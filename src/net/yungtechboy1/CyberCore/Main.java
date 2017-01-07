@@ -51,6 +51,7 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
     public CyberTech.CyberChat.Main CC;
 
     public Map<String, String> tpr = new HashMap<>();
+    public static final String NAME = TextFormat.GOLD+""+TextFormat.BOLD+"§eTERRA§6CORE "+TextFormat.RESET+TextFormat.GOLD+"» "+TextFormat.RESET;
 
     @Override
     public void onEnable() {
@@ -101,23 +102,30 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
         tipban.save();
         tban.save();
         tcban.save();
+        cooldowns.save();
     }
 
     public Integer GetPlayerRank(Player p) {
+        return GetPlayerRank(p,false);
+    }
+    public Integer GetPlayerRank(Player p,Boolean all) {
+        return GetPlayerRank(p.getName().toLowerCase(),all);
+    }
+    public Integer GetPlayerRank(String p,Boolean all) {
         String rank = "";
-        rank = CC.GetAdminRank(p.getName());
-        if (rank == null) rank = CC.GetMasterRank(p.getName());
-        if (rank == null) rank = CC.GetSecondaryRank(p.getName());
+        rank = CC.GetAdminRank(p);
+        if (rank == null) rank = CC.GetMasterRank(p);
+        if (rank == null) rank = CC.GetSecondaryRank(p);
         if (rank == null) {
             return 0;
         } else if (rank.equalsIgnoreCase("tourist")) {
-            //return 1;
+            if(all)return 1;
         } else if (rank.equalsIgnoreCase("islander")) {
-            //return 2;
+            if(all)return 2;
         } else if (rank.equalsIgnoreCase("adventurer")) {
-            //return 3;
+            if(all)return 3;
         } else if (rank.equalsIgnoreCase("conquerer")) {
-            //return 4;
+            if(all)return 4;
         } else if (rank.equalsIgnoreCase("TMOD")) {
             return 5;
         } else if (rank.equalsIgnoreCase("MOD1") || rank.equalsIgnoreCase("yt")) {
@@ -240,6 +248,9 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
                 return true;
             case "wild":
                 Wild.runCommand(s, this);
+                return true;
+            case "fix":
+                new Fix(this).runCommand(s, args);
                 return true;
             case "job":
                 Job.runCommand(s, args, this);

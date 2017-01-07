@@ -34,6 +34,10 @@ commands:
       description: Accept Teleport
       usage: "/tpa"
       permission: CyberTech.CyberCore.player
+  fix:
+      description: Fix Item
+      usage: "/fix"
+      permission: CyberTech.CyberCore.player
   tpd:
       description: Deny Teleport
       usage: "/tpd"

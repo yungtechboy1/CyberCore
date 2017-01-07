@@ -12,10 +12,6 @@ import net.yungtechboy1.CyberCore.Msgs;
  */
 
 public class Spawn {
-    Main Owner;
-    public void Spawn(Main server){
-        Owner = server;
-    }
 
     public static void runCommand(CommandSender s,String[] args, Main server){
         if(s instanceof Player){
