@@ -37,7 +37,7 @@ public class Vote {
         Integer vs = GetVoteStatus1(s.getName());
         if(vs == 0){
             s.sendMessage(TextFormat.AQUA+"[Terratide]"+TextFormat.YELLOW+" You have not voted for "+TextFormat.RED+"Terratide"+TextFormat.YELLOW+" yet!");
-            s.sendMessage(TextFormat.AQUA+"[Terratide]"+TextFormat.YELLOW+" Please go to 'http://minecraftpocket-servers.com/server/38216/vote/' vote for"+TextFormat.RED+"CyberTech");
+            s.sendMessage(TextFormat.AQUA+"[Terratide]"+TextFormat.YELLOW+" Please go to 'http://minecraftpocket-servers.com/server/38216/vote/' vote for"+TextFormat.GOLD+"Terratide");
         }else if(vs == 1){
             if(SetVoted1(s.getName()) == 0) {
                 s.sendMessage(TextFormat.AQUA+"[Terratide]"+TextFormat.GREEN+" Vote Claimed for "+TextFormat.RED+"Terratide"+TextFormat.GREEN+"!");

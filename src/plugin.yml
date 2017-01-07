@@ -46,10 +46,6 @@ commands:
       description: Request Teleport to player
       usage: "/tpr <Player>"
       permission: CyberTech.CyberCore.player
-  ci:
-      description: ClearInv
-      usage: "/ci"
-      permission: CyberTech.CyberCore.op
   cl:
       description: ClearInv
       usage: "/ci"

@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Commands;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
+import cn.nukkit.block.Block;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
@@ -14,15 +15,23 @@ import net.yungtechboy1.CyberCore.Msgs;
 
 public class Top {
     Main Owner;
-    public void Top(Main server){
+    public Top(Main server){
         Owner = server;
     }
 
     public static void runCommand(CommandSender s,String[] args, Main server){
         if(s instanceof Player){
-            Player p = (Player)s;
-            Vector3 v = p;
-            p.teleport(p.getLevel().getSafeSpawn(v));
+            int y;
+            for (y = 256; y >= 0; --y) {
+                int b = ((Player) s).getLevel().getBlockIdAt(((Player) s).getFloorX(), y, ((Player) s).getFloorZ());
+                if (b != Block.AIR && b != Block.LEAVES && b != Block.LEAVES2 && b != Block.SNOW_LAYER)break;
+            }
+            if(y == 0){
+                s.sendMessage(TextFormat.RED+"Error! Could not teleport to top!");
+            }else{
+                ((Player) s).teleport(new Vector3(((Player) s).getFloorX(),++y,((Player) s).getFloorZ()));
+                s.sendMessage(TextFormat.GREEN+"Teleport to top!");
+            }
         } else {
             s.sendMessage(Msgs.NEED_TO_BE_PLAYER);
         }

@@ -45,7 +45,7 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
     public Config tban;
     public Config tcban;
     public Config tipban;
-    public Config kits;
+    public Config cooldowns;
     public HashMap<String, HashMap<String, Object>> cache = new HashMap<>();
     public HashMap<String, String> LastMsg = new HashMap<>();
     public CyberTech.CyberChat.Main CC;
@@ -62,6 +62,7 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
         tcban = new Config(new File(this.getDataFolder(), "tcban.yml"), Config.YAML);
         tipban = new Config(new File(this.getDataFolder(), "tipban.yml"), Config.YAML);
         job = new Config(new File(this.getDataFolder(), "job.yml"), Config.YAML);
+        cooldowns = new Config(new File(this.getDataFolder(), "cooldowns.yml"), Config.YAML);
         getLogger().info(TextFormat.GREEN + "Initializing Cyber Essentials");
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getScheduler().scheduleDelayedTask(new Restart(this),20*60*60*2);//EVERY 2 Hours
@@ -93,66 +94,6 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
         }
         return result;
     }
-/*
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void SafeSpawn(EntityDamageByEntityEvent factionDamage) {
-        Integer ex = (int)factionDamage.getEntity().x;
-        Integer ey = (int)factionDamage.getEntity().y;
-        Integer ez = (int)factionDamage.getEntity().z;
-        if((-108 < ex)&& (ex < 11)){
-            if((137 < ez)&& (ez < 303)) {
-                factionDamage.setCancelled();
-                return;
-            }
-        }
-        Integer r = 100;
-        Position p = factionDamage.getEntity().getLevel().getSpawnLocation();
-        Vector3 v = new Vector3(p.x, p.y, p.z);
-        if (factionDamage.getEntity() instanceof Player && factionDamage.getEntity().getPosition().distance(v) <= r) {
-            factionDamage.setCancelled();
-            return;
-        }
-    }
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void SafeSpawn(EntityDamageEvent factionDamage) {
-        Integer ex = (int)factionDamage.getEntity().x;
-        Integer ey = (int)factionDamage.getEntity().y;
-        Integer ez = (int)factionDamage.getEntity().z;
-        if((-108 < ex)&& (ex < 11)){
-            if((137 < ez)&& (ez < 303)) {
-                factionDamage.setCancelled();
-                return;
-            }
-        }
-        Integer r = 100;
-        Position p = factionDamage.getEntity().getLevel().getSpawnLocation();
-        Vector3 v = new Vector3(p.x, p.y, p.z);
-        if (factionDamage.getEntity() instanceof Player && factionDamage.getEntity().getPosition().distance(v) <= r) {
-            factionDamage.setCancelled();
-            return;
-        }
-    }*/
-
-    /*@EventHandler
-   /* public void PreLogin(PlayerPreLoginEvent event){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Player p = event.getPlayer();
-        Long time = new Date().getTime();
-        String key = p.getName().toLowerCase();
-        if(tban.exists(key) && time < (Long)tban.get(key)){
-            Date edate = new Date((Long)tban.get(key));
-            Map<TimeUnit,Long> result = computeDiff(new Date(),edate);
-            event.getPlayer().kick(TextFormat.RED+"You Are Temporally Banned from the server for "+TextFormat.AQUA+result.get("DAYS")+" Days "+result.get("HOURS")+" Hours "+result.get("MINS")+" MINS "+result.get("SECONDS")+" Secs!");
-        }else if(tipban.exists(event.getPlayer().getAddress()) && time < (Long)tipban.get(event.getPlayer().getAddress())){
-            Date edate = new Date((Long)tipban.get(event.getPlayer().getAddress()));
-            Map<TimeUnit,Long> result = computeDiff(new Date(),edate);
-            event.getPlayer().kick(TextFormat.RED+"You Are Temporally Banned from the server for "+TextFormat.AQUA+result.get("DAYS")+" Days "+result.get("HOURS")+" Hours "+result.get("MINS")+" MINS "+result.get("SECONDS")+" Secs!");
-        }else if(tcban.exists(key) && time < (Long)tcban.get(key)){
-            Date edate = new Date((Long)tcban.get(event.getPlayer().getAddress()));
-            Map<TimeUnit,Long> result = computeDiff(new Date(),edate);
-            event.getPlayer().kick(TextFormat.RED+"You Are Temporally Banned from the server for "+TextFormat.AQUA+result.get("DAYS")+" Days "+result.get("HOURS")+" Hours "+result.get("MINS")+" MINS "+result.get("SECONDS")+" Secs!");
-        }
-    }*/
 
     @Override
     public void onDisable() {
@@ -163,31 +104,36 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
     }
 
     public Integer GetPlayerRank(Player p) {
-        String rank = CC.getPlayerRank(p);
+        String rank = "";
+        rank = CC.GetAdminRank(p.getName());
+        if (rank == null) rank = CC.GetMasterRank(p.getName());
+        if (rank == null) rank = CC.GetSecondaryRank(p.getName());
         if (rank == null) {
             return 0;
-        } else if (rank.equalsIgnoreCase("SCRUB")) {
-            return 0;
+        } else if (rank.equalsIgnoreCase("tourist")) {
+            //return 1;
+        } else if (rank.equalsIgnoreCase("islander")) {
+            //return 2;
+        } else if (rank.equalsIgnoreCase("adventurer")) {
+            //return 3;
+        } else if (rank.equalsIgnoreCase("conquerer")) {
+            //return 4;
         } else if (rank.equalsIgnoreCase("TMOD")) {
-            return 1;
-        } else if (rank.equalsIgnoreCase("MOD1")) {
-            return 2;
-        } else if (rank.equalsIgnoreCase("MOD2")) {
-            return 3;
-        } else if (rank.equalsIgnoreCase("MOD3")) {
-            return 4;
-        } else if (rank.equalsIgnoreCase("MOD4")) {
             return 5;
-        } else if (rank.equalsIgnoreCase("MOD5")) {
+        } else if (rank.equalsIgnoreCase("MOD1") || rank.equalsIgnoreCase("yt")) {
+            return 6;
+        } else if (rank.equalsIgnoreCase("MOD2")) {
             return 7;
-        } else if (rank.equalsIgnoreCase("ADMIN1")) {
+        } else if (rank.equalsIgnoreCase("MOD3")) {
             return 8;
-        } else if (rank.equalsIgnoreCase("ADMIN2")) {
+        } else if (rank.equalsIgnoreCase("ADMIN1")) {
             return 9;
-        } else if (rank.equalsIgnoreCase("ADMIN3")) {
+        } else if (rank.equalsIgnoreCase("ADMIN2")) {
             return 10;
-        } else if (rank.equalsIgnoreCase("OP")) {
+        } else if (rank.equalsIgnoreCase("ADMIN3")) {
             return 11;
+        } else if (rank.equalsIgnoreCase("OP")) {
+            return 12;
         }
         return 0;
     }
@@ -298,11 +244,8 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
             case "job":
                 Job.runCommand(s, args, this);
                 return true;
-            case "ci":
-                Ci.runCommand(s, args, this);
-                return true;
             case "cl":
-                if (a >= 3 || s.isOp()) {
+                if (a >= 5 || s.isOp()) {
                     for(Map.Entry<Integer,Level>level :getServer().getLevels().entrySet()){
                         for(Entity e: level.getValue().getEntities()){
                             if(e instanceof Player)continue;
@@ -312,24 +255,24 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
                     return true;
                 }
             case "top":
-                if (a >= 8 || s.isOp()) {
+                if (a >= 5 || s.isOp()) {
                     Top.runCommand(s, args, this);
                     return true;
                 }
             case "tipban":
-                if (a >= 8 || s.isOp() || s instanceof ConsoleCommandSender) {
+                if (a >= 4 || s.isOp() || s instanceof ConsoleCommandSender) {
                     if(!CanTarget(s,a,t))return false;
                     TIPBan.runCommand(s, args, this);
                     return true;
                 }
             case "tipbanp":
-                if (a > 0 || s.isOp() || s instanceof ConsoleCommandSender) {
+                if (a > 4 || s.isOp() || s instanceof ConsoleCommandSender) {
                     tipban.set(args[0].toLowerCase(),0);
                     s.sendMessage(TextFormat.GREEN+"Removed Ban from "+args[0]);
                     return true;
                 }
             case "tban":
-                if (a > 0 || s.isOp() || s instanceof ConsoleCommandSender) {
+                if (a > 1 || s.isOp() || s instanceof ConsoleCommandSender) {
                     if(!CanTarget(s,a,t))return false;
                     Tban.runCommand(s, args, this);
                     return true;
