@@ -32,21 +32,25 @@ public class TIPBan {
             server.tipban.set(target.getAddress(),time);
             for(Item I : target.getInventory().getContents().values())target.getLevel().dropItem(target,I);
             target.kick("Your IP Has Been Temp Banned For 24 Hours!");
+            s.sendMessage("That IP has Been Temp Banned For 24 Hours!");
         }else if(args.length == 2){
             Long time = (new Date().getTime()) + (1000 * 60 * 60 * Integer.parseInt(args[1]));
             server.tipban.set(target.getAddress(),time);
             for(Item I : target.getInventory().getContents().values())target.getLevel().dropItem(target,I);
             target.kick("Your IP Has Been Temp Banned For "+Integer.parseInt(args[1])+" Hours!");
+            s.sendMessage("That IP Has Been Temp Banned For "+Integer.parseInt(args[1])+" Hours!");
         }else if(args.length == 3){
             Long time = (new Date().getTime()) + (1000 * 60 * 60 * Integer.parseInt(args[1]) + (1000 * 60 * Integer.parseInt(args[2])));
             server.tipban.set(target.getAddress(),time);
             for(Item I : target.getInventory().getContents().values())target.getLevel().dropItem(target,I);
             target.kick("Your IP Has Been Temp Banned For "+args[1]+" Hours "+args[2]+" Mins!");
+            s.sendMessage("That IP Has Been Temp Banned For "+args[1]+" Hours "+args[2]+" Mins!");
         }else if(args.length == 4){
             Long time = (new Date().getTime()) + (1000 * 60 * 60 * Integer.parseInt(args[1]) + (1000 * 60 * Integer.parseInt(args[2]))) + (1000 * Integer.parseInt(args[3]));
             server.tipban.set(target.getAddress(),time);
             for(Item I : target.getInventory().getContents().values())target.getLevel().dropItem(target,I);
             target.kick("Your IP Has Been Temp Banned For "+args[1]+" Hours "+args[2]+" Mins and "+args[3]+"Secs!");
+            s.sendMessage("That IP Has Been Temp Banned For "+args[1]+" Hours "+args[2]+" Mins and "+args[3]+"Secs!");
         }else{
             return;
         }

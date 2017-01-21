@@ -33,7 +33,7 @@ public class Fix {
     //fix yung
 
     public void runCommand(CommandSender s, String[] args) {
-        CheckPerms(s, args);
+        CheckPerms(s, args,true);
         if (S == 0 && !s.isOp()) {
             s.sendMessage(Main.NAME + TextFormat.RED + "Error! You don't have access to this command!");
             return;
@@ -95,7 +95,7 @@ public class Fix {
     }
 
     public void CheckPerms(CommandSender s, String[] args) {
-        CheckPerms(s,args);
+        CheckPerms(s,args,false);
     }
     public void CheckPerms(CommandSender s, String[] args, Boolean target) {
         if (s instanceof ConsoleCommandSender) {

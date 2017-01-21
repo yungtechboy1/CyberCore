@@ -24,7 +24,7 @@ public class Msgs {
     //TP commands
     public static String TPA_SENT = "§aSent request to §6{0}";
     public static String TPACCEPT_NO_REQUEST = "§cYou do not have any pending requests";
-    public static String TPING = "§e{0} §6accepted your request, teleporting...";
+    public static String TPING = "§e{0} §6accepted your request, teleporting in 8 secs...";
     public static String TPACCEPTED = "§6You accepted §e{0}'s §6teleport request";
     public static String TPDENYED = "§aYou denied §e{0}'s §ateleport request";
     public static String TPDENYED_SENDER = "§cYour request has been denied";

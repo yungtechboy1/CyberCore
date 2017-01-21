@@ -1,46 +1,35 @@
 package net.yungtechboy1.CyberCore;
 
-import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.*;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-
 import cn.nukkit.Player;
-import cn.nukkit.command.CommandExecutor;
-import cn.nukkit.command.ConsoleCommandSender;
+import cn.nukkit.command.*;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
-import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.block.BlockBreakEvent;
-import cn.nukkit.event.entity.EntityDamageByEntityEvent;
-import cn.nukkit.event.entity.EntityDamageEvent;
-import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerLoginEvent;
-import cn.nukkit.event.player.PlayerPreLoginEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
-import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
-import cn.nukkit.command.Command;
-import cn.nukkit.command.CommandSender;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Commands.*;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMS;
+import net.yungtechboy1.CyberCore.Tasks.TeleportEvent;
+
+import java.io.File;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by carlt_000 on 3/21/2016.
  */
 public class Main extends PluginBase implements CommandExecutor, Listener {
 
-    Vector3 p1;
-    Vector3 p2;
-    public Config ymal;
+    public static final String NAME = TextFormat.GOLD + "" + TextFormat.BOLD + "§eTERRA§6CORE " + TextFormat.RESET + TextFormat.GOLD + "» " + TextFormat.RESET;
     public Config job;
     public Config tban;
     public Config tcban;
@@ -49,14 +38,13 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
     public HashMap<String, HashMap<String, Object>> cache = new HashMap<>();
     public HashMap<String, String> LastMsg = new HashMap<>();
     public CyberTech.CyberChat.Main CC;
-
     public Map<String, String> tpr = new HashMap<>();
-    public static final String NAME = TextFormat.GOLD+""+TextFormat.BOLD+"§eTERRA§6CORE "+TextFormat.RESET+TextFormat.GOLD+"» "+TextFormat.RESET;
+    Vector3 p1;
+    Vector3 p2;
 
     @Override
     public void onEnable() {
         new File(getDataFolder().toString()).mkdirs();
-        loadConfig();
 
         CC = (CyberTech.CyberChat.Main) getServer().getPluginManager().getPlugin("CyberChat");
         tban = new Config(new File(this.getDataFolder(), "tban.yml"), Config.YAML);
@@ -66,23 +54,16 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
         cooldowns = new Config(new File(this.getDataFolder(), "cooldowns.yml"), Config.YAML);
         getLogger().info(TextFormat.GREEN + "Initializing Cyber Essentials");
         getServer().getPluginManager().registerEvents(this, this);
-        getServer().getScheduler().scheduleDelayedTask(new Restart(this),20*60*60*2);//EVERY 2 Hours
-    }
-
-    private void loadConfig() {
-        ymal = new Config(
-                new File(this.getDataFolder(), "factions.yml"),
-                Config.YAML,
-                new LinkedHashMap<String, Object>() {
-                    {
-                        put("Factions", new HashMap<String, Object>());
-                    }
-                });
+        getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
+        PluginCommand pc = new PluginCommand<>("msg",this);
+        pc.setUsage("/msg <Player> [Message]");
+        pc.setPermission("CyberTech.CyberCore.player");
+        getServer().getCommandMap().register(getDescription().getName(),pc);
     }
 
     public Map<TimeUnit, Long> computeDiff(Date date1, Date date2) {
         long diffInMillies = date2.getTime() - date1.getTime();
-        List<TimeUnit> units = new ArrayList<TimeUnit>(EnumSet.allOf(TimeUnit.class));
+        List<TimeUnit> units = new ArrayList<>(EnumSet.allOf(TimeUnit.class));
         Collections.reverse(units);
 
         Map<TimeUnit, Long> result = new LinkedHashMap<>();
@@ -106,12 +87,14 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
     }
 
     public Integer GetPlayerRank(Player p) {
-        return GetPlayerRank(p,false);
+        return GetPlayerRank(p, false);
     }
-    public Integer GetPlayerRank(Player p,Boolean all) {
-        return GetPlayerRank(p.getName().toLowerCase(),all);
+
+    public Integer GetPlayerRank(Player p, Boolean all) {
+        return GetPlayerRank(p.getName().toLowerCase(), all);
     }
-    public Integer GetPlayerRank(String p,Boolean all) {
+
+    public Integer GetPlayerRank(String p, Boolean all) {
         String rank = "";
         rank = CC.GetAdminRank(p);
         if (rank == null) rank = CC.GetMasterRank(p);
@@ -119,13 +102,13 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
         if (rank == null) {
             return 0;
         } else if (rank.equalsIgnoreCase("tourist")) {
-            if(all)return 1;
+            if (all) return 1;
         } else if (rank.equalsIgnoreCase("islander")) {
-            if(all)return 2;
+            if (all) return 2;
         } else if (rank.equalsIgnoreCase("adventurer")) {
-            if(all)return 3;
+            if (all) return 3;
         } else if (rank.equalsIgnoreCase("conquerer")) {
-            if(all)return 4;
+            if (all) return 4;
         } else if (rank.equalsIgnoreCase("TMOD")) {
             return 5;
         } else if (rank.equalsIgnoreCase("MOD1") || rank.equalsIgnoreCase("yt")) {
@@ -149,19 +132,22 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
     @EventHandler(ignoreCancelled = true)
     public void PlayerLoginEvent(PlayerLoginEvent event) {
         Player p = event.getPlayer();
-        if (tban.exists(p.getName().toLowerCase()) && (Long)tban.get(p.getName().toLowerCase()) > new Date().getTime()) {
+        if (tban.exists(p.getName().toLowerCase()) && Long.parseLong(tban.get(p.getName().toLowerCase())+"") > new Date().getTime()) {
             event.setCancelled(true);
-            event.setKickMessage(TextFormat.RED + "You are Temp Banned for " + getDifferenceBtwTime((Long) tban.get(p.getName().toLowerCase())) + "!");
-        } else if (tipban.exists(p.getAddress().toLowerCase()) && (Long)tban.get(p.getAddress().toLowerCase()) > new Date().getTime()) {
+            event.setKickMessage(TextFormat.RED + "You are Temp Banned for " + getDifferenceBtwTime(tban.get(p.getName().toLowerCase())) + "!");
+        } else if (tipban.exists(p.getAddress().toLowerCase()) && Long.parseLong(tipban.get(p.getAddress().toLowerCase())+"") > new Date().getTime()) {
             event.setCancelled(true);
-            event.setKickMessage(TextFormat.RED + "You are is Temp Banned for " + getDifferenceBtwTime((Long)tipban.get(p.getAddress().toLowerCase())) + "!");
-        } else if (tcban.exists(p.getUniqueId().toString())  && (Long)tcban.get(p.getUniqueId().toString()) > new Date().getTime()) {
+            event.setKickMessage(TextFormat.RED + "Your IP is Temp Banned for " + getDifferenceBtwTime(tipban.get(p.getAddress().toLowerCase())) + "!");
+        } else if (tcban.exists(p.getUniqueId().toString()) && Long.parseLong(tcban.get(p.getUniqueId().toString())+"") > new Date().getTime()) {
             event.setCancelled(true);
-            event.setKickMessage(TextFormat.RED + "You are is Temp Banned for " + getDifferenceBtwTime((Long)tcban.get(p.getUniqueId().toString())) + "!");
+            event.setKickMessage(TextFormat.RED + "Your Client is Temp Banned for " + getDifferenceBtwTime(tcban.get(p.getUniqueId().toString())) + "!");
         }
 
     }
 
+    public String getDifferenceBtwTime(Object dateTime) {
+        return getDifferenceBtwTime(Long.parseLong(dateTime+""));
+    }
     public String getDifferenceBtwTime(Long dateTime) {
 
         long timeDifferenceMilliseconds = dateTime - new Date().getTime();
@@ -197,13 +183,13 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
         Integer a = 0;
         if (s instanceof ConsoleCommandSender) {
             a = 50;
-        }else if (s instanceof Player) {
+        } else if (s instanceof Player) {
             a = GetPlayerRank((Player) s);
         }
 
-            //TARGETING PLAYER CHECK TARGET RANK
+        //TARGETING PLAYER CHECK TARGET RANK
         Integer t = 0;
-        if(args.length >= 1) {
+        if (args.length >= 1) {
             Player targett = getServer().getPlayer(args[0]);
             if (targett != null) {
                 t = GetPlayerRank(targett);
@@ -229,10 +215,11 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
                 Reply.runCommand(s, args, this);
                 return true;
             case "tpaccept":
-                TPA.runCommand(s, this);
-                return true;
             case "tpa":
-                TPA.runCommand(s, this);
+                Player ve = TPA.runCommand(s, this);
+                if (ve != null) {
+                    getServer().getScheduler().scheduleDelayedTask(new TeleportEvent(this, ve, (Vector3) s), 20 * 20);
+                }
                 return true;
             case "tpd":
                 TPD.runCommand(s, this);
@@ -257,52 +244,50 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
                 return true;
             case "cl":
                 if (a >= 5 || s.isOp()) {
-                    for(Map.Entry<Integer,Level>level :getServer().getLevels().entrySet()){
-                        for(Entity e: level.getValue().getEntities()){
-                            if(e instanceof Player)continue;
+                    for (Map.Entry<Integer, Level> level : getServer().getLevels().entrySet()) {
+                        for (Entity e : level.getValue().getEntities()) {
+                            if (e instanceof Player) continue;
                             e.kill();
                         }
                     }
                     return true;
                 }
             case "top":
-                if (a >= 5 || s.isOp()) {
-                    Top.runCommand(s, args, this);
-                    return true;
-                }
+                new Top(this).runCommand(s, args);
+                return true;
             case "tipban":
-                if (a >= 4 || s.isOp() || s instanceof ConsoleCommandSender) {
-                    if(!CanTarget(s,a,t))return false;
+                if (a > 5 || s.isOp() || s instanceof ConsoleCommandSender) {
+                    if (!CanTarget(s, a, t)) return false;
                     TIPBan.runCommand(s, args, this);
                     return true;
                 }
             case "tipbanp":
-                if (a > 4 || s.isOp() || s instanceof ConsoleCommandSender) {
-                    tipban.set(args[0].toLowerCase(),0);
-                    s.sendMessage(TextFormat.GREEN+"Removed Ban from "+args[0]);
+                if (a > 5 || s.isOp() || s instanceof ConsoleCommandSender) {
+                    tipban.set(args[0].toLowerCase(), 0L);
+                    s.sendMessage(TextFormat.GREEN + "Removed Ban from " + args[0]);
                     return true;
                 }
             case "tban":
-                if (a > 1 || s.isOp() || s instanceof ConsoleCommandSender) {
-                    if(!CanTarget(s,a,t))return false;
+                if (a > 4 || s.isOp() || s instanceof ConsoleCommandSender) {
+                    if (!CanTarget(s, a, t)) return false;
                     Tban.runCommand(s, args, this);
                     return true;
                 }
             case "tbanp":
-                if (a > 0 || s.isOp() || s instanceof ConsoleCommandSender) {
-                    tban.set(args[0].toLowerCase(),0);
-                    s.sendMessage(TextFormat.GREEN+"Removed Ban from "+args[0]);
+                if (a > 4 || s.isOp() || s instanceof ConsoleCommandSender) {
+                    tban.set(args[0].toLowerCase(), 0L);
+                    s.sendMessage(TextFormat.GREEN + "Removed Ban from " + args[0]);
                     return true;
                 }
             case "tcban":
                 if (a >= 8 || s.isOp() || s instanceof ConsoleCommandSender) {
-                    if(!CanTarget(s,a,t))return false;
+                    if (!CanTarget(s, a, t)) return false;
                     TCBan.runCommand(s, args, this);
                     return true;
                 }
             case "cban":
                 if (a >= 8 || s.isOp() || s instanceof ConsoleCommandSender) {
-                    if(!CanTarget(s,a,t))return false;
+                    if (!CanTarget(s, a, t)) return false;
                     LocalDateTime time = LocalDateTime.now().plusYears(99);
                     ZonedDateTime zdt = time.atZone(ZoneId.of("America/Chicago"));
                     long millis = zdt.toInstant().toEpochMilli();
@@ -313,17 +298,17 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
                         return true;
                     }
                     tcban.set(target.getUniqueId().toString(), millis);
-                    for(Item I : target.getInventory().getContents().values())target.getLevel().dropItem(target,I);
+                    for (Item I : target.getInventory().getContents().values()) target.getLevel().dropItem(target, I);
                     target.kick("Your Client Have Been Temp Banned For 24 Hours!");
                     return true;
                 }
             case "gms":
-                if (a >= 8 || s.isOp()) {
+                if (a >= 11 || s.isOp()) {
                     GMS.runCommand(s, args, this);
                     return true;
                 }
             case "gmc":
-                if (a >= 8 || s.isOp()) {
+                if (a >= 11 || s.isOp()) {
                     GMC.runCommand(s, args, this);
                     return true;
                 }
@@ -332,16 +317,17 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
     }
 
 
-    public boolean CanTarget(CommandSender sender,Integer a, Integer t) {
-    return CanTarget(sender,a,t,false);
+    public boolean CanTarget(CommandSender sender, Integer a, Integer t) {
+        return CanTarget(sender, a, t, false);
     }
-    public boolean CanTarget(CommandSender sender,Integer a, Integer t,Boolean equal){
-        if(a > t){
+
+    public boolean CanTarget(CommandSender sender, Integer a, Integer t, Boolean equal) {
+        if (a > t) {
             return true;
         }
-        if(a == t)return equal;
-        if(a < t){
-            sender.sendMessage(TextFormat.RED+"You can not target that player! He is a higher rank than you!");
+        if (a == t) return equal;
+        if (a < t) {
+            sender.sendMessage(TextFormat.RED + "You can not target that player! He is a higher rank than you!");
             return false;
         }
         return true;
