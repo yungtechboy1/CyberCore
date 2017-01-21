@@ -1,54 +1,67 @@
 package net.yungtechboy1.CyberCore.Commands;
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
+import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Main;
-import net.yungtechboy1.CyberCore.Msgs;
 
 /**
  * Created by carlt_000 on 3/21/2016.
  */
 
-public class Reply {
+public class Reply extends Command{
     Main Owner;
-    public void Reply(Main server){
+
+    public Reply(Main server) {
+        super("reply", "Quickly Reply to messages", "/r <msg>", new String[]{"r"});
         Owner = server;
+        this.commandParameters.clear();
+        this.commandParameters.put("default", new CommandParameter[]{
+                new CommandParameter("message", CommandParameter.ARG_TYPE_RAW_TEXT, false)
+        });
     }
 
-    public static void runCommand(CommandSender s,String[] args, Main server){
-        if(s instanceof Player){
-            Player p = (Player)s;
-            if(args.length >= 1 && server.LastMsg.containsKey(p.getName().toLowerCase())){
+    @Override
+    public boolean execute(CommandSender s, String label, String[] args) {
+        Main server = Owner;
+        if (s instanceof Player) {
+            Player p = (Player) s;
+            if (args.length >= 1 && server.LastMsg.containsKey(p.getName().toLowerCase())) {
                 String a = server.LastMsg.get(p.getName().toLowerCase());
                 Player t = server.getServer().getPlayer(a);
-                if(t == null){
-                    if(a.equalsIgnoreCase("SERVER")){
+                if (t == null) {
+                    if (a.equalsIgnoreCase("SERVER")) {
                         String msg = implode(" ", args);
-                        s.sendMessage(TextFormat.YELLOW+"[You > SERVER] : "+TextFormat.AQUA+msg);
-                        server.getLogger().info(TextFormat.YELLOW+"["+p.getName()+" > You/Server ]  : "+TextFormat.AQUA+msg);
-                        server.LastMsg.put("SERVER",s.getName().toLowerCase());
-                        server.LastMsg.put(s.getName().toLowerCase(),"SERVER");
-                        return;
+                        s.sendMessage(TextFormat.YELLOW + "[You > SERVER] : " + TextFormat.AQUA + msg);
+                        server.getLogger().info(TextFormat.YELLOW + "[" + p.getName() + " > You/Server ]  : " + TextFormat.AQUA + msg);
+                        server.LastMsg.put("SERVER", s.getName().toLowerCase());
+                        server.LastMsg.put(s.getName().toLowerCase(), "SERVER");
+                        return true;
                     }
-                    s.sendMessage(TextFormat.RED+"Error! Target Player Not Found!");
-                    return;
+                    s.sendMessage(TextFormat.RED + "Error! Target Player Not Found!");
+                    return true;
                 }
                 String msg = "";
-                for(String aa : args){
-                    msg = msg+" "+aa;
+                for (String aa : args) {
+                    msg = msg + " " + aa;
                 }
-                t.sendMessage(TextFormat.YELLOW+"["+p.getName()+" > You] : "+TextFormat.AQUA+msg);
-                p.sendMessage(TextFormat.YELLOW+"[You > "+t.getName()+"] : "+TextFormat.AQUA+msg);
-                server.getLogger().info(TextFormat.YELLOW+"["+p.getName()+" > "+t.getName()+"] : "+TextFormat.AQUA+msg);
-                server.LastMsg.put(p.getName().toLowerCase(),t.getName().toLowerCase());
-                server.LastMsg.put(t.getName().toLowerCase(),p.getName().toLowerCase());
-            }else{
-                s.sendMessage(TextFormat.YELLOW+"Usage :/r <message>");
-                return;
+                t.sendMessage(TextFormat.YELLOW + "[" + p.getName() + " > You] : " + TextFormat.AQUA + msg);
+                p.sendMessage(TextFormat.YELLOW + "[You > " + t.getName() + "] : " + TextFormat.AQUA + msg);
+                server.getLogger().info(TextFormat.YELLOW + "[" + p.getName() + " > " + t.getName() + "] : " + TextFormat.AQUA + msg);
+                server.LastMsg.put(p.getName().toLowerCase(), t.getName().toLowerCase());
+                server.LastMsg.put(t.getName().toLowerCase(), p.getName().toLowerCase());
+            } else {
+                s.sendMessage(TextFormat.YELLOW + "Usage :/r <message>");
+                return true;
             }
         }
+        return true;
+    }
+
+    public static void runCommand(CommandSender s, String[] args, Main server) {
+
     }
 
     public static String implode(String separator, String... data) {

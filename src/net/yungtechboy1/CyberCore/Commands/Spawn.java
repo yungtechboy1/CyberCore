@@ -1,17 +1,34 @@
 package net.yungtechboy1.CyberCore.Commands;
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
+import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Main;
-import net.yungtechboy1.CyberCore.Msgs;
+import net.yungtechboy1.CyberCore.Messages;
 
 /**
  * Created by carlt_000 on 3/21/2016.
  */
 
-public class Spawn {
+public class Spawn extends Command {
+    Main Owner;
+
+    public Spawn(Main server) {
+        super("spawn", "Teleport to spawn", "/spawn");
+        Owner = server;
+        this.commandParameters.clear();
+        this.commandParameters.put("default", new CommandParameter[]{
+                new CommandParameter("message", CommandParameter.ARG_TYPE_RAW_TEXT, false)
+        });
+    }
+
+    @Override
+    public boolean execute(CommandSender s, String label, String[] args) {
+        runCommand(s,args,Owner);
+        return true;
+    }
 
     public static void runCommand(CommandSender s,String[] args, Main server){
         if(s instanceof Player){
@@ -42,7 +59,7 @@ public class Spawn {
                 s.sendMessage(TextFormat.GREEN+t.getName()+" Teleported to spawn!");
                 return;
             }
-            s.sendMessage(Msgs.NEED_TO_BE_PLAYER);
+            s.sendMessage(Messages.NEED_TO_BE_PLAYER);
         }
     }
 }

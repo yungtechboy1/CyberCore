@@ -4,7 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Main;
-import net.yungtechboy1.CyberCore.Msgs;
+import net.yungtechboy1.CyberCore.Messages;
 
 /**
  * Created by carlt_000 on 3/21/2016.
@@ -19,8 +19,8 @@ public class TPD {
                 server.tpr.remove(s.getName().toLowerCase());
                 return;
             }
-            p1.sendMessage(Msgs.TPDENYED_SENDER);
-            s.sendMessage(Msgs.TPDENYED.replace("{0}",p1.getName()));
+            p1.sendMessage(Messages.TPDENYED_SENDER);
+            s.sendMessage(Messages.TPDENYED.replace("{0}",p1.getName()));
             server.tpr.remove(s.getName().toLowerCase());
         }else{
             s.sendMessage(TextFormat.RED+"No Teleport Found!");

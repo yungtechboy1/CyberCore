@@ -1,11 +1,10 @@
 package net.yungtechboy1.CyberCore.Commands;
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Main;
-import net.yungtechboy1.CyberCore.Msgs;
+import net.yungtechboy1.CyberCore.Messages;
 
 /**
  * Created by carlt_000 on 3/21/2016.
@@ -18,7 +17,8 @@ public class Job {
     }
 
     public static void runCommand(CommandSender s,String[] args, Main server){
-        if(s instanceof Player){
+
+        /*if(s instanceof Player){
             Player p = (Player)s;
             if(args.length >= 1){
                 if(args[0] == "list"){
@@ -82,8 +82,8 @@ public class Job {
                 );
             }
         } else {
-            s.sendMessage(Msgs.NEED_TO_BE_PLAYER);
-        }
+            s.sendMessage(Messages.NEED_TO_BE_PLAYER);
+        }*/
     }
 
     public String GetJob(String name,Main Server){

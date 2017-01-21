@@ -1,25 +1,17 @@
 package net.yungtechboy1.CyberCore.Commands;
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
-import cn.nukkit.block.BlockPlanks;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemDiamond;
 import cn.nukkit.item.ItemSteak;
 import cn.nukkit.utils.TextFormat;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import net.yungtechboy1.CyberCore.Main;
-import net.yungtechboy1.CyberCore.Msgs;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Executable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 

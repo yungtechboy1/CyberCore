@@ -8,7 +8,7 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Main;
-import net.yungtechboy1.CyberCore.Msgs;
+import net.yungtechboy1.CyberCore.Messages;
 
 import java.util.Calendar;
 
@@ -60,7 +60,7 @@ public class Top {
                 Owner.cooldowns.set("top." + s.getName().toLowerCase(), ct);
             }
         } else {
-            s.sendMessage(Main.NAME + Msgs.NEED_TO_BE_PLAYER);
+            s.sendMessage(Main.NAME + Messages.NEED_TO_BE_PLAYER);
         }
     }
 

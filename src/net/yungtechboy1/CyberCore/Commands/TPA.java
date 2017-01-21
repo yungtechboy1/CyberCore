@@ -2,10 +2,9 @@ package net.yungtechboy1.CyberCore.Commands;
 
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
-import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Main;
-import net.yungtechboy1.CyberCore.Msgs;
+import net.yungtechboy1.CyberCore.Messages;
 
 /**
  * Created by carlt_000 on 3/21/2016.
@@ -20,8 +19,8 @@ public class TPA {
                 server.tpr.remove(s.getName().toLowerCase());
                 return null;
             }
-            p1.sendMessage(Msgs.TPING.replace("{0}",s.getName()));
-            s.sendMessage(Msgs.TPACCEPTED.replace("{0}",s.getName()));
+            p1.sendMessage(Messages.TPING.replace("{0}",s.getName()));
+            s.sendMessage(Messages.TPACCEPTED.replace("{0}",s.getName()));
             return p1;
         }else{
             s.sendMessage(TextFormat.RED+"No Teleport Found!");

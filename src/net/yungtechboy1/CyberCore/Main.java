@@ -59,6 +59,8 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
         pc.setUsage("/msg <Player> [Message]");
         pc.setPermission("CyberTech.CyberCore.player");
         getServer().getCommandMap().register(getDescription().getName(),pc);
+        getServer().getCommandMap().register(getDescription().getName(),new Ci(this));
+        getServer().getCommandMap().register(getDescription().getName(),new Fix(this));
     }
 
     public Map<TimeUnit, Long> computeDiff(Date date1, Date date2) {
@@ -102,31 +104,31 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
         if (rank == null) {
             return 0;
         } else if (rank.equalsIgnoreCase("tourist")) {
-            if (all) return 1;
+            if (all) return Ranks.PERM_TOURIST;
         } else if (rank.equalsIgnoreCase("islander")) {
-            if (all) return 2;
+            if (all) return Ranks.PERM_ISLANDER;
         } else if (rank.equalsIgnoreCase("adventurer")) {
-            if (all) return 3;
+            if (all) return Ranks.PERM_ADVENTURER;
         } else if (rank.equalsIgnoreCase("conquerer")) {
-            if (all) return 4;
+            if (all) return Ranks.PERM_CONQUERER;
         } else if (rank.equalsIgnoreCase("TMOD")) {
-            return 5;
+            return Ranks.PERM_TMOD;
         } else if (rank.equalsIgnoreCase("MOD1") || rank.equalsIgnoreCase("yt")) {
-            return 6;
+            return Ranks.PERM_MOD_1;
         } else if (rank.equalsIgnoreCase("MOD2")) {
-            return 7;
+            return Ranks.PERM_MOD_2;
         } else if (rank.equalsIgnoreCase("MOD3")) {
-            return 8;
+            return Ranks.PERM_MOD_3;
         } else if (rank.equalsIgnoreCase("ADMIN1")) {
-            return 9;
+            return Ranks.PERM_ADMIN_1;
         } else if (rank.equalsIgnoreCase("ADMIN2")) {
-            return 10;
+            return Ranks.PERM_ADMIN_2;
         } else if (rank.equalsIgnoreCase("ADMIN3")) {
-            return 11;
+            return Ranks.PERM_ADMIN_3;
         } else if (rank.equalsIgnoreCase("OP")) {
-            return 12;
+            return Ranks.PERM_OP;
         }
-        return 0;
+        return Ranks.PERM_GUEST;
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -202,12 +204,6 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
             case "vote":
                 Vote.runCommand(s, args, this);
                 return true;
-            case "msg":
-                Msg.runCommand(s, args, this);
-                return true;
-            case "message":
-                Msg.runCommand(s, args, this);
-                return true;
             case "reply":
                 Reply.runCommand(s, args, this);
                 return true;
@@ -235,9 +231,6 @@ public class Main extends PluginBase implements CommandExecutor, Listener {
                 return true;
             case "wild":
                 Wild.runCommand(s, this);
-                return true;
-            case "fix":
-                new Fix(this).runCommand(s, args);
                 return true;
             case "job":
                 Job.runCommand(s, args, this);
