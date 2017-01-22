@@ -5,7 +5,7 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Main;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.ReTPTask;
 
 import java.util.Random;
@@ -14,7 +14,7 @@ import java.util.Random;
  * Created by carlt_000 on 3/21/2016.
  */
 public class Wild {
-    public static void runCommand(CommandSender s, Main server){
+    public static void runCommand(CommandSender s, CyberCoreMain server){
         if(!(s instanceof Player)){
             s.sendMessage("Error You Must Be A Player To Use This");
             return;

@@ -8,12 +8,12 @@ import cn.nukkit.scheduler.PluginTask;
 /**
  * Created by carlt_000 on 7/7/2016.
  */
-public class ReTPTask extends PluginTask<Main> {
+public class ReTPTask extends PluginTask<CyberCoreMain> {
 
     public Position Pos;
     public Player P;
 
-    public ReTPTask(Main owner, Player p, Position pos) {
+    public ReTPTask(CyberCoreMain owner, Player p, Position pos) {
         super(owner);
         P = p;
         Pos = pos;

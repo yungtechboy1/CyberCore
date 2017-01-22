@@ -1,22 +1,19 @@
 package net.yungtechboy1.CyberCore.Commands;
 
-import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
-import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Main;
-import net.yungtechboy1.CyberCore.Messages;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
  * Created by carlt_000 on 3/21/2016.
  */
 
 public class Job {
-    Main Owner;
-    public void Job(Main server){
+    CyberCoreMain Owner;
+    public void Job(CyberCoreMain server){
         Owner = server;
     }
 
-    public static void runCommand(CommandSender s,String[] args, Main server){
+    public static void runCommand(CommandSender s,String[] args, CyberCoreMain server){
 
         /*if(s instanceof Player){
             Player p = (Player)s;
@@ -86,7 +83,7 @@ public class Job {
         }*/
     }
 
-    public String GetJob(String name,Main Server){
+    public String GetJob(String name,CyberCoreMain Server){
         if(Server.job.exists(name.toLowerCase())){
             return (String)Server.job.get(name.toLowerCase());
         }else{
@@ -94,7 +91,7 @@ public class Job {
         }
     }
 
-    public static void SetJob(String name,String Key,Main Server){
+    public static void SetJob(String name,String Key,CyberCoreMain Server){
         Server.job.set(name.toLowerCase(),Key);
     }
 }

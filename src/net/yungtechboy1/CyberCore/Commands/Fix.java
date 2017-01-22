@@ -9,9 +9,9 @@ import cn.nukkit.item.ItemTool;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Commands.Constructors.CheckPermCommand;
-import net.yungtechboy1.CyberCore.Main;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Messages;
-import net.yungtechboy1.CyberCore.Ranks;
+import net.yungtechboy1.CyberCore.RankList;
 import net.yungtechboy1.CyberCore.Utils;
 
 import java.util.Calendar;
@@ -22,9 +22,9 @@ import java.util.Calendar;
 
 public class Fix extends CheckPermCommand {
 
-    public Fix(Main server) {
+    public Fix(CyberCoreMain server) {
         //@TODO Check the min Rank for this
-        super(server, "fix", "Fixes Item in hand", "/fix", Ranks.PERM_ISLANDER);
+        super(server, "fix", "Fixes Item in hand", "/fix", RankList.PERM_ISLANDER);
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
                 new CommandParameter("player", CommandParameter.ARG_TYPE_TARGET, true)
@@ -37,7 +37,7 @@ public class Fix extends CheckPermCommand {
         Error = null;
         if (commandSender instanceof Player) {
             //Check Cooldown
-            Boolean skip = (CheckPerms(commandSender) >= Ranks.PERM_ADMIN_3);
+            Boolean skip = (CheckPerms(commandSender) >= RankList.PERM_ADMIN_3);
             CompoundTag nt = ((Player) commandSender).namedTag;
             if (skip) {
                 if (nt != null) {
@@ -46,14 +46,14 @@ public class Fix extends CheckPermCommand {
                     //Check time
                     if (ct < time) {
                         String diff = Utils.getDifferenceBtwTime((long) time);
-                        commandSender.sendMessage(Main.NAME + TextFormat.RED + "Error! You must wait " + diff);
+                        commandSender.sendMessage(CyberCoreMain.NAME + TextFormat.RED + "Error! You must wait " + diff);
                         return true;
                     }
                 }
             }
             Item hand = ((Player) commandSender).getInventory().getItemInHand().clone();
             if (!(hand instanceof ItemTool) && !(hand instanceof ItemArmor)) {
-                commandSender.sendMessage(Main.NAME + TextFormat.RED + "Error! You can repair Armor and Tools!");
+                commandSender.sendMessage(CyberCoreMain.NAME + TextFormat.RED + "Error! You can repair Armor and Tools!");
                 return true;
             }
             hand.setDamage(0);
@@ -69,7 +69,7 @@ public class Fix extends CheckPermCommand {
                 if (nt != null)nt.putInt("CCFix",ct);
             }
         } else {
-            commandSender.sendMessage(Main.NAME + Messages.NEED_TO_BE_PLAYER);
+            commandSender.sendMessage(CyberCoreMain.NAME + Messages.NEED_TO_BE_PLAYER);
         }
         return true;
     }

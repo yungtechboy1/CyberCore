@@ -5,17 +5,18 @@ import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Main;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Messages;
+import net.yungtechboy1.CyberCore.RankList;
 
 /**
  * Created by carlt_000 on 3/21/2016.
  */
 
 public class Spawn extends Command {
-    Main Owner;
+    CyberCoreMain Owner;
 
-    public Spawn(Main server) {
+    public Spawn(CyberCoreMain server) {
         super("spawn", "Teleport to spawn", "/spawn");
         Owner = server;
         this.commandParameters.clear();
@@ -30,11 +31,11 @@ public class Spawn extends Command {
         return true;
     }
 
-    public static void runCommand(CommandSender s,String[] args, Main server){
+    public static void runCommand(CommandSender s,String[] args, CyberCoreMain server){
         if(s instanceof Player){
             Player p = (Player)s;
-            int r = server.GetPlayerRank(p);
-            if(args.length == 1 && r > 0){
+            int r = server.GetPlayerRankInt(p,true);
+            if(args.length == 1 && r > RankList.PERM_ADMIN_1){
                 Player t = server.getServer().getPlayer(args[0]);
                 if(t == null){
                     s.sendMessage(TextFormat.RED+"Error! Target Player Not Found!");

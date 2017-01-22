@@ -2,24 +2,23 @@ package net.yungtechboy1.CyberCore;
 
 import cn.nukkit.Player;
 import cn.nukkit.level.Position;
-import cn.nukkit.math.Vector3;
 import cn.nukkit.scheduler.PluginTask;
 import cn.nukkit.utils.TextFormat;
 
 /**
  * Created by carlt_000 on 7/7/2016.
  */
-public class Restart extends PluginTask<Main> {
+public class Restart extends PluginTask<CyberCoreMain> {
 
     public Position Pos;
     public Player P;
     public Integer Time;
 
-    public Restart(Main owner, Integer time) {
+    public Restart(CyberCoreMain owner, Integer time) {
         super(owner);
         Time = time;
     }
-    public Restart(Main owner) {
+    public Restart(CyberCoreMain owner) {
         this(owner,120);
     }
 

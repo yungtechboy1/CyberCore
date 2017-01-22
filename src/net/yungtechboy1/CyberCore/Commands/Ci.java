@@ -1,14 +1,13 @@
 package net.yungtechboy1.CyberCore.Commands;
 
 import cn.nukkit.Player;
-import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Commands.Constructors.TargetCommand;
-import net.yungtechboy1.CyberCore.Main;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Messages;
-import net.yungtechboy1.CyberCore.Ranks;
+import net.yungtechboy1.CyberCore.RankList;
 
 /**
  * Created by carlt_000 on 3/21/2016.
@@ -16,8 +15,8 @@ import net.yungtechboy1.CyberCore.Ranks;
 
 public class Ci extends TargetCommand {
 
-    public Ci(Main server) {
-        super(server,"ci","Clears Player's Inv","/ci [player]",Ranks.PERM_ADMIN_1,1,true);
+    public Ci(CyberCoreMain server) {
+        super(server,"ci","Clears Player's Inv","/ci [player]", RankList.PERM_ADMIN_1,1,true);
         OT = true;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
@@ -42,6 +41,7 @@ public class Ci extends TargetCommand {
                 s.sendMessage(TextFormat.GREEN + t.getName() + " Inventory Cleared!");
             } else {
                 p.getInventory().clearAll();
+                p.sendMessage(TextFormat.YELLOW + "Your Inventory Cleared!");
             }
         } else {
             if (args.length == 1) {

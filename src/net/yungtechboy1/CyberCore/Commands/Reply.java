@@ -5,16 +5,16 @@ import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Main;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
  * Created by carlt_000 on 3/21/2016.
  */
 
 public class Reply extends Command{
-    Main Owner;
+    CyberCoreMain Owner;
 
-    public Reply(Main server) {
+    public Reply(CyberCoreMain server) {
         super("reply", "Quickly Reply to messages", "/r <msg>", new String[]{"r"});
         Owner = server;
         this.commandParameters.clear();
@@ -25,7 +25,7 @@ public class Reply extends Command{
 
     @Override
     public boolean execute(CommandSender s, String label, String[] args) {
-        Main server = Owner;
+        CyberCoreMain server = Owner;
         if (s instanceof Player) {
             Player p = (Player) s;
             if (args.length >= 1 && server.LastMsg.containsKey(p.getName().toLowerCase())) {
@@ -58,10 +58,6 @@ public class Reply extends Command{
             }
         }
         return true;
-    }
-
-    public static void runCommand(CommandSender s, String[] args, Main server) {
-
     }
 
     public static String implode(String separator, String... data) {

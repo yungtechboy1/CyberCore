@@ -5,16 +5,17 @@ import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Main;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Utils;
 
 /**
  * Created by carlt_000 on 3/21/2016.
  */
 
 public class Msg extends Command {
-    Main Owner;
+    CyberCoreMain Owner;
 
-    public Msg(Main server) {
+    public Msg(CyberCoreMain server) {
         super("msg", "Send messages between players", "/msg <player> <msg>", new String[]{"message", "tell"});
         Owner = server;
         this.commandParameters.clear();
@@ -23,24 +24,9 @@ public class Msg extends Command {
                 new CommandParameter("message", CommandParameter.ARG_TYPE_RAW_TEXT, false)
         });
     }
-
-    //@TODO Move to Utills
-    public static String implode(String separator, String... data) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 1; i < data.length - 1; i++) {
-            //data.length - 1 => to not add separator at the end
-            if (!data[i].matches(" *")) {//empty string are ""; " "; "  "; and so on
-                sb.append(data[i]);
-                sb.append(separator);
-            }
-        }
-        sb.append(data[data.length - 1].trim());
-        return sb.toString();
-    }
-
     @Override
     public boolean execute(CommandSender s, String label, String[] args) {
-        Main server = Owner;
+        CyberCoreMain server = Owner;
         if (s instanceof Player) {
             Player p = (Player) s;
             if (args.length >= 2) {
@@ -48,7 +34,7 @@ public class Msg extends Command {
                 if (t == null) {
                     if (args[0].equalsIgnoreCase("SERVER")) {
 
-                        String msg = implode(" ", args);
+                        String msg = Utils.implode(" ", args);
                         s.sendMessage(TextFormat.YELLOW + "[You > SERVER] : " + TextFormat.AQUA + msg);
                         server.getLogger().info(TextFormat.YELLOW + "[" + p.getName() + " > You/Server ] : " + TextFormat.AQUA + msg);
 
@@ -59,7 +45,7 @@ public class Msg extends Command {
                     s.sendMessage(TextFormat.RED + "Error! Target Player Not Found!");
                     return true;
                 }
-                String msg = implode(" ", args);
+                String msg = Utils.implode(" ", args);
                 t.sendMessage(TextFormat.YELLOW + "[" + p.getName() + " > You] : " + TextFormat.AQUA + msg);
                 s.sendMessage(TextFormat.YELLOW + "[You > " + t.getName() + "] : " + TextFormat.AQUA + msg);
                 server.getLogger().info(TextFormat.YELLOW + "[" + p.getName() + " > " + t.getName() + "] : " + TextFormat.AQUA + msg);
@@ -76,7 +62,7 @@ public class Msg extends Command {
                     s.sendMessage(TextFormat.RED + "Error! Target Player Not Found!");
                     return true;
                 }
-                String msg = implode(" ", args);
+                String msg = Utils.implode(" ", args);
                 t.sendMessage(TextFormat.YELLOW + "[SERVER > You] : " + TextFormat.AQUA + msg);
                 s.sendMessage(TextFormat.YELLOW + "[You > " + t.getName() + "] : " + TextFormat.AQUA + msg);
                 server.getLogger().info(TextFormat.YELLOW + "[SERVER > " + t.getName() + "] : " + TextFormat.AQUA + msg);

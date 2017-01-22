@@ -4,7 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Main;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.Date;
 
@@ -12,7 +12,7 @@ import java.util.Date;
  * Created by carlt_000 on 3/21/2016.
  */
 public class TCBan {
-    public static void runCommand(CommandSender s,String[] args, Main server){
+    public static void runCommand(CommandSender s,String[] args, CyberCoreMain server){
         if(args.length <= 0){
             s.sendMessage("Usage: /tcban <player> <Hours>");
             s.sendMessage("Usage: /tcban <player> <Hours> <Mins>");

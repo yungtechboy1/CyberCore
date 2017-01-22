@@ -1,14 +1,17 @@
 package net.yungtechboy1.CyberCore.Commands;
 
 import cn.nukkit.Player;
-import cn.nukkit.block.Block;
 import cn.nukkit.command.CommandSender;
-import cn.nukkit.command.ConsoleCommandSender;
+import cn.nukkit.command.data.CommandParameter;
+import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
-import cn.nukkit.utils.ConfigSection;
+import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Main;
+import net.yungtechboy1.CyberCore.Commands.Constructors.CheckPermCommand;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Messages;
+import net.yungtechboy1.CyberCore.RankList;
+import net.yungtechboy1.CyberCore.Utils;
 
 import java.util.Calendar;
 
@@ -16,83 +19,84 @@ import java.util.Calendar;
  * Created by carlt_000 on 3/21/2016.
  */
 
-public class Top {
-    Main Owner;
-    Integer S = 0;
-    Integer T = 0;
+public class Top extends CheckPermCommand {
+    private Vector3 temporalVector = new Vector3();
 
-    public Top(Main server) {
-        Owner = server;
+    public Top(CyberCoreMain server) {
+        super(server, "top", "Teleport to Top Block", "/top", RankList.PERM_ADMIN_1);
+        this.commandParameters.clear();
+        this.commandParameters.put("default", new CommandParameter[]{
+                new CommandParameter("player", CommandParameter.ARG_TYPE_TARGET, true)
+        });
     }
 
-    //top
-
-    public void runCommand(CommandSender s, String[] args) {
-        CheckPerms(s, args);
-        if (S == 0 && !s.isOp()) {
-            s.sendMessage(Main.NAME + TextFormat.RED + "Error! You don't have access to this command!");
-            return;
-        }
-        if (s instanceof Player) {
+    @Override
+    public boolean execute(CommandSender commandSender, String s, String[] strings) {
+        if (!super.execute(commandSender, s, strings)) return SendError();
+        if (commandSender instanceof Player) {
+            int S = Owner.GetPlayerRankInt((Player) commandSender, true);
+            if (S == 0 && !commandSender.isOp()) {
+                commandSender.sendMessage(CyberCoreMain.NAME + TextFormat.RED + "Error! You don't have access to this command!");
+                return true;
+            }
             //Check Cooldown
-            Boolean skip = (S <= 7 && !s.isOp());
+            Boolean skip = (CheckPerms(commandSender) >= RankList.PERM_ADMIN_3);
+            CompoundTag nt = ((Player) commandSender).namedTag;
             if (skip) {
-                ConfigSection cds = (ConfigSection) Owner.cooldowns.get("top");
-                if (cds.containsKey(s.getName().toLowerCase())) {
-                    Integer time = (Integer) cds.get(s.getName().toLowerCase());
+                if (nt != null) {
+                    Integer time = nt.getInt("CCTop");
                     Integer ct = (int) (Calendar.getInstance().getTime().getTime() / 1000);
                     //Check time
                     if (ct < time) {
-                        String diff = Owner.getDifferenceBtwTime((long) time);
-                        s.sendMessage(Main.NAME + TextFormat.RED + "Error! You must wait " + diff);
-                        return;
+                        String diff = Utils.getDifferenceBtwTime((long) time);
+                        commandSender.sendMessage(CyberCoreMain.NAME + TextFormat.RED + "Error! You must wait " + diff);
+                        return true;
                     }
                 }
             }
 
-            gototp((Player) s);
+            gototp((Player) commandSender);
 
             if (skip) {
                 Integer q = 10;
                 if (S == 1) q = 60 * 5;
                 if (S == 2) q = 60 * 2;
                 Integer ct = (int) (Calendar.getInstance().getTime().getTime() / 1000) + q;
-                Owner.cooldowns.set("top." + s.getName().toLowerCase(), ct);
+                Owner.cooldowns.set("top." + commandSender.getName().toLowerCase(), ct);
+            }
+            if (skip) {
+                Integer q = 60;
+                if (S == 1) q = 60 * 60 * 12;
+                if (S == 2) q = 60 * 60 * 8;
+                if (S == 3) q = 60 * 60 * 4;
+                if (S == 4) q = 60 * 60;
+                Integer ct = (int) (Calendar.getInstance().getTime().getTime() / 1000) + q;
+                if (nt != null) nt.putInt("CCTop", ct);
             }
         } else {
-            s.sendMessage(Main.NAME + Messages.NEED_TO_BE_PLAYER);
+            commandSender.sendMessage(CyberCoreMain.NAME + Messages.NEED_TO_BE_PLAYER);
         }
+        return true;
     }
 
-    public void CheckPerms(CommandSender s, String[] args) {
-        CheckPerms(s, args,false);
-    }
-
-    public void CheckPerms(CommandSender s, String[] args, Boolean target) {
-        if (s instanceof ConsoleCommandSender) {
-            S = 50;
-        } else if (s instanceof Player) {
-            S = Owner.GetPlayerRank((Player) s, true);
+    public Position getHighestStandablePositionAt(Position pos) {
+        int x = pos.getFloorX();
+        int z = pos.getFloorZ();
+        for (int y = 127; y >= 0; y--) {
+            if (pos.level.getBlock(this.temporalVector.setComponents(x, y, z)).isSolid()) {
+                return new Position(x + 0.5, pos.level.getBlock(this.temporalVector.setComponents(x, y, z)).getBoundingBox().maxY, z + 0.5, pos.level);
+            }
         }
-
-        //TARGETING PLAYER CHECK TARGET RANK
-        if (args.length >= 1 && target) {
-            Player targett = Owner.getServer().getPlayer(args[0]);
-            if (targett != null) T = Owner.GetPlayerRank(targett);
-        }
+        return null;
     }
 
     public void gototp(Player s) {
-        int y;
-        for (y = 256; y >= 0; --y) {
-            int b = s.getLevel().getBlockIdAt(s.getFloorX(), y, s.getFloorZ());
-            if (b != Block.AIR && b != Block.LEAVES && b != Block.LEAVES2 && b != Block.SNOW_LAYER) break;
-        }
-        if (y == 0) {
-            s.sendMessage(Main.NAME + TextFormat.RED + "Error! Could not teleport to top!");
+        Position pos = getHighestStandablePositionAt(s.getPosition());
+        if (pos == null) {
+            s.sendMessage(CyberCoreMain.NAME + TextFormat.RED + "Error! Could not teleport to top!");
         } else {
-            s.teleport(new Vector3(s.getFloorX(), ++y, s.getFloorZ()));
-            s.sendMessage(Main.NAME + TextFormat.GREEN + "Teleport to top!");
+            s.teleport(pos);
+            s.sendMessage(CyberCoreMain.NAME + TextFormat.GREEN + "Teleport to top!");
         }
 
     }
