@@ -365,10 +365,14 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         String f1 = "";//Factioin
         String f2 = "";//Rank
 
-        Faction f = FM.FFactory.getPlayerFaction(p);
-        if (f != null) {
-            f1 = TextFormat.GRAY + "[" + f.GetFactionNameTag(p) + TextFormat.GRAY + "]\n";
-        } else {
+        if(FM != null) {
+            Faction f = FM.FFactory.getPlayerFaction(p);
+            if (f != null) {
+                f1 = TextFormat.GRAY + "[" + f.GetFactionNameTag(p) + TextFormat.GRAY + "]\n";
+            } else {
+                f1 = TextFormat.GRAY + "[NF]";
+            }
+        }else{
             f1 = TextFormat.GRAY + "[NF]";
         }
 

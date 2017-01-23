@@ -17,11 +17,11 @@ public class Spawn extends Command {
     CyberCoreMain Owner;
 
     public Spawn(CyberCoreMain server) {
-        super("spawn", "Teleport to spawn", "/spawn");
+        super("spawn", "Teleport to spawn", "/spawn [player]");
         Owner = server;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
-                new CommandParameter("message", CommandParameter.ARG_TYPE_RAW_TEXT, false)
+                new CommandParameter("player", CommandParameter.ARG_TYPE_TARGET, true)
         });
     }
 
