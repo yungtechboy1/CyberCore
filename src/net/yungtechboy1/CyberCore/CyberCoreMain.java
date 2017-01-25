@@ -66,6 +66,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public Boolean MuteChat = false;
     public Map<String, Integer> Spam = new HashMap<>();
     public Map<String, String> LM = new HashMap<>();
+    public Map<String, MCMMO> MCMMOList = new HashMap<>();
 
     //Factories
     public Homes HomeFactory;
