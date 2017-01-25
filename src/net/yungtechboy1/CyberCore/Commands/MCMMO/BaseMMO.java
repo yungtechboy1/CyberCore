@@ -8,6 +8,7 @@ import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.item.*;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.ConfigSection;
+import net.yungtechboy1.CyberCore.Commands.Abilities.Ability;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.ArrayList;
@@ -24,15 +25,6 @@ public class BaseMMO {
     public int TYPE_HERBALISM = 0;
     public int TYPE_EXCAVATION = 0;
     public int TYPE_FISHING = 0;
-    public int TYPE_UNARMED = 0;
-    public int TYPE_ARCHERY = 0;
-    public int TYPE_SWORDS = 0;
-    public int TYPE_AXES = 0;
-    public int TYPE_TAMING = 0;
-    public int TYPE_REPAIR = 0;
-    public int TYPE_ACROBATICS = 0;
-    public int TYPE_ALCHEMY = 0;
-    public int TYPE_SALVAGE = 0;
     ;
     public int TYPE_SMELTING = 0;
 
@@ -103,6 +95,7 @@ public class BaseMMO {
     private int TYPE = 0;
     private int LVL = 0;
     private int XP = 0;
+    private Ability ActiveAbility;
 
     public BaseMMO(CyberCoreMain main) {
         CCM = main;
@@ -116,16 +109,6 @@ public class BaseMMO {
         TYPE_HERBALISM = cs.getInt("TYPE_HERBALISM");
         TYPE_EXCAVATION = cs.getInt("TYPE_EXCAVATION");
         TYPE_FISHING = cs.getInt("TYPE_FISHING");
-        TYPE_UNARMED = cs.getInt("TYPE_UNARMED");
-        TYPE_ARCHERY = cs.getInt("TYPE_ARCHERY");
-        TYPE_SWORDS = cs.getInt("TYPE_SWORDS");
-        TYPE_AXES = cs.getInt("TYPE_AXES");
-        TYPE_TAMING = cs.getInt("TYPE_TAMING");
-        TYPE_REPAIR = cs.getInt("TYPE_REPAIR");
-        TYPE_ACROBATICS = cs.getInt("TYPE_ACROBATICS");
-        TYPE_ALCHEMY = cs.getInt("TYPE_ALCHEMY");
-        TYPE_SALVAGE = cs.getInt("TYPE_SALVAGE");
-        TYPE_SMELTING = cs.getInt("TYPE_SMELTING");
     }
 
     public ConfigSection export() {
@@ -135,16 +118,6 @@ public class BaseMMO {
             put("TYPE_HERBALISM", TYPE_HERBALISM);
             put("TYPE_EXCAVATION", TYPE_EXCAVATION);
             put("TYPE_FISHING", TYPE_FISHING);
-            put("TYPE_UNARMED", TYPE_UNARMED);
-            put("TYPE_ARCHERY", TYPE_ARCHERY);
-            put("TYPE_SWORDS", TYPE_SWORDS);
-            put("TYPE_AXES", TYPE_AXES);
-            put("TYPE_TAMING", TYPE_TAMING);
-            put("TYPE_REPAIR", TYPE_REPAIR);
-            put("TYPE_ACROBATICS", TYPE_ACROBATICS);
-            put("TYPE_ALCHEMY", TYPE_ALCHEMY);
-            put("TYPE_SALVAGE", TYPE_SALVAGE);
-            put("TYPE_SMELTING", TYPE_SMELTING);
         }};
     }
 
@@ -291,10 +264,6 @@ public class BaseMMO {
         if (wcxp > 0) TYPE_WOOD_CUTTING += wcxp;
         if (hxp > 0) TYPE_HERBALISM += hxp;
         if (exp > 0) TYPE_EXCAVATION += exp;
-    }
-
-    public void BlockPlaceEvent(BlockPlaceEvent event) {
-
     }
 
     public int XPToLevel(int xp) {
