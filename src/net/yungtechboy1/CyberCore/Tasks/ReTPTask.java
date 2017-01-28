@@ -1,9 +1,10 @@
-package net.yungtechboy1.CyberCore;
+package net.yungtechboy1.CyberCore.Tasks;
 
 import cn.nukkit.Player;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.scheduler.PluginTask;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
  * Created by carlt_000 on 7/7/2016.

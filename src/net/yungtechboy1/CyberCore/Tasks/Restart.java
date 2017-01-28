@@ -1,9 +1,10 @@
-package net.yungtechboy1.CyberCore;
+package net.yungtechboy1.CyberCore.Tasks;
 
 import cn.nukkit.Player;
 import cn.nukkit.level.Position;
 import cn.nukkit.scheduler.PluginTask;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
  * Created by carlt_000 on 7/7/2016.

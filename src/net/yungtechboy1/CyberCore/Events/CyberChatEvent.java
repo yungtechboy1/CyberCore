@@ -57,8 +57,8 @@ public class CyberChatEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChatEvent(PlayerChatEvent event) {
         if (event.isCancelled()) return;
-        if (plugin.getServer().getPluginManager().getPlugin("Welcome") != null && !PlayerManager.isPlayerLoggedIn(event.getPlayer()))
-            return;
+        //SHouldnt need thins @TODO
+        //if (plugin.getServer().getPluginManager().getPlugin("Welcome") != null && !PlayerManager.isPlayerLoggedIn(event.getPlayer()))return;
         event.setCancelled(true);
         if (plugin.MuteChat && (!event.getPlayer().hasPermission("CyberTech.CyberChat.op"))) {
             event.getPlayer().sendMessage(TextFormat.YELLOW + "All Chat Is Muted! Try again later!");

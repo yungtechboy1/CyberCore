@@ -1,15 +1,13 @@
 package net.yungtechboy1.CyberCore;
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.command.*;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
-import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.player.PlayerChatEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerPreLoginEvent;
+import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.plugin.Plugin;
@@ -26,11 +24,12 @@ import net.yungtechboy1.CyberCore.Commands.Gamemode.GMS;
 import net.yungtechboy1.CyberCore.Commands.Homes.DelHome;
 import net.yungtechboy1.CyberCore.Commands.Homes.Home;
 import net.yungtechboy1.CyberCore.Commands.Homes.SetHome;
+import net.yungtechboy1.CyberCore.Classes.ClassFactory;
+import net.yungtechboy1.CyberCore.CustomItem.ItemChickenCooked;
+import net.yungtechboy1.CyberCore.CustomItem.ItemPorkchopCooked;
 import net.yungtechboy1.CyberCore.Events.CyberChatEvent;
 import net.yungtechboy1.CyberCore.Ranks.RankFactory;
 import net.yungtechboy1.CyberCore.Tasks.*;
-import ru.nukkit.welcome.players.PlayerManager;
-import com.mysql.jdbc.Driver;
 
 import java.io.File;
 import java.sql.*;
@@ -52,6 +51,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public Config tipban;
     public Config cooldowns;
 
+    //HUD Off
+    public ArrayList<String> HudOff = new ArrayList<>();
+    public ArrayList<String> HudClassOnly = new ArrayList<>();
 
     //CyberChat
     public static Connection Connect = null;
@@ -66,8 +68,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public Boolean MuteChat = false;
     public Map<String, Integer> Spam = new HashMap<>();
     public Map<String, String> LM = new HashMap<>();
-    public Map<String, MCMMO> MCMMOList = new HashMap<>();
 
+    //Classes / MMO
+    public ClassFactory ClassFactory;
     //Factories
     public Homes HomeFactory;
     public RankFactory RankFactory;
@@ -88,6 +91,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     @Override
     public void onEnable() {
         new File(getDataFolder().toString()).mkdirs();
+
+        Item.list[Item.COOKED_CHICKEN] = ItemChickenCooked.class;
+        Item.list[Item.COOKED_PORKCHOP] = ItemPorkchopCooked.class;
 
         initExternalPlugins();
 
@@ -176,10 +182,14 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         cooldowns = new Config(new File(this.getDataFolder(), "cooldowns.yml"), Config.YAML);
         getLogger().info(TextFormat.GREEN + "Initializing Cyber Essentials");
 
+        ClassFactory = new ClassFactory(this);
+
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new CyberChatEvent(this), this);
+        getServer().getPluginManager().registerEvents(ClassFactory, this);
 
         getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
+        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 20);//EVERY 2 Hours
        /*PluginCommand pc = new PluginCommand<>("msg",this);
         pc.setUsage("/msg <Player> [Message]");
         pc.setPermission("CyberTech.CyberCore.player");*/
@@ -198,6 +208,12 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         getServer().getCommandMap().register("CyberCore",new Home(this));
         getServer().getCommandMap().register("CyberCore",new SetHome(this));
         getServer().getCommandMap().register("CyberCore",new DelHome(this));
+
+        getServer().getCommandMap().register("CyberCore",new AA(this));
+        getServer().getCommandMap().register("CyberCore",new ClassCmd(this));
+        getServer().getCommandMap().register("CyberCore",new SetClass(this));
+
+        getServer().getCommandMap().register("CyberCore",new Hud(this));
     }
 
     public void initExternalPlugins(){
@@ -265,6 +281,10 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         MainConfig.save();
         MuteConfig.save();
         RankListConfig.save();
+
+        //Classes
+        ClassFactory.Saveall();
+
         try {
             getMySqlConnection().close();
         } catch (Exception ex) {

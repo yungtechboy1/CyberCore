@@ -6,7 +6,7 @@ import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.ReTPTask;
+import net.yungtechboy1.CyberCore.Tasks.ReTPTask;
 
 import java.util.Random;
 
