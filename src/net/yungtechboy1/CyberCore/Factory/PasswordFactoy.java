@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore;
+package net.yungtechboy1.CyberCore.Factory;
 
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
@@ -13,6 +13,7 @@ import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Events.ForbidAction;
+import net.yungtechboy1.CyberCore.Password;
 import net.yungtechboy1.CyberCore.Tasks.Notify;
 
 import java.io.File;

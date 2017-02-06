@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Classes;
+package net.yungtechboy1.CyberCore.Factory;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.Event;
@@ -10,6 +10,7 @@ import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
+import net.yungtechboy1.CyberCore.Classes.*;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.io.File;

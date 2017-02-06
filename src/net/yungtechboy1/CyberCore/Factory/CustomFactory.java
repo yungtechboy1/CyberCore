@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore;
+package net.yungtechboy1.CyberCore.Factory;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
@@ -23,6 +23,7 @@ import net.yungtechboy1.CyberCore.Custom.CustomEnchant.*;
 import net.yungtechboy1.CyberCore.Custom.Inventory.TestInv;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.Date;
 import java.util.HashSet;

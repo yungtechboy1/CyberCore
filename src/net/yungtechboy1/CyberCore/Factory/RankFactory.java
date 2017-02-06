@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Ranks;
+package net.yungtechboy1.CyberCore.Factory;
 
 import cn.nukkit.Player;
 import cn.nukkit.utils.ConfigSection;
