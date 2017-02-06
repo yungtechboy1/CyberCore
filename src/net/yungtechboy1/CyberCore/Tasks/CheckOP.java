@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Tasks;
 
 import cn.nukkit.Player;
 import cn.nukkit.scheduler.PluginTask;
+import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.Map;
@@ -20,7 +21,9 @@ public class CheckOP extends PluginTask<CyberCoreMain> {
         for(Map.Entry<UUID,Player> e: getOwner().getServer().getOnlinePlayers().entrySet()){
             String rank = getOwner().getPlayerRankCache(e.getValue().toString());
             if (rank != null && !rank.equalsIgnoreCase("op") && e.getValue().isOp()){
-                getOwner().getServer().getNameBans().addBan(e.getValue().getName(),"You should not be OP!");
+                //getOwner().getServer().getNameBans().addBan(e.getValue().getName(),"You should not be OP!");
+                e.getValue().setOp(false);
+                e.getValue().sendMessage(TextFormat.RED+"You should not be OP!");
             }
         }
     }

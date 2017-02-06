@@ -8,6 +8,8 @@ import cn.nukkit.level.Level;
 import cn.nukkit.level.generator.object.tree.ObjectTree;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.BlockColor;
+import cn.nukkit.utils.Config;
+import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
@@ -60,7 +62,11 @@ public class BlockSapling extends BlockFlowable {
         if(player != null){
             CyberCoreMain CCM = (CyberCoreMain) getLevel().getServer().getPluginManager().getPlugin("CyberCore");
             if(CCM != null){
-
+                String pos = getFloorX() + "|" + getFloorY() + "|" + getFloorZ();
+                CCM.ClassFactory.LumberJackTreePlants.set(player.getName().toLowerCase(),new ConfigSection(){{
+                    put(pos,0);
+                }});
+                //Just Check every Min if it is wood or not...
             }
         }
 

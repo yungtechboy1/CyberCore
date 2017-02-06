@@ -12,6 +12,7 @@ import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.*;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Tasks.LumberJackTreeCheckerTask;
 
 import java.io.File;
 import java.util.HashMap;
@@ -23,12 +24,15 @@ import java.util.Map;
 public class ClassFactory implements Listener {
 
     public Config MMOSave;
+    public Config LumberJackTreePlants;
     CyberCoreMain CCM;
     private HashMap<String, BaseClass> ClassList = new HashMap<>();
 
     public ClassFactory(CyberCoreMain main) {
         CCM = main;
         MMOSave = new Config(new File(CCM.getDataFolder(), "MMOSave.yml"), Config.YAML);
+        LumberJackTreePlants = new Config(new File(CCM.getDataFolder(), "LumberJackTreePlants.yml"), Config.YAML);
+        CCM.getServer().getScheduler().scheduleDelayedRepeatingTask(new LumberJackTreeCheckerTask(main),20*60,20*60);//Every Min
     }
 
     public BaseClass GetClass(Player p) {
@@ -120,5 +124,6 @@ public class ClassFactory implements Listener {
             MMOSave.set(o.getKey(), o.getValue().export());
         }
         MMOSave.save();
+        LumberJackTreePlants.save();
     }
 }

@@ -22,11 +22,13 @@ import net.yungtechboy1.CyberCore.Commands.Gamemode.GMS;
 import net.yungtechboy1.CyberCore.Commands.Homes.DelHome;
 import net.yungtechboy1.CyberCore.Commands.Homes.Home;
 import net.yungtechboy1.CyberCore.Commands.Homes.SetHome;
-import net.yungtechboy1.CyberCore.Classes.ClassFactory;
+import net.yungtechboy1.CyberCore.Factory.ClassFactory;
 import net.yungtechboy1.CyberCore.Custom.Item.ItemChickenCooked;
 import net.yungtechboy1.CyberCore.Custom.Item.ItemPorkchopCooked;
 import net.yungtechboy1.CyberCore.Events.CyberChatEvent;
-import net.yungtechboy1.CyberCore.Ranks.RankFactory;
+import net.yungtechboy1.CyberCore.Factory.CustomFactory;
+import net.yungtechboy1.CyberCore.Factory.PasswordFactoy;
+import net.yungtechboy1.CyberCore.Factory.RankFactory;
 import net.yungtechboy1.CyberCore.Tasks.*;
 
 import java.io.File;
@@ -75,9 +77,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     //Classes / MMO
     public ClassFactory ClassFactory;
     //PasswordFactoy
-    public PasswordFactoy PasswordFactoy;
+    public net.yungtechboy1.CyberCore.Factory.PasswordFactoy PasswordFactoy;
     //CustomFactory
-    public CustomFactory CustomFactory;
+    public net.yungtechboy1.CyberCore.Factory.CustomFactory CustomFactory;
     //Factories
     public Homes HomeFactory;
     public RankFactory RankFactory;
@@ -109,7 +111,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         getServer().getScheduler().scheduleRepeatingTask(new UnMuteTask(this), 20 * 15);
         getServer().getScheduler().scheduleRepeatingTask(new ClearSpamTick(this), 20 * 5);
-        getServer().getScheduler().scheduleRepeatingTask(new CheckOP(this), 20 * 60 * 5);//5 Mins
+        getServer().getScheduler().scheduleRepeatingTask(new CheckOP(this), 20 * 60 );//1 Min
 
         Homes = new Config(new File(this.getDataFolder(), "homes.yml"), Config.YAML, new ConfigSection());
 
