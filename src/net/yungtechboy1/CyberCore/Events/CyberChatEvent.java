@@ -8,10 +8,12 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerChatEvent;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
+import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import ru.nukkit.welcome.players.PlayerManager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -57,8 +59,7 @@ public class CyberChatEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChatEvent(PlayerChatEvent event) {
         if (event.isCancelled()) return;
-        //SHouldnt need thins @TODO
-        //if (plugin.getServer().getPluginManager().getPlugin("Welcome") != null && !PlayerManager.isPlayerLoggedIn(event.getPlayer()))return;
+        //SHouldnt need thins @TODO^^
         event.setCancelled(true);
         if (plugin.MuteChat && (!event.getPlayer().hasPermission("CyberTech.CyberChat.op"))) {
             event.getPlayer().sendMessage(TextFormat.YELLOW + "All Chat Is Muted! Try again later!");
@@ -69,6 +70,7 @@ public class CyberChatEvent implements Listener {
             return;
         }
         String FinalChat = formatForChat(event.getPlayer(), event.getMessage());
+        if(FinalChat == null)return;
         if (plugin.LM.containsKey(event.getPlayer().getName().toLowerCase()) && plugin.LM.get(event.getPlayer().getName().toLowerCase()).equalsIgnoreCase(FinalChat)) {
             event.getPlayer().sendMessage(FinalChat);
             return;
@@ -83,6 +85,15 @@ public class CyberChatEvent implements Listener {
     }
 
     public String formatForChat(Player player, String chat) {
+        HashMap<String, Object> badwords = new HashMap<String, Object>(){{
+            put("fuck","f***");
+            put("shit","s***");
+            put("nigger","kitty");
+            put("nigga","boi");
+            put("bitch","Sweetheart");
+            put("hoe","tool");
+            put("ass","butt");
+        }};
         String ChatFormat = (String) plugin.MainConfig.get("Chat-Format");
         String FactionFormat = (String) plugin.MainConfig.get("Faction-Format");
         String RankFormat = (String) plugin.MainConfig.get("Rank-Format");
@@ -95,16 +106,32 @@ public class CyberChatEvent implements Listener {
             FactionFormat = TextFormat.GRAY + "[NF]" + TextFormat.WHITE;
         }
 
-        String a = "";
-        System.out.println("Asdasdasd");
-        if(plugin.RankFactory.GetAdminRank(player.getName()) == null){
-
-            System.out.println("asdasd1231231231231");
+        //ANTI BADWORDS
+        String chatb4 = chat;
+        String chatafter = chat;
+        for(String s: chat.split(" ")){
+            if(!badwords.containsKey(s.toLowerCase()))continue;
+            chatafter = chatafter.replaceAll("(?i)"+s,badwords.get(s.toLowerCase()).toString());
         }
+        /*
+        Fucks up words like Class and BAss
+        for(String b: badwords.keySet()){
+            if(chatafter.toLowerCase().contains(b.toLowerCase())) {
+                chatafter = chatafter.replaceAll("(?i)" + b, badwords.get(b).toString());
+                chatafter = chatafter.replaceAll(b, badwords.get(b).toString());
+            }
+        }*/
+        /*String chat2 = chat;
+        chat2 = chat.replace(" ","");
+         */
+        //ANTI WORK AROUND BADWORDS
+        //@TODO remove all spaces and use Regex to replace all Instaces of it
+
+        chat = chatafter;
+
+        String a = "";
         a = plugin.RankFactory.GetAdminRank(player.getName());
-        System.out.println("Asdasdasd");
         if (a == null) a = plugin.RankFactory.GetMasterRank(player.getName());
-        System.out.println("Asdasdasd");
         if (a == null) a = plugin.RankFactory.GetSecondaryRank(player.getName());
         if (a != null) {
             RankFormat = RankFormat.replace("{value}", (String) plugin.RankConfig.get(a));

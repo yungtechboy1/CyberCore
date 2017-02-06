@@ -224,7 +224,7 @@ public class RankFactory {
         Integer mod = 0;
         String r = null;
         ArrayList<String> gar = GetAllRanks(p);
-        if (gar.size() == 0) return null;
+        if (gar == null|| gar.size() == 0) return null;
         for (String rank : gar) {
             Integer nm = RankAdminRank(rank);
             if (mod < nm) {

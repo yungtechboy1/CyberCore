@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.CustomItem;
+package net.yungtechboy1.CyberCore.Custom.Item;
 
 import cn.nukkit.item.ItemEdible;
 import cn.nukkit.utils.TextFormat;

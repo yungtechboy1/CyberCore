@@ -72,6 +72,11 @@ public class Ability extends PluginTask<CyberCoreMain> {
         player = BC.getPlayer();
     }
 
+    public String getName(){
+        return this.getClass().getName();
+        //return "Unknown Abillity #"+ID+" Type "+TYPE;
+    }
+
     public int XPToLevel(int xp) {
         int lvl = 0;
         while (xp >= calculateRequireExperience(lvl)) {
@@ -186,4 +191,6 @@ public class Ability extends PluginTask<CyberCoreMain> {
     public int GetCooldown(){
         return getTime() + 240;
     }
+
+    public void PrimeEvent(){}
 }

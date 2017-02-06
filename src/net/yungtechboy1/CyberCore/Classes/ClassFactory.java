@@ -115,8 +115,9 @@ public class ClassFactory implements Listener {
 
     public void Saveall() {
         for (Map.Entry<String, BaseClass> o : ClassList.entrySet()) {
+            if(o.getValue() == null)continue;
             MMOSave.set(o.getKey(), o.getValue().export());
-            MMOSave.save();
         }
+        MMOSave.save();
     }
 }

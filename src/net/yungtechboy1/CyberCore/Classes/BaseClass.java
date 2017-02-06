@@ -10,16 +10,12 @@ import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.event.inventory.CraftItemEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerToggleSprintEvent;
-import cn.nukkit.item.Item;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Abilities.Ability;
-import net.yungtechboy1.CyberCore.Abilities.ForestFire;
-import net.yungtechboy1.CyberCore.Abilities.Tree_Feller;
+import net.yungtechboy1.CyberCore.Abilities.Super_Breaker;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -92,8 +88,11 @@ public class BaseClass {
         COOLDOWNS = cs.getSection("COOLDOWNS");
     }
 
-    public ArrayList<Class> PossibleAbillity(){
-        return new ArrayList<Class>();
+    public ArrayList<Ability> PossibleAbillity() {
+        ArrayList<Ability> a = new ArrayList<Ability>();
+        a.add(new Super_Breaker(CCM, this));
+        a.add(new Super_Breaker(CCM, this));
+        return a;
     }
 
     public String getName() {
@@ -137,12 +136,15 @@ public class BaseClass {
         return Prime;
     }
 
-    public void setPrime(boolean prime) {
-        Prime = prime;
+    public void setPrime(int key) {
+        setPrime(true);
+        PrimeKey = key;
+        Ability a = PossibleAbillity().get(key);
+        a.PrimeEvent();
     }
 
-    public void setPrime() {
-        setPrime(true);
+    public void setPrime(boolean prime) {
+        Prime = prime;
     }
 
     public void AddCooldown(int perk, int value) {
@@ -150,7 +152,7 @@ public class BaseClass {
         COOLDOWNS.put(key, value);
     }
 
-    public boolean HasCooldown( int perk) {
+    public boolean HasCooldown(int perk) {
         String key = "" + perk;
         Integer time = (int) (Calendar.getInstance().getTime().getTime() / 1000);
         return time < COOLDOWNS.getInt(key);
@@ -175,27 +177,21 @@ public class BaseClass {
         } else if (event instanceof EntityDamageEvent) {
             EntityDamageEvent((EntityDamageEvent) event);
             if (ActiveAbility != null) ActiveAbility.EntityDamageEvent((EntityDamageEvent) event);
-        }else if (event instanceof CraftItemEvent) {
+        } else if (event instanceof CraftItemEvent) {
             CraftItemEvent((CraftItemEvent) event);
             if (ActiveAbility != null) ActiveAbility.CraftItemEvent((CraftItemEvent) event);
         }
     }
 
     public void activateAbility() {
-        try {
-            if (PrimeKey <= PossibleAbillity().size() - 1) {
-                Class a = PossibleAbillity().get(PrimeKey);
-                if (a != null) {
-                    Constructor constructor = a.getDeclaredConstructor(CyberCoreMain.class,BaseClass .class);
-                    constructor.setAccessible(true);
-                    Ability ab = (Ability) constructor.newInstance(CCM,this);
-                    if(ab.activate()){
-                        setActiveAbility(ab);
-                    }
-                }
+        if(HasCooldown(PrimeKey)){
+            getPlayer().sendMessage("This Has a CoolDown!");
+            return;
+        }else if (PrimeKey <= PossibleAbillity().size() - 1) {
+            Ability a = PossibleAbillity().get(PrimeKey);
+            if (a != null && a.activate()) {
+                setActiveAbility(a);
             }
-        }catch (Exception ex){
-
         }
     }
 

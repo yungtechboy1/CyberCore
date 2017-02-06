@@ -15,6 +15,7 @@ public class Green_Thumb extends Ability {
     public Green_Thumb(CyberCoreMain main, BaseClass bc){
         super(main,bc, BaseClass.TYPE_FARMER,Ability.FARMER_GREEN_THUMB);
     }
+    //@TODO not doing this???
 
     @Override
     public boolean activate(){
@@ -61,5 +62,11 @@ public class Green_Thumb extends Ability {
     @Override
     public void BlockBreakEvent(BlockBreakEvent event) {
 
+    }
+
+    @Override
+    public void PrimeEvent() {
+        String msg = "Use an Axe and tap on a block to activate this ability!";
+        BC.getPlayer().sendMessage(msg);
     }
 }

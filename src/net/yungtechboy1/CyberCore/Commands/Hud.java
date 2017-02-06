@@ -25,15 +25,26 @@ public class Hud extends Command {
     @Override
     public boolean execute(CommandSender s, String label, String[] args) {
         if (args.length == 1) {
+            String snl = s.getName().toLowerCase();
             if (args[0].equalsIgnoreCase("on")) {
-                Owner.HudOff.remove(s.getName().toLowerCase());
-                Owner.HudClassOnly.remove(s.getName().toLowerCase());
+                Owner.HudOff.remove(snl);
+                Owner.HUDClassOff.remove(snl);
+                Owner.HUDPosOff.remove(snl);
+                Owner.HUDFactionOff.remove(snl);
             } else if (args[0].equalsIgnoreCase("class")) {
-                Owner.HudOff.remove(s.getName().toLowerCase());
-                Owner.HudClassOnly.add(s.getName().toLowerCase());
+                Owner.HudOff.remove(snl);
+                //@TODO Check that the IF Statement Will Work!
+                if(Owner.HUDClassOff.contains(snl))Owner.HUDClassOff.remove(snl);else Owner.HUDClassOff.add(snl);
+            }else if (args[0].equalsIgnoreCase("fac")) {
+                Owner.HudOff.remove(snl);
+                //@TODO Check that the IF Statement Will Work!
+                if(Owner.HUDFactionOff.contains(snl))Owner.HUDFactionOff.remove(snl);else Owner.HUDFactionOff.add(snl);
+            }else if (args[0].equalsIgnoreCase("pos")) {
+                Owner.HudOff.remove(snl);
+                //@TODO Check that the IF Statement Will Work!
+                if(Owner.HUDPosOff.contains(snl))Owner.HUDPosOff.remove(snl);else Owner.HUDPosOff.add(snl);
             } else if (args[0].equalsIgnoreCase("off")) {
-                Owner.HudOff.add(s.getName().toLowerCase());
-                Owner.HudClassOnly.remove(s.getName().toLowerCase());
+                Owner.HudOff.add(snl);
             }
             s.sendMessage(TextFormat.GREEN+"HUD Updated!");
             return true;

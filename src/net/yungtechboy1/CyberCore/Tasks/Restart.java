@@ -26,16 +26,16 @@ public class Restart extends PluginTask<CyberCoreMain> {
     @Override
     public void onRun(int currentTick) {
         if(Time == 120){
-            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),60),60);
-            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),30),90);
-            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),15),105);
-            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),10),110);
-            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),5),115);
-            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),4),116);
-            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),3),117);
-            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),2),118);
-            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),1),119);
-            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),0),120);
+            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),60),60*20);
+            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),30),90*20);
+            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),15),105*20);
+            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),10),110*20);
+            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),5),115*20);
+            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),4),116*20);
+            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),3),117*20);
+            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),2),118*20);
+            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),1),119*20);
+            getOwner().getServer().getScheduler().scheduleDelayedTask(new Restart(getOwner(),0),120*20);
             getOwner().getServer().broadcastMessage(TextFormat.AQUA+"Server Restart in 2 Mins!");
         }else if(Time == 0){
             getOwner().getServer().shutdown();

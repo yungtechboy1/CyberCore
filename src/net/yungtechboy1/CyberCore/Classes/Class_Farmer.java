@@ -15,6 +15,8 @@ import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.potion.Potion;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.DyeColor;
+import net.yungtechboy1.CyberCore.Abilities.Ability;
+import net.yungtechboy1.CyberCore.Abilities.Green_Thumb;
 import net.yungtechboy1.CyberCore.Abilities.Super_Breaker;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
@@ -41,6 +43,11 @@ public class Class_Farmer extends BaseClass {
         put(Block.BROWN_MUSHROOM, 100);
         put(Block.RED_MUSHROOM, 100);
     }};
+
+
+    public Class_Farmer(CyberCoreMain main, Player player, int rank, int xp, ConfigSection cooldowns) {
+        super(main, player, rank, xp, cooldowns);
+    }
 
     public Class_Farmer (CyberCoreMain main, Player player, ConfigSection cs){
         super(main,player,cs);
@@ -120,10 +127,11 @@ public class Class_Farmer extends BaseClass {
     }
 
     @Override
-    public ArrayList<Class> PossibleAbillity() {
-        return new ArrayList<Class>() {{
-            add(Super_Breaker.class);
-        }};
+    public ArrayList<Ability> PossibleAbillity() {
+        ArrayList<Ability> a = new ArrayList<Ability>();
+        //@TODO Auto Plant
+        //a.add(new Green_Thumb(CCM,this));
+        return a;
     }
 
     @Override

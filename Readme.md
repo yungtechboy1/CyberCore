@@ -26,12 +26,12 @@ Farmer
 Warrior
 
 ### TODO
-- [ ] Add CyberChat
-- [ ] Copy Warp over from CyberChat
+- [x] Add CyberChat
+- [x] Copy Warp over from CyberChat
 - [ ] Add /sudo
-- [ ] Pass Events To Abillity
+- [x] Pass Events To Abillity
 - [ ] Fix Absourption on Nukkit
-- [ ] TODO
+- [ ] Add Reset Password
 - [ ] TODO
 - [ ] TODO
 - [ ] TODO

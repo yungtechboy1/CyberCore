@@ -132,7 +132,7 @@ public class Homes {
     }
 
     public boolean HasHomeAtKey(String player, String num) {
-        if (homes.exists(player.toLowerCase())) {
+        if (homes != null && homes.exists(player.toLowerCase()) && homes.get(player.toLowerCase()) instanceof LinkedHashMap ) {
             LinkedHashMap<String, String> v = (LinkedHashMap<String, String>) homes.get(player.toLowerCase());
             if (v.containsKey(num.toLowerCase() + "a")) return true;
         }
@@ -140,7 +140,7 @@ public class Homes {
     }
 
     public Integer CountHomes(String player) {
-        if (homes.exists(player)) {
+        if (homes != null && homes.exists(player)) {
             LinkedHashMap<String, String> v = (LinkedHashMap<String, String>) homes.get(player);
             return v.size();
         }

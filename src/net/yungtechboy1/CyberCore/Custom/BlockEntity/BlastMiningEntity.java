@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.CustomBlockEntity;
+package net.yungtechboy1.CyberCore.Custom.BlockEntity;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;

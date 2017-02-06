@@ -1,0 +1,74 @@
+Settings:
+  prefix: '&c[PrefixG]&r '
+Kits:
+  Starter:
+    cooldown: 1
+    items:
+      Stone_Sword: 1
+      iron_sword: 1
+      iron_axe: 1
+      iron_pcikaxe: 1
+      bread: 10
+    armor:
+      helmet: leather_cap
+      chestplate: leather_chestplate
+      leggings: leather_leggings
+      boots: leather_boots
+    rank: ''
+  Tourist:
+    cooldown: 1
+    items:
+      diamond_sword: '1:9:1'
+      diamond_pickaxe: '1:15:1'
+      diamond_axe: '1:15:1'
+      steak: 16
+    armor:
+      helmet: '306:0:1'
+      chestplate: '311:0:1'
+      leggings: '311:0:1'
+      boots: '309:0:1'
+    rank: Conquerer,Adventurer,Islander,Tourist
+  Islander:
+    cooldown: 1
+    items:
+      diamond_sword: '1:9:2'
+      diamond_pickaxe: '1:15:2'
+      diamond_axe: '1:15:2'
+      steak: 32
+      obsidian: 16
+    armor:
+      helmet: '310:0:2'
+      chestplate: '311:0:2'
+      leggings: '312:0:2'
+      boots: '309:0:2'
+    rank: Conquerer,Adventurer,Islander
+  Adventurer:
+    cooldown: 1
+    items:
+      diamond_sword: '1:9:4'
+      diamond_pickaxe: '1:15:4'
+      diamond_axe: '1:15:4'
+      steak: 64
+      obsidian: 32
+      golden_apple: 8
+    armor:
+      helmet: '310:0:4'
+      chestplate: '311:0:4'
+      leggings: '312:0:4'
+      boots: '309:0:4'
+    rank: Conquerer,Adventurer
+  Conquerer:
+    cooldown: 1
+    items:
+      diamond_sword: '1:9:5'
+      diamond_pickaxe: '1:15:5'
+      diamond_axe: '1:15:5'
+      steak: 64
+      obsidian: 64
+      golden_apple: 16
+    armor:
+      helmet: '310:0:5'
+      chestplate: '311:0:5'
+      leggings: '312:0:5'
+      boots: '309:0:5'
+    rank: Conquerer

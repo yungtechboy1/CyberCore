@@ -8,6 +8,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemTool;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.ConfigSection;
+import net.yungtechboy1.CyberCore.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Abilities.ForestFire;
 import net.yungtechboy1.CyberCore.Abilities.Super_Breaker;
 import net.yungtechboy1.CyberCore.Abilities.Tree_Feller;
@@ -95,10 +96,10 @@ public class Class_Miner extends BaseClass {
     }
 
     @Override
-    public ArrayList<Class> PossibleAbillity() {
-        return new ArrayList<Class>() {{
-            add(Super_Breaker.class);
-        }};
+    public ArrayList<Ability> PossibleAbillity() {
+        ArrayList<Ability> a = new ArrayList<Ability>();
+        a.add(new Super_Breaker(CCM,this));
+        return a;
     }
 
     @Override

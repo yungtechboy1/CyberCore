@@ -23,6 +23,5 @@ public class ReTPTask extends PluginTask<CyberCoreMain> {
     @Override
     public void onRun(int currentTick) {
         P.teleport(P.getLevel().getSafeSpawn(new Vector3(Pos.x+.5,Pos.y,Pos.z+.5)));
-        P.sendMessage("RE-TPed");
     }
 }

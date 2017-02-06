@@ -32,8 +32,6 @@ public class Super_Breaker extends Ability {
         return true;
     }
 
-
-
     @Override
     public int GetCooldown() {
         return getTime() + 240;
@@ -63,4 +61,16 @@ public class Super_Breaker extends Ability {
     public void BlockBreakEvent(BlockBreakEvent event) {
 
     }
+
+    @Override
+    public String getName() {
+        return "Super Breaker";
+    }
+
+    @Override
+    public void PrimeEvent() {
+        String msg = "Use a Sword and tap on a block to activate this ability!";
+        BC.getPlayer().sendMessage(msg);
+    }
+
 }

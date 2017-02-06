@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Abilities;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockAir;
 import cn.nukkit.block.BlockLeaves;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.item.Item;
@@ -34,7 +35,7 @@ public class ForestFire extends Ability {
         for (int x = -size; x < size; x++) {
             for (int y = -size; y < size; y++) {
                 for (int z = -size; z < size; z++) {
-                    Block b = player.getLevel().getBlock(new Vector3(x,y,z));
+                    Block b = player.getLevel().getBlock(new Vector3(player.getFloorX()+x,player.getFloorY()+y,player.getFloorZ()+z));
                     if(b != null && (b.getId() == Block.WOOD||b.getId() == Block.WOOD2||b.getId() == Block.LEAVE||b.getId() == Block.LEAVE2)){
                         affected.add(b);
                     }
@@ -53,12 +54,16 @@ public class ForestFire extends Ability {
                 }
             }else if(b instanceof BlockLeaves){
                 int[][] drops = b.getDrops(new ItemGunpowder());
-                if(drops[0][0] == Item.APPLE && rand < (4+(BC.getLVL()/15))){//GAPPLE
-                    drops[0][0] = Item.GOLDEN_APPLE;
+                if(drops.length != 0 ) {
+                    //@TODO Add for statement for if multiple Items are dropped!
+                    if (drops[0][0] == Item.APPLE && rand < (4 + (BC.getLVL() / 15))) {//GAPPLE
+                        drops[0][0] = Item.GOLDEN_APPLE;
+                    }
+                    player.getLevel().dropItem(b.add(.5, .5, .5), Item.get(drops[0][0], drops[0][1], 1));
                 }
-                player.getLevel().dropItem(b.add(.5,.5,.5), Item.get(drops[0][0],drops[0][1],1));
             }
             player.getLevel().addParticle(new FlameParticle(b));
+            player.getLevel().setBlock(b,new BlockAir(),true,false);
         }
         player.getLevel().addSound(new BlazeShootSound(player));
         return true;
@@ -68,7 +73,7 @@ public class ForestFire extends Ability {
     @Override
     public int GetCooldown() {
         return getTime() + 240;
-    }
+    }//4 Mins
 
     @Override
     public void deactivate() {
@@ -83,5 +88,16 @@ public class ForestFire extends Ability {
     @Override
     public void BlockBreakEvent(BlockBreakEvent event) {
 
+    }
+
+    @Override
+    public String getName() {
+        return "Forest Fire";
+    }
+
+    @Override
+    public void PrimeEvent() {
+        String msg = "Use an Axe and tap on a block to activate this ability!";
+        BC.getPlayer().sendMessage(msg);
     }
 }

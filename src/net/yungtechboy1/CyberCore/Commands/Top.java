@@ -82,7 +82,7 @@ public class Top extends CheckPermCommand {
     public Position getHighestStandablePositionAt(Position pos) {
         int x = pos.getFloorX();
         int z = pos.getFloorZ();
-        for (int y = 127; y >= 0; y--) {
+        for (int y = 256; y >= 0; y--) {
             if (pos.level.getBlock(this.temporalVector.setComponents(x, y, z)).isSolid()) {
                 return new Position(x + 0.5, pos.level.getBlock(this.temporalVector.setComponents(x, y, z)).getBoundingBox().maxY, z + 0.5, pos.level);
             }

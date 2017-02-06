@@ -11,6 +11,7 @@ import cn.nukkit.inventory.Recipe;
 import cn.nukkit.item.*;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.ConfigSection;
+import net.yungtechboy1.CyberCore.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Abilities.Super_Breaker;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
@@ -23,8 +24,18 @@ import java.util.HashMap;
  */
 public class Class_Digger  extends BaseClass {
 
+
+    public Class_Digger(CyberCoreMain main, Player player, int rank, int xp, ConfigSection cooldowns) {
+        super(main, player, rank, xp, cooldowns);
+    }
+
     public Class_Digger (CyberCoreMain main, Player player, ConfigSection cs){
         super(main,player,cs);
+    }
+
+    @Override
+    public ArrayList<Ability> PossibleAbillity() {
+       return new ArrayList<Ability>();
     }
 
     @Override

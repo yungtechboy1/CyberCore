@@ -1,7 +1,12 @@
 package net.yungtechboy1.CyberCore.Commands;
 
 import cn.nukkit.Player;
+import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.inventory.PlayerInventory;
+import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemDiamond;
+import cn.nukkit.item.ItemSteak;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
@@ -13,11 +18,20 @@ import java.util.Random;
 /**
  * Created by carlt_000 on 3/21/2016.
  */
-public class Wild {
-    public static void runCommand(CommandSender s, CyberCoreMain server){
+public class Wild extends Command {
+    CyberCoreMain Owner;
+
+    public Wild(CyberCoreMain server) {
+        super("wild", "Teleport to Wild", "/wild");
+        Owner = server;
+        this.commandParameters.clear();
+    }
+
+    @Override
+    public boolean execute(CommandSender s, String label, String[] args) {
         if(!(s instanceof Player)){
-            s.sendMessage("Error You Must Be A Player To Use This");
-            return;
+            s.sendMessage(TextFormat.RED+"Error You Must Be A Player To Use This");
+            return true;
         }
         Random rand = new Random();
         Integer X = 50000 - rand.nextInt((100000)+1);
@@ -25,7 +39,12 @@ public class Wild {
         Position pos = ((Player) s).getLevel().getSafeSpawn(new Vector3(X,50,Z));
         ((Player) s).getLevel().generateChunk(X >> 4,Z >> 4,true);
         s.sendMessage(TextFormat.GREEN+"Teleporting to Wild in 5 Secs!");
-        server.getServer().getScheduler().scheduleDelayedTask(new ReTPTask(server,(Player)s,pos),20*5);
+        Owner.getServer().getScheduler().scheduleDelayedTask(new ReTPTask(Owner,(Player)s,pos),20*5);
+
+        return false;
+    }
+
+    public static void runCommand(CommandSender s, CyberCoreMain server){
         //((Player) s).teleport(pos);
     }
 }

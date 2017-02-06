@@ -1,0 +1,192 @@
+82&85&344:
+  text: |
+    §l§d >>> §6Welcome To TerraTide §d<<<§r§d
+         There are §a{online-players}§d Players online
+         The Server is running at §a{ticks}§d TPS
+  Dynamic: true
+  Syntax: true
+  level: world
+85&85&342:
+  text: |
+    §d ---> §6Staff List §d<---
+    §d      §1[Owner]§7 Yungtechboy1
+    §d      §1[Owner]§7 Owner 2
+    §d      §1[Owner]§7 Owner 3
+    §d      §1[MOD]§7 MOD 1
+    §d      §1[MOD]§7 MOD 2
+    §d      §1[MOD]§7 MOD 3
+  Dynamic: false
+  Syntax: false
+  level: world
+79&85&342:
+  text: |
+    §l§d ---> §6Player Stats §d<---§r
+    §6Your Faction: §a{faction}
+    §6Your Ranks: §a{rank}
+    §6Your Kills: §a{kills}
+    §6Your Deaths: §a{deaths}
+    §6Your KDR: §a{kdr}
+    §6Your Money: §a{money}
+  Dynamic: true
+  Syntax: true
+  level: world
+88&69&275:
+  text: |
+    §l§d ---> §6Genereal Rules §d<---§r§d
+    §c     -> §6No Hacking!
+    §c     -> §6No Glitching!
+    §c     -> §6PvP is a must!
+  Dynamic: false
+  Syntax: false
+  level: world
+95&72&274:
+  text: |
+    §l§d ---> §6Important Faction Commands §d<---§r§d
+    §c     /f accept §2 | §6 Accept Faction Invite
+    §c     /f create <name> §2 | §6 Create a new faction
+    §c     /f chat | /f c §2 | §6 Send messages to faction
+    §c     /f home §2 | §6 Teleport to your faction's home
+    §c     /f sethome §2 | §6 Set faction's home
+    §c     /f del §2 | §6 Delete faction (Leader Only)
+    §c     /f deny §2 | §6 Deny Faction Invite
+    §c     /f help [page] §2 | §6 Faction Command list
+    §c     /f invite <player> §2 | §6 Invite Player to faction
+    §c        §2View all faction commands with /f help
+  Dynamic: false
+  Syntax: false
+  level: world
+81&72&274:
+  text: |
+    §l§d ---> §6Server Commands §d<---§r§d
+    §c     /wild §2 | §6 Teleport to a random location in the wild
+    §c     /mymoney | /money §2 | §6 View your money
+    §c     /pay §2 | §6 Give money to another player
+    §c     /vote §2 | §6 Vote for server
+    §c     /reply | /r §2 | §6 Reply to a message
+    §c     /message | /msg §2 | §6 Send private message to a player
+    §c     /tpa | /tpaccept §2 | §6 Accept teleport request
+    §c     /tpd | /tpdeny §2 | §6 Deny teleport request
+    §c     /tpr §2 | §6 Request permission to teleport
+    §c     /job §2 | §6 View all /job commands
+    §c     /wild §2 | §6 Teleport to a wild
+  Dynamic: false
+  Syntax: false
+  level: world
+84&69&280:
+  text: |
+    §l§d┏━━━━━━━━━━━━━━━━┓§r
+    §l§d┣━━━━━━━━━━━━━━━━┨§r
+    §l§d┣━━━━━━━━━━━━━━━━┨§r
+    §l§d┣━━━━TerraTideMc━━━┨§r
+    §l§d┣━━━━━━━━━━━━━━━━┨§r
+    §l§d┣━━━━━━━━━━━━━━━━┨§r
+    §l§d┗━━━━━━━━━━━━━━━━┛§r
+  Dynamic: false
+  Syntax: false
+  level: world
+91&69&280:
+  text: |
+    §l§d┏━━━━━━━━━━━━━━━━┓§r
+    §l§d┣━━━━━━━━━━━━━━━━┨§r
+    §l§d┣━━━━━━━━━━━━━━━━┨§r
+    §l§d┣━━━━TerraTideMc━━━┨§r
+    §l§d┣━━━━━━━━━━━━━━━━┨§r
+    §l§d┣━━━━━━━━━━━━━━━━┨§r
+    §l§d┗━━━━━━━━━━━━━━━━┛§r
+  Dynamic: false
+  Syntax: false
+  level: world
+67&73&294:
+  text: |
+    §l§d ---> §6Help Section §d<---§r§d
+  Dynamic: false
+  Syntax: false
+  level: world
+97.5&78&324:
+  text: |
+    §l§d ---> §6Tiki's Store §d<---§r§d
+  Dynamic: false
+  Syntax: false
+  level: world
+102&77&338:
+  text: ''
+  Dynamic: false
+  Syntax: false
+  level: world
+102&77&342:
+  text: ''
+  Dynamic: false
+  Syntax: false
+  level: world
+108.5&80&338.35:
+  text: |
+    §l§d┏━━━━━━━━━━━━━━━━━━━━━━┓§r
+    §l§d┣━━━━━━━━━━━━━━━━━━━━━━┨§r
+    §l§d┣━━━━━━━━━━━━━━━━━━━━━━┨§r
+    §l§d┣━━━━━━━TerraTideMc━━━━━━┨§r
+    §l§d┣━━━━━━━━━━Shop━━━━━━━━━┨§r
+    §l§d┣━━━━━━━━━━━━━━━━━━━━━━┨§r
+    §l§d┣━━━━━━━━━━━━━━━━━━━━━━┨§r
+    §l§d┗━━━━━━━━━━━━━━━━━━━━━━┛§r
+  Dynamic: false
+  Syntax: false
+  level: world
+119&76&301.5:
+  text: |
+    §l§d┏━━━━━━━━━━━━━━━━┓§r
+    §l§d┣━━━━━━━━━━━━━━━━┨§r
+    §l§d┣━━━━━━━━━━━━━━━━┨§r
+    §l§d┣━━━━§eTerraTideMc§d━━━┨§r
+    §l§d┣━━━§eComming Soon§d━━━┨§r
+    §l§d┣━━━━━━━━━━━━━━━━┨§r
+    §l§d┗━━━━━━━━━━━━━━━━┛§r
+  Dynamic: false
+  Syntax: false
+  level: world
+104&80&320:
+  text: |
+    §l§d   ---------> §6Enchant Station§d<---------§r§d
+    §cUse  §b/ChatEnchat  §cor §b/CE  §cto Enchant the items in your hand
+    §cYou must be within §b5  §cBlocks of an §bEnchantment Table
+  Dynamic: false
+  Syntax: false
+  level: world
+111&79&320.5:
+  text: §l§e ---------> §6Enchant Here §e<---------§r§d
+  Dynamic: false
+  Syntax: false
+  level: world
+68.5&69&281.5:
+  text: |
+    §l§d   ----> §6Mission Station§d<----§r§d
+    §aConquer missions and gain rewards
+  Dynamic: false
+  Syntax: false
+  level: world
+57&69&281:
+  text: |
+    §l§d   ----> §6Mission TEST§d<----§r§d
+    §aTesting this mission
+    §aTesting this mission
+    §aTesting this mission
+    §aTesting this mission
+  Dynamic: false
+  Syntax: false
+  level: world
+121&213&355:
+  text: |
+    §l§aWELCOME TO THE ELYTRA LAUNCH PAD§r§d
+          AIM FOR §lWATER§r§b, LAND IS §l§4DEADLY§r
+        §bFLY OFF, START YOUR ADVENTURE§r
+  Dynamic: false
+  Syntax: false
+  level: world
+62&83&341.5:
+  text: |
+    §l§d   ----> §6Ender Chest Station§d<----§r§d
+                       §aVault Station
+                  §aKeep your items safe
+                     0§aAccess Anywhere
+  Dynamic: false
+  Syntax: false
+  level: world

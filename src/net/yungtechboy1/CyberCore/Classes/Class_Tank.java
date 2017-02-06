@@ -10,6 +10,8 @@ import cn.nukkit.item.Item;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.potion.Potion;
 import cn.nukkit.utils.ConfigSection;
+import net.yungtechboy1.CyberCore.Abilities.Ability;
+import net.yungtechboy1.CyberCore.Abilities.Double_Hearts;
 import net.yungtechboy1.CyberCore.Abilities.Super_Breaker;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
@@ -21,6 +23,11 @@ import java.util.HashMap;
  * Created by carlt_000 on 1/26/2017.
  */
 public class Class_Tank extends BaseClass {
+
+
+    public Class_Tank(CyberCoreMain main, Player player, int rank, int xp, ConfigSection cooldowns) {
+        super(main, player, rank, xp, cooldowns);
+    }
 
     public Class_Tank (CyberCoreMain main, Player player, ConfigSection cs){
         super(main,player,cs);
@@ -51,14 +58,9 @@ public class Class_Tank extends BaseClass {
     }
 
     @Override
-    public ArrayList<Class> PossibleAbillity() {
-        return new ArrayList<Class>() {{
-            add(Super_Breaker.class);
-        }};
-    }
-
-    @Override
-    public void activateAbility() {
-        super.activateAbility();
+    public ArrayList<Ability> PossibleAbillity() {
+        ArrayList<Ability> a = new ArrayList<Ability>();
+        a.add(new Double_Hearts(CCM,this));
+        return a;
     }
 }

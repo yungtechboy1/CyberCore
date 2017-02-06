@@ -7,10 +7,7 @@ import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.potion.Potion;
 import cn.nukkit.utils.ConfigSection;
-import net.yungtechboy1.CyberCore.Abilities.Ability;
-import net.yungtechboy1.CyberCore.Abilities.ForestFire;
-import net.yungtechboy1.CyberCore.Abilities.Tree_Feller;
-import net.yungtechboy1.CyberCore.Abilities.Tree_Feller_Async;
+import net.yungtechboy1.CyberCore.Abilities.*;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.lang.reflect.Constructor;
@@ -30,6 +27,10 @@ public class Class_LumberJack extends BaseClass {
         put(Block.LEAVE2, 5);
     }};
 
+    public Class_LumberJack(CyberCoreMain main, Player player, int rank, int xp, ConfigSection cooldowns) {
+        super(main, player, rank, xp, cooldowns);
+    }
+
     public Class_LumberJack(CyberCoreMain main, Player player, ConfigSection cs) {
         super(main, player, cs);
     }
@@ -46,11 +47,11 @@ public class Class_LumberJack extends BaseClass {
     }
 
     @Override
-    public ArrayList<Class> PossibleAbillity() {
-        return new ArrayList<Class>() {{
-            add(Tree_Feller.class);
-            add(ForestFire.class);
-        }};
+    public ArrayList<Ability> PossibleAbillity() {
+        ArrayList<Ability> a = new ArrayList<Ability>();
+        a.add(new Tree_Feller(CCM,this));
+        a.add(new ForestFire(CCM,this));
+        return a;
     }
 
     @Override
@@ -61,8 +62,9 @@ public class Class_LumberJack extends BaseClass {
     @Override
     public void PlayerInteractEvent(PlayerInteractEvent event) {
         Item hand = event.getItem();
-        if (isPrime() && !HasCooldown(PrimeKey)) {
+        if (isPrime()) {
             if (hand.isAxe()) {
+                event.getPlayer().sendMessage("INTERACTED!");
                 setPrime(false);
                 activateAbility();
             }
