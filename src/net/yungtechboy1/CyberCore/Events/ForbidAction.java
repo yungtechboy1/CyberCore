@@ -17,7 +17,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 /**
  * Created by carlt_000 on 2/4/2017.
  */
-public class ForbidAction  implements Listener {
+public class ForbidAction implements Listener {
     CyberCoreMain Main;
 
     public ForbidAction(CyberCoreMain main) {
@@ -65,7 +65,7 @@ public class ForbidAction  implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onInventoryOpenEvent(InventoryOpenEvent event) {
-        cancel(event.getPlayer(), event);
+        if (event.getPlayer().isOnline()) cancel(event.getPlayer(), event);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
@@ -128,6 +128,6 @@ public class ForbidAction  implements Listener {
     }
 
     private void cancel(Player player, cn.nukkit.event.Cancellable event) {
-        if (!Main.PasswordFactoy.GetPassword(player).getLoggedin())event.setCancelled();
+        if (!Main.PasswordFactoy.GetPassword(player).getLoggedin()) event.setCancelled();
     }
 }

@@ -48,8 +48,6 @@ public class Gooey extends CustomEnchantment {
     @Override
     public void doPostAttack(Entity attacker, Entity entity) {
         if (!(entity instanceof Player)) return;
-        if (!lastplayer.equalsIgnoreCase(attacker.getName()))
-            CheckCustomName(Server.getInstance().getPlayerExact(attacker.getName()));
         if (!(attacker instanceof Player)) return;
 
         EntityHumanType human = (EntityHumanType) entity;
@@ -66,7 +64,7 @@ public class Gooey extends CustomEnchantment {
                 hitcounter++;
                 if (hitcounter > 6 - getLevel()) {
                     hitcounter = 0;
-                    int rand = new NukkitRandom().nextRange(0, 100);
+                    int rand = new NukkitRandom(GOOEY*GOOEY).nextRange(0, 100);
                     if (rand >= 100 - (18 * getLevel())) {
                         FlyUp(entity);
                         SendParticles(entity);

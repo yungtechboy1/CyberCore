@@ -23,6 +23,7 @@ public class CustomEnchantment extends Enchantment {
     public static int POISON = 31;
     public static int THUNDER = 32;
     public static int VIPER = 33;
+    public static int CrateKey = 255;
 
     boolean CheckCustomName = true;
     String lastplayer = "";

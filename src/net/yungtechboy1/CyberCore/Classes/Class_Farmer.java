@@ -54,12 +54,6 @@ public class Class_Farmer extends BaseClass {
     }
 
     @Override
-    public void EntityRegainHealthEvent(EntityRegainHealthEvent event){
-        int xp = (int)Math.ceil(event.getAmount());
-        addXP(xp*10);
-    }
-
-    @Override
     public String getName() {
         return "Farmer";
     }

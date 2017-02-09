@@ -45,8 +45,6 @@ public class Blind extends CustomEnchantment {
     @Override
     public void doPostAttack(Entity attacker, Entity entity) {
         if (!(entity instanceof Player)) return;
-        if (!lastplayer.equalsIgnoreCase(attacker.getName()))
-            CheckCustomName(Server.getInstance().getPlayerExact(attacker.getName()));
         if (!(attacker instanceof Player)) return;
 
         EntityHumanType human = (EntityHumanType) entity;
@@ -59,7 +57,7 @@ public class Blind extends CustomEnchantment {
 
 
         if (ct >= nextregintick) {
-            int rand = new NukkitRandom().nextRange(0,100);
+            int rand = new NukkitRandom(BLIND*BLIND).nextRange(0,100);
             //Server.getInstance().getLogger().info("POST ATTACK!!!" + rand + " <= " + 15*getLevel());
             if(rand <= 15*getLevel()){
                 Effect e = Effect.getEffect(15);

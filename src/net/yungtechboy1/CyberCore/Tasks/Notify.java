@@ -19,6 +19,8 @@ public class Notify extends PluginTask<CyberCoreMain> {
         for(Player p: getOwner().getServer().getOnlinePlayers().values()){
             Password pass = getOwner().PasswordFactoy.GetPassword(p);
             if(!pass.getLoggedin()){
+                //§7Please §bLogin §7with §b/login
+                //@TODO
                 if(!pass.IsRegistered())p.sendPopup(TextFormat.YELLOW+"You must /register <password>");
                 if(pass.IsRegistered())p.sendPopup(TextFormat.YELLOW+"You must /login <password>");
             }

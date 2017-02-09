@@ -1,8 +1,6 @@
 package net.yungtechboy1.CyberCore.Factory;
 
 import cn.nukkit.Player;
-import cn.nukkit.command.Command;
-import cn.nukkit.command.CommandSender;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
@@ -10,7 +8,7 @@ import cn.nukkit.event.player.PlayerLoginEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.utils.ConfigSection;
-import cn.nukkit.utils.TextFormat;
+import com.sun.org.apache.regexp.internal.RE;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Events.ForbidAction;
 import net.yungtechboy1.CyberCore.Password;
@@ -21,17 +19,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Calendar;
 
 /**
  * Created by carlt_000 on 2/4/2017.
  */
-public class PasswordFactoy implements Listener{
+public class PasswordFactoy implements Listener {
 
     public ConfigSection Passwords = new ConfigSection();
     public Connection Connect = null;
     public CyberCoreMain CCM = null;
 
-    public PasswordFactoy (CyberCoreMain main){
+    public PasswordFactoy(CyberCoreMain main) {
         CCM = main;
         new File(CCM.getDataFolder().toString()).mkdirs();
         CCM.getServer().getPluginManager().registerEvents(new ForbidAction(CCM), CCM);
@@ -58,7 +57,7 @@ public class PasswordFactoy implements Listener{
             for (Object pass : Passwords.values()) {
                 if (pass instanceof Password) {
                     stmt.executeUpdate("DELETE FROM `password` WHERE `player` = '" + ((Password) pass).getPlayer() + "';");
-                    stmt.executeUpdate("INSERT INTO `password` VALUES ('" + ((Password) pass).getPlayer() + "','" + ((Password) pass).getHash() + "','" + ((Password) pass).getCID() + "','" + ((Password) pass).getUnqiqueID() + "','" + ((Password) pass).getIpaddress() + "','" + ((Password) pass).getEmail() + "')");
+                    stmt.executeUpdate("INSERT INTO `password` VALUES ('" + ((Password) pass).getPlayer() + "','" + ((Password) pass).getHash() + "','" + ((Password) pass).getCID() + "','" + ((Password) pass).getUnqiqueID() + "','" + ((Password) pass).getIpaddress() + "','" + ((Password) pass).getEmail() + "','" + ((Password) pass).getLastLogin() + "','" + ((Password) pass).getRegistered() + "')");
                 }
             }
         } catch (Exception ex) {
@@ -83,11 +82,15 @@ public class PasswordFactoy implements Listener{
                         String UniqueID = r.getString("UniqueID");
                         String Ipaddress = r.getString("Ipaddress");
                         String Email = r.getString("Email");
+                        Long LastLogin = r.getLong("LastLogin");
+                        Long Registered = r.getLong("Registered");
                         pass.setHash(Hash);
                         pass.setCID(CID);
                         pass.setUnqiqueID(UniqueID);
                         pass.setIpaddress(Ipaddress);
                         pass.setEmail(Email);
+                        pass.setLastLogin(LastLogin);
+                        pass.setRegistered(Registered);
                         Passwords.put(player.toLowerCase(), pass);
                         break;
                     }
@@ -97,9 +100,12 @@ public class PasswordFactoy implements Listener{
                 throw new RuntimeException(e);
             }
         }
-        if (Passwords.exists(name.toLowerCase()) && Passwords.get(name.toLowerCase()) instanceof Password)
-            return (Password) Passwords.get(name.toLowerCase());
-        System.out.println(Passwords.get(name.toLowerCase(), "").getClass().getName().toString());
+        if (Passwords.exists(name.toLowerCase()) && Passwords.get(name.toLowerCase()) instanceof Password) {
+            Password pw = (Password) Passwords.get(name.toLowerCase());
+            Player p = CCM.getServer().getPlayerExact(name);
+            if(!pw.getLoggedin() && p != null)pw.CheckAutoLogin(p);
+            return pw;
+        }
         Password a = new Password(name);
         Passwords.set(name.toLowerCase(), a);
         return a;
@@ -140,4 +146,33 @@ public class PasswordFactoy implements Listener{
             return null;
         }
     }
+
+    public long getLastRegisterTimeFromPlayer(Player p){
+        String q = "SELECT * FROM `password` WHERE `Ipaddress` LIKE '"+p.getAddress()+"' ORDER BY `password`.`Registered` ASC";
+        try {
+            ResultSet r = this.ExecuteQuerySQLite(q);
+            if (r.next()){//1 Only!
+                return r.getLong("Registered");
+            }
+        }catch (Exception ex){
+            //ignore
+        }
+        return 0;
+    }
+
+
+    public int getAccountsRegisteredWithinFromPlayer(Player p, int within){
+        long now = (Calendar.getInstance().getTime().getTime() / 1000);
+        String q = "SELECT COUNT(*) AS 'count' FROM `password` WHERE `Ipaddress` LIKE '"+p.getAddress()+"' AND `Registered` >= '" + (now - within) + "' ORDER BY `password`.`Registered` ASC";
+        try {
+            ResultSet r = this.ExecuteQuerySQLite(q);
+            if (r.next()){//1 Only!
+                return r.getInt("count");
+            }
+        }catch (Exception ex){
+            //ignore
+        }
+        return 0;
+    }
+
 }

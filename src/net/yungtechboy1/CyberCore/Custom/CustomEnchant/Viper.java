@@ -43,8 +43,6 @@ public class Viper extends CustomEnchantment {
     @Override
     public void doPostAttack(Entity attacker, Entity entity) {
         if (!(entity instanceof Player)) return;
-        if (!lastplayer.equalsIgnoreCase(attacker.getName()))
-            CheckCustomName(Server.getInstance().getPlayerExact(attacker.getName()));
         if (!(attacker instanceof Player)) return;
 
         long ct = new Date().getTime() / 1000;
@@ -53,7 +51,7 @@ public class Viper extends CustomEnchantment {
         int nexttick = ph.getNamedTag().getInt("Vnexttick");
 
         if (ct >= nexttick) {
-            int rand = new NukkitRandom().nextRange(0, 100);
+            int rand = new NukkitRandom(VIPER*VIPER).nextRange(0, 100);
             if (rand >= 100 - (18 * getLevel())) {
                 for(Item a: ((Player) entity).getInventory().getArmorContents()){
                     a.setDamage(a.getDamage()+1+getLevel());

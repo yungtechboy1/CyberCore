@@ -7,8 +7,11 @@ import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Tasks.SendHUD;
+import net.yungtechboy1.CyberCore.Tasks.SendInvTask;
 import net.yungtechboy1.CyberCore.Utils;
 
+import java.security.acl.Owner;
 import java.util.Map;
 
 /**
@@ -30,13 +33,9 @@ public class Sync extends Command {
             Player p = (Player) s;
             Map<Integer, Item>  a = p.getInventory().getContents();
             p.getInventory().clearAll();
-            p.getInventory().sendContents(p);
-            p.getInventory().setContents(a);
-            p.getInventory().sendContents(p);
-            p.getInventory().sendArmorContents(p);
-            p.getInventory().sendHeldItem(p);
+            Owner.getServer().getScheduler().scheduleDelayedTask(new SendInvTask(Owner,p,a),20);
             //p.getInventory().sendHeldItem(p);
-            p.sendMessage("Sync Completed!!");
+            p.sendMessage(TextFormat.GREEN+"Sync Completed!! Items Resending in as Sec!");
         }
         return true;
     }

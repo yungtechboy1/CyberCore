@@ -45,8 +45,6 @@ public class LifeSteal extends CustomEnchantment {
 
     @Override
     public void doPostAttack(Entity attacker, Entity entity) {
-        if (!lastplayer.equalsIgnoreCase(attacker.getName()))
-            CheckCustomName(Server.getInstance().getPlayerExact(attacker.getName()));
         if (!(entity instanceof EntityHumanType) && !(attacker instanceof Player)) return;
 
         EntityHumanType human = (EntityHumanType) entity;

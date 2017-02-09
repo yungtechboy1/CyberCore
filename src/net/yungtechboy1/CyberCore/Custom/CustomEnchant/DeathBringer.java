@@ -23,7 +23,6 @@ public class DeathBringer extends CustomEnchantment {
 
     @Override
     public double getDamageBonus(Entity entity) {
-        if (!lastplayer.equalsIgnoreCase(entity.getName()))CheckCustomName(Server.getInstance().getPlayerExact(entity.getName()));
         return getLevel();
     }
 

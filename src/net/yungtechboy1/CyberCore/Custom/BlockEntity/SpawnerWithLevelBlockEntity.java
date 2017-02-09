@@ -2,7 +2,7 @@ package net.yungtechboy1.CyberCore.Custom.BlockEntity;
 
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
-import de.kniffo80.mobplugin.entities.block.BlockEntitySpawner;
+import net.yungtechboy1.CyberCore.entities.block.BlockEntitySpawner;
 
 /**
  * Created by carlt_000 on 1/13/2017.

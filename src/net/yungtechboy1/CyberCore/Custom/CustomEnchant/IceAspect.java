@@ -45,8 +45,6 @@ public class IceAspect extends CustomEnchantment {
     @Override
     public void doPostAttack(Entity attacker, Entity entity) {
         if (!(entity instanceof Player)) return;
-        if (!lastplayer.equalsIgnoreCase(attacker.getName()))
-            CheckCustomName(Server.getInstance().getPlayerExact(attacker.getName()));
         if (!(attacker instanceof Player)) return;
 
         EntityHumanType human = (EntityHumanType) entity;
@@ -57,8 +55,8 @@ public class IceAspect extends CustomEnchantment {
         int nexttick = ph.getNamedTag().getInt("IAnexttick");
 
         if (ct >= nexttick) {
-            int rand = new NukkitRandom().nextRange(0, 100);
-            int rand2 = new NukkitRandom().nextRange(0, 100);
+            int rand = new NukkitRandom(ICEASPECT*ICEASPECT).nextRange(0, 100);
+            int rand2 = new NukkitRandom(ICEASPECT*ICEASPECT*2*ICEASPECT*22).nextRange(0, 100);
             if (rand >= 100 - (18 * getLevel())) {
                 //Chance to Freeze:
                 if(rand2 <= getLevel()*2){

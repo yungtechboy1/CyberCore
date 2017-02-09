@@ -32,14 +32,6 @@ public class Home extends Command {
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (args.length != 1 || !(sender instanceof Player)) return false;
         Player p = (Player) sender;
-        if (!Owner.HomeFactory.HasHomeAtKey(sender.getName(), args[0])) {
-            sender.sendMessage(Prefix + "Error! You do not have a home called " + args[0]);
-            return true;
-        }
-        if (!Owner.TPING.contains(sender.getName().toLowerCase())) {
-            sender.sendMessage(Prefix + "Error! You are in the process of TPing already!");
-            return true;
-        }
         if(args[0].equalsIgnoreCase("list")){
             String a = "";
             a += TextFormat.GRAY+"========================"+TextFormat.RESET+"\n";
@@ -51,6 +43,14 @@ public class Home extends Command {
             }
             a += TextFormat.GRAY+"========================"+TextFormat.RESET;
             sender.sendMessage(a);
+            return true;
+        }
+        if (!Owner.HomeFactory.HasHomeAtKey(sender.getName(), args[0])) {
+            sender.sendMessage(Prefix + "Error! You do not have a home called " + args[0]);
+            return true;
+        }
+        if (!Owner.TPING.contains(sender.getName().toLowerCase())) {
+            sender.sendMessage(Prefix + "Error! You are in the process of TPing already!");
             return true;
         }
         Owner.getServer().getScheduler().scheduleDelayedTask(new TPToHome(Owner, p, args[0]), 20 * 8);

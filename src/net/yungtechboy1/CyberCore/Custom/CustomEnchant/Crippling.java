@@ -43,8 +43,6 @@ public class Crippling extends CustomEnchantment {
     @Override
     public void doPostAttack(Entity attacker, Entity entity) {
         if (!(entity instanceof Player)) return;
-        if (!lastplayer.equalsIgnoreCase(attacker.getName()))
-            CheckCustomName(Server.getInstance().getPlayerExact(attacker.getName()));
         if (!(attacker instanceof Player)) return;
 
         long ct = new Date().getTime() / 1000;
@@ -53,7 +51,7 @@ public class Crippling extends CustomEnchantment {
         int nexttick = ph.getNamedTag().getInt("CSnexttick");
 
         if (ct >= nexttick) {
-            int rand = new NukkitRandom().nextRange(0, 100);
+            int rand = new NukkitRandom(CRIPPLING*CRIPPLING).nextRange(0, 100);
             if (rand >= 100 - (18 * getLevel())) {
                 ((Player) attacker).sendMessage(TextFormat.GREEN + getName().toUpperCase() + " ACTIVATED");
                 ((Player) entity).sendMessage(TextFormat.RED + attacker.getName().toUpperCase() + " ACTIVATED " + getName().toUpperCase());

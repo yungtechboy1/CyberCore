@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
+import cn.nukkit.block.BlockRedstone;
 import cn.nukkit.entity.EntityHuman;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.inventory.InventoryType;
@@ -16,6 +17,7 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.*;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
 
 import java.util.*;
 
@@ -51,7 +53,7 @@ public class TestInv implements Inventory {
     public void Take(Player player) {
         onRename(player);//One Last Check!
         if (getItem(2).getId() != Item.ANVIL && getItem(2).getId() != 0) {
-            Server.getInstance().getLogger().info("COMMMBBBIIINNNEEE@!!!!");
+            Server.getInstance().getLogger().debug("COMMMBBBIIINNNEEE@!!!!");
             setItem2(0, Item.get(0));
             setItem2(4, Item.get(0));
             player.getInventory().addItem(getItem(2).clone());
@@ -76,7 +78,7 @@ public class TestInv implements Inventory {
             if (second.getId() == Item.ENCHANT_BOOK) key = 0;
         } else if (!local.equals(second, false, false)) {
             //ITEMS NOT EQUAL!
-            Server.getInstance().getLogger().info("TESTING WITH ID 0");
+            Server.getInstance().getLogger().debug("TESTING WITH ID 0");
             return false;
         }
 
@@ -87,12 +89,12 @@ public class TestInv implements Inventory {
         if (local.hasCompoundTag()) lp = local.getNamedTag().getInt("penalty");
         if (Math.max(sp, lp) > 63) {
             //Cant do it!
-            Server.getInstance().getLogger().info("TESTING WITH ID 1");
+            Server.getInstance().getLogger().debug("TESTING WITH ID 1");
             return false;
         }
 
         if (local.getId() == Item.ENCHANT_BOOK && second.getId() == Item.ENCHANT_BOOK) {
-            resultItem = new ItemBookEnchanted();
+            resultItem = new CItemBookEnchanted();
         } else if (key == -1) {
             resultItem = Item.get(getItem(0).getId());
         } else {
@@ -219,7 +221,13 @@ public class TestInv implements Inventory {
             int pl = sp + lp + 1;
             if (player.getExperienceLevel() < pl) {
                 //Not Enough EXP!
-                Server.getInstance().getLogger().info("TESTING WITH ID 3");
+
+                Item t = Item.get(Item.REDSTONE_BLOCK);
+                t.setCustomName(TextFormat.RED+"ERROR!"+TextFormat.RESET+"\n"+TextFormat.YELLOW+"Not enough Exp!");
+                setItem(1, t);
+                setItem(3, t);
+                sendContents(player);
+                Server.getInstance().getLogger().debug("TESTING WITH ID 3");
                 return false;
             }
 
@@ -235,14 +243,19 @@ public class TestInv implements Inventory {
             setItem(2, resultItem);
             Item t = getItem(1);
             t.setCustomName(TextFormat.GREEN+"CLICK ME TO COMBINE"+TextFormat.RESET+"\n"+TextFormat.GREEN+"EXP Required: " + pl);
-            setItem(2, resultItem);
             setItem(1, t);
             setItem(3, t);
             sendContents(player);
             player.getLevel().addSound(new AnvilUseSound(player));
             return true;
+        }else{
+            Item t = Item.get(Item.REDSTONE_BLOCK);
+            t.setCustomName(TextFormat.RED+"ERROR!"+TextFormat.RESET+"\n"+TextFormat.YELLOW+"Please Add 2 Items!");
+            setItem(1, t);
+            setItem(3, t);
+            sendContents(player);
         }
-        Server.getInstance().getLogger().info("TESTING WITH ID>>> 5");
+        Server.getInstance().getLogger().debug("TESTING WITH ID>>> 5");
         return false;
     }
 
@@ -253,7 +266,7 @@ public class TestInv implements Inventory {
         fullBlock1.x = (int) BA.x;
         fullBlock1.y = (int) BA.y - 2;
         fullBlock1.z = (int) BA.z;
-        fullBlock1.blockId = Block.CHEST;
+        fullBlock1.blockId = Block.HOPPER_BLOCK;
         fullBlock1.blockData = 0;
         fullBlock1.flags = 0;
         who.dataPacket(fullBlock1);
@@ -268,7 +281,6 @@ public class TestInv implements Inventory {
         pk.y = BA.getFloorY() - 2;
         pk.z = BA.getFloorZ();
 
-        Server.getInstance().broadcastMessage(BA.getX() + "|{2}" + BA.getY() + "|" + BA.getZ());
         /*pk.x = 85;
         pk.y = 77;
         pk.z = 323;*/
@@ -280,7 +292,6 @@ public class TestInv implements Inventory {
 
     @Override
     public void onClose(Player who) {
-        Server.getInstance().broadcastMessage("CLOSE ER");
         UpdateBlockPacket fullBlock1 = new UpdateBlockPacket();
         fullBlock1.x = (int) BA.x;
         fullBlock1.y = BA.getFloorY() - 2;
@@ -290,7 +301,6 @@ public class TestInv implements Inventory {
         ;
         fullBlock1.flags = 0;
         who.dataPacket(fullBlock1);
-        Server.getInstance().broadcastMessage(BA.getX() + "|{2}" + BA.getY() + "|" + BA.getZ());
         ContainerClosePacket pk = new ContainerClosePacket();
         pk.windowid = (byte) who.getWindowId(this);
         who.dataPacket(pk);
@@ -343,7 +353,6 @@ public class TestInv implements Inventory {
     @Override
     public void setContents(Map<Integer, Item> items) {
 
-        Server.getInstance().broadcastMessage("REMOVE SETTTCCC!1");
         ReloadInv();
     }
 
@@ -371,7 +380,6 @@ public class TestInv implements Inventory {
     public int i4 = 0;
     @Override
     public boolean setItem(int index, Item item) {
-        Server.getInstance().broadcastMessage("SET IMTE!");
         item = item.clone();
         if (index < 0 || index >= this.size) {
             return false;
@@ -426,7 +434,6 @@ public class TestInv implements Inventory {
 
     @Override
     public void remove(Item item) {
-        Server.getInstance().broadcastMessage("REMOVE IMTE!1");
         boolean checkDamage = item.hasMeta();
         boolean checkTag = item.getCompoundTag() != null;
         for (Map.Entry<Integer, Item> entry : this.getContents().entrySet()) {
@@ -463,7 +470,6 @@ public class TestInv implements Inventory {
 
     @Override
     public boolean canAddItem(Item item) {
-        Server.getInstance().broadcastMessage("CAN ADD IMTE!");
         item = item.clone();
         boolean checkDamage = item.hasMeta();
         boolean checkTag = item.getCompoundTag() != null;
@@ -488,7 +494,6 @@ public class TestInv implements Inventory {
 
     @Override
     public Item[] addItem(Item... slots) {
-        Server.getInstance().broadcastMessage("ADD IMTE!");
         List<Item> itemSlots = new ArrayList<>();
         for (Item slot : slots) {
             if (slot.getId() != 0 && slot.getCount() > 0) {
@@ -547,7 +552,6 @@ public class TestInv implements Inventory {
 
     @Override
     public Item[] removeItem(Item... slots) {
-        Server.getInstance().broadcastMessage("REMOVE IMTE!");
         List<Item> itemSlots = new ArrayList<>();
         for (Item slot : slots) {
             if (slot.getId() != 0 && slot.getCount() > 0) {
@@ -585,7 +589,6 @@ public class TestInv implements Inventory {
 
     @Override
     public boolean clear(int index) {
-        Server.getInstance().broadcastMessage("CLR IMTE!");
         if (this.slots.containsKey(index)) {
             Item item = new ItemBlock(new BlockAir(), null, 0);
             Item old = this.slots.get(index);
@@ -694,6 +697,6 @@ public class TestInv implements Inventory {
 
     @Override
     public InventoryType getType() {
-        return InventoryType.CHEST;
+        return InventoryType.HOPPER;
     }
 }

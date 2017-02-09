@@ -3,13 +3,17 @@ package net.yungtechboy1.CyberCore.Factory;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.event.EventHandler;
+import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.event.inventory.InventoryOpenEvent;
+import cn.nukkit.event.inventory.InventoryPickupItemEvent;
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.inventory.Inventory;
+import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.inventory.SimpleTransactionGroup;
 import cn.nukkit.inventory.Transaction;
 import cn.nukkit.item.Item;
@@ -17,6 +21,7 @@ import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.MovePlayerPacket;
 import cn.nukkit.network.protocol.ProtocolInfo;
+import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.*;
@@ -25,6 +30,7 @@ import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,6 +41,7 @@ import java.util.Set;
 public class CustomFactory implements Listener {
 
     public CyberCoreMain CCM;
+    public ConfigSection VEIList = new ConfigSection();
 
     public CustomFactory(CyberCoreMain main){
         CCM = main;
@@ -74,7 +81,7 @@ public class CustomFactory implements Listener {
                 CCM.getLogger().debug("TI > "+t.getSlot());
                 if(t.getSlot() == 3 || t.getSlot() == 1) {
                     if(t.getSourceItem().getId() == Item.SLIME_BLOCK){
-                        CCM.getLogger().info("11111!!");
+                        CCM.getLogger().debug("11111!!");
                         if(inv instanceof TestInv)((TestInv) inv).Take(transaction.getSource());
                     }
                     CCM.getLogger().debug("CANCELED!!");
@@ -85,6 +92,21 @@ public class CustomFactory implements Listener {
                     event.setCancelled();
                     break;
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void InventoryOpenEvent(InventoryOpenEvent event){
+        CCM.getLogger().debug("asdas asas d");
+        Player p = event.getPlayer();
+        ArrayList<Item> ali =  new ArrayList<>(p.getInventory().getContents().values());
+        for (Item i: ali){
+            if(i instanceof CItemBookEnchanted){
+                CItemBookEnchanted i2 = (CItemBookEnchanted) i.clone();
+                p.getInventory().remove(i);
+                i2.CheckCustomName();
+                p.getInventory().addItem(i2);
             }
         }
     }

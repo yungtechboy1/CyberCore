@@ -1,7 +1,9 @@
 package net.yungtechboy1.CyberCore;
 
 import cn.nukkit.Player;
-import cn.nukkit.command.*;
+import cn.nukkit.command.Command;
+import cn.nukkit.command.CommandExecutor;
+import cn.nukkit.command.CommandSender;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
@@ -22,19 +24,22 @@ import net.yungtechboy1.CyberCore.Commands.Gamemode.GMS;
 import net.yungtechboy1.CyberCore.Commands.Homes.DelHome;
 import net.yungtechboy1.CyberCore.Commands.Homes.Home;
 import net.yungtechboy1.CyberCore.Commands.Homes.SetHome;
-import net.yungtechboy1.CyberCore.Factory.ClassFactory;
 import net.yungtechboy1.CyberCore.Custom.Item.ItemChickenCooked;
 import net.yungtechboy1.CyberCore.Custom.Item.ItemPorkchopCooked;
 import net.yungtechboy1.CyberCore.Events.CyberChatEvent;
+import net.yungtechboy1.CyberCore.Factory.ClassFactory;
 import net.yungtechboy1.CyberCore.Factory.CustomFactory;
 import net.yungtechboy1.CyberCore.Factory.PasswordFactoy;
 import net.yungtechboy1.CyberCore.Factory.RankFactory;
+import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
+import net.yungtechboy1.CyberCore.MobAI.SpawnEvent;
 import net.yungtechboy1.CyberCore.Tasks.*;
 
 import java.io.File;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.*;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -43,6 +48,9 @@ import java.util.concurrent.TimeUnit;
 public class CyberCoreMain extends PluginBase implements CommandExecutor, Listener {
 
     public static final String NAME = TextFormat.GOLD + "" + TextFormat.BOLD + "§eTERRA§6CORE " + TextFormat.RESET + TextFormat.GOLD + "» " + TextFormat.RESET;
+    //CyberChat
+    public static Connection Connect = null;
+    public static String Prefix = TextFormat.AQUA + "[TerraTP]";
     public Config job;
     public Config Homes;
     public Config ban;
@@ -50,15 +58,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public Config tcban;
     public Config tipban;
     public Config cooldowns;
-
     //HUD Off
     public ArrayList<String> HudOff = new ArrayList<>();
     public ArrayList<String> HUDClassOff = new ArrayList<>();
     public ArrayList<String> HUDFactionOff = new ArrayList<>();
     public ArrayList<String> HUDPosOff = new ArrayList<>();
-
-    //CyberChat
-    public static Connection Connect = null;
     public Config RankChatColor;
     public Config RankConfig;
     public Config MainConfig;
@@ -70,23 +74,21 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public Boolean MuteChat = false;
     public Map<String, Integer> Spam = new HashMap<>();
     public Map<String, String> LM = new HashMap<>();
-
     //Floating Text
     public FloatingTextMain FTM;
-
+    //Mob Plugin and AI
+    public MobPlugin MP;
     //Classes / MMO
     public ClassFactory ClassFactory;
     //PasswordFactoy
-    public net.yungtechboy1.CyberCore.Factory.PasswordFactoy PasswordFactoy;
+    public PasswordFactoy PasswordFactoy;
     //CustomFactory
-    public net.yungtechboy1.CyberCore.Factory.CustomFactory CustomFactory;
+    public CustomFactory CustomFactory;
     //Factories
     public Homes HomeFactory;
     public RankFactory RankFactory;
-
     public List<String> Final = new ArrayList<>();
     public List<String> TPING = new ArrayList<>();
-
     public HashMap<String, HashMap<String, Object>> cache = new HashMap<>();
     public HashMap<String, String> LastMsg = new HashMap<>();
     //public CyberTech.CyberChat.Main CC;
@@ -94,8 +96,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public ArrayList<Ban> bans = new ArrayList<>();
     Vector3 p1;
     Vector3 p2;
-
-    public static String Prefix = TextFormat.AQUA + "[TerraTP]";
 
     @Override
     public void onEnable() {
@@ -108,10 +108,12 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         //Floating Text
         FTM = new FloatingTextMain(this);
+        //Mob Plugin
+        MP = new MobPlugin(this);
 
         getServer().getScheduler().scheduleRepeatingTask(new UnMuteTask(this), 20 * 15);
         getServer().getScheduler().scheduleRepeatingTask(new ClearSpamTick(this), 20 * 5);
-        getServer().getScheduler().scheduleRepeatingTask(new CheckOP(this), 20 * 60 );//1 Min
+        getServer().getScheduler().scheduleRepeatingTask(new CheckOP(this), 20 * 60);//1 Min
 
         Homes = new Config(new File(this.getDataFolder(), "homes.yml"), Config.YAML, new ConfigSection());
 
@@ -183,7 +185,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         MuteConfig = new Config(new File(getDataFolder(), "Mute.yml"), Config.YAML);
 
         ban = new Config(new File(this.getDataFolder(), "ban.yml"), Config.YAML);
-        if(ban.getAll().size() > 0) {
+        if (ban.getAll().size() > 0) {
             for (ConfigSection c : (ConfigSection[]) ban.getAll().values().toArray()) {
                 bans.add(new Ban(c));
             }
@@ -210,44 +212,46 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 
         //COMMANDS
-        getServer().getCommandMap().register("CyberCore",new net.yungtechboy1.CyberCore.Commands.Ban(this));
-        getServer().getCommandMap().register("CyberCore",new Ci(this));
-        getServer().getCommandMap().register("CyberCore",new Fix(this));
-        getServer().getCommandMap().register("CyberCore",new IPBan(this));
-        getServer().getCommandMap().register("CyberCore",new Msg(this));
-        getServer().getCommandMap().register("CyberCore",new Reply(this));
-        getServer().getCommandMap().register("CyberCore",new Spawn(this));
-        getServer().getCommandMap().register("CyberCore",new Tban(this));
-        getServer().getCommandMap().register("CyberCore",new Top(this));
-        getServer().getCommandMap().register("CyberCore",new Vote(this));
-        getServer().getCommandMap().register("CyberCore",new net.yungtechboy1.CyberCore.Commands.Ban(this));
-        getServer().getCommandMap().register("CyberCore",new Wild(this));
+        getServer().getCommandMap().register("CyberCore", new net.yungtechboy1.CyberCore.Commands.Ban(this));
+        getServer().getCommandMap().register("CyberCore", new Ci(this));
+        getServer().getCommandMap().register("CyberCore", new Fix(this));
+        getServer().getCommandMap().register("CyberCore", new IPBan(this));
+        getServer().getCommandMap().register("CyberCore", new Msg(this));
+        getServer().getCommandMap().register("CyberCore", new Reply(this));
+        getServer().getCommandMap().register("CyberCore", new Spawn(this));
+        getServer().getCommandMap().register("CyberCore", new Tban(this));
+        getServer().getCommandMap().register("CyberCore", new Top(this));
+        getServer().getCommandMap().register("CyberCore", new Vote(this));
+        getServer().getCommandMap().register("CyberCore", new net.yungtechboy1.CyberCore.Commands.Ban(this));
+        getServer().getCommandMap().register("CyberCore", new Wild(this));
 
-        getServer().getCommandMap().register("CyberCore",new Home(this));
-        getServer().getCommandMap().register("CyberCore",new SetHome(this));
-        getServer().getCommandMap().register("CyberCore",new DelHome(this));
+        getServer().getCommandMap().register("CyberCore", new Home(this));
+        getServer().getCommandMap().register("CyberCore", new SetHome(this));
+        getServer().getCommandMap().register("CyberCore", new DelHome(this));
 
-        getServer().getCommandMap().register("CyberCore",new AA(this));
-        getServer().getCommandMap().register("CyberCore",new ClassCmd(this));
-        getServer().getCommandMap().register("CyberCore",new SetClass(this));
+        getServer().getCommandMap().register("CyberCore", new AA(this));
+        getServer().getCommandMap().register("CyberCore", new ClassCmd(this));
+        getServer().getCommandMap().register("CyberCore", new SetClass(this));
 
-        getServer().getCommandMap().register("CyberCore",new Hud(this));
+        getServer().getCommandMap().register("CyberCore", new Hud(this));
 
-        getServer().getCommandMap().register("CyberCore",new FT(this));
-        getServer().getCommandMap().register("CyberCore",new FTS(this));
-        getServer().getCommandMap().register("CyberCore",new FTR(this));
+        getServer().getCommandMap().register("CyberCore", new FT(this));
+        getServer().getCommandMap().register("CyberCore", new FTS(this));
+        getServer().getCommandMap().register("CyberCore", new FTR(this));
 
-        getServer().getCommandMap().register("CyberCore",new Warp(this));
-        getServer().getCommandMap().register("CyberCore",new SetWarp(this));
+        getServer().getCommandMap().register("CyberCore", new Warp(this));
+        getServer().getCommandMap().register("CyberCore", new SetWarp(this));
 
-        getServer().getCommandMap().register("CyberCore",new ClassCmd(this));
-        getServer().getCommandMap().register("CyberCore",new AClassCmd(this));
+        getServer().getCommandMap().register("CyberCore", new ClassCmd(this));
+        getServer().getCommandMap().register("CyberCore", new AClassCmd(this));
 
-        getServer().getCommandMap().register("CyberCore",new Sync(this));
+        getServer().getCommandMap().register("CyberCore", new Sync(this));
 
-        getServer().getCommandMap().register("CyberCore",new Email(this));
-        getServer().getCommandMap().register("CyberCore",new Login(this));
-        getServer().getCommandMap().register("CyberCore",new Register(this));
+        getServer().getCommandMap().register("CyberCore", new Email(this));
+        getServer().getCommandMap().register("CyberCore", new Login(this));
+        getServer().getCommandMap().register("CyberCore", new Register(this));
+
+        getServer().getCommandMap().register("CyberCore", new ChatEnchant(this));
     }
 
     public Connection getMySqlConnection() {
@@ -292,8 +296,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public void onDisable() {
         super.onDisable();
         ConfigSection bc = new ConfigSection();
-        for(Ban b:bans){
-            bc.put(b.name,b.toconfig());
+        for (Ban b : bans) {
+            bc.put(b.name, b.toconfig());
         }
         ban.setAll(bc);
         ban.save();
@@ -364,6 +368,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     /**
      * Returns Player Faction
+     *
      * @param p
      * @return String
      */
@@ -413,14 +418,14 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         String f1 = "";//Factioin
         String f2 = "";//Rank
 
-        if(FM != null) {
+        if (FM != null) {
             Faction f = FM.FFactory.getPlayerFaction(p);
             if (f != null) {
                 f1 = TextFormat.GRAY + "[" + f.GetFactionNameTag(p) + TextFormat.GRAY + "]\n";
             } else {
                 f1 = TextFormat.GRAY + "[NF]";
             }
-        }else{
+        } else {
             f1 = TextFormat.GRAY + "[NF]";
         }
 
@@ -448,15 +453,16 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public void PlayerLoginEvent(PlayerPreLoginEvent event) {
         Player p = event.getPlayer();
         p.getName();
-        for(Ban b: bans){
-            if(b.checkbanned(p,event))return;
+        for (Ban b : bans) {
+            if (b.checkbanned(p, event)) return;
         }
 
     }
 
     public String getDifferenceBtwTime(Object dateTime) {
-        return getDifferenceBtwTime(Long.parseLong(dateTime+""));
+        return getDifferenceBtwTime(Long.parseLong(dateTime + ""));
     }
+
     public String getDifferenceBtwTime(Long dateTime) {
 
         long timeDifferenceMilliseconds = dateTime - new Date().getTime();
@@ -489,7 +495,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     @Override
     public boolean onCommand(CommandSender s, Command cmd, String label, String[] args) {
-       String cmdd = cmd.getName().toLowerCase();
+        String cmdd = cmd.getName().toLowerCase();
         switch (cmdd) {
             case "wild":
                 Wild.runCommand(s, this);
