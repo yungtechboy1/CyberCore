@@ -13,11 +13,11 @@ public class Hud extends Command {
     CyberCoreMain Owner;
 
     public Hud(CyberCoreMain server) {
-        super("hud", "Turn your HUD on or off!", "hud <on / class / off>");
+        super("hud", "Turn your HUD on or off!", "hud <on / class / fac / pos / off>");
         Owner = server;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
-                new CommandParameter("on / class / off", CommandParameter.ARG_TYPE_STRING, false)
+                new CommandParameter("on / class / fac / pos / off", CommandParameter.ARG_TYPE_STRING, false)
         });
         this.setPermission("CyberTech.CyberCore.player");
     }

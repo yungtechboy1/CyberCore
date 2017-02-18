@@ -112,7 +112,7 @@ public class Password {
     }
 
     public boolean IsValid() {
-        if (Player != null && Hash != null) return true;
+        if (Player != null && Hash != null && !Hash.equalsIgnoreCase("null")) return true;
         return false;
     }
 
@@ -122,7 +122,7 @@ public class Password {
     }
 
     public boolean CheckPassoword(String pw) {
-        if (getHash() == null) return false;
+        if (Hash == null || Hash.equalsIgnoreCase("null")) return false;
         if (BCrypt.checkpw(pw, Hash)) return true;
         return false;
     }
@@ -143,7 +143,7 @@ public class Password {
     }
 
     public boolean IsRegistered() {
-        if (Hash != null) return true;
+        if (Hash != null && !Hash.equalsIgnoreCase("null")) return true;
         return false;
     }
 
@@ -154,11 +154,12 @@ public class Password {
         UnqiqueID = p.getUniqueId().toString();
         Ipaddress = p.getAddress();
         Loggedin = true;
+        p.removeEffect(Effect.BLINDNESS);
         return true;
     }
 
     public void CheckAutoLogin(Player player) {
-        if (getHash() == null) return;
+        if (getHash() == null || getHash().equalsIgnoreCase("null")) return;
         if (CheckIP(player.getAddress()) && (CheckUUID(player.getUniqueId().toString()) || CheckUUID(player.getClientId()))) {
             player.sendMessage(TextFormat.GREEN + "You are now Logged in!");
             Loggedin = true;

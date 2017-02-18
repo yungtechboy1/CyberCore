@@ -48,9 +48,15 @@ public class ClassCmd extends Command {
         } else if (args.length == 1) {
             Integer ct = (int) (Calendar.getInstance().getTime().getTime() / 1000);
             if (bc == null || (Owner.cooldowns.getInt("class." + s.getName().toLowerCase(), 0) > ct || s.isOp())) {
-                int key = Integer.parseInt(args[0]);
+                int key = 0;
+                try {
+                    key = Integer.parseInt(args[0]);
+                }catch (Exception e){
+                    s.sendMessage("Error! Example Usage: /class 1 or /class 3");
+                    return true;
+                }
                 if (key == 0) {
-                    s.sendMessage("ERROR! Bad Key!");
+                    s.sendMessage("Error! Example Usage: /class 1 or /class 3");
                     return true;
                 } else if (key == 1) {
                     Owner.ClassFactory.SetClass((Player) s, new Class_Digger(Owner, (Player) s, BaseClass.TYPE_DIGGER, 0, new ConfigSection()));

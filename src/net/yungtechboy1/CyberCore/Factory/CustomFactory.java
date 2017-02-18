@@ -97,21 +97,6 @@ public class CustomFactory implements Listener {
     }
 
     @EventHandler
-    public void InventoryOpenEvent(InventoryOpenEvent event){
-        CCM.getLogger().debug("asdas asas d");
-        Player p = event.getPlayer();
-        ArrayList<Item> ali =  new ArrayList<>(p.getInventory().getContents().values());
-        for (Item i: ali){
-            if(i instanceof CItemBookEnchanted){
-                CItemBookEnchanted i2 = (CItemBookEnchanted) i.clone();
-                p.getInventory().remove(i);
-                i2.CheckCustomName();
-                p.getInventory().addItem(i2);
-            }
-        }
-    }
-
-    @EventHandler
     public void PIE(PlayerInteractEvent event) {
         Player a = event.getPlayer();
         if (event.getBlock().getId() == Block.ANVIL) {

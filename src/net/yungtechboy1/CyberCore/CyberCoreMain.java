@@ -19,20 +19,13 @@ import main.java.CyberFactions.Faction;
 import main.java.CyberFactions.FactionsMain;
 import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.Commands.*;
-import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
-import net.yungtechboy1.CyberCore.Commands.Gamemode.GMS;
-import net.yungtechboy1.CyberCore.Commands.Homes.DelHome;
-import net.yungtechboy1.CyberCore.Commands.Homes.Home;
-import net.yungtechboy1.CyberCore.Commands.Homes.SetHome;
+import net.yungtechboy1.CyberCore.Commands.Gamemode.*;
+import net.yungtechboy1.CyberCore.Commands.Homes.*;
 import net.yungtechboy1.CyberCore.Custom.Item.ItemChickenCooked;
 import net.yungtechboy1.CyberCore.Custom.Item.ItemPorkchopCooked;
 import net.yungtechboy1.CyberCore.Events.CyberChatEvent;
-import net.yungtechboy1.CyberCore.Factory.ClassFactory;
-import net.yungtechboy1.CyberCore.Factory.CustomFactory;
-import net.yungtechboy1.CyberCore.Factory.PasswordFactoy;
-import net.yungtechboy1.CyberCore.Factory.RankFactory;
+import net.yungtechboy1.CyberCore.Factory.*;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
-import net.yungtechboy1.CyberCore.MobAI.SpawnEvent;
 import net.yungtechboy1.CyberCore.Tasks.*;
 
 import java.io.File;
@@ -238,6 +231,10 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         getServer().getCommandMap().register("CyberCore", new FT(this));
         getServer().getCommandMap().register("CyberCore", new FTS(this));
         getServer().getCommandMap().register("CyberCore", new FTR(this));
+
+        getServer().getCommandMap().register("CyberCore", new TPR(this));
+        getServer().getCommandMap().register("CyberCore", new TPD(this));
+        getServer().getCommandMap().register("CyberCore", new TPA(this));
 
         getServer().getCommandMap().register("CyberCore", new Warp(this));
         getServer().getCommandMap().register("CyberCore", new SetWarp(this));

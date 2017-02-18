@@ -56,6 +56,7 @@ public class PasswordFactoy implements Listener {
             Statement stmt = getMySqlConnection().createStatement();
             for (Object pass : Passwords.values()) {
                 if (pass instanceof Password) {
+                    if(((Password) pass).getHash() == null)continue;
                     stmt.executeUpdate("DELETE FROM `password` WHERE `player` = '" + ((Password) pass).getPlayer() + "';");
                     stmt.executeUpdate("INSERT INTO `password` VALUES ('" + ((Password) pass).getPlayer() + "','" + ((Password) pass).getHash() + "','" + ((Password) pass).getCID() + "','" + ((Password) pass).getUnqiqueID() + "','" + ((Password) pass).getIpaddress() + "','" + ((Password) pass).getEmail() + "','" + ((Password) pass).getLastLogin() + "','" + ((Password) pass).getRegistered() + "')");
                 }

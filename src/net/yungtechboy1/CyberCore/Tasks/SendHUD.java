@@ -66,7 +66,7 @@ public class SendHUD extends PluginTask<CyberCoreMain> {
                 pxp = bc.XPRemainder(bc.getXP());
                 pxpof = bc.calculateRequireExperience(lvl + 1);
                 plvl = lvl;
-                f += TextFormat.GRAY + "Class : " + TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxpof + TextFormat.AQUA + " / " + TextFormat.GOLD + pxp + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl;
+                f += TextFormat.GRAY + "Class : " + TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl;
             }
         }
         p.sendTip(f);
