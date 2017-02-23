@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class CItemBookEnchanted extends Item {
     public CItemBookEnchanted() {
-        this(Integer.valueOf(0), 1);
+        this(0, 1);
     }
 
     public CItemBookEnchanted(Integer meta) {

@@ -50,6 +50,7 @@ public class CheckPermCommand extends Command {
 
     public boolean SendError(String error){
         if(error != null){
+            Error = error;
             CS.sendMessage(CyberCoreMain.NAME +" "+error);
             return true;
         }else if(Error != null){

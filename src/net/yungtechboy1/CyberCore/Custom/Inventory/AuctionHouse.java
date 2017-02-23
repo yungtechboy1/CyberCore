@@ -15,14 +15,13 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.*;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CrateKey;
 
 import java.util.*;
 
 /**
- * Created by carlt_000 on 1/19/2017.
+ * Created by carlt_000 on 2/22/2017.
  */
-public class TestInv implements Inventory {
+public class AuctionHouse implements Inventory {
 
     protected final String name;
     protected final String title;
@@ -36,7 +35,7 @@ public class TestInv implements Inventory {
     Vector3 BA;
     Block OB;
 
-    public TestInv(EntityHuman Holder, Vector3 ba, Block ob) {
+    public AuctionHouse(EntityHuman Holder, Vector3 ba, Block ob) {
         holder = Holder;
         this.size = 5;
 
@@ -65,7 +64,6 @@ public class TestInv implements Inventory {
     }
 
     public void Take(Player player) {
-        onRename(player);//One Last Check!
         if (getItem(2).getId() != Item.ANVIL && getItem(2).getId() != 0) {
             Server.getInstance().getLogger().debug("COMMMBBBIIINNNEEE@!!!!");
             setItem2(0, Item.get(0));
@@ -82,234 +80,6 @@ public class TestInv implements Inventory {
         tag = i.getNamedTag();
         if (tag.contains("display") && tag.get("display") instanceof CompoundTag) return tag.getCompound("display").getInt("penalty");
         return 0;
-    }
-
-    public boolean onRename(Player player) {
-        int testing = 0;
-        Item local = getItem(0);
-        Item second = getItem(4);
-        Item resultItem;
-        Boolean book = false;
-        //@TODO allow for Diamonds to repair Diamond Item
-        Boolean mineral = false;
-
-        int key = -1;
-        if (local.getId() == Item.ENCHANT_BOOK || second.getId() == Item.ENCHANT_BOOK) {
-            book = true;
-            if (local.getId() == Item.ENCHANT_BOOK) key = 4;
-            if (second.getId() == Item.ENCHANT_BOOK) key = 0;
-        } else if (!local.equals(second, false, false)) {
-            //ITEMS NOT EQUAL!
-            Server.getInstance().getLogger().debug("TESTING WITH ID 0");
-            return false;
-        }
-
-        //Check Penalty - Max can change :) - 63 is after 6 Workins
-        int sp = 0;
-        int lp = 0;
-        if (second.hasCompoundTag()) sp = getPenality(second);
-        if (local.hasCompoundTag()) lp = getPenality(local);
-        if (Math.max(sp, lp) > 63) {
-            //Cant do it!
-            Item t = Item.get(Item.REDSTONE_BLOCK);
-            t.setCustomName(TextFormat.RED + "ERROR!" + TextFormat.RESET + "\n" + TextFormat.YELLOW + "This item has been Anviled too many times!");
-            setItem2(1, t);
-            setItem2(3, t);
-            sendContents(player);
-            return false;
-        }
-
-        if (local.getId() == Item.ENCHANT_BOOK && second.getId() == Item.ENCHANT_BOOK) {
-            resultItem = Item.get(Item.ENCHANT_BOOK);
-            //resultItem = new CItemBookEnchanted();
-        } else if (key == -1) {
-            resultItem = Item.get(getItem(0).getId());
-        } else {
-            resultItem = Item.get(getItem(key).getId());
-        }
-
-        //BEGIN COMBINEING!
-        if (local.getId() != 0 && second.getId() != 0) {
-            //enchants combining
-            if (true) {
-                int enchants = 0;
-
-                ArrayList<Enchantment> enchantments = new ArrayList<>(Arrays.asList(second.getEnchantments()));
-                ArrayList<Enchantment> enchantments2 = new ArrayList<>(Arrays.asList(local.getEnchantments()));
-
-                ArrayList<Enchantment> baseEnchants = new ArrayList<>();
-
-                for (Enchantment ench : local.getEnchantments()) {
-                    if (ench.isMajor()) {
-                        baseEnchants.add(ench);
-                    }
-                }
-
-                //FIRST LOOP
-                for (Enchantment enchantment : enchantments) {
-                    if (enchantment.getLevel() < 0 || enchantment.getId() < 0) {
-                        continue;
-                    }
-
-                    Boolean major = false;
-                    //Major Means that if 2 Enchants are the Same then only the Higest level is applied
-                    //And the levels are not combined!
-                    //But if you have the Same level Enchants on both and the enchant is major then 1 level is added!\
-                    //Example SMite 2 & Smite 2 would combine to be Smite 3
-                    //Example Smite 3 & Smike 2 Would combine to be Smike 3
-                    if (enchantment.isMajor()) {
-                        boolean same = false;
-                        boolean another = false;
-
-                        for (Enchantment baseEnchant : baseEnchants) {
-                            if (baseEnchant.getId() == enchantment.getId())
-                                same = true;
-                            else {
-                                another = true;
-                            }
-                        }
-
-                        if (!same && another) major = true;
-                    }
-
-
-                    Enchantment localEnchantment = local.getEnchantment(enchantment.getId());
-                    if (localEnchantment != null) {
-                        int level = 0;
-                        if (major) {
-                            level = Math.max(localEnchantment.getLevel(), enchantment.getLevel());
-                            if (localEnchantment.getLevel() == enchantment.getLevel()) level++;
-                        } else {
-                            level = Math.min(localEnchantment.getLevel() + enchantment.getLevel(), localEnchantment.getMaxLevel());
-                        }
-                        enchantment.setLevel(level);
-                    }
-                    resultItem.addEnchantment(enchantment);
-                    enchants++;
-                }
-
-                //SECCOND LOOP
-                for (Enchantment enchantment : enchantments2) {
-                    boolean b = false;
-                    for (Enchantment e : enchantments) {
-                        if (e.getId() == enchantment.getId()) {
-                            b = true;
-                            break;
-                        }
-                    }
-                    if (b) continue;
-                    if (enchantment.getLevel() < 0 || enchantment.getId() < 0) {
-                        continue;
-                    }
-
-                    Boolean major = false;
-                    //Major Means that if 2 Enchants are the Same then only the Higest level is applied
-                    //And the levels are not combined!
-                    //But if you have the Same level Enchants on both and the enchant is major then 1 level is added!\
-                    //Example SMite 2 & Smite 2 would combine to be Smite 3
-                    //Example Smite 3 & Smike 2 Would combine to be Smike 3
-                    if (enchantment.isMajor()) {
-                        boolean same = false;
-                        boolean another = false;
-
-                        for (Enchantment baseEnchant : second.getEnchantments()) {
-                            if (!baseEnchant.isMajor()) continue;
-                            if (baseEnchant.getId() == enchantment.getId())
-                                same = true;
-                            else {
-                                another = true;
-                            }
-                        }
-                        if (!same && another) major = true;
-                    }
-                    resultItem.addEnchantment(enchantment);
-                    enchants++;
-                }
-            }
-
-            //Damage Combining!
-            if (!book) {
-                //Books Don't reduce Damage!
-                if (local.getTier() == second.getTier()) {//Fast and easy way to make sure items are in same type
-                    int ld = second.getMaxDurability() - local.getDamage();//8 -> 18
-                    int sd = second.getMaxDurability() - second.getDamage();//25 -> 1
-                    //IDK About the minecraft Bonus.....
-                    int d1 = (resultItem.getMaxDurability() - (ld + sd)) - (int) Math.floor(resultItem.getMaxDurability() / 20d);
-                    int d2 = Math.max(0, d1);
-                    resultItem.setDamage(d2);
-                }
-
-            }
-
-            //FUCK CUSTOM NAMES!
-            boolean custom = false;
-            ArrayList<String> CE = new ArrayList<>();
-            for (Enchantment enchantment : resultItem.getEnchantments()) {
-                if (enchantment.getId() > 24) {
-                    CE.add(enchantment.getName() + " " + IntToRoman(enchantment.getLevel()));
-                    custom = true;
-                }
-            }
-            if (custom) {
-                String CT = TextFormat.RESET + "" + TextFormat.AQUA + Item.get(resultItem.getId(), resultItem.getDamage()).getName() + TextFormat.RESET;
-                for (String text : CE)CT += "\n" + TextFormat.GRAY + text + TextFormat.RESET;
-                resultItem.setCustomName(CT);
-            }
-
-            int pl = sp + lp + 1;
-            if (player.getExperienceLevel() < pl) {
-                //Not Enough EXP!
-
-                Item t = Item.get(Item.REDSTONE_BLOCK);
-                t.setCustomName(TextFormat.RED + "ERROR!" + TextFormat.RESET + "\n" + TextFormat.YELLOW + "Not enough Exp!");
-                t.setCount(pl);
-                setItem2(1, t);
-                setItem2(3, t);
-                sendContents(player);
-                Server.getInstance().getLogger().debug("TESTING WITH ID 3");
-                return false;
-            }
-
-            //@TODO NOT Yet
-            //player.setExperience(0,player.getExperienceLevel() - pl);
-
-            CompoundTag tag;
-            if (!resultItem.hasCompoundTag()) {
-                tag = new CompoundTag();
-            } else {
-                tag = resultItem.getNamedTag();
-            }
-            if (tag.contains("display") && tag.get("display") instanceof CompoundTag) {
-                tag.getCompound("display").putInt("penalty", Math.max(sp, lp) * 2 + 1);
-            } else {
-                tag.putCompound("display", new CompoundTag("display")
-                        .putInt("penalty", Math.max(sp, lp) * 2 + 1)
-                );
-            }
-            resultItem.setNamedTag(tag);
-
-            //setItem(2, resultItem);
-            this.slots.put(2, resultItem.clone());
-            Item t = Item.get(Item.SLIME_BLOCK);
-            t.setCount(pl);
-            t.setCustomName(TextFormat.GREEN + "CLICK ME TO COMBINE" + TextFormat.RESET + "\n" + TextFormat.GREEN + "EXP Required: " + pl);
-
-            /*setItem(1, t);
-            setItem(3, t);*/
-            this.slots.put(1, t.clone());
-            this.slots.put(3, t.clone());
-            sendContents(player);
-            player.getLevel().addSound(new AnvilUseSound(player));
-            return true;
-        } else {
-            Item t = Item.get(Item.REDSTONE_BLOCK);
-            t.setCustomName(TextFormat.RED + "ERROR!" + TextFormat.RESET + "\n" + TextFormat.YELLOW + "Please Add 2 Items!");
-            setItem2(1, t);
-            setItem2(3, t);
-            sendContents(player);
-        }
-        Server.getInstance().getLogger().debug("TESTING WITH ID>>> 5");
-        return false;
     }
 
     @Override

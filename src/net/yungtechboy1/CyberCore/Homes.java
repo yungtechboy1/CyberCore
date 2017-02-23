@@ -26,7 +26,7 @@ public class Homes {
         String pn = p.getName().toLowerCase();
         if (HasHomeAtKey(pn, num)) {
             LinkedHashMap<String, String> v = (LinkedHashMap<String, String>) homes.get(pn);
-            String[] key = v.get(num + "a").split("&");
+            String[] key = v.get(num).split("&");
             Vector3 v3 = new Vector3(Double.parseDouble(key[0]), Double.parseDouble(key[1]), Double.parseDouble(key[2]));
             if (!p.getLevel().getFolderName().equalsIgnoreCase(key[3])) {
                 Level l = MainServer.getServer().getLevelByName(key[3]);
@@ -47,8 +47,7 @@ public class Homes {
     public void DelPlayerHome(Player p, String num) {
         String pn = p.getName().toLowerCase();
         if (HasHomeAtKey(pn, num)) {
-            LinkedHashMap<String, String> v = (LinkedHashMap<String, String>) homes.get(pn);
-            v.remove(num + "a");
+            homes.remove(pn+"."+num);
             p.sendMessage(Prefix + TextFormat.GREEN + " Home Successfully Deleted!");
         } else {
             p.sendMessage(Prefix + TextFormat.RED + " No Home at that key!");
@@ -85,16 +84,7 @@ public class Homes {
 
     public void SetPlayerHome(String p, String num, String value) {
         p = p.toLowerCase();
-        if (homes.exists(p)) {
-            LinkedHashMap<String, String> v = (LinkedHashMap<String, String>) homes.get(p);
-            v.put(num.toLowerCase() + "a", value);
-            homes.set(p, v);
-        } else {
-            LinkedHashMap<String, String> settings = new LinkedHashMap<String, String>() {{
-                put(num.toLowerCase() + "a", value);
-            }};
-            homes.set(p, settings);
-        }
+        homes.set(p+"."+num.toLowerCase(), value);
     }
 
     public Integer GetMaxHomes(String player) {
@@ -132,10 +122,7 @@ public class Homes {
     }
 
     public boolean HasHomeAtKey(String player, String num) {
-        if (homes != null && homes.exists(player.toLowerCase()) && homes.get(player.toLowerCase()) instanceof LinkedHashMap ) {
-            LinkedHashMap<String, String> v = (LinkedHashMap<String, String>) homes.get(player.toLowerCase());
-            if (v.containsKey(num.toLowerCase() + "a")) return true;
-        }
+        if (homes != null && homes.exists(player.toLowerCase()+"."+num.toLowerCase()))return true;
         return false;
     }
 

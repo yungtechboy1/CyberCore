@@ -15,7 +15,7 @@ public class TPD extends Command {
     CyberCoreMain Owner;
 
     public TPD(CyberCoreMain server) {
-        super("hud", "Turn your HUD on or off!", "hud <on / class / fac / pos / off>", new String[]{"tpdeny"});
+        super("tpd", "Deny Teleport!", "/tpd", new String[]{"tpdeny"});
         Owner = server;
         this.commandParameters.clear();
         this.setPermission("CyberTech.CyberCore.player");

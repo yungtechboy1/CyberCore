@@ -7,8 +7,8 @@ import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemDiamond;
 import cn.nukkit.item.ItemSteak;
+import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CrateKey;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.io.BufferedReader;
@@ -118,19 +118,34 @@ public class Vote extends Command {
         if (vs == 1) {
             SetVoted1(s.getName());
             //§l§cVOTE> §r§7Username Voted and Received a §b§lCRATE KEY! §r§7To vote, visit: §bvote.terratide.net
-            s.sendMessage("§l§cVOTE> §r§7"+s.getName()+" Voted and Received a §b§lCRATE KEY and DIAMONDS! §r§7To vote, visit: §bvote.terratide.net");
+            s.getServer().broadcastMessage("§l§cVOTE> §r§7" + s.getName() + " Voted and Received a §b§lCRATE KEY and DIAMONDS! §r§7To vote, visit: §bvote.terratide.net");
             //Give Rewards
             if (s instanceof Player) {
                 //REWARD ITEMS
                 Item R1 = new ItemDiamond(0, 2);//2 Diamonds
                 Item R2 = new ItemSteak(0, 3);//3 Steaks
                 Item R3 = new Item(Item.PLANK, 0, 32);//32 Wood
-                Item R4 = new Item(Item.MAGMA_CREAM,1);//1 January Crate
+                Item R4 = new Item(Item.MAGMA_CREAM, 1);//1 January Crate
                 //R4.addEnchantment(new CrateKey());
-                R4.setCustomName("January Crate Key");
-                R4.getNamedTag().putBoolean("JanuaryKey", true  );
+                R4.setCustomName(TextFormat.AQUA + "==CRATE KEY==" + TextFormat.RESET + "\n" +
+                        TextFormat.GREEN + "January Crate Key");
+                R4.getNamedTag().putBoolean("JanuaryKey", true);
+                CompoundTag tag;
+                if (!R4.hasCompoundTag()) {
+                    tag = new CompoundTag();
+                } else {
+                    tag = R4.getNamedTag();
+                }
+                if (tag.contains("display") && tag.get("display") instanceof CompoundTag) {
+                    tag.getCompound("display").putInt("JanuaryKey", 1);
+                } else {
+                    tag.putCompound("display", new CompoundTag("display")
+                            .putInt("JanuaryKey", 1)
+                    );
+                }
+                R4.setNamedTag(tag);
                 PlayerInventory pi = ((Player) s).getInventory();
-                pi.addItem(R1, R2, R3, R4);
+                pi.addItem(R1, R2, R3, R4.clone());
                 s.sendMessage("§l§eTERRA§6TIDE> §r§7Thanks For Voting!");
             }
             return true;

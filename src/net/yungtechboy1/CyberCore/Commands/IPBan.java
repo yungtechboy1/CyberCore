@@ -28,6 +28,7 @@ public class IPBan extends TargetCommand {
 
     @Override
     public boolean execute(CommandSender s, String str, String[] args) {
+        if (!super.execute(s, str, args)) return SendError();
         Player target = Target;
         if (target == null) {
             s.sendMessage(TextFormat.RED + "Target Not Found!");

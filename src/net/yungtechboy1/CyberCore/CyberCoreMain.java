@@ -7,6 +7,7 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
+import cn.nukkit.event.player.PlayerLoginEvent;
 import cn.nukkit.event.player.PlayerPreLoginEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
@@ -201,7 +202,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         getServer().getPluginManager().registerEvents(ClassFactory, this);
 
         getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
-        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 20);//EVERY 2 Hours
+        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec
 
 
         //COMMANDS
@@ -302,6 +303,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         tban.save();
         tcban.save();
         cooldowns.save();
+
+        Homes.save();
 
         //CyberChat
         MainConfig.save();
@@ -447,11 +450,15 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void PlayerLoginEvent(PlayerPreLoginEvent event) {
+    public void PlayerLoginEvent(PlayerLoginEvent event) {
         Player p = event.getPlayer();
         p.getName();
         for (Ban b : bans) {
-            if (b.checkbanned(p, event)) return;
+            if (b.checkbanned(p, event)){
+                event.setKickMessage("You are Banned!");
+                event.setCancelled();
+                return;
+            }
         }
 
     }

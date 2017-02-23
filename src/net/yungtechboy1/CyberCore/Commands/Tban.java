@@ -32,6 +32,7 @@ public class Tban extends TargetCommand {
 
     @Override
     public boolean execute(CommandSender s, String str, String[] args) {
+        if (!super.execute(s, str, args)) return SendError();
         ArrayList<String> args2 = new ArrayList<>();
         int i = 0;
         for(String strr: args){

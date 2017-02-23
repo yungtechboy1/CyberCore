@@ -7,6 +7,7 @@ import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Messages;
+import net.yungtechboy1.CyberCore.Tasks.TeleportEvent;
 
 /**
  * Created by carlt_000 on 3/21/2016.
@@ -35,6 +36,7 @@ public class TPA extends Command {
             }
             p1.sendMessage(Messages.TPING.replace("{0}",s.getName()));
             s.sendMessage(Messages.TPACCEPTED.replace("{0}",s.getName()));
+            Owner.getServer().getScheduler().scheduleDelayedTask(new TeleportEvent(Owner,p1,(Player)s),20*8);
             return true;
         }else{
             s.sendMessage(TextFormat.RED+"No Teleport Found!");

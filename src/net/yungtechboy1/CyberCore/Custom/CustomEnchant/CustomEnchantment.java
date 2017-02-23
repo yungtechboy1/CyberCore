@@ -23,7 +23,7 @@ public class CustomEnchantment extends Enchantment {
     public static int POISON = 31;
     public static int THUNDER = 32;
     public static int VIPER = 33;
-    public static int CrateKey = 255;
+    public static int CrateKey = 55;
 
     boolean CheckCustomName = true;
     String lastplayer = "";
@@ -60,7 +60,6 @@ public class CustomEnchantment extends Enchantment {
             ((Player) attacker).getInventory().sendHeldItem((Player) attacker);;
         }
         lastplayer = attacker.getName();
-
     }
 
     private static String IntToRoman(Integer integer) {

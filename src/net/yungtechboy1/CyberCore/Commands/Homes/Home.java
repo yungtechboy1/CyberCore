@@ -39,8 +39,9 @@ public class Home extends Command {
             for(Map.Entry<String, String> c: v.entrySet()){
                 String b = c.getKey();
                 String d = c.getValue();
-                a += TextFormat.YELLOW+"-> [ "+b+" ] > "+d+TextFormat.RESET+"\n";
+                a += TextFormat.YELLOW+"------> [ "+b+" ] <------ "+TextFormat.RESET+"\n";
             }
+            if(v.size() == 0)a += "----->"+"You have no Homes!<-----";
             a += TextFormat.GRAY+"========================"+TextFormat.RESET;
             sender.sendMessage(a);
             return true;
@@ -49,10 +50,11 @@ public class Home extends Command {
             sender.sendMessage(Prefix + "Error! You do not have a home called " + args[0]);
             return true;
         }
-        if (!Owner.TPING.contains(sender.getName().toLowerCase())) {
+        if (Owner.TPING.contains(sender.getName().toLowerCase())) {
             sender.sendMessage(Prefix + "Error! You are in the process of TPing already!");
             return true;
         }
+        Owner.TPING.add(sender.getName().toLowerCase());
         Owner.getServer().getScheduler().scheduleDelayedTask(new TPToHome(Owner, p, args[0]), 20 * 8);
         return true;
     }

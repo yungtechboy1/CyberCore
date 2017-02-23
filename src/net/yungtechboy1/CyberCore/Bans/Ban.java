@@ -1,6 +1,7 @@
 package net.yungtechboy1.CyberCore.Bans;
 
 import cn.nukkit.Player;
+import cn.nukkit.event.player.PlayerLoginEvent;
 import cn.nukkit.event.player.PlayerPreLoginEvent;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
@@ -144,7 +145,7 @@ public class Ban {
      * @param player
      * @return
      */
-    public boolean checkbanned(Player player, PlayerPreLoginEvent event){
+    public boolean checkbanned(Player player, PlayerLoginEvent event){
         if(IpBan && ip.equalsIgnoreCase(player.getAddress())){
             event.setKickMessage(TextFormat.RED+"Your Banned! E-1");
             event.setCancelled();

@@ -43,7 +43,7 @@ public class ClassCmd extends Command {
                 s.sendMessage(message);
             } else {
                 //Show Class Info
-                s.sendMessage("TOTAL XP: " + bc.getXP() + " LEVEL: " + bc.getLVL() + " XXP:" + bc.XPRemainder(bc.getXP()));
+                s.sendMessage("TOTAL XP: " + bc.getXP() + " LEVEL: " + bc.getLVL() + " XP needed for next level:" + bc.XPRemainder(bc.getXP()));
             }
         } else if (args.length == 1) {
             Integer ct = (int) (Calendar.getInstance().getTime().getTime() / 1000);
@@ -51,26 +51,20 @@ public class ClassCmd extends Command {
                 int key = 0;
                 try {
                     key = Integer.parseInt(args[0]);
-                }catch (Exception e){
-                    s.sendMessage("Error! Example Usage: /class 1 or /class 3");
-                    return true;
-                }
-                if (key == 0) {
-                    s.sendMessage("Error! Example Usage: /class 1 or /class 3");
-                    return true;
-                } else if (key == 1) {
+                }catch (Exception e){}
+                if (key == 1 || args[0].equalsIgnoreCase("digger")) {
                     Owner.ClassFactory.SetClass((Player) s, new Class_Digger(Owner, (Player) s, BaseClass.TYPE_DIGGER, 0, new ConfigSection()));
                     s.sendMessage(TextFormat.GREEN + "You are now a Digger!");
-                } else if (key == 2) {
+                } else if (key == 2 || args[0].equalsIgnoreCase("Farmer")) {
                     Owner.ClassFactory.SetClass((Player) s, new Class_Farmer(Owner, (Player) s, BaseClass.TYPE_FARMER, 0, new ConfigSection()));
                     s.sendMessage(TextFormat.GREEN + "You are now a Farmer!");
-                } else if (key == 3) {
+                } else if (key == 3 || args[0].equalsIgnoreCase("LumberJack")) {
                     Owner.ClassFactory.SetClass((Player) s, new Class_LumberJack(Owner, (Player) s, BaseClass.TYPE_LUMBERJACK, 0, new ConfigSection()));
                     s.sendMessage(TextFormat.GREEN + "You are now a LumberJack!");
-                } else if (key == 4) {
+                } else if (key == 4 || args[0].equalsIgnoreCase("miner")) {
                     Owner.ClassFactory.SetClass((Player) s, new Class_Miner(Owner, (Player) s, BaseClass.TYPE_MINER, 0, new ConfigSection()));
-                    s.sendMessage(TextFormat.GREEN + "You are now a Digger!");
-                } else if (key == 5) {
+                    s.sendMessage(TextFormat.GREEN + "You are now a Miner!");
+                } else if (key == 5 || args[0].equalsIgnoreCase("Tank")) {
                     Owner.ClassFactory.SetClass((Player) s, new Class_Tank(Owner, (Player) s, BaseClass.TYPE_TANK, 0, new ConfigSection()));
                     s.sendMessage(TextFormat.GREEN + "You are now a Tank!");
                 } else {

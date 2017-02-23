@@ -53,12 +53,12 @@ public class AA extends Command {
                 if (bc.PossibleAbillity().size() >= key && key != 0) {
                     bc.setPrime(--key);
                     ((Player) s).getLevel().addSound(new ExperienceOrbSound((Player) s));
-                    s.sendMessage("PRIMED!!!");
+                    s.sendMessage(TextFormat.GRAY+"You ready your self for an ability!");
                 } else {
-                    s.sendMessage("Error! Ability Key Invalid!");
+                    s.sendMessage(TextFormat.RED+"Error! Ability Key Invalid!");
                 }
             } else {
-                s.sendMessage("Error! Usage /aa or /aa [key]");
+                s.sendMessage(TextFormat.RED+"Error! Usage /aa or /aa [key]");
             }
         }
         return true;

@@ -248,7 +248,7 @@ public class VirturalEnchantInv {
 
 
         if(lapiscount != 0){
-            p.getInventory().addItem(new ItemDye(ItemDye.LIGHT_BLUE,lapiscount));
+            p.getInventory().addItem(new ItemDye(DyeColor.BLUE,lapiscount));
         }
         for(Enchantment e: es){
             if(e instanceof CustomEnchantment){

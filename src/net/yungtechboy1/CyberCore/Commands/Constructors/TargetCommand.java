@@ -30,6 +30,7 @@ public class TargetCommand extends CheckPermCommand {
     public boolean execute(CommandSender commandSender, String s, String[] strings) {
         //DO THIS AT THE BEGINGING!
         Error = null;
+        if (!super.execute(commandSender, s, strings)) return SendError();
         if (CT) {
             Target = GetTarget(strings);
             if (Target == null){
@@ -42,7 +43,6 @@ public class TargetCommand extends CheckPermCommand {
             if (tr > sr) return SendError(Messages.TARGET_TOO_HIGH);
             if (tr == sr && !CBE) return SendError(Messages.RANK_CAN_NOT_BE_EQUAL);
         }
-        if (!super.execute(commandSender, s, strings)) return SendError();
         return true;
     }
 

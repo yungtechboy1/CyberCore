@@ -18,6 +18,7 @@ import cn.nukkit.inventory.SimpleTransactionGroup;
 import cn.nukkit.inventory.Transaction;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
+import cn.nukkit.level.sound.AnvilUseSound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.MovePlayerPacket;
 import cn.nukkit.network.protocol.ProtocolInfo;
@@ -78,19 +79,19 @@ public class CustomFactory implements Listener {
         for(Transaction t: traa){
             Inventory inv = t.getInventory();
             if(inv.getName().equals("TEST INV")){
-                CCM.getLogger().debug("TI > "+t.getSlot());
                 if(t.getSlot() == 3 || t.getSlot() == 1) {
-                    if(t.getSourceItem().getId() == Item.SLIME_BLOCK){
-                        CCM.getLogger().debug("11111!!");
-                        if(inv instanceof TestInv)((TestInv) inv).Take(transaction.getSource());
-                    }
-                    CCM.getLogger().debug("CANCELED!!");
                     event.setCancelled();
-                    break;
+                    return;
                 }else if(t.getSlot() == 2){
-                    CCM.getLogger().debug("CANCELED!!");
-                    event.setCancelled();
-                    break;
+                    if(t.getSourceItem().getId() == Item.ANVIL){
+                        event.setCancelled();
+                        return;
+                    }else{
+                        inv.clear(0);
+                        inv.clear(4);
+                        ((SimpleTransactionGroup) event.getTransaction()).getSource().getLevel().addSound(new AnvilUseSound(((SimpleTransactionGroup) event.getTransaction()).getSource()));
+                        inv.close(((SimpleTransactionGroup) event.getTransaction()).getSource());
+                    }
                 }
             }
         }
@@ -102,13 +103,8 @@ public class CustomFactory implements Listener {
         if (event.getBlock().getId() == Block.ANVIL) {
             Block BA = a.getLevel().getBlock(event.getBlock().add(0,-2));
             Inventory b = new TestInv(a, event.getBlock(),BA);
-            //b = new TestInv2(a);
-            //b = new PlayerEnderChestInventory(a);
             a.addWindow(b);
-            CCM.getLogger().debug("3");
             event.setCancelled();
-            //getLogger().info("CALLED!!!"+(a).addWindow(new TestInv(a)));
-            //getLogger().info("CALLED22222!!!"+(a).addWindow(new PlayerEnderChestInventory(a)));
         }
     }
 

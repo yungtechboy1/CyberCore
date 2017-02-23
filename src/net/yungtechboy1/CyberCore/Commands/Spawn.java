@@ -9,6 +9,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Messages;
 import net.yungtechboy1.CyberCore.RankList;
 import net.yungtechboy1.CyberCore.Tasks.ReTPTask;
+import net.yungtechboy1.CyberCore.Tasks.TeleportEvent;
 
 /**
  * Created by carlt_000 on 3/21/2016.
@@ -46,8 +47,13 @@ public class Spawn extends Command {
                 t.sendMessage(TextFormat.YELLOW+" Your at spawn!");
                 s.sendMessage(TextFormat.GREEN+t.getName()+" Teleported to spawn!");
             }else{
-                server.getServer().getScheduler().scheduleDelayedTask(new ReTPTask(server,(Player)s,p.getLevel().getSafeSpawn()),20*5);
-                s.sendMessage(TextFormat.GREEN+"Teleporting you to spawn in 5 Secs!");
+                if(r > RankList.PERM_ADMIN_1){
+                    p.teleport(p.getLevel().getSafeSpawn());
+                    s.sendMessage(TextFormat.GREEN + "Teleporting you!");
+                }else {
+                    server.getServer().getScheduler().scheduleDelayedTask(new TeleportEvent(server, (Player) s, p.getLevel().getSafeSpawn()), 20 * 5);
+                    s.sendMessage(TextFormat.GREEN + "Teleporting you to spawn in 5 Secs!");
+                }
             }
         } else {
             if(args.length == 1){

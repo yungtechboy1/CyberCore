@@ -76,9 +76,9 @@ public class MobPlugin implements Listener {
     CyberCoreMain CCM;
 
     public MobPlugin(CyberCoreMain ccm){
-        CCM = ccm;
+        CCM = ccm;/*
         onLoad();
-        onEnable();
+        onEnable();*/
     }
 
     public Config getConfig(){
