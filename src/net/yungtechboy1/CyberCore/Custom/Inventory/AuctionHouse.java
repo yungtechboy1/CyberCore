@@ -4,17 +4,20 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
+import cn.nukkit.block.BlockClayStained;
+import cn.nukkit.block.BlockGlassPane;
 import cn.nukkit.entity.EntityHuman;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
-import cn.nukkit.item.enchantment.Enchantment;
-import cn.nukkit.level.sound.AnvilUseSound;
+import cn.nukkit.item.ItemPotatoPoisonous;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.*;
+import cn.nukkit.utils.BlockColor;
 import cn.nukkit.utils.TextFormat;
+import sun.swing.plaf.synth.DefaultSynthStyle;
 
 import java.util.*;
 
@@ -42,7 +45,7 @@ public class AuctionHouse implements Inventory {
         BA = ba;
         OB = ob;
 
-        this.title = "TEST INV";
+        this.title = "Anvil INV";
 
         this.name = title;
         ReloadInv();
@@ -74,11 +77,12 @@ public class AuctionHouse implements Inventory {
         }
     }
 
-    public int getPenality(Item i){
+    public int getPenality(Item i) {
         CompoundTag tag;
-        if (!i.hasCompoundTag())return 0;
+        if (!i.hasCompoundTag()) return 0;
         tag = i.getNamedTag();
-        if (tag.contains("display") && tag.get("display") instanceof CompoundTag) return tag.getCompound("display").getInt("penalty");
+        if (tag.contains("display") && tag.get("display") instanceof CompoundTag)
+            return tag.getCompound("display").getInt("penalty");
         return 0;
     }
 
@@ -89,7 +93,7 @@ public class AuctionHouse implements Inventory {
         fullBlock1.x = (int) BA.x;
         fullBlock1.y = (int) BA.y - 2;
         fullBlock1.z = (int) BA.z;
-        fullBlock1.blockId = Block.HOPPER_BLOCK;
+        fullBlock1.blockId = Block.CHEST;
         fullBlock1.blockData = 0;
         fullBlock1.flags = 0;
         who.dataPacket(fullBlock1);
@@ -128,10 +132,6 @@ public class AuctionHouse implements Inventory {
         pk.windowid = (byte) who.getWindowId(this);
         who.dataPacket(pk);
         this.viewers.remove(who);
-        who.getInventory().sendContents(who);
-        who.getInventory().sendHeldItem(who);
-        if (getItem(0).getId() != 0) this.getHolder().getLevel().dropItem(BA.add(0.5, 0.5, 0.5), this.getItem(0));
-        if (getItem(4).getId() != 0) this.getHolder().getLevel().dropItem(BA.add(0.5, 0.5, 0.5), this.getItem(4));
     }
 
     @Override
@@ -181,16 +181,42 @@ public class AuctionHouse implements Inventory {
 
     public void ReloadInv() {
         this.slots.clear();
-        this.slots.put(0, Item.get(0));
-        this.slots.put(1, Item.get(Item.SLIME_BLOCK));
-        this.slots.put(2, Item.get(Item.ANVIL));
-        this.slots.put(3, Item.get(Item.SLIME_BLOCK));
-        this.slots.put(4, Item.get(0));
-        onSlotChange(0, null);
-        onSlotChange(1, null);
-        onSlotChange(2, null);
-        onSlotChange(3, null);
-        onSlotChange(4, null);
+        Item diamond = Item.get(Item.DIAMOND);
+        diamond.setCustomName(
+                TextFormat.GOLD + "" + TextFormat.BOLD + "Items you are Selling" + TextFormat.RESET + "\n" +
+                TextFormat.GREEN + " Click here to view all the items you are currently selling on the auction" + TextFormat.RESET + "\n\n" +
+                TextFormat.GREEN + "Can also use " + TextFormat.DARK_GREEN + "/ah listed"
+        );
+        Item potato = Item.get(Item.POTATO,1);
+        potato.setCustomName(
+                TextFormat.GOLD + "" + TextFormat.BOLD + "Collect Expired Items" + TextFormat.RESET + "\n" +
+                TextFormat.GREEN + " Click here to view all the items you have canceled or experied" + TextFormat.RESET + "\n\n" +
+                TextFormat.GREEN + "Can also use " + TextFormat.DARK_GREEN + "/ah expired"
+        );
+
+        Item redglass = Item.get(Item.STAINED_GLASS_PANE, 14);
+        redglass.setCustomName(
+                TextFormat.YELLOW + "" + TextFormat.BOLD + "Previous Page"
+        );
+        Item greenglass = Item.get(Item.STAINED_GLASS_PANE,5);
+        greenglass.setCustomName(
+                TextFormat.YELLOW + "" + TextFormat.BOLD + "Next Page"
+        );
+        Item netherstar = Item.get(Item.NETHER_STAR);
+        netherstar.setCustomName(
+                TextFormat.GREEN + "" + TextFormat.BOLD + "Refresh Page"
+        );
+        Item chest = Item.get(Item.CHEST);
+        chest.setCustomName(
+                TextFormat.GOLD + "" + TextFormat.BOLD + "Categories"
+        );
+        this.slots.put(46, diamond);
+        this.slots.put(47, potato);
+        this.slots.put(49, redglass);
+        this.slots.put(50, netherstar);
+        this.slots.put(51, greenglass);
+        this.slots.put(53, chest);
+        sendContents((Player) holder);
     }
 
     public void setItem2(int index, Item item) {
@@ -216,13 +242,13 @@ public class AuctionHouse implements Inventory {
             i0 = getItem(0).getId();
             i4 = getItem(4).getId();
             onRename((Player) holder);
-        }else if(getItem(0).getId() == 0 || getItem(4).getId() == 0){
+        } else if (getItem(0).getId() == 0 || getItem(4).getId() == 0) {
             Item t = Item.get(Item.REDSTONE_BLOCK);
             t.setCustomName(TextFormat.RED + "ERROR!" + TextFormat.RESET + "\n" + TextFormat.YELLOW + "Please Add 2 Items!");
             setItem2(1, t);
             setItem2(3, t);
             setItem2(2, Item.get(Item.ANVIL));
-            sendContents((Player)holder);
+            sendContents((Player) holder);
         }
 
         return true;
@@ -528,6 +554,6 @@ public class AuctionHouse implements Inventory {
 
     @Override
     public InventoryType getType() {
-        return InventoryType.HOPPER;
+        return InventoryType.DOUBLE_CHEST;
     }
 }

@@ -81,6 +81,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     //Factories
     public Homes HomeFactory;
     public RankFactory RankFactory;
+    public AuctionFactory AuctionFactory;
     public List<String> Final = new ArrayList<>();
     public List<String> TPING = new ArrayList<>();
     public HashMap<String, HashMap<String, Object>> cache = new HashMap<>();
@@ -113,6 +114,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         HomeFactory = new Homes(this);
         RankFactory = new RankFactory(this);
+        AuctionFactory = new AuctionFactory(this);
 
         MainConfig = new Config(new File(getDataFolder(), "config.yml"), Config.YAML,
                 new LinkedHashMap<String, Object>() {

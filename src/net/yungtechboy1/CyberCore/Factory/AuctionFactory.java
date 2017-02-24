@@ -1,12 +1,9 @@
 package net.yungtechboy1.CyberCore.Factory;
 
 import cn.nukkit.Player;
-import cn.nukkit.entity.Entity;
 import cn.nukkit.item.Item;
-import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.nbt.tag.StringTag;
 import cn.nukkit.nbt.tag.Tag;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
@@ -14,9 +11,11 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.io.File;
-import java.nio.ByteOrder;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -26,16 +25,18 @@ public class AuctionFactory {
     CyberCoreMain CCM;
     /**
      * Settings:
-     *      Key: {
-     *          id:
-     *          meta:
-     *          count:
-     *          namedtag:
-     *          cost:
-     *          soldby:
-     *      }
+     * Key: {
+     * id:
+     * meta:
+     * count:
+     * namedtag:
+     * cost:
+     * soldby:
+     * }
      */
     Config Settings;
+
+    ArrayList<Item> items = new ArrayList<>();
 
     public AuctionFactory(CyberCoreMain CCM) {
         this.CCM = CCM;
@@ -48,51 +49,112 @@ public class AuctionFactory {
         return true;
     }
 
-    public ArrayList<Item> getListOfItems(){
+    public void Init(){
         ArrayList<Item> is = new ArrayList<>();
-        for(Object o: Settings.getAll().values()){
-            if(o instanceof ConfigSection){
-                int id = ((ConfigSection) o).getInt("id");
-                int meta = ((ConfigSection) o).getInt("meta");
-                int count = ((ConfigSection) o).getInt("count");
-                int cost = ((ConfigSection) o).getInt("cost");
-                String soldby = ((ConfigSection) o).getString("soldby");
-                String nmdtg = ((ConfigSection) o).getString("namedtag");
-                Item i = Item.get(id,meta,count);
-                i.setCompoundTag(nmdtg.getBytes());
+        ResultSet rs = ExecuteQuerySQLite("SELECT * FROM `auctions`");
+        if(rs != null){
+            try {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    int item_id = rs.getInt("item-id");
+                    int item_meta = rs.getInt("item-meta");
+                    int item_count = rs.getInt("item-count");
+                    byte[] namedtag = rs.getString("namedtag").getBytes();
+                    int cost = rs.getInt("cost");
+                    String soldby = rs.getString("soldby");
 
-                CompoundTag tag = i.getNamedTag();
-                if(!i.getCustomName().equals("") && tag.contains("display") && tag.get("display") instanceof CompoundTag)tag.getCompound("display").putString("Name2", i.getCustomName());
-                i.setNamedTag(tag);
-                String cn = i.getCustomName();
-                cn += TextFormat.RESET+"\n"+TextFormat.AQUA+
-                        "-------------"+TextFormat.RESET+
-                        TextFormat.GREEN+"$"+cost+TextFormat.RESET+"\n"+
-                        TextFormat.GOLD+"Sold By: "+soldby;
-                i.setCustomName(cn);
-                is.add(i);
+                    Item i = Item.get(item_id, item_meta, item_count);
+                    i.setCompoundTag(namedtag);
+
+                    CompoundTag tag = i.getNamedTag();
+                    if (!i.getCustomName().equals("") && tag.contains("display") && tag.get("display") instanceof CompoundTag)
+                        tag.getCompound("display").putString("Name2", i.getCustomName());
+
+                    if(tag.contains("display") && tag.get("display") instanceof CompoundTag) {
+                        tag.getCompound("display").putString("soldby", soldby);
+                    } else {
+                        tag.putCompound("display", (new CompoundTag("display")).putString("soldby", soldby));
+                    }
+
+                    i.setNamedTag(tag);
+
+                    String cn = i.getCustomName();
+
+                    cn += TextFormat.RESET + "\n" + TextFormat.AQUA +
+                            "-------------" + TextFormat.RESET +
+                            TextFormat.GREEN + "$" + cost + TextFormat.RESET + "\n" +
+                            TextFormat.GOLD + "Sold By: " + soldby
+                    // + TextFormat.RESET + "\n" +TextFormat.BLACK+"{#"+id;
+                    ;
+
+                    i.setCustomName(cn);
+
+                    is.add(i);
+                }
+            }catch (Exception ex){
+                return;
             }
+            items = is;
         }
-        return is;
+
     }
 
-    public void saveall(){
-        for(Map.Entry<String>)
+    public ArrayList<Item> getListOfItems() {
+        return items;
     }
 
-    public ConfigSection CompoundTagtoConfigSection(CompoundTag ct) {
-        ConfigSection cs = new ConfigSection();
-        for (Tag t : ct.getAllTags()) {
-            if (t instanceof)
+    public void additem(Item i, Player p, int cost){
+        int id = i.getId();
+        int meta = i.getDamage();
+        int count = i.getCount();
+        String namedtag = i.getNamedTag().toString();
+        String sql = "INSERT INTO `auctions` (`id`, `item-id`, `item-meta`, `item-count`, `namedtag`, `cost`, `soldby`, `moneysent`) VALUES (NULL, '"+id+"', '"+meta+"', '"+count+"', '"+namedtag+"', '"+cost+"', '"+p.getName()+"', '0')";
+        ExecuteUpdateSQLite(sql);
+        //Take Item
+
+        CompoundTag tag = i.getNamedTag();
+        if (!i.getCustomName().equals("") && tag.contains("display") && tag.get("display") instanceof CompoundTag)
+            tag.getCompound("display").putString("Name2", i.getCustomName());
+
+        if(tag.contains("display") && tag.get("display") instanceof CompoundTag) {
+            tag.getCompound("display").putString("soldby", p.getName());
+        } else {
+            tag.putCompound("display", (new CompoundTag("display")).putString("soldby", p.getName()));
         }
+
+        i.setNamedTag(tag);
+
+        String cn = i.getCustomName();
+
+        cn += TextFormat.RESET + "\n" + TextFormat.AQUA +
+                "-------------" + TextFormat.RESET +
+                TextFormat.GREEN + "$" + cost + TextFormat.RESET + "\n" +
+                TextFormat.GOLD + "Sold By: " + p.getName()
+        // + TextFormat.RESET + "\n" +TextFormat.BLACK+"{#"+id;
+        ;
+
+        i.setCustomName(cn);
+
+        items.add(i);
     }
 
-    public CompoundTag getCompoundFromString(String name) {
+    public ResultSet ExecuteQuerySQLite(String s) {
         try {
-            return NBTIO.readCompressed(name.getBytes());
+            Statement stmt = CCM.getMySqlConnection().createStatement();
+            ResultSet r = stmt.executeQuery(s);
+            return r;
         } catch (Exception ex) {
-            CCM.getLogger().error("Auction Item Corruped!");
+            CCM.getServer().getLogger().info(ex.getClass().getName() + ":822 " + ex.getMessage());
+            return null;
         }
-        return null;
+    }
+
+    public void ExecuteUpdateSQLite(String s) {
+        try {
+            Statement stmt = CCM.getMySqlConnection().createStatement();
+            stmt.executeUpdate(s);
+        } catch (Exception ex) {
+            CCM.getServer().getLogger().info(ex.getClass().getName() + ":2822 " + ex.getMessage());
+        }
     }
 }
