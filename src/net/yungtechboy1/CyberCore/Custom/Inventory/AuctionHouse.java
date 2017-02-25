@@ -17,6 +17,7 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.*;
 import cn.nukkit.utils.BlockColor;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import sun.swing.plaf.synth.DefaultSynthStyle;
 
 import java.util.*;
@@ -30,17 +31,24 @@ public class AuctionHouse implements Inventory {
     protected final String title;
     protected final Map<Integer, Item> slots = new HashMap<>();
     protected final Set<Player> viewers = new HashSet<>();
-    public int i0 = 0;
-    public int i4 = 0;
+    public int Page = 1;
     protected int maxStackSize = Inventory.MAX_STACK;
     protected int size;
     EntityHuman holder;
     Vector3 BA;
     Block OB;
+    CyberCoreMain CCM;
 
-    public AuctionHouse(EntityHuman Holder, Vector3 ba, Block ob) {
+    public AuctionHouse(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba, Block ob) {
+        this(Holder,ccm, ba, ob, 1);
+    }
+
+    public AuctionHouse(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba, Block ob, int page) {
         holder = Holder;
         this.size = 5;
+
+        CCM = ccm;
+        Page = page;
 
         BA = ba;
         OB = ob;
@@ -77,15 +85,6 @@ public class AuctionHouse implements Inventory {
         }
     }
 
-    public int getPenality(Item i) {
-        CompoundTag tag;
-        if (!i.hasCompoundTag()) return 0;
-        tag = i.getNamedTag();
-        if (tag.contains("display") && tag.get("display") instanceof CompoundTag)
-            return tag.getCompound("display").getInt("penalty");
-        return 0;
-    }
-
     @Override
     public void onOpen(Player who) {
 
@@ -112,6 +111,8 @@ public class AuctionHouse implements Inventory {
         pk.y = 77;
         pk.z = 323;*/
         //57.0|83.0|336.0
+
+        CCM.AuctionFactory.getListOfItems();
 
         who.batchDataPacket(pk);
         this.sendContents(who);
@@ -184,21 +185,21 @@ public class AuctionHouse implements Inventory {
         Item diamond = Item.get(Item.DIAMOND);
         diamond.setCustomName(
                 TextFormat.GOLD + "" + TextFormat.BOLD + "Items you are Selling" + TextFormat.RESET + "\n" +
-                TextFormat.GREEN + " Click here to view all the items you are currently selling on the auction" + TextFormat.RESET + "\n\n" +
-                TextFormat.GREEN + "Can also use " + TextFormat.DARK_GREEN + "/ah listed"
+                        TextFormat.GREEN + " Click here to view all the items you are currently selling on the auction" + TextFormat.RESET + "\n\n" +
+                        TextFormat.GREEN + "Can also use " + TextFormat.DARK_GREEN + "/ah listed"
         );
-        Item potato = Item.get(Item.POTATO,1);
+        Item potato = Item.get(Item.POTATO, 1);
         potato.setCustomName(
                 TextFormat.GOLD + "" + TextFormat.BOLD + "Collect Expired Items" + TextFormat.RESET + "\n" +
-                TextFormat.GREEN + " Click here to view all the items you have canceled or experied" + TextFormat.RESET + "\n\n" +
-                TextFormat.GREEN + "Can also use " + TextFormat.DARK_GREEN + "/ah expired"
+                        TextFormat.GREEN + " Click here to view all the items you have canceled or experied" + TextFormat.RESET + "\n\n" +
+                        TextFormat.GREEN + "Can also use " + TextFormat.DARK_GREEN + "/ah expired"
         );
 
         Item redglass = Item.get(Item.STAINED_GLASS_PANE, 14);
         redglass.setCustomName(
                 TextFormat.YELLOW + "" + TextFormat.BOLD + "Previous Page"
         );
-        Item greenglass = Item.get(Item.STAINED_GLASS_PANE,5);
+        Item greenglass = Item.get(Item.STAINED_GLASS_PANE, 5);
         greenglass.setCustomName(
                 TextFormat.YELLOW + "" + TextFormat.BOLD + "Next Page"
         );
@@ -241,7 +242,7 @@ public class AuctionHouse implements Inventory {
         if (getItem(0).getId() != 0 && getItem(4).getId() != 0 /*&& getItem(0).getId() != i0 && getItem(4).getId() != i4*/) {
             i0 = getItem(0).getId();
             i4 = getItem(4).getId();
-            onRename((Player) holder);
+
         } else if (getItem(0).getId() == 0 || getItem(4).getId() == 0) {
             Item t = Item.get(Item.REDSTONE_BLOCK);
             t.setCustomName(TextFormat.RED + "ERROR!" + TextFormat.RESET + "\n" + TextFormat.YELLOW + "Please Add 2 Items!");

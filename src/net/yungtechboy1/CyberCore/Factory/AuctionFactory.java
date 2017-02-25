@@ -103,6 +103,33 @@ public class AuctionFactory {
         return items;
     }
 
+    public ArrayList<Item> getPage(int page){
+        int stop = page*45 - 1;
+        int start = stop - 44;
+        if(start > getListOfItems().size()){
+            return new ArrayList<>();
+        }
+
+        int z = 10;
+        int x = 13;
+
+       ArrayList<Item> list = new ArrayList<>();
+
+        for(int a = start; start < getListOfItems().size(); a++){
+            if(a >= stop) break;
+            Item newitem = getListOfItems().get(a).clone();
+            if(newitem == null)continue;
+            list.add(newitem);
+        }
+
+        return list;
+
+        /*
+        1 => 0 | 44
+        2 => 45 | 89
+         */
+    }
+
     public void additem(Item i, Player p, int cost){
         int id = i.getId();
         int meta = i.getDamage();

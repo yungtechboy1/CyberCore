@@ -1,7 +1,8 @@
 <component name="libraryTable">
   <library name="nukkit-1.0-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../nukkit-1.0-SNAPSHOT.jar!/" />
+      <root url="jar://$USER_HOME$/nukkit-1.0-SNAPSHOT.jar!/" />
+      <root url="jar://$USER_HOME$/Documents/PR-Java/nukkit-1.0-SNAPSHOT.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
