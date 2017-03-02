@@ -1,6 +1,7 @@
 package net.yungtechboy1.CyberCore.Events;
 
 import cn.nukkit.Player;
+import cn.nukkit.block.Block;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
@@ -109,6 +110,8 @@ public class ForbidAction implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onPlayerInteractEvent(cn.nukkit.event.player.PlayerInteractEvent event) {
+        Block b = event.getBlock();
+        System.out.println(b.getDamage());
         cancel(event.getPlayer(), event);
     }
 

@@ -13,10 +13,10 @@ import net.yungtechboy1.CyberCore.Utils;
 /**
  * Created by carlt_000 on 1/21/2017.
  */
-public class Ban extends TargetCommand {
+public class BanCmd extends TargetCommand {
 
-    public Ban(CyberCoreMain server) {
-        super(server, "ban", "Bans player", "/ban <player> [Message|'']", RankList.PERM_ADMIN_1, 1, true);
+    public BanCmd(CyberCoreMain server) {
+        super(server, "ban", "Bans player", "/ban <player> [Message|'']", RankList.PERM_ADMIN_1, 0, true);
         OT = false;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{

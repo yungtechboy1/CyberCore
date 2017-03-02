@@ -5,6 +5,7 @@ import cn.nukkit.event.player.PlayerLoginEvent;
 import cn.nukkit.event.player.PlayerPreLoginEvent;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Commands.IPBan;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
@@ -13,7 +14,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 public class Ban {
     public String name = null;
     String ip = null;
-    long randomclientid = -1;
+    Long randomclientid = -1L;
     String UniqueId = null;
 
     long tempban = -1;
@@ -103,7 +104,7 @@ public class Ban {
      * @param clientban Ban Client
      */
     public Ban(CyberCoreMain server, Player p, String reason, long date, boolean nameban, boolean ipban, boolean clientban) {
-        this.name = name;
+        this.name = p.getName();
         ip = p.getAddress();
         randomclientid = p.getClientId();
         UniqueId = p.getUniqueId().toString();
@@ -146,12 +147,17 @@ public class Ban {
      * @return
      */
     public boolean checkbanned(Player player, PlayerLoginEvent event){
+        /*player.getServer().getLogger().info(player.getAddress()+" | "+randomclientid+" | "+UniqueId);
+        if(IpBan) player.getServer().getLogger().info("1111");
+        if(ClientBan && randomclientid.equals(player.getClientId())) player.getServer().getLogger().info("2222A");
+        if(ClientBan && UniqueId.equals(player.getUniqueId().toString())) player.getServer().getLogger().info("2222B");
+        if(NameBan) player.getServer().getLogger().info("3333");*/
         if(IpBan && ip.equalsIgnoreCase(player.getAddress())){
             event.setKickMessage(TextFormat.RED+"Your Banned! E-1");
             event.setCancelled();
             return true;
         }
-        if(ClientBan && randomclientid == player.getClientId() && UniqueId.equals(player.getUniqueId().toString())){
+        if(ClientBan && randomclientid.equals(player.getClientId()) && UniqueId.equals(player.getUniqueId().toString())){
             event.setKickMessage(TextFormat.RED+"Your Banned! E-2");
             event.setCancelled();
             return true;

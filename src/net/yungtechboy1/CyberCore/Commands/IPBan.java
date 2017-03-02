@@ -16,7 +16,7 @@ import net.yungtechboy1.CyberCore.Utils;
 public class IPBan extends TargetCommand {
 
     public IPBan(CyberCoreMain server) {
-        super(server, "banip", "Bans player's IP", "/banip <player> [Message|'']", RankList.PERM_ADMIN_1, 1, true);
+        super(server, "ban", "Bans player", "/banip <player> [Message|'']", RankList.PERM_ADMIN_1, 0, true);
         OT = false;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{

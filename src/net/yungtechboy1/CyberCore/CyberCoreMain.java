@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore;
 
+import ArchMCPE.ArchEcon.ArchEconMain;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandExecutor;
@@ -8,7 +9,6 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerLoginEvent;
-import cn.nukkit.event.player.PlayerPreLoginEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.math.Vector3;
@@ -44,6 +44,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public static final String NAME = TextFormat.GOLD + "" + TextFormat.BOLD + "§eTERRA§6CORE " + TextFormat.RESET + TextFormat.GOLD + "» " + TextFormat.RESET;
     //CyberChat
     public static Connection Connect = null;
+    public static Connection Connect2 = null;
     public static String Prefix = TextFormat.AQUA + "[TerraTP]";
     public Config job;
     public Config Homes;
@@ -78,7 +79,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public PasswordFactoy PasswordFactoy;
     //CustomFactory
     public CustomFactory CustomFactory;
-    //Factories
+    //FactoriesA
     public Homes HomeFactory;
     public RankFactory RankFactory;
     public AuctionFactory AuctionFactory;
@@ -182,8 +183,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         ban = new Config(new File(this.getDataFolder(), "ban.yml"), Config.YAML);
         if (ban.getAll().size() > 0) {
-            for (ConfigSection c : (ConfigSection[]) ban.getAll().values().toArray()) {
-                bans.add(new Ban(c));
+            for (Object c : ban.getAll().values().toArray()) {
+                if(c instanceof ConfigSection)bans.add(new Ban((ConfigSection)c));
             }
         }
         tban = new Config(new File(this.getDataFolder(), "tban.yml"), Config.YAML);
@@ -202,23 +203,23 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new CyberChatEvent(this), this);
         getServer().getPluginManager().registerEvents(ClassFactory, this);
+        getServer().getPluginManager().registerEvents(AuctionFactory, this);
 
         getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
         getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec
 
 
         //COMMANDS
-        getServer().getCommandMap().register("CyberCore", new net.yungtechboy1.CyberCore.Commands.Ban(this));
+        getServer().getCommandMap().register("CyberCore", new BanCmd(this));
         getServer().getCommandMap().register("CyberCore", new Ci(this));
         getServer().getCommandMap().register("CyberCore", new Fix(this));
         getServer().getCommandMap().register("CyberCore", new IPBan(this));
         getServer().getCommandMap().register("CyberCore", new Msg(this));
         getServer().getCommandMap().register("CyberCore", new Reply(this));
         getServer().getCommandMap().register("CyberCore", new Spawn(this));
-        getServer().getCommandMap().register("CyberCore", new Tban(this));
+        //getServer().getCommandMap().register("CyberCore", new Tban(this));
         getServer().getCommandMap().register("CyberCore", new Top(this));
         getServer().getCommandMap().register("CyberCore", new Vote(this));
-        getServer().getCommandMap().register("CyberCore", new net.yungtechboy1.CyberCore.Commands.Ban(this));
         getServer().getCommandMap().register("CyberCore", new Wild(this));
 
         getServer().getCommandMap().register("CyberCore", new Home(this));
@@ -252,6 +253,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         getServer().getCommandMap().register("CyberCore", new Register(this));
 
         getServer().getCommandMap().register("CyberCore", new ChatEnchant(this));
+
+        getServer().getCommandMap().register("CyberCore", new AuctionHouseCmd(this));
+        getServer().getCommandMap().register("CyberCore", new SellHand(this));
     }
 
     public Connection getMySqlConnection() {
@@ -272,6 +276,27 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         } catch (Exception ignore) {
             getServer().getLogger().info(ignore.getClass().getName() + ": " + ignore.getMessage());
             Connect = null;
+        }
+        return null;
+    }
+    public Connection getMySqlConnection2() {
+        try {
+            if (Connect2 != null && Connect2.isClosed()) Connect2 = null;
+            if (Connect2 != null) return Connect2;
+            Class.forName("com.mysql.jdbc.Driver");
+            //getLogger().info(TextFormat.GREEN+"Connecting to database...");
+            Connect2 = DriverManager.getConnection("jdbc:mysql://localhost/Terratide?user=TerraTideMC&password=TerraTideMC&autoreconnect=true");
+            return Connect2;
+            //} catch (Exception ignore) {
+        } catch (SQLException ex) {
+            // handle any errors
+            getServer().getLogger().info("SQLException: " + ex.getMessage());
+            getServer().getLogger().info("SQLState: " + ex.getSQLState());
+            getServer().getLogger().info("VendorError: " + ex.getErrorCode());
+            Connect2 = null;
+        } catch (Exception ignore) {
+            getServer().getLogger().info(ignore.getClass().getName() + ": " + ignore.getMessage());
+            Connect2 = null;
         }
         return null;
     }
@@ -457,7 +482,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         p.getName();
         for (Ban b : bans) {
             if (b.checkbanned(p, event)){
-                event.setKickMessage("You are Banned!");
                 event.setCancelled();
                 return;
             }

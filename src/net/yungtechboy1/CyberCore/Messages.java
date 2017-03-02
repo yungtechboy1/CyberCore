@@ -10,11 +10,11 @@ import javax.xml.soap.Text;
 public class Messages {
 
     //Genral Strings
-    public static String RANK_CAN_NOT_BE_EQUAL = TextFormat.RED+"You do not have enough permissionsn to do so.";
-    public static String TARGET_TOO_HIGH = TextFormat.RED+"You do not have enough permissionsn to do so.";
+    public static String RANK_CAN_NOT_BE_EQUAL = TextFormat.RED+"You do not have enough permissionsn to do so. Target Is Equal to you!";
+    public static String TARGET_TOO_HIGH = TextFormat.RED+"You do not have enough permissionsn to do so. Target Too High";
 
-    public static String TARGET_NOT_FOUND = TextFormat.RED+"You do not have enough permissionsn to do so.";
-    public static String INVALID_COMMAND_SYNTAX = TextFormat.RED+"You do not have enough permissionsn to do so.";
+    public static String TARGET_NOT_FOUND = TextFormat.RED+"Target Not Found!.";
+    public static String INVALID_COMMAND_SYNTAX = TextFormat.RED+"Invalid Command Syntax.";
 
     public static String NO_PERM = TextFormat.RED+"You do not permissionsn to access this command!";
     public static String NEED_TO_BE_PLAYER = TextFormat.RED+"You have to be a player to use this command!";

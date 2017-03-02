@@ -26,9 +26,6 @@ public class CheckPermCommand extends Command {
 
     @Override
     public boolean execute(CommandSender commandSender, String s, String[] strings) {
-        if (!this.testPermission(commandSender)) {
-            return SendError(Messages.NO_PERM);
-        }
         CS = commandSender;
         if(MinRank > CheckPerms(commandSender))return SendError(Messages.NO_PERM);
         Error = null;

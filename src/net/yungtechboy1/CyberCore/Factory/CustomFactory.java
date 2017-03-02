@@ -78,7 +78,7 @@ public class CustomFactory implements Listener {
 
         for(Transaction t: traa){
             Inventory inv = t.getInventory();
-            if(inv.getName().equals("TEST INV")){
+            if(inv instanceof TestInv){
                 if(t.getSlot() == 3 || t.getSlot() == 1) {
                     event.setCancelled();
                     return;
