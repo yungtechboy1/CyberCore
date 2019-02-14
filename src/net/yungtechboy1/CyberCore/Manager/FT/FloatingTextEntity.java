@@ -1,33 +1,35 @@
-package net.yungtechboy1.CyberCore.CustomEntity;
+package net.yungtechboy1.CyberCore.Manager.FT;
 
 
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.data.EntityMetadata;
 import cn.nukkit.item.Item;
-import cn.nukkit.level.particle.Particle;
+import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.Vector3;
-import cn.nukkit.network.protocol.AddEntityPacket;
+import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.AddPlayerPacket;
 import cn.nukkit.network.protocol.DataPacket;
 import cn.nukkit.network.protocol.RemoveEntityPacket;
+
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.IntFunction;
 
-public class CTFloatingTextParticle2 extends Particle {
+public class FloatingTextEntity extends Entity {
     protected String text;
     protected String title;
+    public boolean isVisitorSensitive = false;
     public Long entityId;
     protected boolean invisible;
     protected EntityMetadata metadata;
 
-    public CTFloatingTextParticle2(Vector3 pos, String text) {
-        this(pos, text, "");
+    public FloatingTextEntity(Vector3 pos, String text, FullChunk fc, CompoundTag ct) {
+        this(pos, text, "", fc, ct);
     }
 
-    public CTFloatingTextParticle2(Vector3 pos, String text, String title) {
-        super(pos.x, pos.y, pos.z);
+    public FloatingTextEntity(Vector3 pos, String text, String title, FullChunk fc, CompoundTag ct) {
+        super(fc, ct);
+        setPosition(pos);
         this.entityId = -1L;
         this.invisible = false;
         this.metadata = new EntityMetadata();
@@ -60,7 +62,6 @@ public class CTFloatingTextParticle2 extends Particle {
         this.invisible = invisible;
     }
 
-    @Override
     public DataPacket[] encode() {
         ArrayList<DataPacket> packets = new ArrayList<>();
 
@@ -96,12 +97,17 @@ public class CTFloatingTextParticle2 extends Particle {
             pk.metadata = new EntityMetadata()
                     .putLong(Entity.DATA_FLAGS, flags)
                     .putString(Entity.DATA_NAMETAG, this.title + (!"".equals(this.text) ? "\n" + this.text : ""))
-                    .putLong(Entity.DATA_LEAD_HOLDER_EID, -1)
-                    .putByte(Entity.DATA_LEAD, 0);
+                    .putLong(Entity.DATA_LEAD_HOLDER_EID, -1);
+//                    .putByte(Entity.DATA_LEAD, 0);
             pk.item = Item.get(Item.AIR);
             packets.add(pk);
         }
 
         return packets.stream().toArray(DataPacket[]::new);
+    }
+
+    @Override
+    public int getNetworkId() {
+        return -1;
     }
 }

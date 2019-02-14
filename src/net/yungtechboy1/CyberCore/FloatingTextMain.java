@@ -2,9 +2,6 @@ package net.yungtechboy1.CyberCore;
 
 import ArchMCPE.ArchEcon.ArchEconMain;
 import cn.nukkit.Player;
-import cn.nukkit.Server;
-import cn.nukkit.command.Command;
-import cn.nukkit.command.CommandSender;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
@@ -15,11 +12,10 @@ import cn.nukkit.event.player.PlayerDeathEvent;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.level.Level;
 import cn.nukkit.math.Vector3;
-import cn.nukkit.network.protocol.RemoveEntityPacket;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
 import main.java.CyberFactions.FactionsMain;
-import net.yungtechboy1.CyberCore.CustomEntity.CTFloatingTextParticle2;
+import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextEntity;
 import net.yungtechboy1.CyberCore.Tasks.UpdateFloatingTextTask;
 
 import java.io.File;
@@ -153,7 +149,7 @@ public class FloatingTextMain implements Listener {
             String[] split = e.getKey().split("&");
             Vector3 v3 = new Vector3(Double.parseDouble(split[0]),Double.parseDouble(split[1]),Double.parseDouble(split[2]));
             String FT = FormatText((String)v.get("text"),event.getPlayer());
-            CTFloatingTextParticle2 ftp = new CTFloatingTextParticle2(v3,FT);
+            FloatingTextEntity ftp = new FloatingTextEntity(v3,FT);
             Player[] p = new Player[]{event.getPlayer()};
             l.addParticle(ftp,p);
             Eids.add(ftp.entityId);
@@ -215,7 +211,7 @@ public class FloatingTextMain implements Listener {
                     Vector3 v3 = new Vector3(Double.parseDouble(split[0]), Double.parseDouble(split[1]), Double.parseDouble(split[2]));
                     String FT = FormatText((String) v.get("text"));
 
-                    CTFloatingTextParticle2 ftp = new CTFloatingTextParticle2(v3, FT);
+                    FloatingTextEntity ftp = new FloatingTextEntity(v3, FT);
                     if (EV3.containsKey(e.getKey())) {
                         ftp.entityId = EV3.get(e.getKey());
                     } else {
@@ -255,7 +251,7 @@ public class FloatingTextMain implements Listener {
                     Vector3 v3 = new Vector3(Double.parseDouble(split[0]), Double.parseDouble(split[1]), Double.parseDouble(split[2]));
                     String FT = ((String) v.get("text"))
                             .replace("`", "\n");
-                    CTFloatingTextParticle2 ftp = new CTFloatingTextParticle2(v3, FT);
+                    FloatingTextEntity ftp = new FloatingTextEntity(v3, FT);
                     l.addParticle(ftp);
                     //l.addParticle(ftp,l.getPlayers().values());
                     Eids.add(ftp.entityId);
@@ -269,7 +265,7 @@ public class FloatingTextMain implements Listener {
                         CCM.getLogger().alert("ERROR4 Loading Text with key " + e.getKey() + " On " + (String) v.get("level") + " VS " + v.get("text"));
                         continue;
                     }
-                    CTFloatingTextParticle2 ftp = new CTFloatingTextParticle2(e.getKey(), FormatText((String) v.get("text"), eee.getValue()));
+                    FloatingTextEntity ftp = new FloatingTextEntity(e.getKey(), FormatText((String) v.get("text"), eee.getValue()));
 
                     String key = e.getKey().getX() + "&" + e.getKey().getY() + "&" + e.getKey().getZ();
 
@@ -303,7 +299,7 @@ public class FloatingTextMain implements Listener {
             put("level", player.getLevel().getFolderName());
 
         }};
-        CTFloatingTextParticle2 ftp = new CTFloatingTextParticle2(v3, "Testing Text","TTEESSTT");
+        FloatingTextEntity ftp = new FloatingTextEntity(v3, "Testing Text","TTEESSTT");
         //player.getLevel().addParticle(ftp,  player.getLevel().getPlayers().values());
         player.getLevel().addParticle(ftp);
         Eids.add(ftp.entityId);

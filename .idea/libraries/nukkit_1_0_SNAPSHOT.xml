@@ -1,10 +1,16 @@
 <component name="libraryTable">
   <library name="nukkit-1.0-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$USER_HOME$/nukkit-1.0-SNAPSHOT.jar!/" />
-      <root url="jar://$USER_HOME$/Documents/PR-Java/nukkit-1.0-SNAPSHOT.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/nukkit-1.0-SNAPSHOT.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../bcrypt-0.4.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../bytes-0.4.6.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../Nukkit-master.zip!/Nukkit-master/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/../Nukkit-master.zip!/Nukkit-master/src/test/java" />
+      <root url="jar://$PROJECT_DIR$/../jBCrypt-0.4.zip!/jBCrypt-0.4/src" />
+      <root url="jar://$PROJECT_DIR$/../jBCrypt-0.4.zip!/jBCrypt-0.4/test" />
+    </SOURCES>
   </library>
 </component>

@@ -2,18 +2,13 @@ package net.yungtechboy1.CyberCore.Tasks;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
-import cn.nukkit.entity.data.EntityMetadata;
 import cn.nukkit.level.Level;
 import cn.nukkit.math.Vector3;
-import cn.nukkit.network.protocol.AddEntityPacket;
-import cn.nukkit.network.protocol.DataPacket;
 import cn.nukkit.network.protocol.RemoveEntityPacket;
 import cn.nukkit.scheduler.PluginTask;
-import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.CustomEntity.CTFloatingTextParticle2;
+import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextEntity;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
-import java.security.acl.Owner;
 import java.util.*;
 
 /**
@@ -80,7 +75,7 @@ public class UpdateFloatingTextTask  extends PluginTask<CyberCoreMain> {
                 String[] split = e.getKey().split("&");
                 Vector3 v3 = new Vector3(Double.parseDouble(split[0]),Double.parseDouble(split[1]),Double.parseDouble(split[2]));
                 String FT = getOwner().FTM.FormatText((String)v.get("text"));
-                CTFloatingTextParticle2 ftp = new CTFloatingTextParticle2(v3,FT);
+                FloatingTextEntity ftp = new FloatingTextEntity(v3,FT);
                 if(getOwner().FTM.EV3.containsKey(e.getKey())) {
                     ftp.entityId = getOwner().FTM.EV3.get(e.getKey());
                 }else{
@@ -99,7 +94,7 @@ public class UpdateFloatingTextTask  extends PluginTask<CyberCoreMain> {
                     getOwner().getLogger().alert("ERROR Loading Sending Syntax Text with key " + e.getKey() + " On " + v.get("Level"));
                     continue;
                 }
-                CTFloatingTextParticle2 ftp = new CTFloatingTextParticle2(e.getKey(), getOwner().FTM.FormatText((String )v.get("text"), eee.getValue()));
+                FloatingTextEntity ftp = new FloatingTextEntity(e.getKey(), getOwner().FTM.FormatText((String )v.get("text"), eee.getValue()));
 
                 String key = e.getKey().getX()+"&"+e.getKey().getY()+"&"+e.getKey().getZ();
 
