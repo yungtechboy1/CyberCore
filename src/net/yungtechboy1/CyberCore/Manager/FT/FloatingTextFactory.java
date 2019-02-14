@@ -59,8 +59,8 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
                     if (ftlt >= tick) continue;
                     ArrayList<String> ap = new ArrayList<>();
                     for(String player: ppss.keySet()){
-                        Position pos = ppss[player];
-                        if(pos.distance(ft.Pos) > 100)continue;
+                        Position ppos = ppss.get(player);
+                        if(ppos.distance(ft.Pos) > 100)continue;
                         ap.add(player);
                     }
                     if(ap.size() == 0)continue;
