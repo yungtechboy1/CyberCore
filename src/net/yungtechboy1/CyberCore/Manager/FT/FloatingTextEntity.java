@@ -2,21 +2,34 @@ package net.yungtechboy1.CyberCore.Manager.FT;
 
 
 import cn.nukkit.Player;
+import cn.nukkit.Server;
+import cn.nukkit.block.Block;
 import cn.nukkit.entity.Attribute;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.EntityHuman;
 import cn.nukkit.entity.data.EntityData;
 import cn.nukkit.entity.data.EntityMetadata;
+import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.event.entity.EntityRegainHealthEvent;
+import cn.nukkit.event.player.PlayerTeleportEvent;
 import cn.nukkit.item.Item;
+import cn.nukkit.level.Level;
+import cn.nukkit.level.Location;
 import cn.nukkit.level.Position;
 import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.math.Vector3;
+import cn.nukkit.math.*;
+import cn.nukkit.metadata.MetadataValue;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.AddEntityPacket;
 import cn.nukkit.network.protocol.AddPlayerPacket;
 import cn.nukkit.network.protocol.DataPacket;
 import cn.nukkit.network.protocol.RemoveEntityPacket;
+import cn.nukkit.plugin.Plugin;
+import cn.nukkit.potion.Effect;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -30,7 +43,7 @@ public class FloatingTextEntity extends Entity {
     protected boolean invisible;
     protected EntityMetadata metadata;
 
-    private static final EntityMetadata DEFAULT_DATA =  new EntityMetadata()
+    private static final EntityMetadata DEFAULT_DATA = new EntityMetadata()
             .putLong(Entity.DATA_FLAGS, (
                     (1L << Entity.DATA_FLAG_CAN_SHOW_NAMETAG) |
                             (1L << Entity.DATA_FLAG_ALWAYS_SHOW_NAMETAG) |
@@ -165,8 +178,53 @@ public class FloatingTextEntity extends Entity {
 
         player.dataPacket(pk);
     }
+
     @Override
     public int getNetworkId() {
         return -1;
     }
+
+    @Override
+    public boolean canCollide() {
+        return false;
+    }
+
+    @Override
+    protected float getGravity() {
+        return 0f;
+    }
+
+    ///
+    @Override
+    protected void initEntity() {
+        super.initEntity();
+    }
+
+
+    @Override
+    public boolean isImmobile() {
+        return true;
+    }
+
+    @Override
+    public void setImmobile() {
+        super.setImmobile();
+    }
+
+
+    @Override
+    public void saveNBT() {
+        super.saveNBT();
+    }
+
+    @Override
+    public String getName() {
+        return super.getName();
+    }
+
+    @Override
+    public boolean onUpdate(int currentTick) {
+        return super.onUpdate(currentTick);
+    }
+
 }
