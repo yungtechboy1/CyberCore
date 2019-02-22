@@ -14,7 +14,7 @@ import cn.nukkit.level.Level;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
-import main.java.CyberFactions.FactionsMain;
+import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextEntity;
 import net.yungtechboy1.CyberCore.Tasks.UpdateFloatingTextTask;
 

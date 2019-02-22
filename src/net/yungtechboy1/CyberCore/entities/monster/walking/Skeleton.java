@@ -12,7 +12,6 @@ import cn.nukkit.item.ItemBow;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Location;
 import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.level.sound.LaunchSound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.MobEquipmentPacket;
@@ -84,7 +83,7 @@ public class Skeleton extends WalkingMonster {
                     projectile.kill();
                 } else {
                     projectile.spawnToAll();
-                    this.level.addSound(new LaunchSound(this), this.getViewers().values());
+//                    this.level.addSound(new LaunchSound(this), this.getViewers().values());
                 }
             }
         }
@@ -94,12 +93,12 @@ public class Skeleton extends WalkingMonster {
     public void spawnTo(Player player) {
         super.spawnTo(player);
 
-        MobEquipmentPacket pk = new MobEquipmentPacket();
-        pk.eid = this.getId();
-        pk.item = new ItemBow();
-        pk.slot = 10;
-        pk.selectedSlot = 10;
-        player.dataPacket(pk);
+//        MobEquipmentPacket pk = new MobEquipmentPacket();
+//        pk.eid = this.getId();
+//        pk.item = new ItemBow();
+//        pk.slot = 10;
+//        pk.selectedSlot = 10;
+//        player.dataPacket(pk);
     }
 
     @Override

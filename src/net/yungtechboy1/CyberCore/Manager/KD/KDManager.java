@@ -14,7 +14,8 @@ public class KDManager {
      * Kills:0
      * Deaths:0
      */
-    public ConfigSection Data;
+    public ConfigSection KillData;
+    public ConfigSection DeathData;
 
     public void LoadData() {
 
@@ -25,16 +26,33 @@ public class KDManager {
     }
 
     public void AddDeath(Player p) {
+        AddDeath(p.getName());
+    }
+    public void AddDeath(String p) {
         String key = p + ".Deaths";
-        if (!Data.exists(key)) {
-            Data.set(key,1);
+        if (!DeathData.exists(key)) {
+            DeathData.set(key,1);
         }else{
-            Data.set(key,(int)Data.get(key) + 1);
+            DeathData.set(key,(int)DeathData.get(key) + 1);
+        }
+    }
+
+    public void AddKill(Player p) {
+        AddDeath(p.getName());
+    }
+    public void AddKill(String p) {
+        String key = p + ".Deaths";
+        if (!KillData.exists(key)) {
+            KillData.set(key,1);
+        }else{
+            KillData.set(key,(int)KillData.get(key) + 1);
         }
     }
 
     public void RecordKD(Player killed, Player killer) {
-        DataPacket[killed + ".Deaths"] =
+       AddKill(killer);
+       AddDeath(killed);
+       //TODO remove effects?
     }
 
 

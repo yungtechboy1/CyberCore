@@ -2,7 +2,7 @@ package net.yungtechboy1.CyberCore.Tasks;
 
 import cn.nukkit.plugin.Plugin;
 import cn.nukkit.scheduler.PluginTask;
-import main.java.CyberFactions.FactionsMain;
+import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**

@@ -22,7 +22,6 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
 
     private CyberCoreMain CCM;
 
-    protected final FloatingTextUpdater floatingTextUpdater = new FloatingTextUpdater(this);
     ArrayList<FloatingTextContainer> LList = new ArrayList<>();
 
     public FloatingTextFactory(CyberCoreMain CCM) {
@@ -39,8 +38,7 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
     }
 
     public void CTstop() {
-
-        if (floatingTextUpdater.isAlive()) floatingTextUpdater.interrupt();
+        if (isAlive()) interrupt();
     }
 
     public HashMap<String, Position> GetPlayerPoss() {
@@ -77,26 +75,26 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
                 }
 
 
-                try {
-                    Thread.sleep(60);
-                } catch (InterruptedException e) {
-                    //ignore
-                }
+            }
+            try {
+                Thread.sleep(60);
+            } catch (InterruptedException e) {
+                //ignore
             }
         }
     }
 
     public String FormatText(String text, Player player) {
-        text = text.replace("{online-players}",""+CCM.getServer().getOnlinePlayers().size())
-                .replace("{ticks}",CCM.getServer().getTicksPerSecondAverage()+"")
-                .replace("`","\n")
-                .replace("{&}", TextFormat.ESCAPE+"");
-        if(player != null)text = text.replace("{name}",player.getName());
-        if(player != null){
+        text = text.replace("{online-players}", "" + CCM.getServer().getOnlinePlayers().size())
+                .replace("{ticks}", CCM.getServer().getTicksPerSecondAverage() + "")
+                .replace("`", "\n")
+                .replace("{&}", TextFormat.ESCAPE + "");
+        if (player != null) text = text.replace("{name}", player.getName());
+        if (player != null) {
             //Faction
 
             String pf = "No Faction";
-            if(CCM.FM != null) {
+            if (CCM.FM != null) {
                 pf = CCM.FM.getPlayerFaction(player);
                 if (pf == null) pf = "No Faction";
             }
@@ -111,16 +109,16 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
 //                deaths = Double.parseDouble(((LinkedHashMap)KDConfig.get(player.getName().toLowerCase())).get("deaths")+"");
 //            }
             //KDR
-            Double kdr = kills/deaths;//Factions.GetKDR(player.getName());
+            Double kdr = kills / deaths;//Factions.GetKDR(player.getName());
             CyberCoreMain CC = (CyberCoreMain) CCM.getServer().getPluginManager().getPlugin("CyberCore");
             String rank = "Guest|";
-            if(CC != null){
+            if (CC != null) {
                 rank = CC.getPlayerRankCache(player.getName());
-                if(rank == null)rank = "Guest";
+                if (rank == null) rank = "Guest";
             }
-            String tps = ""+CCM.getServer().getTicksPerSecond();
-            String players = ""+CCM.getServer().getOnlinePlayers().size();
-            String max = ""+CCM.getServer().getMaxPlayers();
+            String tps = "" + CCM.getServer().getTicksPerSecond();
+            String players = "" + CCM.getServer().getOnlinePlayers().size();
+            String max = "" + CCM.getServer().getMaxPlayers();
             String money = "0";
 //            ArchEconMain AA = (ArchEconMain) CCM.getServer().getPluginManager().getPlugin("ArchEcon");
 //            if(AA != null){
@@ -128,22 +126,22 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
 //            }
 
             text = text
-                    .replace("{faction}",pf)
-                    .replace("{kills}",kills+"")
-                    .replace("{deaths}",deaths+"")
-                    .replace("{kdr}",kdr+"")
-                    .replace("{rank}",rank)
-                    .replace("{tps}",tps)
-                    .replace("{players}",players)
-                    .replace("{max}",max)
-                    .replace("{money}",money)
+                    .replace("{faction}", pf)
+                    .replace("{kills}", kills + "")
+                    .replace("{deaths}", deaths + "")
+                    .replace("{kdr}", kdr + "")
+                    .replace("{rank}", rank)
+                    .replace("{tps}", tps)
+                    .replace("{players}", players)
+                    .replace("{max}", max)
+                    .replace("{money}", money)
             ;
-        }else{
+        } else {
             text = text
-                    .replace("{faction}","No Faction")
-                    .replace("{kills}","N/A")
-                    .replace("{deaths}","N/A")
-                    .replace("{kdr}","N/A");
+                    .replace("{faction}", "No Faction")
+                    .replace("{kills}", "N/A")
+                    .replace("{deaths}", "N/A")
+                    .replace("{kdr}", "N/A");
         }
         return text;
     }
