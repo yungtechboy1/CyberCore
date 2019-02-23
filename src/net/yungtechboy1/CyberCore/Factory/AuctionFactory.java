@@ -8,6 +8,8 @@ import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.inventory.SimpleTransactionGroup;
 import cn.nukkit.inventory.Transaction;
+import cn.nukkit.inventory.transaction.InventoryTransaction;
+import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.sound.AnvilUseSound;
 import cn.nukkit.nbt.NBTIO;
@@ -275,11 +277,12 @@ public class AuctionFactory implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void TE(InventoryTransactionEvent event) {
-        SimpleTransactionGroup transaction = (SimpleTransactionGroup) event.getTransaction();
-        Set<Transaction> traa = new HashSet<>(transaction.getTransactions());
+        InventoryTransaction transaction =  event.getTransaction();
+        Set<InventoryAction> traa = transaction.getActions();
 
-        for (Transaction t : traa) {
-            Inventory inv = t.getInventory();
+        for (InventoryAction t : traa) {
+            Set<Inventory> inv = transaction.getInventories();
+            if(inv.isEmpty())return;
             if (inv instanceof AuctionHouse) {
                 AuctionHouse AHINV = ((AuctionHouse) inv);
                 if (!AHINV.ConfirmPurchase) {

@@ -107,35 +107,37 @@ public void PlayerInteractEvent(PlayerInteractEvent event){
         Shop is seperate island 1 Chunk Wide
         Shop is premade and editable
         Shop Signs will work on chests
-    Assasin
-        Silent movement
-        Trained Killer and does 1.2X Damage (EG 5 * 1.2 = 6, 2.5 Hearts -> 3 Hearts attack)
-        Get paid by server to kill players...The server helps you successed
-        Can Pick-pocket players
-            Using a fishing lure or tapping player a small inv will appear with 9 Random items for the player to attempt to grab
-            Only 4 of the Items are actually stealable.
-            Cooldown
-    Knight
-        Trained Killers with 1.2X Better damage asorbtion.
-        Protector
-    Enchanter
-        Creates enchated items for Knights,Assasin, and potions
-        Can create "planting stick" which allows farmers to auto plant seeds, by enchanting a book
-        
-    Farmer
-        Sells goods to Merchants
-        Able to auto plant seeds 2 * Level blocks away as an ability or with hoe only farmers can use.
-    IronSmith
-        Create weapons for Enchanter or Merchant or Knight
-            These weapons can then be enchanted by an Enchanter and increase the value and power of the sword.
-    LandOwner
-        Can Claim land for Bussiness ventures
-            - Mine
-            - Bar
-            - Lounge
-            - Arena
-            - Farm
-            - Fee'd Entrance
+    Fighter
+        Assasin
+            Silent movement
+            Trained Killer and does 1.2X Damage (EG 5 * 1.2 = 6, 2.5 Hearts -> 3 Hearts attack)
+            Get paid by server to kill players...The server helps you successed
+            Can Pick-pocket players
+                Using a fishing lure or tapping player a small inv will appear with 9 Random items for the player to attempt to grab
+                Only 4 of the Items are actually stealable.
+                Cooldown
+        Knight
+            Trained Killers with 1.2X Better damage asorbtion.
+            Protector
+    Crafter
+        Enchanter
+            Creates enchated items for Knights,Assasin, and potions
+            Can create "planting stick" which allows farmers to auto plant seeds, by enchanting a book
+            
+        Farmer
+            Sells goods to Merchants
+            Able to auto plant seeds 2 * Level blocks away as an ability or with hoe only farmers can use.
+        IronSmith
+            Create weapons for Enchanter or Merchant or Knight
+                These weapons can then be enchanted by an Enchanter and increase the value and power of the sword.
+        LandOwner
+            Can Claim land for Bussiness ventures
+                - Mine
+                - Bar
+                - Lounge
+                - Arena
+                - Farm
+                - Fee'd Entrance
             
             
 
