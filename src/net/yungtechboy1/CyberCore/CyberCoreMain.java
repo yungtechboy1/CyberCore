@@ -25,6 +25,7 @@ import net.yungtechboy1.CyberCore.Custom.Item.ItemChickenCooked;
 import net.yungtechboy1.CyberCore.Custom.Item.ItemPorkchopCooked;
 import net.yungtechboy1.CyberCore.Events.CyberChatEvent;
 import net.yungtechboy1.CyberCore.Factory.*;
+import net.yungtechboy1.CyberCore.Manager.SQLManager;
 import net.yungtechboy1.CyberCore.Manager.Save.SaveMain;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
 import net.yungtechboy1.CyberCore.Tasks.*;
@@ -94,12 +95,14 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     Vector3 p2;
 
     public SaveMain Save;
+    public SQLManager SQLSaveManager;
 
     @Override
     public void onEnable() {
         new File(getDataFolder().toString()).mkdirs();
 
         Save = new SaveMain(this);
+        SQLSaveManager = new SQLManager(this);
 
         Item.list[Item.COOKED_CHICKEN] = ItemChickenCooked.class;
         Item.list[Item.COOKED_PORKCHOP] = ItemPorkchopCooked.class;

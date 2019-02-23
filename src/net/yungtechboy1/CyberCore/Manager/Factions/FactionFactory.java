@@ -9,7 +9,6 @@ import cn.nukkit.utils.TextFormat;
 import main.java.CyberFactions.Mission.ActiveMission;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
@@ -53,41 +52,9 @@ public class FactionFactory {
         return null;
     }
 
-    //public Connection Connect;
-    public Connection getMySqlConnection() {
-        //return getMySqliteConnection();
-        try {
-            if (Main.Connect != null && !Main.Connect.isClosed()) return Main.Connect;
-            Main.getServer().getLogger().info("REGEtting Connection!");
-            Class.forName("com.mysql.jdbc.Driver");
-            Main.Connect = DriverManager.getConnection("jdbc:mysql://localhost/Terratide?user=TerraTideMC&password=TerraTideMC");
-            return Main.Connect;
-        } catch (Exception ex) {
-            return null;
-        }
-    }
 
-    public Connection getMySqliteConnection() {
-        //if(Connect != null)return Connect;
-        try {
-            if (Main.Connect != null && !Main.Connect.isClosed()) return Main.Connect;
-            Class.forName("org.sqlite.JDBC");
-            return DriverManager.getConnection("jdbc:sqlite:" + getMain().getDataFolder().toString() + "/fac.db");
-        } catch (Exception ignore) {
-            getMain().getServer().getLogger().info(ignore.getClass().getName() + ": " + ignore.getMessage());
-        }
-        return null;
-    }
-
-    public Connection getMySqliteConnection2() {
-        //if(Connect != null)return Connect;
-        try {
-            Class.forName("org.sqlite.JDBC");
-            return DriverManager.getConnection("jdbc:sqlite:" + getMain().getDataFolder().toString() + "/fac-" + (Calendar.getInstance().getTime().getTime() / 1000) + ".db");
-        } catch (Exception ignore) {
-            getMain().getServer().getLogger().info(ignore.getClass().getName() + ": " + ignore.getMessage());
-        }
-        return null;
+    private Connection getMySqlConnection() {
+        return Main.Main.SQLSaveManager.getMySqlConnection();
     }
 
     public void RemoveFaction(Faction fac) {
@@ -144,6 +111,7 @@ public class FactionFactory {
         }
     }
 
+
     public void SaveAllFactions() {
         try {
             Statement stmt = getMySqlConnection().createStatement();
@@ -198,7 +166,7 @@ public class FactionFactory {
             stmt2.executeUpdate(sql4);
             stmt2.executeUpdate(sql6);*/
             //stmt.executeUpdate("DELETE FROM allies; DELETE FROM confirm; DELETE FROM home; DELETE FROM plots; DELETE FROM settings; DELETE FROM master;");
-            Main.getLogger().info("Going to save: "+List.size());
+            Main.Main.getLogger().info("Going to save: "+List.size());
             stmt.executeUpdate("BEGIN;");
             String yaml = "";
             for (Map.Entry<String, Faction> e : List.entrySet()) {
@@ -226,26 +194,26 @@ public class FactionFactory {
                     Integer lvl = fac.GetLevel();
                     Integer rich = fac.GetRich();
                     String am = "";
-                    if (fac.GetActiveMission() != null) {
-                        am = fac.GetActiveMission().id + "";
-                        try {
-                            ActiveMission a = fac.GetActiveMission();
-                            a.faction = null;
-                            a.Main = null;
-                            Main.AM.set(fac.GetName(), a.ToHashMap());
-                         /*Yaml y = new Yaml();
-                        Utils.writeFile(new File(Main.getDataFolder().toString() + "/missions/" + fac.GetName() + ".yml"), y.dump(a));
-                        ;
-                        YamlWriter reader = new YamlWriter(new FileWriter(Main.getDataFolder().toString()+"/missions/"+fac.GetName()+".yml"));
-                        reader.write(a);
-                        reader.close();*/
-                        } catch (Exception ex) {
-                            getServer().getLogger().info(ex.getClass().getName() + ":9 " + ex.getMessage() + " > " + ex.getStackTrace()[0].getLineNumber() + " ? " + ex.getCause());
-                            am = "";
-                        } /*catch (IOException var8) {
-                        Server.getInstance().getLogger().logException(var8);
-                    }*/
-                    }
+//                    if (fac.GetActiveMission() != null) {
+//                        am = fac.GetActiveMission().id + "";
+//                        try {
+//                            ActiveMission a = fac.GetActiveMission();
+//                            a.faction = null;
+//                            a.Main = null;
+//                            Main.AM.set(fac.GetName(), a.ToHashMap());
+//                         /*Yaml y = new Yaml();
+//                        Utils.writeFile(new File(Main.getDataFolder().toString() + "/missions/" + fac.GetName() + ".yml"), y.dump(a));
+//                        ;
+//                        YamlWriter reader = new YamlWriter(new FileWriter(Main.getDataFolder().toString()+"/missions/"+fac.GetName()+".yml"));
+//                        reader.write(a);
+//                        reader.close();*/
+//                        } catch (Exception ex) {
+//                            getServer().getLogger().info(ex.getClass().getName() + ":9 " + ex.getMessage() + " > " + ex.getStackTrace()[0].getLineNumber() + " ? " + ex.getCause());
+//                            am = "";
+//                        } /*catch (IOException var8) {
+//                        Server.getInstance().getLogger().logException(var8);
+//                    }*/
+//                    }
                     ArrayList<Integer> CMID1 = fac.GetCompletedMissions();
                     String CMID = "";
                     if (CMID1.size() > 1) {
@@ -323,9 +291,9 @@ public class FactionFactory {
                     stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `player` = '%s';", fac.GetLeader()));
                     stmt.executeUpdate(String.format("INSERT IGNORE INTO `master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');", fac.GetLeader(), name, "Leader"));
                     //stmt2.executeUpdate(String.format("INSERT INTO `master`(`player`,`faction`,`rank`) VALUES (''%s'',''%s'',''%s'');",fac.GetLeader(),name,"Leader"));
-                    Main.getLogger().info(TextFormat.GREEN + "[Factions] Saving Faction " + name);
+                    Main.Main.getLogger().info(TextFormat.GREEN + "[Factions] Saving Faction " + name);
                 } catch (Exception ex) {
-                    Main.getLogger().info(TextFormat.GREEN + "[Factions] Error! Faction " + e.getKey());
+                    Main.Main.getLogger().info(TextFormat.GREEN + "[Factions] Error! Faction " + e.getKey());
                     ex.printStackTrace();
                     getServer().getLogger().info(ex.getClass().getName() + ":77 " + ex.getMessage());
                 }
@@ -340,7 +308,7 @@ public class FactionFactory {
         }
     }
 
-    public ResultSet ExecuteQuerySQLite(String s) {
+    public ResultSet ExecuteQuerySQL(String s) {
         try {
             Statement stmt = this.getMySqlConnection().createStatement();
             ResultSet r = stmt.executeQuery(s);
@@ -356,7 +324,7 @@ public class FactionFactory {
 /*
     public Boolean PlayerExistsInDB(String player, String fac) {
         try {
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select count(*) from master where `faction` LIKE '%s' , `player` LIKE '%s'",fac,player));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select count(*) from master where `faction` LIKE '%s' , `player` LIKE '%s'",fac,player));
             if(r == null)return false;
             if(r.next())if(r.getInt(1) > 0)return true;
             r.close();
@@ -368,7 +336,7 @@ public class FactionFactory {
 
     public Boolean factionExistsInDB(String name) {
         try {
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select count(*) from settings where faction = '%s'", name));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select count(*) from settings where faction = '%s'", name));
             if (r == null) return false;
             if (r.next()) if (r.getInt(1) > 0) return true;
             r.close();
@@ -380,7 +348,7 @@ public class FactionFactory {
 
     public Object GetFromSettings(String key, String faction) {
         try {
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select * from settings where faction = '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from settings where faction = '%s'", faction));
             if (r == null) return null;
             if (r.next()) return r.getObject(key);
             return null;
@@ -391,7 +359,7 @@ public class FactionFactory {
 
     public String GetDisplayName(String faction) {
         try {
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select * from settings where faction = '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from settings where faction = '%s'", faction));
             if (r == null) return null;
             if (r.next()) {
                 return r.getString("displayname");
@@ -404,7 +372,7 @@ public class FactionFactory {
 
     public String GetLeader(String faction) {
         try {
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select * from master where faction = '%s' and rank LIKE 'leader'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from master where faction = '%s' and rank LIKE 'leader'", faction));
             if (r == null) return null;
             if (r.next()) {
                 return r.getString("player");
@@ -418,7 +386,7 @@ public class FactionFactory {
     public ArrayList<String> GetRecruits(String faction) {
         try {
             ArrayList<String> result = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select * from master where faction LIKE '%s' AND rank LIKE '%s'", faction, "recruit"));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from master where faction LIKE '%s' AND rank LIKE '%s'", faction, "recruit"));
             if (r == null) return null;
             while (r.next()) {
                 result.add(r.getString("player").toLowerCase());
@@ -433,7 +401,7 @@ public class FactionFactory {
     public ArrayList<String> GetMemebrs(String faction) {
         try {
             ArrayList<String> result = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select * from master where faction LIKE '%s' AND rank LIKE '%s'", faction, "Member"));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from master where faction LIKE '%s' AND rank LIKE '%s'", faction, "Member"));
             if (r == null) return null;
             while (r.next()) {
                 result.add(r.getString("player").toLowerCase());
@@ -448,7 +416,7 @@ public class FactionFactory {
     public ArrayList<String> GetOfficers(String faction) {
         try {
             ArrayList<String> result = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select * from master where faction LIKE '%s' AND rank LIKE '%s'", faction, "Officer"));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from master where faction LIKE '%s' AND rank LIKE '%s'", faction, "Officer"));
             if (r == null) return null;
             while (r.next()) {
                 result.add(r.getString("player").toLowerCase());
@@ -463,7 +431,7 @@ public class FactionFactory {
     public ArrayList<String> GetGenerals(String faction) {
         try {
             ArrayList<String> result = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select * from master where faction LIKE '%s' AND rank LIKE '%s'", faction, "General"));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from master where faction LIKE '%s' AND rank LIKE '%s'", faction, "General"));
             if (r == null) return null;
             while (r.next()) {
                 result.add(r.getString("player").toLowerCase());
@@ -478,7 +446,7 @@ public class FactionFactory {
     public ArrayList<String> GetPlots(String faction) {
         try {
             ArrayList<String> results = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select * from plots where faction LIKE '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from plots where faction LIKE '%s'", faction));
             if (r == null) return null;
             while (r.next()) {
                 results.add(r.getInt("x") + "|" + r.getInt("z"));
@@ -499,7 +467,7 @@ public class FactionFactory {
         try {
             ConfigSection results = new ConfigSection();
 
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select * from war where attackingfaction LIKE '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from war where attackingfaction LIKE '%s'", faction));
             if (r == null) return null;
             while (r.next()) {
                 War.put(r.getString("attackingfaction"), r.getString("defendingfaction"));
@@ -518,7 +486,7 @@ public class FactionFactory {
     public ArrayList<String> GetAllFactions() {
         try {
             ArrayList<String> results = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQLite("select * from settings");
+            ResultSet r = this.ExecuteQuerySQL("select * from settings");
             if (r == null) return null;
             while (r.next()) {
                 String ff = r.getString("faction");
@@ -533,7 +501,7 @@ public class FactionFactory {
     public ArrayList<String> GetAllies(String faction) {
         try {
             ArrayList<String> results = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select * from allies where factiona LIKE '%s' OR factionb LIKE '%s'", faction, faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from allies where factiona LIKE '%s' OR factionb LIKE '%s'", faction, faction));
             if (r == null) return null;
             while (r.next()) {
                 if (r.getString("factiona").equalsIgnoreCase(faction)) results.add(r.getString("factionb"));
@@ -548,7 +516,7 @@ public class FactionFactory {
     public ArrayList<String> GetEnemies(String faction) {
         try {
             ArrayList<String> results = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select * from enemies where factiona LIKE '%s' OR factionb LIKE '%s'", faction, faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from enemies where factiona LIKE '%s' OR factionb LIKE '%s'", faction, faction));
             if (r == null) return null;
             while (r.next()) {
                 if (r.getString("factiona").equalsIgnoreCase(faction)) results.add(r.getString("factionb"));
@@ -562,7 +530,7 @@ public class FactionFactory {
 
     public Vector3 GetHome(String faction) {
         try {
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select * from home where faction LIKE '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from home where faction LIKE '%s'", faction));
             if (r == null) return null;
             if (r.next()) return new Vector3(r.getInt("x"), r.getInt("y"), r.getInt("z"));
         } catch (Exception e) {
@@ -574,7 +542,7 @@ public class FactionFactory {
     public Map<String, Integer> GetInvites(String faction) {
         try {
             Map<String, Integer> result = new HashMap<>();
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select * from confirm where faction LIKE '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from confirm where faction LIKE '%s'", faction));
             if (r == null) return null;
             while (r.next()) {
                 result.put(r.getString("player").toLowerCase(), r.getInt("timestamp"));
@@ -613,7 +581,7 @@ public class FactionFactory {
 
     public String factionPartialName(String name) {
         try {
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select * from master where faction= '%s'", name + "%"));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from master where faction= '%s'", name + "%"));
             if (r == null) return null;
             if (r.next()) {
                 return r.getString("faction");
@@ -635,7 +603,7 @@ public class FactionFactory {
 
     public String GetFactionFromMember(String faction) {
         try {
-            ResultSet r = this.ExecuteQuerySQLite(String.format("select * from master where `player` LIKE '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from master where `player` LIKE '%s'", faction));
             if (r == null) return null;
             while (r.next()) {
                 return r.getString("faction").toLowerCase();
@@ -687,7 +655,7 @@ public class FactionFactory {
 
             return fac;
         }
-        Main.getLogger().error("WTF NOTHING FOUND AT 374!" + name);
+        Main.Main.getLogger().error("WTF NOTHING FOUND AT 374!" + name);
         return null;
     }
 

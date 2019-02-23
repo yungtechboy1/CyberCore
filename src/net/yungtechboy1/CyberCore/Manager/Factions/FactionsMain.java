@@ -30,7 +30,6 @@ import java.sql.DriverManager;
 public class FactionsMain {
 
     private static FactionsMain instance = null;
-    public Connection Connect = null;
     //private Statement Statement = null;
     private PreparedStatement PreparedStatement = null;
     private ResultSet ResultSet = null;
@@ -39,9 +38,9 @@ public class FactionsMain {
 
     public ConfigSection War = new ConfigSection();
     private FactionsCommands FC = new FactionsCommands(this);
-    public Map<String,Integer> killed = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    public Map<String,Integer> death = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    public Map<String,Integer> pvplog = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+//    public Map<String,Integer> killed = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+//    public Map<String,Integer> death = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+//    public Map<String,Integer> pvplog = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public Map<Long,CustomFloatingTextParticle> popups = new HashMap<>();
     public FactionFactory FFactory = new FactionFactory(this);
     public CyberCoreMain Main;
@@ -51,8 +50,6 @@ public class FactionsMain {
 
     public FactionsMain(CyberCoreMain main){
         Main = main;
-        this.getMySqlConnection();
-        this.Init();
 
         getServer().getPluginManager().registerEvents(new FactionListener(this),Main);
 
@@ -183,258 +180,14 @@ public class FactionsMain {
 //        bb.send();
 //    }
 
-    public Connection getMySqlConnection(){
-        return FFactory.getMySqlConnection();
-    }
-
-    public void EchoException(Exception ex){
-        this.getServer().getLogger().info( ex.getClass().getName() + ":2 " + ex.getMessage() );
-    }
-
-    public ResultSet ExecuteQuerySQLite(String s){
-        try {
-            Statement stmt = this.getMySqlConnection().createStatement();
-            ResultSet r  = stmt.executeQuery(s);
-            //this.getServer().getLogger().info( s );
-            return r;
-        } catch (Exception  ex) {
-
-            getServer().getLogger().info( ex.getClass().getName() + ":10 " + ex.getMessage() );
-            this.EchoException(ex);
-            return null;
-        }
-    }
-
-    public boolean ExecuteUpdateSQLite(String s){
-        try {
-            Statement stmt = this.getMySqlConnection().createStatement();
-            stmt.executeUpdate(s);
-            this.getServer().getLogger().info( s );
-            stmt.close();
-            return true;
-        } catch (Exception  ex) {
-            this.getServer().getLogger().info( ex.getClass().getName() + ":3 " + ex.getMessage() );
-            return false;
-        }
-    }
-
-    public boolean ExecuteUpdateSQLite(String[] ss){
-        try {
-            Statement stmt = this.getMySqlConnection().createStatement();
-            for(String s: ss){
-                stmt.executeUpdate(s);
-            }
-            stmt.close();
-            return true;
-        } catch (Exception  ex) {
-            this.getServer().getLogger().info( ex.getClass().getName() + ":4 " + ex.getMessage() );
-            return false;
-        }
-    }
-
-    private void Init(){
-        try {//ss
-            Statement stmt = FFactory.getMySqlConnection().createStatement();
-            String sql = "CREATE TABLE IF NOT EXISTS \"master\" " +
-                    "`player` VARCHAR(250)PRIMARY KEY     NOT NULL," +
-                    " `faction`           VARCHAR(250)    NOT NULL, " +
-                    " `rank`            VARCHAR(250)     NOT NULL)";
-            String sql1 = "CREATE TABLE IF NOT EXISTS \"allies\" (  " +
-                    "                        `id` INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,  " +
-                    "                        `factiona` VARCHAR(250)NOT NULL,  " +
-                    "                        `factionb` VARCHAR(250)NOT NULL,  " +
-                    "                        `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP  " +
-                    "                        );";
-            String sql2 = "CREATE TABLE IF NOT EXISTS \"confirm\" (" +
-                    "`player`TEXT NOT NULL," +
-                    "`faction`TEXT NOT NULL," +
-                    "`timestamp`INTEGER," +
-                    "`id`INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT" +
-                    ")";
-            String sql3 = "CREATE TABLE  IF NOT EXISTS \"home\" (" +
-                    "                     `faction` VARCHAR(250)NOT NULL UNIQUE, " +
-                    "                     `x` int(250) NOT NULL, " +
-                    "                     `y` int(250) NOT NULL, " +
-                    "                     `z` int(250) NOT NULL, " +
-                    "                     PRIMARY KEY(faction) " +
-                    "                    );";
-            String sql4 = "CREATE TABLE IF NOT EXISTS \"plots\" (  " +
-                    "            `id` INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,  " +
-                    "            `faction` varchar(250) NOT NULL,  " +
-                    "            `x` int(250) NOT NULL,  " +
-                    "            `z` int(250) NOT NULL  " +
-                    "            );";
-            String sql6 = "CREATE TABLE IF NOT EXISTS \"settings\" (" +
-                    "`faction`varchar(250) NOT NULL UNIQUE," +
-                    "`max`int(250) NOT NULL," +
-                    "`powerbonus`int(50) NOT NULL," +
-                    "`MOTD`varchar(1000) NOT NULL," +
-                    "`displayname`varchar(1000) NOT NULL," +
-                    "`desc`varchar(1000) NOT NULL," +
-                    "`prem`INTEGER NOT NULL," +
-                    "`privacy`int(11) NOT NULL," +
-                    "`power`INTEGER NOT NULL," +
-                    "`money`INTEGER NOT NULL," +
-                    "`point`INTEGER NOT NULL," +
-                    "`xp`INTEGER NOT NULL," +
-                    "`lvl`INTEGER NOT NULL," +
-                    "`cmid`varchar(200) NOT NULL," +
-                    "`am`varchar(200) NOT NULL," +
-                    "`rich`INTEGER NOT NULL," +
-                    "PRIMARY KEY(faction)" +
-                    ")";
-            String sql7 = "CREATE TABLE IF NOT EXISTS \"war\" (" +
-                    "`defendingfaction` varchar(250) NOT NULL UNIQUE," +
-                    "`attackingfaction` varchar(250) NOT NULL UNIQUE," +
-                    "`start` int(250) NOT NULL," +
-                    "`stop` int(250) NOT NULL," +
-                    "PRIMARY KEY(defendingfaction)" +
-                    ")";
-            String sql8 = "CREATE TABLE IF NOT EXISTS \"overclaim\" (" +
-                    "`defendingfaction` varchar(250) NOT NULL UNIQUE," +
-                    "`attackingfaction` varchar(250) NOT NULL UNIQUE," +
-                    "`start`int(250) NOT NULL," +
-                    "`attacktime` int(50) NOT NULL," +
-                    "`defendtime` int(50) NOT NULL," +
-                    "`endtime` int(50) NOT NULL," +
-                    "`x` int(50) NOT NULL," +
-                    "`z` int(50) NOT NULL," +
-                    "PRIMARY KEY(faction)" +
-                    ")";
-            String sql9 = "CREATE TABLE IF NOT EXISTS \"enemies\" (  " +
-                    "                        `id` INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,  " +
-                    "                        `factiona` VARCHAR(250)NOT NULL,  " +
-                    "                        `factionb` VARCHAR(250)NOT NULL,  " +
-                    "                        `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP  " +
-                    "                        );";
-            //String sql7 = "CREATE TABLE IF NOT EXISTS war ( attacker varchar(250) NOT NULL PRIMARY KEY, defender varchar(250) NOT NULL, start int(250) NOT NULL)";
-            stmt.executeUpdate(sql);
-            stmt.executeUpdate(sql1);
-            stmt.executeUpdate(sql2);
-            stmt.executeUpdate(sql3);
-            stmt.executeUpdate(sql4);
-            stmt.executeUpdate(sql6);
-            //sstmt.executeUpdate(sql7);
-            //stmt.executeUpdate(sql8);
-            //this.getServer().getLogger().info("ECECUTE 8");
-            stmt.executeUpdate(sql9);
-            stmt.close();
-        } catch (Exception  ex) {
-            this.getServer().getLogger().info( ex.getClass().getName() + ":1 " + ex.getMessage() );
-        }
-        return;
-    }
-
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         return this.FC.onCommand(this,sender,command,label,args);
-    }
-
-    public Boolean AtWar(String attackers, String fac2) {
-        Faction fac = FFactory.getFaction(attackers);
-        return fac.AtWar(fac2);
-    }
-
-    //@todo FInsih
-    public void DeclareWar(Faction defenders, Faction attackers){
-        String rand = null;
-        while (rand == null){
-            Integer a = new Random().nextInt(999999);
-            if (War.containsKey(a+""))continue;
-            rand = a+"";
-        }
-        Integer time = (int)(Calendar.getInstance().getTime().getTime()/1000);
-        War.put(rand,new ConfigSection(){{
-            put("attackers", attackers.GetName());
-            put("defenders", defenders.GetName());
-            put("start", time);
-            put("stop", time+60*5);
-            put("Time", time);
-            put("AKills",0);
-            put("DKills",0);
-        }});
-        attackers.StartWar(rand);
-        defenders.StartWar(rand);
-        attackers.BroadcastMessage(NAME+ TextFormat.LIGHT_PURPLE+" Sharpen your Swords! We are at war attacking "+defenders+"!");
-        defenders.BroadcastMessage(NAME+ TextFormat.LIGHT_PURPLE+" Sharpen your Shields! We are at war baby!");
-        getServer().broadcastMessage(NAME+ TextFormat.YELLOW + " "+attackers.GetName()+" Are now at war with "+defenders.GetName()+"!!!");
-        /*try {//ss
-            Statement stmt = Connect.createStatement();
-            stmt.executeUpdate("INSERT INTO `war` VALUE ('"+attackers+"','"+ defenders +"','"+time+"')");
-            stmt.close();
-        } catch (Exception  ex) {
-            this.getServer().getLogger().info( ex.getClass().getName() + ":5 " + ex.getMessage() );
-        }*/
     }
 
     public boolean isFactionsAllyed(String faction1, String faction2) {
         Faction fac1 = FFactory.getFaction(faction1);
         if(fac1 != null && fac1.isAllied(faction2))return true;
         return false;
-    }
-
-    //Kills
-    public Integer GetKills(Player player) {
-        return GetKills(player.getName());
-    }
-
-    public Integer GetKills(String player) {
-        if(KD.exists(player)){
-            LinkedHashMap v = (LinkedHashMap<String, Object>) KD.get(player.toLowerCase());
-            return (Integer) v.get("Kills");
-        }
-        return 0;
-    }
-
-    public void AddKill(String player) {
-        AddKill(player,1);
-    }
-
-    public void AddKill(String player, Integer amount) {
-        if(KD.exists(player)){
-            LinkedHashMap v = (LinkedHashMap<String,Object>) KD.get(player);
-            Integer a = (int)v.get("Kills");
-            v.put("Kills",a+amount);
-        }else{
-            LinkedHashMap settings = new LinkedHashMap(){{
-                put("Kills",amount);
-                put("Deaths",0);
-            }};
-            KD.set(player,settings);
-        }
-    }
-
-    //Get Deaths
-    public Integer GetDeaths(String player) {
-        if(KD.exists(player)){
-            LinkedHashMap v = (LinkedHashMap<String, Object>) KD.get(player);
-            return (Integer) v.get("Deaths");
-        }
-        return 0;
-    }
-
-    public void AddDeath(String player) {
-        AddDeath(player,1);
-    }
-
-    public void AddDeath(String player, Integer amount) {
-        if(KD.exists(player)){
-            LinkedHashMap v = (LinkedHashMap<String,Object>) KD.get(player);
-            Integer a = (int)v.get("Deaths");
-            v.put("Deaths",a+amount);
-        }else{
-            LinkedHashMap settings = new LinkedHashMap(){{
-                put("Kills",0);
-                put("Deaths",amount);
-            }};
-            KD.set(player,settings);
-        }
-    }
-
-    //KDR
-    public float GetKDR(String player){
-        Float k = (float)GetKills(player);
-        Float d = (float)GetDeaths(player);
-        return k/d;
     }
 
     public void AddFactionPower(String faction ,Integer power) {
@@ -475,15 +228,7 @@ public class FactionsMain {
     }
 
     public int getNumberOfPlayers(String faction) {
-        Faction fac = FFactory.getFaction(faction);
-        if(fac != null){
-            Integer a = 1;
-            a += fac.GetMembers().toArray().length;
-            a += fac.GetOfficers().toArray().length;
-            a += fac.GetGenerals().toArray().length;
-            return a;
-        }
-        return 0;
+        return getNumberOfPlayers(FFactory.getFaction(faction));
     }
 
     public int getNumberOfPlayers(Faction faction) {

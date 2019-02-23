@@ -1,6 +1,5 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Listener;
 
-import CyberTech.CyberChat.Main;
 import cn.nukkit.event.player.PlayerDeathEvent;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerPreLoginEvent;
@@ -40,20 +39,20 @@ public class PreLoginEvent {
 
     //Check IP
     public boolean CheckIP(String ip){
-        if(Main.IP.exists(ip)){
-            return (boolean)Main.IP.get(ip);
+        if(Main.Main.Save.IP.exists(ip)){
+            return (boolean)Main.Main.Save.IP.get(ip);
         }
-        String query = "http://yunc7a2id60lpalzyh6u2hsji.getipintel.net/check.php?ip="+ip+"&contact=yungtechboy1@gmail.com&flags=m";
-        Float result = execute(query);
-        if(result == null){
-            Main.IP.set(ip,false);
-            return false;
-        }
-        if(result < .90f){
-            Main.IP.set(ip,true);
-            return true;
-        }
-        Main.IP.set(ip,false);
+//        String query = "http://yunc7a2id60lpalzyh6u2hsji.getipintel.net/check.php?ip="+ip+"&contact=yungtechboy1@gmail.com&flags=m";
+//        Float result = execute(query);
+//        if(result == null){
+//            Main.IP.set(ip,false);
+//            return false;
+//        }
+//        if(result < .90f){
+//            Main.IP.set(ip,true);
+//            return true;
+//        }
+        Main.Main.Save.IP.set(ip,false);
         return false;
     }
 
