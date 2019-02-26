@@ -94,6 +94,19 @@ public void PlayerInteractEvent(PlayerInteractEvent event){
 ```
 
 ```
+    Classes
+        Miner 
+            TNT-Specalist
+                Chance of spawning TNT that can destroy ores
+                20% increase in power with TNT
+            MineLife
+                10% increase in mine speed
+                
+        enchanter
+        mixer
+        builder
+        crafter
+        smith
 
     Crafter - Better at making weapons
     Farmers - Better at planting and farming crops

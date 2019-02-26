@@ -279,7 +279,6 @@ public class AuctionFactory implements Listener {
     public void TE(InventoryTransactionEvent event) {
         InventoryTransaction transaction =  event.getTransaction();
         Set<InventoryAction> traa = transaction.getActions();
-
         for (InventoryAction t : traa) {
             Set<Inventory> inv = transaction.getInventories();
             if(inv.isEmpty())return;
