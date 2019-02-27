@@ -90,24 +90,122 @@ public void PlayerInteractEvent(PlayerInteractEvent event){
         if (exp > 0) XP_EXCAVATION += exp;*/
     }
 ```
-
-```
-
+#GOOD
 ```
     Classes
-        Miner 
+        Miner - Mining and Digging
             TNT-Specalist
                 Chance of spawning TNT that can destroy ores
                 20% increase in power with TNT
             MineLife
                 10% increase in mine speed
                 
-        enchanter
-        mixer
-        builder
-        crafter
-        smith
+        enchanter - Enchanting, Producing rare Potion and Books
+        scholar - Potion Making, Can create "super-food", potions, and splash-potions
+        builder - Easier base building, Can create auto-gen walls,/fly within faction plot, craft TNT arrows, Cannon TNT...
+        crafter - Can craft special items (TNT arrows, Cannon TNT...), Alos Farmer... can Auto plant and 
+        smith - Can combine Enchanted Books with items, craft enhanced weapons
+        Assasin - 
+            Silent movement
+                        Trained Killer and does 1.2X Damage (EG 5 * 1.2 = 6, 2.5 Hearts -> 3 Hearts attack)
+                        Get paid by server to kill players...The server helps you successed
+                        Can Pick-pocket players
+                            Using a fishing lure or tapping player a small inv will appear with 9 Random items for the player to attempt to grab
+                            Only 4 of the Items are actually stealable.
+                            Cooldown
+        Knight - 
+            Can hold Modified Sword
+            Trained Killers with 1.2X Better damage asorbtion.
+                    Protector
+                
+```
 
+###Modifed Swords
+- 3 Length Types: Short,Medium,Long
+- Shorter swings can swing faster
+- Depending on the material used to forge the Sword it can have up to 4 Base Effects
+- Made to be a very deadly weapon when customized correctly
+- Players can change every part of the Data Values below
+- Requires a `PrimeFurnace` Can be crafted by ``Crafter`` (Mayber ``Smith`` :/)
+- DATA VALUES
+    - Length
+        - Short
+        - Medium
+        - Long
+    - Material
+    - Effects
+        - 4 Max
+    - Speed - Swing speed
+    - Damage - Base damage/Min Damage
+
+
+#Custom Items
+##Cannon(Dispenser)
+##Cannon Barrel(Blaze Rod)
+
+Custom Meta data : 1
+
+Custom item that can not be crafted but only obtained by CratesExtends fireing range of TNT Cannon
+
+##Cannon TNT(TNT)
+- Constructed by Builder & Crafter
+- Fuel for TNT Cannon.
+- Construction
+```
+        |-T-|-G-|-T-|
+        |-G-|-T-|-G-|
+        |-T-|-G-|-T-|
+        T = 5 = TNT
+        G = 4 = Gun Powder
+```
+##Cannon(Dispenser)
+- Turns the Dispenser into a cannon. Needs to be connected to a Chest with a hopper.
+- Takes `CannonTNT`(Only pushes entities and does no block damage) and Regular TNT or any other type
+- Will not drop when broken unless it was with a Pickaxe with `CannonSaver`
+###Crafting Process
+- Needs:
+    ...
+###Chest Inv
+
+- 1 `Cannon TNT` - Fuel used to shoot shots
+- 2 TNT - Any TNT can go here and will be shot out
+- 3 `Cannon Barrel` - Can Increase/Decrease the accuracy/range/power/fire rate
+- 4 Gunpowder - Can increase the power, evenly divides amoung TNT
+- 5 `Cannon Blueprint` - Is Paper, defines the Damage Value, Ergonomic Value, TNT Amount, and Max Range
+- 6 `Offset Sheet` - allows the cannon to shoots shots slightly off center
+### Enchanted Book
+2 Varriables
+- Chance of Success
+- Level Required
+### Custom Enchant
+- ID
+- Lvl
+- Power - Another value for the Life of the enchnat (0-100)
+- Percent - an average number of how successful the enchant is (0-100)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+#Old Ideal
+```
     Crafter - Better at making weapons
     Farmers - Better at planting and farming crops
     Fighters - Increased Range,Damage, and/or armor
