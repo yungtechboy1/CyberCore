@@ -55,6 +55,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public Config tipban;
     public Config cooldowns;
     //HUD Off
+    //TODO add PlayerSetting Object to allow players to save
+    //TODO add /settings commands that adds GUI
     public ArrayList<String> HudOff = new ArrayList<>();
     public ArrayList<String> HUDClassOff = new ArrayList<>();
     public ArrayList<String> HUDFactionOff = new ArrayList<>();

@@ -19,6 +19,7 @@ import javax.xml.crypto.Data;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -67,7 +68,7 @@ public class FloatingTextContainer {
 
     public void HaldleSend(ArrayList<String> ap) {
 //        ArrayList<DataPacket> tosend = new ArrayList<>();
-        Dictionary<String,ArrayList<DataPacket>> tosend;
+        HashMap<String,ArrayList<DataPacket>> tosend;
 //        sync(_CE_Lock)//TODO
         if (_CE_Lock) return;
         _CE_Lock = true;

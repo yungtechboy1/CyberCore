@@ -6,7 +6,7 @@ import cn.nukkit.level.Level;
 import cn.nukkit.level.format.generic.BaseFullChunk;
 import cn.nukkit.scheduler.AsyncTask;
 import cn.nukkit.utils.ConfigSection;
-import main.java.CyberFactions.Faction;
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.Map;

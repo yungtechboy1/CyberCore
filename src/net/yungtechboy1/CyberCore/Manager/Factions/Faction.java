@@ -14,9 +14,7 @@ import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import com.sun.xml.internal.ws.client.SenderException;
-import main.java.CyberFactions.Mission.ActiveMission;
-import main.java.CyberFactions.Mission.Mission;
-import main.java.CyberFactions.Tasks.FactionRichAsyncSingle;
+import net.yungtechboy1.CyberCore.Manager.Factions.Mission.ActiveMission;
 
 import java.io.File;
 import java.io.FileReader;

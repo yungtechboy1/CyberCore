@@ -4,8 +4,8 @@ import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.defaults.TeleportCommand;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
-import main.java.CyberFactions.Faction;
 
 import java.util.LinkedHashMap;
 

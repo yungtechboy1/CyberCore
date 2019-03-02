@@ -10,7 +10,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import com.sun.org.apache.xpath.internal.operations.Bool;
-import main.java.CyberFactions.Faction;
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.ArrayList;

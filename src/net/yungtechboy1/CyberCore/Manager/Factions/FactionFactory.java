@@ -6,7 +6,6 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
-import main.java.CyberFactions.Mission.ActiveMission;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

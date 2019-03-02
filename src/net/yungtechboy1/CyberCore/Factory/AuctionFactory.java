@@ -1,17 +1,13 @@
 package net.yungtechboy1.CyberCore.Factory;
 
-import ArchMCPE.ArchEcon.ArchEconMain;
 import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.inventory.Inventory;
-import cn.nukkit.inventory.SimpleTransactionGroup;
-import cn.nukkit.inventory.Transaction;
 import cn.nukkit.inventory.transaction.InventoryTransaction;
 import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.item.Item;
-import cn.nukkit.level.sound.AnvilUseSound;
 import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.Tag;
@@ -285,6 +281,7 @@ public class AuctionFactory implements Listener {
             if (inv instanceof AuctionHouse) {
                 AuctionHouse AHINV = ((AuctionHouse) inv);
                 if (!AHINV.ConfirmPurchase) {
+                    t.g
                     if (t.getSlot() >= 0 && t.getSlot() < 45) {
                         //Confirm Item
                         AHINV.ConfirmItemPurchase(t.getSlot());

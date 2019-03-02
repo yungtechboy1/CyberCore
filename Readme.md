@@ -101,9 +101,43 @@ public void PlayerInteractEvent(PlayerInteractEvent event){
                 10% increase in mine speed
                 
         enchanter - Enchanting, Producing rare Potion and Books
-        scholar - Potion Making, Can create "super-food", potions, and splash-potions
+        scholar - Potion Making, Can create "super-food", potions, and splash-potions, BAREL,
+            Extensive knowledge of Potions
+                Fire Splash Potion
+                Ice Splash Potion
+                Nerve Gas Splash potion
+                
         builder - Easier base building, Can create auto-gen walls,/fly within faction plot, craft TNT arrows, Cannon TNT...
+            Snow Hoe Enchant:
+                Only can be used by builder    
+                Can errect Snow Barriers with bow
+                LVL 1 - 5:
+                    9 Snow blocks Carrying Capacity
+                    1 Snow block regin every 5/lvl Secs
+                    Place 1 Snow block every 1 Sec 
+                LVL 6 - 10:
+                    9 Snow blocks Carrying Capacity + Level/2
+                    1 Snow block regin every 4/lvl Secs
+                    Place 1 Snow block every 1 Sec 
+                LVL 11 - 15:
+                    9 Snow blocks Carrying Capacity + level - 10
+                    1 Snow block regin every 3/lvl Secs
+                    Place 1 Snow block every 1 Sec 
         crafter - Can craft special items (TNT arrows, Cannon TNT...), Alos Farmer... can Auto plant and 
+            Power Stomp
+                Creats a Shockwave around player
+                LVL 1 - 5 
+                    Shockwave 3 block splash damage @ Level*.5+1
+                    7 Block Plant Shockwave
+                    30/lvl cooldown
+                LVL 5 - 10
+                    Shockwave 5 block splash damage @ Level*.6+1
+                    12 Block Plant Shockwave
+                    30/lvl cooldown
+                LVL 10 - 15
+                    Shockwave 8 block splash damage @ Level*.7+1
+                    15 Block Plant Shockwave
+                    30/lvl cooldown
         smith - Can combine Enchanted Books with items, craft enhanced weapons
         Assasin - 
             Silent movement
@@ -140,6 +174,54 @@ public void PlayerInteractEvent(PlayerInteractEvent event){
 
 
 #Custom Items
+##Cords Maps
+
+Has 2 States
+ - blank
+ - written (X,Y)
+
+Recipe
+ - Can be crafted by crafter
+        
+        |--R-|-EM-|--R-|
+        |-EM-|-CP-|-EM-|
+        |--R-|-EM-|-R--|
+        
+        - R = Redston Dust
+        - EM = Empty Map
+        - CP = Compass
+  Can be put into a `Teleporter` and teleport individuals to the Chunk Cords
+        
+##Teleporter(BlockStructure)
+        ------------------------------------
+        |                   Y
+        |          |--|--|--|--|--|
+        |          D--D--D--D--D--D
+        |          D--D--G--G--D--D
+        |     X    D--G--D--D--G--D
+        |          D--G--D--D--G--D
+        |          D--D--G--G--D--D
+        |          D--D--D--D--D--D
+            D = Diamond block
+            G = Gold block
+            
+        
+        |          D--D--D--D--D--D
+        |          D--|--|--|--|--D
+        |          D--|--|--|--|--D
+        |          D--|--|--|--|--D
+        |          D--|--|--|--|--D
+        |          D--D--D--D--D--D
+        |
+        |
+        |
+        |
+        |
+Default settings:
+    Drops randomly in Chunk
+    Once at Level 2 the Teleporter would now be able to 
+Can add upgrades:
+    
 ##Cannon(Dispenser)
 ##Cannon Barrel(Blaze Rod)
 
