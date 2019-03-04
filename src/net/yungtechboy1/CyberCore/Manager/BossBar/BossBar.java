@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Manager.Factions.BossBar;
+package net.yungtechboy1.CyberCore.Manager.BossBar;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;

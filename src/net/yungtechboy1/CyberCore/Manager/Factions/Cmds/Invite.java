@@ -4,7 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
-import main.java.CyberFactions.Faction;
+
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.Calendar;

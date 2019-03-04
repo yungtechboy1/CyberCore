@@ -8,7 +8,6 @@ import cn.nukkit.event.entity.ProjectileLaunchEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Location;
 import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.level.sound.LaunchSound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
@@ -88,7 +87,7 @@ public class Ghast extends FlyingMonster {
                 fireball.kill();
             } else {
                 fireball.spawnToAll();
-                this.level.addSound(new LaunchSound(this), this.getViewers().values());
+//                this.level.addSound(new LaunchSound(this), this.getViewers().values());
             }
         }
     }

@@ -1,18 +1,30 @@
-package net.yungtechboy1.CyberCore.Manager.Factions.BossBar;
+package net.yungtechboy1.CyberCore.Manager.BossBar;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.Attribute;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.data.EntityMetadata;
 import cn.nukkit.network.protocol.*;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
+
+import java.util.HashMap;
 
 /**
- * Created by joneca04 on 12/30/2016.
+ * Created by carlt on 3/3/2019.
  */
-public class Packet {
-    /**
-     * Sends the text to one player
-     */
+public class BossBarManager {
+
+    public HashMap<String, BossBarNotification> BossList;
+    public CyberCoreMain Main;
+
+    public BossBarManager(CyberCoreMain m){
+        Main = m;
+    }
+
+    public void AddBossBar(Player p, BossBarNotification bbn){
+        
+    }
+
     public static void sendBossBar(Player player, int eid, String title){
         if(title.equals("")){
             return;
@@ -37,7 +49,7 @@ public class Packet {
         player.dataPacket(packet);
 
         BossEventPacket bpk = new BossEventPacket(); // This updates the bar
-        bpk.eid = eid;
+        bpk.bossEid = eid;
         bpk.type = 0;
         player.dataPacket(bpk);
     }
@@ -63,7 +75,7 @@ public class Packet {
         player.dataPacket(upk);
 
         BossEventPacket bpk = new BossEventPacket(); // This updates the bar
-        bpk.eid = eid;
+        bpk.bossEid = eid;
         bpk.type = 0;
         player.dataPacket(bpk);
     }
@@ -80,7 +92,7 @@ public class Packet {
         player.dataPacket(npk);
 
         BossEventPacket bpk = new BossEventPacket(); // This updates the bar
-        bpk.eid = eid;
+        bpk.bossEid = eid;
         bpk.type = 0;
         player.dataPacket(bpk);
     }
@@ -94,5 +106,4 @@ public class Packet {
         player.dataPacket(pk);
         return true;
     }
-
 }

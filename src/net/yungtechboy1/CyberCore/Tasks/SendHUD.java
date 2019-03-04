@@ -3,7 +3,7 @@ package net.yungtechboy1.CyberCore.Tasks;
 import cn.nukkit.Player;
 import cn.nukkit.scheduler.PluginTask;
 import cn.nukkit.utils.TextFormat;
-import main.java.CyberFactions.Faction;
+
 import net.yungtechboy1.CyberCore.Classes.BaseClass;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 

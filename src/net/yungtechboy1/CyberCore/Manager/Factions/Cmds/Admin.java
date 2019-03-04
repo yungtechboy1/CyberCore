@@ -1,13 +1,11 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.Player;
-import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
-import com.sun.org.apache.xpath.internal.Arg;
-import main.java.CyberFactions.BossBar.BossBarNotification;
-import main.java.CyberFactions.Faction;
-import main.java.CyberFactions.FactionFactory;
+import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
+import net.yungtechboy1.CyberCore.Manager.Factions.FactionFactory;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.ArrayList;

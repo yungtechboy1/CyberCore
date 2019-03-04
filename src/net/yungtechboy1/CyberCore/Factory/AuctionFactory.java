@@ -271,114 +271,115 @@ public class AuctionFactory implements Listener {
         p.addWindow(b);
     }
 
-    @EventHandler(ignoreCancelled = true)
-    public void TE(InventoryTransactionEvent event) {
-        InventoryTransaction transaction =  event.getTransaction();
-        Set<InventoryAction> traa = transaction.getActions();
-        for (InventoryAction t : traa) {
-            Set<Inventory> inv = transaction.getInventories();
-            if(inv.isEmpty())return;
-            if (inv instanceof AuctionHouse) {
-                AuctionHouse AHINV = ((AuctionHouse) inv);
-                if (!AHINV.ConfirmPurchase) {
-                    t.g
-                    if (t.getSlot() >= 0 && t.getSlot() < 45) {
-                        //Confirm Item
-                        AHINV.ConfirmItemPurchase(t.getSlot());
-                    } else if (t.getSlot() == 45) {
-                        //@TODO Show Items they are selling
-                    } else if (t.getSlot() == 46) {
-                        //@TODO Show Expired Items
-                    } else if (t.getSlot() == 48) {
-                        //@TODO Previous
-                        AHINV.setPage(AHINV.Page - 1);
-                        AHINV.setContents(getPage(AHINV.Page));
-                    } else if (t.getSlot() == 49) {
-                        //@TODO Resend Page
-                        AHINV.setPage(AHINV.Page);
-                        AHINV.setContents(getPage(AHINV.Page));
-                    } else if (t.getSlot() == 50) {
-                        //@TODO Next
-                        AHINV.setPage(AHINV.Page + 1);
-                        AHINV.setContents(getPage(AHINV.Page));
-                    } else if (t.getSlot() == 52) {
-                        //@TODO Catagories
-                    }
-                } else {
-                    if (t.getSourceItem().getId() == Item.EMERALD_BLOCK) {
-                        event.setCancelled();
-                        Player p = (Player)AHINV.getHolder();
-                        if(p == null){
-                            System.out.println("?!??!?! Ahh222222hhh");
-                            return;
-                        }
-                        //DONE!
-                        //Give Item
-                        Item TI = AHINV.getItem(31);
-                        if (TI.hasCompoundTag()) {
-                            CompoundTag tag = TI.getNamedTag();
-                            if (tag.contains("display") && tag.get("display") instanceof CompoundTag) {
-                                CompoundTag tag2 = tag.getCompound("display");
-                                if (tag2 != null) {
-                                    ArchEconMain AA = (ArchEconMain) CCM.getServer().getPluginManager().getPlugin("ArchEcon");
-                                    int id = tag2.getInt("keyid");
-                                    int price = tag2.getInt("cost");
-                                    if(AA == null){
-                                        p.sendMessage(TextFormat.RED+"Error! 258");
-                                        AHINV.close(p);
-                                        return;
-                                    }
-                                    //@TODO Check Items
-                                    Item checkitem = GetItemfromDB(id);
-                                    if(checkitem == null && !checkitem.equals(TI)){
-                                        p.sendMessage(TextFormat.RED+"Error! 273");
-                                        AHINV.close(p);
-                                        System.out.println("?!??!?! Ahhhhh");
-                                        return;
-                                    }
-
-                                    //@TODO reset all my custom shit!
-                                    String soldby = tag2.getString("soldby");
-                                    tag2.remove("keyid");
-                                    tag2.remove("cost");
-                                    tag2.remove("soldby");
-                                    String CN = tag2.getString("Name2");
-                                    tag2.remove("Name");
-                                    if(CN != null && CN.length() != 0)tag2.putString("Name",CN);
-                                    tag2.remove("Name2");
-                                    TI.setNamedTag(tag);
-
-                                    if(!AA.TakeMoney(p.getName(),1.0 * price,false)){
-                                        p.sendMessage(TextFormat.RED+"Error! You don't have enough money!");
-                                        AHINV.close(p);
-                                        return;
-                                    }
-
-                                    SetBought(id);
-                                    AA.GiveMoney(soldby,1.0*price);
-                                    p.getInventory().addItem(TI);
-                                    AHINV.close(p);
-                                    //p.getLevel().dropItem(p,TI.clone());
-
-
-                                    System.out.println("Braasssssa");
-                                    return;
-                                    //Take Money
-                                    //DEl Item
-                                }
-                            } else {
-                                System.out.println("Braaaaaaaaa");
-                            }
-                        }else{
-                            System.out.println("Braaa");
-                        }
-                    }
-                    System.out.println("Other Blokc ");
-                }
-                event.setCancelled();
-            }
-        }
-    }
+    //TODO
+//    @EventHandler(ignoreCancelled = true)
+//    public void TE(InventoryTransactionEvent event) {
+//        InventoryTransaction transaction =  event.getTransaction();
+//        Set<InventoryAction> traa = transaction.getActions();
+//        for (InventoryAction t : traa) {
+//            Set<Inventory> inv = transaction.getInventories();
+//            if(inv.isEmpty())return;
+//            if (inv instanceof AuctionHouse) {
+//                AuctionHouse AHINV = ((AuctionHouse) inv);
+//                if (!AHINV.ConfirmPurchase) {
+//                    t.g
+//                    if (t.getSlot() >= 0 && t.getSlot() < 45) {
+//                        //Confirm Item
+//                        AHINV.ConfirmItemPurchase(t.getSlot());
+//                    } else if (t.getSlot() == 45) {
+//                        //@TODO Show Items they are selling
+//                    } else if (t.getSlot() == 46) {
+//                        //@TODO Show Expired Items
+//                    } else if (t.getSlot() == 48) {
+//                        //@TODO Previous
+//                        AHINV.setPage(AHINV.Page - 1);
+//                        AHINV.setContents(getPage(AHINV.Page));
+//                    } else if (t.getSlot() == 49) {
+//                        //@TODO Resend Page
+//                        AHINV.setPage(AHINV.Page);
+//                        AHINV.setContents(getPage(AHINV.Page));
+//                    } else if (t.getSlot() == 50) {
+//                        //@TODO Next
+//                        AHINV.setPage(AHINV.Page + 1);
+//                        AHINV.setContents(getPage(AHINV.Page));
+//                    } else if (t.getSlot() == 52) {
+//                        //@TODO Catagories
+//                    }
+//                } else {
+//                    if (t.getSourceItem().getId() == Item.EMERALD_BLOCK) {
+//                        event.setCancelled();
+//                        Player p = (Player)AHINV.getHolder();
+//                        if(p == null){
+//                            System.out.println("?!??!?! Ahh222222hhh");
+//                            return;
+//                        }
+//                        //DONE!
+//                        //Give Item
+//                        Item TI = AHINV.getItem(31);
+//                        if (TI.hasCompoundTag()) {
+//                            CompoundTag tag = TI.getNamedTag();
+//                            if (tag.contains("display") && tag.get("display") instanceof CompoundTag) {
+//                                CompoundTag tag2 = tag.getCompound("display");
+//                                if (tag2 != null) {
+//                                    ArchEconMain AA = (ArchEconMain) CCM.getServer().getPluginManager().getPlugin("ArchEcon");
+//                                    int id = tag2.getInt("keyid");
+//                                    int price = tag2.getInt("cost");
+//                                    if(AA == null){
+//                                        p.sendMessage(TextFormat.RED+"Error! 258");
+//                                        AHINV.close(p);
+//                                        return;
+//                                    }
+//                                    //@TODO Check Items
+//                                    Item checkitem = GetItemfromDB(id);
+//                                    if(checkitem == null && !checkitem.equals(TI)){
+//                                        p.sendMessage(TextFormat.RED+"Error! 273");
+//                                        AHINV.close(p);
+//                                        System.out.println("?!??!?! Ahhhhh");
+//                                        return;
+//                                    }
+//
+//                                    //@TODO reset all my custom shit!
+//                                    String soldby = tag2.getString("soldby");
+//                                    tag2.remove("keyid");
+//                                    tag2.remove("cost");
+//                                    tag2.remove("soldby");
+//                                    String CN = tag2.getString("Name2");
+//                                    tag2.remove("Name");
+//                                    if(CN != null && CN.length() != 0)tag2.putString("Name",CN);
+//                                    tag2.remove("Name2");
+//                                    TI.setNamedTag(tag);
+//
+//                                    if(!AA.TakeMoney(p.getName(),1.0 * price,false)){
+//                                        p.sendMessage(TextFormat.RED+"Error! You don't have enough money!");
+//                                        AHINV.close(p);
+//                                        return;
+//                                    }
+//
+//                                    SetBought(id);
+//                                    AA.GiveMoney(soldby,1.0*price);
+//                                    p.getInventory().addItem(TI);
+//                                    AHINV.close(p);
+//                                    //p.getLevel().dropItem(p,TI.clone());
+//
+//
+//                                    System.out.println("Braasssssa");
+//                                    return;
+//                                    //Take Money
+//                                    //DEl Item
+//                                }
+//                            } else {
+//                                System.out.println("Braaaaaaaaa");
+//                            }
+//                        }else{
+//                            System.out.println("Braaa");
+//                        }
+//                    }
+//                    System.out.println("Other Blokc ");
+//                }
+//                event.setCancelled();
+//            }
+//        }
+//    }
 
     public void SetBought(int id) {
         String sql = "UPDATE `auctions` SET `purchased` = '1' WHERE `auctions`.`id` = "+id+";";

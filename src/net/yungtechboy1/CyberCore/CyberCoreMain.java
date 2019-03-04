@@ -15,6 +15,7 @@ import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.Bans.Ban;
@@ -43,6 +44,7 @@ import java.util.concurrent.TimeUnit;
 public class CyberCoreMain extends PluginBase implements CommandExecutor, Listener {
 
     public static final String NAME = TextFormat.GOLD + "" + TextFormat.BOLD + "§eTERRA§6CORE " + TextFormat.RESET + TextFormat.GOLD + "» " + TextFormat.RESET;
+    public BossBarManager BBM;
     //CyberChat
     public static Connection Connect = null;
     public static Connection Connect2 = null;
@@ -111,6 +113,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         getServer().getScheduler().scheduleDelayedTask(new GetFactions(this), 20);
 
+        //BossBar Manager
+        BBM = new BossBarManager(this);
         //Floating Text
         FTM = new FloatingTextMain(this);
         //Mob Plugin

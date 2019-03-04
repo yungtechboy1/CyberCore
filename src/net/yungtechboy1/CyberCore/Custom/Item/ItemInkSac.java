@@ -6,7 +6,7 @@
 package net.yungtechboy1.CyberCore.Custom.Item;
 
 
-import de.kniffo80.mobplugin.items.MobPluginItems;
+
 
 /**
  * @author <a href="mailto:kniffman@googlemail.com">Michael Gertz (kniffo80)</a>

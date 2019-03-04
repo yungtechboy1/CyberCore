@@ -9,7 +9,7 @@ import cn.nukkit.potion.Effect;
 import cn.nukkit.potion.Potion;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
-import main.java.CyberFactions.Faction;
+
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.*;

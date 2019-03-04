@@ -2,7 +2,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
-import main.java.CyberFactions.Faction;
+
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**

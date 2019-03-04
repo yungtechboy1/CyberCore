@@ -15,6 +15,7 @@ import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import com.sun.xml.internal.ws.client.SenderException;
 import net.yungtechboy1.CyberCore.Manager.Factions.Mission.ActiveMission;
+import net.yungtechboy1.CyberCore.Manager.Factions.Mission.Mission;
 
 import java.io.File;
 import java.io.FileReader;
@@ -272,12 +273,12 @@ public class Faction {
         SetActiveMission(id);
     }
     public void SetActiveMission(Integer id){
-        for(Mission mission: Main.Missions){
-            if(mission.id.equals(id)) {
-                SetActiveMission(new ActiveMission(Main,this,mission));
-                BroadcastMessage(FactionsMain.NAME+TextFormat.AQUA+mission.name+TextFormat.GREEN+" Faction mission accepted!");
-            }
-        }
+//        for(Mission mission: Main.Missions){
+//            if(mission.id.equals(id)) {
+//                SetActiveMission(new ActiveMission(Main,this,mission));
+//                BroadcastMessage(FactionsMain.NAME+TextFormat.AQUA+mission.name+TextFormat.GREEN+" Faction mission accepted!");
+//            }
+//        }
     }
     public void RetrieveActiveMission(String id){
         if(id == null || id.equalsIgnoreCase("")){
@@ -287,28 +288,28 @@ public class Faction {
         }
     }
     public void RetrieveActiveMission(Integer id){
-        if(Main.AM.exists(GetName())){
-            for(Mission mission: Main.Missions){
-                if(mission.id.equals(id)){
-                    try {
-                        /*YamlConfig yamlConfig = new YamlConfig();
-                        yamlConfig.setClassTag("ActiveMission",ActiveMission.class);
-                        yamlConfig.setClassTag("tag:yaml.org,2002:cn.nukkit.item.ItemBlock",ItemBlock.class);
-                        YamlReader reader = new YamlReader(new FileReader(Main.getDataFolder().toString()+"/missions/"+GetName()+".yml"),yamlConfig);
-                        ActiveMission activeMission = reader.read(ActiveMission.class);
-                        System.out.println(activeMission.name)*/;
-                        ActiveMission activeMission = new ActiveMission(Main, this,(ConfigSection) Main.AM.get(GetName()));
-                        SetActiveMission(activeMission);
-                        //SetActiveMission(new ActiveMission(Main,this,mission));
-                        BroadcastMessage(FactionsMain.NAME+TextFormat.AQUA+mission.name+TextFormat.GREEN+" Faction mission accepted!");
-                        return;
-                    }catch(Exception ex){
-                        ex.printStackTrace();
-                    }
-                }
-            }
-        }
-        SetActiveMission();
+//        if(Main.AM.exists(GetName())){
+//            for(Mission mission: Main.Missions){
+//                if(mission.id.equals(id)){
+//                    try {
+//                        /*YamlConfig yamlConfig = new YamlConfig();
+//                        yamlConfig.setClassTag("ActiveMission",ActiveMission.class);
+//                        yamlConfig.setClassTag("tag:yaml.org,2002:cn.nukkit.item.ItemBlock",ItemBlock.class);
+//                        YamlReader reader = new YamlReader(new FileReader(Main.getDataFolder().toString()+"/missions/"+GetName()+".yml"),yamlConfig);
+//                        ActiveMission activeMission = reader.read(ActiveMission.class);
+//                        System.out.println(activeMission.name)*/;
+//                        ActiveMission activeMission = new ActiveMission(Main, this,(ConfigSection) Main.AM.get(GetName()));
+//                        SetActiveMission(activeMission);
+//                        //SetActiveMission(new ActiveMission(Main,this,mission));
+//                        BroadcastMessage(FactionsMain.NAME+TextFormat.AQUA+mission.name+TextFormat.GREEN+" Faction mission accepted!");
+//                        return;
+//                    }catch(Exception ex){
+//                        ex.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
+//        SetActiveMission();
     }
     public void SetActiveMission(){
         AM = null;

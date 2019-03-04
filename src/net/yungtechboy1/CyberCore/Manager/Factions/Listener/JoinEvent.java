@@ -6,7 +6,7 @@ import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerPreLoginEvent;
 import cn.nukkit.utils.TextFormat;
 import main.java.CyberFactions.BossBar.BossBar;
-import main.java.CyberFactions.Faction;
+
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**

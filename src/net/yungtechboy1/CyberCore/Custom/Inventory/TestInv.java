@@ -10,7 +10,6 @@ import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
 import cn.nukkit.item.enchantment.Enchantment;
-import cn.nukkit.level.sound.AnvilUseSound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.*;
@@ -365,6 +364,11 @@ public class TestInv implements Inventory {
     }
 
     @Override
+    public void onSlotChange(int index, Item before, boolean send) {
+
+    }
+
+    @Override
     public int getSize() {
         return size;
     }
@@ -459,6 +463,11 @@ public class TestInv implements Inventory {
     }
 
     @Override
+    public boolean setItem(int index, Item item, boolean send) {
+        return false;
+    }
+
+    @Override
     public boolean contains(Item item) {
         int count = Math.max(1, item.getCount());
         boolean checkDamage = item.hasMeta();
@@ -515,6 +524,11 @@ public class TestInv implements Inventory {
     }
 
     @Override
+    public int first(Item item, boolean exact) {
+        return 0;
+    }
+
+    @Override
     public int firstEmpty(Item item) {
         for (int i = 0; i < this.size; ++i) {
             if (this.getItem(i).getId() == Item.AIR) {
@@ -523,6 +537,11 @@ public class TestInv implements Inventory {
         }
 
         return -1;
+    }
+
+    @Override
+    public void decreaseCount(int slot) {
+
     }
 
     @Override
@@ -667,10 +686,25 @@ public class TestInv implements Inventory {
     }
 
     @Override
+    public boolean clear(int index, boolean send) {
+        return false;
+    }
+
+    @Override
     public void clearAll() {
         for (Integer index : this.getContents().keySet()) {
             this.clear(index);
         }
+    }
+
+    @Override
+    public boolean isFull() {
+        return false;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
     }
 
     @Override

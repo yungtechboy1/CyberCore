@@ -6,7 +6,7 @@ import cn.nukkit.level.format.anvil.Chunk;
 import cn.nukkit.level.format.generic.BaseFullChunk;
 import cn.nukkit.scheduler.PluginTask;
 import cn.nukkit.utils.TextFormat;
-import main.java.CyberFactions.Faction;
+
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.*;

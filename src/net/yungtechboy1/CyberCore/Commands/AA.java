@@ -4,7 +4,6 @@ import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParameter;
-import cn.nukkit.level.sound.ExperienceOrbSound;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Classes.BaseClass;
@@ -52,7 +51,7 @@ public class AA extends Command {
                 int key = Integer.parseInt(args[0]);
                 if (bc.PossibleAbillity().size() >= key && key != 0) {
                     bc.setPrime(--key);
-                    ((Player) s).getLevel().addSound(new ExperienceOrbSound((Player) s));
+//                    ((Player) s).getLevel().addSound(new ExperienceOrbSound((Player) s));
                     s.sendMessage(TextFormat.GRAY+"You ready your self for an ability!");
                 } else {
                     s.sendMessage(TextFormat.RED+"Error! Ability Key Invalid!");
