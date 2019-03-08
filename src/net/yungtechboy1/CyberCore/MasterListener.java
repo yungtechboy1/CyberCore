@@ -210,6 +210,7 @@ public class MasterListener implements Listener {
         //TODO Add 30 Sec Cooldown
 
         //TODO Create CheckClaim Function
+        //Checks factions claim
         String chunkfaction = Main.FM.GetChunkOwner((int) ev.getPlayer().getX() >> 4, (int) ev.getPlayer().getZ() >> 4);
         if (chunkfaction != null) {
             String pf = Main.FM.getPlayerFaction(ev.getPlayer().getName());
