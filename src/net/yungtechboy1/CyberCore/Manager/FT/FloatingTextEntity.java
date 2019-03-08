@@ -81,6 +81,10 @@ public class FloatingTextEntity extends Entity {
         return entityId;
     }
 
+    public void GetFinalText(){
+
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }

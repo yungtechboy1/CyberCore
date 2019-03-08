@@ -6,6 +6,7 @@ import cn.nukkit.Server;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.math.Vector3f;
+import cn.nukkit.network.protocol.RemoveEntityPacket;
 import cn.nukkit.utils.TextFormat;
 import javafx.geometry.Pos;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -18,9 +19,14 @@ import java.util.List;
 /**
  * Created by carlt on 2/14/2019.
  */
+
+
 public class FloatingTextFactory extends Thread implements InterruptibleThread {
 
-    private CyberCoreMain CCM;
+
+    public CyberCoreMain CCM;
+
+    private HashMap<Long, ArrayList<String>> LastPL = new HashMap<Long, ArrayList<String>>();
 
     ArrayList<FloatingTextContainer> LList = new ArrayList<>();
 
@@ -43,7 +49,8 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
 
     public HashMap<String, Position> GetPlayerPoss() {
         HashMap<String, Position> playerposs = new HashMap<>();
-        for (Player p : Server.getInstance().getOnlinePlayers().values()) playerposs.put(p.getName(), p.getPosition());
+        for (Player p : Server.getInstance().getOnlinePlayers().values())
+            playerposs.put(p.getName(), p.getPosition());
         return playerposs;
     }
 
@@ -55,6 +62,9 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
                 lasttick = tick;
                 HashMap<String, Position> ppss = GetPlayerPoss();
                 for (FloatingTextContainer ft : LList) {
+                    ArrayList<String> a = new ArrayList<String>();
+                    if (!LastPL.containsKey(ft.EID)) LastPL.put(ft.EID, a);
+                    ft.OnUpdate(tick);
                     int ftlt = ft.LastUpdate;
                     if (ftlt >= tick) continue;
                     ArrayList<String> ap = new ArrayList<>();
@@ -66,8 +76,13 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
                         if (!ppos.level.getName().equalsIgnoreCase(ft.Pos.level.getName()) && ppos.distance(ft.Pos) > 100)//Not same World & 100+ Blocks away
                             continue;
                         ap.add(player);
+                        if (LastPL.get(ft.EID).size() > 0) LastPL.get(ft.EID).remove(player);
                     }
                     if (ap.size() == 0) continue;
+                    //Last time AP
+
+                    //Remove Each player from LastPL
+                    KillUnnneded(LastPL.get(ft.EID),ft.EID);
                     ft.HaldleSend(ap);
 
                     //Should i send packes within the Thread?
@@ -76,11 +91,20 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
 
 
             }
+            //A little faster than .1 of a sec (.06 to be exact...or 1 tick = 50millis and this is 60 millisecs)
+            //Low key Every other 4 thics is fine
             try {
-                Thread.sleep(60);
+                Thread.sleep(200);//4 Ticks
             } catch (InterruptedException e) {
                 //ignore
             }
+        }
+    }
+
+    private void KillUnnneded(ArrayList<String> strings, long eid) {
+        for (String p : strings) {
+            Player pp = CCM.getServer().getPlayerExact(p);
+            kill(eid, pp);
         }
     }
 
@@ -144,5 +168,12 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
                     .replace("{kdr}", "N/A");
         }
         return text;
+    }
+
+    public static void kill(long eid, Player p) {
+        RemoveEntityPacket pk = new RemoveEntityPacket();
+        pk.eid = eid;
+
+        p.dataPacket(pk);
     }
 }

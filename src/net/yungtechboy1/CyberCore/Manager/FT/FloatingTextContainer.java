@@ -27,6 +27,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * Created by carlt on 2/14/2019.
  */
 public class FloatingTextContainer {
+    public FloatingTextType TYPE = FloatingTextType.FT_Standard;
     public String Syntax;
     public Boolean PlayerUnique = false;
     public Boolean Active = false;
@@ -66,6 +67,7 @@ public class FloatingTextContainer {
         return FTF.FormatText(Syntax, p);
     }
 
+    //Generate Flaoting Text for following players
     public void HaldleSend(ArrayList<String> ap) {
 //        ArrayList<DataPacket> tosend = new ArrayList<>();
         HashMap<String,ArrayList<DataPacket>> tosend;
@@ -122,6 +124,10 @@ public class FloatingTextContainer {
 
     public DataPacket[] arryListToArray(ArrayList<DataPacket> packets) {
         return packets.stream().toArray(DataPacket[]::new);
+    }
+
+    public void OnUpdate(int tick){
+
     }
 
 }
