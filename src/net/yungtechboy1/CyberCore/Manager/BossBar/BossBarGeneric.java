@@ -153,6 +153,7 @@ public class BossBarGeneric {
     }
 
     public void kill() {
+        CurrentHealth = 0;
         sendHideBossBar();
         removeBossEntity();
     }

@@ -32,9 +32,9 @@ public class FactionsCommands {
             case "mystats":
             case "kdr":
                 sender.sendMessage(TextFormat.GREEN+"-------My Status-------");
-                sender.sendMessage(TextFormat.AQUA+"Kills"+TextFormat.YELLOW+" > "+main.GetKills(sender.getName()));
-                sender.sendMessage(TextFormat.AQUA+"Deaths"+TextFormat.YELLOW+" > "+main.GetDeaths(sender.getName()));
-                sender.sendMessage(TextFormat.AQUA+"KDR"+TextFormat.YELLOW+" > "+main.GetKDR(sender.getName()));
+                sender.sendMessage(TextFormat.AQUA+"Kills"+TextFormat.YELLOW+" > "+main.Main.KDM.GetKills(sender.getName()));
+                sender.sendMessage(TextFormat.AQUA+"Deaths"+TextFormat.YELLOW+" > "+main.Main.KDM.GetDeaths(sender.getName()));
+                sender.sendMessage(TextFormat.AQUA+"KDR"+TextFormat.YELLOW+" > "+main.Main.KDM.GetKDR(sender.getName()));
                 sender.sendMessage(TextFormat.GREEN+"--------------");
                 return true;
             case "purge":

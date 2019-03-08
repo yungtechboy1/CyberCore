@@ -14,7 +14,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class ChatEvent {
     FactionsMain Main;
-    PlayerChatEvent Event;
+    public PlayerChatEvent Event;
     String Name;
 
     public ChatEvent(FactionsMain main, PlayerChatEvent ev) {

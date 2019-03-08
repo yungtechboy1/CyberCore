@@ -26,6 +26,7 @@ import net.yungtechboy1.CyberCore.Custom.Item.ItemChickenCooked;
 import net.yungtechboy1.CyberCore.Custom.Item.ItemPorkchopCooked;
 import net.yungtechboy1.CyberCore.Events.CyberChatEvent;
 import net.yungtechboy1.CyberCore.Factory.*;
+import net.yungtechboy1.CyberCore.Manager.KD.KDManager;
 import net.yungtechboy1.CyberCore.Manager.SQLManager;
 import net.yungtechboy1.CyberCore.Manager.Save.SaveMain;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
@@ -78,6 +79,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public FloatingTextMain FTM;
     //Mob Plugin and AI
     public MobPlugin MP;
+    //KDR
+    public KDManager KDM;
     //Classes / MMO
     public ClassFactory ClassFactory;
     //PasswordFactoy
@@ -113,6 +116,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         getServer().getScheduler().scheduleDelayedTask(new GetFactions(this), 20);
 
+        //KDR Manager
+        KDM = new KDManager();
         //BossBar Manager
         BBM = new BossBarManager(this);
         //Floating Text

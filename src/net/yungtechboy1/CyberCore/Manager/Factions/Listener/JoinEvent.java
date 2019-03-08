@@ -27,6 +27,5 @@ public class JoinEvent {
 
     public void sendBossBar(){
         Player player = Event.getPlayer();
-        Main.sendBossBar(player);
     }
 }

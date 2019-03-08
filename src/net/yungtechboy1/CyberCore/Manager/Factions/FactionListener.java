@@ -518,19 +518,6 @@ public class FactionListener implements Listener {
     }
 */
 
-    public String GetFactionFromMember(String faction) {
-        try {
-            ResultSet r = plugin.ExecuteQuerySQLite(String.format("select * from master where `player` LIKE '%s'", faction));
-            if (r == null) return null;
-            while (r.next()) {
-                return r.getString("faction").toLowerCase();
-            }
-            return null;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void joinEvent(PlayerJoinEvent event) {
         new JoinEvent(plugin,event);

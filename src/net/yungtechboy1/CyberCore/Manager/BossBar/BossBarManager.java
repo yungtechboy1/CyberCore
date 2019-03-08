@@ -14,15 +14,25 @@ import java.util.HashMap;
  */
 public class BossBarManager {
 
-    public HashMap<String, BossBarNotification> BossList;
+    public HashMap<String, BossBarGeneric> BossList;
     public CyberCoreMain Main;
 
     public BossBarManager(CyberCoreMain m){
         Main = m;
     }
 
-    public void AddBossBar(Player p, BossBarNotification bbn){
-        
+    public boolean PlayerHasBossBar(Player p){
+        return BossList.containsKey(p.getName());
+    }
+
+    public BossBarGeneric GetCurrentBossBar(Player p){
+        if(!PlayerHasBossBar(p))return null;
+        return BossList.getOrDefault(p.getName(),null);
+    }
+
+    public void AddBossBar(Player p, BossBarGeneric bbn){
+        if(PlayerHasBossBar(p))GetCurrentBossBar(p).kill();
+        BossList.put(p.getName(),bbn);
     }
 
     public static void sendBossBar(Player player, int eid, String title){

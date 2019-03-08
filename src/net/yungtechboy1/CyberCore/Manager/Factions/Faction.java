@@ -434,23 +434,23 @@ public class Faction {
         return false;
     }
 
-    public void AddCooldown(Integer secs){
-        Map<String, Object> cd = Main.CD.getAll();
-        int time = (int)(Calendar.getInstance().getTime().getTime()/1000);
-        cd.put(GetName(),time+secs);
-    }
-    public boolean HasWarCooldown(){
-        Map<String, Object> cd = Main.CD.getAll();
-        int time = (int)(Calendar.getInstance().getTime().getTime()/1000);
-        if (cd.containsKey(GetName())){
-            if (time >= (int)cd.get(GetName())){
-                cd.remove(GetName());
-                return false;
-            }
-            return true;
-        }
-        return false;
-    }
+//    public void AddCooldown(Integer secs){
+//        Map<String, Object> cd = Main.CD.getAll();
+//        int time = (int)(Calendar.getInstance().getTime().getTime()/1000);
+//        cd.put(GetName(),time+secs);
+//    }
+//    public boolean HasWarCooldown(){
+//        Map<String, Object> cd = Main.CD.getAll();
+//        int time = (int)(Calendar.getInstance().getTime().getTime()/1000);
+//        if (cd.containsKey(GetName())){
+//            if (time >= (int)cd.get(GetName())){
+//                cd.remove(GetName());
+//                return false;
+//            }
+//            return true;
+//        }
+//        return false;
+//    }
 
     public void SetEnemies(ArrayList<String> list){Enemies = list;}
     public void AddEnemy(String fac){Enemies.add(fac);}
@@ -617,36 +617,36 @@ public class Faction {
         Player p = Main.getServer().getPlayerExact(Leader);
         if(p != null)p.sendMessage(message);
     }
-
-    public void ResetNameTag(){
-        for(String m: Members){
-            Player p = Main.getServer().getPlayerExact(m);
-            if(p != null){
-                if(Main.CC != null)Main.CC.Setnametag(p);
-            }
-        }
-        for(String m: Officers){
-            Player p = Main.getServer().getPlayerExact(m);
-            if(p != null){
-                if(Main.CC != null)Main.CC.Setnametag(p);
-            }
-        }
-        for(String m: Generals){
-            Player p = Main.getServer().getPlayerExact(m);
-            if(p != null){
-                if(Main.CC != null)Main.CC.Setnametag(p);
-            }
-        }
-
-        for(String m: Recruits){
-            Player p = Main.getServer().getPlayerExact(m);
-            if(p != null){
-                if(Main.CC != null)Main.CC.Setnametag(p);
-            }
-        }
-        Player p = Main.getServer().getPlayerExact(Leader);
-        if(p != null && Main.CC != null)Main.CC.Setnametag(p);
-    }
+//
+//    public void ResetNameTag(){
+//        for(String m: Members){
+//            Player p = Main.getServer().getPlayerExact(m);
+//            if(p != null){
+//                if(Main.CC != null)Main.CC.Setnametag(p);
+//            }
+//        }
+//        for(String m: Officers){
+//            Player p = Main.getServer().getPlayerExact(m);
+//            if(p != null){
+//                if(Main.CC != null)Main.CC.Setnametag(p);
+//            }
+//        }
+//        for(String m: Generals){
+//            Player p = Main.getServer().getPlayerExact(m);
+//            if(p != null){
+//                if(Main.CC != null)Main.CC.Setnametag(p);
+//            }
+//        }
+//
+//        for(String m: Recruits){
+//            Player p = Main.getServer().getPlayerExact(m);
+//            if(p != null){
+//                if(Main.CC != null)Main.CC.Setnametag(p);
+//            }
+//        }
+//        Player p = Main.getServer().getPlayerExact(Leader);
+//        if(p != null && Main.CC != null)Main.CC.Setnametag(p);
+//    }
 
     public void BroadcastPopUp(String message){
         BroadcastPopUp(message, "");
