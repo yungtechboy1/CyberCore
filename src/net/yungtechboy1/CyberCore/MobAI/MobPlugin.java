@@ -45,6 +45,7 @@ import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.DyeColor;
 import net.yungtechboy1.CyberCore.Custom.Item.ItemEnderPearl;
 import net.yungtechboy1.CyberCore.Custom.Item.ItemInkSac;
+import net.yungtechboy1.CyberCore.Custom.Item.MobPluginItems;
 import net.yungtechboy1.CyberCore.entities.BaseEntity;
 import net.yungtechboy1.CyberCore.entities.animal.flying.Bat;
 import net.yungtechboy1.CyberCore.entities.animal.swimming.Squid;
@@ -232,7 +233,6 @@ public class MobPlugin implements Listener {
         // register the new items
         Item.addCreativeItem(new ItemMuttonCooked());
         Item.addCreativeItem(new ItemMuttonRaw());
-        new cn.nukkit.item.ItemEnderPearl()
         Item.addCreativeItem(new ItemEnderPearl());
         Item.addCreativeItem(new ItemInkSac());
 

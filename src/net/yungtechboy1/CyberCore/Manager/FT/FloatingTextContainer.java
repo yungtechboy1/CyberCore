@@ -39,6 +39,7 @@ public class FloatingTextContainer {
     public Position Pos;
     public Level Lvl;
     public boolean _CE_Lock = false;
+    public boolean _CE_Done = false;
     public FloatingTextFactory FTF;
 
     public FloatingTextContainer(FloatingTextFactory ftf, Position pos, String syntax) {
@@ -72,7 +73,7 @@ public class FloatingTextContainer {
 //        ArrayList<DataPacket> tosend = new ArrayList<>();
         HashMap<String,ArrayList<DataPacket>> tosend;
 //        sync(_CE_Lock)//TODO
-        if (_CE_Lock) return;
+        if (_CE_Lock || _CE_Done) return;
         _CE_Lock = true;
         for (String pn : ap) {
             Player p = Server.getInstance().getPlayerExact(pn);
@@ -127,7 +128,11 @@ public class FloatingTextContainer {
     }
 
     public void OnUpdate(int tick){
+        LastUpdate = tick;
+    }
 
+    public void kill(){
+        _CE_Done = true;
     }
 
 }
