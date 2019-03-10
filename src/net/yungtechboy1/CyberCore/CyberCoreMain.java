@@ -88,7 +88,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     //CustomFactory
     public CustomFactory CustomFactory;
     //FactoriesA
-    public Homes HomeFactory;
+    public HomeManager HomeFactory;
     public RankFactory RankFactory;
     public AuctionFactory AuctionFactory;
     public List<String> Final = new ArrayList<>();
@@ -131,7 +131,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         Homes = new Config(new File(this.getDataFolder(), "homes.yml"), Config.YAML, new ConfigSection());
 
-        HomeFactory = new Homes(this);
+        HomeFactory = new HomeManager(this);
         RankFactory = new RankFactory(this);
         AuctionFactory = new AuctionFactory(this);
 

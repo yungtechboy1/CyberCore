@@ -41,7 +41,7 @@ public class Home extends Command {
                 String d = c.getValue();
                 a += TextFormat.YELLOW+"------> [ "+b+" ] <------ "+TextFormat.RESET+"\n";
             }
-            if(v.size() == 0)a += "----->"+"You have no Homes!<-----";
+            if(v.size() == 0)a += "----->"+"You have no HomeManager!<-----";
             a += TextFormat.GRAY+"========================"+TextFormat.RESET;
             sender.sendMessage(a);
             return true;

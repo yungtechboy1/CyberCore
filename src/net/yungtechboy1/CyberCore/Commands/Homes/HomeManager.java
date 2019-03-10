@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore;
+package net.yungtechboy1.CyberCore.Commands.Homes;
 
 import cn.nukkit.Player;
 import cn.nukkit.level.Level;
@@ -6,6 +6,7 @@ import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.LinkedHashMap;
 
@@ -14,10 +15,10 @@ import static net.yungtechboy1.CyberCore.CyberCoreMain.Prefix;
 /**
  * Created by carlt_000 on 1/21/2017.
  */
-public class Homes {
+public class HomeManager {
     public CyberCoreMain MainServer;
     public Config homes;
-    public Homes(CyberCoreMain main){
+    public HomeManager(CyberCoreMain main){
         MainServer = main;
         homes = main.Homes;
     }
@@ -67,14 +68,14 @@ public class Homes {
                 SetPlayerHome(pn, num, key);
                 p.sendMessage(Prefix + TextFormat.GREEN + " Home Set! Use" + TextFormat.AQUA + " /home " + num + TextFormat.GREEN + " To go to your new home!");
             } else {
-                p.sendMessage(Prefix + TextFormat.RED + " Their is alread a home set... If you wish to over-ride that home please type the command again ");
+                p.sendMessage(Prefix + TextFormat.RED + " There is already a home set... If you wish to over-ride that home please type the command again with the same home name.");
                 MainServer.Final.add(pn);
                 return;
             }
         } else {
             if (MainServer.Final.contains(pn)) MainServer.Final.remove(pn);
             if (CountHomes(pn) > GetMaxHomes(pn)) {
-                p.sendMessage(Prefix + TextFormat.RED + "Max Homes Set!");
+                p.sendMessage(Prefix + TextFormat.RED + "Max HomeManager Set!");
                 return;
             }
             SetPlayerHome(pn, num, key);

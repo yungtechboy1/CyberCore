@@ -90,7 +90,16 @@ public void PlayerInteractEvent(PlayerInteractEvent event){
         if (exp > 0) XP_EXCAVATION += exp;*/
     }
 ```
+#Other Class
+
 #GOOD
+Stay with other clases for now
+
+Or Maybe make these into abillities that can be gained when the Repestive class is leveled up...
+
+^^
+
+Good Idea!!!
 ```
     Classes
         Miner - Mining and Digging
