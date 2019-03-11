@@ -90,8 +90,95 @@ public void PlayerInteractEvent(PlayerInteractEvent event){
         if (exp > 0) XP_EXCAVATION += exp;*/
     }
 ```
+    Offense
+        Raider
+            Able to enter raid more and toggle Nametag
+            Take 10% less damage in enemy plot
+        Theif
+            Can Pickpocket
+            10% damage buff when using the Dagger/Short blade
+        Assassin
+            More Powerfull Bows
+            10% Damage buff with Automatic Bow & Bows
+            Can go invisable using ability while they have "Invisbility Cloak" Enchant on their Chestplate
+        Kngith
+            Reduces All damage by 10%
+            Slower swing time and Longer Attack Cooldown (27 Ticks vs 20)
+        Tank
+            Gain Upto 50% more health
+            Deal upto 10% more damage
+            Deal 10% more damage when still (No movement in past 10 Ticks)
+    Crafting
+        Mad Scientist - Potion Maker
+            Able to craft special potions
+            Potons have Buffs that are assocated with Potion Stand Quality and lvl
+            Potons have Inpurities taht are assocated with players Ability lvl
+                KEY = Impurtiy % | Max Possible Buff from Stand
+                1-10 - 100% | 10%
+                11-20 - 90% | 15%
+                21-30 - 80% | 20%
+                31-40 - 70% | 30%
+                41-50 - 60% | 45%
+                51-60 - 50% | 60%
+                61-70 - 45% | 75%
+                71-80 - 40% | 85%
+                81-90 - 35% | 95%
+                91-100 - 30% | 100%
+        Enchater
+            Each Custom enchant has a chance of Failing and Succeding depending on Enchanters ability lvl
+                KEY = Max Success % | Max Fail %
+                    1-10| 30% | 100%
+                    11-20|40% | 90%
+                    21-30|45% | 80%
+                    31-40|50% | 70%
+                    41-50|60% | 60%
+                    51-60|75% | 50%
+                    61-70|85% | 45%
+                    71-80|100% | 40%
+                    81-90|100% | 35%
+                    91-100|100% | 30%
+            
+        Smith - Weapon Specalizatioin
+            Can craft Modified Sword
+        Crafter - Block and Item Customization
+            Can craft Custom items
+    Farming
+        Farmer
+            Auto harvest - Each time you havest a crop there is a chance that a fully grown crop directly next can be harvested too. This effect has a max
+                Key = Auto Havest % | Max Blocks
+                01 - 10 = 5% | 3
+                11 - 20 = 10% | 3
+                21 - 30 = 15% | 4
+                31 - 40 = 20% | 5
+                41 - 50 = 25% | 6
+                51 - 60 = 30% | 7
+                61 - 70 = 35% | 8
+                71 - 80 = 45% | 8
+                81 - 90 = 55% | 9
+                91 - 100 = 65% | 10
+        LumberJack
+        Miner
+            TNT-Specalist
+                Chance of spawning TNT that can destroy ores
+                20% increase in power with TNT
+            MineLife
+                10% increase in mine speed
+    
+#Avatar?
+Water
+Fire
+Ice
+Air
 #Other Class
-
+    Digger
+        @ Lvl 10 Can specalize Minner
+    Farmer
+        @ Lvl 10 Can specalize Enchanter & Scholar
+    LumberJack
+        @ Lvl 10 Can specalize 
+    Miner
+    Tank
+    
 #GOOD
 Stay with other clases for now
 
@@ -101,7 +188,7 @@ Or Maybe make these into abillities that can be gained when the Repestive class 
 
 Good Idea!!!
 ```
-    Classes
+    Specalizations
         Miner - Mining and Digging
             TNT-Specalist
                 Chance of spawning TNT that can destroy ores
@@ -183,6 +270,38 @@ Good Idea!!!
 
 
 #Custom Items
+##Pocket Lure
+    Used by an Assassin to pick pocket players
+    Depends on Assassin Pick pocket lvl and Tool Lvl
+        LVL:
+            KEY = Max Success Change | Inpurities (Reduces Players Ability by This Percent) | Cooldown | Modifier (+/- Percent to Final Chance & Can override Max)
+            1 = 40 | 0-40 | 120 | -100-100
+            2 = 50 | 0-40 | 90 | -100-100
+            3 = 60 | 0-30 | 70 | -100-100
+            4 = 70 | 0-20 | 50 | -100-100
+            5 = 80 | 0-50 | 30 | -100-100
+            6 = 90 | 0-80 | 20 | -100-100
+##Knockback Hoe
+    Affects X Distance and knocks opponents back with cooldown
+    LVL:
+        KEY = Knockback Lvl | Distance |Cooldown | Damage/20
+        1 = 1 | 2 | 5 | 1
+        2 = 1 | 4 | 4 | 1
+        3 = 2 | 5 | 4 | 2
+        4 = 2 | 7 | 3 | 2
+        5 = 3 | 7 | 2 | 3
+        6 = 4 | 8 | 1 | 3
+##Snow Hoe
+    Item crafted by Crafter
+    Creates snow blocks Barriers when tapped on floor
+    LVL:
+        KEY = Blocks Regenerated per 20 Ticks | Snow Capacity
+        1 = .7 | 3
+        2 = 1 | 5
+        3 = 1.5 | 7
+        4 = 1.7 | 9
+        5 = 2 | 11
+        6 = 2.5 | 15
 ##Cords Maps
 
 Has 2 States
