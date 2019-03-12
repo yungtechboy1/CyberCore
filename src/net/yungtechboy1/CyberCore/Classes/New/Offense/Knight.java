@@ -20,7 +20,7 @@ public class Knight extends BaseClass {
 
     @Override
     public PlayerInteractEvent PlayerInteractEvent(PlayerInteractEvent event) {
-        PlayerInteractEvent
+//        PlayerInteractEvent
         if(event.getAction() == PlayerInteractEvent.RIGHT_CLICK_AIR && event.){
 
         }
