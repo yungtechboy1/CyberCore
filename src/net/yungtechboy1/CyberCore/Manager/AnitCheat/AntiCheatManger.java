@@ -56,6 +56,7 @@ public class AntiCheatManger {
                 Entity target = p.level.getEntity(useItemOnEntityData.entityRuntimeId);
                 if (target == null) {
                     return packet;
+<<<<<<< HEAD
                 } else if (!target.isAlive()) {
                     return null;
                 }
@@ -63,6 +64,9 @@ public class AntiCheatManger {
                 if (type == InventoryTransactionPacket.USE_ITEM_ON_ENTITY_ACTION_ATTACK) {
                     //Check Cooldown
                     if(HasCooldown(p, Server.getInstance().getTick()))return null;
+                }
+                int type = useItemOnEntityData.actionType;
+                if (type == InventoryTransactionPacket.USE_ITEM_ON_ENTITY_ACTION_ATTACK){
                     Item item = useItemOnEntityData.itemInHand;
                     float itemDamage = item.getAttackDamage();
 
@@ -128,6 +132,17 @@ public class AntiCheatManger {
                     if (item.isTool() && p.isSurvival()) p.getInventory().sendContents(p);
 
                     for (Enchantment enchantment : item.getEnchantments()) enchantment.doPostAttack(p, target);
+                    //TODO
+                    //CALL ALL DAMAGE EVENTS HERE!!!!
+                    //TODO
+
+                    if(entityDamageByEntityEvent.isCancelled())return null;
+
+                    p.setLastDamageCause(Convert(entityDamageByEntityEvent));
+                    p.setHealth(p.getHealth() - entityDamageByEntityEvent.getFinalDamage());
+                    if (item.isTool() && p.isSurvival())p.getInventory().sendContents(p);
+
+                    for (Enchantment enchantment : item.getEnchantments())enchantment.doPostAttack(p, target);
 
 
                     if (item.isTool() && p.isSurvival()) {
@@ -150,6 +165,11 @@ public class AntiCheatManger {
 
     public EntityDamageEvent.DamageCause Convert(CustomEntiyDamageEvent.CustomDamageCause v) {
         switch (v) {
+    public EntityDamageByEntityEvent Convert(CustomEntityDamageByEntityEvent v){
+        return new EntityDamageByEntityEvent(v.getDamager(),v.entity,Convert(v.getCause()),v.getFinalDamage());
+    }
+    public EntityDamageEvent.DamageCause Convert(CustomEntiyDamageEvent.CustomDamageCause v){
+        switch (v){
             case CONTACT:
                 return EntityDamageEvent.DamageCause.CONTACT;
             case ENTITY_ATTACK:
@@ -194,6 +214,17 @@ public class AntiCheatManger {
     }
 
     public boolean CustomCanInteract(Vector3 pos, double maxDistance, Player p, double maxDiff) {
+        if (p.distanceSquared(pos) > maxDistance * maxDistance) {
+            return false;
+        }
+        }
+    }
+
+    public boolean CustomCanInteract(Vector3 pos, double maxDistance, Player p) {
+        return CustomCanInteract(pos, maxDistance,p, 0.5 );
+    }
+
+    public boolean CustomCanInteract(Vector3 pos, double maxDistance,Player p, double maxDiff) {
         if (p.distanceSquared(pos) > maxDistance * maxDistance) {
             return false;
         }
