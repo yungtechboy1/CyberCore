@@ -15,6 +15,8 @@ import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Abilities.Super_Breaker;
 import net.yungtechboy1.CyberCore.Classes.Old.Class_LumberJack;
+import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
+import net.yungtechboy1.CyberCore.Custom.Events.CustomEntiyDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ public abstract class BaseClass {
     public ConfigSection COOLDOWNS = new ConfigSection();
     public boolean Prime = false;
     public int PrimeKey = 0;
+    public int SwingTime = 20;
 
     public int getMainID() {
         return MainID;
@@ -262,6 +265,8 @@ public abstract class BaseClass {
     public CraftItemEvent CraftItemEvent(CraftItemEvent event) {
         return event;
     }
+    public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {return event;}
+    public CustomEntiyDamageEvent CustomEntiyDamageEvent(CustomEntiyDamageEvent event) {return event;}
 
     public int XPToLevel(int xp) {
         int lvl = 0;

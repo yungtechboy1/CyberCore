@@ -105,9 +105,11 @@ public void PlayerInteractEvent(PlayerInteractEvent event){
             Reduces All damage by 10%
             Slower swing time and Longer Attack Cooldown (27 Ticks vs 20)
         Tank
-            Gain Upto 50% more health
+            Gain Upto 50% more health in Asorbtion
             Deal upto 10% more damage
             Deal 10% more damage when still (No movement in past 10 Ticks)
+            Use "Tank Juice" potion to restore Absorbtion health
+            Or Wait 1 Min - 20 Secs for 1/2 Heart to restore
     Crafting
         Mad Scientist - Potion Maker
             Able to craft special potions
@@ -165,10 +167,10 @@ public void PlayerInteractEvent(PlayerInteractEvent event){
                 10% increase in mine speed
     
 #Avatar?
-Water
-Fire
-Ice
-Air
+    Water
+    Fire
+    Ice
+    Air
 #Other Class
     Digger
         @ Lvl 10 Can specalize Minner

@@ -1,11 +1,8 @@
 <component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="CyberCore">
+  <artifact type="jar" name="CyberCore">
     <output-path>$PROJECT_DIR$/out/artifacts/CyberCore</output-path>
     <root id="archive" name="CyberCore.jar">
       <element id="module-output" name="CyberCore" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../mysql-connector-java-5.0.8-bin.jar" path-in-jar="/" />
-      <element id="library" level="project" name="sqlite-jdbc-3.8.11.2" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../jBCrypt-0.4/jbcrypt.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

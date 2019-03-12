@@ -12,6 +12,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 public class Knight extends BaseClass {
     public Knight(CyberCoreMain main, Player player, int rank, int xp, ConfigSection cooldowns) {
         super(main, player, rank,BaseClass.TYPE_Offensive_Knight, xp, cooldowns);
+        SwingTime = 27;
     }
 
     public Knight(CyberCoreMain main, Player player, ConfigSection cs) {
@@ -20,7 +21,7 @@ public class Knight extends BaseClass {
 
     @Override
     public PlayerInteractEvent PlayerInteractEvent(PlayerInteractEvent event) {
-        PlayerInteractEvent
+//        PlayerInteractEvent
         if(event.getAction() == PlayerInteractEvent.RIGHT_CLICK_AIR && event.){
 
         }
