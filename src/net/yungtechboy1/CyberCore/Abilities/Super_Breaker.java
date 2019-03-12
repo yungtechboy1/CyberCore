@@ -1,12 +1,11 @@
 package net.yungtechboy1.CyberCore.Abilities;
 
-import cn.nukkit.Player;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemTool;
 import cn.nukkit.item.enchantment.Enchantment;
-import net.yungtechboy1.CyberCore.Classes.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**

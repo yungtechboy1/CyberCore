@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Abilities;
 
 import cn.nukkit.Player;
-import cn.nukkit.event.Event;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
@@ -11,7 +10,7 @@ import cn.nukkit.event.player.*;
 import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.scheduler.PluginTask;
-import net.yungtechboy1.CyberCore.Classes.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.Calendar;
@@ -105,31 +104,31 @@ public class Ability extends PluginTask<CyberCoreMain> {
         }
     }
 
-    public void CraftItemEvent(CraftItemEvent event){
-
+    public CraftItemEvent CraftItemEvent(CraftItemEvent event){
+        return event;
     }
-    public void PlayerToggleSprintEvent(PlayerToggleSprintEvent event){
-
-    }
-
-    public void EntityDamageEvent(EntityDamageEvent event){
-
+    public PlayerToggleSprintEvent PlayerToggleSprintEvent(PlayerToggleSprintEvent event){
+        return event;
     }
 
-    public void BlockBreakEvent(BlockBreakEvent event){
-
+    public EntityDamageEvent EntityDamageEvent(EntityDamageEvent event){
+        return event;
     }
 
-    public void BlockPlaceEvent(BlockPlaceEvent event){
-
+    public BlockBreakEvent BlockBreakEvent(BlockBreakEvent event){
+        return event;
     }
 
-    public void EntityRegainHealthEvent(EntityRegainHealthEvent event) {
-
+    public BlockPlaceEvent BlockPlaceEvent(BlockPlaceEvent event){
+        return event;
     }
 
-    public void PlayerInteractEvent(PlayerInteractEvent event) {
+    public EntityRegainHealthEvent EntityRegainHealthEvent(EntityRegainHealthEvent event) {
+        return event;
+    }
 
+    public PlayerInteractEvent PlayerInteractEvent(PlayerInteractEvent event) {
+        return event;
     }
 
     public void PlayerDropItemEvent(PlayerDropItemEvent event){

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" inherit-compiler-output="false">
+  <component name="NewModuleRootManager">
     <output url="file:///production/CyberCore" />
     <output-test url="file:///test/CyberCore" />
     <exclude-output />
@@ -9,11 +9,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="nukkit-1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="sqlite-jdbc-3.8.11.2" level="project" />
-    <orderEntry type="library" name="mysql-connector-java-5.0.8-bin" level="project" />
-    <orderEntry type="library" name="CyberEcon" level="project" />
-    <orderEntry type="library" name="Factions" level="project" />
-    <orderEntry type="library" name="jbcrypt" level="project" />
+    <orderEntry type="library" name="Nukkit" level="project" />
   </component>
 </module>

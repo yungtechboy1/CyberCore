@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Classes.New.Offense;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.item.Item;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -18,17 +19,20 @@ public class Thief extends BaseClass {
     @Override
     public EntityDamageEvent EntityDamageEvent(EntityDamageEvent event) {
         Player p = (Player)event.getEntity();
-        int x = p.getFloorX() >> 4;
-        int z = p.getFloorZ() >> 4;
-        if(CyberCoreMain.getInstance().FM.FFactory.PlotsList.containsKey(x+"|"+z)){
-            float bd = event.getDamage(EntityDamageEvent.MODIFIER_BASE) * .90f;
-            event.setDamage(bd,EntityDamageEvent.MODIFIER_BASE);
-        }
+        Item i = p.getInventory().getItemInHand();
+        //TODO Check to see if item is a Dagger/Short Sword
+//        if()
         return event;
     }
 
     @Override
     public String getName() {
-        return "Raider";
+        return "Thief";
     }
-}
+
+
+    @Override
+    public int getMainID() {
+        return BaseClass.TYPE_Offensive_Thief;
+    }
+    }

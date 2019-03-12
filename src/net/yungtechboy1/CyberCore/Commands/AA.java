@@ -6,7 +6,7 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Abilities.Ability;
-import net.yungtechboy1.CyberCore.Classes.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**

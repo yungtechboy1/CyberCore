@@ -5,12 +5,11 @@ import cn.nukkit.block.Block;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.scheduler.PluginTask;
 import cn.nukkit.utils.ConfigSection;
-import net.yungtechboy1.CyberCore.Classes.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Class_LumberJack;
+import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Old.Class_LumberJack;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by carlt_000 on 2/6/2017.

@@ -45,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 public class CyberCoreMain extends PluginBase implements CommandExecutor, Listener {
 
     public static final String NAME = TextFormat.GOLD + "" + TextFormat.BOLD + "§eTERRA§6CORE " + TextFormat.RESET + TextFormat.GOLD + "» " + TextFormat.RESET;
+    private static CyberCoreMain instance;
     public BossBarManager BBM;
     //CyberChat
     public static Connection Connect = null;
@@ -274,6 +275,14 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         getServer().getCommandMap().register("CyberCore", new AuctionHouseCmd(this));
         getServer().getCommandMap().register("CyberCore", new SellHand(this));
+    }
+
+    public void onLoad(){
+        CyberCoreMain.instance = this;
+    }
+
+    public static CyberCoreMain getInstance(){
+        return CyberCoreMain.instance;
     }
 
     public Connection getMySqlConnection() {

@@ -1,11 +1,9 @@
 package net.yungtechboy1.CyberCore.Abilities;
 
-import cn.nukkit.Player;
-import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.player.PlayerToggleSprintEvent;
-import net.yungtechboy1.CyberCore.Classes.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**

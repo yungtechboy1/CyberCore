@@ -1,6 +1,5 @@
 package net.yungtechboy1.CyberCore.Abilities;
 
-import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.block.BlockLeaves;
@@ -9,13 +8,9 @@ import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemGunpowder;
 import cn.nukkit.level.Sound;
 import cn.nukkit.level.particle.FlameParticle;
-import cn.nukkit.level.particle.Particle;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.math.Vector3;
-import cn.nukkit.network.protocol.DataPacket;
-import cn.nukkit.network.protocol.LevelEventPacket;
-import cn.nukkit.scheduler.AsyncTask;
-import net.yungtechboy1.CyberCore.Classes.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.ArrayList;

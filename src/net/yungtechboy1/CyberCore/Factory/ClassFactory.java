@@ -10,7 +10,7 @@ import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
-import net.yungtechboy1.CyberCore.Classes.*;
+import net.yungtechboy1.CyberCore.Classes.Old.*;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Tasks.LumberJackTreeCheckerTask;
 

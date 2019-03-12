@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Classes.Old;
+package net.yungtechboy1.CyberCore.Classes.New;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
@@ -21,23 +21,31 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-/**
- * Created by carlt_000 on 1/25/2017.
- */
-public class BaseClass {
+public abstract class BaseClass {
     public static int NONE = 0;
-    public static int TYPE_MINER = 1;
-    public static int TYPE_TANK = 2;
-    public static int TYPE_LUMBERJACK = 3;
-    public static int TYPE_FARMER = 4;
-    public static int TYPE_DIGGER = 5;
-    public static int TYPE_WARRIOR = 6;
-    public static int TYPE_RAIDER = 7;
-    public static int TYPE_PYRO = 8;
+
+    protected final static int TYPE_Offensive_Raider = 1;
+    protected final static int TYPE_Offensive_Thief = 2;
+    protected final static int TYPE_Offensive_Assassin = 3;
+    protected final static int TYPE_Offensive_Knight = 4;
+    protected final static int TYPE_Offensive_Tank = 5;
+    protected final static int TYPE_Crafting_MadScientist = 6;
+    protected final static int TYPE_Crafting_Enchater = 7;
+    protected final static int TYPE_Crafting_Smith = 8;
+    protected final static int TYPE_Crafting_Crafter = 9;
+    protected final static int TYPE_Farming_Farmer = 10;
+    protected final static int TYPE_Farming_LumberJack = 11;
+    protected final static int TYPE_Farming_Miner = 12;
 
     public ConfigSection COOLDOWNS = new ConfigSection();
     public boolean Prime = false;
     public int PrimeKey = 0;
+
+    public int getMainID() {
+        return MainID;
+    }
+
+    protected int MainID = 0;
     protected CyberCoreMain CCM;
     HashMap<Integer, Integer> Herbal = new HashMap<Integer, Integer>() {{
         put(Block.GRASS, 10);
@@ -71,8 +79,9 @@ public class BaseClass {
     private int XP = 0;
     private Ability ActiveAbility;
 
-    public BaseClass(CyberCoreMain main, Player player, int rank, int xp, ConfigSection cooldowns) {
+    public BaseClass(CyberCoreMain main, Player player, int mid, int rank, int xp, ConfigSection cooldowns) {
         CCM = main;
+        MainID = mid;
         P = player;
         TYPE = rank;
         XP = xp;
@@ -80,8 +89,9 @@ public class BaseClass {
         COOLDOWNS = cooldowns;
     }
 
-    public BaseClass(CyberCoreMain main, Player player, ConfigSection cs) {
+    public BaseClass(CyberCoreMain main, Player player, int mid, ConfigSection cs) {
         CCM = main;
+        MainID = mid;
         P = player;
         XP = cs.getInt("XP");
         TYPE = cs.getInt("TYPE");
@@ -159,36 +169,45 @@ public class BaseClass {
         return time < COOLDOWNS.getInt(key);
     }
 
-    public void HandelEvent(Event event) {
+    //TODO
+    public Event HandelEvent(Event event) {
         if (event instanceof BlockBreakEvent) {
-            BlockBreakEvent((BlockBreakEvent) event);
-            if (ActiveAbility != null) ActiveAbility.BlockBreakEvent((BlockBreakEvent) event);
+            event = BlockBreakEvent((BlockBreakEvent) event);
+            if (ActiveAbility != null) event = ActiveAbility.BlockBreakEvent((BlockBreakEvent) event);
+            return event;
         } else if (event instanceof PlayerToggleSprintEvent) {
-            PlayerToggleSprintEvent((PlayerToggleSprintEvent) event);
-            if (ActiveAbility != null) ActiveAbility.PlayerToggleSprintEvent((PlayerToggleSprintEvent) event);
+            event = PlayerToggleSprintEvent((PlayerToggleSprintEvent) event);
+            if (ActiveAbility != null) event = ActiveAbility.PlayerToggleSprintEvent((PlayerToggleSprintEvent) event);
+            return event;
         } else if (event instanceof PlayerInteractEvent) {
-            PlayerInteractEvent((PlayerInteractEvent) event);
-            if (ActiveAbility != null) ActiveAbility.PlayerInteractEvent((PlayerInteractEvent) event);
+            event = PlayerInteractEvent((PlayerInteractEvent) event);
+            if (ActiveAbility != null) event = ActiveAbility.PlayerInteractEvent((PlayerInteractEvent) event);
+            return event;
         } else if (event instanceof EntityRegainHealthEvent) {
-            EntityRegainHealthEvent((EntityRegainHealthEvent) event);
-            if (ActiveAbility != null) ActiveAbility.EntityRegainHealthEvent((EntityRegainHealthEvent) event);
+            event = EntityRegainHealthEvent((EntityRegainHealthEvent) event);
+            if (ActiveAbility != null) event = ActiveAbility.EntityRegainHealthEvent((EntityRegainHealthEvent) event);
+            return event;
         } else if (event instanceof BlockPlaceEvent) {
-            BlockPlaceEvent((BlockPlaceEvent) event);
-            if (ActiveAbility != null) ActiveAbility.BlockPlaceEvent((BlockPlaceEvent) event);
+            event = BlockPlaceEvent((BlockPlaceEvent) event);
+            if (ActiveAbility != null) event = ActiveAbility.BlockPlaceEvent((BlockPlaceEvent) event);
+            return event;
         } else if (event instanceof EntityDamageEvent) {
-            EntityDamageEvent((EntityDamageEvent) event);
-            if (ActiveAbility != null) ActiveAbility.EntityDamageEvent((EntityDamageEvent) event);
+            event = EntityDamageEvent((EntityDamageEvent) event);
+            if (ActiveAbility != null) event = ActiveAbility.EntityDamageEvent((EntityDamageEvent) event);
+            return event;
         } else if (event instanceof CraftItemEvent) {
-            CraftItemEvent((CraftItemEvent) event);
-            if (ActiveAbility != null) ActiveAbility.CraftItemEvent((CraftItemEvent) event);
+            event = CraftItemEvent((CraftItemEvent) event);
+            if (ActiveAbility != null) event = ActiveAbility.CraftItemEvent((CraftItemEvent) event);
+            return event;
         }
+        return event;
     }
 
     public void activateAbility() {
-        if(HasCooldown(PrimeKey)){
+        if (HasCooldown(PrimeKey)) {
             getPlayer().sendMessage("This Has a CoolDown!");
             return;
-        }else if (PrimeKey <= PossibleAbillity().size() - 1) {
+        } else if (PrimeKey <= PossibleAbillity().size() - 1) {
             Ability a = PossibleAbillity().get(PrimeKey);
             if (a != null && a.activate()) {
                 setActiveAbility(a);
@@ -216,32 +235,32 @@ public class BaseClass {
         ActiveAbility.deactivate();
     }
 
-    public void EntityDamageEvent(EntityDamageEvent event) {
-
+    public EntityDamageEvent EntityDamageEvent(EntityDamageEvent event) {
+        return event;
     }
 
-    public void PlayerToggleSprintEvent(PlayerToggleSprintEvent event) {
-
+    public PlayerToggleSprintEvent PlayerToggleSprintEvent(PlayerToggleSprintEvent event) {
+        return event;
     }
 
-    public void BlockPlaceEvent(BlockPlaceEvent event) {
-
+    public BlockPlaceEvent BlockPlaceEvent(BlockPlaceEvent event) {
+        return event;
     }
 
-    public void EntityRegainHealthEvent(EntityRegainHealthEvent event) {
-
+    public EntityRegainHealthEvent EntityRegainHealthEvent(EntityRegainHealthEvent event) {
+        return event;
     }
 
-    public void PlayerInteractEvent(PlayerInteractEvent event) {
-
+    public PlayerInteractEvent PlayerInteractEvent(PlayerInteractEvent event) {
+        return event;
     }
 
-    public void BlockBreakEvent(BlockBreakEvent event) {
-
+    public BlockBreakEvent BlockBreakEvent(BlockBreakEvent event) {
+        return event;
     }
 
-    public void CraftItemEvent(CraftItemEvent event) {
-
+    public CraftItemEvent CraftItemEvent(CraftItemEvent event) {
+        return event;
     }
 
     public int XPToLevel(int xp) {
@@ -271,4 +290,5 @@ public class BaseClass {
             return 7 + level * 2 * 100;
         }
     }
+
 }

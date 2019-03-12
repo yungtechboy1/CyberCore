@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Classes;
+package net.yungtechboy1.CyberCore.Classes.Old;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
