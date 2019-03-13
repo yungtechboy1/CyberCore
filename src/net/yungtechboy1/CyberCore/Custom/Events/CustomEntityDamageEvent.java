@@ -3,7 +3,6 @@ package net.yungtechboy1.CyberCore.Custom.Events;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
-import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.utils.EventException;
 
@@ -13,7 +12,7 @@ import java.util.Map;
 /**
  * Created by carlt on 3/11/2019.
  */
-public class CustomEntiyDamageEvent implements Cancellable {
+public class CustomEntityDamageEvent implements Cancellable {
 
     private boolean isCancelled = false;
     private static final HandlerList handlers = new HandlerList();
@@ -28,7 +27,17 @@ public class CustomEntiyDamageEvent implements Cancellable {
     public final Map<CustomDamageModifier, Float> originals;
     public Entity entity;
 
-    public CustomEntiyDamageEvent(Entity entity, CustomDamageCause cause, float damage) {
+    public int getCoolDownTicks() {
+        return CoolDownTicks;
+    }
+
+    public void setCoolDownTicks(int coolDownTicks) {
+        CoolDownTicks = coolDownTicks;
+    }
+
+    private int CoolDownTicks = 20;
+
+    public CustomEntityDamageEvent(Entity entity, CustomDamageCause cause, float damage) {
         this(entity, cause, new EnumMap<CustomDamageModifier, Float>(CustomDamageModifier.class) {
             {
                 put(CustomDamageModifier.BASE, damage);
@@ -36,7 +45,7 @@ public class CustomEntiyDamageEvent implements Cancellable {
         });
     }
 
-    public CustomEntiyDamageEvent(Entity entity, CustomDamageCause cause, Map<CustomDamageModifier, Float> modifiers) {
+    public CustomEntityDamageEvent(Entity entity, CustomDamageCause cause, Map<CustomDamageModifier, Float> modifiers) {
         this.entity = entity;
         this.cause = cause;
         this.modifiers = modifiers;
@@ -139,9 +148,11 @@ public class CustomEntiyDamageEvent implements Cancellable {
         /**
          * Damage reduction caused by the Damage absorption effect
          */
-        ABSORPTION
+        ABSORPTION,
 
         //ARMOR_ENCHANTMENTS
+
+        MODIFIER_ARMOR_ABILLITY
     }
 
     public enum CustomDamageCause {
