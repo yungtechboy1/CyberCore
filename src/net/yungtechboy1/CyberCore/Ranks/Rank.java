@@ -5,10 +5,11 @@ import cn.nukkit.Player;
 /**
  * Created by carlt_000 on 1/22/2017.
  */
-public class   Rank {
+public class Rank {
     Player player;
     int rank;
-    public Rank(Player player, Integer rank){
+
+    public Rank(Player player, Integer rank) {
         this.player = player;
         this.rank = rank;
     }

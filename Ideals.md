@@ -1,0 +1,1 @@
+- A Class where when your heals reaches 2 hearts or 4/20 Health it will make you Invisible for 30 secs or 2 Hits

@@ -8,7 +8,6 @@ import cn.nukkit.block.BlockAir;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
-import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.inventory.transaction.data.UseItemOnEntityData;
 import cn.nukkit.item.Item;
@@ -20,9 +19,8 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.DataPacket;
 import cn.nukkit.network.protocol.InventoryTransactionPacket;
 import cn.nukkit.network.protocol.ProtocolInfo;
-import javafx.scene.effect.Effect;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
-import net.yungtechboy1.CyberCore.Custom.Events.CustomEntiyDamageEvent;
+import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.EnumMap;
@@ -56,14 +54,8 @@ public class AntiCheatManger {
                 Entity target = p.level.getEntity(useItemOnEntityData.entityRuntimeId);
                 if (target == null) {
                     return packet;
-<<<<<<< HEAD
                 } else if (!target.isAlive()) {
                     return null;
-                }
-                int type = useItemOnEntityData.actionType;
-                if (type == InventoryTransactionPacket.USE_ITEM_ON_ENTITY_ACTION_ATTACK) {
-                    //Check Cooldown
-                    if(HasCooldown(p, Server.getInstance().getTick()))return null;
                 }
                 int type = useItemOnEntityData.actionType;
                 if (type == InventoryTransactionPacket.USE_ITEM_ON_ENTITY_ACTION_ATTACK){
@@ -74,8 +66,8 @@ public class AntiCheatManger {
                         itemDamage += enchantment.getDamageBonus(target);
                     }
 
-                    Map<CustomEntiyDamageEvent.CustomDamageModifier, Float> damage = new EnumMap<>(CustomEntiyDamageEvent.CustomDamageModifier.class);
-                    damage.put(CustomEntiyDamageEvent.CustomDamageModifier.BASE, itemDamage);
+                    Map<CustomEntityDamageEvent.CustomDamageModifier, Float> damage = new EnumMap<>(CustomEntityDamageEvent.CustomDamageModifier.class);
+                    damage.put(CustomEntityDamageEvent.CustomDamageModifier.BASE, itemDamage);
 
                     if (!CustomCanInteract(target, GetPlayerMaxReach(p), p)) {
                         return null;
@@ -89,7 +81,7 @@ public class AntiCheatManger {
 //                        }
                     }
 
-                    CustomEntityDamageByEntityEvent entityDamageByEntityEvent = new CustomEntityDamageByEntityEvent(p, target, CustomEntiyDamageEvent.CustomDamageCause.ENTITY_ATTACK, damage);
+                    CustomEntityDamageByEntityEvent entityDamageByEntityEvent = new CustomEntityDamageByEntityEvent(p, target, CustomEntityDamageEvent.CustomDamageCause.ENTITY_ATTACK, damage);
                     if (p.isSpectator()) entityDamageByEntityEvent.setCancelled();
                     if ((target instanceof Player) && !p.level.getGameRules().getBoolean(GameRule.PVP)) {
                         entityDamageByEntityEvent.setCancelled();
@@ -97,19 +89,19 @@ public class AntiCheatManger {
                     if (target.getAbsorption() > 0) {  //Damage Absorption
                         float absorptionHealth = target.getAbsorption() - entityDamageByEntityEvent.getFinalDamage() > 0 ? entityDamageByEntityEvent.getFinalDamage() : target.getAbsorption();
                         target.setAbsorption(target.getAbsorption() - absorptionHealth);
-                        entityDamageByEntityEvent.setDamage(-absorptionHealth, CustomEntiyDamageEvent.CustomDamageModifier.ABSORPTION);
+                        entityDamageByEntityEvent.setDamage(-absorptionHealth, CustomEntityDamageEvent.CustomDamageModifier.ABSORPTION);
                     }
 
 
-                    if (p.isCreative() && entityDamageByEntityEvent.getCause() != CustomEntiyDamageEvent.CustomDamageCause.SUICIDE
-                            && entityDamageByEntityEvent.getCause() != CustomEntiyDamageEvent.CustomDamageCause.VOID
+                    if (p.isCreative() && entityDamageByEntityEvent.getCause() != CustomEntityDamageEvent.CustomDamageCause.SUICIDE
+                            && entityDamageByEntityEvent.getCause() != CustomEntityDamageEvent.CustomDamageCause.VOID
                             ) {
                         //source.setCancelled();
                         return null;
-                    } else if (p.getAdventureSettings().get(AdventureSettings.Type.ALLOW_FLIGHT) && entityDamageByEntityEvent.getCause() == CustomEntiyDamageEvent.CustomDamageCause.FALL) {
+                    } else if (p.getAdventureSettings().get(AdventureSettings.Type.ALLOW_FLIGHT) && entityDamageByEntityEvent.getCause() == CustomEntityDamageEvent.CustomDamageCause.FALL) {
                         //source.setCancelled();
                         return null;
-                    } else if (entityDamageByEntityEvent.getCause() == CustomEntiyDamageEvent.CustomDamageCause.FALL) {
+                    } else if (entityDamageByEntityEvent.getCause() == CustomEntityDamageEvent.CustomDamageCause.FALL) {
                         if (p.getLevel().getBlock(p.getPosition().floor().add(0.5, -1, 0.5)).getId() == Block.SLIME_BLOCK) {
                             if (!p.isSneaking()) {
                                 p.resetFallDistance();
@@ -119,7 +111,6 @@ public class AntiCheatManger {
                     }
                     //TODO Tanks use more food
                     p.getFoodData().updateFoodExpLevel(0.3);
-                    AddCooldown(p,Server.getInstance().getTick() + 20);
                     //TODO
                     //Check
                     //CALL ALL DAMAGE EVENTS HERE!!!!
@@ -128,6 +119,7 @@ public class AntiCheatManger {
                     if (entityDamageByEntityEvent.isCancelled()) return null;
 
                     p.setLastDamageCause(Convert(entityDamageByEntityEvent));
+                    AddCooldown(p,Server.getInstance().getTick() + entityDamageByEntityEvent.getCoolDownTicks());
                     p.setHealth(p.getHealth() - entityDamageByEntityEvent.getFinalDamage());
                     if (item.isTool() && p.isSurvival()) p.getInventory().sendContents(p);
 
@@ -163,12 +155,7 @@ public class AntiCheatManger {
         return new EntityDamageByEntityEvent(v.getDamager(), v.entity, Convert(v.getCause()), v.getFinalDamage());
     }
 
-    public EntityDamageEvent.DamageCause Convert(CustomEntiyDamageEvent.CustomDamageCause v) {
-        switch (v) {
-    public EntityDamageByEntityEvent Convert(CustomEntityDamageByEntityEvent v){
-        return new EntityDamageByEntityEvent(v.getDamager(),v.entity,Convert(v.getCause()),v.getFinalDamage());
-    }
-    public EntityDamageEvent.DamageCause Convert(CustomEntiyDamageEvent.CustomDamageCause v){
+    public EntityDamageEvent.DamageCause Convert(CustomEntityDamageEvent.CustomDamageCause v){
         switch (v){
             case CONTACT:
                 return EntityDamageEvent.DamageCause.CONTACT;
@@ -206,17 +193,6 @@ public class AntiCheatManger {
                 return EntityDamageEvent.DamageCause.HUNGER;
             default:
                 return EntityDamageEvent.DamageCause.CUSTOM;
-        }
-    }
-
-    public boolean CustomCanInteract(Vector3 pos, double maxDistance, Player p) {
-        return CustomCanInteract(pos, maxDistance, p, 0.5);
-    }
-
-    public boolean CustomCanInteract(Vector3 pos, double maxDistance, Player p, double maxDiff) {
-        if (p.distanceSquared(pos) > maxDistance * maxDistance) {
-            return false;
-        }
         }
     }
 

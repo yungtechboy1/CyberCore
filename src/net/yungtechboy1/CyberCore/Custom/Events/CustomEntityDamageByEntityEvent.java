@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Created by carlt on 3/11/2019.
  */
-public class CustomEntityDamageByEntityEvent extends CustomEntiyDamageEvent {
+public class CustomEntityDamageByEntityEvent extends CustomEntityDamageEvent {
 
     private final Entity damager;
 
