@@ -13,7 +13,6 @@ import cn.nukkit.network.protocol.DataPacket;
 import cn.nukkit.network.protocol.RemoveEntityPacket;
 import cn.nukkit.utils.ConfigSection;
 import javafx.geometry.Pos;
-import net.yungtechboy1.CyberCore.FloatingTextMain;
 
 import javax.xml.crypto.Data;
 import java.security.PublicKey;

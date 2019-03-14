@@ -9,6 +9,7 @@ import cn.nukkit.block.BlockLiquid;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.level.Level;
+import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.NukkitMath;
 import cn.nukkit.math.Vector2;
 import cn.nukkit.math.Vector3;
@@ -189,13 +190,12 @@ public class WalkingMonsterAsync extends AsyncTask {
             return false;
         }
 
-        int[] sides = {Block.SIDE_SOUTH, Block.SIDE_WEST, Block.SIDE_NORTH, Block.SIDE_EAST};
         Block that = CP.getLevel().getBlock(new Vector3(NukkitMath.floorDouble(CP.x + dx + .5), (int) CP.y, NukkitMath.floorDouble(CP.z + dz + .5)));
         if (CP.getDirection() == null) {
             return false;
         }
-        Block block = that.getSide(sides[CP.getDirection()]);
-        if (!block.canPassThrough() && block.getSide(Block.SIDE_UP).canPassThrough() && that.getSide(Block.SIDE_UP, 2).canPassThrough()) {
+        Block block = that.getSide(CP.getDirection());
+        if (!block.canPassThrough() && block.up().canPassThrough() && that.getSide(BlockFace.UP, 2).canPassThrough()) {
             if (block instanceof BlockFence || block instanceof BlockFenceGate) {
                 CP.motionY = 0.08F;
             } else if (CP.motionY <= 0.08F * 7) {

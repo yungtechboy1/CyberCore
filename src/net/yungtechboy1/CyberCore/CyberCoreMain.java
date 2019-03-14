@@ -16,6 +16,8 @@ import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
+import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
+import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.Bans.Ban;
@@ -45,6 +47,7 @@ import java.util.concurrent.TimeUnit;
 public class CyberCoreMain extends PluginBase implements CommandExecutor, Listener {
 
     public static final String NAME = TextFormat.GOLD + "" + TextFormat.BOLD + "§eTERRA§6CORE " + TextFormat.RESET + TextFormat.GOLD + "» " + TextFormat.RESET;
+    private EconManager ECON;
     private static CyberCoreMain instance;
     public BossBarManager BBM;
     //CyberChat
@@ -77,7 +80,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public Map<String, Integer> Spam = new HashMap<>();
     public Map<String, String> LM = new HashMap<>();
     //Floating Text
-    public FloatingTextMain FTM;
+    public FloatingTextFactory FTM;
     //Mob Plugin and AI
     public MobPlugin MP;
     //KDR
@@ -122,9 +125,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         //BossBar Manager
         BBM = new BossBarManager(this);
         //Floating Text
-        FTM = new FloatingTextMain(this);
+        FTM = new FloatingTextFactory(this);
         //Mob Plugin
         MP = new MobPlugin(this);
+
+        ECON = new EconManager(this);
 
         getServer().getScheduler().scheduleRepeatingTask(new UnMuteTask(this), 20 * 15);
         getServer().getScheduler().scheduleRepeatingTask(new ClearSpamTick(this), 20 * 5);
@@ -686,5 +691,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
                 }
         }
         return false;
+    }
+
+    public EconManager GetEcon(){
+        return ECON;
     }
 }

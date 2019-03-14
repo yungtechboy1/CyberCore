@@ -1,9 +1,7 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Mission;
 
-import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.ConfigSection;
-import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.List;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.ArrayList;

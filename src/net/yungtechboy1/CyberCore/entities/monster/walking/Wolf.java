@@ -11,8 +11,6 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.DyeColor;
 import net.yungtechboy1.CyberCore.entities.monster.TameableMonster;
 
-import java.util.HashMap;
-
 public class Wolf extends TameableMonster {
 
     public static final int     NETWORK_ID           = 14;
@@ -87,21 +85,20 @@ public class Wolf extends TameableMonster {
     }
 
     @Override
-    public void attack(EntityDamageEvent ev) {
+    public boolean attack(EntityDamageEvent ev) {
         super.attack(ev);
 
         if (!ev.isCancelled()) {
             this.setAngry(true);
         }
+        return false;
     }
 
     @Override
     public void attackEntity(Entity player) {
         if (this.attackDelay > 10 && this.distanceSquared(player) < 1.6) {
             this.attackDelay = 0;
-            HashMap<Integer, Float> damage = new HashMap<>();
-            damage.put(EntityDamageEvent.MODIFIER_BASE, (float) this.getDamage());
-            player.attack(new EntityDamageByEntityEvent(this, player, EntityDamageEvent.CAUSE_ENTITY_ATTACK, damage));
+            player.attack(new EntityDamageByEntityEvent(this, player, EntityDamageEvent.DamageCause.ENTITY_ATTACK, getDamage()));
         }
     }
 

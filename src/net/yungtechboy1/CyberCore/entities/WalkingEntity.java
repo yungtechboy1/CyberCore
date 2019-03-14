@@ -7,8 +7,10 @@ import cn.nukkit.block.BlockLiquid;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.level.format.FullChunk;
+import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.NukkitMath;
 import cn.nukkit.math.Vector3;
+import cn.nukkit.math.Vector3f;
 import cn.nukkit.nbt.tag.CompoundTag;
 import net.yungtechboy1.CyberCore.entities.BaseEntity;
 import net.yungtechboy1.CyberCore.entities.animal.Animal;
@@ -96,14 +98,13 @@ public abstract class WalkingEntity extends BaseEntity {
             return false;
         }
 
-        int[] sides = { Block.SIDE_SOUTH, Block.SIDE_WEST, Block.SIDE_NORTH, Block.SIDE_EAST };
         Block that = this.getLevel().getBlock(new Vector3(NukkitMath.floorDouble(this.x + dx), (int) this.y, NukkitMath.floorDouble(this.z + dz)));
         if (this.getDirection() == null) {
             return false;
         }
 
-        Block block = that.getSide(sides[this.getDirection()]);
-        if (!block.canPassThrough() && block.getSide(Block.SIDE_UP).canPassThrough() && that.getSide(Block.SIDE_UP, 2).canPassThrough()) {
+        Block block = that.getSide(this.getDirection());
+        if (!block.canPassThrough() && block.getSide(BlockFace.UP).canPassThrough() && that.getSide(BlockFace.UP, 2).canPassThrough()) {
             if (block instanceof BlockFence || block instanceof BlockFenceGate) {
                 this.motionY = this.getGravity();
             } else if (this.motionY <= this.getGravity() * 4) {

@@ -86,8 +86,8 @@ public class CustomFloatingTextParticle extends Particle {
             pk.metadata = new EntityMetadata()
                     .putLong(Entity.DATA_FLAGS, flags)
                     .putString(Entity.DATA_NAMETAG, this.title + (!"".equals(this.text) ? "\n" + this.text : ""))
-                    .putLong(Entity.DATA_LEAD_HOLDER_EID, -1)
-                    .putByte(Entity.DATA_LEAD, 0);
+                    .putLong(Entity.DATA_LEAD_HOLDER_EID, -1);
+//                    .putByte(Entity.DATA_LEAD, 0);ERrored Out
             pk.item = Item.get(Item.AIR);
             packets.add(pk);
         }

@@ -38,7 +38,7 @@ public class Deposit extends Commands {
             Sender.sendMessage(FactionsMain.NAME+TextFormat.GRAY+"Usage /f deposit <amount>");
             return;
         }
-        if(!Main.Econ.TakeMoney(Sender.getName(),money,false)){
+        if(!Main.Main.GetEcon().MakeTransaction(Sender.getName(),money)){
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"You don't have "+money+" Money!");
             return;
         }

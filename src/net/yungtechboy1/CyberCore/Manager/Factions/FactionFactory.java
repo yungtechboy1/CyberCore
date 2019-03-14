@@ -64,35 +64,35 @@ public class FactionFactory {
             for (String m : fac.GetRecruits()) {
                 if (FacList.containsKey(m)) FacList.remove(m);
                 if (Main.getServer().getPlayerExact(m) != null) {
-                    Main.Setnametag(m);
-                    Main.sendBossBar(m);
+//                    Main.Setnametag(m);
+//                    Main.sendBossBar(m);
                 }
             }
             for (String m : fac.GetMembers()) {
                 if (FacList.containsKey(m)) FacList.remove(m);
                 if (Main.getServer().getPlayerExact(m) != null) {
-                    Main.CC.Setnametag(m);
-                    Main.sendBossBar(m);
+//                    Main.CC.Setnametag(m);
+//                    Main.sendBossBar(m);
                 }
             }
             for (String m : fac.GetOfficers()) {
                 if (Main.getServer().getPlayerExact(m) != null) {
-                    Main.CC.Setnametag(m);
-                    Main.sendBossBar(m);
+//                    Main.CC.Setnametag(m);
+//                    Main.sendBossBar(m);
                 }
                 if (FacList.containsKey(m)) FacList.remove(m);
             }
             for (String m : fac.GetGenerals()) {
                 if (Main.getServer().getPlayerExact(m) != null) {
-                    Main.CC.Setnametag(m);
-                    Main.sendBossBar(m);
+//                    Main.CC.Setnametag(m);
+//                    Main.sendBossBar(m);
                 }
                 if (FacList.containsKey(m)) FacList.remove(m);
             }
             if (FacList.containsKey(fac.GetLeader().toLowerCase())) {
                 if (Main.getServer().getPlayerExact(fac.GetLeader()) != null) {
-                    Main.CC.Setnametag(fac.GetLeader());
-                    Main.sendBossBar(fac.GetLeader());
+//                    Main.CC.Setnametag(fac.GetLeader());
+//                    Main.sendBossBar(fac.GetLeader());
                 }
                 FacList.remove(fac.GetLeader().toLowerCase());
             }

@@ -9,7 +9,9 @@ import cn.nukkit.IPlayer;
 import cn.nukkit.block.Block;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
-import cn.nukkit.level.generator.biome.Biome;
+import cn.nukkit.level.biome.Biome;
+import cn.nukkit.level.biome.BiomeSelector;
+import cn.nukkit.level.biome.EnumBiome;
 import cn.nukkit.utils.Config; import net.yungtechboy1.CyberCore.MobAI.AutoSpawnTask; import net.yungtechboy1.CyberCore.MobAI.FileLogger;
 import net.yungtechboy1.CyberCore.entities.autospawn.AbstractEntitySpawner;
 import net.yungtechboy1.CyberCore.entities.autospawn.SpawnResult;
@@ -35,7 +37,7 @@ public class WolfSpawner extends AbstractEntitySpawner {
         int blockLightLevel = level.getBlockLightAt((int) pos.x, (int) pos.y, (int) pos.z);
         int biomeId = level.getBiomeId((int) pos.x, (int) pos.z);
 
-        if (biomeId != Biome.FOREST && biomeId != Biome.BIRCH_FOREST && biomeId == Biome.TAIGA) {
+        if (biomeId != EnumBiome.FOREST.id && biomeId != EnumBiome.BIRCH_FOREST.id && biomeId == EnumBiome.TAIGA.id) {
             result = SpawnResult.WRONG_BLOCK;
         } else if (pos.y > 256 || pos.y < 1 || level.getBlockIdAt((int) pos.x, (int) pos.y, (int) pos.z) == Block.AIR) { // cannot spawn on AIR block
             result = SpawnResult.POSITION_MISMATCH;

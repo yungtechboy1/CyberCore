@@ -60,8 +60,9 @@ public class Green_Thumb extends Ability {
     }
 
     @Override
-    public void BlockBreakEvent(BlockBreakEvent event) {
+    public BlockBreakEvent BlockBreakEvent(BlockBreakEvent event) {
 
+        return event;
     }
 
     @Override

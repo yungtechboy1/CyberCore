@@ -50,8 +50,9 @@ public class FactionsMain {
 
     public FactionsMain(CyberCoreMain main){
         Main = main;
+        onLoad();
 
-        getServer().getPluginManager().registerEvents(new FactionListener(this),Main);
+//        getServer().getPluginManager().registerEvents(new FactionListener(this),Main);
 
 //        getServer().getScheduler().scheduleDelayedRepeatingTask(new FactionPower(this),20*10,20*60*5);
 //        getServer().getScheduler().scheduleDelayedRepeatingTask(new Purge(this,false,60),20*60*5,20*60*15);//15 mINS

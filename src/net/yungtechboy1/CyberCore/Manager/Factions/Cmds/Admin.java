@@ -29,6 +29,7 @@ public class Admin extends Commands {
 
     @Override
     public void RunCommand() {
+        //TODO MAKE NEAT
         if (Args.length == 1) {
             //Send Help
             SendHelp(1);
@@ -46,12 +47,12 @@ public class Admin extends Commands {
                 Sender.sendMessage(Main.getServer().getCommandMap().getCommand("msg").getClass().getCanonicalName());
             } else if (Args[1].equalsIgnoreCase("save")) {
                 Main.FFactory.SaveAllFactions();
-            } else if (Args[1].equalsIgnoreCase("test")) {
-                String t = TextFormat.LIGHT_PURPLE+""+TextFormat.BOLD+"====TEST "+TextFormat.GOLD+"WARNING====";
-                String m = "TT will be starting soon!s";
-                BossBarNotification b = new BossBarNotification((Player)Sender,t,m,20*10,Main);
-                b.send();
-                Main.AddBBN((Player)Sender,b);
+//            } else if (Args[1].equalsIgnoreCase("test")) {
+//                String t = TextFormat.LIGHT_PURPLE+""+TextFormat.BOLD+"====TEST "+TextFormat.GOLD+"WARNING====";
+//                String m = "TT will be starting soon!s";
+//                BossBarNotification b = new BossBarNotification((Player)Sender,t,m,20*10,Main);
+//                b.send();
+//                Main.AddBBN((Player)Sender,b);
             } else if (Args[1].equalsIgnoreCase("help")) {
                 SendHelp(1);
             } else if (Args[1].equalsIgnoreCase("test2s")) {

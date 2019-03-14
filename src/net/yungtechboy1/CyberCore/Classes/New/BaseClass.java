@@ -104,8 +104,6 @@ public abstract class BaseClass {
 
     public ArrayList<Ability> PossibleAbillity() {
         ArrayList<Ability> a = new ArrayList<Ability>();
-        a.add(new Super_Breaker(CCM, this));
-        a.add(new Super_Breaker(CCM, this));
         return a;
     }
 
@@ -227,11 +225,7 @@ public abstract class BaseClass {
     }
 
     public void activateAbility(Vector3 pos, int id) {
-        if (TYPE == TYPE_MINER) {
 
-        } else if (TYPE == TYPE_LUMBERJACK && this instanceof Class_LumberJack) {
-            //CCM.getServer().getScheduler().scheduleAsyncTask(new Tree_Feller_Async(CCM, ));
-        }
     }
 
     public void disableAbility() {

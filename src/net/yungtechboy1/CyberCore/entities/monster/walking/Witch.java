@@ -8,6 +8,7 @@ import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.ProjectileLaunchEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Location;
+import cn.nukkit.level.Sound;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
@@ -63,8 +64,8 @@ public class Witch extends WalkingMonster {
     }
 
     @Override
-    public void attack(EntityDamageEvent ev) {
-        super.attack(ev);
+    public boolean attack(EntityDamageEvent ev) {
+        return super.attack(ev);
     }
 
     /*
@@ -104,7 +105,7 @@ public class Witch extends WalkingMonster {
                         thrownPotion.kill();
                     } else {
                         thrownPotion.spawnToAll();
-                        this.level.addSound(new LaunchSound(this), this.getViewers().values());
+                        this.level.addSound(this, Sound.MOB_WITCH_THROW);
                     }
                 }
             } else {

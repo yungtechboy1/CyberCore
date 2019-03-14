@@ -40,6 +40,7 @@ public class CustomFactory implements Listener {
 
     public CyberCoreMain CCM;
     public ConfigSection VEIList = new ConfigSection();
+    protected static Enchantment[] enchantments = new Enchantment[256];
 
     public CustomFactory(CyberCoreMain main){
         CCM = main;
@@ -47,51 +48,22 @@ public class CustomFactory implements Listener {
         Item.list[Item.BOOK] = CItemBook.class;
         Item.list[Item.ENCHANT_BOOK] = CItemBookEnchanted.class;
         Block.init();
-        Enchantment.enchantments[CustomEnchantment.BLIND] = new LifeSteal();
-        Enchantment.enchantments[CustomEnchantment.CRIPPLING] = new Crippling();
-        Enchantment.enchantments[CustomEnchantment.DEATHBRINGER] = new DeathBringer();
-        Enchantment.enchantments[CustomEnchantment.GOOEY] = new Gooey();
-        Enchantment.enchantments[CustomEnchantment.ICEASPECT] = new IceAspect();
-        Enchantment.enchantments[CustomEnchantment.LIFESTEALER] = new LifeSteal();
-        Enchantment.enchantments[CustomEnchantment.POISON] = new Poison();
-        Enchantment.enchantments[CustomEnchantment.THUNDER] = new Thunder();
-        Enchantment.enchantments[CustomEnchantment.VIPER] = new Viper();
+        enchantments[CustomEnchantment.BLIND] = new LifeSteal();
+        enchantments[CustomEnchantment.CRIPPLING] = new Crippling();
+        enchantments[CustomEnchantment.DEATHBRINGER] = new DeathBringer();
+        enchantments[CustomEnchantment.GOOEY] = new Gooey();
+        enchantments[CustomEnchantment.ICEASPECT] = new IceAspect();
+        enchantments[CustomEnchantment.LIFESTEALER] = new LifeSteal();
+        enchantments[CustomEnchantment.POISON] = new Poison();
+        enchantments[CustomEnchantment.THUNDER] = new Thunder();
+        enchantments[CustomEnchantment.VIPER] = new Viper();
         main.getServer().getPluginManager().registerEvents(this, main);
-        main.getLogger().info(TextFormat.GREEN + " ||||||||||||||||||||||||||||| " + Enchantment.enchantments.length);
+        main.getLogger().info(TextFormat.GREEN + " ||||||||||||||||||||||||||||| " + enchantments.length);
     }
 
     @EventHandler
     public void DamageEvent(EntityDamageByEntityEvent event) {
-        long ct = new Date().getTime() / 1000;
-        if (event.getDamager().namedTag.getLong("Crippling") > ct) {
-            event.setDamage(event.getDamage(EntityDamageEvent.MODIFIER_BASE) / 2, EntityDamageEvent.MODIFIER_BASE);
-        }
-    }
 
-    @EventHandler(ignoreCancelled = true)
-    public void TE(InventoryTransactionEvent event){
-        SimpleTransactionGroup transaction = (SimpleTransactionGroup) event.getTransaction();
-        Set<Transaction> traa = new HashSet<>(transaction.getTransactions());
-
-        for(Transaction t: traa){
-            Inventory inv = t.getInventory();
-            if(inv instanceof TestInv){
-                if(t.getSlot() == 3 || t.getSlot() == 1) {
-                    event.setCancelled();
-                    return;
-                }else if(t.getSlot() == 2){
-                    if(t.getSourceItem().getId() == Item.ANVIL){
-                        event.setCancelled();
-                        return;
-                    }else{
-                        inv.clear(0);
-                        inv.clear(4);
-                        ((SimpleTransactionGroup) event.getTransaction()).getSource().getLevel().addSound(new AnvilUseSound(((SimpleTransactionGroup) event.getTransaction()).getSource()));
-                        inv.close(((SimpleTransactionGroup) event.getTransaction()).getSource());
-                    }
-                }
-            }
-        }
     }
 
     @EventHandler

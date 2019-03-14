@@ -4,27 +4,27 @@ import cn.nukkit.Player;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.New.CustomDamageModifiers;
+
+import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 public class Raider extends BaseClass {
     public Raider(CyberCoreMain main, Player player, int rank, int xp, ConfigSection cooldowns) {
-        super(main, player, rank, xp, cooldowns);
+        super(main, player, rank, BaseClass.TYPE_Offensive_Raider, xp, cooldowns);
     }
 
     public Raider(CyberCoreMain main, Player player, ConfigSection cs) {
-        super(main, player, cs);
+        super(main, player, BaseClass.TYPE_Offensive_Raider, cs);
     }
 
-    @Override
-    public EntityDamageEvent EntityDamageEvent(EntityDamageEvent event) {
-        Player p = (Player)event.getEntity();
+    public CustomEntityDamageEvent CustomEntityDamageEvent(CustomEntityDamageEvent event) {
+        Player p = (Player)event.entity;
         int x = p.getFloorX() >> 4;
         int z = p.getFloorZ() >> 4;
         if(CyberCoreMain.getInstance().FM.FFactory.PlotsList.containsKey(x+"|"+z)){
-            float ad = event.getDamage(EntityDamageEvent.MODIFIER_BASE) * -.1f;
-            event.setDamage(ad,CustomDamageModifiers.MODIFIER_ARMOR_Class);
+            float ad = event.getDamage(CustomEntityDamageEvent.CustomDamageModifier.BASE) * -.1f;
+            event.setDamage(ad, CustomEntityDamageEvent.CustomDamageModifier.ARMOR);
         }
         return event;
     }

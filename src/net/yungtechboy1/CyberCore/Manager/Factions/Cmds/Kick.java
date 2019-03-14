@@ -5,6 +5,7 @@ import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.Calendar;
@@ -76,8 +77,8 @@ public class Kick extends Commands {
             pp.sendMessage(FactionsMain.NAME+TextFormat.GREEN + "You Have Been Kicked From factionName!!!");
             Main.FFactory.FacList.remove(ppn);
             fac.TakePower(2);
-            Main.CC.Setnametag(ppn);
-            Main.sendBossBar(pp);
+//            Main.CC.Setnametag(ppn);
+//            Main.sendBossBar(pp);
 
         } else if (perm == ppnperm) {
             Sender.sendMessage(FactionsMain.NAME+TextFormat.YELLOW + "You can not kick those who are the same rank as you!");

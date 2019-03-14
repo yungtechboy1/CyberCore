@@ -16,9 +16,6 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.CustomFloatingTextParticle;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
-import net.yungtechboy1.CyberCore.Manager.Factions.Listener.ChatEvent;
-import net.yungtechboy1.CyberCore.Manager.Factions.Listener.JoinEvent;
-import net.yungtechboy1.CyberCore.Manager.Factions.Listener.PreLoginEvent;
 import net.yungtechboy1.CyberCore.Manager.Factions.Tasks.PopUp;
 
 import java.util.ArrayList;
@@ -37,8 +34,8 @@ public class MasterListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void FactionChatEvent(PlayerChatEvent event){
-        ChatEvent ce = new ChatEvent(Main.FM,event);
-        event = ce.Event;
+//        ChatEvent ce = new ChatEvent(Main.FM,event);
+//        event = ce.Event;
     }
 
     @EventHandler
@@ -56,14 +53,14 @@ public class MasterListener implements Listener {
                     //@TODO Bounty XD
                     /*
                     int tb = 0;
-                    if(isset(this.plugin.bounty[strtolower(playern)])){
-                        foreach(this.plugin.bounty[strtolower(playern)] as name=>bounty){
+                    if(isset(Main.FM.bounty[strtolower(playern)])){
+                        foreach(Main.FM.bounty[strtolower(playern)] as name=>bounty){
                             tb += bounty;
-                            event.getEntity().setNameTag(this.plugin.nt[strtolower(event.getPlayer().getName())]);
-                            unset(this.plugin.bounty[strtolower(playern)][name]);
+                            event.getEntity().setNameTag(Main.FM.nt[strtolower(event.getPlayer().getName())]);
+                            unset(Main.FM.bounty[strtolower(playern)][name]);
                         }
                         if(tb != 0){
-                            this.plugin.api.addMoney(e,tb);
+                            Main.FM.api.addMoney(e,tb);
                             e.sendMessage(TextFormat.GREEN."[Bounty] Bounty Claimed for the Amount of tb");
                             e.addExperience(5);
                         }
@@ -78,20 +75,20 @@ public class MasterListener implements Listener {
                    Main.KDM.AddKill(killername);
                     if ( Main.KDM.GetKills(killername) == 5) {
                         Main.getServer().broadcastMessage(TextFormat.GREEN + killername + " is on a 5 KillStreak!");
-                        //if(kf != null)this.plugin.AddFactionPower(kf, 5);
+                        //if(kf != null)Main.FM.AddFactionPower(kf, 5);
                     }
                     if (Main.KDM.GetKills(killername) == 8) {
                         Main.getServer().broadcastMessage(TextFormat.AQUA + killername + " is on a 8 KillStreak!");
-                        //if(kf != null)this.plugin.AddFactionPower(kf, 8);
+                        //if(kf != null)Main.FM.AddFactionPower(kf, 8);
                     }
                     if (Main.KDM.GetKills(killername) == 10) {
                         Main.getServer().broadcastMessage(TextFormat.LIGHT_PURPLE + killername + " is on a 10 KillStreak!");
-                        //if(kf != null)this.plugin.AddFactionPower(kf, 10);
+                        //if(kf != null)Main.FM.AddFactionPower(kf, 10);
                     }
                     if (Main.KDM.GetKills(killername) > 10) {
                         Integer kills = Main.KDM.GetKills(killername);
                         Main.getServer().broadcastMessage(TextFormat.LIGHT_PURPLE + killername + " is on a " + kills + " KillStreak!");
-                        //if(kf != null)this.plugin.AddFactionPower(kf, kills*2);
+                        //if(kf != null)Main.FM.AddFactionPower(kf, kills*2);
                     }
                 }
             }
@@ -99,7 +96,7 @@ public class MasterListener implements Listener {
     }
     @EventHandler(priority = EventPriority.HIGHEST)
     public void FationsJoinEvent(PlayerJoinEvent event) {
-        //this.plugin.uuid[event.getPlayer().getName()][event.getPlayer().getClientId()] = date(DATE_COOKIE);
+        //Main.FM.uuid[event.getPlayer().getName()][event.getPlayer().getClientId()] = date(DATE_COOKIE);
         String player = event.getPlayer().getName();
 
         String fn = Main.FM.getPlayerFaction(event.getPlayer().getName());
@@ -113,18 +110,18 @@ public class MasterListener implements Listener {
         asd = "";
         //CHECK BOUNTY
         tb = 0;
-        if(isset(this.plugin.bounty[strtolower(sender.getName())])){
-            foreach(this.plugin.bounty[strtolower(sender.getName())] as name=>bounty){
+        if(isset(Main.FM.bounty[strtolower(sender.getName())])){
+            foreach(Main.FM.bounty[strtolower(sender.getName())] as name=>bounty){
                 tb += bounty;
             }
             if(tb != 0){
                 asd = "\n".TextFormat.AQUA."[Bounty tb]";
             }
         }
-        faction = this.plugin.getPlayerFaction(player);
+        faction = Main.FM.getPlayerFaction(player);
         if(faction !== false){
-            this.plugin.MessageFaction(faction, TextFormat.GREEN."player Has Joined!");
-            fc = this.plugin.DecodeFactionColor(this.plugin.getFactionColor(faction));
+            Main.FM.MessageFaction(faction, TextFormat.GREEN."player Has Joined!");
+            fc = Main.FM.DecodeFactionColor(Main.FM.getFactionColor(faction));
             if(fc == false){
                 fc = TextFormat.GRAY;
             }
@@ -133,15 +130,15 @@ public class MasterListener implements Listener {
             abcdefg = event.getPlayer().getName();
         }
         event.getPlayer().setNameTag(abcdefg.asd);
-        this.plugin.nt[strtolower(event.getPlayer().getName())] = abcdefg;
+        Main.FM.nt[strtolower(event.getPlayer().getName())] = abcdefg;
 */
         /*
-        rank = this.plugin.GetRank(player);
+        rank = Main.FM.GetRank(player);
         if(sender.isOp() && (rank == false || rank == "Guest")){
             sender.kick("YOu should not be OP");
         }
         a = array();
-        aaa = @mysqli_query( this.plugin.db2,"SELECT * FROM `ranks` WHERE `name` = 'player'");
+        aaa = @mysqli_query( Main.FM.db2,"SELECT * FROM `ranks` WHERE `name` = 'player'");
         if(@mysqli_num_rows(aaa) > 0){
             f = false;
             while(row = @mysqli_fetch_assoc(aaa)){
@@ -156,11 +153,11 @@ public class MasterListener implements Listener {
                 break;
             }
             if(f == false){
-                unset(this.plugin.CC.yml["prefixs"][player]);
+                unset(Main.FM.CC.yml["prefixs"][player]);
                 return true;
             }
         }else{
-            unset(this.plugin.CC.yml["prefixs"][player]);
+            unset(Main.FM.CC.yml["prefixs"][player]);
             return true;
         }
         if(a['color'] !== ""){
@@ -176,13 +173,13 @@ public class MasterListener implements Listener {
         rankt = a['prefix'];
         if(rankt == "")rankt = rank;
         if(rankt == "")rankt = "UNKNOWN";
-        if(rank !== "Guest")this.plugin.getServer ().getScheduler ().scheduleDelayedTask (new SetNameTeg(this.plugin, event.getPlayer(), color.rankt."\n".abcdefg), 20);
-        if(rank !== "Guest" && rank !== "OP")this.plugin.CC.yml["prefixs"][player] = color.rankt;
+        if(rank !== "Guest")Main.FM.getServer ().getScheduler ().scheduleDelayedTask (new SetNameTeg(Main.FM, event.getPlayer(), color.rankt."\n".abcdefg), 20);
+        if(rank !== "Guest" && rank !== "OP")Main.FM.CC.yml["prefixs"][player] = color.rankt;
         if(rank !== "Guest")event.getPlayer().setNameTag (color.rankt."\n".abcdefg);
-        this.plugin.nt[strtolower(event.getPlayer().getName())] = color.rankt."\n".abcdefg;
+        Main.FM.nt[strtolower(event.getPlayer().getName())] = color.rankt."\n".abcdefg;
         echo color.rankt."-rank\n".abcdefg;
         if(rank !== "Guest" && (rank == "OP" || rank == "BUILDER"))event.getPlayer().setOp(true);
-        //if(rank == "Guest")this.plugin.CC.yml["prefixs"][player] = null;
+        //if(rank == "Guest")Main.FM.CC.yml["prefixs"][player] = null;
         if(rank == "Guest")event.getPlayer().setOp (false);
         //this.CC.yml["prefixs"][player] = "§a".rank;
         if(a['claimed'] == 0){
@@ -265,78 +262,79 @@ public class MasterListener implements Listener {
 
     //IPChecker
     //IPChecker
-    //IPChecker
+    //
+    //TODO CHECK BANNED
     @EventHandler()
     public void PreLogin(PlayerPreLoginEvent ev){
-        new PreLoginEvent(Main.FM,ev);
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void PURGEPVPNSTUFF(EntityDamageEvent factionDamage) {
-        if (plugin.Purge) {
-            //Purge is on
-            factionDamage.setCancelled(false);
-        }
-
-        if (factionDamage.isCancelled()) return;
-        if (factionDamage instanceof EntityDamageByEntityEvent) {
-            if ((factionDamage.getEntity() instanceof Player) && (((EntityDamageByEntityEvent) factionDamage).getDamager() instanceof Player)) {
-                Integer t = (int) (Calendar.getInstance().getTime().getTime() / 1000) + 10;
-                this.plugin.pvplog.put(factionDamage.getEntity().getName(), t);
-                this.plugin.pvplog.put(((EntityDamageByEntityEvent) factionDamage).getDamager().getName(), t);
-                float d = factionDamage.getFinalDamage();
-                String text = TextFormat.RED.toString() + d + " Damage";
-                long eid = 9999999 + (long) (Math.random() * 50000);
-                Entity e = factionDamage.getEntity();
-                CustomFloatingTextParticle ft = new CustomFloatingTextParticle(new Vector3(e.x, e.y + 1.5, e.z), text);
-                ft.entityId = eid;
-                ArrayList<Player> ps = new ArrayList<Player>() {{
-                    add((Player) ((EntityDamageByEntityEvent) factionDamage).getDamager());
-                }};
-                Entity dmger = ((EntityDamageByEntityEvent) factionDamage).getDamager();
-                dmger.getLevel().addParticle(ft, ps);
-                this.plugin.popups.put(eid, ft);
-                this.plugin.getServer().getScheduler().scheduleDelayedTask(new PopUp(this.plugin, (Player) ((EntityDamageByEntityEvent) factionDamage).getDamager(), eid, ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel()), 7);
-            } else if (((EntityDamageByEntityEvent) factionDamage).getDamager() instanceof Player) {
-                float d = factionDamage.getFinalDamage();
-                String text = TextFormat.RED.toString() + d + " Damage";
-                long eid = 9999999 + (long) (Math.random() * 50000);
-                Entity e = factionDamage.getEntity();
-                CustomFloatingTextParticle ft = new CustomFloatingTextParticle(new Vector3(e.x, e.y + 1.5, e.z), text);
-                ft.entityId = eid;
-                ArrayList<Player> ps = new ArrayList<Player>() {{
-                    add((Player) ((EntityDamageByEntityEvent) factionDamage).getDamager());
-                }};
-                ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel().addParticle(ft, ps);
-                this.plugin.popups.put(eid, ft);
-                this.plugin.getServer().getScheduler().scheduleDelayedTask(new PopUp(this.plugin, (Player) ((EntityDamageByEntityEvent) factionDamage).getDamager(), eid, ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel()), 7);
-            } /*else {
-                float d = factionDamage.getFinalDamage();
-                String text = TextFormat.RED.toString() + d + " Damage";
-                long eid = 9999999 + (long) (Math.random() * 50000);
-                Entity e = factionDamage.getEntity();
-                CustomFloatingTextParticle ft = new CustomFloatingTextParticle(new Vector3(e.x, e.y + 1.5, e.z), text);
-                ft.entityId = eid;
-                factionDamage.getEntity().getLevel().addParticle(ft);
-                this.plugin.popups.put(eid, ft);
-                this.plugin.getServer().getScheduler().scheduleDelayedTask(new PopUp(this.plugin, (Player) ((EntityDamageByEntityEvent) factionDamage).getDamager(), eid, ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel()), 7);
-
-            }*/
-        }
 
     }
+
+//    @EventHandler(priority = EventPriority.HIGHEST)
+//    public void PURGEPVPNSTUFF(EntityDamageEvent factionDamage) {
+//        if (Main.Purge) {
+//            //Purge is on
+//            factionDamage.setCancelled(false);
+//        }
+//
+//        if (factionDamage.isCancelled()) return;
+//        if (factionDamage instanceof EntityDamageByEntityEvent) {
+//            if ((factionDamage.getEntity() instanceof Player) && (((EntityDamageByEntityEvent) factionDamage).getDamager() instanceof Player)) {
+//                Integer t = (int) (Calendar.getInstance().getTime().getTime() / 1000) + 10;
+//                Main.FM.pvplog.put(factionDamage.getEntity().getName(), t);
+//                Main.FM.pvplog.put(((EntityDamageByEntityEvent) factionDamage).getDamager().getName(), t);
+//                float d = factionDamage.getFinalDamage();
+//                String text = TextFormat.RED.toString() + d + " Damage";
+//                long eid = 9999999 + (long) (Math.random() * 50000);
+//                Entity e = factionDamage.getEntity();
+//                CustomFloatingTextParticle ft = new CustomFloatingTextParticle(new Vector3(e.x, e.y + 1.5, e.z), text);
+//                ft.entityId = eid;
+//                ArrayList<Player> ps = new ArrayList<Player>() {{
+//                    add((Player) ((EntityDamageByEntityEvent) factionDamage).getDamager());
+//                }};
+//                Entity dmger = ((EntityDamageByEntityEvent) factionDamage).getDamager();
+//                dmger.getLevel().addParticle(ft, ps);
+//                Main.FM.popups.put(eid, ft);
+//                Main.FM.getServer().getScheduler().scheduleDelayedTask(new PopUp(Main.FM, (Player) ((EntityDamageByEntityEvent) factionDamage).getDamager(), eid, ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel()), 7);
+//            } else if (((EntityDamageByEntityEvent) factionDamage).getDamager() instanceof Player) {
+//                float d = factionDamage.getFinalDamage();
+//                String text = TextFormat.RED.toString() + d + " Damage";
+//                long eid = 9999999 + (long) (Math.random() * 50000);
+//                Entity e = factionDamage.getEntity();
+//                CustomFloatingTextParticle ft = new CustomFloatingTextParticle(new Vector3(e.x, e.y + 1.5, e.z), text);
+//                ft.entityId = eid;
+//                ArrayList<Player> ps = new ArrayList<Player>() {{
+//                    add((Player) ((EntityDamageByEntityEvent) factionDamage).getDamager());
+//                }};
+//                ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel().addParticle(ft, ps);
+//                Main.FM.popups.put(eid, ft);
+//                Main.FM.getServer().getScheduler().scheduleDelayedTask(new PopUp(Main.FM, (Player) ((EntityDamageByEntityEvent) factionDamage).getDamager(), eid, ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel()), 7);
+//            } /*else {
+//                float d = factionDamage.getFinalDamage();
+//                String text = TextFormat.RED.toString() + d + " Damage";
+//                long eid = 9999999 + (long) (Math.random() * 50000);
+//                Entity e = factionDamage.getEntity();
+//                CustomFloatingTextParticle ft = new CustomFloatingTextParticle(new Vector3(e.x, e.y + 1.5, e.z), text);
+//                ft.entityId = eid;
+//                factionDamage.getEntity().getLevel().addParticle(ft);
+//                Main.FM.popups.put(eid, ft);
+//                Main.FM.getServer().getScheduler().scheduleDelayedTask(new PopUp(Main.FM, (Player) ((EntityDamageByEntityEvent) factionDamage).getDamager(), eid, ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel()), 7);
+//
+//            }*/
+//        }
+//
+//    }
 
     //LOG COMMANDS IN CONSOLE
     @EventHandler
     public void CommandEvent(PlayerCommandPreprocessEvent event){
-        plugin.getServer().getLogger().info(event.getPlayer().getName()+"  > "+event.getMessage());
+        Main.getServer().getLogger().info(event.getPlayer().getName()+"  > "+event.getMessage());
     }
 
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void factionPVP(EntityDamageEvent factionDamage) {
         if (factionDamage.isCancelled()) return;
-        Faction pf = plugin.FFactory.getFaction("peace");
+        Faction pf = Main.FM.FFactory.getFaction("peace");
         int x = factionDamage.getEntity().getFloorX() >> 4;
         int z = factionDamage.getEntity().getFloorZ() >> 4;
         if (pf.GetPlots().contains(x+"|"+z)){
@@ -355,14 +353,14 @@ public class MasterListener implements Listener {
             String player1 = factionDamage.getEntity().getName();
             String player2 = ((EntityDamageByEntityEvent) factionDamage).getDamager().getName();
             ((Player) ((EntityDamageByEntityEvent) factionDamage).getDamager()).sendPopup(player1 + "'s Health: " + ((Player) factionDamage.getEntity()).getPlayer().getHealth() + "/" + ((Player) factionDamage.getEntity()).getPlayer().getMaxHealth());
-            String faction1 = this.plugin.getPlayerFaction(player1.toLowerCase());
-            String faction2 = this.plugin.getPlayerFaction(player2.toLowerCase());
+            String faction1 = Main.FM.getPlayerFaction(player1.toLowerCase());
+            String faction2 = Main.FM.getPlayerFaction(player2.toLowerCase());
             if (faction1 == null || faction2 == null) return;
             if (faction1.equalsIgnoreCase(faction2)) {
                 factionDamage.setCancelled(true);
                 return;
             }
-            if (this.plugin.isFactionsAllyed(faction1, faction2)) {
+            if (Main.FM.isFactionsAllyed(faction1, faction2)) {
                 factionDamage.setCancelled(true);
                 return;
             }
@@ -372,19 +370,19 @@ public class MasterListener implements Listener {
     @EventHandler
     public void factionBlockBreakProtect(BlockBreakEvent event) {
         if (event.getPlayer() != null && event.getPlayer().isOp()) {
-            String pf = this.plugin.getPlayerFaction(event.getPlayer().getName());
-            Faction fac = plugin.FFactory.getFaction(pf);
+            String pf = Main.FM.getPlayerFaction(event.getPlayer().getName());
+            Faction fac = Main.FM.FFactory.getFaction(pf);
             if (fac != null) fac.HandleBreakEvent(event);
             event.setCancelled(false);
             return;
         }
         if (event.isCancelled()) return;
-        String pf = this.plugin.getPlayerFaction(event.getPlayer().getName());
-        String chunkfaction = this.plugin.GetChunkOwner((int) event.getBlock().getX() >> 4, (int) event.getBlock().getZ() >> 4);
+        String pf = Main.FM.getPlayerFaction(event.getPlayer().getName());
+        String chunkfaction = Main.FM.GetChunkOwner((int) event.getBlock().getX() >> 4, (int) event.getBlock().getZ() >> 4);
         if (chunkfaction != null) {
             if (pf != null) {
-                if (pf.equalsIgnoreCase(chunkfaction) || plugin.AtWar(pf, chunkfaction)) {
-                    Faction fac = plugin.FFactory.getFaction(pf);
+                if (pf.equalsIgnoreCase(chunkfaction)) {
+                    Faction fac = Main.FM.FFactory.getFaction(pf);
                     if (fac != null) fac.HandleBreakEvent(event);
                     return;
                 }
@@ -394,25 +392,25 @@ public class MasterListener implements Listener {
             }
             event.setCancelled(true);
         }
-        Faction fac = plugin.FFactory.getFaction(pf);
+        Faction fac = Main.FM.FFactory.getFaction(pf);
         if (fac != null) fac.HandleBreakEvent(event);
     }
 
     @EventHandler
     public void factionBlockPlaceProtect(BlockPlaceEvent event) {
         if (event.getPlayer() != null && event.getPlayer().isOp()) {
-            String pf = this.plugin.getPlayerFaction(event.getPlayer().getName());
-            Faction fac = plugin.FFactory.getFaction(pf);
+            String pf = Main.FM.getPlayerFaction(event.getPlayer().getName());
+            Faction fac = Main.FM.FFactory.getFaction(pf);
             if (fac != null) fac.HandlePlaceEvent(event);
             return;
         }
         if (event.isCancelled()) return;
-        String pf = this.plugin.getPlayerFaction(event.getPlayer().getName());
-        String chunkfaction = this.plugin.GetChunkOwner((int) event.getBlock().getX() >> 4, (int) event.getBlock().getZ() >> 4);
+        String pf = Main.FM.getPlayerFaction(event.getPlayer().getName());
+        String chunkfaction = Main.FM.GetChunkOwner((int) event.getBlock().getX() >> 4, (int) event.getBlock().getZ() >> 4);
         if (chunkfaction != null) {
             if (pf != null) {
-                if (pf.equalsIgnoreCase(chunkfaction) || plugin.AtWar(pf, chunkfaction)) {
-                    Faction fac = plugin.FFactory.getFaction(pf);
+                if (pf.equalsIgnoreCase(chunkfaction)) {
+                    Faction fac = Main.FM.FFactory.getFaction(pf);
                     if (fac != null) fac.HandlePlaceEvent(event);
                     return;
                 }
@@ -422,7 +420,7 @@ public class MasterListener implements Listener {
             }
             event.setCancelled(true);
         }
-        Faction fac = plugin.FFactory.getFaction(pf);
+        Faction fac = Main.FM.FFactory.getFaction(pf);
         if (fac != null) fac.HandlePlaceEvent(event);
     }
 }

@@ -6,6 +6,7 @@ import cn.nukkit.utils.TextFormat;
 
 import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 
 import java.util.ArrayList;
 

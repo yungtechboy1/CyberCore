@@ -84,7 +84,7 @@ public class Top extends CheckPermCommand {
         int z = pos.getFloorZ();
         for (int y = 256; y >= 0; y--) {
             if (pos.level.getBlock(this.temporalVector.setComponents(x, y, z)).isSolid()) {
-                return new Position(x + 0.5, pos.level.getBlock(this.temporalVector.setComponents(x, y, z)).getBoundingBox().maxY, z + 0.5, pos.level);
+                return new Position(x + 0.5, pos.level.getBlock(this.temporalVector.setComponents(x, y, z)).getBoundingBox().getMaxY(), z + 0.5, pos.level);
             }
         }
         return null;

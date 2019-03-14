@@ -66,13 +66,13 @@ public class Tree_Feller_Async extends AsyncTask {
             visited.add(index);
             BlockList.add(pos);
             //No more loops
-            this.findLog(pos.getSide(Block.SIDE_UP), distance + 1, check, fromSide);
-            this.findLog(pos.getSide(Block.SIDE_DOWN), distance + 1, check, fromSide);
-            this.findLog(pos.getSide(Block.SIDE_NORTH), distance + 1, check, fromSide);
-            this.findLog(pos.getSide(Block.SIDE_EAST), distance + 1, check, fromSide);
-            this.findLog(pos.getSide(Block.SIDE_SOUTH), distance + 1, check, fromSide);
-            this.findLog(pos.getSide(Block.SIDE_WEST), distance + 1, check, fromSide);
-            this.findLog(pos.getSide(Block.SIDE_DOWN), distance + 1, check, fromSide);
+            this.findLog(pos.up(), distance + 1, check, fromSide);
+            this.findLog(pos.down(), distance + 1, check, fromSide);
+            this.findLog(pos.north(), distance + 1, check, fromSide);
+            this.findLog(pos.south(), distance + 1, check, fromSide);
+            this.findLog(pos.east(), distance + 1, check, fromSide);
+            this.findLog(pos.west(), distance + 1, check, fromSide);
+            this.findLog(pos.down(), distance + 1, check, fromSide);
         }
     }
 }

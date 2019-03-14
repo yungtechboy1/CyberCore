@@ -6,6 +6,7 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.Calendar;
@@ -39,7 +40,7 @@ public class Accept extends Commands {
             if (FF.HasInvite(Sender.getName().toLowerCase()) && FF.AcceptInvite(Sender.getName().toLowerCase())) {
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN + "Faction Invite Accepted!");
                 FF.BroadcastMessage(FactionsMain.NAME+TextFormat.GREEN + player + " Has joined your faction!");
-                Main.CC.Setnametag(Sender.getName());
+//                Main.CC.Setnametag(Sender.getName());
                 Main.FFactory.FacList.put(Sender.getName().toLowerCase(), FF.GetName());
             } else {
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + " Invite has expired or their was an error! Please try again!");

@@ -81,7 +81,7 @@ public class Demote extends Commands {
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"You must be Higher than a General to Demote this Person!");
             }
         }
-        Main.CC.Setnametag((Player) Sender);
-        Main.CC.Setnametag(pp);
+//        Main.CC.Setnametag((Player) Sender);
+//        Main.CC.Setnametag(pp);
     }
 }

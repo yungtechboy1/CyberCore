@@ -11,6 +11,9 @@ import cn.nukkit.item.ItemTool;
 public class ModifiedSword extends ItemTool {
 
     private ModifiedMaterial M;
+    private ModifiedLength L;
+    private ItemRank IR;
+    private Rarity RR;
 
 
     public ModifiedSword() {
@@ -23,7 +26,8 @@ public class ModifiedSword extends ItemTool {
 
     public ModifiedSword(Integer meta, int count) {
         //TODO GET M from Meta Data
-        super(M.getId(), meta, count, "Diamond Sword");
+//        super(M.getId(), meta, count, "Diamond Sword");
+        super(Item.DIAMOND_SWORD, meta, count, "Diamond Sword");
     }
 
     @Override
@@ -49,25 +53,3 @@ public class ModifiedSword extends ItemTool {
 
 }
 
-public enum ModifiedMaterial {
-    Wood(Item.WOODEN_SWORD),
-    FireStone(Item.WOODEN_SWORD),//Burn Damage
-    IcedStone(Item.WOODEN_SWORD),//Freeze Opponents
-    Gold(Item.GOLD_SWORD),
-    Iron(Item.IRON_SWORD),
-    Steel(Item.IRON_SWORD),
-    Diamond(Item.DIAMOND_SWORD),
-    Safire(Item.DIAMOND_SWORD);
-
-    public int getId() {
-        return i;
-    }
-
-    private int i;
-    private String n;
-
-    private M_MATERIAL(int id,String name) {
-        i = id;
-        n = name;
-    }
-    }
