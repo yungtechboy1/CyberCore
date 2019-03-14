@@ -58,8 +58,8 @@ public class Create extends Commands {
         } else {
             Main.FFactory.CreateFaction(Args[1],(Player) Sender);
             Sender.sendMessage(FactionsMain.NAME+TextFormat.GRAY+"Your Faction has 2 power!");
-            Main.CC.Setnametag((Player) Sender);
-            Main.sendBossBar((Player) Sender);
+//            Main.CC.Setnametag((Player) Sender);
+//            Main.sendBossBar((Player) Sender);
             return;
         }
     }

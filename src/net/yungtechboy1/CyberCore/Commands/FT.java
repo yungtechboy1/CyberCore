@@ -31,7 +31,8 @@ public class FT extends Command {
     @Override
     public boolean execute(CommandSender s, String label, String[] args) {
 
-        Owner.FTM.AddFloatingText((Player) s);
+        //TODO
+//        Owner.FTM.AddFloatingText((Player) s);
         s.sendMessage(TextFormat.GREEN+"Floating Text Created!");
 
 

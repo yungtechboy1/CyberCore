@@ -38,9 +38,9 @@ public class Tree_Feller_Async extends AsyncTask {
         if(world != null){
             for(Block block: BlockList){
                 if(block instanceof BlockLeaves){
-                    int[][] d = block.getDrops(new ItemShears());
+                    Item[] d = block.getDrops(new ItemShears());
                     for (int i = 0; i < d.length; i++) {
-                        Item drop = Item.get(d[i][0], d[i][1], d[i][2]);
+                        Item drop = d[i];
                         world.setBlock(block, new BlockAir(),true,true);
                         world.dropItem(block.add(0.5,0.5,0.5),drop);
                         try {
