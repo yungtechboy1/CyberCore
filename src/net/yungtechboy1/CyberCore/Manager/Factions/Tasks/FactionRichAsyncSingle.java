@@ -46,7 +46,7 @@ public class FactionRichAsyncSingle extends AsyncTask {
                         } else {
                             kkey = b.getId() + "";
                         }
-                        if (Main.BV.exists(kkey)) value += (Integer) Main.BV.get(kkey);
+//                        if (Main.BV.exists(kkey)) value += (Integer) Main.BV.get(kkey);
                     }
                 }
             }

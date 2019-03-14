@@ -21,7 +21,7 @@ import java.util.HashMap;
 public class Class_Miner extends BaseClass {
     HashMap<Integer, Integer> OreBreak = new HashMap<Integer, Integer>() {{
         put(Block.GOLD_ORE, 50);
-        put(Block.HARDENED_CLAY, 30);
+        put(Block.STAINED_HARDENED_CLAY, 30);
         put(Block.MOSS_STONE, 15);
         put(Block.NETHERRACK, 3);
         put(Block.SANDSTONE, 10);

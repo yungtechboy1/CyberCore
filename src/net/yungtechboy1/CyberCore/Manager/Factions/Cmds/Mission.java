@@ -76,33 +76,36 @@ public class Mission extends Commands {
     }
 
     public void SendList(Integer p){
-        ArrayList<String> a = new ArrayList<>();
-        for(main.java.CyberFactions.Mission.Mission mission: Main.Missions){
-            if(fac.GetCompletedMissions().contains(mission.id)){
-                //@TODO Decide weather to show this or just show the red...
-                a.add(TextFormat.GRAY+"["+TextFormat.RED+mission.id+TextFormat.GRAY+"]"+TextFormat.AQUA+" "+mission.name+TextFormat.YELLOW+" > "+TextFormat.GRAY+ mission.desc);
-            }else{
-                a.add(TextFormat.GRAY+"["+TextFormat.GREEN+mission.id+TextFormat.GRAY+"]"+TextFormat.AQUA+" "+mission.name+TextFormat.YELLOW+" > "+TextFormat.GRAY+ mission.desc);
-            }
-     }
-
-        Integer to = p * 5;
-        Integer from = to - 5;
-        // 5 -> 0 ||| 10 -> 5
-        Integer x = 0;
-        String t = "";
-
-        t += TextFormat.GRAY+"-----"+TextFormat.GOLD+".<[Faction Mission List]>."+TextFormat.GRAY+"-----\n";
-        for(String vvalue : a){
-            if(!(x < to && x >= from)){
-                x++;
-                continue;
-            }
-            if(x > to)break;
-            x++;
-            t += vvalue + " \n";
-        }
-        t += "------------------------------";
-        Sender.sendMessage(t);
-    }
+        return;
+        //TODO
+//        ArrayList<String> a = new ArrayList<>();
+//        for(Mission mission: Main.Missions){
+//            if(fac.GetCompletedMissions().contains(mission.id)){
+//                //@TODO Decide weather to show this or just show the red...
+//                a.add(TextFormat.GRAY+"["+TextFormat.RED+mission.id+TextFormat.GRAY+"]"+TextFormat.AQUA+" "+mission.name+TextFormat.YELLOW+" > "+TextFormat.GRAY+ mission.desc);
+//            }else{
+//                a.add(TextFormat.GRAY+"["+TextFormat.GREEN+mission.id+TextFormat.GRAY+"]"+TextFormat.AQUA+" "+mission.name+TextFormat.YELLOW+" > "+TextFormat.GRAY+ mission.desc);
+//            }
+//     }
+//
+//        Integer to = p * 5;
+//        Integer from = to - 5;
+//        // 5 -> 0 ||| 10 -> 5
+//        Integer x = 0;
+//        String t = "";
+//
+//        t += TextFormat.GRAY+"-----"+TextFormat.GOLD+".<[Faction Mission List]>."+TextFormat.GRAY+"-----\n";
+//        for(String vvalue : a){
+//            if(!(x < to && x >= from)){
+//                x++;
+//                continue;
+//            }
+//            if(x > to)break;
+//            x++;
+//            t += vvalue + " \n";
+//        }
+//        t += "------------------------------";
+//        Sender.sendMessage(t);
+//    }
+}
 }

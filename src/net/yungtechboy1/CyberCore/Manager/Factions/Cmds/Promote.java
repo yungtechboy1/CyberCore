@@ -80,8 +80,9 @@ public class Promote extends Commands {
             }else if(perm == GENERAL){
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"You must be Higher than a General to Promote this Person!");
             }
-        }
-        Main.CC.Setnametag((Player) Sender);
-        Main.CC.Setnametag(pp);
+            }
+//        }
+//        Main.CC.Setnametag((Player) Sender);
+//        Main.CC.Setnametag(pp);
     }
 }

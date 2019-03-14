@@ -1,8 +1,9 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="CyberCore">
+  <artifact type="jar" build-on-make="true" name="CyberCore">
     <output-path>$PROJECT_DIR$/out/artifacts/CyberCore</output-path>
     <root id="archive" name="CyberCore.jar">
       <element id="module-output" name="CyberCore" />
+      <element id="library" level="project" name="Nukkit-master" />
     </root>
   </artifact>
 </component>

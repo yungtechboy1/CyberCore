@@ -8,7 +8,6 @@ import cn.nukkit.level.Level;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.*;
-import net.yungtechboy1.CyberCore.Manager.Factions.Tasks.Purge;
 
 import java.util.Calendar;
 import java.util.Map;
@@ -37,16 +36,6 @@ public class FactionsCommands {
                 sender.sendMessage(TextFormat.AQUA+"KDR"+TextFormat.YELLOW+" > "+main.Main.KDM.GetKDR(sender.getName()));
                 sender.sendMessage(TextFormat.GREEN+"--------------");
                 return true;
-            case "purge":
-                if(args.length == 1 && args[0].equalsIgnoreCase("f")){
-                    if(Main.Main.Save.Purge){
-                        Main.Main.Save.Purge = false;
-                    } else{
-                        Main.Main.Save.Purge = true;
-                    }
-                }else {
-                    new Purge(Main, false, 60).onRun(0);
-                }
             case "f":
                 //if(!(sender instanceof Player))return false;
                 //if(args.length > 0)sender.sendMessage("Count"+args.length+" 1:"+args[0]);

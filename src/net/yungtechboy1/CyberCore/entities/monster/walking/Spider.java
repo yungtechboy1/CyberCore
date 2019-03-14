@@ -176,9 +176,8 @@ public class Spider extends WalkingMonster {
             }
         }
 
-        int[] sides = { Block.SIDE_SOUTH, Block.SIDE_WEST, Block.SIDE_NORTH, Block.SIDE_EAST };
         Block block = this.getLevel().getBlock(new Vector3(NukkitMath.floorDouble(this.x + dx), (int) this.y, NukkitMath.floorDouble(this.z + dz)));
-        Block directionBlock = block.getSide(sides[this.getDirection()]);
+        Block directionBlock = block.getSide(this.getDirection());
         if (!directionBlock.canPassThrough()) {
             this.motionY = this.getGravity() * 3;
             return true;
@@ -195,9 +194,7 @@ public class Spider extends WalkingMonster {
     public void attackEntity(Entity player) {
         if (!this.isFriendly()) {
             this.attackDelay = 0;
-            HashMap<Integer, Float> damage = new HashMap<>();
-            damage.put(EntityDamageEvent.MODIFIER_BASE, (float) this.getDamage());
-            player.attack(new EntityDamageByEntityEvent(this, player, EntityDamageEvent.CAUSE_ENTITY_ATTACK, damage));
+            player.attack(new EntityDamageByEntityEvent(this, player, EntityDamageEvent.DamageCause.ENTITY_ATTACK, this.getDamage()));
         }
     }
 

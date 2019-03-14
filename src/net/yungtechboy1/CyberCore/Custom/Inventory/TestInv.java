@@ -10,6 +10,7 @@ import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
 import cn.nukkit.item.enchantment.Enchantment;
+import cn.nukkit.level.Sound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.*;
@@ -298,7 +299,7 @@ public class TestInv implements Inventory {
             this.slots.put(1, t.clone());
             this.slots.put(3, t.clone());
             sendContents(player);
-            player.getLevel().addSound(new AnvilUseSound(player));
+            player.getLevel().addSound(player, Sound.RANDOM_ANVIL_USE);
             return true;
         } else {
             Item t = Item.get(Item.REDSTONE_BLOCK);
@@ -313,54 +314,54 @@ public class TestInv implements Inventory {
 
     @Override
     public void onOpen(Player who) {
-
-        UpdateBlockPacket fullBlock1 = new UpdateBlockPacket();
-        fullBlock1.x = (int) BA.x;
-        fullBlock1.y = (int) BA.y - 2;
-        fullBlock1.z = (int) BA.z;
-        fullBlock1.blockId = Block.HOPPER_BLOCK;
-        fullBlock1.blockData = 0;
-        fullBlock1.flags = 0;
-        who.dataPacket(fullBlock1);
-
-        this.viewers.add(who);
-        ContainerOpenPacket pk = new ContainerOpenPacket();
-        pk.windowid = (byte) who.getWindowId(this);
-        pk.type = (byte) this.getType().getNetworkType();
-        //pk.type = 9;
-        pk.slots = 1;
-        pk.x = BA.getFloorX();
-        pk.y = BA.getFloorY() - 2;
-        pk.z = BA.getFloorZ();
+//
+//        UpdateBlockPacket fullBlock1 = new UpdateBlockPacket();
+//        fullBlock1.x = (int) BA.x;
+//        fullBlock1.y = (int) BA.y - 2;
+//        fullBlock1.z = (int) BA.z;
+//        fullBlock1.blockRuntimeId = Block.HOPPER_BLOCK;
+//        fullBlock1.blockData = 0;
+//        fullBlock1.flags = 0;
+//        who.dataPacket(fullBlock1);
+//
+//        this.viewers.add(who);
+//        ContainerOpenPacket pk = new ContainerOpenPacket();
+//        pk.windowid = (byte) who.getWindowId(this);
+//        pk.type = (byte) this.getType().getNetworkType();
+//        //pk.type = 9;
+//        pk.slots = 1;
+//        pk.x = BA.getFloorX();
+//        pk.y = BA.getFloorY() - 2;
+//        pk.z = BA.getFloorZ();
 
         /*pk.x = 85;
         pk.y = 77;
         pk.z = 323;*/
         //57.0|83.0|336.0
-
-        who.batchDataPacket(pk);
-        this.sendContents(who);
+//
+//        who.batchDataPacket(pk);
+//        this.sendContents(who);
     }
 
     @Override
     public void onClose(Player who) {
-        UpdateBlockPacket fullBlock1 = new UpdateBlockPacket();
-        fullBlock1.x = (int) BA.x;
-        fullBlock1.y = BA.getFloorY() - 2;
-        fullBlock1.z = (int) BA.z;
-        fullBlock1.blockId = OB.getId();
-        fullBlock1.blockData = OB.getDamage();
-        ;
-        fullBlock1.flags = 0;
-        who.dataPacket(fullBlock1);
-        ContainerClosePacket pk = new ContainerClosePacket();
-        pk.windowid = (byte) who.getWindowId(this);
-        who.dataPacket(pk);
-        this.viewers.remove(who);
-        who.getInventory().sendContents(who);
-        who.getInventory().sendHeldItem(who);
-        if (getItem(0).getId() != 0) this.getHolder().getLevel().dropItem(BA.add(0.5, 0.5, 0.5), this.getItem(0));
-        if (getItem(4).getId() != 0) this.getHolder().getLevel().dropItem(BA.add(0.5, 0.5, 0.5), this.getItem(4));
+//        UpdateBlockPacket fullBlock1 = new UpdateBlockPacket();
+//        fullBlock1.x = (int) BA.x;
+//        fullBlock1.y = BA.getFloorY() - 2;
+//        fullBlock1.z = (int) BA.z;
+//        fullBlock1.blockId = OB.getId();
+//        fullBlock1.blockData = OB.getDamage();
+//        ;
+//        fullBlock1.flags = 0;
+//        who.dataPacket(fullBlock1);
+//        ContainerClosePacket pk = new ContainerClosePacket();
+//        pk.windowid = (byte) who.getWindowId(this);
+//        who.dataPacket(pk);
+//        this.viewers.remove(who);
+//        who.getInventory().sendContents(who);
+//        who.getInventory().sendHeldItem(who);
+//        if (getItem(0).getId() != 0) this.getHolder().getLevel().dropItem(BA.add(0.5, 0.5, 0.5), this.getItem(0));
+//        if (getItem(4).getId() != 0) this.getHolder().getLevel().dropItem(BA.add(0.5, 0.5, 0.5), this.getItem(4));
     }
 
     @Override
@@ -729,7 +730,6 @@ public class TestInv implements Inventory {
         this.onClose(who);
     }
 
-    @Override
     public void onSlotChange(int index, Item before) {
         this.sendSlot(index, this.getViewers());
     }
@@ -741,21 +741,21 @@ public class TestInv implements Inventory {
 
     @Override
     public void sendContents(Player[] players) {
-        ContainerSetContentPacket pk = new ContainerSetContentPacket();
-        pk.slots = new Item[this.getSize()];
-        for (int i = 0; i < this.getSize(); ++i) {
-            pk.slots[i] = this.getItem(i);
-        }
-
-        for (Player player : players) {
-            int id = player.getWindowId(this);
-            if (id == -1 || !player.spawned) {
-                this.close(player);
-                continue;
-            }
-            pk.windowid = (byte) id;
-            player.batchDataPacket(pk);
-        }
+//        ContainerSetContentPacket pk = new ContainerSetContentPacket();
+//        pk.slots = new Item[this.getSize()];
+//        for (int i = 0; i < this.getSize(); ++i) {
+//            pk.slots[i] = this.getItem(i);
+//        }
+//
+//        for (Player player : players) {
+//            int id = player.getWindowId(this);
+//            if (id == -1 || !player.spawned) {
+//                this.close(player);
+//                continue;
+//            }
+//            pk.windowid = (byte) id;
+//            player.batchDataPacket(pk);
+//        }
     }
 
     @Override
@@ -770,19 +770,19 @@ public class TestInv implements Inventory {
 
     @Override
     public void sendSlot(int index, Player[] players) {
-        ContainerSetSlotPacket pk = new ContainerSetSlotPacket();
-        pk.slot = index;
-        pk.item = this.getItem(index).clone();
-
-        for (Player player : players) {
-            int id = player.getWindowId(this);
-            if (id == -1) {
-                this.close(player);
-                continue;
-            }
-            pk.windowid = (byte) id;
-            player.dataPacket(pk);
-        }
+//        ContainerSetSlotPacket pk = new ContainerSetSlotPacket();
+//        pk.slot = index;
+//        pk.item = this.getItem(index).clone();
+//
+//        for (Player player : players) {
+//            int id = player.getWindowId(this);
+//            if (id == -1) {
+//                this.close(player);
+//                continue;
+//            }
+//            pk.windowid = (byte) id;
+//            player.dataPacket(pk);
+//        }
     }
 
     @Override

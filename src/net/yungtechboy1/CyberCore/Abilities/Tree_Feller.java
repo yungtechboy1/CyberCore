@@ -40,8 +40,9 @@ public class Tree_Feller extends Ability {
     }
 
     @Override
-    public void BlockBreakEvent(BlockBreakEvent event) {
+    public BlockBreakEvent BlockBreakEvent(BlockBreakEvent event) {
 
+        return event;
     }
 
     @Override

@@ -11,9 +11,6 @@ import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.BlockColor;
-import cn.nukkit.utils.Config;
-import cn.nukkit.utils.ConfigSection;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -21,7 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * Created by carlt_000 on 2/6/2017.
  */
 
-public class BlockSapling extends BlockFlowable  {
+public class CustomBlockSapling extends BlockFlowable  {
     public static final int OAK = 0;
     public static final int SPRUCE = 1;
     public static final int BIRCH = 2;
@@ -33,11 +30,11 @@ public class BlockSapling extends BlockFlowable  {
     public static final int ACACIA = 4;
     public static final int DARK_OAK = 5;
 
-    public BlockSapling() {
+    public CustomBlockSapling() {
         this(0);
     }
 
-    public BlockSapling(int meta) {
+    public CustomBlockSapling(int meta) {
         super(meta);
     }
 

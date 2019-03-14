@@ -29,17 +29,19 @@ public class Double_Hearts extends Ability {
     }
 
     @Override
-    public void EntityDamageEvent(EntityDamageEvent event) {
+    public EntityDamageEvent EntityDamageEvent(EntityDamageEvent event) {
         if (event instanceof EntityDamageByEntityEvent) {
             if (((EntityDamageByEntityEvent) event).getDamager().getName().equalsIgnoreCase(player.getName())) {
                 event.setDamage(event.getDamage() * .80f);
             }
         }
+        return event;
     }
 
     @Override
-    public void PlayerToggleSprintEvent(PlayerToggleSprintEvent event) {
+    public PlayerToggleSprintEvent PlayerToggleSprintEvent(PlayerToggleSprintEvent event) {
         if(event.isSprinting())event.setCancelled();
+        return event;
     }
 
     @Override

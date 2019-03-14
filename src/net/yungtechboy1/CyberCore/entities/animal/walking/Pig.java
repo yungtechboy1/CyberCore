@@ -1,6 +1,7 @@
 package net.yungtechboy1.CyberCore.entities.animal.walking;
 
 import cn.nukkit.Player;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.entity.EntityRideable;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
@@ -69,4 +70,8 @@ public class Pig extends WalkingAnimal implements EntityRideable {
         return Utils.rand(1, 4); // gain 1-3 experience
     }
 
+    @Override
+    public boolean mountEntity(Entity entity) {
+        return false;
+    }
 }

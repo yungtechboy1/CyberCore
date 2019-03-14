@@ -26,20 +26,7 @@ public class Troll extends Command {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (args.length != 1 || !(sender instanceof Player)) return false;
-        Player p = (Player) sender;
-        if (p != null) {
-            if(args[0].equalsIgnoreCase("on")) {
-                p.setGamemode(1);
-                AdventureSettings newSettings = p.getAdventureSettings();
-                newSettings.setCanDestroyBlock(true);
-                newSettings.setCanFly(true);
-                newSettings.setNoclip(true);
-                newSettings.setNoPvp(false);
-                newSettings.update();
-            }else{
-                p.setGamemode(1);
-            }
-        }
+        //TODO
         return true;
     }
 }

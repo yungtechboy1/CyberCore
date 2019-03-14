@@ -20,7 +20,7 @@ public class FTS extends Command {
 
     @Override
     public boolean execute(CommandSender s, String label, String[] args) {
-        Owner.FTM.MainConfig.save();
+        //TODO
         s.sendMessage(TextFormat.GREEN+"Config Saved!");
         return true;
     }

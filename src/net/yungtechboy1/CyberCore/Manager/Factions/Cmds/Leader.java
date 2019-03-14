@@ -48,8 +48,8 @@ public class Leader extends Commands {
                     fac.AddMember(Sender.getName());
                     fac.BroadcastMessage(FactionsMain.NAME+TextFormat.YELLOW+""+ppn+" Is your New Leader!");
                     Sender.sendMessage(FactionsMain.NAME+TextFormat.YELLOW+"You are no longer leader!");
-                    Main.CC.Setnametag((Player) Sender);
-                    Main.CC.Setnametag(pp);
+//                    Main.CC.Setnametag((Player) Sender);
+//                    Main.CC.Setnametag(pp);
                     pp.sendMessage(FactionsMain.NAME+TextFormat.YELLOW+"You are now leader of factionName!");
                 } else {
                     Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Add player to faction first!");

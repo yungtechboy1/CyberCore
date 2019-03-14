@@ -5,6 +5,7 @@ import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.Calendar;
@@ -42,10 +43,11 @@ public class War extends Commands {
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Error, you are already in a war!");
                 return;
             }
-            if (target.HasWarCooldown()){
-                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Error, that faction has a war cooldown and cannot bet attacked right now... Try again later!");
-                return;
-            }
+            //TODO
+//            if (target.HasWarCooldown()){
+//                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Error, that faction has a war cooldown and cannot bet attacked right now... Try again later!");
+//                return;
+//            }
 
             Float tp = (float) target.GetMaxPower();
             Float fp = (float) fac.GetMaxPower();
@@ -79,7 +81,7 @@ public class War extends Commands {
 
             fac.TakePower(takepower);
             Integer time = (int)(Calendar.getInstance().getTime().getTime()/1000);
-            Main.DeclareWar(target,fac);
+//            Main.DeclareWar(target,fac);
 
 
 

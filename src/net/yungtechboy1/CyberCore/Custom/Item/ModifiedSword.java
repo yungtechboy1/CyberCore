@@ -26,7 +26,8 @@ public class ModifiedSword extends ItemTool {
 
     public ModifiedSword(Integer meta, int count) {
         //TODO GET M from Meta Data
-        super(M.getId(), meta, count, "Diamond Sword");
+//        super(M.getId(), meta, count, "Diamond Sword");
+        super(Item.DIAMOND_SWORD, meta, count, "Diamond Sword");
     }
 
     @Override

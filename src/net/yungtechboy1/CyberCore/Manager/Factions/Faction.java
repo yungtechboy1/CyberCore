@@ -723,9 +723,9 @@ public class Faction {
     }
 
     public void UpdateBossBar(){
-        for(Player player: GetOnlinePlayers()){
-            Main.sendBossBar(player,this);
-        }
+//        for(Player player: GetOnlinePlayers()){
+//            Main.sendBossBar(player,this);
+//        }
     }
 
     public ArrayList<String> getFAlly() {
