@@ -47,9 +47,9 @@ public class Leave extends Commands {
                 }
             }
             fac.BroadcastMessage(FactionsMain.NAME+TextFormat.YELLOW+Sender.getName()+" has Left the Faction!"+lm);
-            if(Main.CC != null)Main.CC.Setnametag((Player)Sender);
-            Main.CC.Setnametag((Player) Sender);
-            Main.sendBossBar((Player) Sender);
+//            if(Main.CC != null)Main.CC.Setnametag((Player)Sender);
+//            Main.CC.Setnametag((Player) Sender);
+//            Main.sendBossBar((Player) Sender);
             Main.FFactory.FacList.remove(Sender.getName().toLowerCase());
         } else {
             Sender.sendMessage(FactionsMain.NAME+"You are the leader of the faction... Please Do `/f del` if you wish to leave or pass leadership on to someone else!");

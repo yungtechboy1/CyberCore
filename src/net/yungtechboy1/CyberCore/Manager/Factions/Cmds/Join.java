@@ -5,6 +5,7 @@ import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.ArrayList;
@@ -47,6 +48,6 @@ public class Join extends Commands {
 
         Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Congrads! You Just Joined "+fac.GetDisplayName()+" Faction!");
         f.BroadcastMessage(FactionsMain.NAME+TextFormat.GREEN+Sender.getName()+" Has joinded your faction!");
-        if(Main.CC != null)Main.CC.Setnametag((Player)Sender);
+//        if(Main.CC != null)Main.CC.Setnametag((Player)Sender);
     }
 }

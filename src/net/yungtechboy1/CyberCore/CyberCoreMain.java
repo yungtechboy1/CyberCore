@@ -118,7 +118,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Item.list[Item.COOKED_CHICKEN] = ItemChickenCooked.class;
         Item.list[Item.COOKED_PORKCHOP] = ItemPorkchopCooked.class;
 
-        getServer().getScheduler().scheduleDelayedTask(new GetFactions(this), 20);
 
         //KDR Manager
         KDM = new KDManager();
