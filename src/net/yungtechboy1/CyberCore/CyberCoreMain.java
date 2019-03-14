@@ -29,6 +29,7 @@ import net.yungtechboy1.CyberCore.Custom.Item.ItemPorkchopCooked;
 import net.yungtechboy1.CyberCore.Events.CyberChatEvent;
 import net.yungtechboy1.CyberCore.Factory.*;
 import net.yungtechboy1.CyberCore.Manager.KD.KDManager;
+import net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager;
 import net.yungtechboy1.CyberCore.Manager.SQLManager;
 import net.yungtechboy1.CyberCore.Manager.Save.SaveMain;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
@@ -95,6 +96,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public HomeManager HomeFactory;
     public RankFactory RankFactory;
     public AuctionFactory AuctionFactory;
+    public PurgeManager PurgeManager;
     public List<String> Final = new ArrayList<>();
     public List<String> TPING = new ArrayList<>();
     public HashMap<String, HashMap<String, Object>> cache = new HashMap<>();
@@ -118,7 +120,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Item.list[Item.COOKED_CHICKEN] = ItemChickenCooked.class;
         Item.list[Item.COOKED_PORKCHOP] = ItemPorkchopCooked.class;
 
-
+        PurgeManager = new PurgeManager(this);
         //KDR Manager
         KDM = new KDManager();
         //BossBar Manager
