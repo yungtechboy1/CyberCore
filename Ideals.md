@@ -4,3 +4,6 @@
 it would then look like we have realms and can call it that.
 
 - Being in water deals 1/2 Damage before enchants & armor and Boosts
+
+- Assassins and Enchanters can benifit from Fermenation Enchant while allows a Buf for all Damage and Effects
+
