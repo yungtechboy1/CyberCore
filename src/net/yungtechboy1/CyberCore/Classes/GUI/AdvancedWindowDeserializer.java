@@ -19,30 +19,30 @@ public class AdvancedWindowDeserializer implements JsonDeserializer<AdvancedWind
         t = jsonObject.get("Title").getAsString();
         ArrayList<Element> eeee = new ArrayList<>();
         JsonArray ee = jsonObject.getAsJsonArray("Elements");
-        for(int eee = 0;eee <ee.size();eee++){
+        for (int eee = 0; eee < ee.size(); eee++) {
             JsonObject jo = ee.get(eee).getAsJsonObject();
             eeee.add(PharseElement(jo));
         }
 //            for (int x = -size; x < size; x++) {
-        new AdvancedWindow(t,e);
+        new AdvancedWindow(t, e);
 
         return null;
     }
 
-    public Element PharseElement(JsonObject jo){
-        String jt,jid,jimg,jaction = null;
+    public Element PharseElement(JsonObject jo) {
+        String jt, jid, jimg, jaction = null;
         jt = jo.get("type").getAsString();
         jid = jo.get("id").getAsString();
         jimg = jo.get("img").getAsString();
         jaction = jo.get("action").getAsString();
 
-        switch (jt.toLowerCase()){
+        switch (jt.toLowerCase()) {
             case "button":
                 return new ElementButton(jid);
-                break;
+            break;
             case "button-img":
-                return new ElementButton(jid)
-                break;
+                return new ElementButton(jid);
+            break;
         }
 
     }
