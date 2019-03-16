@@ -15,13 +15,16 @@ public class SQLApi {
     }
 
     public Integer getInteger(String table, String condition, Object value, String selector) {
+        return getInteger(table, condition, value, selector, -1);
+    }
+    public Integer getInteger(String table, String condition, Object value, String selector , Integer def) {
         try {
-            ResultSet r = connection.executeSql("SELECT 1 FROM " + table + " WHERE " + condition + "=" + value);
+            ResultSet r = connection.executeSql("SELECT * FROM " + table + " WHERE " + condition + "=" + value);
             return r.getInt(selector);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return def;
     }
 
 
@@ -48,11 +51,13 @@ public class SQLApi {
 
     public void checkCoreUser(String uuid) {
         try {
-            ResultSet r = connection.executeSql("SELECT 1 FROM mcpe WHERE uuid='" + uuid + "'");
+            ResultSet r = connection.executeSql("SELECT * FROM mcpe WHERE uuid='" + uuid + "'");
             if(r == null) {
                 connection.Main.getLogger().info("USER BEING CREATED!!!");
                 addCoreUser(uuid);
             } else {
+                int rank = r.getInt("rank");
+                connection.Main.RankFactory.RankCache.put(uuid, rank);
                 r.close();
                 connection.Main.getLogger().info("USER EXISTS!!!");
             }
