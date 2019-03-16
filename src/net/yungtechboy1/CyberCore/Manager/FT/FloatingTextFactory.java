@@ -4,17 +4,12 @@ import cn.nukkit.InterruptibleThread;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.level.Position;
-import cn.nukkit.math.Vector3;
-import cn.nukkit.math.Vector3f;
 import cn.nukkit.network.protocol.RemoveEntityPacket;
 import cn.nukkit.utils.TextFormat;
-import javafx.geometry.Pos;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 
 /**
  * Created by carlt on 2/14/2019.
@@ -134,10 +129,10 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
 //            }
             //KDR
             Double kdr = kills / deaths;//Factions.GetKDR(player.getName());
-            CyberCoreMain CC = (CyberCoreMain) CCM.getServer().getPluginManager().getPlugin("CyberCore");
+            CyberCoreMain CC = (CyberCoreMain) CCM.getServer().getPluginManager().getPlugin("net/yungtechboy1/CyberCore");
             String rank = "Guest|";
             if (CC != null) {
-                rank = CC.getPlayerRankCache(player.getName());
+                rank = CC.getPlayerRank(player.getName()).getDisplayName();
                 if (rank == null) rank = "Guest";
             }
             String tps = "" + CCM.getServer().getTicksPerSecond();

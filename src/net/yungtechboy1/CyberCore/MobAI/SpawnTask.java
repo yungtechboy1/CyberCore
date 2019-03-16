@@ -5,14 +5,13 @@
  */
 package net.yungtechboy1.CyberCore.MobAI;
 
+import net.yungtechboy1.CyberCore.entities.utils.Utils;
 import cn.nukkit.IPlayer;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
-import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
-import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ public class SpawnTask implements Runnable {
 
     private static final int    MIN_SPAWN_RADIUS = 3; // in blocks
     
-    private net.yungtechboy1.CyberCore.MobAI.MobPlugin plugin = null;
+    private MobPlugin plugin = null;
 
     public SpawnTask(MobPlugin plugin) {
         this.server = Server.getInstance();

@@ -1,11 +1,12 @@
 package net.yungtechboy1.CyberCore.Commands;
 
+import net.yungtechboy1.CyberCore.Commands.Constructors.TargetCommand;
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Commands.Constructors.TargetCommand;
+import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.RankList;
 import net.yungtechboy1.CyberCore.Utils;
@@ -36,7 +37,7 @@ public class BanCmd extends TargetCommand {
         }
 
         Long time = -1L;
-        new net.yungtechboy1.CyberCore.Bans.Ban(Owner,target,TextFormat.RED+s.getName()+" Has banned you! Reason:"+ Utils.implode(" ",args),time,true,false,true);
+        new Ban(Owner,target,TextFormat.RED+s.getName()+" Has banned you! Reason:"+ Utils.implode(" ",args),time,true,false,true);
         for (Item I : target.getInventory().getContents().values()) target.getLevel().dropItem(target, I);
         target.getInventory().clearAll();
         target.kick("You Have Been Banned!");

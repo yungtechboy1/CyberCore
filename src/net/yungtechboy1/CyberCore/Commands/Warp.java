@@ -6,16 +6,9 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
-import cn.nukkit.math.Vector3;
-import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Messages;
-import net.yungtechboy1.CyberCore.RankList;
 import net.yungtechboy1.CyberCore.Tasks.ReTPTask;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Created by carlt_000 on 2/1/2017.

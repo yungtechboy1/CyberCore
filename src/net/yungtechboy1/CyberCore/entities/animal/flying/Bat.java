@@ -47,7 +47,7 @@ public class Bat extends FlyingAnimal {
     }
 
     /* (@Override)
-     * @see net.yungtechboy1.CyberCore.entities.BaseEntity#getKillExperience()
+     * @see BaseEntity#getKillExperience()
      */
     @Override
     public int getKillExperience() {
