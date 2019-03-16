@@ -1,5 +1,7 @@
 package net.yungtechboy1.CyberCore;
 
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
+import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
@@ -12,14 +14,6 @@ import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.player.*;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Manager.Factions.CustomFloatingTextParticle;
-import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
-import net.yungtechboy1.CyberCore.Manager.Factions.Tasks.PopUp;
-
-import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * Created by carlt on 3/7/2019.

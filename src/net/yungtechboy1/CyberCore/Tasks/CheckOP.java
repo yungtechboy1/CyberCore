@@ -19,7 +19,7 @@ public class CheckOP extends PluginTask<CyberCoreMain> {
     @Override
     public void onRun(int currentTick) {
         for(Map.Entry<UUID,Player> e: getOwner().getServer().getOnlinePlayers().entrySet()){
-            String rank = getOwner().getPlayerRankCache(e.getValue().toString());
+            String rank = getOwner().getPlayerRank(e.getValue().toString()).getDisplayName();
             if (rank != null && !rank.equalsIgnoreCase("op") && e.getValue().isOp()){
                 //getOwner().getServer().getNameBans().addBan(e.getValue().getName(),"You should not be OP!");
                 e.getValue().setOp(false);

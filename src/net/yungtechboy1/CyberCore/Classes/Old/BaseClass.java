@@ -14,7 +14,6 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Abilities.Super_Breaker;
-import net.yungtechboy1.CyberCore.Classes.Old.Class_LumberJack;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.ArrayList;

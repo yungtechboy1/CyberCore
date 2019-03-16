@@ -1,6 +1,5 @@
 package net.yungtechboy1.CyberCore.Custom.CustomEnchant;
 
-import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.item.enchantment.EnchantmentType;
 

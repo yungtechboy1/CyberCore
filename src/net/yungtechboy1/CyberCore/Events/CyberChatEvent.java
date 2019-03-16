@@ -8,11 +8,10 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerChatEvent;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
-import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import sun.applet.Main;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -34,10 +33,13 @@ public class CyberChatEvent implements Listener {
         } else {
             event.setJoinMessage(Msg);
         }
-        String Rank = plugin.RankFactory.GetMasterRank(event.getPlayer().getName());
-        event.getPlayer().sendMessage(TextFormat.GREEN + "You Have Joined with the Rank: " + Rank);
+
+        plugin.checkUser(event.getPlayer().getUniqueId());
+
+        String rank = plugin.RankFactory.getPlayerRank(event.getPlayer().getName()).getDisplayName();
+        event.getPlayer().sendMessage(plugin.colorize( TextFormat.GREEN + "You Have Joined with the Rank: " + rank));
         plugin.Setnametag(event.getPlayer().getName());
-        if (Rank != null && Rank.equalsIgnoreCase("op")) {
+        if (rank != null && rank.equalsIgnoreCase("op")) {
             event.getPlayer().setOp(true);
         } else {
             event.getPlayer().setOp(false);
@@ -130,9 +132,9 @@ public class CyberChatEvent implements Listener {
         chat = chatafter;
 
         String a = "";
-        a = plugin.RankFactory.GetAdminRank(player.getName());
-        if (a == null) a = plugin.RankFactory.GetMasterRank(player.getName());
-        if (a == null) a = plugin.RankFactory.GetSecondaryRank(player.getName());
+//        a = plugin.RankFactory.GetAdminRank(player.getName());
+//        if (a == null) a = plugin.RankFactory.GetMasterRank(player.getName());
+//        if (a == null) a = plugin.RankFactory.GetSecondaryRank(player.getName());
         if (a != null) {
             RankFormat = RankFormat.replace("{value}", (String) plugin.RankConfig.get(a));
             RankFormat = RankFormat.replace("&", TextFormat.ESCAPE + "") + TextFormat.WHITE;

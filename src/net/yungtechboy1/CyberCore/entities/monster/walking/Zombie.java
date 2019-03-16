@@ -1,5 +1,7 @@
 package net.yungtechboy1.CyberCore.entities.monster.walking;
 
+import net.yungtechboy1.CyberCore.entities.monster.WalkingMonster;
+import net.yungtechboy1.CyberCore.entities.utils.Utils;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityAgeable;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
@@ -9,11 +11,8 @@ import cn.nukkit.level.Level;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import co.aikar.timings.Timings;
-import net.yungtechboy1.CyberCore.entities.monster.WalkingMonster;
-import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Zombie extends WalkingMonster implements EntityAgeable {

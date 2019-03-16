@@ -1,16 +1,12 @@
 package net.yungtechboy1.CyberCore.Tasks;
 
+import net.yungtechboy1.CyberCore.entities.block.BlockEntitySpawner;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.level.Level;
-import cn.nukkit.level.Position;
-import cn.nukkit.math.Vector3;
 import cn.nukkit.scheduler.AsyncTask;
-import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
-import net.yungtechboy1.CyberCore.entities.block.BlockEntitySpawner;
-import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
 import java.util.ArrayList;
 
