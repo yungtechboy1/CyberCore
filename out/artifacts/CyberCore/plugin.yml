@@ -1,0 +1,49 @@
+name: CyberCore
+main: net.yungtechboy1.CyberCore.CyberCoreMain
+version: "1.0.0"
+api: ["1.0.0"]
+
+load: POSTWORLD
+author: Yungtechboy1
+description: Core Plugin from Yungtech
+commands:
+  cl:
+      description: Clear Lag
+      usage: "/cl"
+      permission: CyberTech.CyberCore.op
+  gmc:
+      description: Mutting Local Chat
+      usage: "/gmc"
+      permission: CyberTech.CyberCore.op
+  gms:
+      description: Mutting Local Chat
+      usage: "/gms"
+      permission: CyberTech.CyberCore.op
+  chmute:
+      description: Turns on and off all chat
+      usage: "/chmute"
+      permission: CyberTech.CyberCore.op
+  mute:
+      description: Mutes player from chatting
+      usage: "/mute <player> [Mins]"
+      permission: CyberTech.CyberCore.op
+  unmute:
+      description: UnMutes player from chatting
+      usage: "/unmute <player>"
+      permission: CyberTech.CyberCore.op
+  chat:
+      description: Mutting Local Chat
+      usage: "/chat <on|off>"
+      permission: CyberTech.CyberCore.player
+  rank:
+      description: Shows Rank
+      usage: "/rank"
+      permission: CyberTech.CyberCore.player
+permissions:
+  CyberTech.CyberCore:
+    description: "CyberCore Perms"
+    children:
+      CyberTech.CyberCore.op:
+        default: op
+      CyberTech.CyberCore.player:
+        default: true
