@@ -22,10 +22,10 @@ public class UnMuteTask extends PluginTask<CyberCoreMain> {
             Integer time = (int)(Calendar.getInstance().getTime().getTime()/1000);
             Integer v = (Integer) e.getValue();
             if(v <= time){
-                this.getOwner().removeMute(e.getKey());
                 Player t = this.getOwner().getServer().getPlayerExact(e.getKey());
                 if(t != null){
                     t.sendMessage(TextFormat.GREEN+"You are now un-muted!");
+                    this.getOwner().removeMute(t);
                 }
             }
         }

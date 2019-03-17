@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Factory;
+package net.yungtechboy1.CyberCore.Ranks;
 
 import cn.nukkit.Player;
 import cn.nukkit.utils.Config;
@@ -42,7 +42,8 @@ public class RankFactory {
             Main.getLogger().info("-===" + s + "===-");
             int index = rankConf.getInt("Ranks." +s+ ".rank");
             String display = rankConf.getString("Ranks." +s+ ".display_name");
-            Rank data = new Rank(index, display);
+            String chat_prefix = rankConf.getString("Ranks." +s+ ".chat_prefix");
+            Rank data = new Rank(index, display, chat_prefix);
             ranks.put(index, data);
             Main.getLogger().info("Rank: " + s + " ["+index+"]- loaded...");
         }
