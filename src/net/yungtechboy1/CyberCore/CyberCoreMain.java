@@ -124,11 +124,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         //KDR Manager
         KDM = new KDManager();
         //BossBar Manager
-        BBM = new BossBarManager(this);
+//        BBM = new BossBarManager(this);
         //Floating Text
-        FTM = new FloatingTextFactory(this);
+//        FTM = new FloatingTextFactory(this);
         //Mob Plugin
-        MP = new MobPlugin(this);
+//        MP = new MobPlugin(this);
 
         ECON = new EconManager(this);
 
@@ -219,7 +219,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         cooldowns = new Config(new File(this.getDataFolder(), "cooldowns.yml"), Config.YAML);
         getLogger().info(TextFormat.GREEN + "Initializing Cyber Essentials");
 
-        PasswordFactoy = new PasswordFactoy(this);
+        PasswordFactoy = new Pa1sswordFactoy(this);
 
         ClassFactory = new ClassFactory(this);
 
