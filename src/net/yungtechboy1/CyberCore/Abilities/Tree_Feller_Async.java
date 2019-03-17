@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Abilities;
 
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
@@ -8,7 +9,6 @@ import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemShears;
 import cn.nukkit.level.Level;
 import cn.nukkit.scheduler.AsyncTask;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.ArrayList;
 

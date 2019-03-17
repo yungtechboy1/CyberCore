@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Commands;
 
+import net.yungtechboy1.CyberCore.Classes.Old.*;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;

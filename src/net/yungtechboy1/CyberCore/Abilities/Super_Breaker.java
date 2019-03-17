@@ -1,18 +1,18 @@
 package net.yungtechboy1.CyberCore.Abilities;
 
+import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemTool;
 import cn.nukkit.item.enchantment.Enchantment;
-import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
  * Created by carlt_000 on 1/25/2017.
  */
 public class Super_Breaker extends Ability {
-    public Super_Breaker(CyberCoreMain main,BaseClass bc){
+    public Super_Breaker(CyberCoreMain main, BaseClass bc){
         super(main,bc, BaseClass.TYPE_MINER,Ability.MINER_SUPER_BREAK);
     }
 

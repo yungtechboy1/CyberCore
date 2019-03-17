@@ -70,7 +70,7 @@ public class Witch extends WalkingMonster {
 
     /*
      * (@Override)
-     * @see net.yungtechboy1.CyberCore.entities.monster.Monster#attackEntity(cn.nukkit.entity.Entity)
+     * @see Monster#attackEntity(cn.nukkit.entity.Entity)
      */
     @Override
     public void attackEntity(Entity player) {

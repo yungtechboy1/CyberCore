@@ -9,7 +9,6 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.potion.Effect;
 import net.yungtechboy1.CyberCore.entities.FlyingEntity;
-import net.yungtechboy1.CyberCore.entities.monster.Monster;
 import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
 public abstract class FlyingMonster extends FlyingEntity implements Monster {

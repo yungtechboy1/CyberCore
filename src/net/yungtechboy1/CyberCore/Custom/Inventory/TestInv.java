@@ -13,9 +13,7 @@ import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.level.Sound;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.network.protocol.*;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CrateKey;
 
 import java.util.*;
 

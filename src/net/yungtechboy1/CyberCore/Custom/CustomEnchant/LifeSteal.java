@@ -11,7 +11,6 @@ import cn.nukkit.item.enchantment.EnchantmentType;
 import cn.nukkit.level.particle.HeartParticle;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Custom.CustomEnchant.*;
 
 import java.util.Date;
 

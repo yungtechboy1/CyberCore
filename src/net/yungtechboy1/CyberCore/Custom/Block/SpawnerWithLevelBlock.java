@@ -1,5 +1,7 @@
 package net.yungtechboy1.CyberCore.Custom.Block;
 
+import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
+import net.yungtechboy1.CyberCore.entities.block.BlockEntitySpawner;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockMobSpawner;
@@ -9,8 +11,6 @@ import cn.nukkit.item.ItemTool;
 import cn.nukkit.math.BlockFace;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.entities.block.BlockEntitySpawner;
-import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
 
 /**
  * Created by carlt_000 on 1/14/2017.

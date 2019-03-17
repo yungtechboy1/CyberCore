@@ -1,12 +1,12 @@
 package net.yungtechboy1.CyberCore.Tasks;
 
+import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Old.Class_LumberJack;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.scheduler.PluginTask;
 import cn.nukkit.utils.ConfigSection;
-import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Old.Class_LumberJack;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.Map;

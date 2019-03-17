@@ -66,7 +66,7 @@ public class SkeletonHorse extends WalkingAnimal {
     }
 
     /* (@Override)
-     * @see net.yungtechboy1.CyberCore.entities.BaseEntity#getKillExperience()
+     * @see BaseEntity#getKillExperience()
      */
     @Override
     public int getKillExperience() {

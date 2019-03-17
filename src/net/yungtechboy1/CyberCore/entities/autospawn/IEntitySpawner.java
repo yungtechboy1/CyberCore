@@ -10,7 +10,6 @@ import cn.nukkit.OfflinePlayer;
 import cn.nukkit.Player;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
-import net.yungtechboy1.CyberCore.entities.autospawn.SpawnResult;
 
 import java.util.List;
 

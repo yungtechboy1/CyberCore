@@ -3,7 +3,6 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionFactory;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
