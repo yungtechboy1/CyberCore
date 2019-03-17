@@ -14,7 +14,6 @@ import net.yungtechboy1.CyberCore.entities.monster.WalkingMonster;
 import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class PigZombie extends WalkingMonster {
@@ -73,8 +72,8 @@ public class PigZombie extends WalkingMonster {
 
     @Override
     public boolean targetOption(EntityCreature creature, double distance) {
-        if (distance <= 100 && this.isAngry() && creature instanceof net.yungtechboy1.CyberCore.entities.monster.walking.PigZombie && !((net.yungtechboy1.CyberCore.entities.monster.walking.PigZombie) creature).isAngry()) {
-            ((net.yungtechboy1.CyberCore.entities.monster.walking.PigZombie) creature).setAngry(1000);
+        if (distance <= 100 && this.isAngry() && creature instanceof PigZombie && !((PigZombie) creature).isAngry()) {
+            ((PigZombie) creature).setAngry(1000);
         }
         return this.isAngry() && super.targetOption(creature, distance);
     }

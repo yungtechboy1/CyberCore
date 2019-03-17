@@ -1,11 +1,8 @@
 package net.yungtechboy1.CyberCore.Manager.BossBar;
 
 import cn.nukkit.Player;
-import cn.nukkit.entity.Entity;
-import cn.nukkit.utils.TextFormat;
 
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 public class BossBarNotification extends BossBarGeneric{
 

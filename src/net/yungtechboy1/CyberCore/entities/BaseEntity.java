@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.entities;
 
+import net.yungtechboy1.CyberCore.entities.monster.Monster;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.entity.Entity;
@@ -17,7 +18,6 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.AddEntityPacket;
 import cn.nukkit.potion.Effect;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
-import net.yungtechboy1.CyberCore.entities.monster.Monster;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,8 +2,6 @@ package net.yungtechboy1.CyberCore;
 
 import cn.nukkit.utils.TextFormat;
 
-import javax.xml.soap.Text;
-
 /**
  * Created by carlt_000 on 3/21/2016.
  */

@@ -1,5 +1,8 @@
 package net.yungtechboy1.CyberCore.entities.monster.walking;
 
+import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
+import net.yungtechboy1.CyberCore.entities.monster.WalkingMonster;
+import net.yungtechboy1.CyberCore.entities.utils.Utils;
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.projectile.EntityArrow;
@@ -8,16 +11,11 @@ import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityShootBowEvent;
 import cn.nukkit.event.entity.ProjectileLaunchEvent;
 import cn.nukkit.item.Item;
-import cn.nukkit.item.ItemBow;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Location;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.network.protocol.MobEquipmentPacket;
-import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
-import net.yungtechboy1.CyberCore.entities.monster.WalkingMonster;
-import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;

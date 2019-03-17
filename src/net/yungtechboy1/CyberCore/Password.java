@@ -10,7 +10,6 @@ import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;

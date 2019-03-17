@@ -1,12 +1,12 @@
 package net.yungtechboy1.CyberCore.Commands;
 
+import net.yungtechboy1.CyberCore.Commands.Constructors.TargetCommand;
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Bans.Ban;
-import net.yungtechboy1.CyberCore.Commands.Constructors.TargetCommand;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.RankList;
 import net.yungtechboy1.CyberCore.Utils;

@@ -11,7 +11,6 @@ import net.yungtechboy1.CyberCore.entities.monster.WalkingMonster;
 import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Enderman extends WalkingMonster {

@@ -1,12 +1,12 @@
 package net.yungtechboy1.CyberCore.Tasks;
 
+import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import cn.nukkit.Player;
 import cn.nukkit.scheduler.PluginTask;
 import cn.nukkit.utils.TextFormat;
 
-import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 
 import java.util.ArrayList;
 

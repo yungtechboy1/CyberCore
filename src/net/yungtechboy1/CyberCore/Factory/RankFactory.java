@@ -1,185 +1,69 @@
 package net.yungtechboy1.CyberCore.Factory;
 
 import cn.nukkit.Player;
+import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.RankList;
+import net.yungtechboy1.CyberCore.Ranks.Rank;
 
-import java.sql.ResultSet;
+import java.io.File;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by carlt_000 on 1/22/2017.
  */
 public class RankFactory {
-    public Map<String, Object> RankCache = new HashMap<>();
+
+    public final String DB_TABLE = "mcpe";
+
+    public Map<String, Integer> RankCache = new HashMap<>();
     CyberCoreMain Main;
     public ConfigSection GARC = new ConfigSection();
     public ConfigSection MRC = new ConfigSection();
     public ConfigSection SRC = new ConfigSection();
 
+    public Map<Integer, Rank> ranks = new HashMap<>();
+
     public RankFactory(CyberCoreMain main) {
         Main = main;
+        loadRanks();
     }
 
-    public ArrayList<String> GetAllRanks(String p) {
-        ArrayList<String> al = new ArrayList<>();
-        if (GARC.containsKey(p.toLowerCase())) return (ArrayList<String>) GARC.get(p.toLowerCase());
-        try {
-            Statement stmt = Main.getMySqlConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM `xf_user` WHERE `MCPE` = '" + p + "'");
-            while (rs.next()) {
-                String secusergroups = rs.getString("secondary_group_ids");
-                String usergroups = rs.getString("user_group_id");
-                if (usergroups != null || !usergroups.equalsIgnoreCase("")) {
-                    String r = GetRankStringFromGroup(usergroups);
-                    if (r != null) al.add(r);
-                    MRC.put(p.toLowerCase(), r);
-                }
-                if (secusergroups != null || !secusergroups.equalsIgnoreCase("")) {
-                    String r = null;
-                    if (secusergroups.contains(",")) {
-                        String[] secgroups = secusergroups.split(",");
-                        for (String secgroup : secgroups) {
-                            //http://209.126.102.26/phpmyadmin/index.php?db=admin_arch&target=db_search.php&token=d8db4073e2feb9b6386d5bd3d1612f46#PMAURL-4:sql.php?db=admin_arch&table=xf_user_group&server=1&target=&token=d8db4073e2feb9b6386d5bd3d1612f46
-                            r = GetRankStringFromGroup(secgroup);
-                            if (r != null) al.add(r);
-                        }
-                    } else {
-                        r = GetRankStringFromGroup(secusergroups);
-                        if (r != null) al.add(r);
-                    }
-                }
-            }
-        } catch (SQLException ex) {
+    public void loadRanks() {
+        Main.getLogger().info("Loading Ranks...");
+        Config rankConf = new Config(new File(Main.getDataFolder(), "ranks.yml"));
+        Main.getLogger().info(rankConf.get("Ranks").toString());
+        Map<String, Object> map = rankConf.getSection("Ranks").getAllMap();
+        for(String s: map.keySet()) {
+            Main.getLogger().info("-===" + s + "===-");
+            int index = rankConf.getInt("Ranks." +s+ ".rank");
+            String display = rankConf.getString("Ranks." +s+ ".display_name");
+            Rank data = new Rank(index, display);
+            ranks.put(index, data);
+            Main.getLogger().info("Rank: " + s + " ["+index+"]- loaded...");
         }
-
-        if (al.size() == 0) {
-            GARC.put(p.toLowerCase(), new ArrayList<String>());
-            return null;
-        } else {
-            GARC.put(p.toLowerCase(), al);
-            return al;
-        }
-
     }
 
-    public String GetMasterRank(String p) {
-        if (MRC.containsKey(p.toLowerCase())) {
-            return (String) MRC.get(p.toLowerCase());
+    public Rank getPlayerRank(String p) {
+        String uuid;
+        if((uuid = Main.getPlayer(p).getUniqueId().toString()) != null ) {
+            return ranks.get(RankCache.get(uuid));
         } else {
             try {
-                Statement stmt = Main.getMySqlConnection().createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT * FROM `xf_user` WHERE `MCPE` = '" + p + "'");
-                while (rs.next()) {
-                    String usergroups = rs.getString("user_group_id");
-                    if (usergroups != null || !usergroups.equalsIgnoreCase("")) {
-                        String r = GetRankStringFromGroup(usergroups);
-                        if (r != null) {
-                            MRC.put(p.toLowerCase(), r);
-                            return r;
-                        }
-                    }
-                    //return null;
-                }
-            } catch (SQLException ex) {
+                return(ranks.get(Main.SQLApi.getInteger(DB_TABLE, "gamertag", p, "rank")));
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
-        MRC.put(p.toLowerCase(), null);
         return null;
     }
 
-    /**
-     * Gets the highest Seccondary Rank from user
-     *
-     * @param p Player Name
-     * @return Integer|null Highest Rank
-     */
-    public String GetSecondaryRank(String p) {
-        if (SRC.containsKey(p.toLowerCase())) {
-            return (String) SRC.get(p.toLowerCase());
-        }
-        try {
-            Statement stmt = Main.getMySqlConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM `xf_user` WHERE `MCPE` = '" + p + "'");
-            while (rs.next()) {
-                String secusergroups = rs.getString("secondary_group_ids");
-                if (secusergroups != null || !secusergroups.equalsIgnoreCase("")) {
-                    String r = null;
-                    String tr = null;
-                    Integer mod = -1;
-                    if (secusergroups.contains(",")) {
-                        String[] secgroups = secusergroups.split(",");
-                        for (String secgroup : secgroups) {
-                            //http://209.126.102.26/phpmyadmin/index.php?db=admin_arch&target=db_search.php&token=d8db4073e2feb9b6386d5bd3d1612f46#PMAURL-4:sql.php?db=admin_arch&table=xf_user_group&server=1&target=&token=d8db4073e2feb9b6386d5bd3d1612f46
-                            tr = GetRankStringFromGroup(secgroup);
-                            Integer rsr = AllRanksToInt(tr,true);
-                            if (rsr > mod) {
-                                r = tr;
-                                mod = rsr;
-                            }
-                        }
-                        SRC.put(p.toLowerCase(), r);
-                        return r;
-                    } else {
-                        r = GetRankStringFromGroup(secusergroups);
-                        if (r != null) {
-                            SRC.put(p.toLowerCase(), r);
-                            return r;
-                        }
-                    }
-                }
-            }
-        } catch (SQLException ex) {
-        }
-        SRC.put(p.toLowerCase(), null);
-        return null;
-    }
-
-    public String getPlayerRank(Player p) {
+    public Rank getPlayerRank(Player p) {
         return getPlayerRank(p.getName());
-    }
-
-    public String getPlayerRank(String p) {
-        if (RankCache.containsKey(p.toLowerCase())) {
-            return (String) RankCache.get(p.toLowerCase());
-        } else {
-            try {
-                Statement stmt = Main.getMySqlConnection().createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT * FROM `xf_user` WHERE `MCPE` = '" + p + "'");
-                while (rs.next()) {
-                    String secusergroups = rs.getString("secondary_group_ids");
-                    String usergroups = rs.getString("user_group_id");
-                    if (usergroups != null || !usergroups.equalsIgnoreCase("")) {
-                        String r = GetRankStringFromGroup(usergroups);
-                        if (r != null) {
-                            RankCache.put(p.toLowerCase(), r);
-                            return r;
-                        }
-                    }
-                    if (secusergroups != null || !secusergroups.equalsIgnoreCase("")) {
-                        String r = null;
-                        String[] secgroups = secusergroups.split(",");
-                        for (String secgroup : secgroups) {
-                            //http://209.126.102.26/phpmyadmin/index.php?db=admin_arch&target=db_search.php&token=d8db4073e2feb9b6386d5bd3d1612f46#PMAURL-4:sql.php?db=admin_arch&table=xf_user_group&server=1&target=&token=d8db4073e2feb9b6386d5bd3d1612f46
-                            r = GetRankStringFromGroup(secgroup);
-                            if (r != null) {
-                                RankCache.put(p.toLowerCase(), r);
-                                return r;
-                            }
-                        }
-                    }
-                    //return null;
-                }
-            } catch (SQLException ex) {
-            }
-        }
-        RankCache.put(p.toLowerCase(), null);
-        return null;
     }
 
     public String GetRankStringFromGroup(String group) {
@@ -214,26 +98,6 @@ public class RankFactory {
         return r;
     }
 
-    /**
-     * Gets Highest Admin rank from all your possible ranks
-     *
-     * @param p
-     * @return String | Null
-     */
-    public String GetAdminRank(String p) {
-        Integer mod = 0;
-        String r = null;
-        ArrayList<String> gar = GetAllRanks(p);
-        if (gar == null|| gar.size() == 0) return null;
-        for (String rank : gar) {
-            Integer nm = RankAdminRank(rank);
-            if (mod < nm) {
-                mod = nm;
-                r = rank;
-            }
-        }
-        return r;
-    }
 
     /**
      * Returns rank from 0 - 8

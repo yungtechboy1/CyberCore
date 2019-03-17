@@ -1,12 +1,10 @@
 package net.yungtechboy1.CyberCore.entities.block;
 
-import cn.nukkit.Player;
 import cn.nukkit.blockentity.BlockEntitySpawnable;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Position;
 import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.level.format.generic.BaseFullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ShortTag;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;

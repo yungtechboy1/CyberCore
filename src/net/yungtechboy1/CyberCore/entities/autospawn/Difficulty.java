@@ -24,7 +24,7 @@ public enum Difficulty {
         return difficulty;
     }
     
-    public static net.yungtechboy1.CyberCore.entities.autospawn.Difficulty getByDiffculty (int difficulty) {
+    public static Difficulty getByDiffculty (int difficulty) {
         switch (difficulty) {
             case 0:
                 return PEACEFUL;
