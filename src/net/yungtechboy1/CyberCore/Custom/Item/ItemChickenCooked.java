@@ -3,8 +3,6 @@ package net.yungtechboy1.CyberCore.Custom.Item;
 import cn.nukkit.item.ItemEdible;
 import cn.nukkit.utils.TextFormat;
 
-import java.awt.*;
-
 /**
  * Created by carlt_000 on 1/27/2017.
  */

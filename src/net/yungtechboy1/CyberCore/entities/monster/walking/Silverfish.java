@@ -1,14 +1,12 @@
 package net.yungtechboy1.CyberCore.entities.monster.walking;
 
+import net.yungtechboy1.CyberCore.entities.monster.WalkingMonster;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
-import net.yungtechboy1.CyberCore.entities.monster.WalkingMonster;
-
-import java.util.HashMap;
 
 public class Silverfish extends WalkingMonster {
 

@@ -1,15 +1,13 @@
 package net.yungtechboy1.CyberCore.Tasks;
 
+import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.scheduler.PluginTask;
-import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * Created by carlt_000 on 2/8/2017.

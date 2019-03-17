@@ -8,7 +8,6 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Messages;
 import net.yungtechboy1.CyberCore.RankList;
-import net.yungtechboy1.CyberCore.Tasks.ReTPTask;
 import net.yungtechboy1.CyberCore.Tasks.TeleportEvent;
 
 /**

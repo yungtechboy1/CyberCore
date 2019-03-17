@@ -1,17 +1,9 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Tasks;
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.level.Level;
-import cn.nukkit.math.Vector3;
-import cn.nukkit.network.protocol.RemoveEntityPacket;
 import cn.nukkit.scheduler.PluginTask;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Manager.Factions.CustomFloatingTextParticle;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Created by carlt_000 on 8/16/2016.

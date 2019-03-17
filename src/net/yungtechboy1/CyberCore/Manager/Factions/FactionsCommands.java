@@ -1,17 +1,15 @@
 package net.yungtechboy1.CyberCore.Manager.Factions;
 
+import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.*;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.level.Level;
-import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.*;
 
-import java.util.Calendar;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by carlt_000 on 4/10/2016.
@@ -289,7 +287,7 @@ public class FactionsCommands {
                 //Example: /f admin
                 //@todo Add Auto unclaim and Claim Radius
                 if(args[0].equalsIgnoreCase("admin")) {
-                    String gar = Main.Main.RankFactory.GetAdminRank(sender.getName());
+                    String gar = null;
                     if(gar != null && Main.Main.RankFactory.RankAdminRank(gar) >= 4) {
                         new Admin(sender, args, main);
                         return true;

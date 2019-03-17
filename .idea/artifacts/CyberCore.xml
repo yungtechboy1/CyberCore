@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/CyberCore</output-path>
     <root id="archive" name="CyberCore.jar">
       <element id="module-output" name="CyberCore" />
-      <element id="library" level="project" name="Nukkit-master" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/mysql-connector-java-5.1.40.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

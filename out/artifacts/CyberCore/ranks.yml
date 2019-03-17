@@ -1,0 +1,7 @@
+Ranks:
+  default:
+    rank: 0
+    display_name: "&7[D]&r"
+  vip:
+    rank: 1
+    display_name: "&4[V]&r"

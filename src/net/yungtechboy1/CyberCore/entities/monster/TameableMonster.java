@@ -12,7 +12,6 @@ import cn.nukkit.entity.data.LongEntityData;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import net.yungtechboy1.CyberCore.entities.Tameable;
-import net.yungtechboy1.CyberCore.entities.monster.WalkingMonster;
 
 /**
  * @author <a href="mailto:kniffman@googlemail.com">Michael Gertz</a>

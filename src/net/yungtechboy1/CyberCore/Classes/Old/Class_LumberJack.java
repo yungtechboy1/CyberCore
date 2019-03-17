@@ -1,12 +1,14 @@
 package net.yungtechboy1.CyberCore.Classes.Old;
 
+import net.yungtechboy1.CyberCore.Abilities.ForestFire;
+import net.yungtechboy1.CyberCore.Abilities.Tree_Feller;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.ConfigSection;
-import net.yungtechboy1.CyberCore.Abilities.*;
+import net.yungtechboy1.CyberCore.Abilities.Ability;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.ArrayList;

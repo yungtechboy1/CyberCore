@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Custom.Inventory;
 
+import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
@@ -11,7 +12,6 @@ import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.DyeColor;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 

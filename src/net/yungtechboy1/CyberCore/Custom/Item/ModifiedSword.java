@@ -1,8 +1,6 @@
 package net.yungtechboy1.CyberCore.Custom.Item;
 
-import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
-import cn.nukkit.item.ItemSwordDiamond;
 import cn.nukkit.item.ItemTool;
 
 /**

@@ -7,7 +7,6 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.io.File;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Created by carlt on 2/21/2019.
@@ -87,7 +86,7 @@ public class SaveMain {
         if(KD.exists(player)){
             LinkedHashMap v = (LinkedHashMap<String,Object>) KD.get(player);
             Integer a = (int)v.get("Kills");
-            v.put("Kills",a+amount);
+            KD.set(player+".Kills",a+amount);
         }else{
             LinkedHashMap settings = new LinkedHashMap(){{
                 put("Kills",amount);
@@ -114,7 +113,7 @@ public class SaveMain {
         if(KD.exists(player)){
             LinkedHashMap v = (LinkedHashMap<String,Object>) KD.get(player);
             Integer a = (int)v.get("Deaths");
-            v.put("Deaths",a+amount);
+            KD.set(player+".Deaths",a+amount);
         }else{
             LinkedHashMap settings = new LinkedHashMap(){{
                 put("Kills",0);

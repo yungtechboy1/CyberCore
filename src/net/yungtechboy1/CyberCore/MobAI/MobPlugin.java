@@ -5,44 +5,6 @@
  */
 package net.yungtechboy1.CyberCore.MobAI;
 
-import cn.nukkit.IPlayer;
-import cn.nukkit.OfflinePlayer;
-import cn.nukkit.Player;
-import cn.nukkit.Server;
-import cn.nukkit.block.Block;
-import cn.nukkit.block.BlockAir;
-import cn.nukkit.blockentity.BlockEntity;
-import cn.nukkit.command.Command;
-import cn.nukkit.command.CommandSender;
-import cn.nukkit.entity.Entity;
-import cn.nukkit.entity.item.EntityItem;
-import cn.nukkit.event.EventHandler;
-import cn.nukkit.event.Listener;
-import cn.nukkit.event.block.BlockBreakEvent;
-import cn.nukkit.event.block.BlockPlaceEvent;
-import cn.nukkit.event.entity.EntityDamageByEntityEvent;
-import cn.nukkit.event.entity.EntityDeathEvent;
-import cn.nukkit.event.player.PlayerInteractEvent;
-import cn.nukkit.event.player.PlayerMouseOverEntityEvent;
-import cn.nukkit.item.Item;
-import cn.nukkit.item.ItemMuttonCooked;
-import cn.nukkit.item.ItemMuttonRaw;
-import cn.nukkit.item.food.Food;
-import cn.nukkit.item.food.FoodNormal;
-import cn.nukkit.level.Level;
-import cn.nukkit.level.Location;
-import cn.nukkit.level.Position;
-import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.math.Vector3;
-import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.nbt.tag.DoubleTag;
-import cn.nukkit.nbt.tag.FloatTag;
-import cn.nukkit.nbt.tag.ListTag;
-import cn.nukkit.network.protocol.EntityEventPacket;
-import cn.nukkit.plugin.PluginBase;
-import cn.nukkit.utils.Config;
-import cn.nukkit.utils.ConfigSection;
-import cn.nukkit.utils.DyeColor;
 import net.yungtechboy1.CyberCore.Custom.Item.ItemEnderPearl;
 import net.yungtechboy1.CyberCore.Custom.Item.ItemInkSac;
 import net.yungtechboy1.CyberCore.Custom.Item.MobPluginItems;
@@ -54,9 +16,44 @@ import net.yungtechboy1.CyberCore.entities.block.BlockEntitySpawner;
 import net.yungtechboy1.CyberCore.entities.monster.flying.Blaze;
 import net.yungtechboy1.CyberCore.entities.monster.flying.Ghast;
 import net.yungtechboy1.CyberCore.entities.monster.walking.*;
-import net.yungtechboy1.CyberCore.entities.projectile.EntityFireBall;
+import net.yungtechboy1.CyberCore.entities.monster.walking.*;
 import net.yungtechboy1.CyberCore.entities.utils.Utils;
+import cn.nukkit.IPlayer;
+import cn.nukkit.OfflinePlayer;
+import cn.nukkit.Player;
+import cn.nukkit.Server;
+import cn.nukkit.block.Block;
+import cn.nukkit.blockentity.BlockEntity;
+import cn.nukkit.command.Command;
+import cn.nukkit.command.CommandSender;
+import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.item.EntityItem;
+import cn.nukkit.event.EventHandler;
+import cn.nukkit.event.Listener;
+import cn.nukkit.event.block.BlockBreakEvent;
+import cn.nukkit.event.entity.EntityDamageByEntityEvent;
+import cn.nukkit.event.entity.EntityDeathEvent;
+import cn.nukkit.event.player.PlayerMouseOverEntityEvent;
+import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemMuttonCooked;
+import cn.nukkit.item.ItemMuttonRaw;
+import cn.nukkit.item.food.Food;
+import cn.nukkit.item.food.FoodNormal;
+import cn.nukkit.level.Level;
+import cn.nukkit.level.Location;
+import cn.nukkit.level.Position;
+import cn.nukkit.level.format.FullChunk;
+import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.nbt.tag.DoubleTag;
+import cn.nukkit.nbt.tag.FloatTag;
+import cn.nukkit.nbt.tag.ListTag;
+import cn.nukkit.network.protocol.EntityEventPacket;
+import cn.nukkit.utils.Config;
+import cn.nukkit.utils.ConfigSection;
+import cn.nukkit.utils.DyeColor;
+import net.yungtechboy1.CyberCore.entities.projectile.EntityFireBall;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.entities.animal.walking.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -93,12 +90,14 @@ public class MobPlugin implements Listener {
 
 
     public void onEnable() {
+
+        CCM.getLogger().error("RUNNNINNNGNGNGGG");
         // Config reading and writing
         pluginConfig = new Config(new File(CCM.getDataFolder(), "MobPlugin.yml"));
 
         // we need this flag as it's controlled by the plugin's entities
-        MOB_AI_ENABLED = pluginConfig.getBoolean("entities.mob-ai", false);
-        int spawnDelay = pluginConfig.getInt("entities.auto-spawn-tick", 0);
+        MOB_AI_ENABLED = true;
+        int spawnDelay = 0;
 
         // register as listener to plugin events
         CCM.getServer().getPluginManager().registerEvents(this, CCM);
@@ -135,7 +134,7 @@ public class MobPlugin implements Listener {
                         Position pos = playerThatSpawns.getPosition();
 
                         Entity ent;
-                        if ((ent = net.yungtechboy1.CyberCore.MobAI.MobPlugin.create(mob, pos)) != null) {
+                        if ((ent = MobPlugin.create(mob, pos)) != null) {
                             ent.spawnToAll();
                             output += "spawned " + mob + " to " + playerThatSpawns.getName();
                         } else {

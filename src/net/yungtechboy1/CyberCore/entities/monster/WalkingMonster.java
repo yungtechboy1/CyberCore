@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.entities.monster;
 
+import net.yungtechboy1.CyberCore.entities.monster.walking.Enderman;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.BlockWater;
@@ -14,8 +15,6 @@ import cn.nukkit.potion.Effect;
 import co.aikar.timings.Timings;
 import net.yungtechboy1.CyberCore.entities.Async.WalkingMonsterAsync;
 import net.yungtechboy1.CyberCore.entities.WalkingEntity;
-import net.yungtechboy1.CyberCore.entities.monster.Monster;
-import net.yungtechboy1.CyberCore.entities.monster.walking.Enderman;
 import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
 public abstract class WalkingMonster extends WalkingEntity implements Monster {

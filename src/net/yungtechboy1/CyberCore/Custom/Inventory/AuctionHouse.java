@@ -1,24 +1,16 @@
 package net.yungtechboy1.CyberCore.Custom.Inventory;
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.block.*;
 import cn.nukkit.blockentity.BlockEntity;
-import cn.nukkit.blockentity.BlockEntityChest;
 import cn.nukkit.entity.EntityHuman;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
-import cn.nukkit.item.ItemPotatoPoisonous;
 import cn.nukkit.math.Vector3;
-import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.nbt.tag.ListTag;
-import cn.nukkit.network.protocol.*;
-import cn.nukkit.utils.BlockColor;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import sun.swing.plaf.synth.DefaultSynthStyle;
 
 import java.util.*;
 

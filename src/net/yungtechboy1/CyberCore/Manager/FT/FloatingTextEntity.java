@@ -2,34 +2,19 @@ package net.yungtechboy1.CyberCore.Manager.FT;
 
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
-import cn.nukkit.block.Block;
 import cn.nukkit.entity.Attribute;
 import cn.nukkit.entity.Entity;
-import cn.nukkit.entity.EntityHuman;
-import cn.nukkit.entity.data.EntityData;
 import cn.nukkit.entity.data.EntityMetadata;
-import cn.nukkit.event.entity.EntityDamageEvent;
-import cn.nukkit.event.entity.EntityRegainHealthEvent;
-import cn.nukkit.event.player.PlayerTeleportEvent;
 import cn.nukkit.item.Item;
-import cn.nukkit.level.Level;
-import cn.nukkit.level.Location;
 import cn.nukkit.level.Position;
 import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.math.*;
-import cn.nukkit.metadata.MetadataValue;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.AddEntityPacket;
 import cn.nukkit.network.protocol.AddPlayerPacket;
 import cn.nukkit.network.protocol.DataPacket;
 import cn.nukkit.network.protocol.RemoveEntityPacket;
-import cn.nukkit.plugin.Plugin;
-import cn.nukkit.potion.Effect;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
