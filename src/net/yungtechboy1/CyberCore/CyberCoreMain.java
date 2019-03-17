@@ -365,6 +365,10 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
     }
 
     public Rank getPlayerRank(String p) {
+        return getPlayerRank(getPlayer(p));
+    }
+
+    public Rank getPlayerRank(Player p) {
         return RankFactory.getPlayerRank(p);
     }
 

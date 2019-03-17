@@ -2,6 +2,8 @@ Ranks:
   default:
     rank: 0
     display_name: "&7[D]&r"
+    chat_prefix: "&7"
   vip:
     rank: 1
     display_name: "&4[V]&r"
+    chat_prefix: "&2"

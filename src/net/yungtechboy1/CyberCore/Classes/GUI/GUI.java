@@ -9,6 +9,6 @@ public enum GUI{
 
     }
     public String GetName(){
-        ret
+        return "name";
     }
 }
