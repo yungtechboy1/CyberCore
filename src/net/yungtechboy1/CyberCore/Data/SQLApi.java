@@ -1,30 +1,49 @@
 package net.yungtechboy1.CyberCore.Data;
 
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
+import ru.nukkit.dblib.DbLib;
 import sun.applet.Main;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class SQLApi {
 
-    public SQLConnection connection;
+    public Connection connection;
+    public CyberCoreMain plugin;
+    private boolean enabled;
 
-    public SQLApi(SQLConnection connection) {
-        this.connection = connection;
+    public SQLApi(CyberCoreMain plugin) {
+        this.plugin = plugin;
     }
 
-    public Integer getInteger(String table, String condition, Object value, String selector) {
+    public Connection connectToDb() {
+        String host = plugin.MainConfig.getString("mysql-host");
+        String pass = plugin.MainConfig.getString("mysql-pass");
+        int port = plugin.MainConfig.getInt("mysql-port");
+        String user = plugin.MainConfig.getString("mysql-user");
+        String db = plugin.MainConfig.getString("mysql-db");
+        Connection connectionSource =
+                DbLib.getMySqlConnection(host,port,db, user, pass);
+        if (connectionSource == null) enabled=false;
+        return connectionSource;
+    }
+
+    public Integer getInteger(String table, String condition, Object value, String selector) throws SQLException {
         return getInteger(table, condition, value, selector, -1);
     }
-    public Integer getInteger(String table, String condition, Object value, String selector , Integer def) {
-        try {
-            ResultSet r = connection.executeSql("SELECT * FROM " + table + " WHERE " + condition + "=" + value);
-            return r.getInt(selector);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return def;
+
+    public Integer getInteger(String table, String condition, Object value, String selector , Integer def) throws SQLException {
+        int result;
+        String query = ("SELECT * FROM " + table + " WHERE " + condition + "=" + value);
+        Statement statement = connection.prepareStatement(query);
+        ResultSet resultSet = statement.executeQuery(query);
+        result = resultSet.getInt(selector);
+        if (statement != null) statement.close();
+        if (connection != null) connection.close();
+        return result;
     }
 
 
@@ -32,16 +51,12 @@ public class SQLApi {
 
 
 
-    public void addCoreUser(String uuid) {
-        try {
-            String query = "insert mcpe set uuid = ? ";
-            PreparedStatement stmt = connection.conn.prepareStatement(query);
-            stmt.setString(1,uuid);
-            connection.insertSql(stmt);
-            connection.Main.getLogger().info("User: " + uuid + " - added to DB");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void addCoreUser(String uuid) throws SQLException {
+        Connection connection = connectToDb();
+        String query = "insert mcpe set uuid = '"+uuid+"'";
+        Statement stmt = connection.prepareStatement(query);
+        stmt.executeUpdate(query);
+        plugin.getLogger().info("User: " + uuid + " - added to DB");
     }
 
 
@@ -49,20 +64,21 @@ public class SQLApi {
 
 
 
-    public void checkCoreUser(String uuid) {
-        try {
-            ResultSet r = connection.executeSql("SELECT * FROM mcpe WHERE uuid='" + uuid + "'");
-            if(r == null) {
-                connection.Main.getLogger().info("USER BEING CREATED!!!");
-                addCoreUser(uuid);
-            } else {
-                int rank = r.getInt("rank");
-                connection.Main.RankFactory.RankCache.put(uuid, rank);
-                r.close();
-                connection.Main.getLogger().info("USER EXISTS!!!");
+    public void checkCoreUser(String uuid) throws SQLException {
+        Connection connection = connectToDb();
+        String query = "SELECT * FROM mcpe WHERE uuid='" + uuid + "'";
+        Statement stmt = connection.prepareStatement(query);
+        ResultSet rs = stmt.executeQuery(query);
+        if(rs == null) {
+            plugin.getLogger().info("USER BEING CREATED!!!");
+            addCoreUser(uuid);
+        } else {
+            if(rs.next()) {
+                int rank = rs.getInt("rank");
+                plugin.RankFactory.RankCache.put(uuid, rank);
+                rs.close();
+                plugin.getLogger().info("USER EXISTS!!!");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 

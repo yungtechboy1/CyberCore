@@ -8,6 +8,7 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerChatEvent;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
+import cn.nukkit.event.player.PlayerRespawnEvent;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import sun.applet.Main;
@@ -27,12 +28,10 @@ public class CyberChatEvent implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void joinEvent(PlayerJoinEvent event) {
-        String Msg = (String) plugin.MainConfig.get("Join-Message");
-        if (Msg.equalsIgnoreCase("")) {
-            event.setJoinMessage("");
-        } else {
-            event.setJoinMessage(Msg);
-        }
+
+        String Msg = plugin.colorize((String) plugin.MainConfig.get("Join-Message"));
+        event.setJoinMessage(Msg.replace("{player}", event.getPlayer().getName()));
+        event.getPlayer().sendTitle(plugin.colorize("&l&bCyberTech"), plugin.colorize("&l&2Welcome!"),30,30, 10);
 
         plugin.checkUser(event.getPlayer().getUniqueId());
 
@@ -46,14 +45,15 @@ public class CyberChatEvent implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void spawnEvent(PlayerRespawnEvent event) {
+
+    }
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void quitEvent(PlayerQuitEvent event) {
         String Msg = (String) plugin.MainConfig.get("Leave-Message");
-        if (Msg.equalsIgnoreCase("")) {
-            event.setQuitMessage("");
-        } else {
-            event.setQuitMessage(Msg);
-        }
+        event.setQuitMessage(Msg.replace("{player}", event.getPlayer().getName()));
     }
 
 

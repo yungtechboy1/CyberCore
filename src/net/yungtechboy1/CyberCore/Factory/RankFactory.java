@@ -8,6 +8,7 @@ import net.yungtechboy1.CyberCore.RankList;
 import net.yungtechboy1.CyberCore.Ranks.Rank;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,8 +53,13 @@ public class RankFactory {
         if((uuid = Main.getPlayer(p).getUniqueId().toString()) != null ) {
             return ranks.get(RankCache.get(uuid));
         } else {
-            return(ranks.get(Main.SQLApi.getInteger(DB_TABLE, "uuid", uuid, "rank")));
+            try {
+                return(ranks.get(Main.SQLApi.getInteger(DB_TABLE, "gamertag", p, "rank")));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+        return null;
     }
 
     public Rank getPlayerRank(Player p) {
