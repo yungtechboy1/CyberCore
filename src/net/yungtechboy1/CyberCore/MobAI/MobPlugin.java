@@ -96,8 +96,8 @@ public class MobPlugin implements Listener {
         pluginConfig = new Config(new File(CCM.getDataFolder(), "MobPlugin.yml"));
 
         // we need this flag as it's controlled by the plugin's entities
-        MOB_AI_ENABLED = pluginConfig.getBoolean("entities.mob-ai", false);
-        int spawnDelay = pluginConfig.getInt("entities.auto-spawn-tick", 0);
+        MOB_AI_ENABLED = true;
+        int spawnDelay = 0;
 
         // register as listener to plugin events
         CCM.getServer().getPluginManager().registerEvents(this, CCM);

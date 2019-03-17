@@ -116,20 +116,22 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
 
         SQLApi = new SQLApi(this);
 
-//        Item.list[Item.COOKED_CHICKEN] = ItemChickenCooked.class;
-//        Item.list[Item.COOKED_PORKCHOP] = ItemPorkchopCooked.class;
-
-//        PurgeManager = new PurgeManager(this);
-//        //KDR Manager
-//        KDM = new KDManager();
-//        //BossBar Manager
-//        BBM = new BossBarManager(this);
-//        //Floating Text
+        PurgeManager = new PurgeManager(this);
+        //KDR Manager - All Good
+        //GOOD
+        KDM = new KDManager(this);
+        //BossBar Manager
+        //GOOD - Test Refine
+        BBM = new BossBarManager(this);
+        //Floating Text
+        //Threaded ONLY RUN FOR TESTING
 //        FTM = new FloatingTextFactory(this);
-//        //Mob Plugin
-//        MP = new MobPlugin(this);
-//
-//        ECON = new EconManager(this);
+        //Mob Plugin
+        //GOOD - Should all be ready! Just add modifications for custom Entity drops and etc
+        MP = new MobPlugin(this);
+
+//        GOOD
+        ECON = new EconManager(this);
 
 //        getServer().getScheduler().scheduleRepeatingTask(new UnMuteTask(this), 20 * 15);
 //        getServer().getScheduler().scheduleRepeatingTask(new ClearSpamTick(this), 20 * 5);
