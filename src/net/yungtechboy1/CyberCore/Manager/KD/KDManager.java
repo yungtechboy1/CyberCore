@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Manager.KD;
 
 import cn.nukkit.Player;
 import cn.nukkit.utils.ConfigSection;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
  * Created by carlt on 2/17/2019.

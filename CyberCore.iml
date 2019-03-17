@@ -12,5 +12,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="nukkit-1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Nukkit-master" level="project" />
   </component>
 </module>
