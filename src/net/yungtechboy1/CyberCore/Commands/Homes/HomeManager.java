@@ -90,7 +90,7 @@ public class HomeManager {
 
     public Integer GetMaxHomes(String player) {
         String a = "";
-       /* a = CC.GetAdminRank(player.toLowerCase());
+        a = CC.GetAdminRank(player.toLowerCase());
         if (a == null) a = CC.GetMasterRank(player.toLowerCase());
         if (a == null) a = CC.GetSecondaryRank(player.toLowerCase());
         if (a == null) return 5;
@@ -118,7 +118,7 @@ public class HomeManager {
             return 11;
         } else if (a.equalsIgnoreCase("OP")) {
             return 12;
-        }*/
+        }
         return 5;
     }
 

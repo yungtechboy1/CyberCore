@@ -121,15 +121,20 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Item.list[Item.COOKED_PORKCHOP] = ItemPorkchopCooked.class;
 
         PurgeManager = new PurgeManager(this);
-        //KDR Manager
-        KDM = new KDManager();
+        //KDR Manager - All Good
+        //GOOD
+        KDM = new KDManager(this);
         //BossBar Manager
-//        BBM = new BossBarManager(this);
+        //GOOD - Test Refine
+        BBM = new BossBarManager(this);
         //Floating Text
+        //Threaded ONLY RUN FOR TESTING
 //        FTM = new FloatingTextFactory(this);
         //Mob Plugin
-//        MP = new MobPlugin(this);
+        //GOOD - Should all be ready! Just add modifications for custom Entity drops and etc
+        MP = new MobPlugin(this);
 
+//        GOOD
         ECON = new EconManager(this);
 
         getServer().getScheduler().scheduleRepeatingTask(new UnMuteTask(this), 20 * 15);
@@ -219,7 +224,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         cooldowns = new Config(new File(this.getDataFolder(), "cooldowns.yml"), Config.YAML);
         getLogger().info(TextFormat.GREEN + "Initializing Cyber Essentials");
 
-        PasswordFactoy = new Pa1sswordFactoy(this);
+        PasswordFactoy = new PasswordFactoy(this);
 
         ClassFactory = new ClassFactory(this);
 
