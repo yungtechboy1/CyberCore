@@ -10,7 +10,6 @@ import cn.nukkit.potion.Effect;
 import co.aikar.timings.Timings;
 import net.yungtechboy1.CyberCore.entities.Async.WalkingAnimalAsync;
 import net.yungtechboy1.CyberCore.entities.WalkingEntity;
-import net.yungtechboy1.CyberCore.entities.animal.Animal;
 
 public abstract class WalkingAnimal extends WalkingEntity implements Animal {
 

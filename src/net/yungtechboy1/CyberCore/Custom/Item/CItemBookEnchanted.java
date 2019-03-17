@@ -1,11 +1,9 @@
 package net.yungtechboy1.CyberCore.Custom.Item;
 
-import cn.nukkit.Player;
-import cn.nukkit.entity.Entity;
+import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 
 import java.util.ArrayList;
 

@@ -1,31 +1,18 @@
 package net.yungtechboy1.CyberCore.Factory;
 
 import cn.nukkit.Player;
-import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.inventory.Inventory;
-import cn.nukkit.inventory.transaction.InventoryTransaction;
-import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.item.Item;
-import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.nbt.tag.Tag;
 import cn.nukkit.utils.Config;
-import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by carlt_000 on 2/22/2017.
@@ -57,7 +44,7 @@ public class AuctionFactory implements Listener {
 
     public Item GetItemfromDB(int idd) {
         if(idd == 0)return null;
-        ResultSet rs = ExecuteQuerySQLite("SELECT * FROM `auctions` WHERE `id` = '" + idd + "'");
+        ResultSet rs = null;//ExecuteQuerySQLite("SELECT * FROM `auctions` WHERE `id` = '" + idd + "'");
         if (rs != null) {
             try {
                 if (rs.next()) {
@@ -114,7 +101,7 @@ public class AuctionFactory implements Listener {
 
     public void Init() {
         ArrayList<Item> is = new ArrayList<>();
-        ResultSet rs = ExecuteQuerySQLite("SELECT * FROM `auctions` WHERE `purchased` != 1");
+        ResultSet rs = null ;//ExecuteQuerySQLite("SELECT * FROM `auctions` WHERE `purchased` != 1");
         if (rs != null) {
             try {
                 while (rs.next()) {
@@ -173,7 +160,7 @@ public class AuctionFactory implements Listener {
     //@Todo
     public ArrayList<Item> getSoldItems() {
         ArrayList<Item> is = new ArrayList<>();
-        ResultSet rs = ExecuteQuerySQLite("SELECT * FROM `auctions` WHERE `purchased` != 1");
+        ResultSet rs = null;//ExecuteQuerySQLite("SELECT * FROM `auctions` WHERE `purchased` != 1");
         if (rs != null) {
             try {
                 while (rs.next()) {
@@ -383,11 +370,11 @@ public class AuctionFactory implements Listener {
 
     public void SetBought(int id) {
         String sql = "UPDATE `auctions` SET `purchased` = '1' WHERE `auctions`.`id` = "+id+";";
-        ExecuteUpdateSQLite(sql);
+        //ExecuteUpdateSQLite(sql);
     }
     public void ClaimMoney(int id) {
         String sql = "UPDATE `auctions` SET `moneysent` = '1' WHERE `auctions`.`id` = "+id+";";
-        ExecuteUpdateSQLite(sql);
+        //ExecuteUpdateSQLite(sql);
     }
 
     public void additem(Item i, Player p, int cost) {
@@ -396,7 +383,7 @@ public class AuctionFactory implements Listener {
         int count = i.getCount();
         String namedtag = new String(i.getCompoundTag());
         String sql = "INSERT INTO `auctions` (`id`, `item-id`, `item-meta`, `item-count`, `namedtag`, `cost`, `soldby`, `moneysent`) VALUES (NULL, '" + id + "', '" + meta + "', '" + count + "', '" + namedtag + "', '" + cost + "', '" + p.getName() + "', '0','0')";
-        ExecuteUpdateSQLite(sql);
+        //ExecuteUpdateSQLite(sql);
         String sql2 = "SELECT * FROM `auctions` ORDER BY `auctions`.`id` DESC";
         System.out.println(sql);
         //Take Item
@@ -434,23 +421,4 @@ public class AuctionFactory implements Listener {
         items.add(i);
     }
 
-    public ResultSet ExecuteQuerySQLite(String s) {
-        try {
-            Statement stmt = CCM.getMySqlConnection2().createStatement();
-            ResultSet r = stmt.executeQuery(s);
-            return r;
-        } catch (Exception ex) {
-            CCM.getServer().getLogger().info(ex.getClass().getName() + ":822 " + ex.getMessage());
-            return null;
-        }
-    }
-
-    public void ExecuteUpdateSQLite(String s) {
-        try {
-            Statement stmt = CCM.getMySqlConnection2().createStatement();
-            stmt.executeUpdate(s);
-        } catch (Exception ex) {
-            CCM.getServer().getLogger().info(ex.getClass().getName() + ":2822 " + ex.getMessage());
-        }
-    }
 }

@@ -1,32 +1,13 @@
 package net.yungtechboy1.CyberCore.Custom.BlockEntity;
 
 import cn.nukkit.Player;
-import cn.nukkit.block.Block;
-import cn.nukkit.block.BlockAir;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityExplosive;
 import cn.nukkit.entity.data.IntEntityData;
-import cn.nukkit.entity.item.EntityPrimedTNT;
-import cn.nukkit.event.block.BlockUpdateEvent;
 import cn.nukkit.event.entity.*;
-import cn.nukkit.item.Item;
-import cn.nukkit.item.ItemBlock;
-import cn.nukkit.level.Level;
-import cn.nukkit.level.Position;
 import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.level.particle.HugeExplodeSeedParticle;
-import cn.nukkit.math.AxisAlignedBB;
-import cn.nukkit.math.BlockVector3;
-import cn.nukkit.math.NukkitMath;
-import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.*;
 import cn.nukkit.network.protocol.AddEntityPacket;
-import cn.nukkit.network.protocol.ExplodePacket;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 //TODO TNT
 public class BlastMiningEntity extends Entity implements EntityExplosive {

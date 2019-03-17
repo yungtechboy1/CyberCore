@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.entities.Async;
 
+import net.yungtechboy1.CyberCore.entities.animal.WalkingAnimal;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
@@ -15,7 +16,6 @@ import cn.nukkit.math.Vector2;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.scheduler.AsyncTask;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
-import net.yungtechboy1.CyberCore.entities.animal.WalkingAnimal;
 
 /**
  * Created by carlt_000 on 1/23/2017.

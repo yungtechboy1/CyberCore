@@ -1,17 +1,17 @@
 package net.yungtechboy1.CyberCore.Abilities;
 
+import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.player.PlayerToggleSprintEvent;
-import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
  * Created by carlt_000 on 1/26/2017.
  */
 public class Double_Hearts extends Ability {
-    public Double_Hearts(CyberCoreMain main,BaseClass bc){
-        super(main,bc, BaseClass.TYPE_TANK,Ability.TANK_DOUBLE_HEARTS);
+    public Double_Hearts(CyberCoreMain main, BaseClass bc){
+        super(main,bc, BaseClass.TYPE_TANK, TANK_DOUBLE_HEARTS);
     }
 
     @Override

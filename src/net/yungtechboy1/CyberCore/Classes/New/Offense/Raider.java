@@ -1,13 +1,11 @@
 package net.yungtechboy1.CyberCore.Classes.New.Offense;
 
 import cn.nukkit.Player;
-import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 public class Raider extends BaseClass {
     public Raider(CyberCoreMain main, Player player, int rank, int xp, ConfigSection cooldowns) {

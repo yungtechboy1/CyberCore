@@ -1,15 +1,15 @@
 package net.yungtechboy1.CyberCore.Abilities;
 
-import cn.nukkit.event.block.BlockBreakEvent;
 import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import cn.nukkit.event.block.BlockBreakEvent;
 
 /**
  * Created by carlt_000 on 1/26/2017.
  */
 public class Tree_Feller extends Ability {
-    public Tree_Feller(CyberCoreMain main,BaseClass bc){
-        super(main,bc, BaseClass.TYPE_LUMBERJACK,Ability.LUMBERJACK_TREE_FELLER);
+    public Tree_Feller(CyberCoreMain main, BaseClass bc){
+        super(main,bc, BaseClass.TYPE_LUMBERJACK, LUMBERJACK_TREE_FELLER);
     }
 
 

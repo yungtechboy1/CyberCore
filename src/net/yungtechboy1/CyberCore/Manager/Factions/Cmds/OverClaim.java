@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.Player;
-import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 

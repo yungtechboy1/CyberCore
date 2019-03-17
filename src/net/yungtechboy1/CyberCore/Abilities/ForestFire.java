@@ -1,5 +1,7 @@
 package net.yungtechboy1.CyberCore.Abilities;
 
+import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.block.BlockLeaves;
@@ -10,8 +12,6 @@ import cn.nukkit.level.Sound;
 import cn.nukkit.level.particle.FlameParticle;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.math.Vector3;
-import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.ArrayList;
 
@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public class ForestFire extends Ability {
     public ForestFire(CyberCoreMain main, BaseClass bc) {
-        super(main, bc, BaseClass.TYPE_LUMBERJACK, Ability.LUMBERJACK_FORESTFIRE);
+        super(main, bc, BaseClass.TYPE_LUMBERJACK, LUMBERJACK_FORESTFIRE);
     }
 
     @Override

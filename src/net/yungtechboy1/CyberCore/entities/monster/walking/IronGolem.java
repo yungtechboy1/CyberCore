@@ -1,5 +1,7 @@
 package net.yungtechboy1.CyberCore.entities.monster.walking;
 
+import net.yungtechboy1.CyberCore.entities.monster.WalkingMonster;
+import net.yungtechboy1.CyberCore.entities.utils.Utils;
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
@@ -8,11 +10,8 @@ import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
-import net.yungtechboy1.CyberCore.entities.monster.WalkingMonster;
-import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class IronGolem extends WalkingMonster {

@@ -1,6 +1,5 @@
 package net.yungtechboy1.CyberCore.Commands;
 
-import cn.nukkit.AdventureSettings;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;

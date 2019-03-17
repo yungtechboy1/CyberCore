@@ -8,7 +8,6 @@ import cn.nukkit.event.player.PlayerLoginEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.utils.ConfigSection;
-import com.sun.org.apache.regexp.internal.RE;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Events.ForbidAction;
 import net.yungtechboy1.CyberCore.Password;

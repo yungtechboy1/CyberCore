@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Custom.CustomEnchant;
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.weather.EntityLightning;
 import cn.nukkit.event.weather.LightningStrikeEvent;
