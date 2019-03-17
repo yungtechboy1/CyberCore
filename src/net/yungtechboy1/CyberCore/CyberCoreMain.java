@@ -4,12 +4,7 @@ import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.Commands.*;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMS;
-import net.yungtechboy1.CyberCore.Commands.Homes.DelHome;
-import net.yungtechboy1.CyberCore.Commands.Homes.Home;
 import net.yungtechboy1.CyberCore.Commands.Homes.HomeManager;
-import net.yungtechboy1.CyberCore.Commands.Homes.SetHome;
-import net.yungtechboy1.CyberCore.Custom.Item.ItemChickenCooked;
-import net.yungtechboy1.CyberCore.Custom.Item.ItemPorkchopCooked;
 import net.yungtechboy1.CyberCore.Events.CyberChatEvent;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
@@ -17,50 +12,34 @@ import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.Manager.KD.KDManager;
-import net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager;
 import net.yungtechboy1.CyberCore.Manager.SQLManager;
 import net.yungtechboy1.CyberCore.Manager.Save.SaveMain;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
 import net.yungtechboy1.CyberCore.Ranks.Rank;
 import net.yungtechboy1.CyberCore.Factory.*;
-import net.yungtechboy1.CyberCore.Tasks.*;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandExecutor;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.entity.Entity;
-import cn.nukkit.event.EventHandler;
-import cn.nukkit.event.Listener;
-import cn.nukkit.event.player.PlayerLoginEvent;
-import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Factory.AuctionFactory;
-import net.yungtechboy1.CyberCore.Factory.ClassFactory;
-import net.yungtechboy1.CyberCore.Factory.CustomFactory;
-import net.yungtechboy1.CyberCore.Factory.PasswordFactoy;
-import net.yungtechboy1.CyberCore.Tasks.CheckOP;
-import net.yungtechboy1.CyberCore.Tasks.ClearSpamTick;
-import net.yungtechboy1.CyberCore.Tasks.SendHUD;
 import net.yungtechboy1.CyberCore.Data.SQLApi;
-import net.yungtechboy1.CyberCore.Data.SQLConnection;
-import net.yungtechboy1.CyberCore.Commands.*;
-import net.yungtechboy1.CyberCore.Factory.*;
-import net.yungtechboy1.CyberCore.Tasks.*;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Created by carlt_000 on 3/21/2016.
  */
-public class CyberCoreMain extends PluginBase implements CommandExecutor, Listener {
+public class CyberCoreMain extends PluginBase implements CommandExecutor {
 
     public static final String NAME = TextFormat.GOLD + "" + TextFormat.BOLD + "§eTERRA§6CORE " + TextFormat.RESET + TextFormat.GOLD + "» " + TextFormat.RESET;
     private EconManager ECON;
@@ -124,8 +103,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     public SaveMain Save;
     public SQLManager SQLSaveManager;
-
-    public SQLConnection SQLConn;
     public SQLApi SQLApi;
 
     @Override
@@ -134,47 +111,38 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         saveResource("ranks.yml");
 
-        Save = new SaveMain(this);
+        //Save = new SaveMain(this);
         SQLSaveManager = new SQLManager(this);
 
-        SQLConn = new SQLConnection(this);
-        SQLApi = new SQLApi(SQLConn);
+        SQLApi = new SQLApi(this);
 
-        Item.list[Item.COOKED_CHICKEN] = ItemChickenCooked.class;
-        Item.list[Item.COOKED_PORKCHOP] = ItemPorkchopCooked.class;
+//        Item.list[Item.COOKED_CHICKEN] = ItemChickenCooked.class;
+//        Item.list[Item.COOKED_PORKCHOP] = ItemPorkchopCooked.class;
 
-        PurgeManager = new PurgeManager(this);
-        //KDR Manager
-        KDM = new KDManager();
-        //BossBar Manager
-        BBM = new BossBarManager(this);
-        //Floating Text
-        FTM = new FloatingTextFactory(this);
-        //Mob Plugin
-        MP = new MobPlugin(this);
+//        PurgeManager = new PurgeManager(this);
+//        //KDR Manager
+//        KDM = new KDManager();
+//        //BossBar Manager
+//        BBM = new BossBarManager(this);
+//        //Floating Text
+//        FTM = new FloatingTextFactory(this);
+//        //Mob Plugin
+//        MP = new MobPlugin(this);
+//
+//        ECON = new EconManager(this);
 
-        ECON = new EconManager(this);
-
-        getServer().getScheduler().scheduleRepeatingTask(new UnMuteTask(this), 20 * 15);
-        getServer().getScheduler().scheduleRepeatingTask(new ClearSpamTick(this), 20 * 5);
-        getServer().getScheduler().scheduleRepeatingTask(new CheckOP(this), 20 * 60);//1 Min
+//        getServer().getScheduler().scheduleRepeatingTask(new UnMuteTask(this), 20 * 15);
+//        getServer().getScheduler().scheduleRepeatingTask(new ClearSpamTick(this), 20 * 5);
+//        getServer().getScheduler().scheduleRepeatingTask(new CheckOP(this), 20 * 60);//1 Min
 
         Homes = new Config(new File(this.getDataFolder(), "homes.yml"), Config.YAML, new ConfigSection());
 
-        HomeFactory = new HomeManager(this);
+//        HomeFactory = new HomeManager(this);
         RankFactory = new RankFactory(this);
-        AuctionFactory = new AuctionFactory(this);
+//        AuctionFactory = new AuctionFactory(this);
 
-        MainConfig = new Config(new File(getDataFolder(), "config.yml"), Config.YAML,
-                new LinkedHashMap<String, Object>() {
-                    {
-                        put("Chat-Format", "{rank}{faction}{player-name} > {msg}");
-                        put("Faction-Format", "[{value}]");
-                        put("Rank-Format", "[{value}]");
-                        put("Join-Message", "");
-                        put("Leave-Message", "");
-                    }
-                });
+        saveResource("config.yml");
+        MainConfig = new Config(new File(getDataFolder(), "config.yml"));
         RankConfig = new Config(new File(getDataFolder(), "rank.yml"), Config.YAML,
                 new LinkedHashMap<String, Object>() {
                     {
@@ -229,12 +197,12 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         RankListConfig = new Config(new File(getDataFolder(), "rank.yml"), Config.YAML);
         MuteConfig = new Config(new File(getDataFolder(), "Mute.yml"), Config.YAML);
 
-        ban = new Config(new File(this.getDataFolder(), "ban.yml"), Config.YAML);
-        if (ban.getAll().size() > 0) {
-            for (Object c : ban.getAll().values().toArray()) {
-                if(c instanceof ConfigSection)bans.add(new Ban((ConfigSection)c));
-            }
-        }
+//        ban = new Config(new File(this.getDataFolder(), "ban.yml"), Config.YAML);
+//        if (ban.getAll().size() > 0) {
+//            for (Object c : ban.getAll().values().toArray()) {
+//                if(c instanceof ConfigSection)bans.add(new Ban((ConfigSection)c));
+//            }
+//        }
         tban = new Config(new File(this.getDataFolder(), "tban.yml"), Config.YAML);
         tcban = new Config(new File(this.getDataFolder(), "tcban.yml"), Config.YAML);
         tipban = new Config(new File(this.getDataFolder(), "tipban.yml"), Config.YAML);
@@ -242,68 +210,67 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         cooldowns = new Config(new File(this.getDataFolder(), "cooldowns.yml"), Config.YAML);
         getLogger().info(TextFormat.GREEN + "Initializing Cyber Essentials");
 
-        PasswordFactoy = new PasswordFactoy(this);
+//        PasswordFactoy = new PasswordFactoy(this);
+//
+//        ClassFactory = new ClassFactory(this);
+//
+//        CustomFactory = new CustomFactory(this);
 
-        ClassFactory = new ClassFactory(this);
-
-        CustomFactory = new CustomFactory(this);
-
-        getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new CyberChatEvent(this), this);
-        getServer().getPluginManager().registerEvents(ClassFactory, this);
-        getServer().getPluginManager().registerEvents(AuctionFactory, this);
+//        getServer().getPluginManager().registerEvents(ClassFactory, this);
+//        getServer().getPluginManager().registerEvents(AuctionFactory, this);
 
-        getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
-        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec
+//        getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
+//        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec
 
 
         //COMMANDS
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new BanCmd(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Ci(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Fix(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new IPBan(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Msg(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Reply(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Spawn(this));
-        //getServer().getCommandMap().register("CyberCore", new Tban(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Top(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Vote(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Wild(this));
-
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Home(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SetHome(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new DelHome(this));
-
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new AA(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ClassCmd(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SetClass(this));
-
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Hud(this));
-
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new FT(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new FTS(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new FTR(this));
-
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPR(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPD(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPA(this));
-
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Warp(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SetWarp(this));
-
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ClassCmd(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new AClassCmd(this));
-
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Sync(this));
-
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Email(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Login(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Register(this));
-
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ChatEnchant(this));
-
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new AuctionHouseCmd(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SellHand(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new BanCmd(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Ci(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Fix(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new IPBan(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Msg(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Reply(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Spawn(this));
+//        //getServer().getCommandMap().register("CyberCore", new Tban(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Top(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Vote(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Wild(this));
+//
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Home(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SetHome(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new DelHome(this));
+//
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new AA(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ClassCmd(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SetClass(this));
+//
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Hud(this));
+//
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new FT(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new FTS(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new FTR(this));
+//
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPR(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPD(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPA(this));
+//
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Warp(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SetWarp(this));
+//
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ClassCmd(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new AClassCmd(this));
+//
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Sync(this));
+//
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Email(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Login(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Register(this));
+//
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ChatEnchant(this));
+//
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new AuctionHouseCmd(this));
+//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SellHand(this));
     }
 
     public void onLoad(){
@@ -527,18 +494,18 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         return RankFactory.getPlayerRank(p).getRank();
     }
 
-    @EventHandler(ignoreCancelled = true)
-    public void PlayerLoginEvent(PlayerLoginEvent event) {
-        Player p = event.getPlayer();
-        p.getName();
-        for (Ban b : bans) {
-            if (b.checkbanned(p, event)){
-                event.setCancelled();
-                return;
-            }
-        }
-
-    }
+//    @EventHandler(ignoreCancelled = true)
+//    public void PlayerLoginEvent(PlayerLoginEvent event) {
+//        Player p = event.getPlayer();
+//        p.getName();
+//        for (Ban b : bans) {
+//            if (b.checkbanned(p, event)){
+//                event.setCancelled();
+//                return;
+//            }
+//        }
+//
+//    }
 
     public String getDifferenceBtwTime(Object dateTime) {
         return getDifferenceBtwTime(Long.parseLong(dateTime + ""));
@@ -717,6 +684,10 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     }
 
     public void checkUser(UUID uuid) {
-        SQLApi.checkCoreUser(uuid.toString());
+        try {
+            SQLApi.checkCoreUser(uuid.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

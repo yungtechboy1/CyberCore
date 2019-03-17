@@ -90,6 +90,8 @@ public class MobPlugin implements Listener {
 
 
     public void onEnable() {
+
+        CCM.getLogger().error("RUNNNINNNGNGNGGG");
         // Config reading and writing
         pluginConfig = new Config(new File(CCM.getDataFolder(), "MobPlugin.yml"));
 

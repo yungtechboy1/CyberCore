@@ -1,0 +1,11 @@
+Chat-Format: "{rank}{faction}{player-name} > {msg}"
+Faction-Format: "[{value}]"
+Rank-Format: "[{value}]"
+Join-Message: "&eWelcome to the server &7@&2{player}"
+Leave-Message: "{player} left"
+
+mysql-host: "truelinux.cf"
+mysql-pass: "3X0T~l1p8mJ*"
+mysql-db: "truelinu_mcpe"
+mysql-user: "truelinu_admin"
+mysql-port: 3306
