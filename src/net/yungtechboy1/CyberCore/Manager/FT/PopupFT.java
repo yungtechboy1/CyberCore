@@ -11,26 +11,32 @@ public class PopupFT extends FloatingTextContainer {
     int Lifespan = 150;// 7.5 secs
     long Created = -1;
     int Updates = -1;
+    int interval = 10;
+    int _nu = -1;
 
     public PopupFT(FloatingTextFactory ftf, Position pos, String syntax) {
         super(ftf, pos, syntax);
-        Created = ftf.CCM.FM.Main.getServer().getTick();
+        Created = FTF.CCM.getServer().getTick();
     }
 
     public boolean CheckKill(int t) {
+        System.out.println(t+"|"+(Created + Lifespan));
         return (t > Created + Lifespan) || _CE_Done;
     }
 
     @Override
     public void OnUpdate(int tick) {
         super.OnUpdate(tick);
-        _CE_Done = CheckKill(tick);
-        if(_CE_Done)return;
-        Updates++;
-        if(Updates >= 1){
-            Position op  = Pos.clone();//Old Position
-            op.add(new Vector3(0,.7,0));//Raise .7 height
+        if (tick >= _nu) {
+            _nu = tick + interval;
+            _CE_Done = CheckKill(tick);
+            if (_CE_Done) return;
+            Updates++;
+            if (Updates >= 1) {
+                Position op = Pos.clone();//Old Position
+                Pos = op.add(new Vector3(0, .7, 0));//Raise .7 height
+            }
+            if (Updates >= 5) kill();
         }
-        if(Updates >= 5)kill();
     }
 }

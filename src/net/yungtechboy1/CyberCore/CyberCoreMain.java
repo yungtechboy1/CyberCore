@@ -1,14 +1,21 @@
 package net.yungtechboy1.CyberCore;
 
+import cn.nukkit.event.EventHandler;
+import cn.nukkit.event.EventPriority;
+import cn.nukkit.event.Listener;
+import cn.nukkit.event.player.PlayerMoveEvent;
 import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.Commands.*;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMS;
 import net.yungtechboy1.CyberCore.Commands.Homes.HomeManager;
 import net.yungtechboy1.CyberCore.Events.CyberChatEvent;
+import net.yungtechboy1.CyberCore.Factory.PasswordFactoy;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
+import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
+import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.Manager.KD.KDManager;
@@ -40,7 +47,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by carlt_000 on 3/21/2016.
  */
-public class CyberCoreMain extends PluginBase implements CommandExecutor {
+public class CyberCoreMain extends PluginBase implements CommandExecutor, Listener {
 
     public static final String NAME = TextFormat.GOLD + "" + TextFormat.BOLD + "§eTERRA§6CORE " + TextFormat.RESET + TextFormat.GOLD + "» " + TextFormat.RESET;
     private EconManager ECON;
@@ -126,7 +133,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
         BBM = new BossBarManager(this);
         //Floating Text
         //Threaded ONLY RUN FOR TESTING
-//        FTM = new FloatingTextFactory(this);
+        //TESTING
+        FTM = new FloatingTextFactory(this);
+        FloatingTextFactory.AddFloatingText(new FloatingTextContainer(FTM,getServer().getLevelByName("world").getSafeSpawn(),"TESTTTT"));
+
+
         //Mob Plugin
         //GOOD - Should all be ready! Just add modifications for custom Entity drops and etc
         MP = new MobPlugin(this);
@@ -140,8 +151,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
 
         Homes = new Config(new File(this.getDataFolder(), "homes.yml"), Config.YAML, new ConfigSection());
 
-//        HomeFactory = new HomeManager(this);
+        HomeFactory = new HomeManager(this);
         RankFactory = new RankFactory(this);
+        //TODO
 //        AuctionFactory = new AuctionFactory(this);
 
         saveResource("config.yml");
@@ -171,6 +183,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
         getServer().getPluginManager().registerEvents(new CyberChatEvent(this), this);
 //        getServer().getPluginManager().registerEvents(ClassFactory, this);
 //        getServer().getPluginManager().registerEvents(AuctionFactory, this);
+        getServer().getPluginManager().registerEvents(this, this);
 
 //        getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
 //        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec
@@ -629,5 +642,12 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void PM(PlayerMoveEvent me){
+        System.out.println("PM E");
+        FloatingTextFactory.AddFloatingText(new PopupFT(FTM,me.getPlayer().add(0,1.5,0),TextFormat.AQUA+me.getPlayer().getName()+" was Here!"));
     }
 }
