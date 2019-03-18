@@ -24,6 +24,7 @@ public class BossBarGeneric {
     public int Lasttick;
     public boolean Visible = true;
     public BossBarManager BBM;
+    public BossBarType Type = BossBarType.Generic;
 
     public BossBarGeneric(BossBarManager b,Player owner, String title, String msg) {
         GetRandomID();
@@ -134,10 +135,13 @@ public class BossBarGeneric {
         Owner.dataPacket(pkRemove);
     }
 
+    boolean Created = false;
     public void create() {
+        if(Created)return;
         createBossEntity();
         sendAttributes();
         sendShowBossBar();
+        Created = true;
     }
 
     /**
@@ -155,6 +159,11 @@ public class BossBarGeneric {
     }
 
     public boolean CheckUpdate(int tick){
+        return CheckUpdate(tick,false);
+    }
+    public boolean CheckUpdate(int tick, boolean dontcreate){
+        if(!Created && !dontcreate)create();
+        if(!Created)return false;
         int diff = tick - Lasttick;
         int diff2 = CurrentHealth - diff;
         if(diff2 < 0){//Kill
@@ -169,4 +178,9 @@ public class BossBarGeneric {
     public void onUpdate(int tick){
         CheckUpdate(tick);
     }
+}
+
+enum BossBarType{
+    Generic,
+    Notificatication
 }
