@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Classes.GUI;
 
+import cn.nukkit.Player;
 import cn.nukkit.event.player.PlayerFormRespondedEvent;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
@@ -17,8 +18,7 @@ public class GUIPickClass {
         gui.addButton(new ElementButton("Defensse"));
         gui.addButton(new ElementButton("Crafting"));
         gui.addButton(new ElementButton("--------"));
-
-
+        return gui;
     }
 
     public void Step1r(PlayerFormRespondedEvent e) {

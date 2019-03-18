@@ -7,6 +7,7 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import sun.applet.Main;
 
 import java.util.LinkedHashMap;
 
@@ -90,9 +91,7 @@ public class HomeManager {
 
     public Integer GetMaxHomes(String player) {
         String a = "";
-        a = CC.GetAdminRank(player.toLowerCase());
-        if (a == null) a = CC.GetMasterRank(player.toLowerCase());
-        if (a == null) a = CC.GetSecondaryRank(player.toLowerCase());
+        a = MainServer.getPlayerRank(player).getDisplayName();
         if (a == null) return 5;
         if (a.equalsIgnoreCase("tourist")) {
             return 10;

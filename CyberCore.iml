@@ -8,10 +8,9 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/out" isTestSource="false" />
     </content>
-    <orderEntry type="library" exported="" name="mysql:mysql-connector-java:5.1.40" level="project" />
-    <orderEntry type="library" exported="" name="DbLib-1.0-SNAPSHOT" level="project" />
-    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="library" name="DbLib-1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="nukkit-1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Nukkit-master" level="project" />
   </component>
