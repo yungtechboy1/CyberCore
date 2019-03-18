@@ -1,42 +1,105 @@
 package net.yungtechboy1.CyberCore.Manager.BossBar;
 
+import cn.nukkit.InterruptibleThread;
 import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.entity.Attribute;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.data.EntityMetadata;
+import cn.nukkit.level.Position;
 import cn.nukkit.network.protocol.*;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by carlt on 3/3/2019.
  */
-public class BossBarManager {
+public class BossBarManager extends Thread implements InterruptibleThread {
 
-    public HashMap<String, BossBarGeneric> BossList;
-    public CyberCoreMain Main;
 
-    public BossBarManager(CyberCoreMain m){
+    public static HashMap<String, BossBarGeneric> BossList;
+    public static List ABossList = Collections.synchronizedList(new ArrayList(1));
+    ;
+    public static List RBossList = Collections.synchronizedList(new ArrayList(1));
+    ;
+    private final static Object llock = new Object();
+    public static CyberCoreMain Main;
+
+    public BossBarManager(CyberCoreMain m) {
         Main = m;
     }
 
-    public boolean PlayerHasBossBar(Player p){
-        return BossList.containsKey(p.getName());
+    public void RemoveBossBarFromList(BossBarGeneric bbg) {
+        synchronized (llock) {
+            RBossList.add(bbg);
+        }
     }
 
-    public BossBarGeneric GetCurrentBossBar(Player p){
-        if(!PlayerHasBossBar(p))return null;
-        return BossList.getOrDefault(p.getName(),null);
+    public HashMap<String, BossBarGeneric> GetBossBarList() {
+        HashMap<String, BossBarGeneric> l;
+        synchronized (llock){
+            BBSyncUpdate();
+            l = BossList;
+        }
+        return l;
+    }
+    public boolean PlayerHasBossBar(Player p) {
+        boolean b;
+
+        BBSyncUpdate();
+        synchronized (llock) {
+            b = BossList.containsKey(p.getName());
+        }
+        return b;
     }
 
-    public void AddBossBar(Player p, BossBarGeneric bbn){
-        if(PlayerHasBossBar(p))GetCurrentBossBar(p).kill();
-        BossList.put(p.getName(),bbn);
+    public void BBSyncUpdate() {
+        synchronized (llock) {
+            for (Object bbg : ABossList) {
+                if (bbg instanceof BossBarGeneric) {
+                    BossBarGeneric bg = (BossBarGeneric) bbg;
+                    BossList.put(bg.getPlayer().getName(), bg);
+                }
+            }
+            ABossList.clear();
+            for (Object bbg : RBossList) {
+                if (bbg instanceof BossBarGeneric) {
+                    BossBarGeneric bg = (BossBarGeneric) bbg;
+                    BossList.remove(bg.getPlayer().getName());
+                }
+            }
+            RBossList.clear();
+        }
     }
 
-    public static void sendBossBar(Player player, int eid, String title){
-        if(title.equals("")){
+    public BossBarGeneric GetCurrentBossBar(Player p) {
+        BBSyncUpdate();
+        BossBarGeneric bbg;
+        synchronized (llock) {
+            if (!PlayerHasBossBar(p)) return null;
+            bbg = BossList.getOrDefault(p.getName(), null);
+        }
+        return bbg;
+    }
+
+    public void RemoveBossBar(Player p) {
+        if (PlayerHasBossBar(p)) GetCurrentBossBar(p).kill();
+    }
+
+    public void AddBossBar(Player p, BossBarGeneric bbn) {
+        synchronized (llock) {
+            if (PlayerHasBossBar(p)) GetCurrentBossBar(p).kill();
+            ABossList.add(bbn);
+        }
+    }
+
+    public static void sendBossBar(Player player, int eid, String title) {
+        if (title.equals("")) {
             return;
         }
         AddEntityPacket packet = new AddEntityPacket();
@@ -45,7 +108,7 @@ public class BossBarManager {
         packet.type = 52;
         packet.yaw = 0;
         packet.pitch = 0;
-        EntityMetadata dataProperties= new EntityMetadata();
+        EntityMetadata dataProperties = new EntityMetadata();
         dataProperties.putLong(Entity.DATA_LEAD_HOLDER_EID, -1);
         dataProperties.putLong(Entity.DATA_FLAGS, 0 ^ 1 << Entity.DATA_FLAG_SILENT ^ 1 << Entity.DATA_FLAG_INVISIBLE ^ 1 << Entity.DATA_FLAG_NO_AI);
         dataProperties.putFloat(Entity.DATA_SCALE, 0);
@@ -67,12 +130,12 @@ public class BossBarManager {
     /**
      * Sets how many % the bar is full by EID
      */
-    public static void sendPercentage(Player player, int eid, double percentage){
+    public static void sendPercentage(Player player, int eid, double percentage) {
         UpdateAttributesPacket upk = new UpdateAttributesPacket(); // Change health of fake wither . bar progress
-        if(percentage > 100){
+        if (percentage > 100) {
             percentage = 100;
         }
-        if(percentage < 0){
+        if (percentage < 0) {
             percentage = 0;
         }
         Attribute a = Attribute.getAttribute(4);
@@ -93,9 +156,9 @@ public class BossBarManager {
     /**
      * Sets the BossBar title by EID
      */
-    public static void sendTitle(Player player, int eid, String title){
+    public static void sendTitle(Player player, int eid, String title) {
         SetEntityDataPacket npk = new SetEntityDataPacket(); // change name of fake wither . bar text
-        EntityMetadata dataProperties= new EntityMetadata();
+        EntityMetadata dataProperties = new EntityMetadata();
         dataProperties.putString(Entity.DATA_NAMETAG, title);
         npk.metadata = dataProperties;
         npk.eid = eid;
@@ -110,10 +173,37 @@ public class BossBarManager {
     /**
      * Remove BossBar from players by EID
      */
-    public static boolean removeBossBar(Player player, int eid){
+    public static boolean removeBossBar(Player player, int eid) {
         RemoveEntityPacket pk = new RemoveEntityPacket();
         pk.eid = eid;
         player.dataPacket(pk);
         return true;
+    }
+
+
+    public void run() {
+        int lasttick = -1;
+//        System.out.println("11111111111111111111");
+        while (Server.getInstance().isRunning()) {
+//System.out.println("======");
+            int tick = Server.getInstance().getTick();
+            if (tick != lasttick) {
+                lasttick = tick;
+                for (BossBarGeneric bbg : BossList.values()) {
+                    if (bbg.CheckUpdate(tick)) {
+                        bbg.reshow();
+                    } else {
+                        if (bbg.CurrentHealth <= 0) RemoveBossBarFromList(bbg);
+                    }
+                }
+            }
+            //A little faster than .1 of a sec (.06 to be exact...or 1 tick = 50millis and this is 60 millisecs)
+            //Low key Every other 4 thics is fine
+            try {
+                Thread.sleep(200);//4 Ticks
+            } catch (InterruptedException e) {
+                //ignore
+            }
+        }
     }
 }

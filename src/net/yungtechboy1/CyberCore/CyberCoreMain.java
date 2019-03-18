@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
+import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
 import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.Commands.*;
@@ -12,6 +13,7 @@ import net.yungtechboy1.CyberCore.Commands.Homes.HomeManager;
 import net.yungtechboy1.CyberCore.Events.CyberChatEvent;
 import net.yungtechboy1.CyberCore.Factory.PasswordFactoy;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
+import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
 import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
@@ -135,7 +137,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         //Threaded ONLY RUN FOR TESTING
         //TESTING
         FTM = new FloatingTextFactory(this);
-        FloatingTextFactory.AddFloatingText(new FloatingTextContainer(FTM,getServer().getLevelByName("world").getSafeSpawn(),"TESTTTT"));
+        FloatingTextFactory.AddFloatingText(new FloatingTextContainer(FTM, getServer().getLevelByName("world").getSafeSpawn(), "TESTTTT"));
 
 
         //Mob Plugin
@@ -238,14 +240,13 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SellHand(this));
     }
 
-    public void onLoad(){
+    public void onLoad() {
         CyberCoreMain.instance = this;
     }
 
-    public static CyberCoreMain getInstance(){
+    public static CyberCoreMain getInstance() {
         return CyberCoreMain.instance;
     }
-
 
 
 //    Deprecated for public database --------------------------------------------
@@ -353,7 +354,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     public Player getPlayer(String p) {
         Player player;
-        if((player = getServer().getPlayer(p)) != null) {
+        if ((player = getServer().getPlayer(p)) != null) {
             return player;
         } else {
             return null;
@@ -632,7 +633,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         return false;
     }
 
-    public EconManager GetEcon(){
+    public EconManager GetEcon() {
         return ECON;
     }
 
@@ -646,7 +647,12 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void PM(PlayerMoveEvent me){
-        FloatingTextFactory.AddFloatingText(new PopupFT(FTM,me.getPlayer().add(0,1.5,0),TextFormat.AQUA+me.getPlayer().getName()+" was Here!"));
+    public void PMJ(PlayerJoinEvent me) {
+        BBM.AddBossBar(me.getPlayer(), new BossBarNotification(me.getPlayer(), "TEST TITLE", "TEST MESSAGE", this));
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void PM(PlayerMoveEvent me) {
+        FloatingTextFactory.AddFloatingText(new PopupFT(FTM, me.getPlayer().add(0, 1.5, 0), TextFormat.AQUA + me.getPlayer().getName() + " was Here!"));
     }
 }
