@@ -12,7 +12,7 @@ public class PopupFT extends FloatingTextContainer {
     long Created = -1;
     int Updates = -1;
     int interval = 10;
-    int _nu = -1;
+    int _nu = -1;//Next Update!
 
     public PopupFT(FloatingTextFactory ftf, Position pos, String syntax) {
         super(ftf, pos, syntax);
