@@ -647,7 +647,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PM(PlayerMoveEvent me){
-        System.out.println("PM E");
         FloatingTextFactory.AddFloatingText(new PopupFT(FTM,me.getPlayer().add(0,1.5,0),TextFormat.AQUA+me.getPlayer().getName()+" was Here!"));
     }
 }
