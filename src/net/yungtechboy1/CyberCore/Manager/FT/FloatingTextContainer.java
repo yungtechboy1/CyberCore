@@ -3,10 +3,12 @@ package net.yungtechboy1.CyberCore.Manager.FT;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.data.EntityData;
 import cn.nukkit.entity.data.EntityMetadata;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
+import cn.nukkit.network.protocol.AddEntityPacket;
 import cn.nukkit.network.protocol.AddPlayerPacket;
 import cn.nukkit.network.protocol.DataPacket;
 import cn.nukkit.network.protocol.RemoveEntityPacket;
@@ -39,6 +41,8 @@ public class FloatingTextContainer {
     public FloatingTextContainer(FloatingTextFactory ftf, Position pos, String syntax) {
         FTF = ftf;
         generateEID();
+        Syntax = syntax;
+        Pos = pos;
 
 
     }
@@ -64,6 +68,7 @@ public class FloatingTextContainer {
 
     //Generate Flaoting Text for following players
     public void HaldleSend(ArrayList<String> ap) {
+        System.out.println("HS");
 //        ArrayList<DataPacket> tosend = new ArrayList<>();
         HashMap<String,ArrayList<DataPacket>> tosend;
 //        sync(_CE_Lock)//TODO
@@ -87,11 +92,10 @@ public class FloatingTextContainer {
             packets.add(pk);
         }
 
-        AddPlayerPacket pk = new AddPlayerPacket();
-        pk.uuid = UUID.randomUUID();
-        pk.username = "";
+        AddEntityPacket pk = new AddEntityPacket ();
         pk.entityUniqueId = EID;
         pk.entityRuntimeId = EID;
+        pk.type = 61; //
         pk.x = (float) Pos.x;
         pk.y = (float) (Pos.y - 1.62);
         pk.z = (float) Pos.z;
@@ -108,9 +112,25 @@ public class FloatingTextContainer {
         pk.metadata = new EntityMetadata()
                 .putLong(Entity.DATA_FLAGS, flags)
                 .putString(Entity.DATA_NAMETAG, FTF.FormatText(Syntax, p))
-                .putLong(Entity.DATA_LEAD_HOLDER_EID, -1);
+                .putLong(Entity.DATA_LEAD_HOLDER_EID, -1)
+                .putByte(Entity.DATA_ALWAYS_SHOW_NAMETAG, 1)
+                .putFloat(Entity.DATA_BOUNDING_BOX_HEIGHT, 0)
+                .putFloat(Entity.DATA_BOUNDING_BOX_WIDTH, 0);
 //                    .putByte(Entity.DATA_LEAD, 0);
-        pk.item = Item.get(Item.AIR);
+        pk.metadata = new EntityMetadata().putLong(Entity.DATA_FLAGS, (
+                (1L << Entity.DATA_FLAG_CAN_SHOW_NAMETAG) |
+                        (1L << Entity.DATA_FLAG_ALWAYS_SHOW_NAMETAG) |
+                        (1L << Entity.DATA_FLAG_IMMOBILE) |
+                        (1L << Entity.DATA_FLAG_SILENT)
+//                            (1L << Entity.DATA_FLAG_INVISIBLE)
+        ))
+                .putFloat(Entity.DATA_BOUNDING_BOX_HEIGHT, 0)
+                .putFloat(Entity.DATA_BOUNDING_BOX_WIDTH, 0)
+                .putFloat(Entity.DATA_SCALE, 0f)
+//            .putFloat(Entity.DATA_HEALTH, 100)
+                .putLong(Entity.DATA_LEAD_HOLDER_EID, -1)
+                .putByte(Entity.DATA_ALWAYS_SHOW_NAMETAG, 1)
+                .putString(Entity.DATA_NAMETAG, FTF.FormatText(Syntax, p));
         packets.add(pk);
         Active = true;
         return packets;
