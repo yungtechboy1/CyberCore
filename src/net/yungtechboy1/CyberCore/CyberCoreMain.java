@@ -5,16 +5,15 @@ import net.yungtechboy1.CyberCore.Commands.*;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMS;
 import net.yungtechboy1.CyberCore.Commands.Homes.HomeManager;
+import net.yungtechboy1.CyberCore.Data.UserSQL;
 import net.yungtechboy1.CyberCore.Events.CyberChatEvent;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
-import net.yungtechboy1.CyberCore.Manager.KD.KDManager;
 import net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager;
 import net.yungtechboy1.CyberCore.Manager.SQLManager;
-import net.yungtechboy1.CyberCore.Manager.Save.SaveMain;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
 import net.yungtechboy1.CyberCore.Ranks.Rank;
 import cn.nukkit.Player;
@@ -28,7 +27,7 @@ import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Data.SQLApi;
+import net.yungtechboy1.CyberCore.Data.CoreSQL;
 import net.yungtechboy1.CyberCore.Ranks.RankFactory;
 
 import java.io.File;
@@ -80,7 +79,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
     //Mob Plugin and AI
     public MobPlugin MP;
     //KDR
-    public KDManager KDM;
     //Classes / MMO
     public net.yungtechboy1.CyberCore.Factory.ClassFactory ClassFactory;
     //PasswordFactoy
@@ -102,25 +100,37 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
     Vector3 p1;
     Vector3 p2;
 
-    public SaveMain Save;
     public SQLManager SQLSaveManager;
-    public SQLApi SQLApi;
+
+    /**
+     * DATA: UUID, GAMERTAG, CREATED(TIMESTAMP), LAST_LOGIN(TIMESTAMP), RANK(INT), LAST_IP
+     */
+    public CoreSQL CoreSQL;
+
+    /**
+     * DATA: ECON, K/D,
+     */
+    public net.yungtechboy1.CyberCore.Data.UserSQL UserSQL;
+
 
     @Override
     public void onEnable() {
         new File(getDataFolder().toString()).mkdirs();
 
         saveResource("ranks.yml");
+        saveResource("config.yml");
+
+        MainConfig = new Config(new File(getDataFolder(), "config.yml"));
 
         //Save = new SaveMain(this);
         SQLSaveManager = new SQLManager(this);
 
-        SQLApi = new SQLApi(this);
+        CoreSQL = new CoreSQL(this);
+        UserSQL = new UserSQL(this, "server-data");
 
         PurgeManager = new PurgeManager(this);
         //KDR Manager - All Good
         //GOOD
-        KDM = new KDManager(this);
         //BossBar Manager
         //GOOD - Test Refine
         BBM = new BossBarManager(this);
@@ -143,9 +153,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
 //        HomeFactory = new HomeManager(this);
         RankFactory = new RankFactory(this);
 //        AuctionFactory = new AuctionFactory(this);
-
-        saveResource("config.yml");
-        MainConfig = new Config(new File(getDataFolder(), "config.yml"));
 
         MuteConfig = new Config(new File(getDataFolder(), "Mute.yml"), Config.YAML);
 
@@ -336,6 +343,18 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
             return true;
         }
         return false;
+    }
+
+    public CorePlayer getCorePlayer(String uuid) {
+        return getCorePlayer(getPlayer(uuid));
+    }
+
+    public CorePlayer getCorePlayer(Player p) {
+        if(p instanceof CorePlayer){
+            getLogger().info(((CorePlayer) p).kills + " KILLLSSSSSS!!!!!");
+            return (CorePlayer) p;
+        }
+        return null;
     }
 
     public Player getPlayer(String p) {
@@ -623,9 +642,10 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
         return ECON;
     }
 
-    public void checkUser(UUID uuid) {
+    public void initiatePlayer(Player p) {
         try {
-            SQLApi.checkCoreUser(uuid.toString());
+            CoreSQL.checkUser(p);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

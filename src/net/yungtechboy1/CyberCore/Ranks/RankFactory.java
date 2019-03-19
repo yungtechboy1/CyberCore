@@ -53,12 +53,6 @@ public class RankFactory {
         String uuid;
         if((uuid = Main.getPlayer(p).getUniqueId().toString()) != null ) {
             return ranks.get(RankCache.get(uuid));
-        } else {
-            try {
-                return(ranks.get(Main.SQLApi.getInteger(DB_TABLE, "gamertag", p, "rank")));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
         return null;
     }

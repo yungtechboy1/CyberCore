@@ -27,13 +27,13 @@ public class FactionsCommands {
         Faction faction = Main.FFactory.getPlayerFaction(sender);
         switch (command.getName()) {
             case "mystats":
-            case "kdr":
-                sender.sendMessage(TextFormat.GREEN+"-------My Status-------");
-                sender.sendMessage(TextFormat.AQUA+"Kills"+TextFormat.YELLOW+" > "+main.Main.KDM.GetKills(sender.getName()));
-                sender.sendMessage(TextFormat.AQUA+"Deaths"+TextFormat.YELLOW+" > "+main.Main.KDM.GetDeaths(sender.getName()));
-                sender.sendMessage(TextFormat.AQUA+"KDR"+TextFormat.YELLOW+" > "+main.Main.KDM.GetKDR(sender.getName()));
-                sender.sendMessage(TextFormat.GREEN+"--------------");
-                return true;
+//            case "kdr":
+//                sender.sendMessage(TextFormat.GREEN+"-------My Status-------");
+//                sender.sendMessage(TextFormat.AQUA+"Kills"+TextFormat.YELLOW+" > "+main.Main.KDM.GetKills(sender.getName()));
+//                sender.sendMessage(TextFormat.AQUA+"Deaths"+TextFormat.YELLOW+" > "+main.Main.KDM.GetDeaths(sender.getName()));
+//                sender.sendMessage(TextFormat.AQUA+"KDR"+TextFormat.YELLOW+" > "+main.Main.KDM.GetKDR(sender.getName()));
+//                sender.sendMessage(TextFormat.GREEN+"--------------");
+//                return true;
             case "f":
                 //if(!(sender instanceof Player))return false;
                 //if(args.length > 0)sender.sendMessage("Count"+args.length+" 1:"+args[0]);
