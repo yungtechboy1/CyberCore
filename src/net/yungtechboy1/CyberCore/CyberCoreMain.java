@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore;
 
+import cn.nukkit.Server;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
@@ -51,6 +52,7 @@ import java.util.concurrent.TimeUnit;
 public class CyberCoreMain extends PluginBase implements CommandExecutor, Listener {
 
     public static final String NAME = TextFormat.GOLD + "" + TextFormat.BOLD + "§eTERRA§6CORE " + TextFormat.RESET + TextFormat.GOLD + "» " + TextFormat.RESET;
+    public CorePlayerManager CPM;
     private EconManager ECON;
     private static CyberCoreMain instance;
     public BossBarManager BBM;
@@ -140,7 +142,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         PurgeManager = new PurgeManager(this);
         //KDR Manager - All Good
         //GOOD
-        KDM = new KDManager(this);
         //Floating Text
         //Threaded ONLY RUN FOR TESTING
         //TESTING
@@ -151,6 +152,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         //Mob Plugin
         //GOOD - Should all be ready! Just add modifications for custom Entity drops and etc
         MP = new MobPlugin(this);
+
+        CPM = new CorePlayerManager(this);
 
 //        GOOD
         ECON = new EconManager(this);
@@ -361,27 +364,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         return false;
     }
 
-    public CorePlayer getCorePlayer(String uuid) {
-        return getCorePlayer(getPlayer(uuid));
-    }
-
-    public CorePlayer getCorePlayer(Player p) {
-        if(p instanceof CorePlayer){
-            getLogger().info(((CorePlayer) p).kills + " KILLLSSSSSS!!!!!");
-            return (CorePlayer) p;
-        }
-        return null;
-    }
-
-    public Player getPlayer(String p) {
-        Player player;
-        if ((player = getServer().getPlayer(p)) != null) {
-            return player;
-        } else {
-            return null;
-        }
-    }
-
     /**
      * Returns Player Faction
      *
@@ -400,7 +382,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     }
 
     public Rank getPlayerRank(String p) {
-        return getPlayerRank(getPlayer(p));
+        return getPlayerRank(getServer().getPlayerExact(p));
     }
 
     public Rank getPlayerRank(Player p) {
@@ -662,7 +644,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         try {
             CoreSQL.checkUser(p);
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -670,9 +652,10 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PMJ(PlayerJoinEvent me) {
-        if(BBM == null)System.out.println("11122222233333333333344444444444");
-        if(me.getPlayer() == null)System.out.println("11111111111111111111111111111111111111111111111111111111122222233333333333344444444444");
-        BBM.AddBossBar(me.getPlayer(), new BossBarNotification(me.getPlayer(), "TEST TITLE", "TEST MESSAGE",20*60, this));
+        if (BBM == null) System.out.println("11122222233333333333344444444444");
+        if (me.getPlayer() == null)
+            System.out.println("11111111111111111111111111111111111111111111111111111111122222233333333333344444444444");
+        BBM.AddBossBar(me.getPlayer(), new BossBarNotification(me.getPlayer(), "TEST TITLE", "TEST MESSAGE", 20 * 60, this));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

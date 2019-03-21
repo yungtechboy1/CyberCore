@@ -51,7 +51,7 @@ public class RankFactory {
 
     public Rank getPlayerRank(String p) {
         String uuid;
-        if((uuid = Main.getPlayer(p).getUniqueId().toString()) != null ) {
+        if((uuid = Main.CPM.GetCorePlayer(p).getUniqueId().toString()) != null ) {
             return ranks.get(RankCache.get(uuid));
         }
         return null;
