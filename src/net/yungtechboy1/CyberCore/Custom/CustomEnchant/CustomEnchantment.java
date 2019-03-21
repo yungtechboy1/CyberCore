@@ -2,6 +2,8 @@ package net.yungtechboy1.CyberCore.Custom.CustomEnchant;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.event.block.BlockBreakEvent;
+import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.item.enchantment.EnchantmentType;
@@ -14,26 +16,28 @@ import java.util.ArrayList;
  */
 public class CustomEnchantment extends Enchantment {
 
-    public static int BLIND = 25;
-    public static int CRIPPLING = 26;
-    public static int DEATHBRINGER = 27;
-    public static int GOOEY = 28;
-    public static int ICEASPECT = 29;
-    public static int LIFESTEALER = 30;
-    public static int POISON = 31;
-    public static int THUNDER = 32;
-    public static int VIPER = 33;
-    public static int CrateKey = 55;
+    public static final int BLIND = 25;
+    public static final int CRIPPLING = 26;
+    public static final int DEATHBRINGER = 27;
+    public static final int GOOEY = 28;
+    public static final int ICEASPECT = 29;
+    public static final int LIFESTEALER = 30;
+    public static final int POISON = 31;
+    public static final int THUNDER = 32;
+    public static final int VIPER = 33;
+    public static final int HASTE = 34;
+    public static final int CrateKey = 55;
 
     boolean CheckCustomName = true;
     String lastplayer = "";
+    public EnchantRarity ER;
 
-    public CustomEnchantment(int id, String name, int weight, EnchantmentType type){
+    public CustomEnchantment(int id, String name, int weight, EnchantmentType type) {
         super(id, name, weight, type);
     }
 
     public void CheckCustomName(Entity attacker) {
-        if(attacker == null)return;
+        if (attacker == null) return;
         if (!(attacker instanceof Player)) return;
         Item hand = ((Player) attacker).getInventory().getItemInHand();
         boolean custom = false;
@@ -46,7 +50,7 @@ public class CustomEnchantment extends Enchantment {
             System.out.println(enchantment.getName() + " " + IntToRoman(enchantment.getLevel()));
         }
         if (custom) {
-            String CT = TextFormat.RESET + "" + TextFormat.AQUA + Item.get(hand.getId(),hand.getDamage()).getName() + TextFormat.RESET;
+            String CT = TextFormat.RESET + "" + TextFormat.AQUA + Item.get(hand.getId(), hand.getDamage()).getName() + TextFormat.RESET;
             for (String text : CE) {
                 CT += "\n" + TextFormat.GRAY + text + TextFormat.RESET;
             }
@@ -57,7 +61,8 @@ public class CustomEnchantment extends Enchantment {
             ((Player) attacker).getInventory().setItemInHand(Item.get(0));
             ((Player) attacker).getInventory().sendHeldItem((Player) attacker);
             ((Player) attacker).getInventory().setItemInHand(hand);
-            ((Player) attacker).getInventory().sendHeldItem((Player) attacker);;
+            ((Player) attacker).getInventory().sendHeldItem((Player) attacker);
+            ;
         }
         lastplayer = attacker.getName();
     }
@@ -78,7 +83,7 @@ public class CustomEnchantment extends Enchantment {
     }
 
     public static Item SetCustomName(Item i) {
-        if(i == null)return null;
+        if (i == null) return null;
         Item hand = i;
         boolean custom = false;
         ArrayList<String> CE = new ArrayList<>();
@@ -89,7 +94,7 @@ public class CustomEnchantment extends Enchantment {
             }
         }
         if (custom) {
-            String CT = TextFormat.RESET + "" + TextFormat.AQUA + Item.get(hand.getId(),hand.getDamage()).getName() + TextFormat.RESET;
+            String CT = TextFormat.RESET + "" + TextFormat.AQUA + Item.get(hand.getId(), hand.getDamage()).getName() + TextFormat.RESET;
             for (String text : CE) {
                 CT += "\n" + TextFormat.GRAY + text + TextFormat.RESET;
             }
@@ -97,5 +102,37 @@ public class CustomEnchantment extends Enchantment {
             hand.setCustomName(CT);
         }
         return hand;
+    }
+
+    public void BlockPlace(BlockPlaceEvent event) {
+
+    }
+
+    public void BlockBreak(BlockBreakEvent event) {
+
+    }
+
+    public static Enchantment getEnchant(int id) {
+        if (id >= Enchantment.ID_TRIDENT_CHANNELING) {
+            return Enchantment.get(id);
+        } else {
+            switch (id) {
+                case BLIND:
+                    return new Blind();
+                case CRIPPLING:
+                case DEATHBRINGER:
+                case GOOEY:
+                case ICEASPECT:
+                case LIFESTEALER:
+                case POISON:
+                case THUNDER:
+                case VIPER:
+                case HASTE:
+                case CrateKey:
+                    return null;
+            }
+        }
+
+        return null;
     }
 }
