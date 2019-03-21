@@ -33,6 +33,7 @@ public class BossBarNotification extends BossBarGeneric{
     @Override
     public void onUpdate(int tick) {
         //TODO
+        super.onUpdate(tick);
     }
 
 }

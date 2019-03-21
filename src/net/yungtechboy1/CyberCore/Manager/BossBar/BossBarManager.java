@@ -11,10 +11,7 @@ import cn.nukkit.network.protocol.*;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by carlt on 3/3/2019.
@@ -22,7 +19,7 @@ import java.util.List;
 public class BossBarManager extends Thread implements InterruptibleThread {
 
 
-    public static HashMap<String, BossBarGeneric> BossList;
+    public static HashMap<String, BossBarGeneric> BossList = new HashMap<>();
     public static List ABossList = Collections.synchronizedList(new ArrayList(1));
     ;
     public static List RBossList = Collections.synchronizedList(new ArrayList(1));
@@ -32,33 +29,37 @@ public class BossBarManager extends Thread implements InterruptibleThread {
 
     public BossBarManager(CyberCoreMain m) {
         Main = m;
+        start();
     }
 
-    public void RemoveBossBarFromList(BossBarGeneric bbg) {
+    public static void RemoveBossBarFromList(BossBarGeneric bbg) {
         synchronized (llock) {
             RBossList.add(bbg);
         }
     }
 
-    public HashMap<String, BossBarGeneric> GetBossBarList() {
-        HashMap<String, BossBarGeneric> l;
+    public static Collection<BossBarGeneric> GetBossBarList() {
+        Collection<BossBarGeneric> l;
         synchronized (llock){
             BBSyncUpdate();
-            l = BossList;
+            l = BossList.values();
         }
         return l;
     }
-    public boolean PlayerHasBossBar(Player p) {
-        boolean b;
-
-        BBSyncUpdate();
+    public static boolean PlayerHasBossBar(Player p) {
+        boolean b = false;
+System.out.println("aaaaaaaaaa"+p.getName());
+//        BBSyncUpdate();
         synchronized (llock) {
+            System.out.println("22222222222222222");
             b = BossList.containsKey(p.getName());
+            System.out.println("ccccccccc");
         }
+        System.out.println("zzzzzzzzzzz"+b);
         return b;
     }
 
-    public void BBSyncUpdate() {
+    public static void BBSyncUpdate() {
         synchronized (llock) {
             for (Object bbg : ABossList) {
                 if (bbg instanceof BossBarGeneric) {
@@ -77,7 +78,7 @@ public class BossBarManager extends Thread implements InterruptibleThread {
         }
     }
 
-    public BossBarGeneric GetCurrentBossBar(Player p) {
+    public static BossBarGeneric GetCurrentBossBar(Player p) {
         BBSyncUpdate();
         BossBarGeneric bbg;
         synchronized (llock) {
@@ -87,13 +88,13 @@ public class BossBarManager extends Thread implements InterruptibleThread {
         return bbg;
     }
 
-    public void RemoveBossBar(Player p) {
+    public static void RemoveBossBar(Player p) {
         if (PlayerHasBossBar(p)) GetCurrentBossBar(p).kill();
     }
 
-    public void AddBossBar(Player p, BossBarGeneric bbn) {
+    public static void AddBossBar(Player p, BossBarGeneric bbn) {
+        if (PlayerHasBossBar(p)) GetCurrentBossBar(p).kill();
         synchronized (llock) {
-            if (PlayerHasBossBar(p)) GetCurrentBossBar(p).kill();
             ABossList.add(bbn);
         }
     }
@@ -183,13 +184,15 @@ public class BossBarManager extends Thread implements InterruptibleThread {
 
     public void run() {
         int lasttick = -1;
-//        System.out.println("11111111111111111111");
+        System.out.println("11111111111111111111");
         while (Server.getInstance().isRunning()) {
-//System.out.println("======");
+System.out.println("======");
             int tick = Server.getInstance().getTick();
             if (tick != lasttick) {
+                System.out.println("===!!!!!!!===");
                 lasttick = tick;
-                for (BossBarGeneric bbg : BossList.values()) {
+                for (BossBarGeneric bbg : GetBossBarList()) {
+                    System.out.println("==++++++++++====");
                     if (bbg.CheckUpdate(tick)) {
                         bbg.reshow();
                     } else {
