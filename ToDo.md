@@ -1,0 +1,14 @@
+-  Make all admin Classes bind from /a
+- Add back command and Save last TP from spot
+- Add Block log for players to allow Admin Undo
+- [ x ]  Add Purge
+- Work on Event Listeners
+- Add Asyns Rick / Top Schedulers
+- Add /Bowrrow
+- Set up Back code for Borrowing System from players and Server
+- Create Inv Shop!
+
+- Being in water deals 1/2 Damage before enchants & armor and Boosts
+
+- Implement BossBarManager
+- Test Window Class config
