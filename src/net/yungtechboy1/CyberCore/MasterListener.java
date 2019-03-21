@@ -35,13 +35,15 @@ public class MasterListener implements Listener {
     @EventHandler
     public void FactionPlayerDeath(PlayerDeathEvent event){
         if (event == null) return;
+        CorePlayer player = Main.getCorePlayer(event.getEntity());
         String playern = event.getEntity().getName();
         EntityDamageEvent cause = event.getEntity().getLastDamageCause();
         event.getEntity().setExperience(0);
-        Main.KDM.AddDeath(playern);
+        player.addDeath();
         if (cause != null && cause.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
             if (cause instanceof EntityDamageByEntityEvent && event.getEntity() instanceof Player) {
                 Entity e = ((EntityDamageByEntityEvent) cause).getDamager();
+                CorePlayer killer = Main.getCorePlayer(e.getName());
                 if (e instanceof Player) {
                     event.setDeathMessage(TextFormat.GRAY + playern + " was killed by " + e.getName() + TextFormat.RED + " (" + e.getHealth() + "❤)");
                     //@TODO Bounty XD
@@ -66,21 +68,21 @@ public class MasterListener implements Listener {
                         kf.HandleKillEvent(event);
                         kf.TakePower(2);
                     }
-                   Main.KDM.AddKill(killername);
-                    if ( Main.KDM.GetKills(killername) == 5) {
+                   killer.addKill();
+                    if ( killer.kills == 5) {
                         Main.getServer().broadcastMessage(TextFormat.GREEN + killername + " is on a 5 KillStreak!");
                         //if(kf != null)Main.FM.AddFactionPower(kf, 5);
                     }
-                    if (Main.KDM.GetKills(killername) == 8) {
+                    if (killer.kills == 8) {
                         Main.getServer().broadcastMessage(TextFormat.AQUA + killername + " is on a 8 KillStreak!");
                         //if(kf != null)Main.FM.AddFactionPower(kf, 8);
                     }
-                    if (Main.KDM.GetKills(killername) == 10) {
+                    if (killer.kills == 10) {
                         Main.getServer().broadcastMessage(TextFormat.LIGHT_PURPLE + killername + " is on a 10 KillStreak!");
                         //if(kf != null)Main.FM.AddFactionPower(kf, 10);
                     }
-                    if (Main.KDM.GetKills(killername) > 10) {
-                        Integer kills = Main.KDM.GetKills(killername);
+                    if (killer.kills > 10) {
+                        Integer kills = killer.kills;
                         Main.getServer().broadcastMessage(TextFormat.LIGHT_PURPLE + killername + " is on a " + kills + " KillStreak!");
                         //if(kf != null)Main.FM.AddFactionPower(kf, kills*2);
                     }

@@ -5,12 +5,11 @@ import cn.nukkit.Server;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.player.PlayerChatEvent;
-import cn.nukkit.event.player.PlayerJoinEvent;
-import cn.nukkit.event.player.PlayerQuitEvent;
-import cn.nukkit.event.player.PlayerRespawnEvent;
+import cn.nukkit.event.player.*;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import org.apache.logging.log4j.core.Core;
 import sun.applet.Main;
 
 import java.util.HashMap;
@@ -28,26 +27,32 @@ public class CyberChatEvent implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void joinEvent(PlayerJoinEvent event) {
+        Player p = event.getPlayer();
 
         String Msg = plugin.colorize((String) plugin.MainConfig.get("Join-Message"));
-        event.setJoinMessage(Msg.replace("{player}", event.getPlayer().getName()));
-        event.getPlayer().sendTitle(plugin.colorize("&l&bCyberTech"), plugin.colorize("&l&2Welcome!"),30,30, 10);
+        event.setJoinMessage(Msg.replace("{player}", p.getName()));
+        p.sendTitle(plugin.colorize("&l&bCyberTech"), plugin.colorize("&l&2Welcome!"),30,30, 10);
 
-        plugin.checkUser(event.getPlayer().getUniqueId());
+        plugin.initiatePlayer(p);
 
-        String rank = plugin.RankFactory.getPlayerRank(event.getPlayer().getName()).getDisplayName();
-        event.getPlayer().sendMessage(plugin.colorize( "&2You Have Joined with the Rank: " + rank));
+        String rank = plugin.RankFactory.getPlayerRank(p.getName()).getDisplayName();
+        p.sendMessage(plugin.colorize( "&2You Have Joined with the Rank: " + rank));
         //plugin.Setnametag(event.getPlayer().getName());
         if (rank != null && rank.equalsIgnoreCase("op")) {
-            event.getPlayer().setOp(true);
+            p.setOp(true);
         } else {
-            event.getPlayer().setOp(false);
+            p.setOp(false);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void spawnEvent(PlayerRespawnEvent event) {
 
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onCreation(PlayerCreationEvent event) {
+        event.setPlayerClass(CorePlayer.class);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
