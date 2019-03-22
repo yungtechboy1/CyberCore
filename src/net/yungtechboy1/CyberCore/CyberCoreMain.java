@@ -196,6 +196,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 
         //COMMANDS
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ChooseClass(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new BanCmd(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Ci(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Fix(this));

@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore;
 
+import cn.nukkit.form.response.FormResponseModal;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import cn.nukkit.Player;
@@ -27,13 +28,13 @@ public class MasterListener implements Listener {
 
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void FactionChatEvent(PlayerChatEvent event){
+    public void FactionChatEvent(PlayerChatEvent event) {
 //        ChatEvent ce = new ChatEvent(Main.FM,event);
 //        event = ce.Event;
     }
 
     @EventHandler
-    public void FactionPlayerDeath(PlayerDeathEvent event){
+    public void FactionPlayerDeath(PlayerDeathEvent event) {
         if (event == null) return;
         CorePlayer player = Main.getCorePlayer(event.getEntity());
         String playern = event.getEntity().getName();
@@ -68,8 +69,8 @@ public class MasterListener implements Listener {
                         kf.HandleKillEvent(event);
                         kf.TakePower(2);
                     }
-                   killer.addKill();
-                    if ( killer.kills == 5) {
+                    killer.addKill();
+                    if (killer.kills == 5) {
                         Main.getServer().broadcastMessage(TextFormat.GREEN + killername + " is on a 5 KillStreak!");
                         //if(kf != null)Main.FM.AddFactionPower(kf, 5);
                     }
@@ -90,6 +91,20 @@ public class MasterListener implements Listener {
             }
         }
     }
+
+    @EventHandler
+    public void PFRE(PlayerFormRespondedEvent pr) {
+        int fid = pr.getFormID();
+        Player p = pr.getPlayer();
+        FormResponseModal frm = (FormResponseModal) pr.getResponse();
+        if(frm.getClickedButtonId() == 0){
+            System.out.println("Bye!");
+        }else{
+            System.out.println("HI!!!!!");
+        }
+
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void FationsJoinEvent(PlayerJoinEvent event) {
         //Main.FM.uuid[event.getPlayer().getName()][event.getPlayer().getClientId()] = date(DATE_COOKIE);
@@ -101,6 +116,7 @@ public class MasterListener implements Listener {
             Main.FM.FFactory.List.put(fn.toLowerCase(), f);
             Main.FM.FFactory.FacList.put(player.toLowerCase(), fn);
         }
+
 
 /*
         asd = "";
@@ -261,7 +277,7 @@ public class MasterListener implements Listener {
     //
     //TODO CHECK BANNED
     @EventHandler()
-    public void PreLogin(PlayerPreLoginEvent ev){
+    public void PreLogin(PlayerPreLoginEvent ev) {
 
     }
 
@@ -322,8 +338,8 @@ public class MasterListener implements Listener {
 
     //LOG COMMANDS IN CONSOLE
     @EventHandler
-    public void CommandEvent(PlayerCommandPreprocessEvent event){
-        Main.getServer().getLogger().info(event.getPlayer().getName()+"  > "+event.getMessage());
+    public void CommandEvent(PlayerCommandPreprocessEvent event) {
+        Main.getServer().getLogger().info(event.getPlayer().getName() + "  > " + event.getMessage());
     }
 
 
@@ -333,9 +349,9 @@ public class MasterListener implements Listener {
         Faction pf = Main.FM.FFactory.getFaction("peace");
         int x = factionDamage.getEntity().getFloorX() >> 4;
         int z = factionDamage.getEntity().getFloorZ() >> 4;
-        if (pf.GetPlots().contains(x+"|"+z)){
+        if (pf.GetPlots().contains(x + "|" + z)) {
             if (factionDamage.getEntity() instanceof Player) {
-                if(((Player)factionDamage.getEntity()).isOp()){
+                if (((Player) factionDamage.getEntity()).isOp()) {
                     factionDamage.setCancelled(false);
                     return;
                 }
