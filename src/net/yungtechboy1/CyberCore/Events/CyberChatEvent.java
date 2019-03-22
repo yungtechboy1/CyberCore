@@ -9,6 +9,7 @@ import cn.nukkit.event.player.*;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import org.apache.logging.log4j.core.Core;
 import sun.applet.Main;
 
@@ -35,7 +36,7 @@ public class CyberChatEvent implements Listener {
 
         plugin.initiatePlayer(p);
 
-        String rank = plugin.RankFactory.getPlayerRank(p.getName()).getDisplayName();
+        String rank = plugin.RankFactory.getPlayerRank(p).getDisplayName();
         p.sendMessage(plugin.colorize( "&2You Have Joined with the Rank: " + rank));
         //plugin.Setnametag(event.getPlayer().getName());
         if (rank != null && rank.equalsIgnoreCase("op")) {
@@ -101,16 +102,13 @@ public class CyberChatEvent implements Listener {
             put("hoe","tool");
             put("ass","butt");
         }};
-        String ChatFormat = (String) plugin.MainConfig.get("Chat-Format");
-        String FactionFormat = (String) plugin.MainConfig.get("Faction-Format");
-        String RankFormat = (String) plugin.MainConfig.get("Rank-Format");
-        //FPlayer fp = FPlayers.i.get(player);
-        if (!plugin.getPlayerFaction(player).equalsIgnoreCase("")) {
-            //if(fp.getFaction() != null && !fp.getFaction().getTag().equalsIgnoreCase(TextFormat.DARK_GREEN + "Wilderness")){
-            FactionFormat = FactionFormat.replace("{value}", plugin.getPlayerFaction(player));
+        String faction;
+        Faction pf = plugin.getPlayerFaction(player);
+        if ( pf != null) {
+            faction = pf.GetDisplayName();
             //FactionFormat = TextFormat.GRAY+FactionFormat.replace("{value}",fp.getFaction().getTag())+TextFormat.WHITE;
         } else {
-            FactionFormat = TextFormat.GRAY + "[NF]" + TextFormat.WHITE;
+            faction = TextFormat.GRAY + "[NF]" + TextFormat.WHITE;
         }
 
         //ANTI BADWORDS
@@ -134,24 +132,7 @@ public class CyberChatEvent implements Listener {
         //ANTI WORK AROUND BADWORDS
         //@TODO remove all spaces and use Regex to replace all Instaces of it
 
-        chat = chatafter;
-
-        String a = "";
-//        a = plugin.RankFactory.GetAdminRank(player.getName());
-//        if (a == null) a = plugin.RankFactory.GetMasterRank(player.getName());
-//        if (a == null) a = plugin.RankFactory.GetSecondaryRank(player.getName());
-        if (a != null) {
-            RankFormat = RankFormat.replace("{value}", (String) plugin.RankConfig.get(a));
-            RankFormat = RankFormat.replace("&", TextFormat.ESCAPE + "") + TextFormat.WHITE;
-        } else {
-            RankFormat = "";
-        }
-        if (a != null && plugin.RankChatColor.exists(a)) {
-            chat = ((String) plugin.RankChatColor.get(a)).replace("&", TextFormat.ESCAPE + "") + chat;
-        }
-        chat = chat;
-        String Final = ChatFormat.replace("{rank}", RankFormat + TextFormat.WHITE).replace("{faction}", FactionFormat).replace("{player-name}", player.getName()).replace("{msg}", chat);
-        return Final;
+        return plugin.RankFactory.getPlayerRank(player).getChat_format().format(faction,plugin.RankFactory.getPlayerRank(player).getDisplayName(),player,chatafter);
 /*
         put("Chat-Format", "{rank}{faction}{player-name} > {msg}");
         put("Faction-Format", "[{value}]");

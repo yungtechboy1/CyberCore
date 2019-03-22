@@ -5,7 +5,7 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.RankList;
+import net.yungtechboy1.CyberCore.Rank.RankList;
 
 /**
  * Created by carlt_000 on 1/28/2017.
@@ -14,7 +14,7 @@ public class SetClass extends CheckPermCommand {
     private Vector3 temporalVector = new Vector3();
 
     public SetClass(CyberCoreMain server) {
-        super(server, "setclass", "[OP] Set Player's Class for Server", "/setclass <Player-Name-Exact> <type> <xp>", RankList.PERM_OP);
+        super(server, "setclass", "[OP] Set Player's Class for Server", "/setclass <Player-Name-Exact> <type> <xp>", RankList.PERM_OP.getID());
         this.commandParameters.clear();
         this.setPermission("CyberTech.CyberCore.op");
     }
