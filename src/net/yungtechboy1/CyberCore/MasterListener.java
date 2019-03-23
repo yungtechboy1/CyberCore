@@ -1,6 +1,9 @@
 package net.yungtechboy1.CyberCore;
 
+import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseModal;
+import cn.nukkit.form.response.FormResponseSimple;
+import cn.nukkit.form.window.FormWindowSimple;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import cn.nukkit.Player;
@@ -15,6 +18,10 @@ import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.player.*;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
+
+import java.util.ArrayList;
+
+import static net.yungtechboy1.CyberCore.FormType.MainForm.*;
 
 /**
  * Created by carlt on 3/7/2019.
@@ -96,13 +103,49 @@ public class MasterListener implements Listener {
     public void PFRE(PlayerFormRespondedEvent pr) {
         int fid = pr.getFormID();
         Player p = pr.getPlayer();
-        FormResponseModal frm = (FormResponseModal) pr.getResponse();
-        if(frm.getClickedButtonId() == 0){
-            System.out.println("Bye!");
-        }else{
-            System.out.println("HI!!!!!");
+        CorePlayer cp = ((CorePlayer) p);
+        switch (cp.LastSentFormType) {
+            case Class_0:
+                FormResponseModal frm = (FormResponseModal) pr.getResponse();
+                if (frm.getClickedButtonId() == 0) {
+                    System.out.println("Bye!");
+                    cp.LastSentFormType = NULL;
+                } else {
+                    System.out.println("HI!!!!!");
+                    cp.showFormWindow(cp.getNewWindow());
+                    cp.LastSentFormType = Class_1;
+                    cp.clearNewWindow();
+                }
+                break;
+            case Class_1:
+                FormResponseSimple frs = (FormResponseSimple) pr.getResponse();
+                int k = frs.getClickedButtonId();
+                if(cp.LastSentSubMenu == FormType.SubMenu.MainMenu) {
+                    if (k == 0) {//Offense
+                        cp.showFormWindow(new FormWindowSimple("Choose your Class Catagory!", "Visit Cybertechpp.com for more info on classes!",
+                                new ArrayList<ElementButton>() {{
+                                    add(new ElementButton("Assassin"));
+                                    add(new ElementButton("Knight"));
+                                    add(new ElementButton("Raider"));
+                                    add(new ElementButton("Theif"));
+                                }}));
+                        cp.LastSentFormType = Class_1;
+                        cp.LastSentSubMenu = FormType.SubMenu.Offense;
+                    }
+                }else if(cp.LastSentSubMenu == FormType.SubMenu.Offense){
+                    switch (k){
+                        case 0:
+                            break;//Assassin
+                        case 1:
+                            break;//Knight
+                        case 2:
+                            break;//Raider
+                        case 3:
+                            break;//Theif
+                    }
+                }
+                break;
         }
-
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -110,7 +153,7 @@ public class MasterListener implements Listener {
         //Main.FM.uuid[event.getPlayer().getName()][event.getPlayer().getClientId()] = date(DATE_COOKIE);
         String player = event.getPlayer().getName();
 
-        String fn = Main.FM.getPlayerFaction(event.getPlayer().getName());
+        String fn = Main.FM.getPlayerFaction(event.getPlayer());
         Faction f = Main.FM.FFactory.getFaction(fn);
         if (f != null) {
             Main.FM.FFactory.List.put(fn.toLowerCase(), f);

@@ -190,6 +190,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        getServer().getPluginManager().registerEvents(ClassFactory, this);
 //        getServer().getPluginManager().registerEvents(AuctionFactory, this);
         getServer().getPluginManager().registerEvents(this, this);
+        getServer().getPluginManager().registerEvents(new MasterListener(this), this);
 
 //        getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
 //        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec
@@ -665,6 +666,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PM(PlayerMoveEvent me) {
-        FloatingTextFactory.AddFloatingText(new PopupFT(FTM, me.getPlayer().add(0, 1.5, 0), TextFormat.AQUA + me.getPlayer().getName() + " was Here!"));
+
+        //TODO Implement \/
+//        cp.LastSentFormType = CorePlayer.FormType.Class_0;
+        if(me.getFrom().distance(me.getTo()) > .1 )FloatingTextFactory.AddFloatingText(new PopupFT(FTM, me.getPlayer().add(0, 1.5, 0), TextFormat.AQUA + me.getPlayer().getName() + " was Here!"));
     }
 }

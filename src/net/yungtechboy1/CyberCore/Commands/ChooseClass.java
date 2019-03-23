@@ -3,14 +3,12 @@ package net.yungtechboy1.CyberCore.Commands;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
-import cn.nukkit.form.element.Element;
 import cn.nukkit.form.element.ElementButton;
-import cn.nukkit.form.element.ElementLabel;
-import cn.nukkit.form.window.FormWindowCustom;
 import cn.nukkit.form.window.FormWindowModal;
-import net.yungtechboy1.CyberCore.Commands.Constructors.CheckPermCommand;
+import cn.nukkit.form.window.FormWindowSimple;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.FormType;
 
 import java.util.ArrayList;
 
@@ -38,12 +36,13 @@ public class ChooseClass extends Command {
                             "But that was only rumors! Good Luck Choose wise!"
                     ,"Go Back","Learn More >");
             p.showFormWindow(FWM);
-            cp.setNewWindow(new FormWindowCustom("Choose your Class Catagory!\n Visit Cybertechpp.com for more info on classes!",
-                    new ArrayList<Element>(){{
-                        add(new ElementLabel("TESTTT"));
+            cp.LastSentFormType = FormType.Class_0;
+            cp.setNewWindow(new FormWindowSimple("Choose your Class Catagory!","Visit Cybertechpp.com for more info on classes!",
+                    new ArrayList<ElementButton>(){{
                         add(new ElementButton("Offense"));
-                        add(new ElementButton("Offense"));
-                        add(new ElementButton("Offense"));
+                        add(new ElementButton("Defense"));
+                        add(new ElementButton("Minning"));
+                        add(new ElementButton("Intelligence"));
                     }}));
         }
         return true;

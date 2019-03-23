@@ -68,7 +68,7 @@ public class FloatingTextContainer {
 
     //Generate Flaoting Text for following players
     public void HaldleSend(ArrayList<String> ap) {
-        System.out.println("HS");
+//        System.out.println("HS");
 //        ArrayList<DataPacket> tosend = new ArrayList<>();
         HashMap<String,ArrayList<DataPacket>> tosend;
 //        sync(_CE_Lock)//TODO

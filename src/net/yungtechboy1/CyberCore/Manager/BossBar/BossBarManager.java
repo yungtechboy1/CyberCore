@@ -184,15 +184,15 @@ System.out.println("aaaaaaaaaa"+p.getName());
 
     public void run() {
         int lasttick = -1;
-        System.out.println("11111111111111111111");
+//        System.out.println("11111111111111111111");
         while (Server.getInstance().isRunning()) {
-System.out.println("======");
+//System.out.println("======");
             int tick = Server.getInstance().getTick();
             if (tick != lasttick) {
-                System.out.println("===!!!!!!!===");
+//                System.out.println("===!!!!!!!===");
                 lasttick = tick;
                 for (BossBarGeneric bbg : GetBossBarList()) {
-                    System.out.println("==++++++++++====");
+//                    System.out.println("==++++++++++====");
                     if (bbg.CheckUpdate(tick)) {
                         bbg.reshow();
                     } else {
