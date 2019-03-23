@@ -20,11 +20,11 @@ import java.util.Date;
  */
 public class Blind extends CustomEnchantment {
 
-    private int cooldown;
 
     public Blind() {
         super(BLIND, "Blind", 2, EnchantmentType.SWORD);
-        cooldown = 10 - getLevel();
+        ER = EnchantRarity.R30;
+        SetCooldown(60 - getLevel());
     }
 
     @Override
@@ -47,16 +47,11 @@ public class Blind extends CustomEnchantment {
         if (!(entity instanceof Player)) return;
         if (!(attacker instanceof Player)) return;
 
-        EntityHumanType human = (EntityHumanType) entity;
-
-        long ct = new Date().getTime() / 1000;
-
         Item ph = ((Player) attacker).getInventory().getItemInHand();
-        int nextregintick = ph.getNamedTag().getInt("nextblindtick");
 
 
 
-        if (ct >= nextregintick) {
+        if (CheckCooldown(ph)) {
             int rand = new NukkitRandom(BLIND*BLIND).nextRange(0,100);
             //Server.getInstance().getLogger().info("POST ATTACK!!!" + rand + " <= " + 15*getLevel());
             if(rand <= 15*getLevel()){
@@ -65,45 +60,22 @@ public class Blind extends CustomEnchantment {
                 e.setDuration(15*getLevel());
                 entity.addEffect(e);
 
-                ((Player) attacker).sendMessage(TextFormat.GREEN +getName().toUpperCase()+" ACTIVATED");
-                ((Player) entity).sendMessage(TextFormat.RED + attacker.getName().toUpperCase() + " ACTIVATED "+getName().toUpperCase());
+                ((Player) attacker).sendActionBar(TextFormat.GREEN +getName().toUpperCase()+" ACTIVATED");
+                ((Player) entity).sendActionBar(TextFormat.RED + attacker.getName().toUpperCase() + " ACTIVATED "+getName().toUpperCase());
 
                 attacker.heal(new EntityRegainHealthEvent(attacker, .5f * getLevel(), EntityRegainHealthEvent.CAUSE_MAGIC));
-                entity.getLevel().addParticle(new InkParticle(entity, 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(-1, 0, -1), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(-1, 0, 0), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(-1, 0, 1), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(0, 0, -1), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(0, 0, 1), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(1, 0, -1), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(1, 0, 0), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(1, 0, 1), 2));
-
-                //1 Up
-                entity.getLevel().addParticle(new InkParticle(entity.add(-1, 1, -1), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(-1, 1, 0), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(-1, 1, 1), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(0, 1, -1), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(0, 1, 0), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(0, 1, 1), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(1, 1, -1), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(1, 1, 0), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(0, 1, 1), 2));
-
-                //1 Down
-                entity.getLevel().addParticle(new InkParticle(entity.add(-1, -1, -1), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(-1, -1, 0), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(-1, -1, 1), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(0, -1, -1), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(0, -1, 0), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(0, -1, 1), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(1, -1, -1), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(1, -1, 0), 2));
-                entity.getLevel().addParticle(new InkParticle(entity.add(0, -1, 1), 2));
+                entity.getLevel().addParticle(new InkParticle(entity.getLevel().getSafeSpawn(entity), 2));
+                entity.getLevel().addParticle(new InkParticle(entity.getLevel().getSafeSpawn(entity.add(-1, -2, -1)), 2));
+                entity.getLevel().addParticle(new InkParticle(entity.getLevel().getSafeSpawn(entity.add(-1, -2, 0)), 2));
+                entity.getLevel().addParticle(new InkParticle(entity.getLevel().getSafeSpawn(entity.add(-1, -2, 1)), 2));
+                entity.getLevel().addParticle(new InkParticle(entity.getLevel().getSafeSpawn(entity.add(0, -2, -1)), 2));
+                entity.getLevel().addParticle(new InkParticle(entity.getLevel().getSafeSpawn(entity.add(0, -2, 1)), 2));
+                entity.getLevel().addParticle(new InkParticle(entity.getLevel().getSafeSpawn(entity.add(1, -2, -1)), 2));
+                entity.getLevel().addParticle(new InkParticle(entity.getLevel().getSafeSpawn(entity.add(1, -2, 0)), 2));
+                entity.getLevel().addParticle(new InkParticle(entity.getLevel().getSafeSpawn(entity.add(1, -2, 1)), 2));
 
             }
-
-            ph.getNamedTag().putLong("nextblindtick",ct + cooldown);
+            SetCooldown(GetCooldown(),ph);
 
             Server.getInstance().getLogger().info("NEW TICK " + nextregintick + " ||| " + (ct + cooldown));
         }

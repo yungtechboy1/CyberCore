@@ -10,6 +10,7 @@ import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.BlockVector3;
+import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.SourceInterface;
 import cn.nukkit.network.protocol.*;
@@ -102,7 +103,7 @@ public class CorePlayer extends Player {
                 case ProtocolInfo.PLAYER_ACTION_PACKET:
                     PlayerActionPacket playerActionPacket = (PlayerActionPacket) packet;
                     if (!this.spawned || (!this.isAlive() && playerActionPacket.action != PlayerActionPacket.ACTION_RESPAWN && playerActionPacket.action != PlayerActionPacket.ACTION_DIMENSION_CHANGE_REQUEST)) {
-                        break;
+                        return;
                     }
 
                     playerActionPacket.entityId = this.id;
@@ -116,14 +117,14 @@ public class CorePlayer extends Player {
                             BlockVector3 currentBreakPosition = new BlockVector3(playerActionPacket.x, playerActionPacket.y, playerActionPacket.z);
                             // HACK: Client spams multiple left clicks so we need to skip them.
                             if ((lastBreakPosition1.equals(currentBreakPosition) && (currentBreak - this.lastBreak) < 10) || pos.distanceSquared(this) > 100) {
-                                break;
+                                return;
                             }
                             Block target = this.level.getBlock(pos);
                             PlayerInteractEvent playerInteractEvent = new PlayerInteractEvent(this, this.inventory.getItemInHand(), target, face, target.getId() == 0 ? PlayerInteractEvent.Action.LEFT_CLICK_AIR : PlayerInteractEvent.Action.LEFT_CLICK_BLOCK);
                             this.getServer().getPluginManager().callEvent(playerInteractEvent);
                             if (playerInteractEvent.isCancelled()) {
                                 this.inventory.sendHeldItem(this);
-                                break;
+                                return;
                             }
                             switch (target.getId()) {
                                 case Block.NOTEBLOCK:
@@ -135,8 +136,10 @@ public class CorePlayer extends Player {
                             }
                             Block block = target.getSide(face);
                             if (block.getId() == Block.FIRE) {
+                                //Chance of getting caught on fire!
+                                RandomChanceOfFire(77);
                                 this.level.setBlock(block, new BlockAir(), true);
-                                break;
+                                return;
                             }
                             if (!this.isCreative()) {
                                 //improved this to take stuff like swimming, ladders, enchanted tools into account, fix wrong tool break time calculations for bad tools (pmmp/PocketMine-MP#211)
@@ -157,6 +160,15 @@ public class CorePlayer extends Player {
                             this.lastBreak = currentBreak;
                             this.lastBreakPosition1 = currentBreakPosition;
                             break;
-                        super.handleDataPacket(packet);
                     }
             }
+        }
+        super.handleDataPacket(packet);
+    }
+
+    public void RandomChanceOfFire(int max) {
+        NukkitRandom nr = new NukkitRandom(entityCount * max);
+        int f = nr.nextRange(0, 100);
+        if (f < max) setOnFire(nr.nextRange(1, 4));
+    }
+}

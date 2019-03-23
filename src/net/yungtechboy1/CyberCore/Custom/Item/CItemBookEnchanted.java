@@ -1,6 +1,5 @@
 package net.yungtechboy1.CyberCore.Custom.Item;
 
-import cn.nukkit.item.ItemBookEnchanted;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.nbt.tag.CompoundTag;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
@@ -9,7 +8,6 @@ import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.utils.TextFormat;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by carlt_000 on 1/18/2017.
@@ -35,7 +33,7 @@ public class CItemBookEnchanted extends Item {
 
     public CItemBookEnchanted(Integer meta, int count, CompoundTag namedtag) {
         super(Item.ENCHANT_BOOK, meta, count, "Custom Enchanted Book");
-        E = CustomEnchantment.getEnchant(meta);
+        E = CustomEnchantment.getEnchantFromID(meta);
         if (namedtag != null && namedtag.contains("rates")) {
             SuccessRate = namedtag.getCompound("rates").getInt("s");
             FailRate = namedtag.getCompound("rates").getInt("f");
@@ -48,7 +46,7 @@ public class CItemBookEnchanted extends Item {
 
     public CItemBookEnchanted(Integer meta, int count, CompoundTag namedtag, int s, int f) {
         super(Item.ENCHANT_BOOK, meta, count, "Custom Enchanted Book");
-        E = CustomEnchantment.getEnchant(meta);
+        E = CustomEnchantment.getEnchantFromID(meta);
         if(namedtag != null)setCompoundTag(namedtag);
         SuccessRate = s;
         FailRate = f;
