@@ -24,7 +24,7 @@ public class Blind extends CustomEnchantment {
     public Blind() {
         super(BLIND, "Blind", 2, EnchantmentType.SWORD);
         ER = EnchantRarity.R30;
-        SetCooldown(60 - getLevel());
+        SetCooldown(60 - (getLevel()*3));
     }
 
     @Override
@@ -55,13 +55,13 @@ public class Blind extends CustomEnchantment {
             int rand = new NukkitRandom(BLIND*BLIND).nextRange(0,100);
             //Server.getInstance().getLogger().info("POST ATTACK!!!" + rand + " <= " + 15*getLevel());
             if(rand <= 15*getLevel()){
-                Effect e = Effect.getEffect(15);
+                Effect e = Effect.getEffect(Effect.BLINDNESS);
                 e.setAmplifier(getLevel());
-                e.setDuration(15*getLevel());
+                e.setDuration(GetDuration());
                 entity.addEffect(e);
 
                 ((Player) attacker).sendActionBar(TextFormat.GREEN +getName().toUpperCase()+" ACTIVATED");
-                ((Player) entity).sendActionBar(TextFormat.RED + attacker.getName().toUpperCase() + " ACTIVATED "+getName().toUpperCase());
+                ((Player) entity).sendActionBar(TextFormat.RED + attacker.getName().toUpperCase() + " has activated "+TextFormat.YELLOW+getName().toUpperCase());
 
                 attacker.heal(new EntityRegainHealthEvent(attacker, .5f * getLevel(), EntityRegainHealthEvent.CAUSE_MAGIC));
                 entity.getLevel().addParticle(new InkParticle(entity.getLevel().getSafeSpawn(entity), 2));
@@ -77,7 +77,7 @@ public class Blind extends CustomEnchantment {
             }
             SetCooldown(GetCooldown(),ph);
 
-            Server.getInstance().getLogger().info("NEW TICK " + nextregintick + " ||| " + (ct + cooldown));
+//            Server.getInstance().getLogger().info("NEW TICK " + nextregintick + " ||| " + (ct + cooldown));
         }
         ((Player) attacker).getInventory().setItemInHand(ph);
 
@@ -91,5 +91,9 @@ public class Blind extends CustomEnchantment {
     @Override
     public int getMaxLevel() {
         return 3;
+    }
+
+    public int GetDuration(){
+        return 15*getLevel();
     }
 }

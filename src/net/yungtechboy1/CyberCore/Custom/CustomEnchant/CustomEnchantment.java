@@ -184,6 +184,9 @@ public class CustomEnchantment extends Enchantment {
 
     }
 
+    public static Enchantment getEnchantFromID(int id) {
+       return getEnchantFromID(id,1);
+    }
     public static Enchantment getEnchantFromID(int id, int lvl) {
         if (id >= Enchantment.ID_TRIDENT_CHANNELING) {
             return Enchantment.get(id);

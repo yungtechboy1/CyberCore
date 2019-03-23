@@ -36,7 +36,7 @@ public class ChooseClass extends Command {
                             "But that was only rumors! Good Luck Choose wise!"
                     ,"Go Back","Learn More >");
             p.showFormWindow(FWM);
-            cp.LastSentFormType = FormType.Class_0;
+            cp.LastSentFormType = FormType.MainForm.Class_0;
             cp.setNewWindow(new FormWindowSimple("Choose your Class Catagory!","Visit Cybertechpp.com for more info on classes!",
                     new ArrayList<ElementButton>(){{
                         add(new ElementButton("Offense"));
