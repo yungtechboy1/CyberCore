@@ -24,7 +24,7 @@ public class Blind extends CustomEnchantment {
     public Blind() {
         super(BLIND, "Blind", 2, EnchantmentType.SWORD);
         ER = EnchantRarity.R30;
-        SetCooldown(60 - (getLevel()*3));
+        SetCooldown(60 - (getLevel() * 3));
     }
 
     @Override
@@ -50,18 +50,14 @@ public class Blind extends CustomEnchantment {
         Item ph = ((Player) attacker).getInventory().getItemInHand();
 
 
-
         if (CheckCooldown(ph)) {
-            int rand = new NukkitRandom(BLIND*BLIND).nextRange(0,100);
+            int rand = new NukkitRandom(BLIND * BLIND).nextRange(0, 25 - getLevel());
             //Server.getInstance().getLogger().info("POST ATTACK!!!" + rand + " <= " + 15*getLevel());
-            if(rand <= 15*getLevel()){
-                Effect e = Effect.getEffect(Effect.BLINDNESS);
-                e.setAmplifier(getLevel());
-                e.setDuration(GetDuration());
-                entity.addEffect(e);
+            if (rand <= getLevel()) {
+                entity.addEffect(GetEffect());
 
-                ((Player) attacker).sendActionBar(TextFormat.GREEN +getName().toUpperCase()+" ACTIVATED");
-                ((Player) entity).sendActionBar(TextFormat.RED + attacker.getName().toUpperCase() + " has activated "+TextFormat.YELLOW+getName().toUpperCase());
+                ((Player) attacker).sendActionBar(TextFormat.GREEN + getName().toUpperCase() + " ACTIVATED");
+                ((Player) entity).sendActionBar(TextFormat.RED + attacker.getName().toUpperCase() + " has activated " + TextFormat.YELLOW + getName().toUpperCase());
 
                 attacker.heal(new EntityRegainHealthEvent(attacker, .5f * getLevel(), EntityRegainHealthEvent.CAUSE_MAGIC));
                 entity.getLevel().addParticle(new InkParticle(entity.getLevel().getSafeSpawn(entity), 2));
@@ -75,7 +71,7 @@ public class Blind extends CustomEnchantment {
                 entity.getLevel().addParticle(new InkParticle(entity.getLevel().getSafeSpawn(entity.add(1, -2, 1)), 2));
 
             }
-            SetCooldown(GetCooldown(),ph);
+            SetCooldown(GetCooldown(), ph);
 
 //            Server.getInstance().getLogger().info("NEW TICK " + nextregintick + " ||| " + (ct + cooldown));
         }
@@ -90,10 +86,39 @@ public class Blind extends CustomEnchantment {
 
     @Override
     public int getMaxLevel() {
-        return 3;
+        return 5;
     }
 
-    public int GetDuration(){
-        return 15*getLevel();
+    public Effect GetEffect() {
+        Effect e = Effect.getEffect(Effect.BLINDNESS);
+        switch (getLevel()) {
+            case 1:
+                e.setAmplifier(1);
+                e.setDuration(GetDuration());
+                return e;
+            case 2:
+                e.setAmplifier(1);
+                e.setDuration(GetDuration());
+                return e;
+            case 3:
+                e.setAmplifier(2);
+                e.setDuration((int) (GetDuration() * .5));
+                return e;
+            case 4:
+                e.setAmplifier(2);
+                e.setDuration(GetDuration() - 15);
+                return e;
+            case 5:
+                e.setAmplifier(3);
+                e.setDuration(GetDuration() - 20);
+                return e;
+
+        }
+        return null;
+    }
+
+    private int GetDuration() {
+
+        return 15 * getLevel();
     }
 }
