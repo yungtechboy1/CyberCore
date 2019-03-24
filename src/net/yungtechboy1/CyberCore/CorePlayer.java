@@ -11,6 +11,7 @@ public class CorePlayer extends Player {
 
     public Integer kills = 0;
     public Integer deaths = 0;
+    public Integer banned = 0;
     public HashMap<String, Object> extraData = new HashMap<>();
 
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {

@@ -265,6 +265,10 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
 //        return null;
 //    }
 
+    public void log(String string) {
+        getLogger().info(colorize(string));
+    }
+
     public String colorize(String str) {
         return str.replace('&', '§');
     }
@@ -345,25 +349,36 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
         return false;
     }
 
-    public CorePlayer getCorePlayer(String uuid) {
-        return getCorePlayer(getPlayer(uuid));
+    public CorePlayer getCorePlayer(String p) {
+        return getCorePlayer(getPlayer(p));
     }
 
     public CorePlayer getCorePlayer(Player p) {
-        if(p instanceof CorePlayer){
-            getLogger().info(((CorePlayer) p).kills + " KILLLSSSSSS!!!!!");
-            return (CorePlayer) p;
+        Class<CorePlayer> aClass = (Class<CorePlayer>) p.getClass();
+        return aClass.cast(p);
+    }
+
+    public UUID getPlayerUUID(String p) {
+        Player player;
+        if((player = getServer().getPlayer(p)) != null) {
+            return player.getUniqueId();
+        } else {
+            return null;
         }
-        return null;
     }
 
     public Player getPlayer(String p) {
         Player player;
         if((player = getServer().getPlayer(p)) != null) {
             return player;
-        } else {
-            return null;
+        }else {
+            for(UUID uuid : getServer().getOnlinePlayers().keySet()) {
+                if(uuid.toString().equals(p)) {
+                    return getServer().getOnlinePlayers().get(uuid);
+                }
+            }
         }
+        return null;
     }
 
     /**
@@ -386,6 +401,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
     public Rank getPlayerRank(String p) {
         return getPlayerRank(getPlayer(p));
     }
+
 
     public Rank getPlayerRank(Player p) {
         return RankFactory.getPlayerRank(p);
