@@ -9,6 +9,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.item.enchantment.EnchantmentType;
 import cn.nukkit.level.particle.HeartParticle;
+import cn.nukkit.level.particle.InkParticle;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.TextFormat;
 
@@ -19,12 +20,9 @@ import java.util.Date;
  */
 public class LifeSteal extends CustomEnchantment {
 
-
-    private int cooldown;
-
     public LifeSteal() {
         super(LIFESTEALER, "Life Steal", 2, EnchantmentType.SWORD);
-        cooldown = 5 - getLevel();
+        SetCooldown(90 - (getLevel()*5));
     }
 
     @Override
@@ -44,65 +42,37 @@ public class LifeSteal extends CustomEnchantment {
 
     @Override
     public void doPostAttack(Entity attacker, Entity entity) {
-        if (!(entity instanceof EntityHumanType) && !(attacker instanceof Player)) return;
-
-        EntityHumanType human = (EntityHumanType) entity;
-
-        long ct = new Date().getTime() / 1000;
+        if (!(entity instanceof Player) && !(attacker instanceof Player)) return;
 
         Item ph = ((Player) attacker).getInventory().getItemInHand();
-        int nextregintick = ph.getNamedTag().getInt("nextlifestealtick");
 
 
-
-        if (ct >= nextregintick) {
-            int rand = new NukkitRandom().nextRange(0,100);
+        if (CheckCooldown(ph)) {
+            int rand = new NukkitRandom(BLIND * BLIND).nextRange(0, 25 - getLevel());
             //Server.getInstance().getLogger().info("POST ATTACK!!!" + rand + " <= " + 15*getLevel());
-            if(rand <= 15*getLevel()){
-            human.setHealth(human.getHealth() - (.5f * getLevel()));
+            if (rand <= getLevel()) {
 
-            ((Player) attacker).sendMessage(TextFormat.GREEN + "LIFE STEALER ACTIVATED");
-            if (entity instanceof Player)
-                ((Player) entity).sendMessage(TextFormat.RED + attacker.getName().toUpperCase() + " ACTIVATED LIFE STEALER");
 
-            attacker.heal(new EntityRegainHealthEvent(attacker, .5f * getLevel(), EntityRegainHealthEvent.CAUSE_MAGIC));
-            attacker.getLevel().addParticle(new HeartParticle(attacker, 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(-1, 0, -1), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(-1, 0, 0), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(-1, 0, 1), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(0, 0, -1), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(0, 0, 1), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(1, 0, -1), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(1, 0, 0), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(1, 0, 1), 2));
+                ((Player) attacker).sendActionBar(TextFormat.GREEN + getName().toUpperCase() + " ACTIVATED and took "+GetHeartsStolen()+" Hearts from enemy!");
+                ((Player) entity).sendActionBar(TextFormat.RED + attacker.getName().toUpperCase() + " has activated " + TextFormat.YELLOW + getName().toUpperCase()+" and stole "+GetHeartsStolen()+" Hearts!");
 
-            //1 Up
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(-1, 1, -1), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(-1, 1, 0), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(-1, 1, 1), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(0, 1, -1), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(0, 1, 0), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(0, 1, 1), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(1, 1, -1), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(1, 1, 0), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(0, 1, 1), 2));
+                attacker.heal(new EntityRegainHealthEvent(attacker, GetHeartsStolen() * getLevel(), EntityRegainHealthEvent.CAUSE_MAGIC));
+                entity.getLevel().addParticle(new HeartParticle(entity.getLevel().getSafeSpawn(entity), 2));
+                entity.getLevel().addParticle(new HeartParticle(entity.getLevel().getSafeSpawn(entity.add(-1, -2, -1)), 2));
+                entity.getLevel().addParticle(new HeartParticle(entity.getLevel().getSafeSpawn(entity.add(-1, -2, 0)), 2));
+                entity.getLevel().addParticle(new HeartParticle(entity.getLevel().getSafeSpawn(entity.add(-1, -2, 1)), 2));
+                entity.getLevel().addParticle(new HeartParticle(entity.getLevel().getSafeSpawn(entity.add(0, -2, -1)), 2));
+                entity.getLevel().addParticle(new HeartParticle(entity.getLevel().getSafeSpawn(entity.add(0, -2, 1)), 2));
+                entity.getLevel().addParticle(new HeartParticle(entity.getLevel().getSafeSpawn(entity.add(1, -2, -1)), 2));
+                entity.getLevel().addParticle(new HeartParticle(entity.getLevel().getSafeSpawn(entity.add(1, -2, 0)), 2));
+                entity.getLevel().addParticle(new HeartParticle(entity.getLevel().getSafeSpawn(entity.add(1, -2, 1)), 2));
 
-            //1 Down
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(-1, -1, -1), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(-1, -1, 0), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(-1, -1, 1), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(0, -1, -1), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(0, -1, 0), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(0, -1, 1), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(1, -1, -1), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(1, -1, 0), 2));
-            attacker.getLevel().addParticle(new HeartParticle(attacker.add(0, -1, 1), 2));
+                SetCooldown(GetCooldown(), ph);
+            }else{
+                SetCooldown(2,ph);
+            }
 
-        }
-
-            ph.getNamedTag().putLong("nextlifestealtick",ct + cooldown);
-
-            Server.getInstance().getLogger().info("NEW TICK " + nextregintick + " ||| " + (ct + cooldown));
+//            Server.getInstance().getLogger().info("NEW TICK " + nextregintick + " ||| " + (ct + cooldown));
         }
         ((Player) attacker).getInventory().setItemInHand(ph);
 
@@ -115,6 +85,22 @@ public class LifeSteal extends CustomEnchantment {
 
     @Override
     public int getMaxLevel() {
-        return 3;
+        return 5;
+    }
+
+    public float GetHeartsStolen(){
+        switch (getLevel()){
+            case 1:
+                return .5f;
+            case 2:
+                return 1;
+            case 3:
+                return 2;
+            case 4:
+                return 4;
+            case 5:
+                return 5;
+        }
+        return .5f;
     }
 }

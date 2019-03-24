@@ -70,8 +70,10 @@ public class Blind extends CustomEnchantment {
                 entity.getLevel().addParticle(new InkParticle(entity.getLevel().getSafeSpawn(entity.add(1, -2, 0)), 2));
                 entity.getLevel().addParticle(new InkParticle(entity.getLevel().getSafeSpawn(entity.add(1, -2, 1)), 2));
 
+                SetCooldown(GetCooldown(), ph);
+            } else {
+                SetCooldown(2, ph);
             }
-            SetCooldown(GetCooldown(), ph);
 
 //            Server.getInstance().getLogger().info("NEW TICK " + nextregintick + " ||| " + (ct + cooldown));
         }

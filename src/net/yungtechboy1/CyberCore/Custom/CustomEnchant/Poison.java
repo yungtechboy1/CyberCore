@@ -22,7 +22,7 @@ public class Poison extends CustomEnchantment {
 
     public Poison() {
         super(POISON, "Poison", 2, EnchantmentType.SWORD);
-        cooldown = 10 - getLevel();
+        SetCooldown(90 - (getLevel()*5));
     }
 
     @Override
@@ -40,9 +40,6 @@ public class Poison extends CustomEnchantment {
         return true;
     }
 
-    public void FlyUp(Entity entity) {
-        entity.addMotion(0, 5, 0);
-    }
 
     @Override
     public void doPostAttack(Entity attacker, Entity entity) {
