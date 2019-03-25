@@ -19,7 +19,7 @@ public class CoreSQL {
 
     public Connection connection;
     public CyberCoreMain plugin;
-    private boolean enabled;
+    private boolean enabled = true;
 
     public CoreSQL(CyberCoreMain plugin) {
         this.plugin = plugin;
@@ -30,6 +30,7 @@ public class CoreSQL {
      * @return Connection
      */
     public Connection connectToDb() {
+        plugin.getLogger().info("ATTEMPTING CONNECTION");
         String host = plugin.MainConfig.getString("mysql-host");
         String pass = plugin.MainConfig.getString("mysql-pass");
         int port = plugin.MainConfig.getInt("mysql-port");
@@ -40,6 +41,15 @@ public class CoreSQL {
                 db, user, pass);
 
         if (connection == null) enabled = false;
+        try {
+            if(connection.isValid(10)) {
+                plugin.getLogger().info("SQL CONNEECTION VALID!");
+            } else {
+                plugin.getLogger().error("SQL CONNEECTION INVALID!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return connection;
     }
 
@@ -58,7 +68,7 @@ public class CoreSQL {
 
 
     public void addUser(String uuid, String ip) throws SQLException {
-        executeUpdate("insert mcpe set uuid = "+uuid+" , last_ip = "+ ip);
+        executeUpdate("insert into mcpe (uuid, last_ip) values ('"+uuid+"' , '"+ip+"')");
         plugin.getLogger().info("User: " + uuid + " - added to DB");
     }
 
@@ -69,14 +79,18 @@ public class CoreSQL {
     public void checkUser(Player player) throws SQLException {
         String uuid = player.getUniqueId().toString();
         String ip = player.getAddress();
+        plugin.getLogger().info(ip);
         String query = "SELECT * FROM mcpe WHERE uuid='" + uuid + "'";
-        String[] selector = {"uuid"};
-        List<HashMap<String, Object>> data = executeSelect(query, selector);
+        String[] selector = {"uuid","last_ip","rank"};
+        ArrayList<HashMap<String, Object>> data = executeSelect(query, selector);
         if(data == null) {
             plugin.getLogger().info("USER BEING CREATED!!!");
             addUser(uuid, ip);
             plugin.UserSQL.addUser(uuid);
+            int rank = 0;
+            plugin.RankFactory.RankCache.put(uuid, rank);
         } else {
+            plugin.getLogger().info(data.get(0).get("last_ip").toString());
             if(!data.get(0).get("last_ip").equals(ip)) {
                 Config ip_change = new Config(new File(plugin.getDataFolder(), "ip_changes.yml"));
                 ip_change.set(uuid, ip_change.getList(uuid).add(ip));
@@ -84,10 +98,10 @@ public class CoreSQL {
             }
             int rank = (int) data.get(0).get("rank");
             plugin.RankFactory.RankCache.put(uuid, rank);
-            connection.close();
             plugin.UserSQL.loadUser(uuid);
             plugin.getLogger().info("USER EXISTS!!!");
         }
+        plugin.UserSQL.saveUser(plugin.getCorePlayer(player));
     }
 
     public boolean executeUpdate(String query) throws SQLException {
@@ -100,11 +114,12 @@ public class CoreSQL {
         return true;
     }
 
-    public List<HashMap<String, Object>> executeSelect(String query, String[] selectors) throws SQLException {
-        List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
+    public ArrayList<HashMap<String, Object>> executeSelect(String query, String[] selectors) throws SQLException {
+        ArrayList<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
         Connection connection = connectToDb();
         if (connection == null) return null;
-        ResultSet resultSet = connection.createStatement().executeQuery(query);
+        Statement statement = connection.prepareStatement(query);
+        ResultSet resultSet = statement.executeQuery(query);
         if (resultSet == null) return null;
         while (resultSet.next()) {
             HashMap<String,Object> map = new HashMap<>();
@@ -114,7 +129,7 @@ public class CoreSQL {
             data.add(map);
         }
         if (connection != null) connection.close();
-        return data;
+        return data.isEmpty() ? null: data;
     }
 
 }

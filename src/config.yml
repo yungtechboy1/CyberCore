@@ -13,11 +13,12 @@ mysql-port: 3306
 server-data:
   file: "cyber_core_data.db"
   table: "mcpe"
-  uuid:
-    type: "varchar(50)"
-  kills:
-    type: "int(9)"
-  deaths:
-    type: "int(9)"
-  banned:
-    type: "int(1)"
+  data:
+    uuid:
+      type: "varchar(50)"
+    kills:
+      type: "int(9)"
+    deaths:
+      type: "int(9)"
+    banned:
+      type: "int(1)"

@@ -35,6 +35,7 @@ public class CorePlayer extends Player {
     private FormWindow nw;
     public Integer kills = 0;
     public Integer deaths = 0;
+    public Integer banned = 0;
     public HashMap<String, Object> extraData = new HashMap<>();
 
     long uct = 0;
