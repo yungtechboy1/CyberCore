@@ -282,6 +282,10 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        return null;
 //    }
 
+    public void log(String string) {
+        getLogger().info(colorize(string));
+    }
+
     public String colorize(String str) {
         return str.replace('&', '§');
     }
@@ -362,8 +366,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         return false;
     }
 
-    public CorePlayer getCorePlayer(String uuid) {
-        return getCorePlayer(getPlayer(uuid));
+    public CorePlayer getCorePlayer(String p) {
+        return getCorePlayer(getPlayer(p));
     }
 
     public CorePlayer getCorePlayer(Player p) {
@@ -371,7 +375,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
             getLogger().info(((CorePlayer) p).kills + " KILLLSSSSSS!!!!!");
             return (CorePlayer) p;
         }
-        return null;
     }
 
     public Player getPlayer(String p) {
@@ -384,6 +387,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
             }
             return null;
         }
+        return null;
     }
 
     /**
@@ -400,6 +404,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public Rank getPlayerRank(String p) {
         return getPlayerRank(getPlayer(p));
     }
+
 
     public Rank getPlayerRank(Player p) {
         return RankFactory.getPlayerRank(p);

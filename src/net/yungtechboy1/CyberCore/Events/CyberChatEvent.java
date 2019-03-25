@@ -35,8 +35,8 @@ public class CyberChatEvent implements Listener {
         p.sendTitle(plugin.colorize("&l&bCyberTech"), plugin.colorize("&l&2Welcome!"),30,30, 10);
 
         plugin.initiatePlayer(p);
-
-        String rank = plugin.RankFactory.getPlayerRank(p).getDisplayName();
+        plugin.getLogger().info(p.getName());
+        String rank = plugin.RankFactory.getPlayerRank(p.getName()).getDisplayName();
         p.sendMessage(plugin.colorize( "&2You Have Joined with the Rank: " + rank));
         //plugin.Setnametag(event.getPlayer().getName());
         if (rank != null && rank.equalsIgnoreCase("op")) {
@@ -54,6 +54,7 @@ public class CyberChatEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCreation(PlayerCreationEvent event) {
         event.setPlayerClass(CorePlayer.class);
+        event.setBaseClass(CorePlayer.class);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
