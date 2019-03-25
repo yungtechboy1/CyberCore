@@ -5,9 +5,12 @@ import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.block.BlockDragonEgg;
 import cn.nukkit.block.BlockNoteblock;
+import cn.nukkit.entity.data.ShortEntityData;
 import cn.nukkit.event.player.PlayerInteractEvent;
+import cn.nukkit.event.player.PlayerRespawnEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.form.window.FormWindow;
+import cn.nukkit.level.Position;
 import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.BlockVector3;
 import cn.nukkit.math.NukkitRandom;
@@ -159,6 +162,10 @@ public class CorePlayer extends Player {
                             this.breakingBlock = target;
                             this.lastBreak = currentBreak;
                             this.lastBreakPosition1 = currentBreakPosition;
+                            break;
+                        case PlayerActionPacket.ACTION_JUMP:
+                            sendMessage("JUMMMPPPPP!!!");
+                            addMotion(0,.5,0);
                             break;
                     }
             }

@@ -2,7 +2,6 @@ package net.yungtechboy1.CyberCore.Manager;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
-import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemTool;
 import cn.nukkit.item.enchantment.Enchantment;
@@ -73,7 +72,7 @@ public class BlockBreakTimeManager {
 
     private double speedRateByHasteLore0(int hasteLoreLevel) {
         if(item.hasEnchantments()){
-            HasteCE ce = (HasteCE)CustomEnchantment.getEnchantFromID(item,(short)CustomEnchantment.HASTE);
+            HasteCE ce = (HasteCE)CustomEnchantment.getEnchantFromIDFromItem(item,(short)CustomEnchantment.HASTE);
             if(ce != null && ce.TestChances(nr.nextRange(0,100)))hasteLoreLevel += ce.getLevel();
 
         }

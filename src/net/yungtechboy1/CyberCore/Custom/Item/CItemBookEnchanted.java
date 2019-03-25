@@ -33,7 +33,7 @@ public class CItemBookEnchanted extends Item {
 
     public CItemBookEnchanted(Integer meta, int count, CompoundTag namedtag) {
         super(Item.ENCHANT_BOOK, meta, count, "Custom Enchanted Book");
-        E = CustomEnchantment.getEnchantFromID(meta);
+        E = CustomEnchantment.getEnchantFromIDFromItem(meta);
         if (namedtag != null && namedtag.contains("rates")) {
             SuccessRate = namedtag.getCompound("rates").getInt("s");
             FailRate = namedtag.getCompound("rates").getInt("f");
@@ -46,7 +46,7 @@ public class CItemBookEnchanted extends Item {
 
     public CItemBookEnchanted(Integer meta, int count, CompoundTag namedtag, int s, int f) {
         super(Item.ENCHANT_BOOK, meta, count, "Custom Enchanted Book");
-        E = CustomEnchantment.getEnchantFromID(meta);
+        E = CustomEnchantment.getEnchantFromIDFromItem(meta);
         if(namedtag != null)setCompoundTag(namedtag);
         SuccessRate = s;
         FailRate = f;

@@ -29,6 +29,10 @@ public class CustomEnchantment extends Enchantment {
     public static final int THUNDER = 32;
     public static final int VIPER = 33;
     public static final int HASTE = 34;
+    public static final int NIGHTVISION = 35;
+    public static final int GILLS = 36;
+    public static final int SNACKPACK = 37;
+    public static final int SPRING = 38;
     public static final int CrateKey = 55;
 
     boolean CheckCustomName = true;
@@ -184,10 +188,10 @@ public class CustomEnchantment extends Enchantment {
 
     }
 
-    public static Enchantment getEnchantFromID(int id) {
-       return getEnchantFromID(id,1);
+    public static Enchantment getEnchantFromIDFromItem(int id) {
+       return getEnchantFromIDFromItem(id,1);
     }
-    public static Enchantment getEnchantFromID(int id, int lvl) {
+    public static Enchantment getEnchantFromIDFromItem(int id, int lvl) {
         if (id >= Enchantment.ID_TRIDENT_CHANNELING) {
             return Enchantment.get(id);
         } else {
@@ -213,17 +217,21 @@ public class CustomEnchantment extends Enchantment {
         return null;
     }
 
-    public static Enchantment getEnchantFromID(Item i, short id) {
+    public static Enchantment getEnchantFromIDFromItem(Item i, short id) {
         if (!i.hasEnchantments()) {
             return null;
         }
 
         for (CompoundTag entry : i.getNamedTag().getList("ench", CompoundTag.class).getAll()) {
             if (entry.getShort("id") == id) {
-                Enchantment e = getEnchantFromID(entry.getShort("id"), entry.getShort("lvl"));
+                Enchantment e = getEnchantFromIDFromItem(entry.getShort("id"), entry.getShort("lvl"));
             }
         }
 
         return null;
+    }
+
+    public void RunPassive(){
+
     }
 }
