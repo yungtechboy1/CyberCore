@@ -36,7 +36,7 @@ public class CyberChatEvent implements Listener {
 
         plugin.initiatePlayer(p);
         plugin.getLogger().info(p.getName());
-        String rank = plugin.RankFactory.getPlayerRank(p.getName()).getDisplayName();
+        String rank = plugin.RankFactory.getPlayerRank(p).getDisplayName();
         p.sendMessage(plugin.colorize( "&2You Have Joined with the Rank: " + rank));
         //plugin.Setnametag(event.getPlayer().getName());
         if (rank != null && rank.equalsIgnoreCase("op")) {

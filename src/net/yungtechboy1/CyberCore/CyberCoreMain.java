@@ -375,6 +375,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
             getLogger().info(((CorePlayer) p).kills + " KILLLSSSSSS!!!!!");
             return (CorePlayer) p;
         }
+        return null;
     }
 
     public Player getPlayer(String p) {
@@ -387,7 +388,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
             }
             return null;
         }
-        return null;
     }
 
     /**

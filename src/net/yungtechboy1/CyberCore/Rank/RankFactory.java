@@ -39,7 +39,6 @@ public class RankFactory {
         Main.getLogger().info("Loading Ranks...");
         loadDefault();
         Config rankConf = new Config(new File(Main.getDataFolder(), "ranks.yml"));
-        Main.getLogger().info(rankConf.get("Ranks").toString());
         Map<String, Object> map = rankConf.getSection("Ranks").getAllMap();
         for (String s : map.keySet()) {
             Main.getLogger().info("-===" + s + "===-");
