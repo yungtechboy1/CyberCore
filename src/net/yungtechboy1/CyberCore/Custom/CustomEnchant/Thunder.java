@@ -88,6 +88,6 @@ public class Thunder extends CustomEnchantment {
 
     @Override
     public int getMaxLevel() {
-        return 1;
+        return 3;
     }
 }

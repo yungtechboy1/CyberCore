@@ -8,7 +8,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.RankList;
+import net.yungtechboy1.CyberCore.Rank.RankList;
 import net.yungtechboy1.CyberCore.Utils;
 
 /**

@@ -41,10 +41,10 @@ public class CustomFactory implements Listener {
         Item.list[Item.ENCHANT_BOOK] = CItemBookEnchanted.class;
         Block.init();
         enchantments[CustomEnchantment.BLIND] = new LifeSteal();
-        enchantments[CustomEnchantment.CRIPPLING] = new Crippling();
+//        enchantments[CustomEnchantment.CRIPPLING] = new Crippling();
         enchantments[CustomEnchantment.DEATHBRINGER] = new DeathBringer();
-        enchantments[CustomEnchantment.GOOEY] = new Gooey();
-        enchantments[CustomEnchantment.ICEASPECT] = new IceAspect();
+//        enchantments[CustomEnchantment.GOOEY] = new Gooey();
+//        enchantments[CustomEnchantment.ICEASPECT] = new IceAspect();
         enchantments[CustomEnchantment.LIFESTEALER] = new LifeSteal();
         enchantments[CustomEnchantment.POISON] = new Poison();
         enchantments[CustomEnchantment.THUNDER] = new Thunder();

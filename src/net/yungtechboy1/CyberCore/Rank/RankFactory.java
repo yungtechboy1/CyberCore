@@ -1,16 +1,13 @@
-package net.yungtechboy1.CyberCore.Ranks;
+package net.yungtechboy1.CyberCore.Rank;
 
 import cn.nukkit.Player;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.RankList;
-import net.yungtechboy1.CyberCore.Ranks.Rank;
+import net.yungtechboy1.CyberCore.Rank.Ranks.Guest_Rank;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,38 +30,40 @@ public class RankFactory {
         loadRanks();
     }
 
+    public void loadDefault() {
+        ranks.put(RankList.PERM_GUEST.getID(), new Guest_Rank());
+
+    }
+
     public void loadRanks() {
         Main.getLogger().info("Loading Ranks...");
+        loadDefault();
         Config rankConf = new Config(new File(Main.getDataFolder(), "ranks.yml"));
         Main.getLogger().info(rankConf.get("Ranks").toString());
         Map<String, Object> map = rankConf.getSection("Ranks").getAllMap();
-        for(String s: map.keySet()) {
+        for (String s : map.keySet()) {
             Main.getLogger().info("-===" + s + "===-");
-            int index = rankConf.getInt("Ranks." +s+ ".rank");
-            String display = rankConf.getString("Ranks." +s+ ".display_name");
-            String chat_prefix = rankConf.getString("Ranks." +s+ ".chat_prefix");
-            Rank data = new Rank(index, display, chat_prefix);
-            ranks.put(index, data);
-            Main.getLogger().info("Rank: " + s + " ["+index+"]- loaded...");
-        }
-    }
-
-    public Rank getPlayerRank(String p) {
-        String uuid;
-        if((uuid = Main.getPlayer(p).getUniqueId().toString()) != null ) {
-            return ranks.get(RankCache.get(uuid));
-        } else {
-            try {
-                return(ranks.get(Main.SQLApi.getInteger(DB_TABLE, "gamertag", p, "rank")));
-            } catch (SQLException e) {
-                e.printStackTrace();
+            int index = rankConf.getInt("Ranks." + s + ".rank");
+            String display = rankConf.getString("Ranks." + s + ".display_name");
+            String chat_prefix = rankConf.getString("Ranks." + s + ".chat_prefix");
+            if (!ranks.containsKey(index)) {
+//                Rank data = new Rank(index, display, chat_prefix);
+//                ranks.put(index, data);
+//                Main.getLogger().info("Rank: " + s + " [" + index + "]- loaded...");
+            } else {
+                Rank rr = ranks.get(index);
+                rr.display_name = display;
+                rr.chat_prefix = chat_prefix;
+                ranks.put(index, rr);
+                Main.getLogger().info("Rank: " + s + " [" + index + "]- Updated!...");
             }
         }
-        return null;
     }
 
     public Rank getPlayerRank(Player p) {
-        return getPlayerRank(p.getName());
+        String uuid = p.getUniqueId().toString();
+        if(uuid == null)return  new Guest_Rank();
+        return ranks.getOrDefault(RankCache.get(uuid), new Guest_Rank());
     }
 
     public String GetRankStringFromGroup(String group) {
@@ -131,42 +130,42 @@ public class RankFactory {
         return 0;
     }
 
-    public Integer AllRanksToInt(String rank) {
-        return AllRanksToInt(rank, false);
-    }
-
-    public Integer AllRanksToInt(String rank, Boolean all) {
-        if (rank == null) {
-            if (all) return RankList.PERM_GUEST;
-        } else if (rank.equalsIgnoreCase("member")) {
-            if (all) return RankList.PERM_MEMBER;
-        } else if (rank.equalsIgnoreCase("member+")) {
-            if (all) return RankList.PERM_MEMBER_PLUS;
-        } else if (rank.equalsIgnoreCase("tourist")) {
-            if (all) return RankList.PERM_TOURIST;
-        } else if (rank.equalsIgnoreCase("islander")) {
-            if (all) return RankList.PERM_ISLANDER;
-        } else if (rank.equalsIgnoreCase("adventurer")) {
-            if (all) return RankList.PERM_ADVENTURER;
-        } else if (rank.equalsIgnoreCase("conquerer")) {
-            if (all) return RankList.PERM_CONQUERER;
-        } else if (rank.equalsIgnoreCase("TMOD")) {
-            return RankList.PERM_TMOD;
-        } else if (rank.equalsIgnoreCase("MOD1") || rank.equalsIgnoreCase("yt")) {
-            return RankList.PERM_MOD_1;
-        } else if (rank.equalsIgnoreCase("MOD2")) {
-            return RankList.PERM_MOD_2;
-        } else if (rank.equalsIgnoreCase("MOD3")) {
-            return RankList.PERM_MOD_3;
-        } else if (rank.equalsIgnoreCase("ADMIN1")) {
-            return RankList.PERM_ADMIN_1;
-        } else if (rank.equalsIgnoreCase("ADMIN2")) {
-            return RankList.PERM_ADMIN_2;
-        } else if (rank.equalsIgnoreCase("ADMIN3")) {
-            return RankList.PERM_ADMIN_3;
-        } else if (rank.equalsIgnoreCase("OP")) {
-            return RankList.PERM_OP;
-        }
-        return 0;
-    }
+//    public Integer AllRanksToInt(String rank) {
+//        return AllRanksToInt(rank, false);
+//    }
+//
+//    public Integer AllRanksToInt(String rank, Boolean all) {
+//        if (rank == null) {
+//            if (all) return RankList.PERM_GUEST;
+//        } else if (rank.equalsIgnoreCase("member")) {
+//            if (all) return RankList.PERM_MEMBER;
+//        } else if (rank.equalsIgnoreCase("member+")) {
+//            if (all) return RankList.PERM_MEMBER_PLUS;
+//        } else if (rank.equalsIgnoreCase("tourist")) {
+//            if (all) return RankList.PERM_TOURIST;
+//        } else if (rank.equalsIgnoreCase("islander")) {
+//            if (all) return RankList.PERM_ISLANDER;
+//        } else if (rank.equalsIgnoreCase("adventurer")) {
+//            if (all) return RankList.PERM_ADVENTURER;
+//        } else if (rank.equalsIgnoreCase("conquerer")) {
+//            if (all) return RankList.PERM_CONQUERER;
+//        } else if (rank.equalsIgnoreCase("TMOD")) {
+//            return RankList.PERM_TMOD;
+//        } else if (rank.equalsIgnoreCase("MOD1") || rank.equalsIgnoreCase("yt")) {
+//            return RankList.PERM_MOD_1;
+//        } else if (rank.equalsIgnoreCase("MOD2")) {
+//            return RankList.PERM_MOD_2;
+//        } else if (rank.equalsIgnoreCase("MOD3")) {
+//            return RankList.PERM_MOD_3;
+//        } else if (rank.equalsIgnoreCase("ADMIN1")) {
+//            return RankList.PERM_ADMIN_1;
+//        } else if (rank.equalsIgnoreCase("ADMIN2")) {
+//            return RankList.PERM_ADMIN_2;
+//        } else if (rank.equalsIgnoreCase("ADMIN3")) {
+//            return RankList.PERM_ADMIN_3;
+//        } else if (rank.equalsIgnoreCase("OP")) {
+//            return RankList.PERM_OP;
+//        }
+//        return 0;
+//    }
 }

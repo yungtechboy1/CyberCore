@@ -105,7 +105,7 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
 //                    System.out.println("|||||");
                     FloatingTextContainer ft;
                     ft = (FloatingTextContainer) ftt;
-                    if(! (ftt instanceof FloatingTextContainer) && ft != null)continue;
+                    if( ft != null)continue;
 
 //                    System.out.println("|||||"+ft.GetText(null));
                     ArrayList<String> a = new ArrayList<>();
