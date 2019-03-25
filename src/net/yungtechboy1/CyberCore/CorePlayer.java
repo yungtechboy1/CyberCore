@@ -164,8 +164,23 @@ public class CorePlayer extends Player {
                             this.lastBreakPosition1 = currentBreakPosition;
                             break;
                         case PlayerActionPacket.ACTION_JUMP:
-                            sendMessage("JUMMMPPPPP!!!");
-                            addMotion(0,.5,0);
+                            sendMessage("JUMMMPPPPP!!!"+getDirection());
+//                            addMovement(0,2.5,0,0,0,0);
+                            switch (getDirection()){
+                            case NORTH:
+                                addMotion(motionX*2,1,0);
+                                break;
+                                case EAST:
+                                    addMotion(0,1,motionZ*2);
+                                    break;
+                                case WEST:
+                                    addMotion(motionX*-2,1,0);
+                                    break;
+                                case SOUTH:
+                                    addMotion(0,1,motionZ*-2);
+                                    break;
+
+                            }
                             break;
                     }
             }
