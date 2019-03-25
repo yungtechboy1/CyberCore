@@ -58,4 +58,3 @@ public class Climber extends CustomEnchantment {
     }
 
 }
-}

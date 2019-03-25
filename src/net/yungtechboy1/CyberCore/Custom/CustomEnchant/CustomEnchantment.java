@@ -34,6 +34,8 @@ public class CustomEnchantment extends Enchantment {
     public static final int SNACKPACK = 37;
     public static final int SPRING = 38;
     public static final int CLIMBER = 39;
+    public static final int BURNSHILED = 40;
+    public static final int KINGOFHEARTS = 40;
     public static final int CrateKey = 55;
 
     boolean CheckCustomName = true;
@@ -218,6 +220,9 @@ public class CustomEnchantment extends Enchantment {
         return null;
     }
 
+    public static Enchantment getEnchantFromIDFromItem(Item i, int id) {
+        return getEnchantFromIDFromItem(i,(short)id);
+    }
     public static Enchantment getEnchantFromIDFromItem(Item i, short id) {
         if (!i.hasEnchantments()) {
             return null;
