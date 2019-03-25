@@ -33,6 +33,7 @@ public class CustomEnchantment extends Enchantment {
     public static final int GILLS = 36;
     public static final int SNACKPACK = 37;
     public static final int SPRING = 38;
+    public static final int CLIMBER = 39;
     public static final int CrateKey = 55;
 
     boolean CheckCustomName = true;
@@ -188,10 +189,10 @@ public class CustomEnchantment extends Enchantment {
 
     }
 
-    public static Enchantment getEnchantFromIDFromItem(int id) {
-       return getEnchantFromIDFromItem(id,1);
+    public static Enchantment CreateEnchant(int id) {
+       return CreateEnchant(id,1);
     }
-    public static Enchantment getEnchantFromIDFromItem(int id, int lvl) {
+    public static Enchantment CreateEnchant(int id, int lvl) {
         if (id >= Enchantment.ID_TRIDENT_CHANNELING) {
             return Enchantment.get(id);
         } else {
@@ -224,7 +225,7 @@ public class CustomEnchantment extends Enchantment {
 
         for (CompoundTag entry : i.getNamedTag().getList("ench", CompoundTag.class).getAll()) {
             if (entry.getShort("id") == id) {
-                Enchantment e = getEnchantFromIDFromItem(entry.getShort("id"), entry.getShort("lvl"));
+                return CreateEnchant(entry.getShort("id"), entry.getShort("lvl"));
             }
         }
 

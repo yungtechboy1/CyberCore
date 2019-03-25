@@ -1,26 +1,24 @@
 package net.yungtechboy1.CyberCore;
 
-import cn.nukkit.AdventureSettings;
 import cn.nukkit.Player;
-import cn.nukkit.PlayerFood;
-import cn.nukkit.block.*;
-import cn.nukkit.entity.data.ShortEntityData;
+import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockAir;
+import cn.nukkit.block.BlockDragonEgg;
+import cn.nukkit.block.BlockNoteblock;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
-import cn.nukkit.event.player.PlayerKickEvent;
-import cn.nukkit.event.player.PlayerRespawnEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.form.window.FormWindow;
-import cn.nukkit.level.GameRule;
-import cn.nukkit.level.Position;
+import cn.nukkit.item.Item;
 import cn.nukkit.math.*;
 import cn.nukkit.network.SourceInterface;
 import cn.nukkit.network.protocol.*;
-import cn.nukkit.potion.Effect;
-import cn.nukkit.utils.DummyBossBar;
 import co.aikar.timings.Timing;
 import co.aikar.timings.Timings;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
+import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
+import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Spring;
 import net.yungtechboy1.CyberCore.Rank.Rank;
 import net.yungtechboy1.CyberCore.Rank.RankList;
 
@@ -36,6 +34,7 @@ public class CorePlayer extends Player {
     public Integer kills = 0;
     public Integer deaths = 0;
     public Integer banned = 0;
+    public boolean InCombat = false;
     public HashMap<String, Object> extraData = new HashMap<>();
 
     long uct = 0;
@@ -92,7 +91,7 @@ public class CorePlayer extends Player {
 
     @Override
     public void fall(float fallDistance) {
-        if(!uw)super.fall(fallDistance);
+        if (!uw) super.fall(fallDistance);
     }
 
     @Override
@@ -100,11 +99,11 @@ public class CorePlayer extends Player {
         return !(uw && source.getCause() == EntityDamageEvent.DamageCause.FALL) && super.attack(source);
     }
 
-    public boolean CheckGround(){
-            AxisAlignedBB bb = this.boundingBox.clone();
-            bb.setMinY(bb.getMinY() - 0.75);
+    public boolean CheckGround() {
+        AxisAlignedBB bb = this.boundingBox.clone();
+        bb.setMinY(bb.getMinY() - 0.75);
 
-            this.onGround = this.level.getCollisionBlocks(bb).length > 0;
+        this.onGround = this.level.getCollisionBlocks(bb).length > 0;
         this.isCollided = this.onGround;
         return onGround;
     }
@@ -135,27 +134,73 @@ public class CorePlayer extends Player {
                     if (this.teleportPosition != null) {
                         break;
                     }
+                    Item boots = getInventory().getBoots();
+                    if (boots == null) break;
+                    Spring se = (Spring) CustomEnchantment.getEnchantFromIDFromItem(boots, (short) CustomEnchantment.SPRING);
+                    Climber ce = (Climber) CustomEnchantment.getEnchantFromIDFromItem(boots, (short) CustomEnchantment.CLIMBER);
+                    if (se == null && ce == null) break;
+                    Vector3 nm = new Vector3();
+                    if (se != null) {
 
-                    MovePlayerPacket movePlayerPacket = (MovePlayerPacket) packet;
-                    Vector3 newPos = new Vector3(movePlayerPacket.x, movePlayerPacket.y - this.getEyeHeight(), movePlayerPacket.z);
+                        MovePlayerPacket movePlayerPacket = (MovePlayerPacket) packet;
+                        Vector3 newPos = new Vector3(movePlayerPacket.x, movePlayerPacket.y - this.getEyeHeight(), movePlayerPacket.z);
 
-                    Vector3 dif = newPos.subtract(this);
-                    CheckGround();
-                    if (dif.getY() > 0 && !uw) {
-                        sendMessage(dif + "!");
-                        addMotion(dif.x, dif.y*1.5, dif.z);
-                        resetFallDistance();
-                        uct = lastUpdate + 20;
-                        uw =true;
+
+                        Vector3 dif = newPos.subtract(this);
+                        CheckGround();
+                        if (dif.getY() > 0 && !uw) {
+
+                            //No Super Boost!
+                            if (0 < dif.x && dif.x > DEFAULT_SPEED) dif.x = DEFAULT_SPEED;
+                            if (0 > dif.x && dif.x < (-1 * DEFAULT_SPEED)) dif.x = (-1 * DEFAULT_SPEED);
+                            if (0 > dif.z && dif.z > DEFAULT_SPEED) dif.z = DEFAULT_SPEED;
+                            if (0 > dif.z && dif.z < (-1 * DEFAULT_SPEED)) dif.z = (-1 * DEFAULT_SPEED);
+
+                            sendMessage(dif.getY() + "!");
+
+                            nm.add(dif.x * .25, DEFAULT_SPEED * se.GetLevelEffect(), dif.z * .25);
+                            resetFallDistance();
+                            uct = lastUpdate + 20;
+                            uw = true;
 //                        upp++;
 //                        if (upp > 3) uw = true;
-                    } else if(onGround && uct > lastUpdate) {
+                        } else if (onGround && uct > lastUpdate) {
 //                        if (upp > 0) upp--;
-                        uw = false;
-                    }
-                    if(uw)inAirTicks = 0;
-//                    if (upp == 0) uw = false;
+                            uw = false;
+                        }
+                        if (uw) inAirTicks = 0;
+                    }else if (ce != null) {
 
+                        MovePlayerPacket movePlayerPacket = (MovePlayerPacket) packet;
+                        Vector3 newPos = new Vector3(movePlayerPacket.x, movePlayerPacket.y - this.getEyeHeight(), movePlayerPacket.z);
+
+
+                        Vector3 dif = newPos.subtract(this);
+                        CheckGround();
+                        if (dif.getY() > 0 && !uw) {
+
+                            //No Super Boost!
+                            if (0 < dif.x && dif.x > DEFAULT_SPEED) dif.x = DEFAULT_SPEED;
+                            if (0 > dif.x && dif.x < (-1 * DEFAULT_SPEED)) dif.x = (-1 * DEFAULT_SPEED);
+                            if (0 > dif.z && dif.z > DEFAULT_SPEED) dif.z = DEFAULT_SPEED;
+                            if (0 > dif.z && dif.z < (-1 * DEFAULT_SPEED)) dif.z = (-1 * DEFAULT_SPEED);
+
+                            sendMessage(dif.getY() + "!");
+
+                            nm.add(dif.x, DEFAULT_SPEED * ce.GetLevelEffect(), dif.z);
+                            resetFallDistance();
+                            uct = lastUpdate + 20;
+                            uw = true;
+//                        upp++;
+//                        if (upp > 3) uw = true;
+                        } else if (onGround && uct > lastUpdate) {
+//                        if (upp > 0) upp--;
+                            uw = false;
+                        }
+                        if (uw) inAirTicks = 0;
+                    }
+//                    if (upp == 0) uw = false;
+                    if (nm != null && !(nm.x != 0 && nm.y != 0 && nm.z != 0)) addMotion(nm.x, nm.y, nm.z);
 
                     break;
                 case ProtocolInfo.PLAYER_ACTION_PACKET:
