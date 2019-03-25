@@ -9,3 +9,15 @@ mysql-pass: "3X0T~l1p8mJ*"
 mysql-db: "truelinu_mcpe"
 mysql-user: "truelinu_admin"
 mysql-port: 3306
+
+server-data:
+  file: "cyber_core_data.db"
+  table: "mcpe"
+  uuid:
+    type: "varchar(50)"
+  kills:
+    type: "int(9)"
+  deaths:
+    type: "int(9)"
+  banned:
+    type: "int(1)"

@@ -1,22 +1,30 @@
 package net.yungtechboy1.CyberCore;
 
+import cn.nukkit.event.EventHandler;
+import cn.nukkit.event.EventPriority;
+import cn.nukkit.event.Listener;
+import cn.nukkit.event.player.PlayerJoinEvent;
+import cn.nukkit.event.player.PlayerMoveEvent;
 import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.Commands.*;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMS;
 import net.yungtechboy1.CyberCore.Commands.Homes.HomeManager;
+import net.yungtechboy1.CyberCore.Data.UserSQL;
 import net.yungtechboy1.CyberCore.Events.CyberChatEvent;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
+import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
 import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
+import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
+import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
-import net.yungtechboy1.CyberCore.Manager.KD.KDManager;
+import net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager;
 import net.yungtechboy1.CyberCore.Manager.SQLManager;
-import net.yungtechboy1.CyberCore.Manager.Save.SaveMain;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
-import net.yungtechboy1.CyberCore.Ranks.Rank;
-import net.yungtechboy1.CyberCore.Factory.*;
+import net.yungtechboy1.CyberCore.Rank.ChatFormats;
+import net.yungtechboy1.CyberCore.Rank.Rank;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandExecutor;
@@ -28,7 +36,8 @@ import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Data.SQLApi;
+import net.yungtechboy1.CyberCore.Data.CoreSQL;
+import net.yungtechboy1.CyberCore.Rank.RankFactory;
 
 import java.io.File;
 import java.sql.Connection;
@@ -39,7 +48,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by carlt_000 on 3/21/2016.
  */
-public class CyberCoreMain extends PluginBase implements CommandExecutor {
+public class CyberCoreMain extends PluginBase implements CommandExecutor, Listener {
 
     public static final String NAME = TextFormat.GOLD + "" + TextFormat.BOLD + "§eTERRA§6CORE " + TextFormat.RESET + TextFormat.GOLD + "» " + TextFormat.RESET;
     private EconManager ECON;
@@ -79,7 +88,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
     //Mob Plugin and AI
     public MobPlugin MP;
     //KDR
-    public KDManager KDM;
     //Classes / MMO
     public net.yungtechboy1.CyberCore.Factory.ClassFactory ClassFactory;
     //PasswordFactoy
@@ -88,7 +96,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
     public net.yungtechboy1.CyberCore.Factory.CustomFactory CustomFactory;
     //FactoriesA
     public HomeManager HomeFactory;
-    public net.yungtechboy1.CyberCore.Factory.RankFactory RankFactory;
+    public net.yungtechboy1.CyberCore.Rank.RankFactory RankFactory;
     public net.yungtechboy1.CyberCore.Factory.AuctionFactory AuctionFactory;
     public net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager PurgeManager;
     public List<String> Final = new ArrayList<>();
@@ -101,35 +109,50 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
     Vector3 p1;
     Vector3 p2;
 
-    public SaveMain Save;
     public SQLManager SQLSaveManager;
-    public SQLApi SQLApi;
+
+    /**
+     * DATA: UUID, GAMERTAG, CREATED(TIMESTAMP), LAST_LOGIN(TIMESTAMP), RANK(INT), LAST_IP
+     */
+    public CoreSQL CoreSQL;
+
+    /**
+     * DATA: ECON, K/D,
+     */
+    public net.yungtechboy1.CyberCore.Data.UserSQL UserSQL;
+
 
     @Override
     public void onEnable() {
         new File(getDataFolder().toString()).mkdirs();
 
         saveResource("ranks.yml");
+        saveResource("config.yml");
+
+        MainConfig = new Config(new File(getDataFolder(), "config.yml"));
 
         //Save = new SaveMain(this);
         SQLSaveManager = new SQLManager(this);
 
-        SQLApi = new SQLApi(this);
+        CoreSQL = new CoreSQL(this);
+        UserSQL = new UserSQL(this, "server-data");
 
-//        Item.list[Item.COOKED_CHICKEN] = ItemChickenCooked.class;
-//        Item.list[Item.COOKED_PORKCHOP] = ItemPorkchopCooked.class;
+        PurgeManager = new PurgeManager(this);
+        //KDR Manager - All Good
+        //GOOD
+        //Floating Text
+        //Threaded ONLY RUN FOR TESTING
+        //TESTING
+        FTM = new FloatingTextFactory(this);
+        FloatingTextFactory.AddFloatingText(new FloatingTextContainer(FTM, getServer().getLevelByName("world").getSafeSpawn(), "TESTTTT"));
 
-//        PurgeManager = new PurgeManager(this);
-//        //KDR Manager
-//        KDM = new KDManager();
-//        //BossBar Manager
-//        BBM = new BossBarManager(this);
-//        //Floating Text
-//        FTM = new FloatingTextFactory(this);
-//        //Mob Plugin
-//        MP = new MobPlugin(this);
-//
-//        ECON = new EconManager(this);
+
+        //Mob Plugin
+        //GOOD - Should all be ready! Just add modifications for custom Entity drops and etc
+        MP = new MobPlugin(this);
+
+//        GOOD
+        ECON = new EconManager(this);
 
 //        getServer().getScheduler().scheduleRepeatingTask(new UnMuteTask(this), 20 * 15);
 //        getServer().getScheduler().scheduleRepeatingTask(new ClearSpamTick(this), 20 * 5);
@@ -137,64 +160,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
 
         Homes = new Config(new File(this.getDataFolder(), "homes.yml"), Config.YAML, new ConfigSection());
 
-//        HomeFactory = new HomeManager(this);
+        HomeFactory = new HomeManager(this);
         RankFactory = new RankFactory(this);
+        //TODO
 //        AuctionFactory = new AuctionFactory(this);
 
-        saveResource("config.yml");
-        MainConfig = new Config(new File(getDataFolder(), "config.yml"));
-        RankConfig = new Config(new File(getDataFolder(), "rank.yml"), Config.YAML,
-                new LinkedHashMap<String, Object>() {
-                    {
-                        put("registered", TextFormat.GRAY + "Memeber");
-                        put("hero", "&aH&bE&cR&dO");
-                        put("vip", "&aV&bI&cP");
-                        put("vip+", "&aV&bI&cP&d+");
-                        put("legend", "&aL&bE&cN&dE&eN&eD");
-                        put("steve+", "&aS&bT&cE&dV&eE&e+");
-                        put("mod1", "&aMOD1");
-                        put("mod2", "&aMOD2");
-                        put("mod3", "&aMOD3");
-                        put("mod4", "&aMOD4");
-                        put("mod5", "&aMOD5");
-                        put("admin1", "&cADMIN1");
-                        put("admin2", "&cADMIN2");
-                        put("admin3", "&cADMIN3");
-                        put("op", "&9OP");
-                        put("yt", TextFormat.DARK_RED + "YT");
-                        put("adventurer", TextFormat.RED + "Adventurer");
-                        put("islander", TextFormat.GREEN + "Islander");
-                        put("adventurer", TextFormat.GOLD + "Adventurer");
-                        put("conquerer", TextFormat.YELLOW + "Conquerer");
-                    }
-                });
-
-        RankChatColor = new Config(new File(getDataFolder(), "RankChatColor.yml"), Config.YAML,
-                new LinkedHashMap<String, Object>() {
-                    {
-                        put("registered", TextFormat.GRAY);
-                        put("hero", "&d");
-                        put("vip", "&c");
-                        put("vip+", "&d");
-                        put("legend", "&e");
-                        put("steve+", "&e");
-                        put("mod1", "&a");
-                        put("mod2", "&a");
-                        put("mod3", "&a");
-                        put("mod4", "&a");
-                        put("mod5", "&a");
-                        put("admin1", "&c");
-                        put("admin2", "&c");
-                        put("admin3", "&c");
-                        put("op", "&9");
-                        put("yt", TextFormat.RED + "");
-                        put("adventurer", TextFormat.RED + "");
-                        put("islander", TextFormat.GREEN + "");
-                        put("adventurer", TextFormat.GOLD + "");
-                        put("conquerer", TextFormat.YELLOW + "");
-                    }
-                });
-        RankListConfig = new Config(new File(getDataFolder(), "rank.yml"), Config.YAML);
         MuteConfig = new Config(new File(getDataFolder(), "Mute.yml"), Config.YAML);
 
 //        ban = new Config(new File(this.getDataFolder(), "ban.yml"), Config.YAML);
@@ -219,12 +189,15 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
         getServer().getPluginManager().registerEvents(new CyberChatEvent(this), this);
 //        getServer().getPluginManager().registerEvents(ClassFactory, this);
 //        getServer().getPluginManager().registerEvents(AuctionFactory, this);
+        getServer().getPluginManager().registerEvents(this, this);
+        getServer().getPluginManager().registerEvents(new MasterListener(this), this);
 
 //        getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
 //        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec
 
 
         //COMMANDS
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ChooseClass(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new BanCmd(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Ci(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Fix(this));
@@ -273,14 +246,17 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SellHand(this));
     }
 
-    public void onLoad(){
+    public void onLoad() {
         CyberCoreMain.instance = this;
+
+        //BossBar Manager
+        //GOOD - Test Refine
+        BBM = new BossBarManager(this);
     }
 
-    public static CyberCoreMain getInstance(){
+    public static CyberCoreMain getInstance() {
         return CyberCoreMain.instance;
     }
-
 
 
 //    Deprecated for public database --------------------------------------------
@@ -358,32 +334,16 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
         }
     }
 
-    public void setMuteM(Player target, Integer time) {
-        setMuteM(target.getName(), time);
-        target.sendMessage(TextFormat.YELLOW + "You are now muted for " + (time * 60) + " Mins");
-    }
 
-    public void setMuteM(String target, Integer time) {
-        Integer finaltime = (int) (Calendar.getInstance().getTime().getTime() / 1000) + (time * 60);
-        MuteConfig.set(target.toLowerCase(), finaltime);
-    }
-
-    public void setMuteS(Player target, Integer time) {
-        setMuteS(target.getName(), time);
+    public void setMute(Player target, Integer time) {
+        Integer finaltime = (int) (Calendar.getInstance().getTime().getTime() / 1000) + (time);
+        MuteConfig.set(target.getName().toLowerCase(), finaltime);
         target.sendMessage(TextFormat.YELLOW + "You are now muted for " + time + " Secs");
     }
 
-    public void setMuteS(String target, Integer time) {
-        Integer finaltime = (int) (Calendar.getInstance().getTime().getTime() / 1000) + (time);
-        MuteConfig.set(target.toLowerCase(), finaltime);
-    }
-
-    public void removeMute(String target) {
-        MuteConfig.remove(target.toLowerCase());
-    }
 
     public void removeMute(Player target) {
-        removeMute(target.getName());
+        MuteConfig.remove(target.getName().toLowerCase().toLowerCase());
     }
 
     public boolean isMuted(Player player) {
@@ -402,11 +362,26 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
         return false;
     }
 
+    public CorePlayer getCorePlayer(String uuid) {
+        return getCorePlayer(getPlayer(uuid));
+    }
+
+    public CorePlayer getCorePlayer(Player p) {
+        if (p instanceof CorePlayer) {
+            getLogger().info(((CorePlayer) p).kills + " KILLLSSSSSS!!!!!");
+            return (CorePlayer) p;
+        }
+        return null;
+    }
+
     public Player getPlayer(String p) {
         Player player;
-        if((player = getServer().getPlayer(p)) != null) {
+        if ((player = getServer().getPlayer(p)) != null) {
             return player;
         } else {
+            if (getServer().getOnlinePlayers().containsKey(UUID.fromString(p))) {
+                return getServer().getOnlinePlayers().get(UUID.fromString(p));
+            }
             return null;
         }
     }
@@ -417,18 +392,16 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
      * @param p
      * @return String
      */
-    public String getPlayerFaction(Player p) {
-        if (FM != null) {
-            Faction fac = FM.FFactory.getPlayerFaction(p);
-            if (fac != null) {
-                //@Todo add support for PREMIUM Facs
-                return fac.GetDisplayName();
-            }
-        }
-        return "";
+    public Faction getPlayerFaction(Player p) {
+        if (FM != null) return FM.FFactory.getPlayerFaction(p);
+        return null;
     }
 
     public Rank getPlayerRank(String p) {
+        return getPlayerRank(getPlayer(p));
+    }
+
+    public Rank getPlayerRank(Player p) {
         return RankFactory.getPlayerRank(p);
     }
 
@@ -439,7 +412,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
             Spam.put(p.getName().toLowerCase(), count);
             if (count >= 4) {
                 p.sendMessage(TextFormat.YELLOW + "Slow Down Typing!");
-                setMuteS(p, 10);
+                setMute(p, 10);
                 return false;
             }
         } else {
@@ -449,16 +422,12 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
     }
 
     public void Setnametag(Player p) {
-        Setnametag(p.getName());
-    }
 
-    public void Setnametag(String p) {
-        String RankFormat = null;
-        if (RankFactory.getPlayerRank(p) != null) {
-            String a = RankFactory.getPlayerRank(p).getDisplayName();
-            RankFormat = (String) RankConfig.get(a);
-        }
-        String pn = p;
+        ChatFormats.RankChatFormat RankFormat;
+        Rank r = RankFactory.getPlayerRank(p);
+        String a = r.getDisplayName();
+        RankFormat = r.getChat_format();
+        String pn = p.getName();
 
         String f1 = "";//Factioin
         String f2 = "";//Rank
@@ -473,13 +442,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
         } else {
             f1 = TextFormat.GRAY + "[NF]";
         }
-
-        if (RankFormat != null) {
-            f2 = TextFormat.AQUA + "[" + RankFormat.replace("&", TextFormat.ESCAPE + "") + TextFormat.AQUA + "]";
-        }
-        Player pp = getServer().getPlayerExact(p);
-        if (pp == null) getLogger().info("WTF12313 123 123 12 3");
-        pp.setNameTag(f1 + f2 + " " + TextFormat.GRAY + pp.getName());
+        p.setNameTag(ChatFormats.RankDisplayNameFormat.Default.format(f1, a, p));
     }
 
     public Integer GetPlayerRankInt(Player p) {
@@ -487,12 +450,12 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
     }
 
     public Integer GetPlayerRankInt(Player p, Boolean all) {
-        return GetPlayerRankInt(p.getName().toLowerCase(), all);
+        return RankFactory.getPlayerRank(p).Ranking;
     }
 
-    public Integer GetPlayerRankInt(String p, Boolean all) {
-        return RankFactory.getPlayerRank(p).getRank();
-    }
+//    public Integer GetPlayerRankInt(String p, Boolean all) {
+//        return RankFactory.getPlayerRank(p).getRank();
+//    }
 
 //    @EventHandler(ignoreCancelled = true)
 //    public void PlayerLoginEvent(PlayerLoginEvent event) {
@@ -644,14 +607,14 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
                         s.sendMessage(TextFormat.RED + "[TerraTide] Error, Player " + args[0] + " not found!");
                         return true;
                     }
-                    setMuteM(Target, time);
+                    setMute(Target, time);
                     return true;
                 } else if (args.length == 2) {
                     Integer time;
                     try {
                         time = Integer.parseInt(args[1]);
                     } catch (Exception e) {
-                        s.sendMessage(TextFormat.RED + "[TerraTide] Usage /mute <Player> [Mins]");
+                        s.sendMessage(TextFormat.RED + "[TerraTide] Usage /mute <Player> [seconds]");
                         return true;
                     }
                     Player Target = getServer().getPlayer(args[0]);
@@ -659,7 +622,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
                         s.sendMessage(TextFormat.RED + "[TerraTide] Error, Player " + args[0] + " not found!");
                         return true;
                     }
-                    setMuteM(Target, time);
+                    setMute(Target, time);
                     return true;
                 }
                 return false;
@@ -679,15 +642,33 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor {
         return false;
     }
 
-    public EconManager GetEcon(){
+    public EconManager GetEcon() {
         return ECON;
     }
 
-    public void checkUser(UUID uuid) {
+    public void initiatePlayer(Player p) {
         try {
-            SQLApi.checkCoreUser(uuid.toString());
+            CoreSQL.checkUser(p);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void PMJ(PlayerJoinEvent me) {
+        if (BBM == null) System.out.println("11122222233333333333344444444444");
+        if (me.getPlayer() == null)
+            System.out.println("11111111111111111111111111111111111111111111111111111111122222233333333333344444444444");
+        BBM.AddBossBar(me.getPlayer(), new BossBarNotification(me.getPlayer(), "TEST TITLE", "TEST MESSAGE", 20 * 60, this));
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void PM(PlayerMoveEvent me) {
+
+        //TODO Implement \/
+//        cp.LastSentFormType = CorePlayer.FormType.Class_0;
+        if(me.getFrom().distance(me.getTo()) > .1 )FloatingTextFactory.AddFloatingText(new PopupFT(FTM, me.getPlayer().add(0, 1.5, 0), TextFormat.AQUA + me.getPlayer().getName() + " was Here!"));
     }
 }

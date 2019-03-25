@@ -6,7 +6,7 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.ConsoleCommandSender;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Messages;
-import net.yungtechboy1.CyberCore.RankList;
+import net.yungtechboy1.CyberCore.Rank.RankList;
 
 /**
  * Created by carlt_000 on 1/20/2017.
@@ -38,7 +38,7 @@ public class CheckPermCommand extends Command {
         } else if (s instanceof Player) {
             return Owner.GetPlayerRankInt((Player) s, true);
         }
-        return RankList.PERM_GUEST;
+        return RankList.PERM_GUEST.getID();
     }
 
     public boolean SendError(){

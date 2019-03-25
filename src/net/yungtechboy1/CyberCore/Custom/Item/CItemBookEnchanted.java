@@ -1,5 +1,7 @@
 package net.yungtechboy1.CyberCore.Custom.Item;
 
+import cn.nukkit.math.NukkitRandom;
+import cn.nukkit.nbt.tag.CompoundTag;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
@@ -11,27 +13,54 @@ import java.util.ArrayList;
  * Created by carlt_000 on 1/18/2017.
  */
 public class CItemBookEnchanted extends Item {
-    public CItemBookEnchanted() {
-        this(0, 1);
-    }
 
+    public Enchantment E;
+    private int SuccessRate;
+    private int FailRate;
+
+    public CItemBookEnchanted(Integer meta,int s,int f) {
+        this(meta,1,null,s,f);
+    }
     public CItemBookEnchanted(Integer meta) {
-        this(meta, 1);
+        this(meta, 1, null);
     }
-
+    public CItemBookEnchanted(Integer meta, int count, int s,int f) {
+        this(meta,count,null,s,f);
+    }
     public CItemBookEnchanted(Integer meta, int count) {
-        super(403, meta, count, "Enchanted Book");
+        this(meta, count, null);
     }
 
-    public Enchantment getEnchantment(){
+    public CItemBookEnchanted(Integer meta, int count, CompoundTag namedtag) {
+        super(Item.ENCHANT_BOOK, meta, count, "Custom Enchanted Book");
+        E = CustomEnchantment.getEnchantFromIDFromItem(meta);
+        if (namedtag != null && namedtag.contains("rates")) {
+            SuccessRate = namedtag.getCompound("rates").getInt("s");
+            FailRate = namedtag.getCompound("rates").getInt("f");
+            setCompoundTag(namedtag);
+        } else {
+            SuccessRate = percentPick(50, 0);
+            FailRate = percentPick(100, 75);
+        }
+    }
+
+    public CItemBookEnchanted(Integer meta, int count, CompoundTag namedtag, int s, int f) {
+        super(Item.ENCHANT_BOOK, meta, count, "Custom Enchanted Book");
+        E = CustomEnchantment.getEnchantFromIDFromItem(meta);
+        if(namedtag != null)setCompoundTag(namedtag);
+        SuccessRate = s;
+        FailRate = f;
+    }
+
+    public Enchantment getEnchantment() {
         return Enchantment.get(getDamage());
     }
 
     @Override
     public void addEnchantment(Enchantment... enchantments) {
         super.addEnchantment(enchantments);
-        for(Enchantment e : getEnchantments()){
-            if(e instanceof CustomEnchantment){
+        for (Enchantment e : getEnchantments()) {
+            if (e instanceof CustomEnchantment) {
                 CheckCustomName();
                 return;
             }
@@ -50,7 +79,7 @@ public class CItemBookEnchanted extends Item {
             System.out.println(enchantment.getName() + " " + IntToRoman(enchantment.getLevel()));
         }
         if (custom) {
-            String CT = TextFormat.RESET + "" + TextFormat.AQUA + Item.get(hand.getId(),hand.getDamage()).getName() + TextFormat.RESET;
+            String CT = TextFormat.RESET + "" + TextFormat.AQUA + Item.get(hand.getId(), hand.getDamage()).getName() + TextFormat.RESET;
             for (String text : CE) {
                 CT += "\n" + TextFormat.GRAY + text + TextFormat.RESET;
             }
@@ -76,5 +105,14 @@ public class CItemBookEnchanted extends Item {
     @Override
     public int getMaxStackSize() {
         return 1;
+    }
+
+    private Integer percentPick(int max, int min) {
+        NukkitRandom i = new NukkitRandom();
+        if (max == min) {
+            return max;
+        } else {
+            return min + i.nextRange(max - min);
+        }
     }
 }

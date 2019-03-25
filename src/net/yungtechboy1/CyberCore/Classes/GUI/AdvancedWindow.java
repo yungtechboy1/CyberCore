@@ -25,11 +25,12 @@ public class AdvancedWindow extends FormWindow {
 
     private FormResponseCustom response;
 
-    public AdvancedWindow(Gson gson) {
-
-        String title = gson
-        this(title, new ArrayList<>());
-    }
+    //TODO allow Elements to be loaded by Json
+//    public AdvancedWindow(Gson gson) {
+//
+//        String title = gson
+//        this(title, new ArrayList<>());
+//    }
 
 
     public AdvancedWindow(String title) {

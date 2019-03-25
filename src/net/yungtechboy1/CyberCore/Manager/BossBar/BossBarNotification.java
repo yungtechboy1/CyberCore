@@ -10,6 +10,7 @@ public class BossBarNotification extends BossBarGeneric{
 
     public BossBarNotification(Player owner, String ttitle, String mmsg, CyberCoreMain main){
         this(owner, ttitle, mmsg, 20*6, main);
+        Type = BossBarType.Notificatication;
     }
 
     public BossBarNotification(Player owner, String ttitle, String mmsg, int tticks, CyberCoreMain main){
@@ -32,6 +33,7 @@ public class BossBarNotification extends BossBarGeneric{
     @Override
     public void onUpdate(int tick) {
         //TODO
+        super.onUpdate(tick);
     }
 
 }

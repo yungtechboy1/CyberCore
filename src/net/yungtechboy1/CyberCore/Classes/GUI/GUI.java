@@ -1,12 +1,16 @@
 package net.yungtechboy1.CyberCore.Classes.GUI;
 
-public enum GUI{
+public enum GUI {
     Offense,
     Defense,
-    Crafting
+    Crafting;
 
-    GUI()
-    public String GetName(){
+    String name = "N/A";
+    GUI() {
 
+    }
+
+    public String GetName() {
+        return name;
     }
 }

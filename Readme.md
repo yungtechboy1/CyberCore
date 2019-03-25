@@ -92,7 +92,7 @@ public void PlayerInteractEvent(PlayerInteractEvent event){
 ```
     Offense
         Raider
-            Able to enter raid more and toggle Nametag
+            Able to enter raid mode and toggle Nametag
             Take 10% less damage in enemy plot
         Theif
             Can Pickpocket

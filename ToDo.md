@@ -9,3 +9,6 @@
 - Create Inv Shop!
 
 - Being in water deals 1/2 Damage before enchants & armor and Boosts
+
+- Implement BossBarManager
+- Test Window Class config
