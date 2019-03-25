@@ -1,22 +1,23 @@
 package net.yungtechboy1.CyberCore;
 
+import cn.nukkit.AdventureSettings;
 import cn.nukkit.Player;
-import cn.nukkit.block.Block;
-import cn.nukkit.block.BlockAir;
-import cn.nukkit.block.BlockDragonEgg;
-import cn.nukkit.block.BlockNoteblock;
+import cn.nukkit.PlayerFood;
+import cn.nukkit.block.*;
 import cn.nukkit.entity.data.ShortEntityData;
+import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
+import cn.nukkit.event.player.PlayerKickEvent;
 import cn.nukkit.event.player.PlayerRespawnEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.form.window.FormWindow;
+import cn.nukkit.level.GameRule;
 import cn.nukkit.level.Position;
-import cn.nukkit.math.BlockFace;
-import cn.nukkit.math.BlockVector3;
-import cn.nukkit.math.NukkitRandom;
-import cn.nukkit.math.Vector3;
+import cn.nukkit.math.*;
 import cn.nukkit.network.SourceInterface;
 import cn.nukkit.network.protocol.*;
+import cn.nukkit.potion.Effect;
+import cn.nukkit.utils.DummyBossBar;
 import co.aikar.timings.Timing;
 import co.aikar.timings.Timings;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
@@ -35,6 +36,10 @@ public class CorePlayer extends Player {
     public Integer kills = 0;
     public Integer deaths = 0;
     public HashMap<String, Object> extraData = new HashMap<>();
+
+    long uct = 0;
+    boolean uw = false;
+
     private Rank R = RankList.PERM_GUEST.getRank();
 
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
@@ -83,6 +88,26 @@ public class CorePlayer extends Player {
 
     private BlockVector3 lastBreakPosition1 = new BlockVector3();
 
+
+    @Override
+    public void fall(float fallDistance) {
+        if(!uw)super.fall(fallDistance);
+    }
+
+    @Override
+    public boolean attack(EntityDamageEvent source) {
+        return !(uw && source.getCause() == EntityDamageEvent.DamageCause.FALL) && super.attack(source);
+    }
+
+    public boolean CheckGround(){
+            AxisAlignedBB bb = this.boundingBox.clone();
+            bb.setMinY(bb.getMinY() - 0.75);
+
+            this.onGround = this.level.getCollisionBlocks(bb).length > 0;
+        this.isCollided = this.onGround;
+        return onGround;
+    }
+
     @Override
     public void handleDataPacket(DataPacket packet) {
         if (!connected) {
@@ -103,6 +128,35 @@ public class CorePlayer extends Player {
 
             packetswitch:
             switch (packet.pid()) {
+
+                case ProtocolInfo.MOVE_PLAYER_PACKET:
+                    super.handleDataPacket(packet);
+                    if (this.teleportPosition != null) {
+                        break;
+                    }
+
+                    MovePlayerPacket movePlayerPacket = (MovePlayerPacket) packet;
+                    Vector3 newPos = new Vector3(movePlayerPacket.x, movePlayerPacket.y - this.getEyeHeight(), movePlayerPacket.z);
+
+                    Vector3 dif = newPos.subtract(this);
+                    CheckGround();
+                    if (dif.getY() > 0 && !uw) {
+                        sendMessage(dif + "!");
+                        addMotion(dif.x, dif.y*1.5, dif.z);
+                        resetFallDistance();
+                        uct = lastUpdate + 20;
+                        uw =true;
+//                        upp++;
+//                        if (upp > 3) uw = true;
+                    } else if(onGround && uct > lastUpdate) {
+//                        if (upp > 0) upp--;
+                        uw = false;
+                    }
+                    if(uw)inAirTicks = 0;
+//                    if (upp == 0) uw = false;
+
+
+                    break;
                 case ProtocolInfo.PLAYER_ACTION_PACKET:
                     PlayerActionPacket playerActionPacket = (PlayerActionPacket) packet;
                     if (!this.spawned || (!this.isAlive() && playerActionPacket.action != PlayerActionPacket.ACTION_RESPAWN && playerActionPacket.action != PlayerActionPacket.ACTION_DIMENSION_CHANGE_REQUEST)) {
@@ -164,23 +218,23 @@ public class CorePlayer extends Player {
                             this.lastBreakPosition1 = currentBreakPosition;
                             break;
                         case PlayerActionPacket.ACTION_JUMP:
-                            sendMessage("JUMMMPPPPP!!!"+getDirection());
+                            sendMessage("JUMMMPPPPP!!!" + getDirection());
 //                            addMovement(0,2.5,0,0,0,0);
-                            switch (getDirection()){
-                            case NORTH:
-                                addMotion(motionX*2,1,0);
-                                break;
-                                case EAST:
-                                    addMotion(0,1,motionZ*2);
-                                    break;
-                                case WEST:
-                                    addMotion(motionX*-2,1,0);
-                                    break;
-                                case SOUTH:
-                                    addMotion(0,1,motionZ*-2);
-                                    break;
-
-                            }
+//                            switch (getDirection()) {
+//                                case NORTH:
+//                                    addMotion(motionX * 2, 3, 0);
+//                                    break;
+//                                case EAST:
+//                                    addMotion(0, 3, motionZ * 2);
+//                                    break;
+//                                case WEST:
+//                                    addMotion(motionX * -2, 3, 0);
+//                                    break;
+//                                case SOUTH:
+//                                    addMotion(0, 3, motionZ * -2);
+//                                    break;
+//
+//                            }
                             break;
                     }
             }
@@ -193,4 +247,110 @@ public class CorePlayer extends Player {
         int f = nr.nextRange(0, 100);
         if (f < max) setOnFire(nr.nextRange(1, 4));
     }
+
+//
+//    @Override
+//    public boolean onUpdate(int currentTick) {
+//        if (!this.loggedIn) {
+//            return false;
+//        }
+//
+//        int tickDiff = currentTick - this.lastUpdate;
+//
+//        if (tickDiff <= 0) {
+//            return true;
+//        }
+//
+//        this.messageCounter = 2;
+//
+//        this.lastUpdate = currentTick;
+//
+//        if (!this.isAlive() && this.spawned) {
+//            ++this.deadTicks;
+//            if (this.deadTicks >= 10) {
+//                this.despawnFromAll();
+//            }
+//            return true;
+//        }
+//
+//        if (this.spawned) {
+//            this.processMovement(tickDiff);
+//
+//            this.entityBaseTick(tickDiff);
+//
+//            if (this.getServer().getDifficulty() == 0 && this.level.getGameRules().getBoolean(GameRule.NATURAL_REGENERATION)) {
+//                if (this.getHealth() < this.getMaxHealth() && this.ticksLived % 20 == 0) {
+//                    this.heal(1);
+//                }
+//
+//                PlayerFood foodData = this.getFoodData();
+//
+//                if (foodData.getLevel() < 20 && this.ticksLived % 10 == 0) {
+//                    foodData.addFoodLevel(1, 0);
+//                }
+//            }
+//
+//            if (this.isOnFire() && this.lastUpdate % 10 == 0) {
+//                if (this.isCreative() && !this.isInsideOfFire()) {
+//                    this.extinguish();
+//                } else if (this.getLevel().isRaining()) {
+//                    if (this.getLevel().canBlockSeeSky(this)) {
+//                        this.extinguish();
+//                    }
+//                }
+//            }
+//
+//            if (!this.isSpectator() && this.speed != null) {
+//                if (this.onGround) {
+//                    if (this.inAirTicks != 0) {
+//                        this.startAirTicks = 5;
+//                    }
+//                    this.inAirTicks = 0;
+//                    this.highestPosition = this.y;
+//                } else {
+//                    if (!this.isGliding() && !server.getAllowFlight() && !this.getAdventureSettings().get(AdventureSettings.Type.ALLOW_FLIGHT) && this.inAirTicks > 10 && !this.isSleeping() && !this.isImmobile() && uw) {
+//                        double expectedVelocity = (-this.getGravity()) / ((double) this.getDrag()) - ((-this.getGravity()) / ((double) this.getDrag())) * Math.exp(-((double) this.getDrag()) * ((double) (this.inAirTicks - this.startAirTicks)));
+//                        double diff = (this.speed.y - expectedVelocity) * (this.speed.y - expectedVelocity);
+//
+//                        Block block = level.getBlock(this);
+//                        boolean onLadder = block.getId() == BlockID.LADDER;
+//
+//                        if (!this.hasEffect(Effect.JUMP) && diff > 0.6 && expectedVelocity < this.speed.y && !onLadder) {
+//                            if (this.inAirTicks < 100) {
+//                                //this.sendSettings();
+//                                this.setMotion(new Vector3(0, expectedVelocity, 0));
+//                            } else if (this.kick(PlayerKickEvent.Reason.FLYING_DISABLED, "Flying is not enabled on this server")) {
+//                                return false;
+//                            }
+//                        }
+//                        if (onLadder) {
+//                            this.resetFallDistance();
+//                        }
+//                    }
+//
+//                    if (this.y > highestPosition) {
+//                        this.highestPosition = this.y;
+//                    }
+//
+//                    if (this.isGliding()) this.resetFallDistance();
+//
+//                    ++this.inAirTicks;
+//
+//                }
+//
+//                if (this.isSurvival() || this.isAdventure()) {
+//                    if (this.getFoodData() != null) this.getFoodData().update(tickDiff);
+//                }
+//            }
+//        }
+//
+//        this.checkTeleportPosition();
+//        this.checkInteractNearby();
+//
+//        if (this.spawned && this.dummyBossBars.size() > 0 && currentTick % 100 == 0) {
+//            this.dummyBossBars.values().forEach(DummyBossBar::updateBossEntityPosition);
+//        }
+//
+//        return true;
+//    }
 }
