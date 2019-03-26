@@ -36,6 +36,7 @@ public class CustomEnchantment extends Enchantment {
     public static final int CLIMBER = 39;
     public static final int BURNSHILED = 40;
     public static final int KINGOFHEARTS = 40;
+    public static final int RESTORATION = 40;
     public static final int CrateKey = 55;
 
     boolean CheckCustomName = true;

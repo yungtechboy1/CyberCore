@@ -437,146 +437,146 @@ public class CorePlayer extends Player {
 //    }
 
 
-    @Override
-    protected void processLogin() {
-        if (!this.server.isWhitelisted((this.getName()).toLowerCase())) {
-            this.kick(PlayerKickEvent.Reason.NOT_WHITELISTED, "Server is white-listed");
-
-            return;
-        } else if (this.isBanned()) {
-            this.kick(PlayerKickEvent.Reason.NAME_BANNED, "You are banned");
-            return;
-        } else if (this.server.getIPBans().isBanned(this.getAddress())) {
-            this.kick(PlayerKickEvent.Reason.IP_BANNED, "You are banned");
-            return;
-        }
-
-        if (this.hasPermission(Server.BROADCAST_CHANNEL_USERS)) {
-            this.server.getPluginManager().subscribeToPermission(Server.BROADCAST_CHANNEL_USERS, this);
-        }
-        if (this.hasPermission(Server.BROADCAST_CHANNEL_ADMINISTRATIVE)) {
-            this.server.getPluginManager().subscribeToPermission(Server.BROADCAST_CHANNEL_ADMINISTRATIVE, this);
-        }
-
-        for (Player p : new ArrayList<>(this.server.getOnlinePlayers().values())) {
-            if (p != this && p.getName() != null && p.getName().equalsIgnoreCase(this.getName())) {
-                if (!p.kick(PlayerKickEvent.Reason.NEW_CONNECTION, "logged in from another location")) {
-                    this.close(this.getLeaveMessage(), "Already connected");
-                    return;
-                }
-            } else if (p.loggedIn && this.getUniqueId().equals(p.getUniqueId())) {
-                if (!p.kick(PlayerKickEvent.Reason.NEW_CONNECTION, "logged in from another location")) {
-                    this.close(this.getLeaveMessage(), "Already connected");
-                    return;
-                }
-            }
-        }
-
-        CompoundTag nbt;
-        File legacyDataFile = new File(server.getDataPath() + "players/" + this.username.toLowerCase() + ".dat");
-        File dataFile = new File(server.getDataPath() + "players/" + this.uuid.toString() + ".dat");
-        if (legacyDataFile.exists() && !dataFile.exists()) {
-            nbt = this.server.getOfflinePlayerData(this.username);
-
-            if (!legacyDataFile.delete()) {
-                log.warn("Could not delete legacy player data for {}", this.username);
-            }
-        } else {
-            nbt = this.server.getOfflinePlayerData(this.uuid);
-        }
-
-        if (nbt == null) {
-            this.close(this.getLeaveMessage(), "Invalid data");
-            return;
-        }
-
-        if (loginChainData.isXboxAuthed() && server.getPropertyBoolean("xbox-auth") || !server.getPropertyBoolean("xbox-auth")) {
-            server.updateName(this.uuid, this.username);
-        }
-
-        this.playedBefore = (nbt.getLong("lastPlayed") - nbt.getLong("firstPlayed")) > 1;
-
-        boolean alive = true;
-
-        nbt.putString("NameTag", this.username);
-
-        if (0 >= nbt.getShort("Health")) {
-            alive = false;
-        }
-
-        int exp = nbt.getInt("EXP");
-        int expLevel = nbt.getInt("expLevel");
-        this.setExperience(exp, expLevel);
-
-        this.gamemode = nbt.getInt("playerGameType") & 0x03;
-        if (this.server.getForceGamemode()) {
-            this.gamemode = this.server.getGamemode();
-            nbt.putInt("playerGameType", this.gamemode);
-        }
-
-        this.adventureSettings = new AdventureSettings(this)
-                .set(AdventureSettings.Type.WORLD_IMMUTABLE, isAdventure())
-                .set(AdventureSettings.Type.WORLD_BUILDER, !isAdventure())
-                .set(AdventureSettings.Type.AUTO_JUMP, true)
-                .set(AdventureSettings.Type.ALLOW_FLIGHT, isCreative())
-                .set(AdventureSettings.Type.NO_CLIP, isSpectator());
-
-        Level level;
-        if ((level = this.server.getLevelByName(nbt.getString("Level"))) == null || !alive) {
-            this.setLevel(this.server.getDefaultLevel());
-            nbt.putString("Level", this.level.getName());
-            nbt.getList("Pos", DoubleTag.class)
-                    .add(new DoubleTag("0", this.level.getSpawnLocation().x))
-                    .add(new DoubleTag("1", this.level.getSpawnLocation().y))
-                    .add(new DoubleTag("2", this.level.getSpawnLocation().z));
-        } else {
-            this.setLevel(level);
-        }
-
-        for (Tag achievement : nbt.getCompound("Achievements").getAllTags()) {
-            if (!(achievement instanceof ByteTag)) {
-                continue;
-            }
-
-            if (((ByteTag) achievement).getData() > 0) {
-                this.achievements.add(achievement.getName());
-            }
-        }
-
-        nbt.putLong("lastPlayed", System.currentTimeMillis() / 1000);
-
-        UUID uuid = getUniqueId();
-        nbt.putLong("UUIDLeast", uuid.getLeastSignificantBits());
-        nbt.putLong("UUIDMost", uuid.getMostSignificantBits());
-
-        if (this.server.getAutoSave()) {
-            this.server.saveOfflinePlayerData(this.uuid, nbt, true);
-        }
-
-        this.sendPlayStatus(PlayStatusPacket.LOGIN_SUCCESS);
-        this.server.onPlayerLogin(this);
-
-        ListTag<DoubleTag> posList = nbt.getList("Pos", DoubleTag.class);
-
-        super.init(this.level.getChunk((int) posList.get(0).data >> 4, (int) posList.get(2).data >> 4, true), nbt);
-
-        if (!this.namedTag.contains("foodLevel")) {
-            this.namedTag.putInt("foodLevel", 20);
-        }
-        int foodLevel = this.namedTag.getInt("foodLevel");
-        if (!this.namedTag.contains("FoodSaturationLevel")) {
-            this.namedTag.putFloat("FoodSaturationLevel", 20);
-        }
-        float foodSaturationLevel = this.namedTag.getFloat("foodSaturationLevel");
-        this.foodData = new PlayerFood(this, foodLevel, foodSaturationLevel);
-
-        if (this.isSpectator()) this.keepMovement = true;
-
-        this.forceMovement = this.teleportPosition = this.getPosition();
-
-        ResourcePacksInfoPacket infoPacket = new ResourcePacksInfoPacket();
-        infoPacket.resourcePackEntries = this.server.getResourcePackManager().getResourceStack();
-        infoPacket.mustAccept = this.server.getForceResources();
-        this.dataPacket(infoPacket);
-    }
+//    @Override
+//    protected void processLogin() {
+//        if (!this.server.isWhitelisted((this.getName()).toLowerCase())) {
+//            this.kick(PlayerKickEvent.Reason.NOT_WHITELISTED, "Server is white-listed");
+//
+//            return;
+//        } else if (this.isBanned()) {
+//            this.kick(PlayerKickEvent.Reason.NAME_BANNED, "You are banned");
+//            return;
+//        } else if (this.server.getIPBans().isBanned(this.getAddress())) {
+//            this.kick(PlayerKickEvent.Reason.IP_BANNED, "You are banned");
+//            return;
+//        }
+//
+//        if (this.hasPermission(Server.BROADCAST_CHANNEL_USERS)) {
+//            this.server.getPluginManager().subscribeToPermission(Server.BROADCAST_CHANNEL_USERS, this);
+//        }
+//        if (this.hasPermission(Server.BROADCAST_CHANNEL_ADMINISTRATIVE)) {
+//            this.server.getPluginManager().subscribeToPermission(Server.BROADCAST_CHANNEL_ADMINISTRATIVE, this);
+//        }
+//
+//        for (Player p : new ArrayList<>(this.server.getOnlinePlayers().values())) {
+//            if (p != this && p.getName() != null && p.getName().equalsIgnoreCase(this.getName())) {
+//                if (!p.kick(PlayerKickEvent.Reason.NEW_CONNECTION, "logged in from another location")) {
+//                    this.close(this.getLeaveMessage(), "Already connected");
+//                    return;
+//                }
+//            } else if (p.loggedIn && this.getUniqueId().equals(p.getUniqueId())) {
+//                if (!p.kick(PlayerKickEvent.Reason.NEW_CONNECTION, "logged in from another location")) {
+//                    this.close(this.getLeaveMessage(), "Already connected");
+//                    return;
+//                }
+//            }
+//        }
+//
+//        CompoundTag nbt;
+//        File legacyDataFile = new File(server.getDataPath() + "players/" + this.username.toLowerCase() + ".dat");
+//        File dataFile = new File(server.getDataPath() + "players/" + this.uuid.toString() + ".dat");
+//        if (legacyDataFile.exists() && !dataFile.exists()) {
+//            nbt = this.server.getOfflinePlayerData(this.username);
+//
+//            if (!legacyDataFile.delete()) {
+//                log.warn("Could not delete legacy player data for {}", this.username);
+//            }
+//        } else {
+//            nbt = this.server.getOfflinePlayerData(this.uuid);
+//        }
+//
+//        if (nbt == null) {
+//            this.close(this.getLeaveMessage(), "Invalid data");
+//            return;
+//        }
+//
+//        if (loginChainData.isXboxAuthed() && server.getPropertyBoolean("xbox-auth") || !server.getPropertyBoolean("xbox-auth")) {
+//            server.updateName(this.uuid, this.username);
+//        }
+//
+//        this.playedBefore = (nbt.getLong("lastPlayed") - nbt.getLong("firstPlayed")) > 1;
+//
+//        boolean alive = true;
+//
+//        nbt.putString("NameTag", this.username);
+//
+//        if (0 >= nbt.getShort("Health")) {
+//            alive = false;
+//        }
+//
+//        int exp = nbt.getInt("EXP");
+//        int expLevel = nbt.getInt("expLevel");
+//        this.setExperience(exp, expLevel);
+//
+//        this.gamemode = nbt.getInt("playerGameType") & 0x03;
+//        if (this.server.getForceGamemode()) {
+//            this.gamemode = this.server.getGamemode();
+//            nbt.putInt("playerGameType", this.gamemode);
+//        }
+//
+//        this.adventureSettings = new AdventureSettings(this)
+//                .set(AdventureSettings.Type.WORLD_IMMUTABLE, isAdventure())
+//                .set(AdventureSettings.Type.WORLD_BUILDER, !isAdventure())
+//                .set(AdventureSettings.Type.AUTO_JUMP, true)
+//                .set(AdventureSettings.Type.ALLOW_FLIGHT, isCreative())
+//                .set(AdventureSettings.Type.NO_CLIP, isSpectator());
+//
+//        Level level;
+//        if ((level = this.server.getLevelByName(nbt.getString("Level"))) == null || !alive) {
+//            this.setLevel(this.server.getDefaultLevel());
+//            nbt.putString("Level", this.level.getName());
+//            nbt.getList("Pos", DoubleTag.class)
+//                    .add(new DoubleTag("0", this.level.getSpawnLocation().x))
+//                    .add(new DoubleTag("1", this.level.getSpawnLocation().y))
+//                    .add(new DoubleTag("2", this.level.getSpawnLocation().z));
+//        } else {
+//            this.setLevel(level);
+//        }
+//
+//        for (Tag achievement : nbt.getCompound("Achievements").getAllTags()) {
+//            if (!(achievement instanceof ByteTag)) {
+//                continue;
+//            }
+//
+//            if (((ByteTag) achievement).getData() > 0) {
+//                this.achievements.add(achievement.getName());
+//            }
+//        }
+//
+//        nbt.putLong("lastPlayed", System.currentTimeMillis() / 1000);
+//
+//        UUID uuid = getUniqueId();
+//        nbt.putLong("UUIDLeast", uuid.getLeastSignificantBits());
+//        nbt.putLong("UUIDMost", uuid.getMostSignificantBits());
+//
+//        if (this.server.getAutoSave()) {
+//            this.server.saveOfflinePlayerData(this.uuid, nbt, true);
+//        }
+//
+//        this.sendPlayStatus(PlayStatusPacket.LOGIN_SUCCESS);
+//        this.server.onPlayerLogin(this);
+//
+//        ListTag<DoubleTag> posList = nbt.getList("Pos", DoubleTag.class);
+//
+//        super.init(this.level.getChunk((int) posList.get(0).data >> 4, (int) posList.get(2).data >> 4, true), nbt);
+//
+//        if (!this.namedTag.contains("foodLevel")) {
+//            this.namedTag.putInt("foodLevel", 20);
+//        }
+//        int foodLevel = this.namedTag.getInt("foodLevel");
+//        if (!this.namedTag.contains("FoodSaturationLevel")) {
+//            this.namedTag.putFloat("FoodSaturationLevel", 20);
+//        }
+//        float foodSaturationLevel = this.namedTag.getFloat("foodSaturationLevel");
+//        this.foodData = new PlayerFood(this, foodLevel, foodSaturationLevel);
+//
+//        if (this.isSpectator()) this.keepMovement = true;
+//
+//        this.forceMovement = this.teleportPosition = this.getPosition();
+//
+//        ResourcePacksInfoPacket infoPacket = new ResourcePacksInfoPacket();
+//        infoPacket.resourcePackEntries = this.server.getResourcePackManager().getResourceStack();
+//        infoPacket.mustAccept = this.server.getForceResources();
+//        this.dataPacket(infoPacket);
+//    }
 }

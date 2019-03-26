@@ -7,6 +7,7 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityArmorChangeEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.potion.Effect;
@@ -24,23 +25,36 @@ public class EnchantListener implements Listener {
 
     @EventHandler
     public void EntityDamageByEntityEvent(EntityDamageByEntityEvent evnt) {
-        Player attacker = (Player)evnt.getDamager();
-        Player defender = (Player)evnt.getEntity();
+//        Player attacker = (Player)evnt.getDamager();
+//        Player defender = (Player)evnt.getEntity();
+//        if(defender ==  null)return;//Defender not player
+//        Item cp = defender.getInventory().getChestplate();
+//        if(cp == null)return;//No Chestplate on
+//        EntityDamageEvent.DamageCause cause = evnt.getCause();
+//        //Check if defender has BurnShield
+//        BurnShield bs = (BurnShield) CustomEnchantment.getEnchantFromIDFromItem(cp,CustomEnchantment.BURNSHILED);
+//        if(bs == null)return;
+//        int bsl = bs.getLevel();
+//        switch (bsl){
+//            case 1:
+//
+//
+//        }
+
+    }
+    @EventHandler
+   public void EntityRegainHealthEvent(EntityRegainHealthEvent event){
+        Player defender = (Player)event.getEntity();
         if(defender ==  null)return;//Defender not player
         Item cp = defender.getInventory().getChestplate();
         if(cp == null)return;//No Chestplate on
-        EntityDamageEvent.DamageCause cause = evnt.getCause();
+        int cause = event.getRegainReason();
         //Check if defender has BurnShield
-        BurnShield bs = (BurnShield) CustomEnchantment.getEnchantFromIDFromItem(cp,CustomEnchantment.BURNSHILED);
-        if(bs == null)return;
-        int bsl = bs.getLevel();
-        switch (bsl){
-            case 1:
-
-
-        }
-
+        Restoration r = (Restoration) CustomEnchantment.getEnchantFromIDFromItem(cp,CustomEnchantment.RESTORATION);
+        if(r == null)return;
+        event.setAmount(event.getAmount() + r.GetLevelEffect());
     }
+
     @EventHandler
     public void PlayerInventoryChange(EntityArmorChangeEvent evnt) {
         Entity e = evnt.getEntity();
