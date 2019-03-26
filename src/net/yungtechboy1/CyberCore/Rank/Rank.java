@@ -6,11 +6,9 @@ package net.yungtechboy1.CyberCore.Rank;
  */
 public class Rank {
 
-    RankList rank;
-
-    String display_name = "[]";
-    String chat_prefix = "&7";
-    public int Ranking = 0;
+    public String display_name = "";
+    public String chat_prefix = "&7";
+    int id = 0;
 
     public ChatFormats.RankChatFormat getChat_format() {
         return chat_format;
@@ -21,21 +19,20 @@ public class Rank {
     }
 
     ChatFormats.RankChatFormat chat_format = ChatFormats.RankChatFormat.Default;
-    RankList R;
 
-    public Rank(RankList rank, String display_name) {
-        this.rank = rank;
+    public Rank(Integer id, String display_name) {
+        this.id = id;
         this.display_name = display_name;
     }
 
-    public Rank(RankList rank, String display_name, String chat_prefix) {
-        this.rank = rank;
+    public Rank(Integer id, String display_name, String chat_prefix) {
+        this.id = id;
         this.display_name = display_name;
         this.chat_prefix = chat_prefix;
     }
 
-    public RankList getRank() {
-        return rank;
+    public Integer getId(){
+        return id;
     }
 
     public String getDisplayName() {

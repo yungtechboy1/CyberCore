@@ -29,7 +29,6 @@ import java.util.HashMap;
 public class CorePlayer extends Player {
 
 
-    BaseClass Class = null;
     public FormType.MainForm LastSentFormType = FormType.MainForm.NULL;
     public FormType.SubMenu LastSentSubMenu = FormType.SubMenu.MainMenu;
     private FormWindow nw;
@@ -41,7 +40,7 @@ public class CorePlayer extends Player {
     long uct = 0;
     boolean uw = false;
 
-    private Rank R = RankList.PERM_GUEST.getRank();
+    private Rank rank = RankList.PERM_GUEST.getRank();
 
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
         super(interfaz, clientID, ip, port);
@@ -81,10 +80,6 @@ public class CorePlayer extends Player {
 
     public void clearNewWindow() {
         this.nw = null;
-    }
-
-    public BaseClass GetClass() {
-        return Class;
     }
 
     private BlockVector3 lastBreakPosition1 = new BlockVector3();

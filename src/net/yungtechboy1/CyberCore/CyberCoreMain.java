@@ -372,7 +372,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     public CorePlayer getCorePlayer(Player p) {
         if (p instanceof CorePlayer) {
-            getLogger().info(((CorePlayer) p).kills + " KILLLSSSSSS!!!!!");
             return (CorePlayer) p;
         }
         return null;
@@ -455,7 +454,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     }
 
     public Integer GetPlayerRankInt(Player p, Boolean all) {
-        return RankFactory.getPlayerRank(p).Ranking;
+        return RankFactory.getPlayerRank(p).getId();
     }
 
 //    public Integer GetPlayerRankInt(String p, Boolean all) {
