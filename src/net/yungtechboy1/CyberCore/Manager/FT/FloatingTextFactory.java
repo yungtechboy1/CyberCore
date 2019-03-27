@@ -188,7 +188,7 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
 
             String pf = "No Faction";
             if (CCM.FM != null) {
-                pf = CCM.FM.getPlayerFaction(player);
+                pf = CCM.FM.getPlayerFaction(player.getName());
                 if (pf == null) pf = "No Faction";
             }
             //Kills

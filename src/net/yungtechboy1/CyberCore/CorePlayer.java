@@ -32,9 +32,13 @@ public class CorePlayer extends Player {
     public FormType.MainForm LastSentFormType = FormType.MainForm.NULL;
     public FormType.SubMenu LastSentSubMenu = FormType.SubMenu.MainMenu;
     private FormWindow nw;
+
+
     public Integer kills = 0;
     public Integer deaths = 0;
     public Integer banned = 0;
+    public String faction_id = null;
+    public String uuid;
     public HashMap<String, Object> extraData = new HashMap<>();
 
     long uct = 0;

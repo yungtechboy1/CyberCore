@@ -288,7 +288,7 @@ public class FactionsCommands {
                 //@todo Add Auto unclaim and Claim Radius
                 if(args[0].equalsIgnoreCase("admin")) {
                     String gar = null;
-                    if(gar != null && Main.Main.RankFactory.RankAdminRank(gar) >= 4) {
+                    if(sender.isOp()) {
                         new Admin(sender, args, main);
                         return true;
                     }else{

@@ -15,121 +15,72 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CoreSQL {
+public class CoreSQL extends MySQL{
 
-    public Connection connection;
-    public CyberCoreMain plugin;
-    private boolean enabled = true;
 
     public CoreSQL(CyberCoreMain plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
-    /**
-     * Connects to the MYSQL database assigned in config.yml for GLOBAL data
-     * @return Connection
-     */
-    public Connection connectToDb() {
-        plugin.getLogger().info("ATTEMPTING CONNECTION");
-        String host = plugin.MainConfig.getString("mysql-host");
-        String pass = plugin.MainConfig.getString("mysql-pass");
-        int port = plugin.MainConfig.getInt("mysql-port");
-        String user = plugin.MainConfig.getString("mysql-user");
-        String db = plugin.MainConfig.getString("mysql-db");
-        if (!enabled) return null;
-        Connection connection = DbLib.getMySqlConnection(host, port,
-                db, user, pass);
 
-        if (connection == null) enabled = false;
+    /**
+     * @param identity Can be a player gamertag or UUID.
+     * @return boolean
+     */
+    public boolean checkUser(String identity) {
+        String query = "SELECT * FROM mcpe WHERE gamertag=':gamertag'";
         try {
-            if(connection.isValid(10)) {
-                plugin.getLogger().info("SQL CONNEECTION VALID!");
-            } else {
-                plugin.getLogger().error("SQL CONNEECTION INVALID!");
-            }
+            ArrayList<HashMap<String, Object>> data = executeSelect(query,"gamertag", identity.toLowerCase(), null);
+            if(data != null && !data.isEmpty()) return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return connection;
+        query = "SELECT * FROM mcpe WHERE uuid=':uuid'";
+        try {
+            ArrayList<HashMap<String, Object>> data = executeSelect(query,"uuid", identity, null);
+            if(data != null && !data.isEmpty()) return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
-//
-//    public Integer getInteger(String table, String condition, Object value, String selector) throws SQLException {
-//        int result;
-//        String query = ("SELECT * FROM " + table + " WHERE " + condition + "=" + value);
-//        Statement statement = connection.prepareStatement(query);
-//        ResultSet resultSet = statement.executeQuery(query);
-//        result = resultSet.getInt(selector);
-//        if (statement != null) statement.close();
-//        if (connection != null) connection.close();
-//        return result;
-//    }
-
-
-
-    public void addUser(String uuid, String ip) throws SQLException {
-        executeUpdate("insert into mcpe (uuid, last_ip) values ('"+uuid+"' , '"+ip+"')");
-        plugin.getLogger().info("User: " + uuid + " - added to DB");
-    }
-
-
-
-
-
-    public void checkUser(Player player) throws SQLException {
+    public void loadUser(Player player) throws SQLException {
         String uuid = player.getUniqueId().toString();
         String ip = player.getAddress();
-        plugin.getLogger().info(ip);
-        String query = "SELECT * FROM mcpe WHERE uuid='" + uuid + "'";
-        String[] selector = {"uuid","last_ip","rank"};
-        ArrayList<HashMap<String, Object>> data = executeSelect(query, selector);
-        if(data == null) {
-            plugin.getLogger().info("USER BEING CREATED!!!");
-            addUser(uuid, ip);
-            plugin.UserSQL.addUser(uuid);
-            int rank = 0;
-            plugin.RankFactory.RankCache.put(uuid, rank);
-        } else {
-            plugin.getLogger().info(data.get(0).get("last_ip").toString());
-            if(!data.get(0).get("last_ip").equals(ip)) {
-                Config ip_change = new Config(new File(plugin.getDataFolder(), "ip_changes.yml"));
-                ip_change.set(uuid, ip_change.getList(uuid).add(ip));
-                ip_change.save();
+        if(checkUser(uuid)) {
+            String[] selectors = {"uuid","last_ip","rank"};
+            String query = "SELECT * FROM mcpe WHERE uuid=':uuid'";
+            try {
+                ArrayList<HashMap<String, Object>> data = executeSelect(query, "uuid", uuid, selectors);
+                if(!data.get(0).get("last_ip").equals(ip)) {
+                    Config ip_change = new Config(new File(plugin.getDataFolder(), "ip_changes.yml"));
+                    ip_change.set(uuid, ip_change.getList(uuid).add(ip));
+                    ip_change.save();
+                }
+                int rank = (int) data.get(0).get("rank");
+                plugin.log("SADSDSD - " + rank);
+                plugin.RankFactory.RankCache.put(uuid, rank);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            int rank = (int) data.get(0).get("rank");
-            plugin.RankFactory.RankCache.put(uuid, rank);
-            plugin.UserSQL.loadUser(uuid);
-            plugin.getLogger().info("USER EXISTS!!!");
+        } else {
+            createUser(uuid, ip);
         }
+        plugin.UserSQL.loadUser(uuid);
         plugin.UserSQL.saveUser(plugin.getCorePlayer(player));
     }
 
-    public boolean executeUpdate(String query) throws SQLException {
-        Connection connection = connectToDb();
-        if (connection == null) return false;
-        Statement statement = connection.prepareStatement(query);
-        statement.executeUpdate(query);
-        if (statement != null) statement.close();
-        if (connection != null) connection.close();
-        return true;
-    }
-
-    public ArrayList<HashMap<String, Object>> executeSelect(String query, String[] selectors) throws SQLException {
-        ArrayList<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
-        Connection connection = connectToDb();
-        if (connection == null) return null;
-        Statement statement = connection.prepareStatement(query);
-        ResultSet resultSet = statement.executeQuery(query);
-        if (resultSet == null) return null;
-        while (resultSet.next()) {
-            HashMap<String,Object> map = new HashMap<>();
-            for (String selector:selectors) {
-                map.put(selector, resultSet.getObject(selector));
-            }
-            data.add(map);
+    public void createUser(String uuid, String ip) {
+        try {
+            executeUpdate("insert into mcpe (uuid, last_ip) values ('"+uuid+"' , '"+ip+"')");
+            plugin.log("User: " + uuid + " - added to DB");
+            plugin.UserSQL.createUser(uuid);
+            int rank = 0;
+            plugin.RankFactory.RankCache.put(uuid, rank);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        if (connection != null) connection.close();
-        return data.isEmpty() ? null: data;
     }
 
 }

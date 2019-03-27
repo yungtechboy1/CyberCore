@@ -53,7 +53,7 @@ public class FactionFactory {
 
 
     private Connection getMySqlConnection() {
-        return Main.Main.SQLSaveManager.getMySqlConnection();
+        return Main.plugin.SQLSaveManager.getMySqlConnection();
     }
 
     public void RemoveFaction(Faction fac) {
@@ -165,7 +165,7 @@ public class FactionFactory {
             stmt2.executeUpdate(sql4);
             stmt2.executeUpdate(sql6);*/
             //stmt.executeUpdate("DELETE FROM allies; DELETE FROM confirm; DELETE FROM home; DELETE FROM plots; DELETE FROM settings; DELETE FROM master;");
-            Main.Main.getLogger().info("Going to save: "+List.size());
+            Main.plugin.getLogger().info("Going to save: "+List.size());
             stmt.executeUpdate("BEGIN;");
             String yaml = "";
             for (Map.Entry<String, Faction> e : List.entrySet()) {
@@ -290,9 +290,9 @@ public class FactionFactory {
                     stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `player` = '%s';", fac.GetLeader()));
                     stmt.executeUpdate(String.format("INSERT IGNORE INTO `master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');", fac.GetLeader(), name, "Leader"));
                     //stmt2.executeUpdate(String.format("INSERT INTO `master`(`player`,`faction`,`rank`) VALUES (''%s'',''%s'',''%s'');",fac.GetLeader(),name,"Leader"));
-                    Main.Main.getLogger().info(TextFormat.GREEN + "[Factions] Saving Faction " + name);
+                    Main.plugin.getLogger().info(TextFormat.GREEN + "[Factions] Saving Faction " + name);
                 } catch (Exception ex) {
-                    Main.Main.getLogger().info(TextFormat.GREEN + "[Factions] Error! Faction " + e.getKey());
+                    Main.plugin.getLogger().info(TextFormat.GREEN + "[Factions] Error! Faction " + e.getKey());
                     ex.printStackTrace();
                     getServer().getLogger().info(ex.getClass().getName() + ":77 " + ex.getMessage());
                 }
@@ -654,7 +654,7 @@ public class FactionFactory {
 
             return fac;
         }
-        Main.Main.getLogger().error("WTF NOTHING FOUND AT 374!" + name);
+        Main.plugin.getLogger().error("WTF NOTHING FOUND AT 374!" + name);
         return null;
     }
 

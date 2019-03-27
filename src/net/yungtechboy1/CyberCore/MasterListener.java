@@ -1,482 +1,143 @@
 package net.yungtechboy1.CyberCore;
 
-import cn.nukkit.form.element.ElementButton;
-import cn.nukkit.form.response.FormResponseModal;
-import cn.nukkit.form.response.FormResponseSimple;
-import cn.nukkit.form.window.FormWindowSimple;
-import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import cn.nukkit.Player;
-import cn.nukkit.entity.Entity;
+import cn.nukkit.Server;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.block.BlockBreakEvent;
-import cn.nukkit.event.block.BlockPlaceEvent;
-import cn.nukkit.event.entity.EntityDamageByEntityEvent;
-import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.player.*;
-import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
+import org.apache.logging.log4j.core.Core;
+import sun.applet.Main;
 
-import java.util.ArrayList;
-
-import static net.yungtechboy1.CyberCore.FormType.MainForm.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
- * Created by carlt on 3/7/2019.
+ * Created by carlt_000 on 1/22/2017.
  */
 public class MasterListener implements Listener {
-    CyberCoreMain Main;
-
-    public MasterListener(CyberCoreMain mm) {
-        Main = mm;
+    CyberCoreMain plugin;
+    public MasterListener(CyberCoreMain main){
+        plugin = main;
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void joinEvent(PlayerJoinEvent event) {
+        Player p = event.getPlayer();
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void FactionChatEvent(PlayerChatEvent event) {
-//        ChatEvent ce = new ChatEvent(Main.FM,event);
-//        event = ce.Event;
-    }
+        String Msg = plugin.colorize((String) plugin.MainConfig.get("Join-Message"));
+        event.setJoinMessage(Msg.replace("{player}", p.getName()));
+        p.sendTitle(plugin.colorize("&l&bCyberTech"), plugin.colorize("&l&2Welcome!"),30,30, 10);
 
-    @EventHandler
-    public void FactionPlayerDeath(PlayerDeathEvent event) {
-        if (event == null) return;
-        CorePlayer player = Main.getCorePlayer(event.getEntity());
-        String playern = event.getEntity().getName();
-        EntityDamageEvent cause = event.getEntity().getLastDamageCause();
-        event.getEntity().setExperience(0);
-        player.addDeath();
-        if (cause != null && cause.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
-            if (cause instanceof EntityDamageByEntityEvent && event.getEntity() instanceof Player) {
-                Entity e = ((EntityDamageByEntityEvent) cause).getDamager();
-                CorePlayer killer = Main.getCorePlayer(e.getName());
-                if (e instanceof Player) {
-                    event.setDeathMessage(TextFormat.GRAY + playern + " was killed by " + e.getName() + TextFormat.RED + " (" + e.getHealth() + "❤)");
-                    //@TODO Bounty XD
-                    /*
-                    int tb = 0;
-                    if(isset(Main.FM.bounty[strtolower(playern)])){
-                        foreach(Main.FM.bounty[strtolower(playern)] as name=>bounty){
-                            tb += bounty;
-                            event.getEntity().setNameTag(Main.FM.nt[strtolower(event.getPlayer().getName())]);
-                            unset(Main.FM.bounty[strtolower(playern)][name]);
-                        }
-                        if(tb != 0){
-                            Main.FM.api.addMoney(e,tb);
-                            e.sendMessage(TextFormat.GREEN."[Bounty] Bounty Claimed for the Amount of tb");
-                            e.addExperience(5);
-                        }
-                    }*/
-                    String killername = e.getName();
-                    //DEath FIne
-                    Faction kf = Main.FM.FFactory.getPlayerFaction((Player) event.getEntity());
-                    if (kf != null) {
-                        kf.HandleKillEvent(event);
-                        kf.TakePower(2);
-                    }
-                    killer.addKill();
-                    if (killer.kills == 5) {
-                        Main.getServer().broadcastMessage(TextFormat.GREEN + killername + " is on a 5 KillStreak!");
-                        //if(kf != null)Main.FM.AddFactionPower(kf, 5);
-                    }
-                    if (killer.kills == 8) {
-                        Main.getServer().broadcastMessage(TextFormat.AQUA + killername + " is on a 8 KillStreak!");
-                        //if(kf != null)Main.FM.AddFactionPower(kf, 8);
-                    }
-                    if (killer.kills == 10) {
-                        Main.getServer().broadcastMessage(TextFormat.LIGHT_PURPLE + killername + " is on a 10 KillStreak!");
-                        //if(kf != null)Main.FM.AddFactionPower(kf, 10);
-                    }
-                    if (killer.kills > 10) {
-                        Integer kills = killer.kills;
-                        Main.getServer().broadcastMessage(TextFormat.LIGHT_PURPLE + killername + " is on a " + kills + " KillStreak!");
-                        //if(kf != null)Main.FM.AddFactionPower(kf, kills*2);
-                    }
-                }
-            }
-        }
-    }
-
-    //GUI Listener
-    @EventHandler
-    public void PFRE(PlayerFormRespondedEvent pr) {
-        int fid = pr.getFormID();
-        Player p = pr.getPlayer();
-        CorePlayer cp = ((CorePlayer) p);
-        switch (cp.LastSentFormType) {
-            case Class_0:
-                FormResponseModal frm = (FormResponseModal) pr.getResponse();
-                if (frm.getClickedButtonId() == 0) {
-                    System.out.println("Bye!");
-                    cp.LastSentFormType = NULL;
-                } else {
-                    System.out.println("HI!!!!!");
-                    cp.showFormWindow(cp.getNewWindow());
-                    cp.LastSentFormType = Class_1;
-                    cp.clearNewWindow();
-                }
-                break;
-            case Class_1:
-                FormResponseSimple frs = (FormResponseSimple) pr.getResponse();
-                int k = frs.getClickedButtonId();
-                if(cp.LastSentSubMenu == FormType.SubMenu.MainMenu) {
-                    if (k == 0) {//Offense
-                        cp.showFormWindow(new FormWindowSimple("Choose your Class Catagory!", "Visit Cybertechpp.com for more info on classes!",
-                                new ArrayList<ElementButton>() {{
-                                    add(new ElementButton("Assassin"));
-                                    add(new ElementButton("Knight"));
-                                    add(new ElementButton("Raider"));
-                                    add(new ElementButton("Theif"));
-                                }}));
-                        cp.LastSentFormType = Class_1;
-                        cp.LastSentSubMenu = FormType.SubMenu.Offense;
-                    }
-                }else if(cp.LastSentSubMenu == FormType.SubMenu.Offense){
-                    switch (k){
-                        case 0:
-                            break;//Assassin
-                        case 1:
-                            break;//Knight
-                        case 2:
-                            break;//Raider
-                        case 3:
-                            break;//Theif
-                    }
-                }
-                break;
+        plugin.initiatePlayer(p);
+        String rank = plugin.RankFactory.getPlayerRank(p).getDisplayName();
+        p.sendMessage(plugin.colorize( "&2You Have Joined with the Rank: " + rank));
+        plugin.getCorePlayer(p).uuid = p.getUniqueId().toString();
+        if (rank != null && rank.equalsIgnoreCase("op")) {
+            p.setOp(true);
+        } else {
+            p.setOp(false);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void FationsJoinEvent(PlayerJoinEvent event) {
-        //Main.FM.uuid[event.getPlayer().getName()][event.getPlayer().getClientId()] = date(DATE_COOKIE);
-        String player = event.getPlayer().getName();
-
-        String fn = Main.FM.getPlayerFaction(event.getPlayer());
-        Faction f = Main.FM.FFactory.getFaction(fn);
-        if (f != null) {
-            Main.FM.FFactory.List.put(fn.toLowerCase(), f);
-            Main.FM.FFactory.FacList.put(player.toLowerCase(), fn);
-        }
-
-
-/*
-        asd = "";
-        //CHECK BOUNTY
-        tb = 0;
-        if(isset(Main.FM.bounty[strtolower(sender.getName())])){
-            foreach(Main.FM.bounty[strtolower(sender.getName())] as name=>bounty){
-                tb += bounty;
-            }
-            if(tb != 0){
-                asd = "\n".TextFormat.AQUA."[Bounty tb]";
-            }
-        }
-        faction = Main.FM.getPlayerFaction(player);
-        if(faction !== false){
-            Main.FM.MessageFaction(faction, TextFormat.GREEN."player Has Joined!");
-            fc = Main.FM.DecodeFactionColor(Main.FM.getFactionColor(faction));
-            if(fc == false){
-                fc = TextFormat.GRAY;
-            }
-            abcdefg = fc."[faction] \n".TextFormat.RESET.event.getPlayer().getName();
-        }else{
-            abcdefg = event.getPlayer().getName();
-        }
-        event.getPlayer().setNameTag(abcdefg.asd);
-        Main.FM.nt[strtolower(event.getPlayer().getName())] = abcdefg;
-*/
-        /*
-        rank = Main.FM.GetRank(player);
-        if(sender.isOp() && (rank == false || rank == "Guest")){
-            sender.kick("YOu should not be OP");
-        }
-        a = array();
-        aaa = @mysqli_query( Main.FM.db2,"SELECT * FROM `ranks` WHERE `name` = 'player'");
-        if(@mysqli_num_rows(aaa) > 0){
-            f = false;
-            while(row = @mysqli_fetch_assoc(aaa)){
-                if(row['expires'] < strtotime("now") && row['forever'] == 0){
-                    continue;
-                }
-                f = true;
-                if(stripos(row["prefix"],"CRATE"))return true;
-                a["prefix"] = row["prefix"];
-                a["color"] = row["color"];
-                a["claimed"] = row["claimed"];
-                break;
-            }
-            if(f == false){
-                unset(Main.FM.CC.yml["prefixs"][player]);
-                return true;
-            }
-        }else{
-            unset(Main.FM.CC.yml["prefixs"][player]);
-            return true;
-        }
-        if(a['color'] !== ""){
-            c = explode(";", a['color']);
-            color = "";
-            foreach(c as colorcode){
-                if(colorcode == "")break;
-                color .= "§".array[colorcode];
-            }
-        }else{
-            color = "§a";
-        }
-        rankt = a['prefix'];
-        if(rankt == "")rankt = rank;
-        if(rankt == "")rankt = "UNKNOWN";
-        if(rank !== "Guest")Main.FM.getServer ().getScheduler ().scheduleDelayedTask (new SetNameTeg(Main.FM, event.getPlayer(), color.rankt."\n".abcdefg), 20);
-        if(rank !== "Guest" && rank !== "OP")Main.FM.CC.yml["prefixs"][player] = color.rankt;
-        if(rank !== "Guest")event.getPlayer().setNameTag (color.rankt."\n".abcdefg);
-        Main.FM.nt[strtolower(event.getPlayer().getName())] = color.rankt."\n".abcdefg;
-        echo color.rankt."-rank\n".abcdefg;
-        if(rank !== "Guest" && (rank == "OP" || rank == "BUILDER"))event.getPlayer().setOp(true);
-        //if(rank == "Guest")Main.FM.CC.yml["prefixs"][player] = null;
-        if(rank == "Guest")event.getPlayer().setOp (false);
-        //this.CC.yml["prefixs"][player] = "§a".rank;
-        if(a['claimed'] == 0){
-            event.getPlayer().sendMessage(TextFormat.AQUA."Use /claim to Claim your Rank Rewards!");
-        }
-        */
-        // }
-    }
-
-    @EventHandler
-    public void BucketEmpty(PlayerBucketEmptyEvent ev) {
-        if (ev.getPlayer().isOp()) return;
-        Vector3 spawn = ev.getPlayer().getLevel().getSpawnLocation();
-        double sx = spawn.getX();
-        double sz = spawn.getZ();
-        double px = ev.getPlayer().getX();
-        double pz = ev.getPlayer().getZ();
-        boolean x = false;
-        boolean z = false;
-        if ((sx - 200) < px && px < (sx + 200)) {
-            x = true;
-        }
-        if ((sz - 200) < pz && pz < (sz + 200)) {
-            z = true;
-        }
-        if (z && x) {
-            ev.getPlayer().sendMessage(TextFormat.RED + "No Using Buckets 200 Block close to spawn!");
-            ev.setCancelled();
-            return;
-        }
-
-        //TODO Add 30 Sec Cooldown
-
-        //TODO Create CheckClaim Function
-        //Checks factions claim
-        String chunkfaction = Main.FM.GetChunkOwner((int) ev.getPlayer().getX() >> 4, (int) ev.getPlayer().getZ() >> 4);
-        if (chunkfaction != null) {
-            String pf = Main.FM.getPlayerFaction(ev.getPlayer().getName());
-            if (pf != null) {
-                if (pf.equalsIgnoreCase(chunkfaction)) return;
-                ev.getPlayer().sendMessage(FactionsMain.NAME + TextFormat.GRAY + " This area is claimed by" + chunkfaction);
-            }
-            ev.setCancelled(true);
-        }
+    public void spawnEvent(PlayerRespawnEvent event) {
 
     }
 
-    @EventHandler
-    public void BucketFill(PlayerBucketFillEvent ev) {
-        if (ev.getPlayer().isOp()) return;
-        Vector3 spawn = ev.getPlayer().getLevel().getSpawnLocation();
-        double sx = spawn.getX();
-        double sz = spawn.getZ();
-        double px = ev.getPlayer().getX();
-        double pz = ev.getPlayer().getZ();
-        boolean x = false;
-        boolean z = false;
-        if ((sx - 200) < px && px < (sx + 200)) {
-            x = true;
-        }
-        if ((sz - 200) < pz && pz < (sz + 200)) {
-            z = true;
-        }
-        if (z && x) {
-            ev.getPlayer().sendMessage(TextFormat.RED + "No Using Buckets 200 Block close to spawn");
-            ev.setCancelled();
-        }
-
-        String chunkfaction = Main.FM.GetChunkOwner((int) ev.getPlayer().getX() >> 4, (int) ev.getPlayer().getZ() >> 4);
-        if (chunkfaction != null) {
-            String pf = Main.FM.getPlayerFaction(ev.getPlayer().getName());
-            if (pf != null) {
-                if (pf.equalsIgnoreCase(chunkfaction)) return;
-                ev.getPlayer().sendMessage(FactionsMain.NAME + TextFormat.GRAY + "This area is claimed by " + chunkfaction);
-            }
-            ev.setCancelled(true);
-        }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onCreation(PlayerCreationEvent event) {
+        event.setPlayerClass(CorePlayer.class);
     }
-
-
-    //IPChecker
-    //IPChecker
-    //
-    //TODO CHECK BANNED
-    @EventHandler()
-    public void PreLogin(PlayerPreLoginEvent ev) {
-
-    }
-
-//    @EventHandler(priority = EventPriority.HIGHEST)
-//    public void PURGEPVPNSTUFF(EntityDamageEvent factionDamage) {
-//        if (Main.Purge) {
-//            //Purge is on
-//            factionDamage.setCancelled(false);
-//        }
-//
-//        if (factionDamage.isCancelled()) return;
-//        if (factionDamage instanceof EntityDamageByEntityEvent) {
-//            if ((factionDamage.getEntity() instanceof Player) && (((EntityDamageByEntityEvent) factionDamage).getDamager() instanceof Player)) {
-//                Integer t = (int) (Calendar.getInstance().getTime().getTime() / 1000) + 10;
-//                Main.FM.pvplog.put(factionDamage.getEntity().getName(), t);
-//                Main.FM.pvplog.put(((EntityDamageByEntityEvent) factionDamage).getDamager().getName(), t);
-//                float d = factionDamage.getFinalDamage();
-//                String text = TextFormat.RED.toString() + d + " Damage";
-//                long eid = 9999999 + (long) (Math.random() * 50000);
-//                Entity e = factionDamage.getEntity();
-//                CustomFloatingTextParticle ft = new CustomFloatingTextParticle(new Vector3(e.x, e.y + 1.5, e.z), text);
-//                ft.entityId = eid;
-//                ArrayList<Player> ps = new ArrayList<Player>() {{
-//                    add((Player) ((EntityDamageByEntityEvent) factionDamage).getDamager());
-//                }};
-//                Entity dmger = ((EntityDamageByEntityEvent) factionDamage).getDamager();
-//                dmger.getLevel().addParticle(ft, ps);
-//                Main.FM.popups.put(eid, ft);
-//                Main.FM.getServer().getScheduler().scheduleDelayedTask(new PopUp(Main.FM, (Player) ((EntityDamageByEntityEvent) factionDamage).getDamager(), eid, ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel()), 7);
-//            } else if (((EntityDamageByEntityEvent) factionDamage).getDamager() instanceof Player) {
-//                float d = factionDamage.getFinalDamage();
-//                String text = TextFormat.RED.toString() + d + " Damage";
-//                long eid = 9999999 + (long) (Math.random() * 50000);
-//                Entity e = factionDamage.getEntity();
-//                CustomFloatingTextParticle ft = new CustomFloatingTextParticle(new Vector3(e.x, e.y + 1.5, e.z), text);
-//                ft.entityId = eid;
-//                ArrayList<Player> ps = new ArrayList<Player>() {{
-//                    add((Player) ((EntityDamageByEntityEvent) factionDamage).getDamager());
-//                }};
-//                ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel().addParticle(ft, ps);
-//                Main.FM.popups.put(eid, ft);
-//                Main.FM.getServer().getScheduler().scheduleDelayedTask(new PopUp(Main.FM, (Player) ((EntityDamageByEntityEvent) factionDamage).getDamager(), eid, ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel()), 7);
-//            } /*else {
-//                float d = factionDamage.getFinalDamage();
-//                String text = TextFormat.RED.toString() + d + " Damage";
-//                long eid = 9999999 + (long) (Math.random() * 50000);
-//                Entity e = factionDamage.getEntity();
-//                CustomFloatingTextParticle ft = new CustomFloatingTextParticle(new Vector3(e.x, e.y + 1.5, e.z), text);
-//                ft.entityId = eid;
-//                factionDamage.getEntity().getLevel().addParticle(ft);
-//                Main.FM.popups.put(eid, ft);
-//                Main.FM.getServer().getScheduler().scheduleDelayedTask(new PopUp(Main.FM, (Player) ((EntityDamageByEntityEvent) factionDamage).getDamager(), eid, ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel()), 7);
-//
-//            }*/
-//        }
-//
-//    }
-
-    //LOG COMMANDS IN CONSOLE
-    @EventHandler
-    public void CommandEvent(PlayerCommandPreprocessEvent event) {
-        Main.getServer().getLogger().info(event.getPlayer().getName() + "  > " + event.getMessage());
-    }
-
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void factionPVP(EntityDamageEvent factionDamage) {
-        if (factionDamage.isCancelled()) return;
-        Faction pf = Main.FM.FFactory.getFaction("peace");
-        int x = factionDamage.getEntity().getFloorX() >> 4;
-        int z = factionDamage.getEntity().getFloorZ() >> 4;
-        if (pf.GetPlots().contains(x + "|" + z)) {
-            if (factionDamage.getEntity() instanceof Player) {
-                if (((Player) factionDamage.getEntity()).isOp()) {
-                    factionDamage.setCancelled(false);
-                    return;
-                }
-            }
-            factionDamage.setCancelled();
+    public void quitEvent(PlayerQuitEvent event) {
+        String Msg = (String) plugin.MainConfig.get("Leave-Message");
+        event.setQuitMessage(Msg.replace("{player}", event.getPlayer().getName()));
+    }
+
+
+    //@TODO Check for BadWords!
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onChatEvent(PlayerChatEvent event) {
+        if (event.isCancelled()) return;
+        //SHouldnt need thins @TODO^^
+        event.setCancelled(true);
+        if (plugin.MuteChat && (!event.getPlayer().hasPermission("CyberTech.CyberChat.op"))) {
+            event.getPlayer().sendMessage(TextFormat.YELLOW + "All Chat Is Muted! Try again later!");
             return;
         }
-        if (factionDamage instanceof EntityDamageByEntityEvent) {
-            if (!(factionDamage.getEntity() instanceof Player) || !(((EntityDamageByEntityEvent) factionDamage).getDamager() instanceof Player))
-                return;
-            String player1 = factionDamage.getEntity().getName();
-            String player2 = ((EntityDamageByEntityEvent) factionDamage).getDamager().getName();
-            ((Player) ((EntityDamageByEntityEvent) factionDamage).getDamager()).sendPopup(player1 + "'s Health: " + ((Player) factionDamage.getEntity()).getPlayer().getHealth() + "/" + ((Player) factionDamage.getEntity()).getPlayer().getMaxHealth());
-            String faction1 = Main.FM.getPlayerFaction(player1.toLowerCase());
-            String faction2 = Main.FM.getPlayerFaction(player2.toLowerCase());
-            if (faction1 == null || faction2 == null) return;
-            if (faction1.equalsIgnoreCase(faction2)) {
-                factionDamage.setCancelled(true);
-                return;
-            }
-            if (Main.FM.isFactionsAllyed(faction1, faction2)) {
-                factionDamage.setCancelled(true);
-                return;
-            }
+        if (plugin.isMuted(event.getPlayer())) {
+            event.getPlayer().sendMessage(TextFormat.YELLOW + "You are Muted! Try again later!");
+            return;
+        }
+        String FinalChat = formatForChat(event.getPlayer(), event.getMessage());
+        if(FinalChat == null)return;
+        if (plugin.LM.containsKey(event.getPlayer().getName().toLowerCase()) && plugin.LM.get(event.getPlayer().getName().toLowerCase()).equalsIgnoreCase(FinalChat)) {
+            event.getPlayer().sendMessage(FinalChat);
+            return;
+        }
+        plugin.LM.put(event.getPlayer().getName().toLowerCase(), FinalChat);
+        plugin.checkSpam(event.getPlayer());
+        Server.getInstance().getLogger().info(FinalChat);
+        for (Map.Entry<UUID, Player> e : plugin.getServer().getOnlinePlayers().entrySet()) {
+            if (plugin.PlayerMuted.contains(e.getValue().getName().toLowerCase())) continue;
+            e.getValue().sendMessage(FinalChat);
         }
     }
 
-    @EventHandler
-    public void factionBlockBreakProtect(BlockBreakEvent event) {
-        if (event.getPlayer() != null && event.getPlayer().isOp()) {
-            String pf = Main.FM.getPlayerFaction(event.getPlayer().getName());
-            Faction fac = Main.FM.FFactory.getFaction(pf);
-            if (fac != null) fac.HandleBreakEvent(event);
-            event.setCancelled(false);
-            return;
+    public String formatForChat(Player player, String chat) {
+        HashMap<String, Object> badwords = new HashMap<String, Object>(){{
+            put("fuck","f***");
+            put("shit","s***");
+            put("nigger","kitty");
+            put("nigga","boi");
+            put("bitch","Sweetheart");
+            put("hoe","tool");
+            put("ass","butt");
+        }};
+        String faction;
+        Faction pf = plugin.getPlayerFaction(player);
+        if ( pf != null) {
+            faction = pf.GetDisplayName();
+            //FactionFormat = TextFormat.GRAY+FactionFormat.replace("{value}",fp.getFaction().getTag())+TextFormat.WHITE;
+        } else {
+            faction = TextFormat.GRAY + "[NF]" + TextFormat.WHITE;
         }
-        if (event.isCancelled()) return;
-        String pf = Main.FM.getPlayerFaction(event.getPlayer().getName());
-        String chunkfaction = Main.FM.GetChunkOwner((int) event.getBlock().getX() >> 4, (int) event.getBlock().getZ() >> 4);
-        if (chunkfaction != null) {
-            if (pf != null) {
-                if (pf.equalsIgnoreCase(chunkfaction)) {
-                    Faction fac = Main.FM.FFactory.getFaction(pf);
-                    if (fac != null) fac.HandleBreakEvent(event);
-                    return;
-                }
-                event.setCancelled(true);
-                event.getPlayer().sendMessage(FactionsMain.NAME + "This area is claimed by " + chunkfaction);
-                return;
+
+        //ANTI BADWORDS
+        String chatb4 = chat;
+        String chatafter = chat;
+        for(String s: chat.split(" ")){
+            if(!badwords.containsKey(s.toLowerCase()))continue;
+            chatafter = chatafter.replaceAll("(?i)"+s,badwords.get(s.toLowerCase()).toString());
+        }
+        /*
+        Fucks up words like Class and BAss
+        for(String b: badwords.keySet()){
+            if(chatafter.toLowerCase().contains(b.toLowerCase())) {
+                chatafter = chatafter.replaceAll("(?i)" + b, badwords.get(b).toString());
+                chatafter = chatafter.replaceAll(b, badwords.get(b).toString());
             }
-            event.setCancelled(true);
-        }
-        Faction fac = Main.FM.FFactory.getFaction(pf);
-        if (fac != null) fac.HandleBreakEvent(event);
+        }*/
+        /*String chat2 = chat;
+        chat2 = chat.replace(" ","");
+         */
+        //ANTI WORK AROUND BADWORDS
+        //@TODO remove all spaces and use Regex to replace all Instaces of it
+
+        return plugin.RankFactory.getPlayerRank(player).getChat_format().format(faction,plugin.RankFactory.getPlayerRank(player).getDisplayName(),player,chatafter);
+/*
+        put("Chat-Format", "{rank}{faction}{player-name} > {msg}");
+        put("Faction-Format", "[{value}]");
+        put("Rank-Format", "[{value}]");
+        put("Join-Message", "");
+        put("Leave-Message", "");*/
     }
 
-    @EventHandler
-    public void factionBlockPlaceProtect(BlockPlaceEvent event) {
-        if (event.getPlayer() != null && event.getPlayer().isOp()) {
-            String pf = Main.FM.getPlayerFaction(event.getPlayer().getName());
-            Faction fac = Main.FM.FFactory.getFaction(pf);
-            if (fac != null) fac.HandlePlaceEvent(event);
-            return;
-        }
-        if (event.isCancelled()) return;
-        String pf = Main.FM.getPlayerFaction(event.getPlayer().getName());
-        String chunkfaction = Main.FM.GetChunkOwner((int) event.getBlock().getX() >> 4, (int) event.getBlock().getZ() >> 4);
-        if (chunkfaction != null) {
-            if (pf != null) {
-                if (pf.equalsIgnoreCase(chunkfaction)) {
-                    Faction fac = Main.FM.FFactory.getFaction(pf);
-                    if (fac != null) fac.HandlePlaceEvent(event);
-                    return;
-                }
-                event.setCancelled(true);
-                event.getPlayer().sendMessage(FactionsMain.NAME + TextFormat.GRAY + " This area is claimed by " + chunkfaction);
-                return;
-            }
-            event.setCancelled(true);
-        }
-        Faction fac = Main.FM.FFactory.getFaction(pf);
-        if (fac != null) fac.HandlePlaceEvent(event);
-    }
 }

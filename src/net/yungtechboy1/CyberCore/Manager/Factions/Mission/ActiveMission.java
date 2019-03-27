@@ -301,7 +301,7 @@ public class ActiveMission extends Mission {
             return 4;
         }
         if(faction == null){
-            Main.Main.getLogger().info("FACTION NUL!?!??!?! ETFaaa");
+            Main.plugin.getLogger().info("FACTION NUL!?!??!?! ETFaaa");
             return 5;
         }
         faction.CompleteMission(this);
