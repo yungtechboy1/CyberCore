@@ -2,8 +2,11 @@ package net.yungtechboy1.CyberCore.Custom.CustomEnchant;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityArmorChangeEvent;
+import cn.nukkit.event.entity.EntityDamageByEntityEvent;
+import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.potion.Effect;
@@ -19,6 +22,26 @@ public class EnchantListener implements Listener {
         Main = mm;
     }
 
+    @EventHandler
+    public void EntityDamageByEntityEvent(EntityDamageByEntityEvent evnt) {
+        Player attacker = (Player)evnt.getDamager();
+        Player defender = (Player)evnt.getEntity();
+        if(defender ==  null)return;//Defender not player
+        Item cp = defender.getInventory().getChestplate();
+        if(cp == null)return;//No Chestplate on
+        EntityDamageEvent.DamageCause cause = evnt.getCause();
+        //Check if defender has BurnShield
+        BurnShield bs = (BurnShield) CustomEnchantment.getEnchantFromIDFromItem(cp,CustomEnchantment.BURNSHILED);
+        if(bs == null)return;
+        int bsl = bs.getLevel();
+        switch (bsl){
+            case 1:
+
+
+        }
+
+    }
+    @EventHandler
     public void PlayerInventoryChange(EntityArmorChangeEvent evnt) {
         Entity e = evnt.getEntity();
         if (e instanceof Player) {
@@ -30,15 +53,20 @@ public class EnchantListener implements Listener {
             Enchantment glowo = CustomEnchantment.getEnchantFromIDFromItem(oi, (short) CustomEnchantment.NIGHTVISION);
             Enchantment gillsn = CustomEnchantment.getEnchantFromIDFromItem(ni, (short) CustomEnchantment.GILLS);
             Enchantment gillso = CustomEnchantment.getEnchantFromIDFromItem(oi, (short) CustomEnchantment.GILLS);
+            Enchantment kohn = CustomEnchantment.getEnchantFromIDFromItem(ni, (short) CustomEnchantment.KINGOFHEARTS);
+            Enchantment koho = CustomEnchantment.getEnchantFromIDFromItem(oi, (short) CustomEnchantment.KINGOFHEARTS);
 
             if (evnt.getNewItem().getId() == Item.AIR) {//Removed Armor
-                if (glown == null && glowo != null) p.removeEffect(Effect.NIGHT_VISION);
-                if (gillsn == null && gillso != null) p.removeEffect(Effect.WATER_BREATHING);
+                if (glowo != null) p.removeEffect(Effect.NIGHT_VISION);
+                if (gillso != null) p.removeEffect(Effect.WATER_BREATHING);
+                if(koho != null)p.setMaxHealth(20);
 
             } else {//Putting on armor
                 if (glown != null && glowo == null)  p.addEffect(Effect.getEffect(Effect.NIGHT_VISION).setDuration(20*60*3).setAmplifier(1).setVisible(false));
                 if (gillsn != null && gillso == null)  p.addEffect(Effect.getEffect(Effect.WATER_BREATHING).setDuration(20*60*3).setAmplifier(1).setVisible(false));
-
+                if(kohn != null){
+                    p.setMaxHealth(20 + kohn.getLevel());
+                }
 
             }
         }
