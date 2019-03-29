@@ -1,15 +1,13 @@
 package net.yungtechboy1.CyberCore.Custom.CustomEnchant;
 
+import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.item.enchantment.EnchantmentType;
 
-/**
- * Created by carlt on 3/24/2019.
- */
-public class Spring extends CustomEnchantment {
-    public Spring() {
-        super(SPRING, "Spring", 2, EnchantmentType.ARMOR_FEET);
+public class BurnShield extends CustomEnchantment {
+    public BurnShield() {
+        super(BURNSHILED, "Burn Shield", 2, EnchantmentType.ARMOR_TORSO);
         SetCooldown(0);
     }
 
@@ -49,13 +47,13 @@ public class Spring extends CustomEnchantment {
     public double GetLevelEffect(int lvl) {
         switch (lvl) {
             case 1:
-                return 1;
+                return 1.5 * Player.MAXIMUM_SPEED;
             case 2:
-                return 2;
+                return 2.5 * Player.MAXIMUM_SPEED;
             case 3:
-                return 3;
+                return 3.5 * Player.MAXIMUM_SPEED;
             default:
-                return 1;
+                return 1.5 * Player.MAXIMUM_SPEED;
         }
     }
 

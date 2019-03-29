@@ -4,12 +4,9 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.item.enchantment.EnchantmentType;
 
-/**
- * Created by carlt on 3/24/2019.
- */
-public class Spring extends CustomEnchantment {
-    public Spring() {
-        super(SPRING, "Spring", 2, EnchantmentType.ARMOR_FEET);
+public class KingOfHearts extends CustomEnchantment {
+    public KingOfHearts() {
+        super(KINGOFHEARTS, "King of Hearts", 2, EnchantmentType.ARMOR_TORSO);
         SetCooldown(0);
     }
 
@@ -40,7 +37,7 @@ public class Spring extends CustomEnchantment {
 
     @Override
     public int getMaxLevel() {
-        return 3;
+        return 10;
     }
 
     public double GetLevelEffect() {
