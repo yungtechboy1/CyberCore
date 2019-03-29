@@ -34,6 +34,7 @@ public class CorePlayer extends Player {
     private FormWindow nw;
 
 
+    public Integer money = 0;
     public Integer kills = 0;
     public Integer deaths = 0;
     public Integer banned = 0;

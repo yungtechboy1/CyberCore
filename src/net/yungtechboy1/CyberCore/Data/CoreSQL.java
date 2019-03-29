@@ -5,6 +5,7 @@ import cn.nukkit.utils.Config;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import ru.nukkit.dblib.DbLib;
 import sun.applet.Main;
@@ -59,13 +60,21 @@ public class CoreSQL extends MySQL{
                     ip_change.save();
                 }
                 int rank = (int) data.get(0).get("rank");
-                plugin.log("SADSDSD - " + rank);
                 plugin.RankFactory.RankCache.put(uuid, rank);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         } else {
             createUser(uuid, ip);
+            CorePlayer p = plugin.getCorePlayer(uuid);
+            p.uuid = uuid;
+            p.kills = 0;
+            p.deaths = 0;
+            p.money = 300;
+            p.faction_id = "no_faction";
+            p.setBanned(false);
+            plugin.UserSQL.saveUser(p);
+            return;
         }
         plugin.UserSQL.loadUser(uuid);
         plugin.UserSQL.saveUser(plugin.getCorePlayer(player));

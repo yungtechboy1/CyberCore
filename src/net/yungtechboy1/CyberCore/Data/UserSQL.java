@@ -65,6 +65,7 @@ public class UserSQL extends SQLite{
             List<HashMap<String,Object>> data = executeSelect(loadQuery, "uuid", uuid, columns.keySet());
             CorePlayer p = plugin.getCorePlayer(uuid);
             p.uuid = uuid;
+            p.money = (Integer) data.get(0).get("money");
             p.kills = (Integer) data.get(0).get("kills");
             p.deaths = (Integer) data.get(0).get("deaths");
             p.faction_id = (String) data.get(0).get("faction_id");
