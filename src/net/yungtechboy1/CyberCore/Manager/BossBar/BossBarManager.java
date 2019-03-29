@@ -48,14 +48,10 @@ public class BossBarManager extends Thread implements InterruptibleThread {
     }
     public static boolean PlayerHasBossBar(Player p) {
         boolean b = false;
-System.out.println("aaaaaaaaaa"+p.getName());
 //        BBSyncUpdate();
         synchronized (llock) {
-            System.out.println("22222222222222222");
             b = BossList.containsKey(p.getName());
-            System.out.println("ccccccccc");
         }
-        System.out.println("zzzzzzzzzzz"+b);
         return b;
     }
 

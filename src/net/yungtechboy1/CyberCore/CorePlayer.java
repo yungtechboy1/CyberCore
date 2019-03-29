@@ -47,7 +47,6 @@ public class CorePlayer extends Player {
     public Integer deaths = 0;
     public Integer banned = 0;
     public String faction_id = null;
-    public String uuid;
     public HashMap<String, Object> extraData = new HashMap<>();
 
     long uct = 0;
@@ -63,7 +62,7 @@ public class CorePlayer extends Player {
         return deaths += 1;
     }
 
-    public Integer addDeath(Integer amount) {
+    public Integer addDeaths(Integer amount) {
         return deaths += amount;
     }
 
@@ -478,7 +477,7 @@ public class CorePlayer extends Player {
             nbt = this.server.getOfflinePlayerData(this.username);
 
             if (!legacyDataFile.delete()) {
-                log.warn("Could not delete legacy player data for {}", this.username);
+                this.server.getLogger().warning(String.format("Could not delete legacy player data for {}", this.username));
             }
         } else {
             nbt = this.server.getOfflinePlayerData(this.uuid);
@@ -489,8 +488,8 @@ public class CorePlayer extends Player {
             return;
         }
 
-        if (loginChainData.isXboxAuthed() && server.getPropertyBoolean("xbox-auth") || !server.getPropertyBoolean("xbox-auth")) {
-            server.updateName(this.uuid, this.username);
+        if (this.getLoginChainData().isXboxAuthed() && server.getPropertyBoolean("xbox-auth") || !server.getPropertyBoolean("xbox-auth")) {
+            this.setDisplayName(this.username);
         }
 
         this.playedBefore = (nbt.getLong("lastPlayed") - nbt.getLong("firstPlayed")) > 1;

@@ -662,9 +662,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PMJ(PlayerJoinEvent me) {
-        if (BBM == null) System.out.println("11122222233333333333344444444444");
-        if (me.getPlayer() == null)
-            System.out.println("11111111111111111111111111111111111111111111111111111111122222233333333333344444444444");
         BBM.AddBossBar(me.getPlayer(), new BossBarNotification(me.getPlayer(), "TEST TITLE", "TEST MESSAGE", 20 * 60, this));
     }
 
