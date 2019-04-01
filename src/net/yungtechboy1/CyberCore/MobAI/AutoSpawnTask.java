@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.MobAI;
 
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.entities.animal.flying.Bat;
 import net.yungtechboy1.CyberCore.entities.monster.flying.Blaze;
 import net.yungtechboy1.CyberCore.entities.monster.flying.Ghast;
@@ -20,10 +21,7 @@ import net.yungtechboy1.CyberCore.entities.animal.walking.*;
 import net.yungtechboy1.CyberCore.entities.autospawn.IEntitySpawner;
 import net.yungtechboy1.CyberCore.entities.animal.walking.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class AutoSpawnTask implements Runnable {
@@ -34,9 +32,9 @@ public class AutoSpawnTask implements Runnable {
     
     private Config                pluginConfig   = null;
     
-    private MobPlugin plugin = null;
+    private CyberCoreMain plugin = null;
 
-    public AutoSpawnTask(MobPlugin plugin) {
+    public AutoSpawnTask(CyberCoreMain plugin) {
         this.pluginConfig = plugin.getConfig();
         this.plugin = plugin;
 
@@ -54,7 +52,7 @@ public class AutoSpawnTask implements Runnable {
     public void run() {
         // when any player is online, we want to spawn in his range. if no player is online, we spawn for players, that
         // were online in the last day
-        List<IPlayer> players = plugin.getAllRegisteredPlayers();
+        List<IPlayer> players = new ArrayList<IPlayer>(plugin.getServer().getOnlinePlayers().values());
         List<Player> onlinePlayers = new ArrayList<>();
         List<OfflinePlayer> offlinePlayers = new ArrayList<>();
 
@@ -155,11 +153,11 @@ public class AutoSpawnTask implements Runnable {
     }
 
     public void createEntity(Object type, Position pos) {
-        if (plugin.CCM.FM != null) {
-            String plotowner = plugin.CCM.FM.FFactory.GetPlotStatus(pos.getFloorX() >> 4, pos.getFloorZ() >> 4);
-            //Mobs only spawn in Wilderness!
-            if (plotowner != null) return;
-        }
+//        if (plugin.CCM.FM != null) {
+//            String plotowner = plugin.CCM.FM.FFactory.GetPlotStatus(pos.getFloorX() >> 4, pos.getFloorZ() >> 4);
+//            //Mobs only spawn in Wilderness!
+//            if (plotowner != null) return;
+//        }
 
             Entity entity = MobPlugin.create(type, pos);
             if (entity != null) {

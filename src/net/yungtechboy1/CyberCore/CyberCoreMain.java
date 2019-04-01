@@ -35,6 +35,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionListener;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager;
 import net.yungtechboy1.CyberCore.Manager.SQLManager;
+import net.yungtechboy1.CyberCore.MobAI.AutoSpawnTask;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
 import net.yungtechboy1.CyberCore.Rank.ChatFormats;
 import net.yungtechboy1.CyberCore.Rank.Rank;
@@ -213,6 +214,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         addCreativeItem(Item.get(Block.ENCHANT_TABLE, 5, 1).setCustomName("TTTTTTTTTTTTTT"));
         ReloadBlockList(Block.ENCHANTING_TABLE,BlockEnchantingTable.class);
 
+
+
         MainConfig = new Config(new File(getDataFolder(), "config.yml"));
         //Save = new SaveMain(this);
         SQLSaveManager = new SQLManager(this);
@@ -332,6 +335,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     public void onLoad() {
         CyberCoreMain.instance = this;
+
+        MobPlugin.registerEntities();
+        MobPlugin.registerItems();
+        getServer().getScheduler().scheduleRepeatingTask(new AutoSpawnTask(this), 5, true);
+
 
         //BossBar Manager
         //GOOD - Test Refine

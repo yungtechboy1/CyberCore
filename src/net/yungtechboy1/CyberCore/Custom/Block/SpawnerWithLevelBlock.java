@@ -19,7 +19,7 @@ import cn.nukkit.utils.TextFormat;
  */
 //TODO
 public class SpawnerWithLevelBlock extends BlockMobSpawner {
-    int meta;
+
 
     public SpawnerWithLevelBlock() {
         this(0);
@@ -27,7 +27,10 @@ public class SpawnerWithLevelBlock extends BlockMobSpawner {
 
     public SpawnerWithLevelBlock(int m) {
         super();
-        meta = m;
+    }
+
+    public int GetKey(){
+
     }
 
     @Override
@@ -47,14 +50,10 @@ public class SpawnerWithLevelBlock extends BlockMobSpawner {
     }
 
     public void setSpawnerInfo(int level, int type) {
-        level--;
-        if (level >= 8) level = 7;
-        if (level < 0) level = 0;
         meta = type;
         meta = meta << 3;
         meta |= level;
     }
-
 
 
     public boolean place(Item item, Block block, Block target, BlockFace face, double fx, double fy, double fz, Player player) {
