@@ -34,7 +34,7 @@ public class Withdraw extends Commands {
             return;
         }
         fac.TakeMoney(money);
-        Main.Main.GetEcon().AddMoney(Sender.getName(),money);
+        Main.plugin.GetEcon().AddMoney(Sender.getName(),money);
         Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"$"+money+" Money taken from your Faction!");
     }
 }

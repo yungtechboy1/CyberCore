@@ -7,11 +7,13 @@ import net.yungtechboy1.CyberCore.Rank.Ranks.Guest_Rank;
  */
 public enum RankList {
     PERM_GUEST(0, "Guest"),
+    PERM_MEMBER(1, "Member"),
     PERM_VIP(3, "VIP"),
     PERM_OP(20, "SuperOP");
 
     final int ID;
     String name;
+    String chat_prefix;
 
     public int getID() {
         return ID;
@@ -28,9 +30,9 @@ public enum RankList {
     RankList(int id, String n) {
         ID = id;
         this.name = n;
+        this.chat_prefix = "&7";
     }
 
-    public static int PERM_MEMBER = 1;
     public static int PERM_MEMBER_PLUS = 2;
     public static int PERM_TOURIST = 3;
     public static int PERM_ISLANDER = 4;
@@ -49,7 +51,12 @@ public enum RankList {
 
     public Rank getRank() {
         if (getID() == PERM_GUEST.getID()) return new Guest_Rank();
+        if (getID() == PERM_MEMBER.getID()) return new Guest_Rank();
 
         return new Guest_Rank();
+    }
+
+    public String getChat_prefix() {
+        return chat_prefix;
     }
 }

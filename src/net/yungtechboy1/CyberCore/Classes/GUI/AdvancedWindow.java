@@ -110,6 +110,7 @@ public class AdvancedWindow extends FormWindow {
         HashMap<Integer, FormResponseData> stepSliderResponses = new HashMap<>();
         HashMap<Integer, Boolean> toggleResponses = new HashMap<>();
         HashMap<Integer, Object> responses = new HashMap<>();
+        HashMap<Integer, String> labelRespones = new HashMap<>();
 
         for (String elementData : elementResponses) {
             if (i >= content.size()) {
@@ -146,7 +147,7 @@ public class AdvancedWindow extends FormWindow {
         }
 
         this.response = new FormResponseCustom(responses, dropdownResponses, inputResponses,
-                sliderResponses, stepSliderResponses, toggleResponses);
+                sliderResponses, stepSliderResponses, toggleResponses, null);
     }
 
     /**

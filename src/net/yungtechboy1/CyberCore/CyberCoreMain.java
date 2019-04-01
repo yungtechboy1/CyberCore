@@ -23,14 +23,15 @@ import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
 import net.yungtechboy1.CyberCore.Custom.CustomGlobalBlockPalette;
 import net.yungtechboy1.CyberCore.Custom.CustomStartGamePacket;
 import net.yungtechboy1.CyberCore.Data.UserSQL;
-import net.yungtechboy1.CyberCore.Events.CyberChatEvent;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
 import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
+import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
+import net.yungtechboy1.CyberCore.Manager.Factions.FactionListener;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager;
 import net.yungtechboy1.CyberCore.Manager.SQLManager;
@@ -213,12 +214,12 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         ReloadBlockList(Block.ENCHANTING_TABLE,BlockEnchantingTable.class);
 
         MainConfig = new Config(new File(getDataFolder(), "config.yml"));
-
         //Save = new SaveMain(this);
         SQLSaveManager = new SQLManager(this);
 
         CoreSQL = new CoreSQL(this);
         UserSQL = new UserSQL(this, "server-data");
+
 
         PurgeManager = new PurgeManager(this);
         //KDR Manager - All Good
@@ -236,7 +237,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        GOOD
         ECON = new EconManager(this);
-
+        FM = new FactionsMain(this, new FactionSQL(this, "server-data"));
 //        getServer().getScheduler().scheduleRepeatingTask(new UnMuteTask(this), 20 * 15);
 //        getServer().getScheduler().scheduleRepeatingTask(new ClearSpamTick(this), 20 * 5);
 //        getServer().getScheduler().scheduleRepeatingTask(new CheckOP(this), 20 * 60);//1 Min
@@ -269,11 +270,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //
 //        CustomFactory = new CustomFactory(this);
 
-        getServer().getPluginManager().registerEvents(new CyberChatEvent(this), this);
+        getServer().getPluginManager().registerEvents(new MasterListener(this), this);
 //        getServer().getPluginManager().registerEvents(ClassFactory, this);
 //        getServer().getPluginManager().registerEvents(AuctionFactory, this);
         getServer().getPluginManager().registerEvents(this, this);
-        getServer().getPluginManager().registerEvents(new MasterListener(this), this);
+        getServer().getPluginManager().registerEvents(new FactionListener(this, FM), this);
 
 //        getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
 //        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec
@@ -455,7 +456,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     public CorePlayer getCorePlayer(Player p) {
         if (p instanceof CorePlayer) {
-            getLogger().info(((CorePlayer) p).kills + " KILLLSSSSSS!!!!!");
             return (CorePlayer) p;
         }
         return null;
@@ -538,7 +538,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     }
 
     public Integer GetPlayerRankInt(Player p, Boolean all) {
-        return RankFactory.getPlayerRank(p).Ranking;
+        return RankFactory.getPlayerRank(p).getId();
     }
 
 //    public Integer GetPlayerRankInt(String p, Boolean all) {
@@ -736,8 +736,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     public void initiatePlayer(Player p) {
         try {
-            CoreSQL.checkUser(p);
-
+            CoreSQL.loadUser(p);
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -32,14 +32,12 @@ public class RankFactory {
 
     public void loadDefault() {
         ranks.put(RankList.PERM_GUEST.getID(), new Guest_Rank());
-
     }
 
     public void loadRanks() {
         Main.getLogger().info("Loading Ranks...");
         loadDefault();
         Config rankConf = new Config(new File(Main.getDataFolder(), "ranks.yml"));
-        Main.getLogger().info(rankConf.get("Ranks").toString());
         Map<String, Object> map = rankConf.getSection("Ranks").getAllMap();
         for (String s : map.keySet()) {
             Main.getLogger().info("-===" + s + "===-");
@@ -51,10 +49,9 @@ public class RankFactory {
 //                ranks.put(index, data);
 //                Main.getLogger().info("Rank: " + s + " [" + index + "]- loaded...");
             } else {
-                Rank rr = ranks.get(index);
-                rr.display_name = display;
-                rr.chat_prefix = chat_prefix;
-                ranks.put(index, rr);
+                Rank rank = ranks.get(index);
+                rank.display_name = display;
+                rank.chat_prefix = chat_prefix;
                 Main.getLogger().info("Rank: " + s + " [" + index + "]- Updated!...");
             }
         }

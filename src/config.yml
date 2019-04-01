@@ -16,6 +16,10 @@ server-data:
   data:
     uuid:
       type: "varchar(50)"
+    faction_id:
+      type: "varchar(32)"
+    money:
+      type: "int(12)"
     kills:
       type: "int(9)"
     deaths:

@@ -40,20 +40,23 @@ import java.util.UUID;
 public class CorePlayer extends Player {
 
 
-    BaseClass Class = null;
     public FormType.MainForm LastSentFormType = FormType.MainForm.NULL;
     public FormType.SubMenu LastSentSubMenu = FormType.SubMenu.MainMenu;
     private FormWindow nw;
+
+
+    public Integer money = 0;
     public Integer kills = 0;
     public Integer deaths = 0;
     public Integer banned = 0;
-    public boolean InCombat = false;
+    public String faction_id = null;
+    public String uuid;
     public HashMap<String, Object> extraData = new HashMap<>();
 
     long uct = 0;
     boolean uw = false;
 
-    private Rank R = RankList.PERM_GUEST.getRank();
+    private Rank rank = RankList.PERM_GUEST.getRank();
 
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
         super(interfaz, clientID, ip, port);
@@ -93,10 +96,6 @@ public class CorePlayer extends Player {
 
     public void clearNewWindow() {
         this.nw = null;
-    }
-
-    public BaseClass GetClass() {
-        return Class;
     }
 
     private BlockVector3 lastBreakPosition1 = new BlockVector3();
