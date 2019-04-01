@@ -24,9 +24,12 @@ import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import org.apache.logging.log4j.core.Core;
 import sun.applet.Main;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static net.yungtechboy1.CyberCore.FormType.MainForm.*;
 
 /**
  * Created by carlt_000 on 1/22/2017.
