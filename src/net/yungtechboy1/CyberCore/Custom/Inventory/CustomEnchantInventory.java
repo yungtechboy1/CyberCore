@@ -32,11 +32,9 @@ import java.util.Random;
 /**
  * Created by carlt on 3/25/2019.
  */
-public class CustomEnchantInventory extends BlockEntitySpawnable  implements InventoryHolder, BlockEntityContainer, BlockEntityNameable {
+public class CustomEnchantInventory extends BlockEntitySpawnable implements InventoryHolder, BlockEntityContainer, BlockEntityNameable {
 
-    protected ChestInventory inventory;
-
-    protected DoubleChestInventory doubleInventory = null;
+    protected CustomChestInventory inventory;
 
     public CustomEnchantInventory(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
@@ -44,7 +42,7 @@ public class CustomEnchantInventory extends BlockEntitySpawnable  implements Inv
 
     @Override
     protected void initBlockEntity() {
-        this.inventory = new ChestInventory(this);
+        this.inventory = new CustomChestInventory(this);
 
         if (!this.namedTag.contains("Items") || !(this.namedTag.get("Items") instanceof ListTag)) {
             this.namedTag.putList(new ListTag<CompoundTag>("Items"));
@@ -66,7 +64,6 @@ public class CustomEnchantInventory extends BlockEntitySpawnable  implements Inv
     @Override
     public void close() {
         if (!closed) {
-            unpair();
 
             for (Player player : new HashSet<>(this.getInventory().getViewers())) {
                 player.removeWindow(this.getInventory());
@@ -149,42 +146,12 @@ public class CustomEnchantInventory extends BlockEntitySpawnable  implements Inv
 
     @Override
     public BaseInventory getInventory() {
-        if (this.doubleInventory == null && this.isPaired()) {
-            this.checkPairing();
-        }
 
-        return this.doubleInventory != null ? this.doubleInventory : this.inventory;
+        return this.inventory;
     }
 
-    public ChestInventory getRealInventory() {
+    public CustomChestInventory getRealInventory() {
         return inventory;
-    }
-
-    protected void checkPairing() {
-        BlockEntityChest pair = this.getPair();
-
-        if (pair != null) {
-            if (!pair.isPaired()) {
-                pair.createPair(this);
-                pair.checkPairing();
-            }
-
-            if (pair.doubleInventory != null) {
-                this.doubleInventory = pair.doubleInventory;
-            } else if (this.doubleInventory == null) {
-                if ((pair.x + ((int) pair.z << 15)) > (this.x + ((int) this.z << 15))) { //Order them correctly
-                    this.doubleInventory = new DoubleChestInventory(pair, this);
-                } else {
-                    this.doubleInventory = new DoubleChestInventory(this, pair);
-                }
-            }
-        } else {
-            if (level.isChunkLoaded(this.namedTag.getInt("pairx") >> 4, this.namedTag.getInt("pairz") >> 4)) {
-                this.doubleInventory = null;
-                this.namedTag.remove("pairx");
-                this.namedTag.remove("pairz");
-            }
-        }
     }
 
     @Override
@@ -231,7 +198,6 @@ public class CustomEnchantInventory extends BlockEntitySpawnable  implements Inv
 
         chest.spawnToAll();
         this.spawnToAll();
-        this.checkPairing();
 
         return true;
     }
@@ -241,31 +207,6 @@ public class CustomEnchantInventory extends BlockEntitySpawnable  implements Inv
         this.namedTag.putInt("pairz", (int) chest.z);
         chest.namedTag.putInt("pairx", (int) this.x);
         chest.namedTag.putInt("pairz", (int) this.z);
-    }
-
-    public boolean unpair() {
-        if (!this.isPaired()) {
-            return false;
-        }
-
-        BlockEntityChest chest = this.getPair();
-
-        this.doubleInventory = null;
-        this.namedTag.remove("pairx");
-        this.namedTag.remove("pairz");
-
-        this.spawnToAll();
-
-        if (chest != null) {
-            chest.namedTag.remove("pairx");
-            chest.namedTag.remove("pairz");
-            chest.doubleInventory = null;
-            chest.checkPairing();
-            chest.spawnToAll();
-        }
-        this.checkPairing();
-
-        return true;
     }
 
     @Override
@@ -293,3 +234,4 @@ public class CustomEnchantInventory extends BlockEntitySpawnable  implements Inv
 
         return c;
     }
+}

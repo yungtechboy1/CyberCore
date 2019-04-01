@@ -10,12 +10,18 @@ import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
+import cn.nukkit.item.Item;
+import cn.nukkit.level.GlobalBlockPalette;
+import cn.nukkit.network.Network;
+import cn.nukkit.network.protocol.ProtocolInfo;
 import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.Commands.*;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMS;
 import net.yungtechboy1.CyberCore.Commands.Homes.HomeManager;
 import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
+import net.yungtechboy1.CyberCore.Custom.CustomGlobalBlockPalette;
+import net.yungtechboy1.CyberCore.Custom.CustomStartGamePacket;
 import net.yungtechboy1.CyberCore.Data.UserSQL;
 import net.yungtechboy1.CyberCore.Events.CyberChatEvent;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
@@ -51,6 +57,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+
+import static cn.nukkit.item.Item.addCreativeItem;
 
 /**
  * Created by carlt_000 on 3/21/2016.
@@ -173,6 +181,20 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
                 Block.lightFilter[id] = 1;
             }
         }
+
+        if(Block.fullList[id << 4] == null){
+            System.out.println("----------------------------");
+            System.out.println("IS NULLL");
+            System.out.println("----------------------------");
+        }else{
+            System.out.println("----------------------------");
+            System.out.println("IS "+Block.fullList[id << 4]);
+            System.out.println("----------------------------");
+            System.out.println("IS "+Block.fullList[(id << 4) | 5]);
+            System.out.println("IS "+Block.fullList[(id << 4) | 5].getDamage());
+            System.out.println("----------------------------");
+
+        }
     }
 
     @Override
@@ -181,8 +203,13 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         saveResource("ranks.yml");
         saveResource("config.yml");
+//        CustomGlobalBlockPalette.registerMapping((entry.id << 4) | entry.data);
+        CustomGlobalBlockPalette.getOrCreateRuntimeId(0,0);
+        getServer().getNetwork().registerPacket(ProtocolInfo.START_GAME_PACKET, CustomStartGamePacket.class);
 
         Block.list[Block.ENCHANTING_TABLE]  = BlockEnchantingTable.class;
+//        Item.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
+        addCreativeItem(Item.get(Block.ENCHANT_TABLE, 5, 1).setCustomName("TTTTTTTTTTTTTT"));
         ReloadBlockList(Block.ENCHANTING_TABLE,BlockEnchantingTable.class);
 
         MainConfig = new Config(new File(getDataFolder(), "config.yml"));

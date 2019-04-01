@@ -11,6 +11,7 @@ import cn.nukkit.block.BlockNoteblock;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerKickEvent;
+import cn.nukkit.event.player.PlayerLoginEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.item.Item;
@@ -19,6 +20,7 @@ import cn.nukkit.math.*;
 import cn.nukkit.nbt.tag.*;
 import cn.nukkit.network.SourceInterface;
 import cn.nukkit.network.protocol.*;
+import cn.nukkit.utils.TextFormat;
 import co.aikar.timings.Timing;
 import co.aikar.timings.Timings;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
@@ -26,6 +28,7 @@ import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Spring;
+import net.yungtechboy1.CyberCore.Custom.CustomStartGamePacket;
 import net.yungtechboy1.CyberCore.Rank.Rank;
 import net.yungtechboy1.CyberCore.Rank.RankList;
 
@@ -578,5 +581,72 @@ public class CorePlayer extends Player {
 //        infoPacket.resourcePackEntries = this.server.getResourcePackManager().getResourceStack();
 //        infoPacket.mustAccept = this.server.getForceResources();
 //        this.dataPacket(infoPacket);
+//    }
+
+//    @Override
+//    public void completeLoginSequence() {
+//        PlayerLoginEvent ev;
+//        this.server.getPluginManager().callEvent(ev = new PlayerLoginEvent(this, "Plugin reason"));
+//        if (ev.isCancelled()) {
+//            this.close(this.getLeaveMessage(), ev.getKickMessage());
+//            return;
+//        }
+//
+//        CustomStartGamePacket startGamePacket = new CustomStartGamePacket();
+//        startGamePacket.entityUniqueId = this.id;
+//        startGamePacket.entityRuntimeId = this.id;
+//        startGamePacket.playerGamemode = (this.gamemode);
+//        startGamePacket.x = (float) this.x;
+//        startGamePacket.y = (float) this.y;
+//        startGamePacket.z = (float) this.z;
+//        startGamePacket.yaw = (float) this.yaw;
+//        startGamePacket.pitch = (float) this.pitch;
+//        startGamePacket.seed = -1;
+//        startGamePacket.dimension = (byte) (this.level.getDimension() & 0xff);
+//        startGamePacket.worldGamemode = (this.gamemode);
+//        startGamePacket.difficulty = this.server.getDifficulty();
+//        startGamePacket.spawnX = (int) this.x;
+//        startGamePacket.spawnY = (int) this.y;
+//        startGamePacket.spawnZ = (int) this.z;
+//        startGamePacket.hasAchievementsDisabled = true;
+//        startGamePacket.dayCycleStopTime = -1;
+//        startGamePacket.eduMode = false;
+//        startGamePacket.rainLevel = 0;
+//        startGamePacket.lightningLevel = 0;
+//        startGamePacket.commandsEnabled = this.isEnableClientCommand();
+//        startGamePacket.gameRules = getLevel().getGameRules();
+//        startGamePacket.levelId = "";
+//        startGamePacket.worldName = this.getServer().getNetwork().getName();
+//        startGamePacket.generator = 1; //0 old, 1 infinite, 2 flat
+//        this.dataPacket(startGamePacket);
+//
+//        this.dataPacket(new AvailableEntityIdentifiersPacket());
+//
+//        this.loggedIn = true;
+//
+//        this.level.sendTime(this);
+//
+//        this.setMovementSpeed(DEFAULT_SPEED);
+//        this.sendAttributes();
+//        this.setNameTagVisible(true);
+//        this.setNameTagAlwaysVisible(true);
+//        this.setCanClimb(true);
+//
+//        this.server.getLogger().info(this.getServer().getLanguage().translateString("nukkit.player.logIn",
+//                TextFormat.AQUA + this.username + TextFormat.WHITE,
+//                this.ip,
+//                String.valueOf(this.port),
+//                String.valueOf(this.id),
+//                this.level.getName(),
+//                String.valueOf(NukkitMath.round(this.x, 4)),
+//                String.valueOf(NukkitMath.round(this.y, 4)),
+//                String.valueOf(NukkitMath.round(this.z, 4))));
+//
+//        if (this.isOp() || this.hasPermission("nukkit.textcolor")) {
+//            this.setRemoveFormat(false);
+//        }
+//
+//        this.server.addOnlinePlayer(this);
+//        this.server.onPlayerCompleteLoginSequence(this);
 //    }
 }

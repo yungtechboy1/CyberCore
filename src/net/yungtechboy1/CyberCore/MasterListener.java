@@ -1,9 +1,14 @@
 package net.yungtechboy1.CyberCore;
 
+import cn.nukkit.Server;
+import cn.nukkit.block.Block;
+import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseModal;
 import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.form.window.FormWindowSimple;
+import cn.nukkit.item.Item;
+import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import cn.nukkit.Player;
@@ -99,6 +104,8 @@ public class MasterListener implements Listener {
         }
     }
 
+
+
     //GUI Listener
     @EventHandler
     public void PFRE(PlayerFormRespondedEvent pr) {
@@ -107,14 +114,20 @@ public class MasterListener implements Listener {
         CorePlayer cp = ((CorePlayer) p);
         switch (cp.LastSentFormType) {
             case Class_0:
+            case Enchanting_0:
                 FormResponseModal frm = (FormResponseModal) pr.getResponse();
                 if (frm.getClickedButtonId() == 0) {
                     System.out.println("Bye!");
+                    if(cp.LastSentFormType == Enchanting_0){
+                        Item e = Item.get(Block.ENCHANT_TABLE,3,1);
+                        p.getInventory().addItem(e.setCustomName("TTTTTTTTTT"));
+                    }
                     cp.LastSentFormType = NULL;
                 } else {
                     System.out.println("HI!!!!!");
                     cp.showFormWindow(cp.getNewWindow());
-                    cp.LastSentFormType = Class_1;
+                    if(cp.LastSentFormType == Enchanting_0)cp.LastSentFormType = Enchanting_1;
+                    if(cp.LastSentFormType == Class_0)cp.LastSentFormType = Class_1;
                     cp.clearNewWindow();
                 }
                 break;
@@ -425,58 +438,73 @@ public class MasterListener implements Listener {
 
     @EventHandler
     public void factionBlockBreakProtect(BlockBreakEvent event) {
-        if (event.getPlayer() != null && event.getPlayer().isOp()) {
-            String pf = Main.FM.getPlayerFaction(event.getPlayer().getName());
-            Faction fac = Main.FM.FFactory.getFaction(pf);
-            if (fac != null) fac.HandleBreakEvent(event);
-            event.setCancelled(false);
-            return;
-        }
-        if (event.isCancelled()) return;
-        String pf = Main.FM.getPlayerFaction(event.getPlayer().getName());
-        String chunkfaction = Main.FM.GetChunkOwner((int) event.getBlock().getX() >> 4, (int) event.getBlock().getZ() >> 4);
-        if (chunkfaction != null) {
-            if (pf != null) {
-                if (pf.equalsIgnoreCase(chunkfaction)) {
-                    Faction fac = Main.FM.FFactory.getFaction(pf);
-                    if (fac != null) fac.HandleBreakEvent(event);
-                    return;
-                }
-                event.setCancelled(true);
-                event.getPlayer().sendMessage(FactionsMain.NAME + "This area is claimed by " + chunkfaction);
-                return;
-            }
-            event.setCancelled(true);
-        }
-        Faction fac = Main.FM.FFactory.getFaction(pf);
-        if (fac != null) fac.HandleBreakEvent(event);
+        return;
+//        if (event.getPlayer() != null && event.getPlayer().isOp()) {
+//            String pf = Main.FM.getPlayerFaction(event.getPlayer().getName());
+//            Faction fac = Main.FM.FFactory.getFaction(pf);
+//            if (fac != null) fac.HandleBreakEvent(event);
+//            event.setCancelled(false);
+//            return;
+//        }
+//        if (event.isCancelled()) return;
+//        String pf = Main.FM.getPlayerFaction(event.getPlayer().getName());
+//        String chunkfaction = Main.FM.GetChunkOwner((int) event.getBlock().getX() >> 4, (int) event.getBlock().getZ() >> 4);
+//        if (chunkfaction != null) {
+//            if (pf != null) {
+//                if (pf.equalsIgnoreCase(chunkfaction)) {
+//                    Faction fac = Main.FM.FFactory.getFaction(pf);
+//                    if (fac != null) fac.HandleBreakEvent(event);
+//                    return;
+//                }
+//                event.setCancelled(true);
+//                event.getPlayer().sendMessage(FactionsMain.NAME + "This area is claimed by " + chunkfaction);
+//                return;
+//            }
+//            event.setCancelled(true);
+//        }
+//        Faction fac = Main.FM.FFactory.getFaction(pf);
+//        if (fac != null) fac.HandleBreakEvent(event);
     }
 
     @EventHandler
+    public void InventoryTransactionEvent(InventoryTransactionEvent e){
+        e.setCancelled(false);
+        Server.getInstance().getLogger().info("YEAAAAAAAAAAA CALLLL "+e.getEventName()+"  _   "+e.getTransaction().getSource().getName());
+    }
+    @EventHandler
     public void factionBlockPlaceProtect(BlockPlaceEvent event) {
-        if (event.getPlayer() != null && event.getPlayer().isOp()) {
-            String pf = Main.FM.getPlayerFaction(event.getPlayer().getName());
-            Faction fac = Main.FM.FFactory.getFaction(pf);
-            if (fac != null) fac.HandlePlaceEvent(event);
-            return;
-        }
-        if (event.isCancelled()) return;
-        String pf = Main.FM.getPlayerFaction(event.getPlayer().getName());
-        String chunkfaction = Main.FM.GetChunkOwner((int) event.getBlock().getX() >> 4, (int) event.getBlock().getZ() >> 4);
-        if (chunkfaction != null) {
-            if (pf != null) {
-                if (pf.equalsIgnoreCase(chunkfaction)) {
-                    Faction fac = Main.FM.FFactory.getFaction(pf);
-                    if (fac != null) fac.HandlePlaceEvent(event);
-                    return;
-                }
-                event.setCancelled(true);
-                event.getPlayer().sendMessage(FactionsMain.NAME + TextFormat.GRAY + " This area is claimed by " + chunkfaction);
-                return;
-            }
-            event.setCancelled(true);
-        }
-        Faction fac = Main.FM.FFactory.getFaction(pf);
-        if (fac != null) fac.HandlePlaceEvent(event);
+event.getPlayer().sendMessage("YEAAAAAAAAAAA CALLLL "+event.getBlock().getId()+"  _   "+event.getBlock().getDamage());
+        event.setCancelled(false);
+        //Allow All!
+
+
+
+
+
+//
+//        if (event.getPlayer() != null && event.getPlayer().isOp()) {
+//            String pf = Main.FM.getPlayerFaction(event.getPlayer().getName());
+//            Faction fac = Main.FM.FFactory.getFaction(pf);
+//            if (fac != null) fac.HandlePlaceEvent(event);
+//            return;
+//        }
+//        if (event.isCancelled()) return;
+//        String pf = Main.FM.getPlayerFaction(event.getPlayer().getName());
+//        String chunkfaction = Main.FM.GetChunkOwner((int) event.getBlock().getX() >> 4, (int) event.getBlock().getZ() >> 4);
+//        if (chunkfaction != null) {
+//            if (pf != null) {
+//                if (pf.equalsIgnoreCase(chunkfaction)) {
+//                    Faction fac = Main.FM.FFactory.getFaction(pf);
+//                    if (fac != null) fac.HandlePlaceEvent(event);
+//                    return;
+//                }
+//                event.setCancelled(true);
+//                event.getPlayer().sendMessage(FactionsMain.NAME + TextFormat.GRAY + " This area is claimed by " + chunkfaction);
+//                return;
+//            }
+//            event.setCancelled(true);
+//        }
+//        Faction fac = Main.FM.FFactory.getFaction(pf);
+//        if (fac != null) fac.HandlePlaceEvent(event);
     }
 }
