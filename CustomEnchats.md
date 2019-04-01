@@ -1,3 +1,13 @@
+#Enchanting Tables
+## 5 Level Tiers
+ - Basic 
+ - Standard 
+ - Upgraded
+ - Eternal
+ - Legendary
+ 
+ 
+
 #Custom Enchats
 ##Item
 ### Pixkaxe
