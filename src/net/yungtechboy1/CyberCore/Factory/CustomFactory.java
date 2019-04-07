@@ -1,7 +1,9 @@
 package net.yungtechboy1.CyberCore.Factory;
 
 import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.block.Block;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
@@ -10,7 +12,16 @@ import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
+import cn.nukkit.level.Location;
+import cn.nukkit.level.Position;
+import cn.nukkit.level.format.FullChunk;
+import cn.nukkit.math.AxisAlignedBB;
+import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.math.Vector3;
+import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.nbt.tag.DoubleTag;
+import cn.nukkit.nbt.tag.FloatTag;
+import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.network.protocol.MovePlayerPacket;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.utils.ConfigSection;
@@ -22,6 +33,8 @@ import net.yungtechboy1.CyberCore.Custom.Inventory.TestInv;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Utils;
+import net.yungtechboy1.CyberCore.entities.EntityStackable;
 
 import java.util.Date;
 
@@ -34,7 +47,7 @@ public class CustomFactory implements Listener {
     public ConfigSection VEIList = new ConfigSection();
     protected static Enchantment[] enchantments = new Enchantment[256];
 
-    public CustomFactory(CyberCoreMain main){
+    public CustomFactory(CyberCoreMain main) {
         CCM = main;
 //        Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
 //        Item.list[Item.BOOK] = CItemBook.class;
@@ -53,6 +66,79 @@ public class CustomFactory implements Listener {
         main.getLogger().info(TextFormat.GREEN + " ||||||||||||||||||||||||||||| " + enchantments.length);
     }
 
+    /**
+     * @param type
+     * @param source
+     * @param args
+     * @return
+     */
+    public static Entity SpawnEntityStack(int type, Position source, Object... args) {
+        FullChunk chunk = source.getLevel().getChunk((int) source.x >> 4, (int) source.z >> 4, true);
+        if (!chunk.isGenerated()) {
+            chunk.setGenerated();
+        }
+        if (!chunk.isPopulated()) {
+            chunk.setPopulated();
+        }
+
+        Entity[] el = source.getLevel().getNearbyEntities(source.getLevelBlock().getBoundingBox().grow(16, 16, 16));
+        Server.getInstance().getLogger().info("FOUND "+el.length);
+        Entity stackEntity = null;
+        for (Entity e : el) {
+            if(!(e instanceof EntityStackable)) {
+                if (e.getNetworkId() == type && e.namedTag.contains("IsStack")) {//Same Entity and Stack
+                    int _c = e.namedTag.getInt("Count");
+                    int _m = e.namedTag.getInt("MaxStack");
+
+                    Server.getInstance().getLogger().info("FOUND STACK ENTITY???:");
+                    if (_c < _m) stackEntity = e;
+                    break;
+                }
+            }else{
+                System.out.println("CORRECT WAY");
+                ((EntityStackable) e).AddStackCount(1);
+            }
+        }
+
+        if (stackEntity == null) {
+            Vector3 temp = new Vector3();
+            temp.x = new NukkitRandom().nextRange(-16,16)+source.x;
+            temp.y = new NukkitRandom().nextRange(-5,5)+source.y;
+            temp.z = new NukkitRandom().nextRange(-16,16)+source.z;
+            Vector3 sp = source.getLevel().getSafeSpawn(temp);
+            CompoundTag nbt = new CompoundTag()
+                    .putList(new ListTag<DoubleTag>("Pos")
+                            .add(new DoubleTag("", sp.x))
+                            .add(new DoubleTag("", sp.y))
+                            .add(new DoubleTag("", sp.z)))
+                    .putList(new ListTag<DoubleTag>("Motion")
+                            .add(new DoubleTag("", 0))
+                            .add(new DoubleTag("", 0))
+                            .add(new DoubleTag("", 0)))
+                    .putList(new ListTag<FloatTag>("Rotation")
+                            .add(new FloatTag("", source instanceof Location ? (float) ((Location) source).yaw : 0))
+                            .add(new FloatTag("", source instanceof Location ? (float) ((Location) source).pitch : 0))
+                    )
+                    .putBoolean("IsStack", true)
+                    .putInt("StackCount", 1)
+                    .putInt("MaxStack", 64)
+
+            .putString("CustomName", "Entity Stack Count 1")
+            .putBoolean("CustomNameVisible", true);;
+
+            return Entity.createEntity(type, chunk, nbt, args);
+        } else {
+            int _c = stackEntity.namedTag.getInt("Count");
+            stackEntity.namedTag.remove("Count");
+            _c++;
+            stackEntity.namedTag.putInt("Count",_c);
+            stackEntity.setNameTag("Entity Stack Count"+_c);
+            stackEntity.saveNBT();
+            stackEntity.onUpdate(Server.getInstance().getTick());
+            return stackEntity;
+        }
+    }
+
     @EventHandler
     public void DamageEvent(EntityDamageByEntityEvent event) {
 
@@ -62,8 +148,8 @@ public class CustomFactory implements Listener {
     public void PIE(PlayerInteractEvent event) {
         Player a = event.getPlayer();
         if (event.getBlock().getId() == Block.ANVIL) {
-            Block BA = a.getLevel().getBlock(event.getBlock().add(0,-2));
-            Inventory b = new TestInv(a, event.getBlock(),BA);
+            Block BA = a.getLevel().getBlock(event.getBlock().add(0, -2));
+            Inventory b = new TestInv(a, event.getBlock(), BA);
             a.addWindow(b);
             event.setCancelled();
         }

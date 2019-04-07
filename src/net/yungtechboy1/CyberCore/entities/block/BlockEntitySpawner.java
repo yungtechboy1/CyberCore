@@ -9,6 +9,7 @@ import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.nbt.tag.ShortTag;
+import net.yungtechboy1.CyberCore.Factory.CustomFactory;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
 import net.yungtechboy1.CyberCore.Tasks.SpawnerCalculationsAsync;
 import net.yungtechboy1.CyberCore.entities.utils.Utils;
@@ -127,15 +128,8 @@ int r = Utils.rand(this.minSpawnDelay, this.maxSpawnDelay);
         Server.getInstance().broadcastMessage("After Update"+list.size()+" | "+maxNearbyEntities);
         if (list.size() > 0) {
             if (list.size() <= this.maxNearbyEntities) {
-                Position pos = new Position(
-                        this.x + Utils.rand(-this.spawnRange, this.spawnRange),
-                        this.y,
-                        this.z + Utils.rand(-this.spawnRange, this.spawnRange),
-                        this.level
-                );
-
                 System.out.println("CREATE ENTITYT");
-                Entity entity = MobPlugin.create(this.entityId, pos);
+                Entity entity = CustomFactory.SpawnEntityStack(this.entityId, this);
                 if (entity != null) {
                     entity.spawnToAll();
                 }

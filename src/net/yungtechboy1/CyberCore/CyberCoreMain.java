@@ -6,6 +6,7 @@ import cn.nukkit.block.BlockIce;
 import cn.nukkit.block.BlockLiquid;
 import cn.nukkit.block.BlockUnknown;
 import cn.nukkit.blockentity.BlockEntity;
+import cn.nukkit.entity.passive.EntityPig;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
@@ -57,6 +58,7 @@ import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Data.CoreSQL;
 import net.yungtechboy1.CyberCore.Rank.RankFactory;
+import net.yungtechboy1.CyberCore.entities.animal.walking.Pig;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -348,6 +350,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     public void onLoad() {
 
+        Entity.registerEntity(EntityPig.NETWORK_ID+"",Pig.class);
 
 
         CyberCoreMain.instance = this;
