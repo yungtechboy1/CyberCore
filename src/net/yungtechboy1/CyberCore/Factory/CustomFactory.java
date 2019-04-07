@@ -36,10 +36,10 @@ public class CustomFactory implements Listener {
 
     public CustomFactory(CyberCoreMain main){
         CCM = main;
-        Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
-        Item.list[Item.BOOK] = CItemBook.class;
-        Item.list[Item.ENCHANT_BOOK] = CItemBookEnchanted.class;
-        Block.init();
+//        Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
+//        Item.list[Item.BOOK] = CItemBook.class;
+//        Item.list[Item.ENCHANT_BOOK] = CItemBookEnchanted.class;
+//        Block.init();
         enchantments[CustomEnchantment.BLIND] = new LifeSteal();
 //        enchantments[CustomEnchantment.CRIPPLING] = new Crippling();
         enchantments[CustomEnchantment.DEATHBRINGER] = new DeathBringer();

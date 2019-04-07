@@ -8,6 +8,7 @@ import cn.nukkit.form.response.FormResponseModal;
 import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.item.Item;
+import cn.nukkit.nbt.tag.CompoundTag;
 import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
@@ -100,6 +101,17 @@ public class MasterListener implements Listener {
                                 }}));
                         cp.LastSentFormType = Class_1;
                         cp.LastSentSubMenu = FormType.SubMenu.Offense;
+                    }else if(k == 4){
+                        //TEMP-GIVE SPAWNER
+                        Item i = Item.get(Item.MONSTER_SPAWNER, 0, 1);
+                        i.setCompoundTag(new CompoundTag() {{
+                            putInt("Level", 1);
+                            putInt("Type", 12);
+                            putShort("MinSpawnDelay", 20*10);
+                            putShort("MaxSpawnDelay", 20*10+10);
+                        }});
+                        cp.sendMessage("Gave ITem!");
+                        cp.getInventory().addItem(i);
                     }
                 }else if(cp.LastSentSubMenu == FormType.SubMenu.Offense){
                     switch (k){

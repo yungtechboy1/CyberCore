@@ -1,11 +1,13 @@
 package net.yungtechboy1.CyberCore.entities.block;
 
+import cn.nukkit.Server;
 import cn.nukkit.blockentity.BlockEntitySpawnable;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Position;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.nbt.tag.ShortTag;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
 import net.yungtechboy1.CyberCore.Tasks.SpawnerCalculationsAsync;
@@ -13,84 +15,128 @@ import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
 import java.util.ArrayList;
 
-public class BlockEntitySpawner extends BlockEntitySpawnable{
+public class BlockEntitySpawner extends BlockEntitySpawnable {
 
     private int entityId = -1;
-    private int spawnRange;
-    private int maxNearbyEntities;
-    private int requiredPlayerRange;
+    public int spawnRange;
+    public int maxNearbyEntities;
+    public int requiredPlayerRange;
+    private int lvl;
 
     private int delay = 0;
 
     public boolean wait = false;
 
-    private int minSpawnDelay;
-    private int maxSpawnDelay;
+    public int minSpawnDelay;
+    public int maxSpawnDelay;
 
-    public BlockEntitySpawner(FullChunk chunk, CompoundTag nbt){
+    public BlockEntitySpawner(FullChunk chunk, CompoundTag nbt, int eid,int llevel, int spawnRange, int minSpawnDelay, int maxSpawnDelay, int requiredPlayerRange) {
+
+        super(chunk, nbt);
+        this.entityId = eid;
+        this.lvl = llevel;
+        this.namedTag.putInt("Type", eid);
+        this.namedTag.putInt("Level", lvl);
+        this.namedTag.putShort("SpawnRange", spawnRange);
+        this.namedTag.putShort("MinSpawnDelay", minSpawnDelay);//2 Min
+        this.namedTag.putShort("MaxSpawnDelay", maxSpawnDelay);//6 Mins
+        this.namedTag.putShort("RequiredPlayerRange", requiredPlayerRange);
+        this.requiredPlayerRange = 32;
+
+    }
+
+    public int GetSEntityID(){
+        return entityId;
+    }
+    public int GetSpawnerLevel(){
+        return lvl;
+    }
+
+    public BlockEntitySpawner(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
 
-        if(this.namedTag.contains("EntityId")){
-            this.entityId = this.namedTag.getInt("EntityId");
+        System.out.println("STARRRRRRRRRRRRRRRRRR! "+nbt.toString());
+        if (this.namedTag.contains("Type")) {
+            this.entityId = this.namedTag.getInt("Type");
         }
 
-        if(!this.namedTag.contains("SpawnRange") || !(this.namedTag.get("SpawnRange") instanceof ShortTag)){
+        if (!this.namedTag.contains("SpawnRange") || !(this.namedTag.get("SpawnRange") instanceof ShortTag)) {
             this.namedTag.putShort("SpawnRange", 8);
         }
 
-        if(!this.namedTag.contains("MinSpawnDelay") || !(this.namedTag.get("MinSpawnDelay") instanceof ShortTag)){
+        if (!this.namedTag.contains("MinSpawnDelay") || !(this.namedTag.get("MinSpawnDelay") instanceof ShortTag)) {
             this.namedTag.putShort("MinSpawnDelay", 2400);//2 Min
         }
 
-        if(!this.namedTag.contains("MaxSpawnDelay") || !(this.namedTag.get("MaxSpawnDelay") instanceof ShortTag)){
-            this.namedTag.putShort("MaxSpawnDelay", 20*60*8);//6 Mins
+        if (!this.namedTag.contains("MaxSpawnDelay") || !(this.namedTag.get("MaxSpawnDelay") instanceof ShortTag)) {
+            this.namedTag.putShort("MaxSpawnDelay", 20 * 60 * 8);//6 Mins
         }
 
-        if(!this.namedTag.contains("MaxNearbyEntities") || !(this.namedTag.get("MaxNearbyEntities") instanceof ShortTag)){
+        if (!this.namedTag.contains("MaxNearbyEntities") || !(this.namedTag.get("MaxNearbyEntities") instanceof ShortTag)) {
             this.namedTag.putShort("MaxNearbyEntities", 2);
         }
 
-        if(!this.namedTag.contains("RequiredPlayerRange") || !(this.namedTag.get("RequiredPlayerRange") instanceof ShortTag)){
-            this.namedTag.putShort("RequiredPlayerRange", 20);
-        }
-
         this.spawnRange = this.namedTag.getShort("SpawnRange");
-        this.minSpawnDelay = this.namedTag.getInt("MinSpawnDelay");
-        this.maxSpawnDelay = this.namedTag.getInt("MaxSpawnDelay");
+        this.minSpawnDelay = this.namedTag.getShort("MinSpawnDelay");
+        this.maxSpawnDelay = this.namedTag.getShort("MaxSpawnDelay");
         this.maxNearbyEntities = this.namedTag.getShort("MaxNearbyEntities");
-        this.requiredPlayerRange = this.namedTag.getShort("RequiredPlayerRange");
+//        this.requiredPlayerRange = this.namedTag.getShort("RequiredPlayerRange");
         this.requiredPlayerRange = 32;
 
         this.scheduleUpdate();
     }
 
     @Override
-    public boolean onUpdate(){
-        if(this.closed){
+    public String toString() {
+        return "BlockEntitySpawner{" +
+                "entityId=" + entityId +
+                ", spawnRange=" + spawnRange +
+                ", maxNearbyEntities=" + maxNearbyEntities +
+                ", requiredPlayerRange=" + requiredPlayerRange +
+                ", lvl=" + lvl +
+                ", delay=" + delay +
+                ", wait=" + wait +
+                ", minSpawnDelay=" + minSpawnDelay +
+                ", maxSpawnDelay=" + maxSpawnDelay +
+                ", x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
+
+    @Override
+    public boolean onUpdate() {
+        if (this.closed) {
             return false;
         }
 
-        if(this.delay++ >= Utils.rand(this.minSpawnDelay, this.maxSpawnDelay) && !wait){
+int r = Utils.rand(this.minSpawnDelay, this.maxSpawnDelay);
+        System.out.println("UPDATE "+this.x+" | "+this.y+" | "+this.z+" | WAIT: "+delay+"<"+r);
+        if (this.delay++ >= r && !wait) {
+            System.out.println("UPDATE "+this.x+" | "+this.y+" | "+this.z+" | DEWLAY TTTTTTTTTTTTTTTTTTTTT"+delay);
             this.delay = 0;
 
-            SpawnerCalculationsAsync SCA = new SpawnerCalculationsAsync(level.getEntities(),this,requiredPlayerRange,maxNearbyEntities);
+            SpawnerCalculationsAsync SCA = new SpawnerCalculationsAsync(level.getEntities(), this, requiredPlayerRange, maxNearbyEntities);
             server.getScheduler().scheduleAsyncTask(SCA);
             wait = true;
         }
         return true;
     }
 
-    public void afterUpdate(ArrayList<Entity> list){
-        if(list.size() > 0){
-            if(list.size() <= this.maxNearbyEntities){
+    public void afterUpdate(ArrayList<Entity> list) {
+        Server.getInstance().broadcastMessage("After Update"+list.size()+" | "+maxNearbyEntities);
+        if (list.size() > 0) {
+            if (list.size() <= this.maxNearbyEntities) {
                 Position pos = new Position(
                         this.x + Utils.rand(-this.spawnRange, this.spawnRange),
                         this.y,
                         this.z + Utils.rand(-this.spawnRange, this.spawnRange),
                         this.level
                 );
+
+                System.out.println("CREATE ENTITYT");
                 Entity entity = MobPlugin.create(this.entityId, pos);
-                if(entity != null){
+                if (entity != null) {
                     entity.spawnToAll();
                 }
             }
@@ -98,10 +144,11 @@ public class BlockEntitySpawner extends BlockEntitySpawnable{
     }
 
     @Override
-    public void saveNBT(){
+    public void saveNBT() {
         super.saveNBT();
 
         this.namedTag.putInt("EntityId", this.entityId);
+        this.namedTag.putInt("Level", this.lvl);
         this.namedTag.putShort("SpawnRange", this.spawnRange);
         this.namedTag.putShort("MinSpawnDelay", this.minSpawnDelay);
         this.namedTag.putShort("MaxSpawnDelay", this.maxSpawnDelay);
@@ -110,13 +157,18 @@ public class BlockEntitySpawner extends BlockEntitySpawnable{
     }
 
     @Override
-    public CompoundTag getSpawnCompound(){
+    public CompoundTag getSpawnCompound() {
         return new CompoundTag()
-            .putString("id", MOB_SPAWNER)
-            .putInt("EntityId", this.entityId)
-            .putInt("x", (int) this.x)
-            .putInt("y", (int) this.y)
-            .putInt("z", (int) this.z);
+                .putString("id", MOB_SPAWNER)
+                .putInt("EntityId", this.entityId)
+                .putList(new ListTag<>("SpawnPotentials").add(new CompoundTag(){{
+                    putCompound("Entity",new CompoundTag(){{
+                        putString("id",entityId+"");
+                    }});
+                }}))
+                .putInt("x", (int) this.x)
+                .putInt("y", (int) this.y)
+                .putInt("z", (int) this.z);
     }
 
     @Override
@@ -124,29 +176,29 @@ public class BlockEntitySpawner extends BlockEntitySpawnable{
         return this.getBlock().getId() == Item.MONSTER_SPAWNER;
     }
 
-    public void setSpawnEntityType(int entityId){
+    public void setSpawnEntityType(int entityId) {
         this.entityId = entityId;
         this.spawnToAll();
     }
 
-    public void setMinSpawnDelay(int minDelay){
-        if(minDelay > this.maxSpawnDelay){
+    public void setMinSpawnDelay(int minDelay) {
+        if (minDelay > this.maxSpawnDelay) {
             return;
         }
 
         this.minSpawnDelay = minDelay;
     }
 
-    public void setMaxSpawnDelay(int maxDelay){
-        if(this.minSpawnDelay > maxDelay){
+    public void setMaxSpawnDelay(int maxDelay) {
+        if (this.minSpawnDelay > maxDelay) {
             return;
         }
 
         this.maxSpawnDelay = maxDelay;
     }
 
-    public void setSpawnDelay(int minDelay, int maxDelay){
-        if(minDelay > maxDelay){
+    public void setSpawnDelay(int minDelay, int maxDelay) {
+        if (minDelay > maxDelay) {
             return;
         }
 
@@ -154,11 +206,11 @@ public class BlockEntitySpawner extends BlockEntitySpawnable{
         this.maxSpawnDelay = maxDelay;
     }
 
-    public void setRequiredPlayerRange(int range){
+    public void setRequiredPlayerRange(int range) {
         this.requiredPlayerRange = range;
     }
 
-    public void setMaxNearbyEntities(int count){
+    public void setMaxNearbyEntities(int count) {
         this.maxNearbyEntities = count;
     }
 

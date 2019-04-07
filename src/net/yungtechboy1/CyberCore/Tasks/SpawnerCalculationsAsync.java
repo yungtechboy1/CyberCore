@@ -13,13 +13,14 @@ import java.util.ArrayList;
 /**
  * Created by carlt_000 on 2/8/2017.
  */
-public class SpawnerCalculationsAsync extends AsyncTask{
+public class SpawnerCalculationsAsync extends AsyncTask {
     Entity[] Entities;
     BlockEntitySpawner Me;
     int requiredPlayerRange = 32;
     int maxNearbyEntities = 6;
     ArrayList<Entity> list = new ArrayList<>();
-    public SpawnerCalculationsAsync(Entity[] entities, BlockEntitySpawner me, int requiredPlayerRange, int maxNearbyEntities){
+
+    public SpawnerCalculationsAsync(Entity[] entities, BlockEntitySpawner me, int requiredPlayerRange, int maxNearbyEntities) {
         Entities = entities;
         Me = me;
         requiredPlayerRange = 32;
@@ -28,23 +29,28 @@ public class SpawnerCalculationsAsync extends AsyncTask{
     @Override
     public void onRun() {
         boolean isValid = false;
-        for(Entity entity : Entities){
-            if(entity.distance(Me) <= this.requiredPlayerRange){
-                if(entity instanceof Player){
+        for (Entity entity : Entities) {
+            if (entity.distance(Me) <= this.requiredPlayerRange) {
+                if (entity instanceof Player) {
                     isValid = true;
                 }
                 list.add(entity);
             }
         }
-        if(!isValid)list.clear();
+        if (!isValid) list.clear();
     }
 
     @Override
     public void onCompletion(Server server) {
         Level lvl = server.getLevel(Me.getLevel().getId());
-        if(lvl != null)return;
+        if (lvl == null) {
+
+            System.out.println("Invalid Level");
+            return;
+        }
         BlockEntity be = lvl.getBlockEntity(Me);
-        if(be != null && be instanceof BlockEntitySpawner){
+        if (be != null && be instanceof BlockEntitySpawner) {
+            System.out.println("AUUUUUUUUUUUUUUUUUUUUUUUU");
             ((BlockEntitySpawner) be).afterUpdate(list);
             ((BlockEntitySpawner) be).wait = false;
         }

@@ -5,6 +5,7 @@ import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockIce;
 import cn.nukkit.block.BlockLiquid;
 import cn.nukkit.block.BlockUnknown;
+import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
@@ -20,8 +21,12 @@ import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMS;
 import net.yungtechboy1.CyberCore.Commands.Homes.HomeManager;
 import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
+import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
+import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
 import net.yungtechboy1.CyberCore.Custom.CustomGlobalBlockPalette;
 import net.yungtechboy1.CyberCore.Custom.CustomStartGamePacket;
+import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
+import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
 import net.yungtechboy1.CyberCore.Data.UserSQL;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
@@ -206,6 +211,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         saveResource("ranks.yml");
         saveResource("config.yml");
 //        CustomGlobalBlockPalette.registerMapping((entry.id << 4) | entry.data);
+
+
         CustomGlobalBlockPalette.getOrCreateRuntimeId(0,0);
         getServer().getNetwork().registerPacket(ProtocolInfo.START_GAME_PACKET, CustomStartGamePacket.class);
 
@@ -213,6 +220,12 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        Item.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         addCreativeItem(Item.get(Block.ENCHANT_TABLE, 5, 1).setCustomName("TTTTTTTTTTTTTT"));
         ReloadBlockList(Block.ENCHANTING_TABLE,BlockEnchantingTable.class);
+        BlockEntity.registerBlockEntity("MonsterSpawner", SpawnerWithLevelBlockEntity.class);
+
+        Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
+        ReloadBlockList(Block.MONSTER_SPAWNER,SpawnerWithLevelBlock.class);
+        Item.list[Item.BOOK] = CItemBook.class;
+        Item.list[Item.ENCHANT_BOOK] = CItemBookEnchanted.class;
 
 
 
@@ -334,10 +347,13 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     }
 
     public void onLoad() {
+
+
+
         CyberCoreMain.instance = this;
 
-        MobPlugin.registerEntities();
-        MobPlugin.registerItems();
+//        MobPlugin.registerEntities();
+//        MobPlugin.registerItems();
         getServer().getScheduler().scheduleRepeatingTask(new AutoSpawnTask(this), 5, true);
 
 
