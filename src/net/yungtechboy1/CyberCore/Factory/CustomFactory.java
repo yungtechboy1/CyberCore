@@ -82,13 +82,13 @@ public class CustomFactory implements Listener {
         }
 
         Entity[] el = source.getLevel().getNearbyEntities(source.getLevelBlock().getBoundingBox().grow(16, 16, 16));
-        Server.getInstance().getLogger().info("FOUND "+el.length);
+//        Server.getInstance().getLogger().info("FOUND "+el.length);
         Entity stackEntity = null;
         for (Entity e : el) {
             if(!(e instanceof EntityStackable)) {
                 System.out.println("BAD WAY");
                 if (e.getNetworkId() == type && e.namedTag.contains("IsStack")) {//Same Entity and Stack
-                    int _c = e.namedTag.getInt("Count");
+                    int _c = e.namedTag.getInt("StackCount");
                     int _m = e.namedTag.getInt("MaxStack");
 
                     Server.getInstance().getLogger().info("FOUND STACK ENTITY???:");

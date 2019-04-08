@@ -12,6 +12,9 @@ import cn.nukkit.nbt.tag.ShortTag;
 import net.yungtechboy1.CyberCore.Factory.CustomFactory;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
 import net.yungtechboy1.CyberCore.Tasks.SpawnerCalculationsAsync;
+import net.yungtechboy1.CyberCore.entities.BaseEntity;
+import net.yungtechboy1.CyberCore.entities.EntityStackable;
+import net.yungtechboy1.CyberCore.entities.animal.walking.Pig;
 import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
 import java.util.ArrayList;
@@ -56,8 +59,8 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
 
     public BlockEntitySpawner(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
-
-        System.out.println("STARRRRRRRRRRRRRRRRRR! " + nbt.toString());
+//
+//        System.out.println("STARRRRRRRRRRRRRRRRRR! " + nbt.toString());
         if (this.namedTag.contains("Type")) {
             this.entityId = this.namedTag.getInt("Type");
         }
@@ -142,6 +145,9 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
                 Entity entity = CustomFactory.SpawnEntityStack(this.entityId, this);
                 if (entity != null) {
                     entity.spawnToAll();
+                    if(((EntityStackable)entity).IsStackable()){
+                        System.out.println("GOING TO + " +((EntityStackable)entity).GetStackCount());
+                    }
                 }
             }
         }
@@ -164,15 +170,21 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
     public CompoundTag getSpawnCompound() {
         return new CompoundTag()
                 .putString("id", MOB_SPAWNER)
-                .putInt("EntityId", this.entityId)
-                .putList(new ListTag<>("SpawnPotentials").add(new CompoundTag() {{
-                    putCompound("Entity", new CompoundTag() {{
-                        putString("id", entityId + "");
-                    }});
-                }}))
+                .putString("SpawnData", this.entityId + "")//"minecraft:zombie"
+                .putList(new ListTag<CompoundTag>("SpawnPotentials") {
+                    {
+                        add(new CompoundTag() {{
+                            putInt("Weight", 1);
+                            putCompound("Entity", new CompoundTag() {{
+                                putString("id", entityId + "");
+                            }});
+                        }});
+                    }
+                })
                 .putInt("x", (int) this.x)
                 .putInt("y", (int) this.y)
                 .putInt("z", (int) this.z);
+
     }
 
     @Override
