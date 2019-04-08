@@ -143,10 +143,12 @@ public abstract class BaseEntity extends EntityCreature implements EntityStackab
         return super.getName()+"11111111";
     }
 
+
+
     @Override
     public void SetStackCount(int amount) {
         namedTag.putInt("StackCount", amount);
-        setNameTag(getSaveId()+" Count :"+amount);
+        setNameTag(GetEntityNameFromID()+" Count :"+amount);
         setNameTagAlwaysVisible(true);
         saveNBT();
     }
@@ -332,9 +334,10 @@ public abstract class BaseEntity extends EntityCreature implements EntityStackab
         return bb != null && block.isSolid() && !block.isTransparent() && bb.intersectsWith(this.getBoundingBox());
     }
 
+    //Todo
     public String GetEntityNameFromID() {
-        switch (getNetworkId()) {
-            case 4:
+        switch (getSaveId()) {
+            case 4+"":
                 return "Pig";
             default:
                 return getName();
