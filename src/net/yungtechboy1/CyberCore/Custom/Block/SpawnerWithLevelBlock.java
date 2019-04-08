@@ -111,7 +111,7 @@ public class SpawnerWithLevelBlock extends BlockMobSpawner {
             }
             CompoundTag nbt = new CompoundTag()
 //                    .putString("id", BlockEntity.MOB_SPAWNER)
-                    .putString("id", t+"")
+                    .putString("id", BlockEntity.MOB_SPAWNER)
                     .putInt("Type", t)
                     .putInt("x", (int) this.x)
                     .putInt("y", (int) this.y)

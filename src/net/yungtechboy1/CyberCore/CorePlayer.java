@@ -45,6 +45,54 @@ public class CorePlayer extends Player {
     private FormWindow nw;
 
 
+    public boolean IsItemBeingEnchanted() {
+        return getItemBeingEnchanted() != null;
+    }
+
+    public void clearItemBeingEnchanted() {
+        setItemBeingEnchanted(null);
+    }
+
+    public Item getItemBeingEnchanted() {
+        return ItemBeingEnchanted;
+    }
+
+    public void setItemBeingEnchanted(Item itemBeingEnchanted) {
+        if (IsItemBeingEnchanted()) {
+
+        }
+        ItemBeingEnchanted = itemBeingEnchanted;
+    }
+
+    private Item ItemBeingEnchanted = null;
+
+    public boolean isItemBeingEnchantedLock() {
+        return ItemBeingEnchantedLock;
+    }
+
+    public void removeItemBeingEnchantedLock() {
+        setItemBeingEnchantedLock(false);
+    }
+
+    public void setItemBeingEnchantedLock() {
+        setItemBeingEnchantedLock(true);
+    }
+
+    public void setItemBeingEnchantedLock(boolean itemBeingEnchantedLock) {
+        ItemBeingEnchantedLock = itemBeingEnchantedLock;
+    }
+
+    private boolean ItemBeingEnchantedLock = false;
+
+    public void ReturnItemBeingEnchanted(){
+        if(IsItemBeingEnchanted() && !isItemBeingEnchantedLock()){
+            Item i = getItemBeingEnchanted();
+            getInventory().addItem(i);
+            clearItemBeingEnchanted();
+            removeItemBeingEnchantedLock();
+        }
+    }
+
     public Integer money = 0;
     public Integer kills = 0;
     public Integer deaths = 0;

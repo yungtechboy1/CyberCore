@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Tasks;
 
+import cn.nukkit.entity.item.EntityItem;
 import net.yungtechboy1.CyberCore.entities.block.BlockEntitySpawner;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
@@ -34,6 +35,7 @@ public class SpawnerCalculationsAsync extends AsyncTask {
                 if (entity instanceof Player) {
                     isValid = true;
                 }
+                if(entity instanceof EntityItem)continue;//Dropped Items Should not count!
                 list.add(entity);
             }
         }
@@ -50,7 +52,6 @@ public class SpawnerCalculationsAsync extends AsyncTask {
         }
         BlockEntity be = lvl.getBlockEntity(Me);
         if (be != null && be instanceof BlockEntitySpawner) {
-            System.out.println("AUUUUUUUUUUUUUUUUUUUUUUUU");
             ((BlockEntitySpawner) be).afterUpdate(list);
             ((BlockEntitySpawner) be).wait = false;
         }

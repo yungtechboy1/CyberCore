@@ -222,7 +222,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        Item.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         addCreativeItem(Item.get(Block.ENCHANT_TABLE, 5, 1).setCustomName("TTTTTTTTTTTTTT"));
         ReloadBlockList(Block.ENCHANTING_TABLE,BlockEnchantingTable.class);
-        BlockEntity.registerBlockEntity("MonsterSpawner", SpawnerWithLevelBlockEntity.class);
 
         Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
         ReloadBlockList(Block.MONSTER_SPAWNER,SpawnerWithLevelBlock.class);
@@ -352,6 +351,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         Entity.registerEntity(EntityPig.NETWORK_ID+"",Pig.class);
 
+        BlockEntity.registerBlockEntity("MonsterSpawner", SpawnerWithLevelBlockEntity.class);
 
         CyberCoreMain.instance = this;
 
@@ -420,28 +420,28 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     @Override
     public void onDisable() {
         super.onDisable();
-        ConfigSection bc = new ConfigSection();
-        for (Ban b : bans) {
-            bc.put(b.name, b.toconfig());
-        }
-        ban.setAll(bc);
-        ban.save();
-        tipban.save();
-        tban.save();
-        tcban.save();
-        cooldowns.save();
+//        ConfigSection bc = new ConfigSection();
+//        for (Ban b : bans) {
+//            bc.put(b.name, b.toconfig());
+//        }
+//        ban.setAll(bc);
+//        ban.save();
+//        tipban.save();
+//        tban.save();
+//        tcban.save();
+//        cooldowns.save();
+//
+//        Homes.save();
+//
+//        //CyberChat
+//        MainConfig.save();
+//        MuteConfig.save();
+//        RankListConfig.save();
 
-        Homes.save();
-
-        //CyberChat
-        MainConfig.save();
-        MuteConfig.save();
-        RankListConfig.save();
-
-        PasswordFactoy.onDisable();
+//        PasswordFactoy.onDisable();
 
         //Classes
-        ClassFactory.Saveall();
+//        ClassFactory.Saveall();
 
         try {
             //getMySqlConnection().close();

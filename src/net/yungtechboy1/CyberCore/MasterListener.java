@@ -10,6 +10,7 @@ import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.item.Item;
 import cn.nukkit.nbt.tag.CompoundTag;
 import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
+import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import cn.nukkit.Player;
@@ -73,16 +74,21 @@ public class MasterListener implements Listener {
             case Enchanting_0:
                 FormResponseModal frm = (FormResponseModal) pr.getResponse();
                 if (frm.getClickedButtonId() == 0) {
-                    System.out.println("Bye!");
                     if(cp.LastSentFormType == Enchanting_0){
                         Item e = Item.get(Block.ENCHANT_TABLE,3,1);
                         p.getInventory().addItem(e.setCustomName("TTTTTTTTTT"));
                     }
                     cp.LastSentFormType = NULL;
                 } else {
-                    System.out.println("HI!!!!!");
                     cp.showFormWindow(cp.getNewWindow());
-                    if(cp.LastSentFormType == Enchanting_0)cp.LastSentFormType = Enchanting_1;
+                    if(cp.LastSentFormType == Enchanting_0){
+                        //Take Hand
+                        cp.ReturnItemBeingEnchanted();
+                        Item i = cp.getInventory().getItemInHand();
+                        cp.getInventory().remove(i);
+                        cp.setItemBeingEnchanted(i);
+                        cp.LastSentFormType = Enchanting_1;
+                    }
                     if(cp.LastSentFormType == Class_0)cp.LastSentFormType = Class_1;
                     cp.clearNewWindow();
                 }

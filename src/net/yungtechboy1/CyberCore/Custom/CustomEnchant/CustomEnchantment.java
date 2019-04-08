@@ -41,6 +41,8 @@ public class CustomEnchantment extends Enchantment {
     public static final int KINGOFHEARTS = 40;
     public static final int RESTORATION = 40;
     public static final int CrateKey = 55;
+    public static final int MAX = 55;//ALWAYS THE MAX ENCHANT ID
+    public static final int VANILLA = 32;//ALWAYS 32
 
 
     public enum Tier {
@@ -326,13 +328,42 @@ public class CustomEnchantment extends Enchantment {
 
     }
 
+    public static ArrayList<Enchantment> GetRandomEnchant(Tier t, int count, Item itm) {
+        ArrayList<Enchantment> el = new ArrayList<>();
+        ArrayList<Enchantment> fel = new ArrayList<>();
+        for (int i = 0; i <= MAX; i++) {
+            Enchantment e = CreateEnchant(i);
+            if (e == null) continue;
+            if (i > VANILLA) {//Custom Enchant
+                CustomEnchantment ce = (CustomEnchantment) e;
+                if (ce.TTier.isGreaterThan(t) || !ce.canEnchant(itm)) continue;
+                int c = ce.ER.GetVal();
+                NukkitRandom nnr = new NukkitRandom();
+                NukkitRandom nr = new NukkitRandom((System.currentTimeMillis() / 1000L) / i * c + nnr.nextRange(0, 10000));
+                if (c < nr.nextRange(0, 100)) continue;
+            }
+            el.add(e);
+        }
+        NukkitRandom nr2 = new NukkitRandom((System.currentTimeMillis() / 1000L)+el.size());
+
+        for (int i = 0; i < count; i++) {
+            if (el.size() == 0) {
+                fel.add(null);
+                continue;
+            }
+            int key = nr2.nextRange(0, el.size() - 1);
+            fel.add(el.get(key));
+            el.remove(key);
+        }
+        return fel;
+    }
     public static ArrayList<Enchantment> GetRandomEnchant(Tier t, int count) {
         ArrayList<Enchantment> el = new ArrayList<>();
         ArrayList<Enchantment> fel = new ArrayList<>();
-        for (int i = 0; i <= 55; i++) {
+        for (int i = 0; i <= MAX; i++) {
             Enchantment e = CreateEnchant(i);
             if (e == null) continue;
-            if (i > 32) {//Custom Enchant
+            if (i > VANILLA) {//Custom Enchant
                 CustomEnchantment ce = (CustomEnchantment) e;
                 if (ce.TTier.isGreaterThan(t)) continue;
                 int c = ce.ER.GetVal();
