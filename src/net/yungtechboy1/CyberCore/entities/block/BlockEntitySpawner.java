@@ -31,7 +31,7 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
     public int minSpawnDelay;
     public int maxSpawnDelay;
 
-    public BlockEntitySpawner(FullChunk chunk, CompoundTag nbt, int eid,int llevel, int spawnRange, int minSpawnDelay, int maxSpawnDelay, int requiredPlayerRange) {
+    public BlockEntitySpawner(FullChunk chunk, CompoundTag nbt, int eid, int llevel, int spawnRange, int minSpawnDelay, int maxSpawnDelay, int requiredPlayerRange) {
 
         super(chunk, nbt);
         this.entityId = eid;
@@ -46,17 +46,18 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
 
     }
 
-    public int GetSEntityID(){
+    public int GetSEntityID() {
         return entityId;
     }
-    public int GetSpawnerLevel(){
+
+    public int GetSpawnerLevel() {
         return lvl;
     }
 
     public BlockEntitySpawner(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
 
-        System.out.println("STARRRRRRRRRRRRRRRRRR! "+nbt.toString());
+        System.out.println("STARRRRRRRRRRRRRRRRRR! " + nbt.toString());
         if (this.namedTag.contains("Type")) {
             this.entityId = this.namedTag.getInt("Type");
         }
@@ -87,6 +88,15 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
         this.scheduleUpdate();
     }
 
+    public String GetEntityNameFromID() {
+        switch (GetSEntityID()) {
+            case 4:
+                return "Pig";
+            default:
+                return getName();
+        }
+    }
+
     @Override
     public String toString() {
         return "BlockEntitySpawner{" +
@@ -111,7 +121,7 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
             return false;
         }
 
-int r = Utils.rand(this.minSpawnDelay, this.maxSpawnDelay);
+        int r = Utils.rand(this.minSpawnDelay, this.maxSpawnDelay);
 //        System.out.println("UPDATE "+this.x+" | "+this.y+" | "+this.z+" | WAIT: "+delay+"<"+r);
         if (this.delay++ >= r && !wait) {
 //            System.out.println("UPDATE "+this.x+" | "+this.y+" | "+this.z+" | DEWLAY TTTTTTTTTTTTTTTTTTTTT"+delay);
@@ -155,9 +165,9 @@ int r = Utils.rand(this.minSpawnDelay, this.maxSpawnDelay);
         return new CompoundTag()
                 .putString("id", MOB_SPAWNER)
                 .putInt("EntityId", this.entityId)
-                .putList(new ListTag<>("SpawnPotentials").add(new CompoundTag(){{
-                    putCompound("Entity",new CompoundTag(){{
-                        putString("id",entityId+"");
+                .putList(new ListTag<>("SpawnPotentials").add(new CompoundTag() {{
+                    putCompound("Entity", new CompoundTag() {{
+                        putString("id", entityId + "");
                     }});
                 }}))
                 .putInt("x", (int) this.x)

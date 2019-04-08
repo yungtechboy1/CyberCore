@@ -139,9 +139,14 @@ public abstract class BaseEntity extends EntityCreature implements EntityStackab
     }
 
     @Override
+    public String getName() {
+        return super.getName();
+    }
+
+    @Override
     public void SetStackCount(int amount) {
         namedTag.putInt("StackCount", amount);
-        setNameTag("Entity Stack Count :" + amount);
+        setNameTag(getName());
         setNameTagAlwaysVisible(true);
         saveNBT();
     }
@@ -325,6 +330,15 @@ public abstract class BaseEntity extends EntityCreature implements EntityStackab
         Block block = this.level.getBlock(this.temporalVector.setComponents(NukkitMath.floorDouble(this.x), NukkitMath.floorDouble(this.y + this.getHeight() - 0.18f), NukkitMath.floorDouble(this.z)));
         AxisAlignedBB bb = block.getBoundingBox();
         return bb != null && block.isSolid() && !block.isTransparent() && bb.intersectsWith(this.getBoundingBox());
+    }
+
+    public String GetEntityNameFromID() {
+        switch (getNetworkId()) {
+            case 4:
+                return "Pig";
+            default:
+                return getName();
+        }
     }
 
     @Override
