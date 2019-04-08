@@ -398,37 +398,38 @@ public class FactionListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void factionPVP(EntityDamageEvent factionDamage) {
         if (factionDamage.isCancelled()) return;
-        Faction pf = factions.FFactory.getFaction("peace");
-        int x = factionDamage.getEntity().getFloorX() >> 4;
-        int z = factionDamage.getEntity().getFloorZ() >> 4;
-        if (pf.GetPlots().contains(x + "|" + z)) {
-            if (factionDamage.getEntity() instanceof Player) {
-                if (((Player) factionDamage.getEntity()).isOp()) {
-                    factionDamage.setCancelled(false);
-                    return;
-                }
-            }
-            factionDamage.setCancelled();
-            return;
-        }
-        if (factionDamage instanceof EntityDamageByEntityEvent) {
-            if (!(factionDamage.getEntity() instanceof Player) || !(((EntityDamageByEntityEvent) factionDamage).getDamager() instanceof Player))
-                return;
-            String player1 = factionDamage.getEntity().getName();
-            String player2 = ((EntityDamageByEntityEvent) factionDamage).getDamager().getName();
-            ((Player) ((EntityDamageByEntityEvent) factionDamage).getDamager()).sendPopup(player1 + "'s Health: " + ((Player) factionDamage.getEntity()).getPlayer().getHealth() + "/" + ((Player) factionDamage.getEntity()).getPlayer().getMaxHealth());
-            String faction1 = factions.getPlayerFaction(player1.toLowerCase());
-            String faction2 = factions.getPlayerFaction(player2.toLowerCase());
-            if (faction1 == null || faction2 == null) return;
-            if (faction1.equalsIgnoreCase(faction2)) {
-                factionDamage.setCancelled(true);
-                return;
-            }
-            if (factions.isFactionsAllyed(faction1, faction2)) {
-                factionDamage.setCancelled(true);
-                return;
-            }
-        }
+//        factionDamage.get
+//        Faction pf = factions.FFactory.getFaction("peace");
+//        int x = factionDamage.getEntity().getFloorX() >> 4;
+//        int z = factionDamage.getEntity().getFloorZ() >> 4;
+//        if (pf.GetPlots().contains(x + "|" + z)) {
+//            if (factionDamage.getEntity() instanceof Player) {
+//                if (((Player) factionDamage.getEntity()).isOp()) {
+//                    factionDamage.setCancelled(false);
+//                    return;
+//                }
+//            }
+//            factionDamage.setCancelled();
+//            return;
+//        }
+//        if (factionDamage instanceof EntityDamageByEntityEvent) {
+//            if (!(factionDamage.getEntity() instanceof Player) || !(((EntityDamageByEntityEvent) factionDamage).getDamager() instanceof Player))
+//                return;
+//            String player1 = factionDamage.getEntity().getName();
+//            String player2 = ((EntityDamageByEntityEvent) factionDamage).getDamager().getName();
+//            ((Player) ((EntityDamageByEntityEvent) factionDamage).getDamager()).sendPopup(player1 + "'s Health: " + ((Player) factionDamage.getEntity()).getPlayer().getHealth() + "/" + ((Player) factionDamage.getEntity()).getPlayer().getMaxHealth());
+//            String faction1 = factions.getPlayerFaction(player1.toLowerCase());
+//            String faction2 = factions.getPlayerFaction(player2.toLowerCase());
+//            if (faction1 == null || faction2 == null) return;
+//            if (faction1.equalsIgnoreCase(faction2)) {
+//                factionDamage.setCancelled(true);
+//                return;
+//            }
+//            if (factions.isFactionsAllyed(faction1, faction2)) {
+//                factionDamage.setCancelled(true);
+//                return;
+//            }
+//        }
     }
 
     @EventHandler

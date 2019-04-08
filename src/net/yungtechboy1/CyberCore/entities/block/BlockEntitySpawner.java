@@ -112,9 +112,9 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
         }
 
 int r = Utils.rand(this.minSpawnDelay, this.maxSpawnDelay);
-        System.out.println("UPDATE "+this.x+" | "+this.y+" | "+this.z+" | WAIT: "+delay+"<"+r);
+//        System.out.println("UPDATE "+this.x+" | "+this.y+" | "+this.z+" | WAIT: "+delay+"<"+r);
         if (this.delay++ >= r && !wait) {
-            System.out.println("UPDATE "+this.x+" | "+this.y+" | "+this.z+" | DEWLAY TTTTTTTTTTTTTTTTTTTTT"+delay);
+//            System.out.println("UPDATE "+this.x+" | "+this.y+" | "+this.z+" | DEWLAY TTTTTTTTTTTTTTTTTTTTT"+delay);
             this.delay = 0;
 
             SpawnerCalculationsAsync SCA = new SpawnerCalculationsAsync(level.getEntities(), this, requiredPlayerRange, maxNearbyEntities);
@@ -125,10 +125,10 @@ int r = Utils.rand(this.minSpawnDelay, this.maxSpawnDelay);
     }
 
     public void afterUpdate(ArrayList<Entity> list) {
-        Server.getInstance().broadcastMessage("After Update"+list.size()+" | "+maxNearbyEntities);
+//        Server.getInstance().broadcastMessage("After Update"+list.size()+" | "+maxNearbyEntities);
         if (list.size() > 0) {
             if (list.size() <= this.maxNearbyEntities) {
-                System.out.println("CREATE ENTITYT");
+//                System.out.println("CREATE ENTITYT");
                 Entity entity = CustomFactory.SpawnEntityStack(this.entityId, this);
                 if (entity != null) {
                     entity.spawnToAll();

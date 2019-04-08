@@ -1,6 +1,7 @@
 package net.yungtechboy1.CyberCore.entities;
 
 import cn.nukkit.Server;
+import cn.nukkit.item.Item;
 import net.yungtechboy1.CyberCore.entities.monster.Monster;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
@@ -125,7 +126,7 @@ public abstract class BaseEntity extends EntityCreature implements EntityStackab
     public void RemoveStackCount(int a) {
         a = Math.abs(a);
         if (this.namedTag.contains("StackCount") && IsStackable()) {
-            int tc = a - GetStackCount();
+            int tc = GetStackCount()-a;
             SetStackCount(tc);
         }
 
@@ -133,19 +134,7 @@ public abstract class BaseEntity extends EntityCreature implements EntityStackab
 
     @Override
     public void kill() {
-        if (IsStackable()) {
-            if (GetStackCount() <= 1){
-                super.kill();
-                return;
-            }
-            if (GetStackCount() > 1) {
-                Server.getInstance().getLogger().info("Skip Kill!!!!!! Remove 1");
-                RemoveStackCount(1);
-                setHealth(getMaxHealth());
-                spawnToAll();
-                return;
-            }
-        }
+
         super.kill();
     }
 
@@ -344,10 +333,32 @@ public abstract class BaseEntity extends EntityCreature implements EntityStackab
             return false;
         }
 
+        if (getHealth() - source.getFinalDamage() < 1) {
+            System.out.println("KILL111111111");
+            if (IsStackable()) {
+                if (GetStackCount() <= 1) {
+                    super.attack(source);
+
+                    this.target = null;
+                    this.attackTime = 7;
+
+                    return true;
+                }else if (GetStackCount() > 1) {
+                    Server.getInstance().getLogger().info("Skip Kill!!!!!! Remove 1");
+                    RemoveStackCount(1);
+                    setHealth(getMaxHealth());
+                    for (Item i:getDrops())getLevel().dropItem(this,i);
+                    spawnToAll();
+                    return false;
+                }
+            }
+        }
+
         super.attack(source);
 
         this.target = null;
         this.attackTime = 7;
+
         return true;
     }
 

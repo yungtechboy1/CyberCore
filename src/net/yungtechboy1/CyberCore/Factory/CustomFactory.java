@@ -86,6 +86,7 @@ public class CustomFactory implements Listener {
         Entity stackEntity = null;
         for (Entity e : el) {
             if(!(e instanceof EntityStackable)) {
+                System.out.println("BAD WAY");
                 if (e.getNetworkId() == type && e.namedTag.contains("IsStack")) {//Same Entity and Stack
                     int _c = e.namedTag.getInt("Count");
                     int _m = e.namedTag.getInt("MaxStack");
@@ -97,14 +98,16 @@ public class CustomFactory implements Listener {
             }else{
                 System.out.println("CORRECT WAY");
                 ((EntityStackable) e).AddStackCount(1);
+                stackEntity = e;
+                break;
             }
         }
 
         if (stackEntity == null) {
             Vector3 temp = new Vector3();
-            temp.x = new NukkitRandom().nextRange(-16,16)+source.x;
-            temp.y = new NukkitRandom().nextRange(-5,5)+source.y;
-            temp.z = new NukkitRandom().nextRange(-16,16)+source.z;
+            temp.x = new NukkitRandom().nextRange(-7,7)+source.x;
+            temp.y = new NukkitRandom().nextRange(-4,4)+source.y;
+            temp.z = new NukkitRandom().nextRange(-7,7)+source.z;
             Vector3 sp = source.getLevel().getSafeSpawn(temp);
             CompoundTag nbt = new CompoundTag()
                     .putList(new ListTag<DoubleTag>("Pos")
@@ -128,12 +131,6 @@ public class CustomFactory implements Listener {
 
             return Entity.createEntity(type, chunk, nbt, args);
         } else {
-            int _c = stackEntity.namedTag.getInt("Count");
-            stackEntity.namedTag.remove("Count");
-            _c++;
-            stackEntity.namedTag.putInt("Count",_c);
-            stackEntity.setNameTag("Entity Stack Count"+_c);
-            stackEntity.saveNBT();
             stackEntity.onUpdate(Server.getInstance().getTick());
             return stackEntity;
         }
