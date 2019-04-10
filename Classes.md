@@ -1,62 +1,87 @@
-Good Idea!!!
+Base Classes
 
-    Specalizations
-        Miner - Mining and Digging
-            TNT-Specalist
-                Chance of spawning TNT that can destroy ores
-                20% increase in power with TNT
-            MineLife
-                10% increase in mine speed
-                
-        enchanter - Enchanting, Producing rare Potion and Books
-        scholar - Potion Making, Can create "super-food", potions, and splash-potions, BAREL,
-            Extensive knowledge of Potions
-                Fire Splash Potion
-                Ice Splash Potion
-                Nerve Gas Splash potion
-                
-        builder - Easier base building, Can create auto-gen walls,/fly within faction plot, craft TNT arrows, Cannon TNT...
-            Snow Hoe Enchant:
-                Only can be used by builder    
-                Can errect Snow Barriers with bow
-                LVL 1 - 5:
-                    9 Snow blocks Carrying Capacity
-                    1 Snow block regin every 5/lvl Secs
-                    Place 1 Snow block every 1 Sec 
-                LVL 6 - 10:
-                    9 Snow blocks Carrying Capacity + Level/2
-                    1 Snow block regin every 4/lvl Secs
-                    Place 1 Snow block every 1 Sec 
-                LVL 11 - 15:
-                    9 Snow blocks Carrying Capacity + level - 10
-                    1 Snow block regin every 3/lvl Secs
-                    Place 1 Snow block every 1 Sec 
-        crafter - Can craft special items (TNT arrows, Cannon TNT...), Alos Farmer... can Auto plant and 
-            Power Stomp
-                Creats a Shockwave around player
-                LVL 1 - 5 
-                    Shockwave 3 block splash damage @ Level*.5+1
-                    7 Block Plant Shockwave
-                    30/lvl cooldown
-                LVL 5 - 10
-                    Shockwave 5 block splash damage @ Level*.6+1
-                    12 Block Plant Shockwave
-                    30/lvl cooldown
-                LVL 10 - 15
-                    Shockwave 8 block splash damage @ Level*.7+1
-                    15 Block Plant Shockwave
-                    30/lvl cooldown
-        smith - Can combine Enchanted Books with items, craft enhanced weapons
-        Assasin - 
-            Silent movement
-                        Trained Killer and does 1.2X Damage (EG 5 * 1.2 = 6, 2.5 Hearts -> 3 Hearts attack)
-                        Get paid by server to kill players...The server helps you successed
-                        Can Pick-pocket players
-                            Using a fishing lure or tapping player a small inv will appear with 9 Random items for the player to attempt to grab
-                            Only 4 of the Items are actually stealable.
-                            Cooldown
-        Knight - 
-            Can hold Modified Sword
-            Trained Killers with 1.2X Better damage asorbtion.
-                    Protector
-                
+- Minner
+- Enchanter
+- Scholar
+- Builder
+- Crafter
+
+Specalizations
+    
+ - Miner - Mining and Digging
+   - TNT-Specalist
+     - Chance of spawning TNT that can destroy ores
+       - 20% increase in power with TNT
+        - MineLife
+          - 10% increase in mine speed
+   - MineLife
+     - Faster break times with each level
+        - 1-10 - 5% Faster
+        - 11-20 - 10% Faster
+        - 21-30 - 15% Faster
+        - 31-40 - 20% Faster
+        - 41-50 - 25% Faster
+- enchanter - Enchanting, Producing rare Potion and Books
+    - Every other class has a max 65% Success rate, and 100% Fail rate. Enchanters will always have a 100% Max Success rate and max 80% Fail rate
+      - The fail rate will decrease with each level
+    - BookWorm
+        - Regain Health when near books
+        - BookShelfs improve resulting enchant 2X - 5X
+    - Witch
+        - Enchants can have Quality Boosts
+            -   1-10 - 5-10% Boost
+- scholar - Potion Making, Can create "super-food", potions, and splash-potions, BARELs, and Drinks
+    -Drinks
+        - Give instant Health and Effect
+    - Can make Lingering Potions
+        - Potions that last 2 - 10 Mins
+   - Extensive knowledge of Potions
+     - Fire Splash Potion
+     - Ice Splash Potion
+     - Nerve Gas Splash potion
+            
+- builder - Easier base building, Can create auto-gen walls,/fly within faction plot, craft TNT arrows, Cannon TNT...
+    - Snow Hoe Enchant:
+        - Only can be used by builder    
+          - Can errect Snow Barriers with bow
+            - LVL 1 - 5:
+                - 9 Snow blocks Carrying Capacity
+                - 1 Snow block regin every 5/lvl Secs
+                - Place 1 Snow block every 1 Sec 
+            - LVL 6 - 10:
+                - 9 Snow blocks Carrying Capacity + Level/2
+                - 1 Snow block regin every 4/lvl Secs
+                - Place 1 Snow block every 1 Sec 
+            - LVL 11 - 15:
+                - 9 Snow blocks Carrying Capacity + level - 10
+                - 1 Snow block regin every 3/lvl Secs
+                Place 1 Snow block every 1 Sec 
+- crafter - Can craft special items (TNT arrows, Cannon TNT...), Alos Farmer... can Auto plant and 
+    - Power Stomp
+        - Creats a Shockwave around player
+        - LVL 1 - 5 
+            - Shockwave 3 block splash damage @ Level*.5+1
+            - 7 Block Plant Shockwave
+            - 30/lvl cooldown
+        - LVL 5 - 10
+            - Shockwave 5 block splash damage @ Level*.6+1
+            - 12 Block Plant Shockwave
+            - 30/lvl cooldown
+        - LVL 10 - 15
+            - Shockwave 8 block splash damage @ Level*.7+1
+            - 15 Block Plant Shockwave
+            - 30/lvl cooldown
+- smith - Can combine Enchanted Books with items, craft enhanced weapons
+- Assasin - 
+    - Silent movement
+                - Trained Killer and does 1.2X Damage (EG 5 * 1.2 = 6, 2.5 Hearts -> 3 Hearts attack)
+                - Get paid by server to kill players...The server helps you successed
+                - Can Pick-pocket players
+                    - Using a fishing lure or tapping player a small inv will appear with 9 Random items for the player to attempt to grab
+                    - Only 4 of the Items are actually stealable.
+                    - Cooldown
+- Knight - 
+    - Can hold Modified Sword
+    - Trained Killers with 1.2X Better damage asorbtion.
+            - Protector
+        
