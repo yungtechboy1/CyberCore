@@ -47,7 +47,7 @@ public class MasterListener implements Listener {
         plugin.initiatePlayer(p);
         String rank = plugin.RankFactory.getPlayerRank(p).getDisplayName();
         p.sendMessage(plugin.colorize("&2You Have Joined with the Rank: " + rank));
-        plugin.getCorePlayer(p).uuid = p.getUniqueId().toString();
+//        plugin.getCorePlayer(p).uuid = p.getUniqueId().toString();
         if (rank != null && rank.equalsIgnoreCase("op")) {
             p.setOp(true);
         } else {

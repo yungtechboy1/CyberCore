@@ -5,6 +5,7 @@ import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Messages;
 import net.yungtechboy1.CyberCore.Rank.RankList;
@@ -33,9 +34,9 @@ public class Spawn extends Command {
     }
 
     public static void runCommand(CommandSender s,String[] args, CyberCoreMain server){
-        if(s instanceof Player){
-            Player p = (Player)s;
-            int r = server.GetPlayerRankInt(p,true);
+        if(s instanceof CorePlayer){
+            CorePlayer p = (CorePlayer)s;
+            int r = p.kills;
             if(args.length == 1 && r > RankList.PERM_ADMIN_1){
                 Player t = server.getServer().getPlayer(args[0]);
                 if(t == null){

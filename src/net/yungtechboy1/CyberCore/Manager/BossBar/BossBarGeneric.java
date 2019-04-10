@@ -139,15 +139,10 @@ public class BossBarGeneric {
 
     boolean Created = false;
     public void create() {
-        System.out.println("CREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
         if(Created)return;
-        System.out.println("22222222222222222222222222222222222222");
         createBossEntity();
-        System.out.println("222222222222222222222222222222223333333333333333333333222222");
         sendAttributes();
-        System.out.println("222222222222222222222222222222224444444444444444444444444444222222");
         sendShowBossBar();
-        System.out.println("2222222222222222222222222222222222777777777777772222");
         Created = true;
     }
 
