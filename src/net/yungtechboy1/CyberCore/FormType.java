@@ -12,6 +12,8 @@ public final class FormType {
     public static enum MainForm {
 
         NULL,
+        Enchanting_0,
+        Enchanting_1,
         Class_0,
         Class_1,
         Class_2,
@@ -19,6 +21,7 @@ public final class FormType {
     }
 
     public static enum SubMenu {
+        Enchanting_Confirm,
         MainMenu,
         Offense,
         Defense,

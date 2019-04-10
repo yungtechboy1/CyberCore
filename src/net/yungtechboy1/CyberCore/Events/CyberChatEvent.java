@@ -1,16 +1,5 @@
-package net.yungtechboy1.CyberCore;
+package net.yungtechboy1.CyberCore.Events;
 
-import cn.nukkit.Server;
-import cn.nukkit.block.Block;
-import cn.nukkit.event.inventory.InventoryTransactionEvent;
-import cn.nukkit.form.element.ElementButton;
-import cn.nukkit.form.response.FormResponseModal;
-import cn.nukkit.form.response.FormResponseSimple;
-import cn.nukkit.form.window.FormWindowSimple;
-import cn.nukkit.item.Item;
-import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
-import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.event.EventHandler;
@@ -24,19 +13,16 @@ import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import org.apache.logging.log4j.core.Core;
 import sun.applet.Main;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static net.yungtechboy1.CyberCore.FormType.MainForm.*;
-
 /**
  * Created by carlt_000 on 1/22/2017.
  */
-public class MasterListener implements Listener {
+public class CyberChatEvent implements Listener {
     CyberCoreMain plugin;
-    public MasterListener(CyberCoreMain main){
+    public CyberChatEvent(CyberCoreMain main){
         plugin = main;
     }
 
@@ -49,70 +35,14 @@ public class MasterListener implements Listener {
         p.sendTitle(plugin.colorize("&l&bCyberTech"), plugin.colorize("&l&2Welcome!"),30,30, 10);
 
         plugin.initiatePlayer(p);
+        plugin.getLogger().info(p.getName());
         String rank = plugin.RankFactory.getPlayerRank(p).getDisplayName();
         p.sendMessage(plugin.colorize( "&2You Have Joined with the Rank: " + rank));
+        //plugin.Setnametag(event.getPlayer().getName());
         if (rank != null && rank.equalsIgnoreCase("op")) {
             p.setOp(true);
         } else {
             p.setOp(false);
-        }
-    }
-
-
-
-    //GUI Listener
-    @EventHandler
-    public void PFRE(PlayerFormRespondedEvent pr) {
-        int fid = pr.getFormID();
-        Player p = pr.getPlayer();
-        CorePlayer cp = ((CorePlayer) p);
-        switch (cp.LastSentFormType) {
-            case Class_0:
-            case Enchanting_0:
-                FormResponseModal frm = (FormResponseModal) pr.getResponse();
-                if (frm.getClickedButtonId() == 0) {
-                    System.out.println("Bye!");
-                    if(cp.LastSentFormType == Enchanting_0){
-                        Item e = Item.get(Block.ENCHANT_TABLE,3,1);
-                        p.getInventory().addItem(e.setCustomName("TTTTTTTTTT"));
-                    }
-                    cp.LastSentFormType = NULL;
-                } else {
-                    System.out.println("HI!!!!!");
-                    cp.showFormWindow(cp.getNewWindow());
-                    if(cp.LastSentFormType == Enchanting_0)cp.LastSentFormType = Enchanting_1;
-                    if(cp.LastSentFormType == Class_0)cp.LastSentFormType = Class_1;
-                    cp.clearNewWindow();
-                }
-                break;
-            case Class_1:
-                FormResponseSimple frs = (FormResponseSimple) pr.getResponse();
-                int k = frs.getClickedButtonId();
-                if(cp.LastSentSubMenu == FormType.SubMenu.MainMenu) {
-                    if (k == 0) {//Offense
-                        cp.showFormWindow(new FormWindowSimple("Choose your Class Catagory!", "Visit Cybertechpp.com for more info on classes!",
-                                new ArrayList<ElementButton>() {{
-                                    add(new ElementButton("Assassin"));
-                                    add(new ElementButton("Knight"));
-                                    add(new ElementButton("Raider"));
-                                    add(new ElementButton("Theif"));
-                                }}));
-                        cp.LastSentFormType = Class_1;
-                        cp.LastSentSubMenu = FormType.SubMenu.Offense;
-                    }
-                }else if(cp.LastSentSubMenu == FormType.SubMenu.Offense){
-                    switch (k){
-                        case 0:
-                            break;//Assassin
-                        case 1:
-                            break;//Knight
-                        case 2:
-                            break;//Raider
-                        case 3:
-                            break;//Theif
-                    }
-                }
-                break;
         }
     }
 
@@ -124,6 +54,7 @@ public class MasterListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCreation(PlayerCreationEvent event) {
         event.setPlayerClass(CorePlayer.class);
+        event.setBaseClass(CorePlayer.class);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

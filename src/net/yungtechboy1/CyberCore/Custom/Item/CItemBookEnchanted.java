@@ -18,22 +18,46 @@ public class CItemBookEnchanted extends Item {
     private int SuccessRate;
     private int FailRate;
 
-    public CItemBookEnchanted(Integer meta,int s,int f) {
-        this(meta,1,null,s,f);
+    public CItemBookEnchanted(Enchantment e) {
+
+        this(e.getId()<<4|e.getLevel(), 1, null);
     }
+    public CItemBookEnchanted(Enchantment e, int s, int f) {
+
+        this(e.getId()<<4|e.getLevel(), 1, null, s, f);
+    }
+
+    public CItemBookEnchanted(Integer meta, int s, int f) {
+        this(meta, 1, null, s, f);
+    }
+
     public CItemBookEnchanted(Integer meta) {
         this(meta, 1, null);
     }
-    public CItemBookEnchanted(Integer meta, int count, int s,int f) {
-        this(meta,count,null,s,f);
+
+    public CItemBookEnchanted(Integer meta, int count, int s, int f) {
+        this(meta, count, null, s, f);
     }
+
     public CItemBookEnchanted(Integer meta, int count) {
         this(meta, count, null);
     }
 
     public CItemBookEnchanted(Integer meta, int count, CompoundTag namedtag) {
         super(Item.ENCHANT_BOOK, meta, count, "Custom Enchanted Book");
-        E = CustomEnchantment.getEnchantFromIDFromItem(this, meta); //TODO IDK WHAT YOU WANT HERE???
+        E = CustomEnchantment.CreateEnchant(meta  >> 4,meta ^2032);
+        //127 Max Enchant
+        //15   Max lvl Book
+
+        //127<<4|15#
+        /*
+        * 127	00001111111	0x7f
+        * <<4	2032	11111110000	0x7f0
+        * |	15	00000001111	0xf
+        * =	2047	11111111111	0x7ff
+
+        * */
+
         if (namedtag != null && namedtag.contains("rates")) {
             SuccessRate = namedtag.getCompound("rates").getInt("s");
             FailRate = namedtag.getCompound("rates").getInt("f");
@@ -46,8 +70,8 @@ public class CItemBookEnchanted extends Item {
 
     public CItemBookEnchanted(Integer meta, int count, CompoundTag namedtag, int s, int f) {
         super(Item.ENCHANT_BOOK, meta, count, "Custom Enchanted Book");
-        E = CustomEnchantment.getEnchantFromIDFromItem(this, meta); //TODO IDK WHAT YOU WANT HERE???
-        if(namedtag != null)setCompoundTag(namedtag);
+        E = CustomEnchantment.CreateEnchant(meta  >> 4,meta ^2032);
+        if (namedtag != null) setCompoundTag(namedtag);
         SuccessRate = s;
         FailRate = f;
     }
