@@ -5,6 +5,8 @@ import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockIce;
 import cn.nukkit.block.BlockLiquid;
 import cn.nukkit.block.BlockUnknown;
+import cn.nukkit.blockentity.BlockEntity;
+import cn.nukkit.entity.passive.EntityPig;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
@@ -22,8 +24,12 @@ import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMS;
 import net.yungtechboy1.CyberCore.Commands.Homes.HomeManager;
 import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
+import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
+import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
 import net.yungtechboy1.CyberCore.Custom.CustomGlobalBlockPalette;
 import net.yungtechboy1.CyberCore.Custom.CustomStartGamePacket;
+import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
+import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
 import net.yungtechboy1.CyberCore.Data.UserSQL;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
@@ -37,6 +43,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionListener;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager;
 import net.yungtechboy1.CyberCore.Manager.SQLManager;
+import net.yungtechboy1.CyberCore.MobAI.AutoSpawnTask;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
 import net.yungtechboy1.CyberCore.Rank.ChatFormats;
 import net.yungtechboy1.CyberCore.Rank.Rank;
@@ -53,6 +60,7 @@ import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Data.CoreSQL;
 import net.yungtechboy1.CyberCore.Rank.RankFactory;
+import net.yungtechboy1.CyberCore.entities.animal.walking.Pig;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -206,6 +214,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         saveResource("ranks.yml");
         saveResource("config.yml");
 //        CustomGlobalBlockPalette.registerMapping((entry.id << 4) | entry.data);
+
+
         CustomGlobalBlockPalette.getOrCreateRuntimeId(0,0);
         getServer().getNetwork().registerPacket(ProtocolInfo.START_GAME_PACKET, CustomStartGamePacket.class);
 
@@ -213,6 +223,13 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        Item.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         addCreativeItem(Item.get(Block.ENCHANT_TABLE, 5, 1).setCustomName("TTTTTTTTTTTTTT"));
         ReloadBlockList(Block.ENCHANTING_TABLE,BlockEnchantingTable.class);
+
+        Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
+        ReloadBlockList(Block.MONSTER_SPAWNER,SpawnerWithLevelBlock.class);
+        Item.list[Item.BOOK] = CItemBook.class;
+        Item.list[Item.ENCHANT_BOOK] = CItemBookEnchanted.class;
+
+
 
         MainConfig = new Config(new File(getDataFolder(), "config.yml"));
         CoreSQL = new CoreSQL(this);
@@ -267,16 +284,18 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         //COMMANDS
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ChooseClass(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new BanCmd(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Ci(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Fix(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new IPBan(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Msg(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Reply(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Spawn(this));
+        //All Commands Up to this point are Updated
+        ///TODO FIX REST OF COMMANDS!
+        //getServer().getCommandMap().register("CyberCore", new Tban(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Balance(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Pay(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new BanCmd(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Ci(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Fix(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new IPBan(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Msg(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Reply(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Spawn(this));
-//        //getServer().getCommandMap().register("CyberCore", new Tban(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Top(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Vote(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Wild(this));
@@ -318,7 +337,17 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     }
 
     public void onLoad() {
+
+        Entity.registerEntity(EntityPig.NETWORK_ID+"",Pig.class);
+
+        BlockEntity.registerBlockEntity("MonsterSpawner", SpawnerWithLevelBlockEntity.class);
+
         CyberCoreMain.instance = this;
+
+//        MobPlugin.registerEntities();
+//        MobPlugin.registerItems();
+        getServer().getScheduler().scheduleRepeatingTask(new AutoSpawnTask(this), 5, true);
+
 
         //BossBar Manager
         //GOOD - Test Refine
@@ -360,18 +389,25 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     @Override
     public void onDisable() {
         super.onDisable();
-        ConfigSection bc = new ConfigSection();
-        for (Ban b : bans) {
-            bc.put(b.name, b.toconfig());
-        }
-        ban.setAll(bc);
-        ban.save();
-        tipban.save();
-        tban.save();
-        tcban.save();
-        cooldowns.save();
+//        ConfigSection bc = new ConfigSection();
+//        for (Ban b : bans) {
+//            bc.put(b.name, b.toconfig());
+//        }
+//        ban.setAll(bc);
+//        ban.save();
+//        tipban.save();
+//        tban.save();
+//        tcban.save();
+//        cooldowns.save();
+//
+//        Homes.save();
+//
+//        //CyberChat
+//        MainConfig.save();
+//        MuteConfig.save();
+//        RankListConfig.save();
 
-        Homes.save();
+//        PasswordFactoy.onDisable();
 
         //CyberChat
         MainConfig.save();
@@ -380,7 +416,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 
         //Classes
-        ClassFactory.Saveall();
+//        ClassFactory.Saveall();
 
         try {
             //getMySqlConnection().close();
@@ -714,7 +750,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     public void initiatePlayer(Player p) {
         try {
-            CoreSQL.loadUser(p);
+            CoreSQL.loadUser((CorePlayer) p);
         } catch (SQLException e) {
             e.printStackTrace();
         }

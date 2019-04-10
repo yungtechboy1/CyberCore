@@ -1,28 +1,23 @@
 package net.yungtechboy1.CyberCore;
 
-import cn.nukkit.Server;
-import cn.nukkit.block.Block;
-import cn.nukkit.event.inventory.InventoryTransactionEvent;
-import cn.nukkit.form.element.ElementButton;
-import cn.nukkit.form.response.FormResponseModal;
-import cn.nukkit.form.response.FormResponseSimple;
-import cn.nukkit.form.window.FormWindowSimple;
-import cn.nukkit.item.Item;
-import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
-import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
+import cn.nukkit.block.Block;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.*;
+import cn.nukkit.form.element.ElementButton;
+import cn.nukkit.form.response.FormResponseCustom;
+import cn.nukkit.form.response.FormResponseData;
+import cn.nukkit.form.response.FormResponseModal;
+import cn.nukkit.form.response.FormResponseSimple;
+import cn.nukkit.form.window.FormWindowSimple;
+import cn.nukkit.item.Item;
+import cn.nukkit.item.enchantment.Enchantment;
+import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
-import org.apache.logging.log4j.core.Core;
-import sun.applet.Main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +31,8 @@ import static net.yungtechboy1.CyberCore.FormType.MainForm.*;
  */
 public class MasterListener implements Listener {
     CyberCoreMain plugin;
-    public MasterListener(CyberCoreMain main){
+
+    public MasterListener(CyberCoreMain main) {
         plugin = main;
     }
 
@@ -73,24 +69,28 @@ public class MasterListener implements Listener {
             case Enchanting_0:
                 FormResponseModal frm = (FormResponseModal) pr.getResponse();
                 if (frm.getClickedButtonId() == 0) {
-                    System.out.println("Bye!");
-                    if(cp.LastSentFormType == Enchanting_0){
-                        Item e = Item.get(Block.ENCHANT_TABLE,3,1);
+                    if (cp.LastSentFormType == Enchanting_0) {
+                        Item e = Item.get(Block.ENCHANT_TABLE, 0, 1);
                         p.getInventory().addItem(e.setCustomName("TTTTTTTTTT"));
                     }
                     cp.LastSentFormType = NULL;
                 } else {
-                    System.out.println("HI!!!!!");
                     cp.showFormWindow(cp.getNewWindow());
-                    if(cp.LastSentFormType == Enchanting_0)cp.LastSentFormType = Enchanting_1;
-                    if(cp.LastSentFormType == Class_0)cp.LastSentFormType = Class_1;
+                    if (cp.LastSentFormType == Enchanting_0) {
+                        //Take Hand
+                        cp.ReturnItemBeingEnchanted();
+                        Item i = cp.getInventory().getItemInHand();
+                        cp.getInventory().remove(i);//Take item and Store it
+                        cp.setItemBeingEnchanted(i);
+                        cp.LastSentFormType = Enchanting_1;
+                    } else if (cp.LastSentFormType == Class_0) cp.LastSentFormType = Class_1;
                     cp.clearNewWindow();
                 }
                 break;
             case Class_1:
                 FormResponseSimple frs = (FormResponseSimple) pr.getResponse();
                 int k = frs.getClickedButtonId();
-                if(cp.LastSentSubMenu == FormType.SubMenu.MainMenu) {
+                if (cp.LastSentSubMenu == FormType.SubMenu.MainMenu) {
                     if (k == 0) {//Offense
                         cp.showFormWindow(new FormWindowSimple("Choose your Class Catagory!", "Visit Cybertechpp.com for more info on classes!",
                                 new ArrayList<ElementButton>() {{
@@ -101,9 +101,20 @@ public class MasterListener implements Listener {
                                 }}));
                         cp.LastSentFormType = Class_1;
                         cp.LastSentSubMenu = FormType.SubMenu.Offense;
+                    } else if (k == 4) {
+                        //TEMP-GIVE SPAWNER
+                        Item i = Item.get(Item.MONSTER_SPAWNER, 0, 1);
+                        i.setCompoundTag(new CompoundTag() {{
+                            putInt("Level", 1);
+                            putInt("Type", 12);
+                            putShort("MinSpawnDelay", 20 * 10);
+                            putShort("MaxSpawnDelay", 20 * 10 + 10);
+                        }});
+                        cp.sendMessage("Gave ITem!");
+                        cp.getInventory().addItem(i);
                     }
-                }else if(cp.LastSentSubMenu == FormType.SubMenu.Offense){
-                    switch (k){
+                } else if (cp.LastSentSubMenu == FormType.SubMenu.Offense) {
+                    switch (k) {
                         case 0:
                             break;//Assassin
                         case 1:
@@ -114,6 +125,27 @@ public class MasterListener implements Listener {
                             break;//Theif
                     }
                 }
+                break;
+            case Enchanting_1:
+                FormResponseCustom frc = (FormResponseCustom) pr.getResponse();
+                FormResponseData frd = frc.getStepSliderResponse(3);
+                int ke = frd.getElementID();
+                cp.sendMessage(frd.getElementContent()+"<<<<<<<");
+                Enchantment e = cp.GetStoredEnchants().get(ke);
+                if(e == null){
+                    cp.sendMessage("Error!");
+                }
+/*
+* cp.setNewWindow(new FormWindowCustom("Choose your Class Catagory!",
+                    new ArrayList<Element>() {{
+                        addAll(CustomEnchantment.PrepareEnchantList(cp.GetStoredEnchants(GetTier(),3,item)));
+                        add(new ElementStepSlider("TE3", new ArrayList<String>() {{
+                            add("1");
+                            add("2");
+                            add("3");
+                        }}, 0));
+                    }}));
+* */
                 break;
         }
     }
@@ -152,7 +184,7 @@ public class MasterListener implements Listener {
             return;
         }
         String FinalChat = formatForChat(event.getPlayer(), event.getMessage());
-        if(FinalChat == null)return;
+        if (FinalChat == null) return;
         if (plugin.LM.containsKey(event.getPlayer().getName().toLowerCase()) && plugin.LM.get(event.getPlayer().getName().toLowerCase()).equalsIgnoreCase(FinalChat)) {
             event.getPlayer().sendMessage(FinalChat);
             return;
@@ -167,18 +199,18 @@ public class MasterListener implements Listener {
     }
 
     public String formatForChat(Player player, String chat) {
-        HashMap<String, Object> badwords = new HashMap<String, Object>(){{
-            put("fuck","f***");
-            put("shit","s***");
-            put("nigger","kitty");
-            put("nigga","boi");
-            put("bitch","Sweetheart");
-            put("hoe","tool");
-            put("ass","butt");
+        HashMap<String, Object> badwords = new HashMap<String, Object>() {{
+            put("fuck", "f***");
+            put("shit", "s***");
+            put("nigger", "kitty");
+            put("nigga", "boi");
+            put("bitch", "Sweetheart");
+            put("hoe", "tool");
+            put("ass", "butt");
         }};
         String faction;
         Faction pf = plugin.getPlayerFaction(player);
-        if ( pf != null) {
+        if (pf != null) {
             faction = pf.GetDisplayName();
             //FactionFormat = TextFormat.GRAY+FactionFormat.replace("{value}",fp.getFaction().getTag())+TextFormat.WHITE;
         } else {
@@ -188,9 +220,9 @@ public class MasterListener implements Listener {
         //ANTI BADWORDS
         String chatb4 = chat;
         String chatafter = chat;
-        for(String s: chat.split(" ")){
-            if(!badwords.containsKey(s.toLowerCase()))continue;
-            chatafter = chatafter.replaceAll("(?i)"+s,badwords.get(s.toLowerCase()).toString());
+        for (String s : chat.split(" ")) {
+            if (!badwords.containsKey(s.toLowerCase())) continue;
+            chatafter = chatafter.replaceAll("(?i)" + s, badwords.get(s.toLowerCase()).toString());
         }
         /*
         Fucks up words like Class and BAss
@@ -206,7 +238,7 @@ public class MasterListener implements Listener {
         //ANTI WORK AROUND BADWORDS
         //@TODO remove all spaces and use Regex to replace all Instaces of it
 
-        return plugin.RankFactory.getPlayerRank(player).getChat_format().format(faction,plugin.RankFactory.getPlayerRank(player).getDisplayName(),player,chatafter);
+        return plugin.RankFactory.getPlayerRank(player).getChat_format().format(faction, plugin.RankFactory.getPlayerRank(player).getDisplayName(), player, chatafter);
 /*
         put("Chat-Format", "{rank}{faction}{player-name} > {msg}");
         put("Faction-Format", "[{value}]");

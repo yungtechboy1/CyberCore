@@ -1,26 +1,20 @@
 package net.yungtechboy1.CyberCore;
 
-import cn.nukkit.AdventureSettings;
 import cn.nukkit.Player;
 import cn.nukkit.PlayerFood;
-import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.block.BlockDragonEgg;
 import cn.nukkit.block.BlockNoteblock;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
-import cn.nukkit.event.player.PlayerKickEvent;
-import cn.nukkit.event.player.PlayerLoginEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.item.Item;
-import cn.nukkit.level.Level;
+import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.math.*;
-import cn.nukkit.nbt.tag.*;
 import cn.nukkit.network.SourceInterface;
 import cn.nukkit.network.protocol.*;
-import cn.nukkit.utils.TextFormat;
 import co.aikar.timings.Timing;
 import co.aikar.timings.Timings;
 import com.j256.ormlite.stmt.query.In;
@@ -29,14 +23,11 @@ import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Spring;
-import net.yungtechboy1.CyberCore.Custom.CustomStartGamePacket;
 import net.yungtechboy1.CyberCore.Rank.Rank;
 import net.yungtechboy1.CyberCore.Rank.RankList;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.UUID;
 
 public class CorePlayer extends Player {
 
@@ -44,11 +35,62 @@ public class CorePlayer extends Player {
     public FormType.MainForm LastSentFormType = FormType.MainForm.NULL;
     public FormType.SubMenu LastSentSubMenu = FormType.SubMenu.MainMenu;
     private FormWindow nw;
+    public boolean MuteMessage = false;
+    public String LastMessageSentTo = null;
 
+
+    public boolean IsItemBeingEnchanted() {
+        return getItemBeingEnchanted() != null;
+    }
+
+    public void clearItemBeingEnchanted() {
+        setItemBeingEnchanted(null);
+    }
+
+    public Item getItemBeingEnchanted() {
+        return ItemBeingEnchanted;
+    }
+
+    public void setItemBeingEnchanted(Item itemBeingEnchanted) {
+        if (IsItemBeingEnchanted()) {
+
+        }
+        ItemBeingEnchanted = itemBeingEnchanted;
+    }
+
+    private Item ItemBeingEnchanted = null;
+
+    public boolean isItemBeingEnchantedLock() {
+        return ItemBeingEnchantedLock;
+    }
+
+    public void removeItemBeingEnchantedLock() {
+        setItemBeingEnchantedLock(false);
+    }
+
+    public void setItemBeingEnchantedLock() {
+        setItemBeingEnchantedLock(true);
+    }
+
+    public void setItemBeingEnchantedLock(boolean itemBeingEnchantedLock) {
+        ItemBeingEnchantedLock = itemBeingEnchantedLock;
+    }
+
+    private boolean ItemBeingEnchantedLock = false;
+
+    public void ReturnItemBeingEnchanted() {
+        if (IsItemBeingEnchanted() && !isItemBeingEnchantedLock()) {
+            Item i = getItemBeingEnchanted();
+            getInventory().addItem(i);
+            clearItemBeingEnchanted();
+            removeItemBeingEnchantedLock();
+        }
+    }
 
     public Integer money = 0;
     public Integer kills = 0;
     public Integer deaths = 0;
+    public Integer fixcoins = 0;
     public Integer banned = 0;
     public String faction_id = null;
     public HashMap<String, Object> extraData = new HashMap<>();
@@ -60,6 +102,17 @@ public class CorePlayer extends Player {
     boolean uw = false;
 
     private Rank rank = RankList.PERM_GUEST.getRank();
+
+    public void SetRank(RankList r) {
+        SetRank(r.getRank());
+    }
+    public void SetRank(Rank r) {
+        rank = r;
+    }
+
+    public Rank GetRank() {
+        return rank;
+    }
 
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
         super(interfaz, clientID, ip, port);
@@ -349,6 +402,21 @@ public class CorePlayer extends Player {
         //Check to see if Player as medic or Restoration
         PlayerFood pf = getFoodData();
         return super.onUpdate(currentTick);
+    }
+
+    public ArrayList<Enchantment> MasterEnchantigList = null;
+
+    public void ReloadMasterEnchatingList() {
+        MasterEnchantigList = null;
+    }
+
+    public ArrayList<Enchantment> GetStoredEnchants() {
+        return MasterEnchantigList;
+    }
+
+    public ArrayList<Enchantment> GetStoredEnchants(CustomEnchantment.Tier tier, int i, Item item) {
+        if (MasterEnchantigList == null) MasterEnchantigList = CustomEnchantment.GetRandomEnchant(tier, 3, item);
+        return MasterEnchantigList;
     }
 //
 //        int tickDiff = currentTick - this.lastUpdate;
