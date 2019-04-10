@@ -299,14 +299,14 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         //COMMANDS
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ChooseClass(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new BanCmd(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Ci(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Fix(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new IPBan(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Msg(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Reply(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Spawn(this));
-//        //getServer().getCommandMap().register("CyberCore", new Tban(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new BanCmd(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Ci(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Fix(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new IPBan(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Msg(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Reply(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Spawn(this));
+        //getServer().getCommandMap().register("CyberCore", new Tban(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Top(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Vote(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Wild(this));
