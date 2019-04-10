@@ -70,7 +70,6 @@ public class CoreSQL extends MySQL {
         } else {
             createUser(uuid, ip);
             CorePlayer p = plugin.getCorePlayer(uuid);
-            p.uuid = uuid;
             p.kills = 0;
             p.deaths = 0;
             p.fixcoins = 0;

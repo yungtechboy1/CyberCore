@@ -47,9 +47,18 @@ public class UserSQL extends SQLite{
             if(player != null) {
                 String query = saveQuery;
                 for(String data:columns.keySet()) {
-                    query = query.replace(":"+data, player.getClass().getField(data).get(player).toString());
+                    if(data.equalsIgnoreCase("uuid")) {
+                        query = query.replace(":uuid", "'"+player.getUniqueId().toString()+"'");
+                    }else {
+                        if(player.getClass().getField(data).getType() == String.class) {
+                            query = query.replace(":" + data, "'"+player.getClass().getField(data).get(player).toString()+"'");
+                        } else {
+                            query = query.replace(":" + data, player.getClass().getField(data).get(player).toString());
+                        }
+                    }
                 }
-                executeUpdate(saveQuery.replace(":uuid", "'"+player.getUniqueId().toString()+"'"));
+                plugin.log(query);
+                executeUpdate(query);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -64,13 +73,16 @@ public class UserSQL extends SQLite{
         try {
             List<HashMap<String,Object>> data = executeSelect(loadQuery, "uuid", uuid, columns.keySet());
             CorePlayer p = plugin.getCorePlayer(uuid);
-            p.uuid = uuid;
-            p.money = (Integer) data.get(0).get("money");
-            p.kills = (Integer) data.get(0).get("kills");
-            p.deaths = (Integer) data.get(0).get("deaths");
-            p.faction_id = (String) data.get(0).get("faction_id");
-            p.setBanned((Integer) data.get(0).get("banned") != 0);
+            for(String sel: columns.keySet()) {
+                if(!sel.equalsIgnoreCase("uuid")) {
+                    p.getClass().getField(sel).set(p, data.get(0).get(sel));
+                }
+            }
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
     }
