@@ -33,6 +33,8 @@ public class CorePlayer extends Player {
     public FormType.MainForm LastSentFormType = FormType.MainForm.NULL;
     public FormType.SubMenu LastSentSubMenu = FormType.SubMenu.MainMenu;
     private FormWindow nw;
+    public boolean MuteMessage = false;
+    public String LastMessageSentTo = null;
 
 
     public boolean IsItemBeingEnchanted() {
@@ -86,6 +88,7 @@ public class CorePlayer extends Player {
     public Integer money = 0;
     public Integer kills = 0;
     public Integer deaths = 0;
+    public Integer fixcoins = 0;
     public Integer banned = 0;
     public String faction_id = null;
     public String uuid;
@@ -95,6 +98,17 @@ public class CorePlayer extends Player {
     boolean uw = false;
 
     private Rank rank = RankList.PERM_GUEST.getRank();
+
+    public void SetRank(RankList r) {
+        SetRank(r.getRank());
+    }
+    public void SetRank(Rank r) {
+        rank = r;
+    }
+
+    public Rank GetRank() {
+        return rank;
+    }
 
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
         super(interfaz, clientID, ip, port);
@@ -386,6 +400,7 @@ public class CorePlayer extends Player {
     public ArrayList<Enchantment> GetStoredEnchants() {
         return MasterEnchantigList;
     }
+
     public ArrayList<Enchantment> GetStoredEnchants(CustomEnchantment.Tier tier, int i, Item item) {
         if (MasterEnchantigList == null) MasterEnchantigList = CustomEnchantment.GetRandomEnchant(tier, 3, item);
         return MasterEnchantigList;

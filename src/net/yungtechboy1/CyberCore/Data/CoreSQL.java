@@ -7,6 +7,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Rank.RankList;
 import ru.nukkit.dblib.DbLib;
 import sun.applet.Main;
 
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CoreSQL extends MySQL{
+public class CoreSQL extends MySQL {
 
 
     public CoreSQL(CyberCoreMain plugin) {
@@ -31,36 +32,38 @@ public class CoreSQL extends MySQL{
     public boolean checkUser(String identity) {
         String query = "SELECT * FROM mcpe WHERE gamertag=':gamertag'";
         try {
-            ArrayList<HashMap<String, Object>> data = executeSelect(query,"gamertag", identity.toLowerCase(), null);
-            if(data != null && !data.isEmpty()) return true;
+            ArrayList<HashMap<String, Object>> data = executeSelect(query, "gamertag", identity.toLowerCase(), null);
+            if (data != null && !data.isEmpty()) return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         query = "SELECT * FROM mcpe WHERE uuid=':uuid'";
         try {
-            ArrayList<HashMap<String, Object>> data = executeSelect(query,"uuid", identity, null);
-            if(data != null && !data.isEmpty()) return true;
+            ArrayList<HashMap<String, Object>> data = executeSelect(query, "uuid", identity, null);
+            if (data != null && !data.isEmpty()) return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
 
-    public void loadUser(Player player) throws SQLException {
+    public void loadUser(CorePlayer player) throws SQLException {
         String uuid = player.getUniqueId().toString();
         String ip = player.getAddress();
-        if(checkUser(uuid)) {
-            String[] selectors = {"uuid","last_ip","rank"};
+        if (checkUser(uuid)) {
+            String[] selectors = {"uuid", "last_ip", "rank"};
             String query = "SELECT * FROM mcpe WHERE uuid=':uuid'";
             try {
                 ArrayList<HashMap<String, Object>> data = executeSelect(query, "uuid", uuid, selectors);
-                if(!data.get(0).get("last_ip").equals(ip)) {
+                if (!data.get(0).get("last_ip").equals(ip)) {
                     Config ip_change = new Config(new File(plugin.getDataFolder(), "ip_changes.yml"));
                     ip_change.set(uuid, ip_change.getList(uuid).add(ip));
                     ip_change.save();
                 }
                 int rank = (int) data.get(0).get("rank");
-                plugin.RankFactory.RankCache.put(uuid, rank);
+                int fc = (int) data.get(0).get("FixCoins");
+                player.SetRank(RankList.GetRankFromInt(rank));
+                player.fixcoins = fc;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -70,6 +73,7 @@ public class CoreSQL extends MySQL{
             p.uuid = uuid;
             p.kills = 0;
             p.deaths = 0;
+            p.fixcoins = 0;
             p.money = 300;
             p.faction_id = "no_faction";
             p.setBanned(false);
@@ -82,7 +86,7 @@ public class CoreSQL extends MySQL{
 
     public void createUser(String uuid, String ip) {
         try {
-            executeUpdate("insert into mcpe (uuid, last_ip) values ('"+uuid+"' , '"+ip+"')");
+            executeUpdate("insert into mcpe (uuid, last_ip) values ('" + uuid + "' , '" + ip + "')");
             plugin.log("User: " + uuid + " - added to DB");
             plugin.UserSQL.createUser(uuid);
             int rank = 0;

@@ -52,7 +52,10 @@ public class CustomEnchantment extends Enchantment {
         Standard(2),
         Upgraded(3),
         Eternal(4),
-        Legendary(5);
+        Legendary(5),
+        Rare(6),
+        Untold(7),
+        Unheard(8);
 
         private int Rank;
 
@@ -74,6 +77,12 @@ public class CustomEnchantment extends Enchantment {
                     return Eternal;
                 case 5:
                     return Legendary;
+                case 6:
+                    return Rare;
+                case 7:
+                    return Untold;
+                case 8:
+                    return Unheard;
                 default:
                     return Unknown;
             }
@@ -322,6 +331,18 @@ public class CustomEnchantment extends Enchantment {
         }
 
         return null;
+    }
+    public static Enchantment[] getAllEnchantFromItem(Item i) {
+        if (!i.hasEnchantments()) {
+            return null;
+        }
+
+        ArrayList<Enchantment> el = new ArrayList<>();
+        for (CompoundTag entry : i.getNamedTag().getList("ench", CompoundTag.class).getAll()) {
+                el.add(CreateEnchant(entry.getShort("id"), entry.getShort("lvl")));
+        }
+
+        return (Enchantment[])el.toArray();
     }
 
     public void RunPassive() {
