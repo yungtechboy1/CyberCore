@@ -106,54 +106,54 @@ public class FactionListener implements Listener {
     }
 
     //GUI Listener
-    @EventHandler
-    public void PFRE(PlayerFormRespondedEvent pr) {
-        int fid = pr.getFormID();
-        Player p = pr.getPlayer();
-        CorePlayer cp = ((CorePlayer) p);
-        switch (cp.LastSentFormType) {
-            case Class_0:
-                FormResponseModal frm = (FormResponseModal) pr.getResponse();
-                if (frm.getClickedButtonId() == 0) {
-                    System.out.println("Bye!");
-                    cp.LastSentFormType = NULL;
-                } else {
-                    System.out.println("HI!!!!!");
-                    cp.showFormWindow(cp.getNewWindow());
-                    cp.LastSentFormType = Class_1;
-                    cp.clearNewWindow();
-                }
-                break;
-            case Class_1:
-                FormResponseSimple frs = (FormResponseSimple) pr.getResponse();
-                int k = frs.getClickedButtonId();
-                if(cp.LastSentSubMenu == FormType.SubMenu.MainMenu) {
-                    if (k == 0) {//Offense
-                        cp.showFormWindow(new FormWindowSimple("Choose your Class Catagory!", "Visit Cybertechpp.com for more info on classes!",
-                                new ArrayList<ElementButton>() {{
-                                    add(new ElementButton("Assassin"));
-                                    add(new ElementButton("Knight"));
-                                    add(new ElementButton("Raider"));
-                                    add(new ElementButton("Theif"));
-                                }}));
-                        cp.LastSentFormType = Class_1;
-                        cp.LastSentSubMenu = FormType.SubMenu.Offense;
-                    }
-                }else if(cp.LastSentSubMenu == FormType.SubMenu.Offense){
-                    switch (k){
-                        case 0:
-                            break;//Assassin
-                        case 1:
-                            break;//Knight
-                        case 2:
-                            break;//Raider
-                        case 3:
-                            break;//Theif
-                    }
-                }
-                break;
-        }
-    }
+//    @EventHandler
+//    public void PFRE(PlayerFormRespondedEvent pr) {
+//        int fid = pr.getFormID();
+//        Player p = pr.getPlayer();
+//        CorePlayer cp = ((CorePlayer) p);
+//        switch (cp.LastSentFormType) {
+//            case Class_0:
+//                FormResponseModal frm = (FormResponseModal) pr.getResponse();
+//                if (frm.getClickedButtonId() == 0) {
+//                    System.out.println("Bye!");
+//                    cp.LastSentFormType = NULL;
+//                } else {
+//                    System.out.println("HI!!!!!");
+//                    cp.showFormWindow(cp.getNewWindow());
+//                    cp.LastSentFormType = Class_1;
+//                    cp.clearNewWindow();
+//                }
+//                break;
+//            case Class_1:
+//                FormResponseSimple frs = (FormResponseSimple) pr.getResponse();
+//                int k = frs.getClickedButtonId();
+//                if(cp.LastSentSubMenu == FormType.SubMenu.MainMenu) {
+//                    if (k == 0) {//Offense
+//                        cp.showFormWindow(new FormWindowSimple("Choose your Class Catagory!", "Visit Cybertechpp.com for more info on classes!",
+//                                new ArrayList<ElementButton>() {{
+//                                    add(new ElementButton("Assassin"));
+//                                    add(new ElementButton("Knight"));
+//                                    add(new ElementButton("Raider"));
+//                                    add(new ElementButton("Theif"));
+//                                }}));
+//                        cp.LastSentFormType = Class_1;
+//                        cp.LastSentSubMenu = FormType.SubMenu.Offense;
+//                    }
+//                }else if(cp.LastSentSubMenu == FormType.SubMenu.Offense){
+//                    switch (k){
+//                        case 0:
+//                            break;//Assassin
+//                        case 1:
+//                            break;//Knight
+//                        case 2:
+//                            break;//Raider
+//                        case 3:
+//                            break;//Theif
+//                    }
+//                }
+//                break;
+//        }
+//    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void FationsJoinEvent(PlayerJoinEvent event) {
@@ -398,37 +398,38 @@ public class FactionListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void factionPVP(EntityDamageEvent factionDamage) {
         if (factionDamage.isCancelled()) return;
-        Faction pf = factions.FFactory.getFaction("peace");
-        int x = factionDamage.getEntity().getFloorX() >> 4;
-        int z = factionDamage.getEntity().getFloorZ() >> 4;
-        if (pf.GetPlots().contains(x + "|" + z)) {
-            if (factionDamage.getEntity() instanceof Player) {
-                if (((Player) factionDamage.getEntity()).isOp()) {
-                    factionDamage.setCancelled(false);
-                    return;
-                }
-            }
-            factionDamage.setCancelled();
-            return;
-        }
-        if (factionDamage instanceof EntityDamageByEntityEvent) {
-            if (!(factionDamage.getEntity() instanceof Player) || !(((EntityDamageByEntityEvent) factionDamage).getDamager() instanceof Player))
-                return;
-            String player1 = factionDamage.getEntity().getName();
-            String player2 = ((EntityDamageByEntityEvent) factionDamage).getDamager().getName();
-            ((Player) ((EntityDamageByEntityEvent) factionDamage).getDamager()).sendPopup(player1 + "'s Health: " + ((Player) factionDamage.getEntity()).getPlayer().getHealth() + "/" + ((Player) factionDamage.getEntity()).getPlayer().getMaxHealth());
-            String faction1 = factions.getPlayerFaction(player1.toLowerCase());
-            String faction2 = factions.getPlayerFaction(player2.toLowerCase());
-            if (faction1 == null || faction2 == null) return;
-            if (faction1.equalsIgnoreCase(faction2)) {
-                factionDamage.setCancelled(true);
-                return;
-            }
-            if (factions.isFactionsAllyed(faction1, faction2)) {
-                factionDamage.setCancelled(true);
-                return;
-            }
-        }
+//        factionDamage.get
+//        Faction pf = factions.FFactory.getFaction("peace");
+//        int x = factionDamage.getEntity().getFloorX() >> 4;
+//        int z = factionDamage.getEntity().getFloorZ() >> 4;
+//        if (pf.GetPlots().contains(x + "|" + z)) {
+//            if (factionDamage.getEntity() instanceof Player) {
+//                if (((Player) factionDamage.getEntity()).isOp()) {
+//                    factionDamage.setCancelled(false);
+//                    return;
+//                }
+//            }
+//            factionDamage.setCancelled();
+//            return;
+//        }
+//        if (factionDamage instanceof EntityDamageByEntityEvent) {
+//            if (!(factionDamage.getEntity() instanceof Player) || !(((EntityDamageByEntityEvent) factionDamage).getDamager() instanceof Player))
+//                return;
+//            String player1 = factionDamage.getEntity().getName();
+//            String player2 = ((EntityDamageByEntityEvent) factionDamage).getDamager().getName();
+//            ((Player) ((EntityDamageByEntityEvent) factionDamage).getDamager()).sendPopup(player1 + "'s Health: " + ((Player) factionDamage.getEntity()).getPlayer().getHealth() + "/" + ((Player) factionDamage.getEntity()).getPlayer().getMaxHealth());
+//            String faction1 = factions.getPlayerFaction(player1.toLowerCase());
+//            String faction2 = factions.getPlayerFaction(player2.toLowerCase());
+//            if (faction1 == null || faction2 == null) return;
+//            if (faction1.equalsIgnoreCase(faction2)) {
+//                factionDamage.setCancelled(true);
+//                return;
+//            }
+//            if (factions.isFactionsAllyed(faction1, faction2)) {
+//                factionDamage.setCancelled(true);
+//                return;
+//            }
+//        }
     }
 
     @EventHandler

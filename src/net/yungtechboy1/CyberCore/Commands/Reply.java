@@ -5,6 +5,7 @@ import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
@@ -26,11 +27,12 @@ public class Reply extends Command{
     @Override
     public boolean execute(CommandSender s, String label, String[] args) {
         CyberCoreMain server = Owner;
-        if (s instanceof Player) {
-            Player p = (Player) s;
-            if (args.length >= 1 && server.LastMsg.containsKey(p.getName().toLowerCase())) {
+        if (s instanceof CorePlayer) {
+            CorePlayer p = (CorePlayer) s;
+            if (args.length >= 1 && server.LastMsg.containsKey(p.getName().toLowerCase()) || p.LastMessageSentTo != null) {
                 String a = server.LastMsg.get(p.getName().toLowerCase());
-                Player t = server.getServer().getPlayer(a);
+                CorePlayer t = (CorePlayer)server.getServer().getPlayer(a);
+                if(t == null)t = (CorePlayer)server.getServer().getPlayerExact(p.LastMessageSentTo);
                 if (t == null) {
                     if (a.equalsIgnoreCase("SERVER")) {
                         String msg = implode(" ", args);
@@ -50,8 +52,10 @@ public class Reply extends Command{
                 t.sendMessage(TextFormat.YELLOW + "[" + p.getName() + " > You] : " + TextFormat.AQUA + msg);
                 p.sendMessage(TextFormat.YELLOW + "[You > " + t.getName() + "] : " + TextFormat.AQUA + msg);
                 server.getLogger().info(TextFormat.YELLOW + "[" + p.getName() + " > " + t.getName() + "] : " + TextFormat.AQUA + msg);
-                server.LastMsg.put(p.getName().toLowerCase(), t.getName().toLowerCase());
-                server.LastMsg.put(t.getName().toLowerCase(), p.getName().toLowerCase());
+                p.LastMessageSentTo = t.getName();
+                t.LastMessageSentTo = p.getName();
+//                server.LastMsg.put(p.getName().toLowerCase(), t.getName().toLowerCase());
+//                server.LastMsg.put(t.getName().toLowerCase(), p.getName().toLowerCase());
             } else {
                 s.sendMessage(TextFormat.YELLOW + "Usage :/r <message>");
                 return true;

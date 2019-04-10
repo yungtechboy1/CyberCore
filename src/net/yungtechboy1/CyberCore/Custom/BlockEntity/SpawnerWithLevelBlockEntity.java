@@ -10,30 +10,38 @@ import cn.nukkit.nbt.tag.CompoundTag;
 public class SpawnerWithLevelBlockEntity extends BlockEntitySpawner {
 
     public Integer Lvl = 0;
-    public SpawnerWithLevelBlockEntity(FullChunk chunk, CompoundTag nbt, Integer level){
+    public SpawnerWithLevelBlockEntity(FullChunk chunk, CompoundTag nbt, Integer ll){
         super(chunk,nbt);
-        Lvl = level;
-        if(level == 1){
-            this.namedTag.putShort("MinSpawnDelay", 20*60);
-            this.namedTag.putShort("MaxSpawnDelay", 20*60*6);
+        Lvl = ll;
+        if(ll == 1){
+            this.namedTag.putShort("MinSpawnDelay", 20*5);
+            this.namedTag.putShort("MaxSpawnDelay", 20*10);
+//            this.namedTag.putShort("MinSpawnDelay", 20*60);
+//            this.namedTag.putShort("MaxSpawnDelay", 20*60*6);
             this.namedTag.putShort("MaxNearbyEntities", 5);
             //this.namedTag.putShort("RequiredPlayerRange", 2400);
-        }else if(level == 2){
+        }else if(ll == 2){
             this.namedTag.putShort("MinSpawnDelay", 20*45);
             this.namedTag.putShort("MaxSpawnDelay", 20*60*5);
             this.namedTag.putShort("MaxNearbyEntities", 15);
-        }else if(level == 3){
+        }else if(ll == 3){
             this.namedTag.putShort("MinSpawnDelay", 20*30);
             this.namedTag.putShort("MaxSpawnDelay", 20*60*4);
             this.namedTag.putShort("MaxNearbyEntities", 25);
-        }else if(level == 4){
+        }else if(ll == 4){
             this.namedTag.putShort("MinSpawnDelay", 20*30);
             this.namedTag.putShort("MaxSpawnDelay", 20*60*3);
             this.namedTag.putShort("MaxNearbyEntities", 35);
-        }else if(level == 5){
+        }else if(ll == 5){
             this.namedTag.putShort("MinSpawnDelay", 20*15);
             this.namedTag.putShort("MaxSpawnDelay", 20*60*2);
             this.namedTag.putShort("MaxNearbyEntities", 45);
         }
+
+        this.spawnRange = this.namedTag.getShort("SpawnRange");
+        this.minSpawnDelay = this.namedTag.getShort("MinSpawnDelay");
+        this.maxSpawnDelay = this.namedTag.getShort("MaxSpawnDelay");
+        this.maxNearbyEntities = this.namedTag.getShort("MaxNearbyEntities");
+        this.Lvl = ll;
     }
 }

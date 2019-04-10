@@ -103,7 +103,7 @@ public class MobPlugin implements Listener {
         CCM.getServer().getPluginManager().registerEvents(this, CCM);
 
         if (spawnDelay > 0) {
-            CCM.getServer().getScheduler().scheduleRepeatingTask(new AutoSpawnTask(this), spawnDelay, true);
+//            CCM.getServer().getScheduler().scheduleRepeatingTask(new AutoSpawnTask(this), spawnDelay, true);
         }
 
         Utils.logServerInfo(String.format("Plugin enabling successful [aiEnabled:%s] [autoSpawnTick:%d]", MOB_AI_ENABLED, spawnDelay));
@@ -187,7 +187,7 @@ public class MobPlugin implements Listener {
         return this.pluginConfig;
     }
 
-    private void registerEntities() {
+    public static void registerEntities() {
         // register living entities
         Entity.registerEntity(Bat.class.getSimpleName(), Bat.class);
         Entity.registerEntity(Chicken.class.getSimpleName(), Chicken.class);
@@ -228,7 +228,7 @@ public class MobPlugin implements Listener {
         Utils.logServerInfo("registerEntites: done.");
     }
 
-    private void registerItems() {
+    public static void registerItems() {
         // register the new items
         Item.addCreativeItem(new ItemMuttonCooked());
         Item.addCreativeItem(new ItemMuttonRaw());
@@ -236,8 +236,8 @@ public class MobPlugin implements Listener {
         Item.addCreativeItem(new ItemInkSac());
 
         // register the items as food
-        Food.registerFood(new FoodNormal(6, 9.6F).addRelative(MobPluginItems.COOKED_MUTTON), CCM);
-        Food.registerFood(new FoodNormal(2, 1.2F).addRelative(MobPluginItems.RAW_MUTTON), CCM);
+//        Food.registerFood(new FoodNormal(6, 9.6F).addRelative(MobPluginItems.COOKED_MUTTON), CCM);
+//        Food.registerFood(new FoodNormal(2, 1.2F).addRelative(MobPluginItems.RAW_MUTTON), CCM);
 
         Item.list[MobPluginItems.COOKED_MUTTON] = ItemMuttonCooked.class;
         Item.list[MobPluginItems.RAW_MUTTON] = ItemMuttonRaw.class;
