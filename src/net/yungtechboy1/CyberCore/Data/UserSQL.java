@@ -38,6 +38,17 @@ public class UserSQL extends SQLite{
         return connection;
     }
 
+    public boolean checkUser(String uuid) {
+        String query = "SELECT * FROM "+table+" WHERE uuid=':uuid'";
+        try {
+            ArrayList<HashMap<String, Object>> data = executeSelect(query,"uuid", uuid, null);
+            if(data != null && !data.isEmpty()) return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public void createUser(String uuid) throws SQLException {
         executeUpdate(addQuery.replace(":uuid", "'"+uuid+"'"));
     }
@@ -60,11 +71,7 @@ public class UserSQL extends SQLite{
                 plugin.log(query);
                 executeUpdate(query);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
+        } catch (SQLException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }
     }

@@ -53,7 +53,7 @@ public class FactionListener implements Listener {
         String playern = event.getEntity().getName();
         EntityDamageEvent cause = event.getEntity().getLastDamageCause();
         event.getEntity().setExperience(0);
-        player.addDeath();
+        player.addDeaths();
         if (cause != null && cause.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
             if (cause instanceof EntityDamageByEntityEvent && event.getEntity() instanceof Player) {
                 Entity e = ((EntityDamageByEntityEvent) cause).getDamager();
@@ -82,7 +82,7 @@ public class FactionListener implements Listener {
                         kf.HandleKillEvent(event);
                         kf.TakePower(2);
                     }
-                    killer.addKill();
+                    killer.addKills();
                     if (killer.kills == 5) {
                         plugin.getServer().broadcastMessage(TextFormat.GREEN + killername + " is on a 5 KillStreak!");
                         //if(kf != null)plugin.AddFactionPower(kf, 5);

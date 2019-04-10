@@ -92,8 +92,8 @@ public class SQLite {
     }
 
 
-    public List<HashMap<String, Object>> executeSelect(String query, String identifier, String search, Set<String> selectors) throws SQLException {
-        List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
+    public ArrayList<HashMap<String, Object>> executeSelect(String query, String identifier, String search, Set<String> selectors) throws SQLException {
+        ArrayList<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
         Connection connection = connectToDb();
         if (connection == null) return null;
         ResultSet resultSet = connection.createStatement().executeQuery(query.replace(":"+identifier, search));
