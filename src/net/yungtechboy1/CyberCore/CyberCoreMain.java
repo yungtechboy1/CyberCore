@@ -765,7 +765,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     public void initiatePlayer(Player p) {
         try {
-            CoreSQL.loadUser(p);
+            CoreSQL.loadUser((CorePlayer) p);
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -91,7 +91,6 @@ public class CorePlayer extends Player {
     public Integer fixcoins = 0;
     public Integer banned = 0;
     public String faction_id = null;
-    public String uuid;
     public HashMap<String, Object> extraData = new HashMap<>();
 
     long uct = 0;
