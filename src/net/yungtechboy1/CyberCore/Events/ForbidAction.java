@@ -15,6 +15,8 @@ import cn.nukkit.event.inventory.InventoryPickupItemEvent;
 import cn.nukkit.event.player.*;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
+import java.security.acl.Owner;
+
 /**
  * Created by carlt_000 on 2/4/2017.
  */
@@ -91,11 +93,7 @@ public class ForbidAction implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
-        if (Main.PasswordFactoy.isPlayerLoggedIn(event.getPlayer())) return;
-        String cmd = event.getMessage().substring(1).split(" ")[0];
-        if ((cmd != null) && ((cmd.equalsIgnoreCase("register")) || (cmd.equalsIgnoreCase("login"))))
-            return;
-        event.setCancelled();
+        cancel(event.getPlayer(), event);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
@@ -131,6 +129,6 @@ public class ForbidAction implements Listener {
     }
 
     private void cancel(Player player, cn.nukkit.event.Cancellable event) {
-        if (!Main.PasswordFactoy.GetPassword(player).getLoggedin()) event.setCancelled();
+        if (Main.getCorePlayer(player).frozen) event.setCancelled();
     }
 }

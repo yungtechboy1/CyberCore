@@ -16,6 +16,8 @@ import cn.nukkit.network.Network;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.Commands.*;
+import net.yungtechboy1.CyberCore.Commands.Econ.Balance;
+import net.yungtechboy1.CyberCore.Commands.Econ.Pay;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMS;
 import net.yungtechboy1.CyberCore.Commands.Homes.HomeManager;
@@ -107,7 +109,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     //Classes / MMO
     public net.yungtechboy1.CyberCore.Factory.ClassFactory ClassFactory;
     //PasswordFactoy
-    public net.yungtechboy1.CyberCore.Factory.PasswordFactoy PasswordFactoy;
     //CustomFactory
     public net.yungtechboy1.CyberCore.Factory.CustomFactory CustomFactory;
     //FactoriesA
@@ -214,29 +215,14 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         ReloadBlockList(Block.ENCHANTING_TABLE,BlockEnchantingTable.class);
 
         MainConfig = new Config(new File(getDataFolder(), "config.yml"));
-        //Save = new SaveMain(this);
-        SQLSaveManager = new SQLManager(this);
-
         CoreSQL = new CoreSQL(this);
         UserSQL = new UserSQL(this, "server-data");
 
 
         PurgeManager = new PurgeManager(this);
-        //KDR Manager - All Good
-        //GOOD
-        //Floating Text
-        //Threaded ONLY RUN FOR TESTING
-        //TESTING
         FTM = new FloatingTextFactory(this);
         FloatingTextFactory.AddFloatingText(new FloatingTextContainer(FTM, getServer().getLevelByName("world").getSafeSpawn(), "TESTTTT"));
-
-
-        //Mob Plugin
-        //GOOD - Should all be ready! Just add modifications for custom Entity drops and etc
         MP = new MobPlugin(this);
-
-//        GOOD
-        ECON = new EconManager(this);
         FM = new FactionsMain(this, new FactionSQL(this, "server-data"));
 //        getServer().getScheduler().scheduleRepeatingTask(new UnMuteTask(this), 20 * 15);
 //        getServer().getScheduler().scheduleRepeatingTask(new ClearSpamTick(this), 20 * 5);
@@ -246,17 +232,16 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         HomeFactory = new HomeManager(this);
         RankFactory = new RankFactory(this);
-        //TODO
-//        AuctionFactory = new AuctionFactory(this);
+//      AuctionFactory = new AuctionFactory(this);
 
         MuteConfig = new Config(new File(getDataFolder(), "Mute.yml"), Config.YAML);
 
-//        ban = new Config(new File(this.getDataFolder(), "ban.yml"), Config.YAML);
-//        if (ban.getAll().size() > 0) {
-//            for (Object c : ban.getAll().values().toArray()) {
-//                if(c instanceof ConfigSection)bans.add(new Ban((ConfigSection)c));
-//            }
-//        }
+        ban = new Config(new File(this.getDataFolder(), "ban.yml"), Config.YAML);
+        if (ban.getAll().size() > 0) {
+            for (Object c : ban.getAll().values().toArray()) {
+                if(c instanceof ConfigSection)bans.add(new Ban((ConfigSection)c));
+            }
+        }
         tban = new Config(new File(this.getDataFolder(), "tban.yml"), Config.YAML);
         tcban = new Config(new File(this.getDataFolder(), "tcban.yml"), Config.YAML);
         tipban = new Config(new File(this.getDataFolder(), "tipban.yml"), Config.YAML);
@@ -282,6 +267,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         //COMMANDS
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ChooseClass(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Balance(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Pay(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new BanCmd(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Ci(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Fix(this));
@@ -342,36 +329,16 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         return CyberCoreMain.instance;
     }
 
-
-//    Deprecated for public database --------------------------------------------
-//    public Connection getMySqlConnection() {
-//        try {
-//            if (Connect != null && Connect.isClosed()) Connect = null;
-//            if (Connect != null) return Connect;
-//            Class.forName("com.mysql.jdbc.Driver");
-//            getLogger().info(TextFormat.GREEN+"Connecting to database...");
-//            Connect = DriverManager.getConnection("jdbc:mysql://209.126.102.26/terratide_db?user=terratide_db&password=terratide_db&autoreconnect=true");
-//            return Connect;
-//            //} catch (Exception ignore) {
-//        } catch (SQLException ex) {
-//            // handle any errors
-//            getServer().getLogger().info("SQLException: " + ex.getMessage());
-//            getServer().getLogger().info("SQLState: " + ex.getSQLState());
-//            getServer().getLogger().info("VendorError: " + ex.getErrorCode());
-//            Connect = null;
-//        } catch (Exception ignore) {
-//            getServer().getLogger().info(ignore.getClass().getName() + ": " + ignore.getMessage());
-//            Connect = null;
-//        }
-//        return null;
-//    }
-
     public void log(String string) {
         getLogger().info(colorize(string));
     }
 
     public String colorize(String str) {
-        return str.replace('&', '§');
+        return colorize(str, "");
+    }
+
+    public String colorize(String str, String player) {
+        return str.replace('&', '§').replace("{player}", player);
     }
 
     public Map<TimeUnit, Long> computeDiff(Date date1, Date date2) {
@@ -411,7 +378,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         MuteConfig.save();
         RankListConfig.save();
 
-        PasswordFactoy.onDisable();
 
         //Classes
         ClassFactory.Saveall();
@@ -419,6 +385,13 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         try {
             //getMySqlConnection().close();
         } catch (Exception ex) {
+        }
+    }
+
+    public void savePlayer(String id) {
+        CorePlayer player;
+        if((player = getCorePlayer(id)).isOnline()) {
+            UserSQL.saveUser(player);
         }
     }
 
@@ -447,6 +420,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
             }
             return true;
         }
+        return false;
+    }
+
+    public boolean isOnline(String id) {
+        if (getServer().getPlayer(id) != null || getServer().getPlayer(UUID.fromString(id)).isPresent()) return true;
         return false;
     }
 

@@ -23,6 +23,7 @@ import cn.nukkit.network.protocol.*;
 import cn.nukkit.utils.TextFormat;
 import co.aikar.timings.Timing;
 import co.aikar.timings.Timings;
+import com.j256.ormlite.stmt.query.In;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
@@ -52,6 +53,9 @@ public class CorePlayer extends Player {
     public String faction_id = null;
     public HashMap<String, Object> extraData = new HashMap<>();
 
+
+    public boolean frozen = false;
+
     long uct = 0;
     boolean uw = false;
 
@@ -61,20 +65,29 @@ public class CorePlayer extends Player {
         super(interfaz, clientID, ip, port);
     }
 
-    public Integer addDeath() {
-        return deaths += 1;
+
+    public Integer addDeaths() {
+        return addDeaths(1);
     }
 
     public Integer addDeaths(Integer amount) {
         return deaths += amount;
     }
 
-    public Integer addKill() {
-        return kills += 1;
+    public Integer addKills() {
+        return addKills(1);
     }
 
     public Integer addKills(Integer amount) {
         return kills += amount;
+    }
+
+    public Integer addMoney(Integer amount) {
+        return money += amount;
+    }
+
+    public Integer subtractMoney(Integer amount) {
+        return money -= amount;
     }
 
     public double calculateKD() {
