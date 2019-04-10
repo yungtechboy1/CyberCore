@@ -61,7 +61,7 @@ public class Fix extends CheckPermCommand {
             if (skip) {
                 Integer q = 60;
                 int S = CheckPerms(commandSender);
-                if (S == 1) q = 60 * 60 * 12;
+                if (S == 1) q = 60 * 60 * 12;//Hun?!
                 if (S == 2) q = 60 * 60 * 8;
                 if (S == 3) q = 60 * 60 * 4;
                 if (S == 4) q = 60 * 60;

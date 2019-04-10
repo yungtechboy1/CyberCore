@@ -165,7 +165,7 @@ public class BlockEnchantingTable extends BlockTransparentMeta {
             cp.LastSentFormType = FormType.MainForm.Enchanting_0;
             cp.setNewWindow(new FormWindowCustom("Choose your Class Catagory!",
                     new ArrayList<Element>() {{
-                        addAll(CustomEnchantment.PrepareEnchantList(CustomEnchantment.GetRandomEnchant(GetTier(), 3)));
+                        addAll(CustomEnchantment.PrepareEnchantList(cp.GetStoredEnchants(GetTier(),3,item)));
                         add(new ElementStepSlider("TE3", new ArrayList<String>() {{
                             add("1");
                             add("2");
