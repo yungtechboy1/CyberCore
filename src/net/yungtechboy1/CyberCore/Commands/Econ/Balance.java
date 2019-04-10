@@ -11,11 +11,11 @@ public class Balance extends Command {
 
     public Balance(CyberCoreMain plugin) {
         super("balance");
+        this.plugin = plugin;
         String[] aliases = {"bal", "money", "credit", "coins", "pesos", "bank"};
         this.setAliases(aliases);
-        this.setUsage("&l&7Usage: /bal [player]");
+        this.setUsage(plugin.colorize("&o&7Usage: /bal [player]"));
         this.setDescription(getUsage());
-        this.plugin = plugin;
     }
 
     @Override
