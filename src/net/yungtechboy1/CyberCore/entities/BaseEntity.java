@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.entities;
 
 import cn.nukkit.Server;
 import cn.nukkit.item.Item;
+import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.entities.monster.Monster;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
@@ -126,7 +127,7 @@ public abstract class BaseEntity extends EntityCreature implements EntityStackab
     public void RemoveStackCount(int a) {
         a = Math.abs(a);
         if (this.namedTag.contains("StackCount") && IsStackable()) {
-            int tc = GetStackCount()-a;
+            int tc = GetStackCount() - a;
             SetStackCount(tc);
         }
 
@@ -140,15 +141,14 @@ public abstract class BaseEntity extends EntityCreature implements EntityStackab
 
     @Override
     public String getName() {
-        return super.getName()+"11111111";
+        return super.getName() + "11111111";
     }
-
 
 
     @Override
     public void SetStackCount(int amount) {
         namedTag.putInt("StackCount", amount);
-        setNameTag(GetEntityNameFromID()+" Count :"+amount);
+        setNameTag(GetEntityNameFromID() + " Count :" + amount + "\n " + TextFormat.RED + "Health : " + getHealth() + " / " + getMaxHealth());
         setNameTagAlwaysVisible(true);
         saveNBT();
     }
@@ -337,7 +337,7 @@ public abstract class BaseEntity extends EntityCreature implements EntityStackab
     //Todo
     public String GetEntityNameFromID() {
         switch (getSaveId()) {
-            case 4+"":
+            case 12 + "":
                 return "Pig";
             default:
                 return getName();
@@ -360,17 +360,19 @@ public abstract class BaseEntity extends EntityCreature implements EntityStackab
                     this.attackTime = 7;
 
                     return true;
-                }else if (GetStackCount() > 1) {
+                } else if (GetStackCount() > 1) {
                     Server.getInstance().getLogger().info("Skip Kill!!!!!! Remove 1");
                     RemoveStackCount(1);
                     setHealth(getMaxHealth());
-                    for (Item i:getDrops())getLevel().dropItem(this,i);
+                    for (Item i : getDrops()) getLevel().dropItem(this, i);
                     spawnToAll();
                     return false;
                 }
             }
+        } else {
+            setNameTag(GetEntityNameFromID() + " Count :" + GetStackCount() + "\n " + TextFormat.RED + "Health : " + getHealth() + " / " + getMaxHealth());
+            spawnToAll();
         }
-
         super.attack(source);
 
         this.target = null;

@@ -15,6 +15,15 @@ public enum RankList {
     String name;
     String chat_prefix;
 
+
+    public static RankList  GetRankFromInt(int i){
+        if(i == 0)return PERM_GUEST;
+        if(i == 1)return PERM_MEMBER;
+        if(i == 3)return PERM_VIP;
+        if(i == 5)return PERM_OP;
+        return PERM_GUEST;
+    }
+
     public int getID() {
         return ID;
     }

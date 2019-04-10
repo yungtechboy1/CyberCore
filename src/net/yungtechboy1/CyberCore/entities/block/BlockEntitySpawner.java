@@ -17,6 +17,7 @@ import net.yungtechboy1.CyberCore.entities.EntityStackable;
 import net.yungtechboy1.CyberCore.entities.animal.walking.Pig;
 import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
+import javax.swing.text.html.StyleSheet;
 import java.util.ArrayList;
 
 public class BlockEntitySpawner extends BlockEntitySpawnable {
@@ -24,7 +25,7 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
     private int entityId = -1;
     public int spawnRange;
     public int maxNearbyEntities;
-    public int requiredPlayerRange;
+    public int requiredPlayerRange = 32;
     private int lvl;
 
     private int delay = 0;
@@ -47,6 +48,11 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
         this.namedTag.putShort("RequiredPlayerRange", requiredPlayerRange);
         this.requiredPlayerRange = 32;
 
+    }
+
+    @Override
+    public boolean isValid() {
+        return super.isValid();
     }
 
     public int GetSEntityID() {
@@ -149,15 +155,50 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
                         System.out.println("GOING TO + " +((EntityStackable)entity).GetStackCount());
                     }
                 }
+            }else{
+                System.out.println("YEAAAAA FULL");
             }
         }
+    }
+
+    @Override
+    protected void initBlockEntity() {
+        System.out.println("INITTTTTT");
+        if (this.namedTag.contains("Type")) {
+            this.entityId = this.namedTag.getInt("Type");
+        }
+
+        if (!this.namedTag.contains("SpawnRange") || !(this.namedTag.get("SpawnRange") instanceof ShortTag)) {
+            this.namedTag.putShort("SpawnRange", 8);
+        }
+
+        if (!this.namedTag.contains("MinSpawnDelay") || !(this.namedTag.get("MinSpawnDelay") instanceof ShortTag)) {
+            this.namedTag.putShort("MinSpawnDelay", 2400);//2 Min
+        }
+
+        if (!this.namedTag.contains("MaxSpawnDelay") || !(this.namedTag.get("MaxSpawnDelay") instanceof ShortTag)) {
+            this.namedTag.putShort("MaxSpawnDelay", 20 * 60 * 8);//6 Mins
+        }
+
+        if (!this.namedTag.contains("MaxNearbyEntities") || !(this.namedTag.get("MaxNearbyEntities") instanceof ShortTag)) {
+            this.namedTag.putShort("MaxNearbyEntities", 2);
+        }
+        if (this.namedTag.contains("Level")) {
+            this.lvl = this.namedTag.getInt("Level");
+        }else{
+            lvl = 1;
+        }
+
+
+        super.initBlockEntity();
+        onUpdate();
     }
 
     @Override
     public void saveNBT() {
         super.saveNBT();
 
-        this.namedTag.putInt("EntityId", this.entityId);
+        this.namedTag.putInt("Type", this.entityId);
         this.namedTag.putInt("Level", this.lvl);
         this.namedTag.putShort("SpawnRange", this.spawnRange);
         this.namedTag.putShort("MinSpawnDelay", this.minSpawnDelay);
