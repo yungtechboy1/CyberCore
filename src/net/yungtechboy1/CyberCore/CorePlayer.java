@@ -50,7 +50,6 @@ public class CorePlayer extends Player {
     public Integer deaths = 0;
     public Integer banned = 0;
     public String faction_id = null;
-    public String uuid;
     public HashMap<String, Object> extraData = new HashMap<>();
 
     long uct = 0;
@@ -66,7 +65,7 @@ public class CorePlayer extends Player {
         return deaths += 1;
     }
 
-    public Integer addDeath(Integer amount) {
+    public Integer addDeaths(Integer amount) {
         return deaths += amount;
     }
 
