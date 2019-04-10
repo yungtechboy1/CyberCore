@@ -147,7 +147,7 @@ public class AdvancedWindow extends FormWindow {
         }
 
         this.response = new FormResponseCustom(responses, dropdownResponses, inputResponses,
-                sliderResponses, stepSliderResponses, toggleResponses, null);
+                sliderResponses, stepSliderResponses, toggleResponses);
     }
 
     /**

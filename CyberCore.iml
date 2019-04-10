@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager">
-    <output url="file://$MODULE_DIR$/out/artifacts/CyberCore" />
-    <output-test url="file:///test/CyberCore" />
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/out" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="DbLib-1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="nukkit-1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Nukkit-master" level="project" />
     <orderEntry type="library" name="nukkit-master" level="project" />
   </component>

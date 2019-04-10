@@ -50,8 +50,8 @@ public class CoreSQL extends MySQL {
     public void loadUser(CorePlayer player) throws SQLException {
         String uuid = player.getUniqueId().toString();
         String ip = player.getAddress();
-        if (checkUser(uuid)) {
-            String[] selectors = {"uuid", "last_ip", "rank"};
+        if(checkUser(uuid) && plugin.UserSQL.checkUser(uuid)) {
+            String[] selectors = {"uuid","last_ip","rank"};
             String query = "SELECT * FROM mcpe WHERE uuid=':uuid'";
             try {
                 ArrayList<HashMap<String, Object>> data = executeSelect(query, "uuid", uuid, selectors);
@@ -67,6 +67,15 @@ public class CoreSQL extends MySQL {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        } else if(checkUser(uuid) && !plugin.UserSQL.checkUser(uuid)){
+            CorePlayer p = plugin.getCorePlayer(uuid);
+            p.kills = 0;
+            p.deaths = 0;
+            p.money = 300;
+            p.faction_id = "no_faction";
+            p.setBanned(false);
+            plugin.UserSQL.saveUser(p);
+            return;
         } else {
             createUser(uuid, ip);
             CorePlayer p = plugin.getCorePlayer(uuid);
@@ -90,6 +99,18 @@ public class CoreSQL extends MySQL {
             plugin.UserSQL.createUser(uuid);
             int rank = 0;
             plugin.RankFactory.RankCache.put(uuid, rank);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveUser(CorePlayer player) {
+        try {
+            if(player != null) {
+                String query = "update mcpe set last_ip=':last_ip', rank=:rank";
+                query = query.replace(":uuid", player.getUniqueId().toString()).replace(":rank", plugin.getPlayerRank(player).getId().toString());
+                executeUpdate(query);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
