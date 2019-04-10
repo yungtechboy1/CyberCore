@@ -47,9 +47,18 @@ public class UserSQL extends SQLite{
             if(player != null) {
                 String query = saveQuery;
                 for(String data:columns.keySet()) {
-                    query = query.replace(":"+data, player.getClass().getField(data).get(player).toString());
+                    if(data.equalsIgnoreCase("uuid")) {
+                        query = query.replace(":uuid", "'"+player.getUniqueId().toString()+"'");
+                    }else {
+                        if(player.getClass().getField(data).getType() == String.class) {
+                            query = query.replace(":" + data, "'"+player.getClass().getField(data).get(player).toString()+"'");
+                        } else {
+                            query = query.replace(":" + data, player.getClass().getField(data).get(player).toString());
+                        }
+                    }
                 }
-                executeUpdate(saveQuery.replace(":uuid", "'"+player.getUniqueId().toString()+"'"));
+                plugin.log(query);
+                executeUpdate(query);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -71,6 +80,10 @@ public class UserSQL extends SQLite{
             p.faction_id = (String) data.get(0).get("faction_id");
             p.setBanned((Integer) data.get(0).get("banned") != 0);
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
     }

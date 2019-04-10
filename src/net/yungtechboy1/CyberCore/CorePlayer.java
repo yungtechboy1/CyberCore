@@ -118,7 +118,7 @@ public class CorePlayer extends Player {
         return deaths += 1;
     }
 
-    public Integer addDeath(Integer amount) {
+    public Integer addDeaths(Integer amount) {
         return deaths += amount;
     }
 
