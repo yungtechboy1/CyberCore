@@ -20,7 +20,9 @@ import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.Commands.*;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMS;
+import net.yungtechboy1.CyberCore.Commands.Homes.DelHome;
 import net.yungtechboy1.CyberCore.Commands.Homes.HomeManager;
+import net.yungtechboy1.CyberCore.Commands.Homes.SetHome;
 import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
@@ -35,6 +37,7 @@ import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
+import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Home;
 import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionListener;
@@ -311,11 +314,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         //getServer().getCommandMap().register("CyberCore", new Tban(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Top(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Vote(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Wild(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Wild(this));
 //
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Home(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SetHome(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new DelHome(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new net.yungtechboy1.CyberCore.Commands.Homes.Home(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SetHome(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new DelHome(this));
 //
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new AA(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ClassCmd(this));

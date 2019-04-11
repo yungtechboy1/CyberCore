@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParameter;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
@@ -24,8 +25,13 @@ public class DelHome extends Command {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (args.length != 1 || !(sender instanceof Player)) return false;
-        Player p = (Player) sender;
-        Owner.HomeFactory.DelPlayerHome(p, args[0]);
+        CorePlayer p = (CorePlayer) sender;
+        if (!p.CheckHomeKey(args[0])) {
+            p.sendMessage("Error! You don't have a home named '" + args[0] + "'!");
+            return true;
+        }
+        p.AddHome(args[0]);
+        p.sendMessage("Success! Home saved as '" + args[0] + "'!");
         return true;
     }
 }

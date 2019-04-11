@@ -47,6 +47,27 @@ public class CoreSQL extends MySQL {
         return false;
     }
 
+    public void loadUserHouses(CorePlayer player) throws SQLException {
+        String uuid = player.getUniqueId().toString();
+
+        String[] selectors = {"owner", "username", "pos"};
+        String query = "SELECT * FROM `Homes` WHERE uuid=':uuid'";
+        try {
+            ArrayList<HashMap<String, Object>> data = executeSelect(query, "uuid", uuid, selectors);
+            ArrayList<HomeData> hd = new ArrayList<>();
+            for(HashMap<String,Object> d : data) {
+                String owner = (String)d.get("owner");
+                String name = (String) d.get("name");
+                String posstring = (String) d.get("pos");
+                hd.add(new HomeData(owner,name,posstring));
+            }
+            player.LoadHomes(hd);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void loadUser(CorePlayer player) throws SQLException {
         String uuid = player.getUniqueId().toString();
         String ip = player.getAddress();

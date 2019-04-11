@@ -21,8 +21,10 @@ import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Spring;
+import net.yungtechboy1.CyberCore.Data.HomeData;
 import net.yungtechboy1.CyberCore.Rank.Rank;
 import net.yungtechboy1.CyberCore.Rank.RankList;
+import net.yungtechboy1.CyberCore.Tasks.TPToHome;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,6 +103,7 @@ public class CorePlayer extends Player {
     public void SetRank(RankList r) {
         SetRank(r.getRank());
     }
+
     public void SetRank(Rank r) {
         rank = r;
     }
@@ -404,6 +407,62 @@ public class CorePlayer extends Player {
         if (MasterEnchantigList == null) MasterEnchantigList = CustomEnchantment.GetRandomEnchant(tier, 3, item);
         return MasterEnchantigList;
     }
+
+    public ArrayList<HomeData> HD = new ArrayList<>();
+
+    public void LoadHomes(ArrayList<HomeData> hd) {
+        HD.addAll(hd);
+    }
+
+    public boolean Teleporting = false;
+
+    public boolean CheckHomeKey(String key) {
+        for (HomeData h : HD) {
+            if (h.getName().equalsIgnoreCase(key)) return true;
+        }
+        return false;
+    }
+
+    public void TeleportToHome(String key) {
+        TeleportToHome(key, false);
+    }
+
+    public void TeleportToHome(String key, boolean instant) {
+        for (HomeData h : HD) {
+            if (h.getName().equalsIgnoreCase(key)) {
+                Vector3 v3 = h.toVector3();
+                if (instant) teleport(v3);
+                else
+                    getServer().getScheduler().scheduleDelayedTask(new TPToHome(CyberCoreMain.getInstance(), this, v3), 20 * 3);//3 Secs
+            }
+        }
+
+    }
+
+    public int MaxHomes = 5;
+
+    public boolean CanAddHome() {
+        return HD.size() >= MaxHomes;
+    }
+
+    public void DelHome(String name) {
+        int k = 0;
+        int kk = 0;
+        for (HomeData h : HD) {
+            k++;
+            if (h.getName().equalsIgnoreCase(name)) {
+                kk = 1;
+                break;
+            }
+        }
+        if (kk == 1) HD.remove(k);
+    }
+
+    public void AddHome(String name) {
+        Vector3 v = (Vector3) getPosition();
+        HD.add(new HomeData(getUniqueId().toString(), name, v));
+    }
+
 //
 //        int tickDiff = currentTick - this.lastUpdate;
 //
