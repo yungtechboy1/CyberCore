@@ -38,6 +38,8 @@ public class CorePlayer extends Player {
     public boolean MuteMessage = false;
     public String LastMessageSentTo = null;
 
+    public CoreSettings settings = new CoreSettings();
+
 
     public boolean IsItemBeingEnchanted() {
         return getItemBeingEnchanted() != null;

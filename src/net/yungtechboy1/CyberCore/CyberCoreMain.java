@@ -61,6 +61,7 @@ import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Data.CoreSQL;
 import net.yungtechboy1.CyberCore.Rank.RankFactory;
+import net.yungtechboy1.CyberCore.Tasks.SendHUD;
 import net.yungtechboy1.CyberCore.entities.animal.walking.Pig;
 
 import java.io.File;
@@ -95,10 +96,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     //HUD Off
     //TODO add PlayerSetting Object to allow players to save
     //TODO add /settings commands that adds GUI
-    public ArrayList<String> HudOff = new ArrayList<>();
-    public ArrayList<String> HUDClassOff = new ArrayList<>();
-    public ArrayList<String> HUDFactionOff = new ArrayList<>();
-    public ArrayList<String> HUDPosOff = new ArrayList<>();
     public Config RankChatColor;
     public Config RankConfig;
     public Config MainConfig;
@@ -298,7 +295,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
 //        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec
-
+        new SendHUD();
 
         //COMMANDS
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ChooseClass(this));
@@ -324,7 +321,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ClassCmd(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SetClass(this));
 //
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Hud(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Hud(this));
 //
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new FT(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new FTS(this));
