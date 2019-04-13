@@ -28,7 +28,13 @@ public class Desc extends Commands {
             Sender.sendMessage(FactionsMain.NAME+TextFormat.GRAY+"Usage /f desc <Description>");
             return;
         }
-        String desc = GetStringAtArgs(1,"A ArchMCPE Faction!");
+        String desc = "";
+        int a = 0;
+        for (String c : Args) {
+            a++;
+            if (a == 1) continue;
+            desc += c + " ";
+        }
         fac.SetDesc(desc);
         Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+" Faction description changed!");
     }

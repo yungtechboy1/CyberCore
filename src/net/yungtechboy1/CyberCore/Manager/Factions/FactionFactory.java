@@ -10,7 +10,10 @@ import cn.nukkit.utils.TextFormat;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by carlt_000 on 5/13/2016.
@@ -53,7 +56,7 @@ public class FactionFactory {
 
 
     private Connection getMySqlConnection() {
-        return Main.plugin.SQLSaveManager.getMySqlConnection();
+        return Main.factionData.connectToDb();
     }
 
     public void RemoveFaction(Faction fac) {
@@ -165,7 +168,7 @@ public class FactionFactory {
             stmt2.executeUpdate(sql4);
             stmt2.executeUpdate(sql6);*/
             //stmt.executeUpdate("DELETE FROM allies; DELETE FROM confirm; DELETE FROM home; DELETE FROM plots; DELETE FROM settings; DELETE FROM master;");
-            Main.plugin.getLogger().info("Going to save: "+List.size());
+            Main.plugin.getLogger().info("Going to save: " + List.size());
             stmt.executeUpdate("BEGIN;");
             String yaml = "";
             for (Map.Entry<String, Faction> e : List.entrySet()) {
@@ -574,8 +577,16 @@ public class FactionFactory {
         fac.SetPower(2);
         fac.SetDesc("Just a Cyber Faction!");
         p.sendMessage(TextFormat.GREEN + "[CyboticFactions] Faction successfully created!");
-        Rich.put(fac.GetName(), fac.GetMoney());
+        RegitsterToRich(fac);
         return fac;
+    }
+
+    public void RegitsterToRich(String f, int cash) {
+        Rich.put(f, cash);
+    }
+
+    public void RegitsterToRich(Faction f) {
+        RegitsterToRich(f.GetName(), f.GetMoney());
     }
 
     public String factionPartialName(String name) {
@@ -625,10 +636,12 @@ public class FactionFactory {
         if (List.containsKey(name.toLowerCase())) {
             //getServer().getLogger().debug("In Cache");
             return List.get(name.toLowerCase());
-        }else if (factionExistsInDB(name)) {
+        } else if (factionExistsInDB(name)) {
             //getServer().getLogger().debug("In DB");
             //if (List.containsKey(name.toLowerCase())) return List.get(name.toLowerCase());
-            if (GetLeader(name) == null && !name.equalsIgnoreCase("peace") && !name.equalsIgnoreCase("wilderness"))return null;
+            //No leader == No Faction!
+            if (GetLeader(name) == null && !name.equalsIgnoreCase("peace") && !name.equalsIgnoreCase("wilderness"))
+                return null;
             Faction fac = new Faction(Main, name, (String) GetFromSettings("displayname", name), GetLeader(name), GetMemebrs(name), GetOfficers(name), GetGenerals(name), GetRecruits(name));
             fac.SetPlots(GetPlots(name));
             fac.SetMaxPlayers((Integer) GetFromSettings("max", name));
@@ -646,11 +659,11 @@ public class FactionFactory {
             fac.SetMoney((Integer) GetFromSettings("money", name));
             fac.SetPoints((Integer) GetFromSettings("point", name));
             fac.SetXP((Integer) GetFromSettings("xp", name));
-            fac.SetLevel((Integer) GetFromSettings("lvl", name));
+            fac.SetLevel((Integer) GetFromSettings("level", name));
             fac.RetrieveActiveMission((String) GetFromSettings("am", name));
             fac.SetRich((Integer) GetFromSettings("rich", name));
             fac.SetCompletedMissisons(GetCompletedMissions(name));
-            List.put(fac.GetName().toLowerCase(),fac);
+            List.put(fac.GetName().toLowerCase(), fac);
 
             return fac;
         }

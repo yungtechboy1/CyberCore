@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 /**
  * Created by carlt_000 on 7/9/2016.
  */
-public class Commands {
+public abstract class Commands {
 
     public String[] Args;
     public String Usage;

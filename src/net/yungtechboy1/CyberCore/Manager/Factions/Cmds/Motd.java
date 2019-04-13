@@ -28,7 +28,14 @@ public class Motd extends Commands {
             SendUseage();
             return;
         }
-        String desc = GetStringAtArgs(1,"A ArchMCPE Faction!");
+
+        String desc = "";
+        int a = 0;
+        for (String c : Args) {
+            a++;
+            if (a == 1) continue;
+            desc += c + " ";
+        }
         fac.SetMOTD(desc);
         Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+" Faction MOTD changed!");
     }

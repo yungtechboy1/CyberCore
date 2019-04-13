@@ -7,3 +7,6 @@ it would then look like we have realms and can call it that.
 
 - Assassins and Enchanters can benifit from Fermenation Enchant while allows a Buf for all Damage and Effects
 
+- /rading
+    - 
+    - Declares to the server that your are raiding and you get rewarded for the more damage you do

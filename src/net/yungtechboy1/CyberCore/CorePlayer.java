@@ -22,6 +22,7 @@ import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Spring;
 import net.yungtechboy1.CyberCore.Data.HomeData;
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Rank.Rank;
 import net.yungtechboy1.CyberCore.Rank.RankList;
 import net.yungtechboy1.CyberCore.Tasks.TPToHome;
@@ -37,6 +38,9 @@ public class CorePlayer extends Player {
     private FormWindow nw;
     public boolean MuteMessage = false;
     public String LastMessageSentTo = null;
+    public String Faction = null;
+
+    public FactionSettings fsettings = new FactionSettings();
 
     public CoreSettings settings = new CoreSettings();
 

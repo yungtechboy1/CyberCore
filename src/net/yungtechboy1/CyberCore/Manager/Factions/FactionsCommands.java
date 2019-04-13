@@ -48,70 +48,73 @@ public class FactionsCommands {
                     new Chat(sender,args,main);return true;
                 }
 
+                //Clear Lag TODO FIX
                 //Usage: /f cc
-                if(args.length > 0 && args[0].equalsIgnoreCase("cc")){
-                    if(!sender.isOp())return false;
-                    int a = 0;
-                    for (Map.Entry<Integer, Level> level : Main.getServer().getLevels().entrySet()) {
-                        for (Entity e : level.getValue().getEntities()) {
-                            if(e instanceof Player)continue;
-                            e.kill();
-                            a++;
-                        }
-                    }
-                    sender.sendMessage(a+" Entities were Killed!");
-                    //@Todo Maybe Later
-                    //Main.prefs = (new Config(Main.getDataFolder() . "Prefs.yml", CONFIG::YAML, array())).getAll();
-                    return true;
-                }
+//                if(args.length > 0 && args[0].equalsIgnoreCase("cc")){
+//                    if(!sender.isOp())return false;
+//                    int a = 0;
+//                    for (Map.Entry<Integer, Level> level : Main.getServer().getLevels().entrySet()) {
+//                        for (Entity e : level.getValue().getEntities()) {
+//                            if(e instanceof Player)continue;
+//                            e.kill();
+//                            a++;
+//                        }
+//                    }
+//                    sender.sendMessage(a+" Entities were Killed!");
+//                    //@Todo Maybe Later
+//                    //Main.prefs = (new Config(Main.getDataFolder() . "Prefs.yml", CONFIG::YAML, array())).getAll();
+//                    return true;
+//                }
 
                 //Usage: /f ac
                 //Example: /f ac Who has diamonds?
-                if (args.length > 0 && ((args[0].endsWith("allychat") || args[0].equalsIgnoreCase("ac")))){
+                if (args.length > 0 && ((args[0].equalsIgnoreCase("allychat") || args[0].equalsIgnoreCase("ac")))){
                     new AllyChat(sender,args,main);return true;
                 }
 
-
-                //Wartp
-                //Usage: /f wartp
-                //Example: /f wartp
-                if(args[0].equalsIgnoreCase("wartp")) {
-                    new Wartp(sender,args,main);return true;
-                }
-                //Perk
-                //Usage: /f Perk
-                //Example: /f Perk
-                if(args[0].equalsIgnoreCase("Perk")) {
-                    new Perk(sender,args,main);return true;
-                }
-                //War
-                //Usage: /f war <fac>
-                //Example: /f war CyberFaction
-                if(args[0].equalsIgnoreCase("war")) {
-                    new War(sender, args, main);
-                    return true;
-                }
-
-                //Mission
-                //Usage: /f mission
-                //Example: /f mission
-                if(args[0].equalsIgnoreCase("mission")) {
-                    new Mission(sender,args,main);return true;
-                }
-
-                //Top
-                //Usage: /f top
-                //Example: /f top
-                if(args[0].equalsIgnoreCase("top")) {
-                    new Top(sender,args,main);return true;
-                }
-
-                //Rich
-                //Usage: /f Rich
-                //Example: /f Rich
-                if(args[0].equalsIgnoreCase("rich")) {
-                    new Rich(sender,args,main);return true;
-                }
+//TODO
+//                //Wartp
+//                //Usage: /f wartp
+//                //Example: /f wartp
+//                if(args[0].equalsIgnoreCase("wartp")) {
+//                    new Wartp(sender,args,main);return true;
+//                }
+//TODO
+//                //Perk
+//                //Usage: /f Perk
+//                //Example: /f Perk
+//                if(args[0].equalsIgnoreCase("Perk")) {
+//                    new Perk(sender,args,main);return true;
+//                }
+//TODO
+//                //War
+//                //Usage: /f war <fac>
+//                //Example: /f war CyberFaction
+//                if(args[0].equalsIgnoreCase("war")) {
+//                    new War(sender, args, main);
+//                    return true;
+//                }
+//TODO
+//                //Mission
+//                //Usage: /f mission
+//                //Example: /f mission
+//                if(args[0].equalsIgnoreCase("mission")) {
+//                    new Mission(sender,args,main);return true;
+//                }
+//TODO
+//                //Top
+//                //Usage: /f top
+//                //Example: /f top
+//                if(args[0].equalsIgnoreCase("top")) {
+//                    new Top(sender,args,main);return true;
+//                }
+//todo
+//                //Rich
+//                //Usage: /f Rich
+//                //Example: /f Rich
+//                if(args[0].equalsIgnoreCase("rich")) {
+//                    new Rich(sender,args,main);return true;
+//                }
 
                 //Balance
                 //Usage: /f Balance
@@ -147,12 +150,13 @@ public class FactionsCommands {
                     new Create(sender,args,main);return true;
                 }
 
+                //TODO
                 //Map
                 //Usage: /f Map
                 //Example: /f Map
-                if(args[0].equalsIgnoreCase("map")) {
-                    new net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Map(sender,args,main);return true;
-                }
+//                if(args[0].equalsIgnoreCase("map")) {
+//                    new net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Map(sender,args,main);return true;
+//                }
 
                 //Privacy
                 //Usage: /f privacy <on\off>

@@ -10,6 +10,7 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
+import net.yungtechboy1.CyberCore.Utils;
 
 import java.sql.*;
 import java.util.*;
@@ -35,7 +36,7 @@ public class FactionsMain {
     public FactionFactory FFactory = new FactionFactory(this);
     public CyberCoreMain plugin;
     //public static final String NAME = "[ArchFactions]";
-    public static final String NAME = TextFormat.GOLD+""+TextFormat.BOLD+"§eTERRA§6TIDE "+TextFormat.RESET+TextFormat.GOLD+"» "+TextFormat.RESET;
+    public static final String NAME = Utils.NAME;
     //public Map<String,Integer> death;
 
     public FactionSQL factionData;
@@ -43,47 +44,47 @@ public class FactionsMain {
     public FactionsMain(CyberCoreMain main, FactionSQL factionData){
         plugin = main;
         this.factionData = factionData;
-//        onLoad();
+        onLoad();
+
+        getServer().getPluginManager().registerEvents(new FactionListener(main,this),main);
+
+//        getServer().getScheduler().scheduleDelayedRepeatingTask(new FactionPower(this),20*10,20*60*5);
+//        getServer().getScheduler().scheduleDelayedRepeatingTask(new Purge(this,false,60),20*60*5,20*60*15);//15 mINS
+        //getServer().getScheduler().scheduleDelayedRepeatingTask(new BBNUpdater(this),5,5);//60 mINS
 //
-////        getServer().getPluginManager().registerEvents(new FactionListener(this),Main);
 //
-////        getServer().getScheduler().scheduleDelayedRepeatingTask(new FactionPower(this),20*10,20*60*5);
-////        getServer().getScheduler().scheduleDelayedRepeatingTask(new Purge(this,false,60),20*60*5,20*60*15);//15 mINS
-//        //getServer().getScheduler().scheduleDelayedRepeatingTask(new BBNUpdater(this),5,5);//60 mINS
-//
-//
-//        Integer Count = 0;
-//        boolean peace = false;
-//        boolean wilderness = false;
-//        for(String fn : FFactory.GetAllFactions()) {
-//            Faction f = FFactory.getFaction(fn);
-//            if(f == null){
-//                continue;
-//                /*Connection c = FFactory.getMySqlConnection();
-//                try {
-//                    getServer().getLogger().error("DELETEING Faction "+fn+"!");
-//                    Statement stmt = c.createStatement();
-//                    stmt.executeUpdate(String.format("DELETE FROM `allies` WHERE `factiona` LIKE '%s' OR `factionb` LIKE '%s';",fn,fn));
-//                    stmt.executeUpdate(String.format("DELETE FROM `plots` WHERE `faction` LIKE '%s';",fn));
-//                    stmt.executeUpdate(String.format("DELETE FROM `confirm` WHERE `faction` LIKE '%s';",fn));
-//                    stmt.executeUpdate(String.format("DELETE FROM `home` WHERE `faction` LIKE '%s';",fn));
-//                    stmt.executeUpdate(String.format("DELETE FROM `settings` WHERE `faction` LIKE '%s';",fn));
-//                    stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `faction` LIKE '%s';",fn));
-//                    stmt.close();
-//                } catch (Exception  ex) {
-//                    getServer().getLogger().info( ex.getClass().getName() + ":9 " + ex.getMessage()+" > "+ex.getStackTrace()[0].getLineNumber()+" ? "+ex.getCause());
-//                }*/
-//            }else{
-//                FFactory.Top.put(f.GetName(),f.GetMoney());
-//                FFactory.Rich.put(f.GetName(),f.GetRich());
-//            }
-//            if(fn.equalsIgnoreCase("peace")){
-//                peace = true;
-//            }else if(fn.equalsIgnoreCase("wilderness")){
-//                wilderness = true;
-//            }
-//            Count++;
-//        }
+        Integer Count = 0;
+        boolean peace = false;
+        boolean wilderness = false;
+        for(String fn : FFactory.GetAllFactions()) {
+            Faction f = FFactory.getFaction(fn);
+            if(f == null){
+                continue;
+                /*Connection c = FFactory.getMySqlConnection();
+                try {
+                    getServer().getLogger().error("DELETEING Faction "+fn+"!");
+                    Statement stmt = c.createStatement();
+                    stmt.executeUpdate(String.format("DELETE FROM `allies` WHERE `factiona` LIKE '%s' OR `factionb` LIKE '%s';",fn,fn));
+                    stmt.executeUpdate(String.format("DELETE FROM `plots` WHERE `faction` LIKE '%s';",fn));
+                    stmt.executeUpdate(String.format("DELETE FROM `confirm` WHERE `faction` LIKE '%s';",fn));
+                    stmt.executeUpdate(String.format("DELETE FROM `home` WHERE `faction` LIKE '%s';",fn));
+                    stmt.executeUpdate(String.format("DELETE FROM `settings` WHERE `faction` LIKE '%s';",fn));
+                    stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `faction` LIKE '%s';",fn));
+                    stmt.close();
+                } catch (Exception  ex) {
+                    getServer().getLogger().info( ex.getClass().getName() + ":9 " + ex.getMessage()+" > "+ex.getStackTrace()[0].getLineNumber()+" ? "+ex.getCause());
+                }*/
+            }else{
+                FFactory.Top.put(f.GetName(),f.GetMoney());
+                FFactory.Rich.put(f.GetName(),f.GetRich());
+            }
+            if(fn.equalsIgnoreCase("peace")){
+                peace = true;
+            }else if(fn.equalsIgnoreCase("wilderness")){
+                wilderness = true;
+            }
+            Count++;
+        }
 //        if(!peace){
 //            getServer().getLogger().info("Peace Faction Being Created!");
 //            Faction fac = new Faction(this,"peace",TextFormat.GREEN+"peaceful","p",new ArrayList<>(),new ArrayList<>(), new ArrayList<>(),new ArrayList<>());

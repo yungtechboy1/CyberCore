@@ -1,0 +1,46 @@
+INSERT INTO sqlite_master (type, name, tbl_name, rootpage, sql) VALUES ('table', 'settings', 'settings', 2, 'CREATE TABLE "settings" (
+  `faction`varchar(250) NOT NULL UNIQUE,
+  `max`int(250) NOT NULL,
+  `powerbonus`int(50) NOT NULL,
+  `MOTD`varchar(1000) NOT NULL,
+  `displayname`varchar(1000) NOT NULL,
+  `desc`varchar(1000) NOT NULL,
+  `prem`INTEGER NOT NULL,
+  `privacy`int(11) NOT NULL,
+  `power`INTEGER NOT NULL,
+  `money`INTEGER NOT NULL,
+  PRIMARY KEY (faction))');
+INSERT INTO sqlite_master (type, name, tbl_name, rootpage, sql) VALUES ('index', 'sqlite_autoindex_settings_1', 'settings', 3, null);
+INSERT INTO sqlite_master (type, name, tbl_name, rootpage, sql) VALUES ('table', 'war', 'war', 4, 'CREATE TABLE war ( attacker varchar(250) NOT NULL PRIMARY KEY, defender varchar(250) NOT NULL, start int(250) NOT NULL)');
+INSERT INTO sqlite_master (type, name, tbl_name, rootpage, sql) VALUES ('index', 'sqlite_autoindex_war_1', 'war', 5, null);
+INSERT INTO sqlite_master (type, name, tbl_name, rootpage, sql) VALUES ('table', 'master', 'master', 6, 'CREATE TABLE "master"
+(player VARCHAR PRIMARY KEY UNIQUE     NOT NULL,
+ faction           VARCHAR    NOT NULL,
+ rank            VARCHAR     NOT NULL)');
+INSERT INTO sqlite_master (type, name, tbl_name, rootpage, sql) VALUES ('index', 'sqlite_autoindex_master_1', 'master', 7, null);
+INSERT INTO sqlite_master (type, name, tbl_name, rootpage, sql) VALUES ('table', 'allies', 'allies', 8, 'CREATE TABLE "allies" (
+                        `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                        `factiona` VARCHAR NOT NULL,
+                        `factionb` varchar NOT NULL,
+                        `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                        )');
+INSERT INTO sqlite_master (type, name, tbl_name, rootpage, sql) VALUES ('table', 'sqlite_sequence', 'sqlite_sequence', 9, 'CREATE TABLE sqlite_sequence(name,seq)');
+INSERT INTO sqlite_master (type, name, tbl_name, rootpage, sql) VALUES ('table', 'confirm', 'confirm', 10, 'CREATE TABLE "confirm" (
+`player`TEXT NOT NULL,
+`faction`TEXT NOT NULL,
+`timestamp`INTEGER,
+`id`INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)');
+INSERT INTO sqlite_master (type, name, tbl_name, rootpage, sql) VALUES ('table', 'home', 'home', 11, 'CREATE TABLE "home" (
+                     `faction` varchar NOT NULL UNIQUE,
+                     `x` int(250) NOT NULL,
+                     `y` int(250) NOT NULL,
+                     `z` int(250) NOT NULL,
+                     PRIMARY KEY(faction)
+                    )');
+INSERT INTO sqlite_master (type, name, tbl_name, rootpage, sql) VALUES ('index', 'sqlite_autoindex_home_1', 'home', 12, null);
+INSERT INTO sqlite_master (type, name, tbl_name, rootpage, sql) VALUES ('table', 'plots', 'plots', 13, 'CREATE TABLE "plots" (
+            `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            `faction` varchar(250) NOT NULL,
+            `x` int(250) NOT NULL,
+            `z` int(250) NOT NULL
+            )');

@@ -1,11 +1,15 @@
 package net.yungtechboy1.CyberCore;
 
+import cn.nukkit.utils.TextFormat;
+
 import java.util.Date;
 
 /**
  * Created by carlt_000 on 1/21/2017.
  */
 public class Utils {
+
+    public static final String NAME = TextFormat.DARK_AQUA+"Cyber"+TextFormat.GOLD+"Tech"+TextFormat.GREEN+"++";
 
     public static String getDifferenceBtwTime(Long dateTime) {
 
