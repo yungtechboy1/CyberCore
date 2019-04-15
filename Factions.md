@@ -13,7 +13,27 @@ Every 30 Mins on the dot, a task will run that calculates the total value of eac
     - Blocks placed in Claimed Chunks
     - Spwaner Values
     - Chest Values
+
+Rules
+---
+- 25 Players Max on each Faction
+
+Raiding
+---
+A few items have been added to aid in raiding.
+- Teleport Map: 
+    - Save cords to a map, tap the map to teleport back later or give it to another player
+    - Cost 
+        - $100,000 to write a cord
+        - $250,000 to use a cord
+    - Item : Map
     
+- Cannon
+    - Built using 3 Parts:
+         - Barrel
+         - TNT
+         - FireStone
+
 Earning Money:
 ---
 
@@ -35,3 +55,4 @@ Players can level up their faction by:
 - Completing Faction Missions
 - Claiming Land
 - Raiding (/raiding)
+

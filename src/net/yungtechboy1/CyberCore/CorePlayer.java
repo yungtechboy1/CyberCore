@@ -12,9 +12,12 @@ import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
+import cn.nukkit.level.Position;
+import cn.nukkit.level.Sound;
 import cn.nukkit.math.*;
 import cn.nukkit.network.SourceInterface;
 import cn.nukkit.network.protocol.*;
+import cn.nukkit.potion.Effect;
 import co.aikar.timings.Timing;
 import co.aikar.timings.Timings;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
@@ -22,6 +25,7 @@ import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Spring;
 import net.yungtechboy1.CyberCore.Data.HomeData;
+import net.yungtechboy1.CyberCore.Manager.Econ.PlayerEconData;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Rank.Rank;
 import net.yungtechboy1.CyberCore.Rank.RankList;
@@ -33,17 +37,44 @@ import java.util.HashMap;
 public class CorePlayer extends Player {
 
 
+    public String TPR = null;
     public FormType.MainForm LastSentFormType = FormType.MainForm.NULL;
     public FormType.SubMenu LastSentSubMenu = FormType.SubMenu.MainMenu;
-    private FormWindow nw;
     public boolean MuteMessage = false;
     public String LastMessageSentTo = null;
     public String Faction = null;
-
     public FactionSettings fsettings = new FactionSettings();
-
     public CoreSettings settings = new CoreSettings();
-
+    /**
+     * @@deprecated
+     */
+    public Integer money = 0;
+    public Integer kills = 0;
+    public Integer deaths = 0;
+    public Integer fixcoins = 0;
+    public Integer banned = 0;
+    public String faction_id = null;
+    public HashMap<String, Object> extraData = new HashMap<>();
+    public ArrayList<Enchantment> MasterEnchantigList = null;
+    public ArrayList<HomeData> HD = new ArrayList<>();
+    public boolean Teleporting = false;
+    public int MaxHomes = 5;
+    long uct = 0;
+    boolean uw = false;
+    private FormWindow nw;
+    private Item ItemBeingEnchanted = null;
+    private boolean ItemBeingEnchantedLock = false;
+    private PlayerSettingsData SettingsData = null;
+    private Rank rank = RankList.PERM_GUEST.getRank();
+    private BlockVector3 lastBreakPosition1 = new BlockVector3();
+    private Position CTLastPos = null;
+    private int TeleportTick = 0;
+    private boolean isTeleporting = false;
+    private boolean isInTeleportingProcess = false;
+    private CorePlayer TargetTeleporting = null;
+    public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
+        super(interfaz, clientID, ip, port);
+    }
 
     public boolean IsItemBeingEnchanted() {
         return getItemBeingEnchanted() != null;
@@ -64,10 +95,12 @@ public class CorePlayer extends Player {
         ItemBeingEnchanted = itemBeingEnchanted;
     }
 
-    private Item ItemBeingEnchanted = null;
-
     public boolean isItemBeingEnchantedLock() {
         return ItemBeingEnchantedLock;
+    }
+
+    public void setItemBeingEnchantedLock(boolean itemBeingEnchantedLock) {
+        ItemBeingEnchantedLock = itemBeingEnchantedLock;
     }
 
     public void removeItemBeingEnchantedLock() {
@@ -78,12 +111,6 @@ public class CorePlayer extends Player {
         setItemBeingEnchantedLock(true);
     }
 
-    public void setItemBeingEnchantedLock(boolean itemBeingEnchantedLock) {
-        ItemBeingEnchantedLock = itemBeingEnchantedLock;
-    }
-
-    private boolean ItemBeingEnchantedLock = false;
-
     public void ReturnItemBeingEnchanted() {
         if (IsItemBeingEnchanted() && !isItemBeingEnchantedLock()) {
             Item i = getItemBeingEnchanted();
@@ -93,18 +120,44 @@ public class CorePlayer extends Player {
         }
     }
 
-    public Integer money = 0;
-    public Integer kills = 0;
-    public Integer deaths = 0;
-    public Integer fixcoins = 0;
-    public Integer banned = 0;
-    public String faction_id = null;
-    public HashMap<String, Object> extraData = new HashMap<>();
+    public PlayerEconData GetData() {
+        if (getSettingsData() == null) CreateDefaultSettingsData();
+        if (getSettingsData() == null) return null;
+        return getSettingsData();
+    }
 
-    long uct = 0;
-    boolean uw = false;
+    public void CreateDefaultSettingsData() {
+        PlayerSettingsData a = new PlayerSettingsData();
+        a.Cash = 1000;
+        a.CreditLimit = 1000;
+        a.CreditScore = 350;//Out of 1000
+        a.Name = getName();
+        a.UsedCredit = 0;
+        setSettingsData(a);
+    }
 
-    private Rank rank = RankList.PERM_GUEST.getRank();
+    public boolean MakeTransaction(double price) {
+        if (price > GetMoney()) return false;
+        TakeMoney(price);
+        return true;
+    }
+
+    public void TakeMoney(double price) {
+        if (price <= 0) return;
+        PlayerEconData ped = GetData();
+        ped.Cash -= price;
+    }
+
+    public void AddMoney(double price) {
+        if (price <= 0) return;
+        PlayerEconData ped = GetData();
+        ped.Cash += price;
+    }
+
+    public double GetMoney() {
+        PlayerEconData ped = GetData();
+        return ped.Cash;
+    }
 
     public void SetRank(RankList r) {
         SetRank(r.getRank());
@@ -116,10 +169,6 @@ public class CorePlayer extends Player {
 
     public Rank GetRank() {
         return rank;
-    }
-
-    public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
-        super(interfaz, clientID, ip, port);
     }
 
     public Integer addDeath() {
@@ -157,9 +206,6 @@ public class CorePlayer extends Player {
     public void clearNewWindow() {
         this.nw = null;
     }
-
-    private BlockVector3 lastBreakPosition1 = new BlockVector3();
-
 
     @Override
     public void fall(float fallDistance) {
@@ -384,22 +430,49 @@ public class CorePlayer extends Player {
         super.handleDataPacket(packet);
     }
 
-
     public void RandomChanceOfFire(int max) {
         NukkitRandom nr = new NukkitRandom(entityCount * max);
         int f = nr.nextRange(0, 100);
         if (f < max) setOnFire(nr.nextRange(1, 4));
     }
 
-
     @Override
     public boolean onUpdate(int currentTick) {
         //Check to see if Player as medic or Restoration
         PlayerFood pf = getFoodData();
+
+        if (CTLastPos == null) CTLastPos = getPosition();
+        else {
+            if (CTLastPos.distance(getPosition()) > 3) {
+                isTeleporting = false;
+            }
+            CTLastPos = getPosition();
+        }
+
+        if (TeleportTick <= currentTick && isInTeleportingProcess) {
+            if (isTeleporting) {
+                Effect e1 = getEffect(9);
+                Effect e2 = getEffect(2);
+                e1.setDuration(2);
+                e2.setDuration(2);
+                addEffect(e1);
+                addEffect(e2);
+                if (TargetTeleporting != null && TargetTeleporting.isAlive()) {
+                    sendMessage("Error! Player Not found!!");
+                    isInTeleportingProcess = false;
+                    return super.onUpdate(currentTick);
+                }
+                teleport(TargetTeleporting);
+                getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
+            } else {
+                //You moved too much
+                sendMessage("Error! you moved too much!");
+            }
+            isInTeleportingProcess = false;
+        }
+
         return super.onUpdate(currentTick);
     }
-
-    public ArrayList<Enchantment> MasterEnchantigList = null;
 
     public void ReloadMasterEnchatingList() {
         MasterEnchantigList = null;
@@ -414,13 +487,9 @@ public class CorePlayer extends Player {
         return MasterEnchantigList;
     }
 
-    public ArrayList<HomeData> HD = new ArrayList<>();
-
     public void LoadHomes(ArrayList<HomeData> hd) {
         HD.addAll(hd);
     }
-
-    public boolean Teleporting = false;
 
     public boolean CheckHomeKey(String key) {
         for (HomeData h : HD) {
@@ -445,8 +514,6 @@ public class CorePlayer extends Player {
 
     }
 
-    public int MaxHomes = 5;
-
     public boolean CanAddHome() {
         return HD.size() >= MaxHomes;
     }
@@ -467,6 +534,35 @@ public class CorePlayer extends Player {
     public void AddHome(String name) {
         Vector3 v = (Vector3) getPosition();
         HD.add(new HomeData(getUniqueId().toString(), name, v));
+    }
+
+    public PlayerSettingsData getSettingsData() {
+        return SettingsData;
+    }
+
+    public void setSettingsData(PlayerSettingsData settingsData) {
+        SettingsData = settingsData;
+    }
+
+    public void StartTeleport() {
+    }
+
+    public void StartTeleport(CorePlayer pl) {
+        pl.BeginTeleportEffects(this);
+    }
+
+    private void BeginTeleportEffects(CorePlayer corePlayer) {
+        Effect e1 = Effect.getEffect(9);
+        Effect e2 = Effect.getEffect(2);
+        e1.setAmplifier(2);
+        e2.setAmplifier(2);
+        e1.setDuration(20 * 600);
+        e2.setDuration(20 * 600);
+        addEffect(e1);
+        addEffect(e2);
+        isTeleporting = true;
+        isInTeleportingProcess = true;
+        TargetTeleporting = corePlayer;
     }
 
 //

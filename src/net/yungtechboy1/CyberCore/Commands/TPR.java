@@ -5,6 +5,7 @@ import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Messages;
 
@@ -26,14 +27,14 @@ public class TPR extends Command {
 
     @Override
     public boolean execute(CommandSender s, String label, String[] args) {
-        if(args.length == 0 || !(s instanceof Player)){
+        if(args.length == 0 || !(s instanceof CorePlayer)){
             s.sendMessage(TextFormat.RED+" > /tpr {Player}");
         }else if(args.length == 1){
             Player t = Owner.getServer().getPlayer(args[0]);
             if(t != null ){
                 t.sendMessage(Messages.TPA_REQUEST.replace("{0}",s.getName()));
                 s.sendMessage(Messages.TPA_SENT.replace("{0}",t.getName()));
-                Owner.tpr.put(t.getName().toLowerCase(),s.getName().toLowerCase());
+                ((CorePlayer)t).TPR = s.getName();
             }else{
                 s.sendMessage(Messages.PLAYER_NOT_FOUND);
             }

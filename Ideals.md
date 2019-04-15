@@ -9,4 +9,4 @@ it would then look like we have realms and can call it that.
 
 - /rading
     - 
-    - Declares to the server that your are raiding and you get rewarded for the more damage you do
+    - Declares to the server that your are raiding and you get rewarded for the more damage you do to claimed base.
