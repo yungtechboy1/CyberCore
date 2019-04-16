@@ -24,7 +24,7 @@ public class Balance extends Command {
             String to = args[0];
             if(plugin.isOnline(to)) {
                 Integer bal = plugin.getCorePlayer(to).money;
-                commandSender.sendMessage(plugin.colorize("&7{player}&e Balance : &2$"+bal, plugin.getPlayer(to).getName()));
+                commandSender.sendMessage(plugin.colorize("&7{player}&e Balance : &2$"+bal, plugin.getPlayer(to)));
             }
         }
         if(commandSender.isPlayer()) {

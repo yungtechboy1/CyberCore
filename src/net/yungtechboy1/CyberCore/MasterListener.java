@@ -44,7 +44,7 @@ public class MasterListener implements Listener {
     public void joinEvent(PlayerJoinEvent event) {
         Player p = event.getPlayer();
 
-        String Msg = plugin.colorize((String) plugin.MainConfig.get("Join-Message"), p.getName());
+        String Msg = plugin.colorize((String) plugin.MainConfig.get("Join-Message"), p);
         event.setJoinMessage(Msg);
         p.sendTitle(plugin.colorize("&l&bCyberTech"), plugin.colorize("&l&2Welcome!"),30,30, 10);
 
@@ -162,7 +162,7 @@ public class MasterListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void quitEvent(PlayerQuitEvent event) {
-        String msg = plugin.colorize(plugin.MainConfig.getString("Leave-Message"), event.getPlayer().getName());
+        String msg = plugin.colorize(plugin.MainConfig.getString("Leave-Message"), event.getPlayer());
         event.setQuitMessage(msg);
 
         plugin.savePlayer(event.getPlayer().getName());

@@ -36,7 +36,7 @@ public class Pay extends Command {
                         if (money - amount >= 0) {
                             plugin.getCorePlayer((Player) commandSender).subtractMoney(amount);
                             plugin.getCorePlayer(to).addMoney(amount);
-                            commandSender.sendMessage(plugin.colorize("&eYou sent {player} &2$" + amount + "", plugin.getPlayer(to).getName()));
+                            commandSender.sendMessage(plugin.colorize("&eYou sent {player} &2$" + amount + "", plugin.getPlayer(to)));
                         } else {
                             commandSender.sendMessage(plugin.colorize("&eSorry, you're too broke to do that!"));
                         }

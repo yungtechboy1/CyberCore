@@ -13,8 +13,6 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
 import cn.nukkit.item.Item;
-import cn.nukkit.level.GlobalBlockPalette;
-import cn.nukkit.network.Network;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.Commands.*;
@@ -31,9 +29,7 @@ import net.yungtechboy1.CyberCore.Custom.CustomStartGamePacket;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
 import net.yungtechboy1.CyberCore.Data.UserSQL;
-import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
-import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
-import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
+import net.yungtechboy1.CyberCore.Manager.BossBarAPI;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
@@ -77,9 +73,8 @@ import static cn.nukkit.item.Item.addCreativeItem;
 public class CyberCoreMain extends PluginBase implements CommandExecutor, Listener {
 
     public static final String NAME = TextFormat.GOLD + "" + TextFormat.BOLD + "§eTERRA§6CORE " + TextFormat.RESET + TextFormat.GOLD + "» " + TextFormat.RESET;
-    private EconManager ECON;
     private static CyberCoreMain instance;
-    public BossBarManager BBM;
+    public BossBarAPI BBM;
     //CyberChat
     public static Connection Connect = null;
     public static Connection Connect2 = null;
@@ -213,14 +208,12 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         saveResource("ranks.yml");
         saveResource("config.yml");
-//        CustomGlobalBlockPalette.registerMapping((entry.id << 4) | entry.data);
 
 
         CustomGlobalBlockPalette.getOrCreateRuntimeId(0,0);
         getServer().getNetwork().registerPacket(ProtocolInfo.START_GAME_PACKET, CustomStartGamePacket.class);
 
         Block.list[Block.ENCHANTING_TABLE]  = BlockEnchantingTable.class;
-//        Item.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         addCreativeItem(Item.get(Block.ENCHANT_TABLE, 5, 1).setCustomName("TTTTTTTTTTTTTT"));
         ReloadBlockList(Block.ENCHANTING_TABLE,BlockEnchantingTable.class);
 
@@ -246,7 +239,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        getServer().getScheduler().scheduleRepeatingTask(new CheckOP(this), 20 * 60);//1 Min
 
         Homes = new Config(new File(this.getDataFolder(), "homes.yml"), Config.YAML, new ConfigSection());
-
+        BBM = new BossBarAPI(this);
+        getServer().getPluginManager().registerEvents(BBM, this);
         HomeFactory = new HomeManager(this);
         RankFactory = new RankFactory(this);
 //      AuctionFactory = new AuctionFactory(this);
@@ -347,11 +341,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        MobPlugin.registerEntities();
 //        MobPlugin.registerItems();
         getServer().getScheduler().scheduleRepeatingTask(new AutoSpawnTask(this), 5, true);
-
-
-        //BossBar Manager
-        //GOOD - Test Refine
-        BBM = new BossBarManager(this);
     }
 
     public static CyberCoreMain getInstance() {
@@ -363,11 +352,22 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     }
 
     public String colorize(String str) {
-        return colorize(str, "");
+        return TextFormat.colorize(str);
     }
 
-    public String colorize(String str, String player) {
-        return str.replace('&', '§').replace("{player}", player);
+    public String colorize(String str, Player p) {
+        return TextFormat.colorize(str)
+                .replace("{player}", p.getName())
+                .replace("{x}", Integer.toString(p.getFloorX()))
+                .replace("{y}", Integer.toString(p.getFloorY()))
+                .replace("{z}", Integer.toString(p.getFloorZ()))
+                .replace("{ping}", Integer.toString(p.getPing()))
+                .replace("{health}", Float.toString(p.getHealth()))
+                .replace("{exp}", Integer.toString(p.getExperience()))
+                .replace("{level}", Integer.toString(p.getExperienceLevel()))
+                .replace("{world}", p.getLevel().getName())
+                .replace("{max-players}", Integer.toString(getServer().getMaxPlayers()))
+                .replace("{tps}", Float.toString(getServer().getTicksPerSecond()));
     }
 
     public Map<TimeUnit, Long> computeDiff(Date date1, Date date2) {
@@ -744,22 +744,12 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         return false;
     }
 
-    public EconManager GetEcon() {
-        return ECON;
-    }
-
     public void initiatePlayer(Player p) {
         try {
             CoreSQL.loadUser((CorePlayer) p);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void PMJ(PlayerJoinEvent me) {
-        BBM.AddBossBar(me.getPlayer(), new BossBarNotification(me.getPlayer(), "TEST TITLE", "TEST MESSAGE", 20 * 60, this));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

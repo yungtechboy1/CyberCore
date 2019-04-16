@@ -3,6 +3,9 @@ Faction-Format: "[{value}]"
 Rank-Format: "[{value}]"
 Join-Message: "&eWelcome to the server &7@&2{player}"
 Leave-Message: "{player} left"
+BossBar-Messages:
+  - "&l&3Welcome, &o{player}"
+  - "&cIM gay"
 
 mysql-host: "truelinux.cf"
 mysql-pass: "3X0T~l1p8mJ*"
