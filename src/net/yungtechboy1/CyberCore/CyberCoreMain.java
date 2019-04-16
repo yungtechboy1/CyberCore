@@ -44,6 +44,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionListener;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager;
 import net.yungtechboy1.CyberCore.Manager.SQLManager;
+import net.yungtechboy1.CyberCore.Manager.Warp.WarpManager;
 import net.yungtechboy1.CyberCore.MobAI.AutoSpawnTask;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
 import net.yungtechboy1.CyberCore.Rank.ChatFormats;
@@ -144,6 +145,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
      * DATA: ECON, K/D,
      */
     public net.yungtechboy1.CyberCore.Data.UserSQL UserSQL;
+    public net.yungtechboy1.CyberCore.Manager.Warp.WarpManager WarpManager;
 
 
     public void ReloadBlockList(int id, Class c){
@@ -227,6 +229,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         ReloadBlockList(Block.MONSTER_SPAWNER,SpawnerWithLevelBlock.class);
         Item.list[Item.BOOK] = CItemBook.class;
         Item.list[Item.ENCHANT_BOOK] = CItemBookEnchanted.class;
+
+        WarpManager = new WarpManager(this);
 
 
 
@@ -327,12 +331,12 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new FTS(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new FTR(this));
 //
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPR(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPD(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPA(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPR(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPD(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPA(this));
 //
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Warp(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SetWarp(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Warp(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SetWarp(this));
 //
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ClassCmd(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new AClassCmd(this));

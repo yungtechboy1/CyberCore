@@ -51,7 +51,7 @@ public class Spawn extends Command {
                     p.teleport(p.getLevel().getSafeSpawn());
                     s.sendMessage(TextFormat.GREEN + "Teleporting you!");
                 }else {
-                    server.getServer().getScheduler().scheduleDelayedTask(new TeleportEvent(server, (Player) s, p.getLevel().getSafeSpawn()), 20 * 5);
+                    p.StartTeleport(((CorePlayer) s).getLevel().getSafeSpawn(),5);
                     s.sendMessage(TextFormat.GREEN + "Teleporting you to spawn in 5 Secs!");
                 }
             }

@@ -41,18 +41,11 @@ public class Warp extends Command {
             //FUck warp Listing
             return true;
         }
-        args[0] = args[0].toLowerCase();
-        if (Owner.MainConfig.exists("warp." + args[0])) {
-            try {
-                String[] v = ((String)  Owner.MainConfig.get("warp." + args[0])).split("&");
-                Level l = Owner.getServer().getLevelByName(v[3]);
-                if (l == null) return true;
-                Position pos = new Position(Double.parseDouble(v[0]), Double.parseDouble(v[1]), Double.parseDouble(v[2]), l);
-                p.sendMessage(Prefix + " Teleported to warp in 5 Secs!");
-                Owner.getServer().getScheduler().scheduleDelayedTask(new ReTPTask(Owner,(Player)s,pos),20*5);
-            } catch (Exception e) {
-                return false;
-            }
+        String warpkey = args[0].toLowerCase();
+        if(Owner.WarpManager.GetWarp(warpkey) != null){
+
+        }else{
+            s.sendMessage("Error! Warp not found!");
         }
         return true;
     }

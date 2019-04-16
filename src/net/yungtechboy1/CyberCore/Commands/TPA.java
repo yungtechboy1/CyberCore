@@ -38,7 +38,6 @@ public class TPA extends Command {
             p1.sendMessage(Messages.TPING.replace("{0}", s.getName()));
             s.sendMessage(Messages.TPACCEPTED.replace("{0}", s.getName()));
             cp.StartTeleport(p1);
-            Owner.getServer().getScheduler().scheduleDelayedTask(new TeleportEvent(Owner, (CorePlayer) p1, (Player) s), 20 * 8);
             return true;
         } else {
             s.sendMessage(TextFormat.RED + "No Teleport Found!");

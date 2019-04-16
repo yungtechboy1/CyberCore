@@ -112,3 +112,31 @@ Construction
     - Line
     - 32 Water
     
+000:0 - Custom Modified Sword
+---
+Data:
+- Length
+    - Short
+    - Medium
+    - Long
+- Material
+    - Firestone - Gives longer fire Damage with lower base damage
+    - Frozen Steel - Can freeze opponent from all movement for .01 - 1 Sec
+    - Reinforced Steel - Same Base Damage of a Iron Sword but with 2X the durability of Diamond
+    - Saphire - Diamond Damage with 1.5X Durability of Diamond
+- Speed
+    - Crafters and Offense classes have a 10% Speed boost
+- Damage
+    -  -5% - 25% random Boost + (lvl*.8);
+    ###Modified Swords
+    - Shorter swings can swing faster
+    - Depending on the material used to forge the Sword it can have up to 4 Base Effects
+    - Made to be a very deadly weapon when customized correctly
+    - Players can change every part of the Data Values below
+    - Requires a `PrimeFurnace` Can be crafted by ``Crafter`` (Mayber ``Smith`` :/)
+
+000:0 - Custom Modified Sword Charms
+---
+Can increase the Damage or Speed on a Custom Modified Sword.
+
+Has `Success` and `fail` Rates

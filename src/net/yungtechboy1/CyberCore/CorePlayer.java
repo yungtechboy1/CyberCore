@@ -12,6 +12,7 @@ import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
+import cn.nukkit.level.Location;
 import cn.nukkit.level.Position;
 import cn.nukkit.level.Sound;
 import cn.nukkit.math.*;
@@ -20,6 +21,7 @@ import cn.nukkit.network.protocol.*;
 import cn.nukkit.potion.Effect;
 import co.aikar.timings.Timing;
 import co.aikar.timings.Timings;
+import javafx.geometry.Pos;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
@@ -72,6 +74,8 @@ public class CorePlayer extends Player {
     private boolean isTeleporting = false;
     private boolean isInTeleportingProcess = false;
     private CorePlayer TargetTeleporting = null;
+    private Position TargetTeleportingLoc;
+
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
         super(interfaz, clientID, ip, port);
     }
@@ -449,7 +453,7 @@ public class CorePlayer extends Player {
             CTLastPos = getPosition();
         }
 
-        if (TeleportTick <= currentTick && isInTeleportingProcess) {
+        if (TeleportTick != 0 && TeleportTick <= currentTick && isInTeleportingProcess) {
             if (isTeleporting) {
                 Effect e1 = getEffect(9);
                 Effect e2 = getEffect(2);
@@ -457,18 +461,27 @@ public class CorePlayer extends Player {
                 e2.setDuration(2);
                 addEffect(e1);
                 addEffect(e2);
-                if (TargetTeleporting != null && TargetTeleporting.isAlive()) {
+                if ((TargetTeleporting != null && !TargetTeleporting.isAlive())) {
                     sendMessage("Error! Player Not found!!");
                     isInTeleportingProcess = false;
                     return super.onUpdate(currentTick);
+                } else if (TargetTeleporting == null && TargetTeleportingLoc == null) {
+                    sendMessage("Error! No Teleport data found!!!");
+                    isInTeleportingProcess = false;
+                    return super.onUpdate(currentTick);
+                } else if (TargetTeleportingLoc != null) {
+                    getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
+                    teleport(TargetTeleportingLoc);
+                } else {
+                    getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
+                    teleport(TargetTeleporting);
                 }
-                teleport(TargetTeleporting);
-                getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
             } else {
                 //You moved too much
                 sendMessage("Error! you moved too much!");
             }
             isInTeleportingProcess = false;
+            TeleportTick = 0;
         }
 
         return super.onUpdate(currentTick);
@@ -544,14 +557,29 @@ public class CorePlayer extends Player {
         SettingsData = settingsData;
     }
 
-    public void StartTeleport() {
+    public void StartTeleport(CorePlayer pl, int delay) {
+
+        pl.BeginTeleportEffects(this, delay);
     }
 
     public void StartTeleport(CorePlayer pl) {
-        pl.BeginTeleportEffects(this);
+        StartTeleport(pl, 3);
+    }
+
+    public void StartTeleport(Position pl, int delay) {
+
+        BeginTeleportEffects((CorePlayer) pl, delay);
+    }
+
+    public void StartTeleport(Position pl) {
+        StartTeleport(pl, 3);
     }
 
     private void BeginTeleportEffects(CorePlayer corePlayer) {
+        BeginTeleportEffects(corePlayer, 3);
+    }
+
+    private void BeginTeleportEffects(CorePlayer corePlayer, int delay) {
         Effect e1 = Effect.getEffect(9);
         Effect e2 = Effect.getEffect(2);
         e1.setAmplifier(2);
@@ -562,6 +590,7 @@ public class CorePlayer extends Player {
         addEffect(e2);
         isTeleporting = true;
         isInTeleportingProcess = true;
+        TeleportTick = getServer().getTick() + 20 * delay;
         TargetTeleporting = corePlayer;
     }
 

@@ -6,6 +6,7 @@ import ru.nukkit.dblib.DbLib;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,6 +106,43 @@ public class SQLite {
             HashMap<String,Object> map = new HashMap<>();
             for (String selector:selectors) {
                 map.put(selector, resultSet.getObject(selector));
+            }
+            data.add(map);
+        }
+        if (connection != null) connection.close();
+        return data.isEmpty() ? null: data;
+    }
+
+    public List<HashMap<String, Object>> executeSelect(String query, Set<String> selectors) throws SQLException {
+        List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
+        Connection connection = connectToDb();
+        if (connection == null) return null;
+        ResultSet resultSet = connection.createStatement().executeQuery(query);
+        if (resultSet == null) return null;
+        while (resultSet.next()) {
+            HashMap<String,Object> map = new HashMap<>();
+            for (String selector:selectors) {
+                map.put(selector, resultSet.getObject(selector));
+            }
+            data.add(map);
+        }
+        if (connection != null) connection.close();
+        return data.isEmpty() ? null: data;
+    }
+
+    public List<HashMap<String, Object>> executeSelect(String query) throws SQLException {
+        List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
+        Connection connection = connectToDb();
+        if (connection == null) return null;
+        ResultSet resultSet = connection.createStatement().executeQuery(query);
+        if (resultSet == null) return null;
+        while (resultSet.next()) {
+            HashMap<String,Object> map = new HashMap<>();
+            ResultSet rs = resultSet;
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            for (int i = 1; i <= columnCount; i++) {
+                map.put(metaData.getColumnName(i), resultSet.getObject(i));
             }
             data.add(map);
         }
