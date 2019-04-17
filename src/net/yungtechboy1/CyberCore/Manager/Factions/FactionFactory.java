@@ -56,6 +56,8 @@ public class FactionFactory {
 
 
     private Connection getMySqlConnection() {
+        System.out.println("YEAAAA |||||||"+ Main.factionData.connectToDb());
+        System.out.println("YEAAAA %%% |||||||"+ Main.factionData);
         return Main.factionData.connectToDb();
     }
 
@@ -312,13 +314,14 @@ public class FactionFactory {
 
     public ResultSet ExecuteQuerySQL(String s) {
         try {
+
             Statement stmt = this.getMySqlConnection().createStatement();
             ResultSet r = stmt.executeQuery(s);
             //this.getServer().getLogger().info( s );
             return r;
         } catch (Exception ex) {
 
-            getServer().getLogger().info(ex.getClass().getName() + ":8 " + ex.getMessage());
+            getServer().getLogger().info(ex.getClass().getName() + ":8 " + ex.getMessage(),ex);
             return null;
         }
     }
@@ -486,8 +489,8 @@ public class FactionFactory {
     }
 
     public ArrayList<String> GetAllFactions() {
+        ArrayList<String> results = new ArrayList<>();
         try {
-            ArrayList<String> results = new ArrayList<>();
             ResultSet r = this.ExecuteQuerySQL("select * from settings");
             if (r == null) return null;
             while (r.next()) {
@@ -496,7 +499,9 @@ public class FactionFactory {
             }
             return results;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            Main.plugin.getLogger().info("EEE",e);
+//            throw new RuntimeException(e);
+            return results;
         }
     }
 

@@ -112,11 +112,11 @@ public class SpawnerWithLevelBlock extends BlockMobSpawner {
             CompoundTag nbt = new CompoundTag()
 //                    .putString("id", BlockEntity.MOB_SPAWNER)
                     .putString("id", BlockEntity.MOB_SPAWNER)
-                    .putInt("Type", t)
+                    .putInt("EntityId", t)
                     .putInt("x", (int) this.x)
                     .putInt("y", (int) this.y)
-                    .putInt("z", (int) this.z)
-                    .putInt("Level", sl);
+                    .putInt("z", (int) this.z);
+//                    .putInt("Level", sl);
             player.sendMessage("PLACE! Spawner is valid! T:"+t+" SL:"+sl);
             SpawnerWithLevelBlockEntity s = new SpawnerWithLevelBlockEntity(this.getLevel().getChunk((int) this.x >> 4, (int) this.z >> 4), nbt, sl);
             Server.getInstance().broadcastMessage(s.namedTag.getShort("MinSpawnDelay")+" <<<<<<");

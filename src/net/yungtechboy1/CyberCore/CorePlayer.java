@@ -454,6 +454,7 @@ public class CorePlayer extends Player {
         }
 
         if (TeleportTick != 0 && TeleportTick <= currentTick && isInTeleportingProcess) {
+            System.out.println("AAAAAA");
             if (isTeleporting) {
                 Effect e1 = getEffect(9);
                 Effect e2 = getEffect(2);

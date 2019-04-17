@@ -36,39 +36,30 @@ public class SQLite {
     public SQLite(CyberCoreMain plugin, String settings) {
         System.setProperty("java.io.tmpdir", plugin.getDataFolder() + "/../../");
         this.plugin = plugin;
-        columns = new HashMap<>();
-        this.table = plugin.MainConfig.getString(settings + ".table");
-        int valueCount = 0;
-        String insertValues = "";
-        for (String columnName: plugin.MainConfig.getSection(settings + ".data").getAllMap().keySet()) {
-            plugin.log(columnName);
-            String columntype = plugin.MainConfig.getString(settings + ".data." + columnName + ".type");
-            createSQL += columnName + " " + columntype + ", ";
-            insertQuery += columnName + ", ";
-            saveQuery += columnName + "=" + ":" + columnName + ", ";
-            insertValues += "{"+valueCount+"}, :";
-            columns.put(columnName, columntype);
-            valueCount++;
-        }
-        createSQL = createSQL.replaceAll(", $", "");
-        insertQuery = insertQuery.replaceAll(", $", "");
-        insertValues = insertValues.replaceAll(", : $", "");
-        saveQuery = saveQuery.replaceAll(", $","");
-        createSQL += ")";
-        insertQuery  += ") values (:";
-        insertQuery = insertQuery + insertValues + ")";
-        saveQuery += " where uuid=:uuid";
+//        columns = new HashMap<>();
+//        this.table = plugin.MainConfig.getString(settings + ".table");
+//        int valueCount = 0;
+//        String insertValues = "";
+//        for (String columnName: plugin.MainConfig.getSection(settings + ".data").getAllMap().keySet()) {
+//            plugin.log(columnName);
+//            String columntype = plugin.MainConfig.getString(settings + ".data." + columnName + ".type");
+//            createSQL += columnName + " " + columntype + ", ";
+//            insertQuery += columnName + ", ";
+//            saveQuery += columnName + "=" + ":" + columnName + ", ";
+//            insertValues += "{"+valueCount+"}, :";
+//            columns.put(columnName, columntype);
+//            valueCount++;
+//        }
+//        createSQL = createSQL.replaceAll(", $", "");
+//        insertQuery = insertQuery.replaceAll(", $", "");
+//        insertValues = insertValues.replaceAll(", : $", "");
+//        saveQuery = saveQuery.replaceAll(", $","");
+//        createSQL += ")";
+//        insertQuery  += ") values (:";
+//        insertQuery = insertQuery + insertValues + ")";
+//        saveQuery += " where uuid=:uuid";
 
-        file = plugin.MainConfig.getString(settings + ".file");
-
-        try {
-            if (executeUpdate(createSQL)) plugin.log("Table successfully created");
-            else {
-                plugin.log("&cFailed to create table!");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        file = settings + ".sql";
     }
 
     /**

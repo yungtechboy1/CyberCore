@@ -97,18 +97,18 @@ public class CoreSQL extends MySQL {
             p.money = 300;
             p.faction_id = "no_faction";
             p.setBanned(false);
-            plugin.UserSQL.saveUser(p);
+//            plugin.UserSQL.saveUser(p);
             return;
         }
-        plugin.UserSQL.loadUser(uuid);
-        plugin.UserSQL.saveUser(plugin.getCorePlayer(player));
+//        plugin.UserSQL.loadUser(uuid);
+//        plugin.UserSQL.saveUser(plugin.getCorePlayer(player));
     }
 
     public void createUser(String uuid, String ip) {
         try {
             executeUpdate("insert into mcpe (uuid, last_ip) values ('" + uuid + "' , '" + ip + "')");
             plugin.log("User: " + uuid + " - added to DB");
-            plugin.UserSQL.createUser(uuid);
+//            plugin.UserSQL.createUser(uuid);
             int rank = 0;
             plugin.RankFactory.RankCache.put(uuid, rank);
         } catch (SQLException e) {

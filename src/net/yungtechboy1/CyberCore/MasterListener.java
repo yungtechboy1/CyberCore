@@ -41,18 +41,18 @@ public class MasterListener implements Listener {
         Player p = event.getPlayer();
 
         String Msg = plugin.colorize((String) plugin.MainConfig.get("Join-Message"));
-        event.setJoinMessage(Msg.replace("{player}", p.getName()));
-        p.sendTitle(plugin.colorize("&l&bCyberTech"), plugin.colorize("&l&2Welcome!"), 30, 30, 10);
+//        event.setJoinMessage(Msg.replace("{player}", p.getName()));
+//        p.sendTitle(plugin.colorize("&l&bCyberTech"), plugin.colorize("&l&2Welcome!"), 30, 30, 10);
 
-        plugin.initiatePlayer(p);
-        String rank = plugin.RankFactory.getPlayerRank(p).getDisplayName();
-        p.sendMessage(plugin.colorize("&2You Have Joined with the Rank: " + rank));
+//        plugin.initiatePlayer(p);
+//        String rank = plugin.RankFactory.getPlayerRank(p).getDisplayName();
+//        p.sendMessage(plugin.colorize("&2You Have Joined with the Rank: " + rank));
 //        plugin.getCorePlayer(p).uuid = p.getUniqueId().toString();
-        if (rank != null && rank.equalsIgnoreCase("op")) {
-            p.setOp(true);
-        } else {
-            p.setOp(false);
-        }
+//        if (rank != null && rank.equalsIgnoreCase("op")) {
+//            p.setOp(true);
+//        } else {
+//            p.setOp(false);
+//        }
     }
 
 

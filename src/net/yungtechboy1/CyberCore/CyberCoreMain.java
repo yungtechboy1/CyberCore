@@ -144,7 +144,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     /**
      * DATA: ECON, K/D,
      */
-    public net.yungtechboy1.CyberCore.Data.UserSQL UserSQL;
+//    public net.yungtechboy1.CyberCore.Data.UserSQL UserSQL;
     public net.yungtechboy1.CyberCore.Manager.Warp.WarpManager WarpManager;
 
 
@@ -217,8 +217,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        CustomGlobalBlockPalette.registerMapping((entry.id << 4) | entry.data);
 
 
-        CustomGlobalBlockPalette.getOrCreateRuntimeId(0,0);
-        getServer().getNetwork().registerPacket(ProtocolInfo.START_GAME_PACKET, CustomStartGamePacket.class);
+//        CustomGlobalBlockPalette.getOrCreateRuntimeId(0,0);
+//        getServer().getNetwork().registerPacket(ProtocolInfo.START_GAME_PACKET, CustomStartGamePacket.class);
 
         Block.list[Block.ENCHANTING_TABLE]  = BlockEnchantingTable.class;
 //        Item.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
@@ -239,7 +239,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         SQLSaveManager = new SQLManager(this);
 
         CoreSQL = new CoreSQL(this);
-        UserSQL = new UserSQL(this, "server-data");
+//        UserSQL = new UserSQL(this, "server-data");
 
 
         PurgeManager = new PurgeManager(this);
@@ -258,7 +258,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        GOOD
         ECON = new EconManager(this);
-        FM = new FactionsMain(this, new FactionSQL(this, "server-data"));
+//        FM = new FactionsMain(this, new FactionSQL(this, "FDB"));
 //        getServer().getScheduler().scheduleRepeatingTask(new UnMuteTask(this), 20 * 15);
 //        getServer().getScheduler().scheduleRepeatingTask(new ClearSpamTick(this), 20 * 5);
 //        getServer().getScheduler().scheduleRepeatingTask(new CheckOP(this), 20 * 60);//1 Min
@@ -295,7 +295,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        getServer().getPluginManager().registerEvents(ClassFactory, this);
 //        getServer().getPluginManager().registerEvents(AuctionFactory, this);
         getServer().getPluginManager().registerEvents(this, this);
-        getServer().getPluginManager().registerEvents(new FactionListener(this, FM), this);
+//        getServer().getPluginManager().registerEvents(new FactionListener(this, FM), this);
 
 //        getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
 //        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec

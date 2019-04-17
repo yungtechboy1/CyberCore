@@ -33,7 +33,7 @@ public class FactionsMain {
 //    public Map<String,Integer> death = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 //    public Map<String,Integer> pvplog = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public Map<Long,CustomFloatingTextParticle> popups = new HashMap<>();
-    public FactionFactory FFactory = new FactionFactory(this);
+    public FactionFactory FFactory = null;
     public CyberCoreMain plugin;
     //public static final String NAME = "[ArchFactions]";
     public static final String NAME = Utils.NAME;
@@ -56,6 +56,8 @@ public class FactionsMain {
         Integer Count = 0;
         boolean peace = false;
         boolean wilderness = false;
+        System.out.println(FFactory == null);
+        System.out.println(FFactory.GetAllFactions() == null);
         for(String fn : FFactory.GetAllFactions()) {
             Faction f = FFactory.getFaction(fn);
             if(f == null){
@@ -112,6 +114,7 @@ public class FactionsMain {
 
     public void onLoad(){
         FactionsMain.instance = this;
+       FFactory = new FactionFactory(this);
     }
 
     public void initiatePlayer(CorePlayer player) {
