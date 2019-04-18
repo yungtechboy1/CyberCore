@@ -100,6 +100,7 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
     public String GetEntityNameFromID() {
         switch (GetSEntityID()) {
             case 4:
+            case 12:
                 return "Pig";
             default:
                 return getName();
@@ -211,7 +212,7 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
     public CompoundTag getSpawnCompound() {
         return new CompoundTag()
                 .putString("id", MOB_SPAWNER)
-                .putString("SpawnData", this.entityId + "")//"minecraft:zombie"
+//                .putString("SpawnData", this.entityId + "")//"minecraft:zombie"
                 .putList(new ListTag<CompoundTag>("SpawnPotentials") {
                     {
                         add(new CompoundTag() {{

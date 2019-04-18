@@ -445,12 +445,15 @@ public class CorePlayer extends Player {
         //Check to see if Player as medic or Restoration
         PlayerFood pf = getFoodData();
 
-        if (CTLastPos == null) CTLastPos = getPosition();
-        else {
-            if (CTLastPos.distance(getPosition()) > 3) {
-                isTeleporting = false;
+        if (TeleportTick != 0) {
+            if (CTLastPos == null) CTLastPos = getPosition();
+            else {
+                sendMessage(CTLastPos.distance(getPosition()) + "");
+                if (CTLastPos.distance(getPosition()) > .5) {
+                    isTeleporting = false;
+                }
+//            CTLastPos = getPosition();
             }
-            CTLastPos = getPosition();
         }
 
         if (TeleportTick != 0 && TeleportTick <= currentTick && isInTeleportingProcess) {
@@ -483,6 +486,7 @@ public class CorePlayer extends Player {
             }
             isInTeleportingProcess = false;
             TeleportTick = 0;
+            CTLastPos = null;
         }
 
         return super.onUpdate(currentTick);
@@ -516,20 +520,28 @@ public class CorePlayer extends Player {
         TeleportToHome(key, false);
     }
 
+    public void TeleportToHome(String key, int delay) {
+        TeleportToHome(key, false, delay);
+    }
+
     public void TeleportToHome(String key, boolean instant) {
+        TeleportToHome(key, instant, 3);
+    }
+
+    public void TeleportToHome(String key, boolean instant, int delay) {
         for (HomeData h : HD) {
             if (h.getName().equalsIgnoreCase(key)) {
                 Vector3 v3 = h.toVector3();
                 if (instant) teleport(v3);
                 else
-                    getServer().getScheduler().scheduleDelayedTask(new TPToHome(CyberCoreMain.getInstance(), this, v3), 20 * 3);//3 Secs
+                    getServer().getScheduler().scheduleDelayedTask(new TPToHome(CyberCoreMain.getInstance(), this, v3), 20 * delay);//3 Secs
             }
         }
 
     }
 
     public boolean CanAddHome() {
-        return HD.size() >= MaxHomes;
+        return HD.size() < MaxHomes;
     }
 
     public void DelHome(String name) {
@@ -569,7 +581,7 @@ public class CorePlayer extends Player {
 
     public void StartTeleport(Position pl, int delay) {
 
-        BeginTeleportEffects((CorePlayer) pl, delay);
+        BeginTeleportEffects(pl, delay);
     }
 
     public void StartTeleport(Position pl) {
@@ -593,6 +605,23 @@ public class CorePlayer extends Player {
         isInTeleportingProcess = true;
         TeleportTick = getServer().getTick() + 20 * delay;
         TargetTeleporting = corePlayer;
+        TargetTeleportingLoc = null;
+    }
+
+    private void BeginTeleportEffects(Position pos, int delay) {
+        Effect e1 = Effect.getEffect(9);
+        Effect e2 = Effect.getEffect(2);
+        e1.setAmplifier(2);
+        e2.setAmplifier(2);
+        e1.setDuration(20 * 600);
+        e2.setDuration(20 * 600);
+        addEffect(e1);
+        addEffect(e2);
+        isTeleporting = true;
+        isInTeleportingProcess = true;
+        TeleportTick = getServer().getTick() + 20 * delay;
+        TargetTeleporting = null;
+        TargetTeleportingLoc = pos;
     }
 
 //

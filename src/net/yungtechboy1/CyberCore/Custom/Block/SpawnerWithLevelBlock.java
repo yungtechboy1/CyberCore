@@ -1,6 +1,7 @@
 package net.yungtechboy1.CyberCore.Custom.Block;
 
 import cn.nukkit.Server;
+import cn.nukkit.entity.EntityHuman;
 import cn.nukkit.item.ItemBookEnchanted;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
 import net.yungtechboy1.CyberCore.entities.block.BlockEntitySpawner;
@@ -112,13 +113,15 @@ public class SpawnerWithLevelBlock extends BlockMobSpawner {
             CompoundTag nbt = new CompoundTag()
 //                    .putString("id", BlockEntity.MOB_SPAWNER)
                     .putString("id", BlockEntity.MOB_SPAWNER)
-                    .putInt("EntityId", t)
+//                    .putInt("EntityId", t)
+                    .putInt("Type", t)
                     .putInt("x", (int) this.x)
                     .putInt("y", (int) this.y)
-                    .putInt("z", (int) this.z);
-//                    .putInt("Level", sl);
+                    .putInt("z", (int) this.z)
+                    .putInt("Level", sl);
             player.sendMessage("PLACE! Spawner is valid! T:"+t+" SL:"+sl);
             SpawnerWithLevelBlockEntity s = new SpawnerWithLevelBlockEntity(this.getLevel().getChunk((int) this.x >> 4, (int) this.z >> 4), nbt, sl);
+//            EntityHuman
             Server.getInstance().broadcastMessage(s.namedTag.getShort("MinSpawnDelay")+" <<<<<<");
             boolean a = super.place(item, block, target, face, fx, fy, fz, player);
             if(a)getLevel().addBlockEntity(s);
