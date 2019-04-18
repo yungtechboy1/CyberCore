@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Data;
 
+import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -19,14 +20,18 @@ public class HomeData {
     private final String owneruuid;
 
     public HomeData(String name, Position v, CorePlayer p) {
-        this( name, v.getFloorX(), v.getFloorY(), v.getFloorZ(), v.getLevel().getName(), p.getName(), p.getUniqueId().toString());
+        this(name, v.getFloorX(), v.getFloorY(), v.getFloorZ(), v.getLevel().getName(), p.getName(), p.getUniqueId().toString());
     }
 
-    public HomeData( String name, CorePlayer p) {
-        this( name, p.getFloorX(), p.getFloorY(), p.getFloorZ(), p.getLevel().getName(), p.getName(), p.getUniqueId().toString());
+    public HomeData(String name, CorePlayer p) {
+        this(name, p.getFloorX(), p.getFloorY(), p.getFloorZ(), p.getLevel().getName(), p.getName(), p.getUniqueId().toString());
     }
 
-    public HomeData( String name, int x, int y, int z, String level, CorePlayer p) {
+    public HomeData(String name, Double x, Double y, Double z, String level, CorePlayer p) {
+        this(name, (int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z), level, p.getName(), p.getUniqueId().toString());
+    }
+
+    public HomeData(String name, int x, int y, int z, String level, CorePlayer p) {
         this(name, x, y, z, level, p.getName(), p.getUniqueId().toString());
     }
 
@@ -72,5 +77,10 @@ public class HomeData {
     public Vector3 toVector3() {
 
         return new Vector3(x, y, z);
+    }
+
+    public Position toPosition(Level l) {
+
+        return new Position(x, y, z, l);
     }
 }

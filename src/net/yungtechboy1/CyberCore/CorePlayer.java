@@ -32,6 +32,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Rank.Rank;
 import net.yungtechboy1.CyberCore.Rank.RankList;
 import net.yungtechboy1.CyberCore.Tasks.TPToHome;
+import net.yungtechboy1.CyberCore.Tasks.TeleportEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,7 +60,6 @@ public class CorePlayer extends Player {
     public HashMap<String, Object> extraData = new HashMap<>();
     public ArrayList<Enchantment> MasterEnchantigList = null;
     public ArrayList<HomeData> HD = new ArrayList<>();
-    public boolean Teleporting = false;
     public int MaxHomes = 5;
     long uct = 0;
     boolean uw = false;
@@ -75,9 +75,16 @@ public class CorePlayer extends Player {
     private boolean isInTeleportingProcess = false;
     private CorePlayer TargetTeleporting = null;
     private Position TargetTeleportingLoc;
-
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
         super(interfaz, clientID, ip, port);
+    }
+
+    public boolean isInTeleportingProcess() {
+        return isInTeleportingProcess;
+    }
+
+    public void setInTeleportingProcess(boolean inTeleportingProcess) {
+        isInTeleportingProcess = inTeleportingProcess;
     }
 
     public boolean IsItemBeingEnchanted() {
@@ -444,50 +451,61 @@ public class CorePlayer extends Player {
     public boolean onUpdate(int currentTick) {
         //Check to see if Player as medic or Restoration
         PlayerFood pf = getFoodData();
-
-        if (TeleportTick != 0) {
-            if (CTLastPos == null) CTLastPos = getPosition();
-            else {
-                sendMessage(CTLastPos.distance(getPosition()) + "");
-                if (CTLastPos.distance(getPosition()) > .5) {
-                    isTeleporting = false;
-                }
+        if (isInTeleportingProcess) {
+            sendPopup(TeleportTick + "|" + isTeleporting);
+            if (TeleportTick != 0 && isTeleporting) {
+                if (CTLastPos == null) CTLastPos = getPosition();
+                else {
+                    sendMessage(CTLastPos.distance(getPosition()) + "");
+                    if (CTLastPos.distance(getPosition()) > 3) {
+                        isTeleporting = false;
+                    }
 //            CTLastPos = getPosition();
+                }
+                if (TeleportTick <= currentTick && isTeleporting) {
+                    System.out.println("AAAAAA");
+                    if (isTeleporting) {
+                        removeAllEffects();
+                        if ((TargetTeleporting != null && !TargetTeleporting.isAlive())) {
+                            sendMessage("Error! Player Not found!!");
+                            isInTeleportingProcess = false;
+                            TeleportTick = 0;
+                            CTLastPos = null;
+                            return super.onUpdate(currentTick);
+                        } else if (TargetTeleporting == null && TargetTeleportingLoc == null) {
+                            sendMessage("Error! No Teleport data found!!!");
+                            isInTeleportingProcess = false;
+                            TeleportTick = 0;
+                            CTLastPos = null;
+                            return super.onUpdate(currentTick);
+                        } else if (TargetTeleportingLoc != null) {
+                            getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
+                            teleport(TargetTeleportingLoc);
+                            TargetTeleportingLoc = null;
+                            TargetTeleporting = null;
+                        } else {
+                            getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
+                            teleport(TargetTeleporting);
+                            TargetTeleportingLoc = null;
+                            TargetTeleporting = null;
+                        }
+                        isInTeleportingProcess = false;
+                        TeleportTick = 0;
+                        CTLastPos = null;
+                    }
+                } else if (isInTeleportingProcess && !isTeleporting) {
+                    removeAllEffects();
+                    sendMessage("Error! you moved too much!");
+                    isInTeleportingProcess = false;
+                    TeleportTick = 0;
+                    CTLastPos = null;
+                    TargetTeleportingLoc = null;
+                    TargetTeleporting = null;
+                }
+
             }
         }
 
-        if (TeleportTick != 0 && TeleportTick <= currentTick && isInTeleportingProcess) {
-            System.out.println("AAAAAA");
-            if (isTeleporting) {
-                Effect e1 = getEffect(9);
-                Effect e2 = getEffect(2);
-                e1.setDuration(2);
-                e2.setDuration(2);
-                addEffect(e1);
-                addEffect(e2);
-                if ((TargetTeleporting != null && !TargetTeleporting.isAlive())) {
-                    sendMessage("Error! Player Not found!!");
-                    isInTeleportingProcess = false;
-                    return super.onUpdate(currentTick);
-                } else if (TargetTeleporting == null && TargetTeleportingLoc == null) {
-                    sendMessage("Error! No Teleport data found!!!");
-                    isInTeleportingProcess = false;
-                    return super.onUpdate(currentTick);
-                } else if (TargetTeleportingLoc != null) {
-                    getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
-                    teleport(TargetTeleportingLoc);
-                } else {
-                    getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
-                    teleport(TargetTeleporting);
-                }
-            } else {
-                //You moved too much
-                sendMessage("Error! you moved too much!");
-            }
-            isInTeleportingProcess = false;
-            TeleportTick = 0;
-            CTLastPos = null;
-        }
 
         return super.onUpdate(currentTick);
     }
@@ -534,7 +552,7 @@ public class CorePlayer extends Player {
                 Vector3 v3 = h.toVector3();
                 if (instant) teleport(v3);
                 else
-                    getServer().getScheduler().scheduleDelayedTask(new TPToHome(CyberCoreMain.getInstance(), this, v3), 20 * delay);//3 Secs
+                    StartTeleport(h.toPosition(getLevel()), 7);
             }
         }
 

@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Data;
 
+import javafx.scene.effect.Effect;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import ru.nukkit.dblib.DbLib;
 
@@ -81,8 +82,13 @@ public class SQLite {
     public boolean executeUpdate(String query) throws SQLException {
         Connection connection = connectToDb();
         if (connection == null) return false;
-        connection.createStatement().executeUpdate(query);
-        if (connection != null) connection.close();
+        try {
+            connection.createStatement().executeUpdate(query);
+        }catch (Exception e){
+            CyberCoreMain.getInstance().getLogger().error("QUERRY : "+query);
+            CyberCoreMain.getInstance().getLogger().error("ERROR!!!!!!!!!",e);
+        }
+        connection.close();
         return true;
     }
 

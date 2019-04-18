@@ -138,7 +138,12 @@ public class FactionsMain {
         }
     }
 
+    public boolean isInFaction(Player player) {
+        return player != null && isInFaction((CorePlayer) player);
+    }
+
     public boolean isInFaction(CorePlayer player) {
+        if(player == null)return false;
         return player.faction_id != null;
     }
 
@@ -238,6 +243,10 @@ public class FactionsMain {
             }
         }
         return false;
+    }
+
+    public void LoadPlayer(Player player) {
+
     }
 
 //    public ConfigSection getBBN() {

@@ -64,7 +64,7 @@ public class ServerSqlite extends SQLite {
             }
 
             for (HashMap<String, Object> v : data) {
-                p.AddHome(new HomeData((String) v.get("name"), (int) v.get("x"), (int) v.get("y"), (int) v.get("z"), (String) v.get("level"),p));
+                p.AddHome(new HomeData((String) v.get("name"), (Double) v.get("x"), (Double) v.get("y"), (Double) v.get("z"), (String) v.get("level"),p));
             }
 
         } catch (SQLException e) {
@@ -74,9 +74,9 @@ public class ServerSqlite extends SQLite {
 
     private void SaveHomes(CorePlayer p) {
         try {
-            executeUpdate("REMOVE * FROM `Homes` WHERE `owneruuid` == '"+p.getUniqueId()+"'");
+            executeUpdate("DELETE FROM `Homes` WHERE `owneruuid` == '"+p.getUniqueId()+"'");
             for(HomeData h : p.HD){
-                executeUpdate("INSERT INTO `Homes VALUES (0,'"+h.getName()+","+h.getX()+","+h.getY()+","+h.getZ()+","+h.getLevel()+","+h.getOwner()+","+h.getOwneruuid()+")");
+                executeUpdate("INSERT INTO `Homes` VALUES (0,'"+h.getName()+"',"+h.getX()+","+h.getY()+","+h.getZ()+",'"+h.getLevel()+"','"+h.getOwner()+"','"+h.getOwneruuid()+"')");
             }
             plugin.getLogger().info("Homes saved for "+p.getName());
             p.sendTip("Homes Saved!");

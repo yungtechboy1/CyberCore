@@ -153,6 +153,14 @@ public class MasterListener implements Listener {
 
     }
 
+
+//    @EventHandler(priority = EventPriority.HIGHEST)
+//    public void onCreation(PlayerCreationEvent event) {
+//        event.setPlayerClass(CorePlayer.class);
+//        event.setBaseClass(CorePlayer.class);
+//    }
+
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCreation(PlayerCreationEvent event) {
         event.setPlayerClass(CorePlayer.class);
@@ -162,6 +170,8 @@ public class MasterListener implements Listener {
     public void quitEvent(PlayerQuitEvent event) {
         String Msg = (String) plugin.MainConfig.get("Leave-Message");
         event.setQuitMessage(Msg.replace("{player}", event.getPlayer().getName()));
+
+        plugin.ServerSQL.UnLoadPlayer(event.getPlayer());
     }
 
 

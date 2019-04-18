@@ -159,15 +159,7 @@ public class FactionListener implements Listener {
         public void FationsJoinEvent(PlayerJoinEvent event) {
             //plugin.uuid[event.getPlayer().getName()][event.getPlayer().getClientId()] = date(DATE_COOKIE);
             String player = event.getPlayer().getName();
-
-            if(factions.isInFaction(player)) {
-                new NukkitRunnable() {
-                    @Override
-                    public void run() {
-                        event.getPlayer().sendPopup("Your Faction is : HACKED FACTION");//TODO: Make faction data retrievable and savable.
-                    }
-                }.runTaskLater(plugin, 60);
-            }
+            factions.LoadPlayer(event.getPlayer());
 
 
 /*

@@ -65,11 +65,11 @@ public class Home extends Command {
             sender.sendMessage(Prefix + "Error! You do not have a home called " + args[0]);
             return true;
         }
-        if (p.Teleporting) {
+        if (p.isInTeleportingProcess()) {
             sender.sendMessage(Prefix + "Error! You are in the process of TPing already!");
             return true;
         }
-        p.Teleporting = true;
+        p.setInTeleportingProcess(true);
         p.TeleportToHome(args[0],10);
         return true;
     }

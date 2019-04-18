@@ -19,7 +19,7 @@ public class SetHome extends Command {
         Owner = server;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
-                new CommandParameter("key", CommandParamType.RAWTEXT, true)
+                new CommandParameter("Home Name", CommandParamType.TEXT, true)
         });
     }
 

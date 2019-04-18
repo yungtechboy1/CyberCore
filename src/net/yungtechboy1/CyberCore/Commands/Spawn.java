@@ -56,19 +56,6 @@ public class Spawn extends Command {
                     s.sendMessage(TextFormat.GREEN + "Teleporting you to spawn in 5 Secs!");
                 }
             }
-        } else {
-            if(args.length == 1){
-                Player t = server.getServer().getPlayer(args[0]);
-                if(t == null){
-                    s.sendMessage(TextFormat.RED+"Error! Target Player Not Found!");
-                    return;
-                }
-                t.teleport(t.getLevel().getSafeSpawn());
-                t.sendMessage(TextFormat.YELLOW+" Your at spawn!");
-                s.sendMessage(TextFormat.GREEN+t.getName()+" Teleported to spawn!");
-                return;
-            }
-            s.sendMessage(Messages.NEED_TO_BE_PLAYER);
         }
     }
 }

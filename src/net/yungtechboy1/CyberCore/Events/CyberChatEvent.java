@@ -51,12 +51,6 @@ public class CyberChatEvent implements Listener {
 
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onCreation(PlayerCreationEvent event) {
-        event.setPlayerClass(CorePlayer.class);
-        event.setBaseClass(CorePlayer.class);
-    }
-
     @EventHandler(priority = EventPriority.LOWEST)
     public void quitEvent(PlayerQuitEvent event) {
         String Msg = (String) plugin.MainConfig.get("Leave-Message");
