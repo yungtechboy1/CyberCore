@@ -1,6 +1,7 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.ServerCmds;
 
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Create;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
@@ -14,7 +15,7 @@ public class FCreate extends CommandBase{
         commandParameters.clear();
         this.commandParameters.put("default",
                 new CommandParameter[]{
-                        new CommandParameter("Name", CommandParameter.ARG_TYPE_STRING, true)
+                        new CommandParameter("Name", CommandParamType.RAWTEXT, true)
                 });
         description = "asdasd";
     }

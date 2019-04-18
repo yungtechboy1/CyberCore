@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Commands;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -21,7 +22,7 @@ public class Register extends Command {
         Owner = server;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
-                new CommandParameter("password", CommandParameter.ARG_TYPE_STRING, true)
+                new CommandParameter("password", CommandParamType.STRING, true)
         });
         this.setPermission("CyberTech.CyberCore.player");
     }

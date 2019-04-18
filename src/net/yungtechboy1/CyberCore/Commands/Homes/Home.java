@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Commands.Homes;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -26,8 +27,12 @@ public class Home extends Command {
         Owner = server;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
-                new CommandParameter("key | list", CommandParameter.ARG_TYPE_RAW_TEXT, true)
+                new CommandParameter("key | list", CommandParamType.RAWTEXT, true),
+
+                new CommandParameter("key | list", CommandParamType.RAWTEXT, true)
         });
+
+        this.commandParameters.put("default", new CommandParameter[]{new CommandParameter("args", CommandParamType.RAWTEXT, true)});
     }
 
     @Override

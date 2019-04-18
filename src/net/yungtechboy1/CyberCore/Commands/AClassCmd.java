@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Commands;
 
+import cn.nukkit.command.data.CommandParamType;
 import net.yungtechboy1.CyberCore.Classes.Old.*;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
@@ -21,15 +22,15 @@ public class AClassCmd extends Command {
         Owner = server;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
-                new CommandParameter("del", CommandParameter.ARG_TYPE_STRING, true)
+                new CommandParameter("del", CommandParamType.STRING, true)
         });
         this.commandParameters.put("classes", new CommandParameter[]{
-                new CommandParameter("setclass", CommandParameter.ARG_TYPE_STRING, false),
-                new CommandParameter("class", CommandParameter.ARG_TYPE_STRING, false)
+                new CommandParameter("setclass", CommandParamType.STRING, false),
+                new CommandParameter("class", CommandParamType.STRING, false)
         });
         this.commandParameters.put("setxp", new CommandParameter[]{
-                new CommandParameter("setclass", CommandParameter.ARG_TYPE_STRING, false),
-                new CommandParameter("class", CommandParameter.ARG_TYPE_INT, false)
+                new CommandParameter("setclass", CommandParamType.STRING, false),
+                new CommandParameter("class", CommandParamType.INT, false)
         });
         this.setPermission("CyberTech.CyberCore.op");
     }

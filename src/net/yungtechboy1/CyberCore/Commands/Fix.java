@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Commands;
 
+import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.item.ItemSwordDiamond;
 import cn.nukkit.item.enchantment.Enchantment;
 import net.yungtechboy1.CyberCore.Commands.Constructors.CheckPermCommand;
@@ -32,7 +33,7 @@ public class Fix extends CheckPermCommand {
         super(server, "fix", "Fixes Item in hand", "/fix", RankList.PERM_ISLANDER);
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
-                new CommandParameter("player", CommandParameter.ARG_TYPE_TARGET, true)
+                new CommandParameter("player", CommandParamType.TARGET, true)
         });
     }
 

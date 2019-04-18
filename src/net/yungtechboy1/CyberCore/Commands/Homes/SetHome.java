@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Commands.Homes;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -18,7 +19,7 @@ public class SetHome extends Command {
         Owner = server;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
-                new CommandParameter("key", CommandParameter.ARG_TYPE_RAW_TEXT, true)
+                new CommandParameter("key", CommandParamType.RAWTEXT, true)
         });
     }
 

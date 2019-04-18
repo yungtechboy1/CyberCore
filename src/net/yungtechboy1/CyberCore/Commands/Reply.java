@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Commands;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -20,7 +21,7 @@ public class Reply extends Command{
         Owner = server;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
-                new CommandParameter("message", CommandParameter.ARG_TYPE_RAW_TEXT, false)
+                new CommandParameter("message", CommandParamType.RAWTEXT, false)
         });
     }
 

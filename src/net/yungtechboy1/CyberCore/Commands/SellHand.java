@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Commands;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.item.Item;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -18,7 +19,7 @@ public class SellHand extends Command {
         Owner = server;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
-                new CommandParameter("price", CommandParameter.ARG_TYPE_INT, false)
+                new CommandParameter("price", CommandParamType.FLOAT, false)
         });
         this.setPermission("CyberTech.CyberCore.player");
     }

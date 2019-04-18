@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Commands;
 
+import cn.nukkit.command.data.CommandParamType;
 import net.yungtechboy1.CyberCore.Commands.Constructors.CheckPermCommand;
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
@@ -19,13 +20,13 @@ public class Password extends CheckPermCommand {
         super(server, "password", "Edits Passwords", "/password", RankList.PERM_ADMIN_1);
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
-                new CommandParameter("player", CommandParameter.ARG_TYPE_TARGET, false),
-                new CommandParameter("reset", CommandParameter.ARG_TYPE_INT, false)
+                new CommandParameter("player", CommandParamType.TARGET, false),
+                new CommandParameter("reset", CommandParamType.INT, false)
         });
         this.commandParameters.put("setpassword", new CommandParameter[]{
-                new CommandParameter("player", CommandParameter.ARG_TYPE_TARGET, false),
-                new CommandParameter("set", CommandParameter.ARG_TYPE_INT, false),
-                new CommandParameter("password", CommandParameter.ARG_TYPE_STRING, false)
+                new CommandParameter("player", CommandParamType.TARGET, false),
+                new CommandParameter("set", CommandParamType.INT, false),
+                new CommandParameter("password", CommandParamType.RAWTEXT, false)
         });
     }
 
