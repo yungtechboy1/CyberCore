@@ -559,7 +559,12 @@ public class CorePlayer extends Player {
 
     public void AddHome(String name) {
         Vector3 v = (Vector3) getPosition();
-        HD.add(new HomeData(getUniqueId().toString(), name, v));
+        HD.add(new HomeData(name, this));
+    }
+
+
+    public void AddHome(HomeData homeData) {
+        HD.add(homeData);
     }
 
     public PlayerSettingsData getSettingsData() {
@@ -623,6 +628,7 @@ public class CorePlayer extends Player {
         TargetTeleporting = null;
         TargetTeleportingLoc = pos;
     }
+
 
 //
 //        int tickDiff = currentTick - this.lastUpdate;

@@ -14,6 +14,7 @@ import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.GlobalBlockPalette;
+import cn.nukkit.level.Position;
 import cn.nukkit.network.Network;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import net.yungtechboy1.CyberCore.Bans.Ban;
@@ -30,6 +31,7 @@ import net.yungtechboy1.CyberCore.Custom.CustomGlobalBlockPalette;
 import net.yungtechboy1.CyberCore.Custom.CustomStartGamePacket;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
+import net.yungtechboy1.CyberCore.Data.ServerSqlite;
 import net.yungtechboy1.CyberCore.Data.UserSQL;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
@@ -146,6 +148,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
      */
 //    public net.yungtechboy1.CyberCore.Data.UserSQL UserSQL;
     public net.yungtechboy1.CyberCore.Manager.Warp.WarpManager WarpManager;
+    public ServerSqlite ServerSQL;
 
 
     public void ReloadBlockList(int id, Class c){
@@ -239,6 +242,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         SQLSaveManager = new SQLManager(this);
 
         CoreSQL = new CoreSQL(this);
+        ServerSQL = new ServerSqlite(this,"server");
+        ServerSQL.LoadAllWarps();
 //        UserSQL = new UserSQL(this, "server-data");
 
 
@@ -249,7 +254,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         //Threaded ONLY RUN FOR TESTING
         //TESTING
         FTM = new FloatingTextFactory(this);
-        FloatingTextFactory.AddFloatingText(new FloatingTextContainer(FTM, getServer().getLevelByName("world").getSafeSpawn(), "TESTTTT"));
+        FloatingTextFactory.AddFloatingText(new FloatingTextContainer(FTM, getServer().getLevelByName("world").getSafeSpawn().add(0,5,0), TextFormat.GREEN+"This is Spawn!"));
 
 
         //Mob Plugin
@@ -295,7 +300,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        getServer().getPluginManager().registerEvents(ClassFactory, this);
 //        getServer().getPluginManager().registerEvents(AuctionFactory, this);
         getServer().getPluginManager().registerEvents(this, this);
-//        getServer().getPluginManager().registerEvents(new FactionListener(this, FM), this);
+        getServer().getPluginManager().registerEvents(new FactionListener(this, FM), this);
 
 //        getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
 //        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec

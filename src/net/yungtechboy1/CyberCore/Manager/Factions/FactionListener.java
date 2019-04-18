@@ -155,19 +155,19 @@ public class FactionListener implements Listener {
 //        }
 //    }
 
-//    @EventHandler(priority = EventPriority.HIGHEST)
-//    public void FationsJoinEvent(PlayerJoinEvent event) {
-//        //plugin.uuid[event.getPlayer().getName()][event.getPlayer().getClientId()] = date(DATE_COOKIE);
-//        String player = event.getPlayer().getName();
-//
-//        if(factions.isInFaction(player)) {
-//            new NukkitRunnable() {
-//                @Override
-//                public void run() {
-//                    event.getPlayer().sendPopup("Your Faction is : HACKED FACTION");//TODO: Make faction data retrievable and savable.
-//                }
-//            }.runTaskLater(plugin, 60);
-//        }
+        @EventHandler(priority = EventPriority.HIGHEST)
+        public void FationsJoinEvent(PlayerJoinEvent event) {
+            //plugin.uuid[event.getPlayer().getName()][event.getPlayer().getClientId()] = date(DATE_COOKIE);
+            String player = event.getPlayer().getName();
+
+            if(factions.isInFaction(player)) {
+                new NukkitRunnable() {
+                    @Override
+                    public void run() {
+                        event.getPlayer().sendPopup("Your Faction is : HACKED FACTION");//TODO: Make faction data retrievable and savable.
+                    }
+                }.runTaskLater(plugin, 60);
+            }
 
 
 /*
@@ -251,7 +251,7 @@ public class FactionListener implements Listener {
         }
         */
         // }
-//    }
+   }
 
     @EventHandler
     public void BucketEmpty(PlayerBucketEmptyEvent ev) {
