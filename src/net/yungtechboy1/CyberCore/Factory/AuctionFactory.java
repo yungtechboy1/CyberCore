@@ -1,9 +1,12 @@
 package net.yungtechboy1.CyberCore.Factory;
 
 import cn.nukkit.Player;
+import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockAir;
 import cn.nukkit.event.Listener;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemBlock;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
@@ -232,7 +235,11 @@ public class AuctionFactory implements Listener {
         int stop = page * 45;
         int start = stop - 45;
         if (start > getListOfItems().size()) {
-            return new ArrayList<>();
+            ArrayList<Item> a = new ArrayList<Item>();
+            for(int i = 0; i < 45; i++){
+                a.add(new ItemBlock(new BlockAir(), (Integer)null, 0));
+            }
+            return a;
         }
 
         ArrayList<Item> list = new ArrayList<>();
@@ -241,8 +248,8 @@ public class AuctionFactory implements Listener {
             if (a >= stop) break;
             Item newitem = getListOfItems().get(a).clone();
             System.out.println(newitem.toString());
-            if (newitem == null) continue;
-            list.add(newitem);
+            if (newitem == null) list.add(new ItemBlock(new BlockAir(), (Integer)null, 0));
+            else list.add(newitem);
         }
 
         return list;

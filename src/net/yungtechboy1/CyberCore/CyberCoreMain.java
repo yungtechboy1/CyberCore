@@ -33,6 +33,8 @@ import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
 import net.yungtechboy1.CyberCore.Data.ServerSqlite;
 import net.yungtechboy1.CyberCore.Data.UserSQL;
+import net.yungtechboy1.CyberCore.Factory.AuctionFactory;
+import net.yungtechboy1.CyberCore.Factory.AuctionFactoryPE;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
 import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
@@ -124,7 +126,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     //FactoriesA
     public HomeManager HomeFactory;
     public net.yungtechboy1.CyberCore.Rank.RankFactory RankFactory;
-    public net.yungtechboy1.CyberCore.Factory.AuctionFactory AuctionFactory;
+    public net.yungtechboy1.CyberCore.Factory.AuctionFactoryPE AuctionFactory;
     public net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager PurgeManager;
     public List<String> Final = new ArrayList<>();
     public List<String> TPING = new ArrayList<>();
@@ -273,7 +275,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         HomeFactory = new HomeManager(this);
         RankFactory = new RankFactory(this);
         //TODO
-//        AuctionFactory = new AuctionFactory(this);
+        AuctionFactory = new AuctionFactoryPE(this);
 
         MuteConfig = new Config(new File(getDataFolder(), "Mute.yml"), Config.YAML);
 
@@ -304,7 +306,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
 //        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec
-        new SendHUD();
+        new SendHUD().start();
 
         //COMMANDS
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ChooseClass(this));
@@ -336,7 +338,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new FTS(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new FTR(this));
 //
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPR(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPR(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPD(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPA(this));
 //
@@ -354,7 +356,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ChatEnchant(this));
 //
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new AuctionHouseCmd(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new AuctionHouseCmd(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SellHand(this));
     }
 

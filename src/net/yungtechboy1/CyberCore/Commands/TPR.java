@@ -36,6 +36,7 @@ public class TPR extends Command {
                 t.sendMessage(Messages.TPA_REQUEST.replace("{0}",s.getName()));
                 s.sendMessage(Messages.TPA_SENT.replace("{0}",t.getName()));
                 ((CorePlayer)t).TPR = s.getName();
+                ((CorePlayer)t).TPRTimeout = t.getServer().getTick() + 20*60*2;//2 Mins
             }else{
                 s.sendMessage(Messages.PLAYER_NOT_FOUND);
             }

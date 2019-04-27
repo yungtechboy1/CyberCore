@@ -19,6 +19,7 @@ import cn.nukkit.math.*;
 import cn.nukkit.network.SourceInterface;
 import cn.nukkit.network.protocol.*;
 import cn.nukkit.potion.Effect;
+import cn.nukkit.utils.TextFormat;
 import co.aikar.timings.Timing;
 import co.aikar.timings.Timings;
 import javafx.geometry.Pos;
@@ -61,6 +62,7 @@ public class CorePlayer extends Player {
     public ArrayList<Enchantment> MasterEnchantigList = null;
     public ArrayList<HomeData> HD = new ArrayList<>();
     public int MaxHomes = 5;
+    public int TPRTimeout;
     long uct = 0;
     boolean uw = false;
     private FormWindow nw;
@@ -75,6 +77,7 @@ public class CorePlayer extends Player {
     private boolean isInTeleportingProcess = false;
     private CorePlayer TargetTeleporting = null;
     private Position TargetTeleportingLoc;
+
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
         super(interfaz, clientID, ip, port);
     }
@@ -451,6 +454,14 @@ public class CorePlayer extends Player {
     public boolean onUpdate(int currentTick) {
         //Check to see if Player as medic or Restoration
         PlayerFood pf = getFoodData();
+        if (TPR != null && TPRTimeout != 0 && TPRTimeout < currentTick && !isInTeleportingProcess) {
+            TPRTimeout = 0;
+            CorePlayer cp  = CyberCoreMain.getInstance().getCorePlayer(TPR);
+            if(cp != null)cp.sendPopup(TextFormat.YELLOW+"Teleport request expired");
+            sendPopup(TextFormat.YELLOW+"Teleport request expired");
+            TPR = null;
+        }
+
         if (isInTeleportingProcess) {
             sendPopup(TeleportTick + "|" + isTeleporting);
             if (TeleportTick != 0 && isTeleporting) {
