@@ -36,7 +36,6 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     public boolean ConfirmPurchase = false;
     public int ConfirmPurchaseSlot = 0;
     protected int maxStackSize = Inventory.MAX_STACK;
-    protected int size;
     EntityHuman holder;
     Vector3 BA;
     CyberCoreMain CCM;
@@ -48,7 +47,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     }
 
     public AuctionHouse(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba, int page) {
-        super(Holder, InventoryType.ENDER_CHEST, new HashMap<>(), 9 * 6);//54??
+        super(Holder, InventoryType.DOUBLE_CHEST, CyberCoreMain.getInstance().AuctionFactory.getPageHash(page), 9 * 6);//54??
         //TODO SHOULD SIZE BE 54!?!?
         holder = Holder;
 //        this.size = 9 * 6;
@@ -62,7 +61,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
         this.name = title;
         if (CyberCoreMain.getInstance().AuctionFactory.getPageHash(page) == null) System.out.println("NUUUUUUUUUUU");
-        setContents(CyberCoreMain.getInstance().AuctionFactory.getPageHash(page));
+//        setContents(CyberCoreMain.getInstance().AuctionFactory.getPageHash(page));
     }
 
     public void setPage(Integer page) {
@@ -74,6 +73,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     @Override
     public void onOpen(Player who) {
         super.onOpen(who);
+        ReloadInv();
         ContainerOpenPacket containerOpenPacket = new ContainerOpenPacket();
         containerOpenPacket.windowId = who.getWindowId(this);
         containerOpenPacket.type = this.getType().getNetworkType();
@@ -85,19 +85,6 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
         who.dataPacket(containerOpenPacket);
         this.sendContents(who);
-        if (chest != null && chest.getViewers().size() == 1) {
-            BlockEventPacket blockEventPacket = new BlockEventPacket();
-            blockEventPacket.x = (int) chest.getX();
-            blockEventPacket.y = (int) chest.getY();
-            blockEventPacket.z = (int) chest.getZ();
-            blockEventPacket.case1 = 1;
-            blockEventPacket.case2 = 2;
-            Level level = this.getHolder().getLevel();
-            if (level != null) {
-                level.addLevelSoundEvent(this.getHolder().add(0.5D, 0.5D, 0.5D), 71);
-                level.addChunkPacket((int) this.getHolder().getX() >> 4, (int) this.getHolder().getZ() >> 4, blockEventPacket);
-            }
-        }
 
 
         who.sendMessage("OPENINGGGGG");
@@ -222,43 +209,22 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 //        }
 //    }
 
-    @Override
-    public int getSize() {
-        return size;
-    }
 
     public void setSize(int size) {
         this.size = size;
     }
 
-    @Override
-    public int getMaxStackSize() {
-        return maxStackSize;
-    }
-
-    @Override
-    public void setMaxStackSize(int maxStackSize) {
-        this.maxStackSize = maxStackSize;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public Item getItem(int index) {
-        return this.slots.containsKey(index) ? this.slots.get(index).clone() : new ItemBlock(new BlockAir(), null, 0);
-    }
 
     @Override
     public Map<Integer, Item> getContents() {
-        return new HashMap<>(this.slots);
+
+        Map<Integer, Item> contents = new HashMap<>();
+
+        for (int i = 0; i < this.getSize(); ++i) {
+            contents.put(i, this.getItem(i));
+        }
+
+        return contents;
     }
 
 //    public void setContents(ArrayList<Item> items) {
@@ -280,13 +246,17 @@ public class AuctionHouse extends BaseInventory implements Inventory {
                         TextFormat.GREEN + " Click here to view all the items" + TextFormat.RESET + "\n" + TextFormat.GREEN + "you are currently selling on the auction" + TextFormat.RESET + "\n\n" +
                         TextFormat.GREEN + "Can also use " + TextFormat.DARK_GREEN + "/ah listed"
         );
-        Item potato = Item.get(Item.POTATO, 1);
+        Item potato = Item.get(Item.POISONOUS_POTATO, 1);
         potato.setCustomName(
                 TextFormat.GOLD + "" + TextFormat.BOLD + "Collect Expired Items" + TextFormat.RESET + "\n" +
                         TextFormat.GREEN + " Click here to view all the items" + TextFormat.RESET + "\n" + TextFormat.GREEN + " you have canceled or experied" + TextFormat.RESET + "\n\n" +
                         TextFormat.GREEN + "Can also use " + TextFormat.DARK_GREEN + "/ah expired"
         );
 
+        Item grayglass = Item.get(Item.STAINED_GLASS_PANE, 7);
+        grayglass.setCustomName(
+                TextFormat.DARK_GRAY + "" + TextFormat.BOLD + "-------------"
+        );
         Item redglass = Item.get(Item.STAINED_GLASS_PANE, 14);
         redglass.setCustomName(
                 TextFormat.YELLOW + "" + TextFormat.BOLD + "Previous Page"
@@ -303,12 +273,16 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         chest.setCustomName(
                 TextFormat.GOLD + "" + TextFormat.BOLD + "Categories"
         );
-        setItem(getSize() - 16, diamond);
-        setItem(getSize() - 15, potato);
-        setItem(getSize() - 14, redglass);
-        setItem(getSize() - 13, netherstar);
-        setItem(getSize() - 12, greenglass);
-        setItem(getSize() - 11, chest);
+        int k = 9;
+        setItem(getSize() - k--, redglass);
+        setItem(getSize() - k--, grayglass);
+        setItem(getSize() - k--, grayglass);
+        setItem(getSize() - k--, diamond);
+        setItem(getSize() - k--, netherstar);
+        setItem(getSize() - k--, chest);
+        setItem(getSize() - k--, grayglass);
+        setItem(getSize() - k--, grayglass);
+        setItem(getSize() - k--, greenglass);
 //        sendContents((Player) holder);
     }
 
@@ -351,28 +325,28 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         this.onSlotChange(index, null);
     }
 
-    @Override
-    public boolean setItem(int index, Item item) {
-        item = item.clone();
-        if (index < 0 || index >= this.size) {
-            return false;
-        } else if (item.getId() == 0 || item.getCount() <= 0) {
-            return this.clear(index);
-        }
-
-
-        Item old = this.getItem(index);
-        setItem(index, item.clone());
-        this.onSlotChange(index, old);
-        //if (getItem(0).getId() == 0 || getItem(4).getId() == 0) setItem2(2, Item.get(Item.ANVIL));
-
-        return true;
-    }
-
-    @Override
-    public boolean setItem(int index, Item item, boolean send) {
-        return false;
-    }
+//    @Override
+//    public boolean setItem(int index, Item item) {
+//        item = item.clone();
+//        if (index < 0 || index >= this.size) {
+//            return false;
+//        } else if (item.getId() == 0 || item.getCount() <= 0) {
+//            return this.clear(index);
+//        }
+//
+//
+//        Item old = this.getItem(index);
+//        setItem(index, item.clone());
+//        this.onSlotChange(index, old);
+//        //if (getItem(0).getId() == 0 || getItem(4).getId() == 0) setItem2(2, Item.get(Item.ANVIL));
+//
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean setItem(int index, Item item, boolean send) {
+//        return false;
+//    }
 
     @Override
     public boolean contains(Item item) {
@@ -451,124 +425,6 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
     }
 
-    @Override
-    public boolean canAddItem(Item item) {
-        item = item.clone();
-        boolean checkDamage = item.hasMeta();
-        boolean checkTag = item.getCompoundTag() != null;
-        for (int i = 0; i < this.getSize(); ++i) {
-            Item slot = this.getItem(i);
-            if (item.equals(slot, checkDamage, checkTag)) {
-                int diff;
-                if ((diff = slot.getMaxStackSize() - slot.getCount()) > 0) {
-                    item.setCount(item.getCount() - diff);
-                }
-            } else if (slot.getId() == Item.AIR) {
-                item.setCount(item.getCount() - this.getMaxStackSize());
-            }
-
-            if (item.getCount() <= 0) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public Item[] addItem(Item... slots) {
-        List<Item> itemSlots = new ArrayList<>();
-        for (Item slot : slots) {
-            if (slot.getId() != 0 && slot.getCount() > 0) {
-                itemSlots.add(slot.clone());
-            }
-        }
-
-        List<Integer> emptySlots = new ArrayList<>();
-
-        for (int i = 0; i < this.getSize(); ++i) {
-            //Only 0 and 4 Slot are editable!
-            if (i != 0 && i != 4) continue;
-            Item item = this.getItem(i);
-            if (item.getId() == Item.AIR || item.getCount() <= 0) {
-                emptySlots.add(i);
-            }
-
-            for (Item slot : new ArrayList<>(itemSlots)) {
-                if (slot.equals(item) && item.getCount() < item.getMaxStackSize()) {
-                    int amount = Math.min(item.getMaxStackSize() - item.getCount(), slot.getCount());
-                    amount = Math.min(amount, this.getMaxStackSize());
-                    if (amount > 0) {
-                        slot.setCount(slot.getCount() - amount);
-                        item.setCount(item.getCount() + amount);
-                        this.setItem(i, item);
-                        if (slot.getCount() <= 0) {
-                            itemSlots.remove(slot);
-                        }
-                    }
-                }
-            }
-            if (itemSlots.isEmpty()) {
-                break;
-            }
-        }
-
-        if (!itemSlots.isEmpty() && !emptySlots.isEmpty()) {
-            for (int slotIndex : emptySlots) {
-                if (!itemSlots.isEmpty()) {
-                    Item slot = itemSlots.get(0);
-                    int amount = Math.min(slot.getMaxStackSize(), slot.getCount());
-                    amount = Math.min(amount, this.getMaxStackSize());
-                    slot.setCount(slot.getCount() - amount);
-                    Item item = slot.clone();
-                    item.setCount(amount);
-                    this.setItem(slotIndex, item);
-                    if (slot.getCount() <= 0) {
-                        itemSlots.remove(slot);
-                    }
-                }
-            }
-        }
-
-        return itemSlots.stream().toArray(Item[]::new);
-    }
-
-    @Override
-    public Item[] removeItem(Item... slots) {
-        List<Item> itemSlots = new ArrayList<>();
-        for (Item slot : slots) {
-            if (slot.getId() != 0 && slot.getCount() > 0) {
-                itemSlots.add(slot.clone());
-            }
-        }
-
-        for (int i = 0; i < this.getSize(); ++i) {
-            if (i != 0 && i != 4) continue;
-            Item item = this.getItem(i);
-            if (item.getId() == Item.AIR || item.getCount() <= 0) {
-                continue;
-            }
-
-            for (Item slot : new ArrayList<>(itemSlots)) {
-                if (slot.equals(item, item.hasMeta(), item.getCompoundTag() != null)) {
-                    int amount = Math.min(item.getCount(), slot.getCount());
-                    slot.setCount(slot.getCount() - amount);
-                    item.setCount(item.getCount() - amount);
-                    this.setItem(i, item);
-                    if (slot.getCount() <= 0) {
-                        itemSlots.remove(slot);
-                    }
-
-                }
-            }
-
-            if (itemSlots.size() == 0) {
-                break;
-            }
-        }
-
-        return itemSlots.stream().toArray(Item[]::new);
-    }
 
     @Override
     public boolean clear(int index) {
@@ -677,6 +533,6 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
     @Override
     public InventoryType getType() {
-        return InventoryType.ENDER_CHEST;
+        return InventoryType.DOUBLE_CHEST;
     }
 }

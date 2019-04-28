@@ -9,10 +9,14 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
+import cn.nukkit.item.ItemBook;
 import cn.nukkit.level.GlobalBlockPalette;
+import cn.nukkit.math.Vector3;
+import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.BlockEntityDataPacket;
 import cn.nukkit.network.protocol.UpdateBlockPacket;
+import cn.nukkit.scheduler.Task;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -20,6 +24,8 @@ import net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.ByteOrder;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -278,23 +284,52 @@ public class AuctionFactory implements Listener {
     }
 
     public void OpenAH(CorePlayer p, Integer pg) {
-        SpawnFakeBlockAndEntity(p,new CompoundTag().putString("CustomName","Auction House!"));
-        Inventory b = new AuctionHouse(p, CCM, p, pg);
-        p.addWindow(b);
+        SpawnFakeBlockAndEntity(p, new CompoundTag().putString("CustomName", "Auction House!"));
+        AuctionHouse b = new AuctionHouse(p, CCM, p, pg);
+        b.addItem(new ItemBook());
+        b.addItem(new ItemBook());
+        b.addItem(new ItemBook());
+        CyberCoreMain.getInstance().getLogger().info(b.getContents().values().size()+" < SIZZEEE"+b.getSize());
+        CyberCoreMain.getInstance().getServer().getScheduler().scheduleDelayedTask(new OpenAH(p,b),10);
 //        b.open()
     }
 
     public void SpawnFakeBlockAndEntity(Player to, CompoundTag data) {
-        BlockEntityDataPacket bedp = new BlockEntityDataPacket();
+
+        SpawnBlock(to, new BlockChest());
+        SpawnBlockEntity(to, data);
+
+    }
+
+    public void SpawnBlock(Player to, Block b) {
         UpdateBlockPacket a = new UpdateBlockPacket();
-        bedp.x = a.x = to.getFloorX();
-        bedp.y = a.y = to.getFloorY()-2;
-        bedp.z = a.z = to.getFloorZ();
-        bedp.namedTag = data.getByteArray("");
-        a.flags = UpdateBlockPacket.FLAG_ALL;
-        a.blockRuntimeId = GlobalBlockPalette.getOrCreateRuntimeId(new BlockEnderChest().getFullId());
-        to.dataPacket(bedp);
+        UpdateBlockPacket aa = new UpdateBlockPacket();
+        a.x = aa.x = to.getFloorX();
+        a.y = aa.y = to.getFloorY() - 2;
+        a.z = aa.z = to.getFloorZ();
+        aa.z += 1;
+        a.flags = aa.flags = UpdateBlockPacket.FLAG_ALL;
+        a.blockRuntimeId = aa.blockRuntimeId = GlobalBlockPalette.getOrCreateRuntimeId(b.getFullId());
         to.dataPacket(a);
+        to.dataPacket(aa);
+    }
+
+    public void SpawnBlockEntity(Player to, CompoundTag data) {
+        BlockEntityDataPacket bedp = new BlockEntityDataPacket();
+        BlockEntityDataPacket bedp2 = new BlockEntityDataPacket();
+        bedp2.x =bedp.x = to.getFloorX();
+        bedp2.y = bedp.y = to.getFloorY() - 2;
+        bedp2.z =bedp.z = to.getFloorZ();
+        bedp2.z += 1;
+        try {
+            bedp.namedTag =  NBTIO.write(data, ByteOrder.LITTLE_ENDIAN, true);
+            bedp2.namedTag =  NBTIO.write(new CompoundTag().putInt("pairx", bedp.x).putInt("pairz", bedp.z), ByteOrder.LITTLE_ENDIAN, true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        to.dataPacket(bedp);
+        to.dataPacket(bedp2);
     }
 
     //TODO
