@@ -3,19 +3,26 @@ package net.yungtechboy1.CyberCore.Factory;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
+import cn.nukkit.block.BlockChest;
+import cn.nukkit.block.BlockEnderChest;
 import cn.nukkit.event.Listener;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
+import cn.nukkit.level.GlobalBlockPalette;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.network.protocol.BlockEntityDataPacket;
+import cn.nukkit.network.protocol.UpdateBlockPacket;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.io.File;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by carlt_000 on 2/22/2017.
@@ -36,7 +43,6 @@ public class AuctionFactory implements Listener {
     Config Settings;
 
 
-
     ArrayList<Item> items = new ArrayList<>();
 
     public AuctionFactory(CyberCoreMain CCM) {
@@ -46,7 +52,7 @@ public class AuctionFactory implements Listener {
     }
 
     public Item GetItemfromDB(int idd) {
-        if(idd == 0)return null;
+        if (idd == 0) return null;
         ResultSet rs = null;//ExecuteQuerySQLite("SELECT * FROM `auctions` WHERE `id` = '" + idd + "'");
         if (rs != null) {
             try {
@@ -73,7 +79,7 @@ public class AuctionFactory implements Listener {
                         tag.getCompound("display").putInt("cost", cost);
                         tag.getCompound("display").putString("soldby", soldby);
                     } else {
-                        tag.putCompound("display", (new CompoundTag("display")).putInt("keyid", id).putInt("cost",cost).putString("soldby",soldby));
+                        tag.putCompound("display", (new CompoundTag("display")).putInt("keyid", id).putInt("cost", cost).putString("soldby", soldby));
                     }
                     i.setNamedTag(tag);
 
@@ -104,7 +110,7 @@ public class AuctionFactory implements Listener {
 
     public void Init() {
         ArrayList<Item> is = new ArrayList<>();
-        ResultSet rs = null ;//ExecuteQuerySQLite("SELECT * FROM `auctions` WHERE `purchased` != 1");
+        ResultSet rs = null;//ExecuteQuerySQLite("SELECT * FROM `auctions` WHERE `purchased` != 1");
         if (rs != null) {
             try {
                 while (rs.next()) {
@@ -130,7 +136,7 @@ public class AuctionFactory implements Listener {
                         tag.getCompound("display").putInt("cost", cost);
                         tag.getCompound("display").putString("soldby", soldby);
                     } else {
-                        tag.putCompound("display", (new CompoundTag("display")).putInt("keyid", id).putInt("cost",cost).putString("soldby",soldby));
+                        tag.putCompound("display", (new CompoundTag("display")).putInt("keyid", id).putInt("cost", cost).putString("soldby", soldby));
                     }
                     i.setNamedTag(tag);
 
@@ -188,7 +194,7 @@ public class AuctionFactory implements Listener {
                         tag.getCompound("display").putInt("keyid", id);
                         tag.getCompound("display").putInt("cost", cost);
                     } else {
-                        tag.putCompound("display", (new CompoundTag("display")).putInt("keyid", id).putInt("cost",cost));
+                        tag.putCompound("display", (new CompoundTag("display")).putInt("keyid", id).putInt("cost", cost));
                     }
                     i.setNamedTag(tag);
 
@@ -230,14 +236,25 @@ public class AuctionFactory implements Listener {
         return items.get(key);
     }
 
+    public HashMap<Integer, Item> getPageHash(int page) {
+        HashMap<Integer, Item> list = new HashMap<Integer, Item>();
+        int k = 0;
+        for (Item i : getPage(page)) {
+            list.put(k, i);
+            k++;
+        }
+        return list;
+
+    }
+
     public ArrayList<Item> getPage(int page) {
         System.out.println(page);
         int stop = page * 45;
         int start = stop - 45;
         if (start > getListOfItems().size()) {
             ArrayList<Item> a = new ArrayList<Item>();
-            for(int i = 0; i < 45; i++){
-                a.add(new ItemBlock(new BlockAir(), (Integer)null, 0));
+            for (int i = 0; i < 45; i++) {
+                a.add(new ItemBlock(new BlockAir(), (Integer) null, 0));
             }
             return a;
         }
@@ -248,7 +265,7 @@ public class AuctionFactory implements Listener {
             if (a >= stop) break;
             Item newitem = getListOfItems().get(a).clone();
             System.out.println(newitem.toString());
-            if (newitem == null) list.add(new ItemBlock(new BlockAir(), (Integer)null, 0));
+            if (newitem == null) list.add(new ItemBlock(new BlockAir(), (Integer) null, 0));
             else list.add(newitem);
         }
 
@@ -260,9 +277,24 @@ public class AuctionFactory implements Listener {
          */
     }
 
-    public void OpenAH(Player p, Integer pg) {
+    public void OpenAH(CorePlayer p, Integer pg) {
+        SpawnFakeBlockAndEntity(p,new CompoundTag().putString("CustomName","Auction House!"));
         Inventory b = new AuctionHouse(p, CCM, p, pg);
         p.addWindow(b);
+//        b.open()
+    }
+
+    public void SpawnFakeBlockAndEntity(Player to, CompoundTag data) {
+        BlockEntityDataPacket bedp = new BlockEntityDataPacket();
+        UpdateBlockPacket a = new UpdateBlockPacket();
+        bedp.x = a.x = to.getFloorX();
+        bedp.y = a.y = to.getFloorY()-2;
+        bedp.z = a.z = to.getFloorZ();
+        bedp.namedTag = data.getByteArray("");
+        a.flags = UpdateBlockPacket.FLAG_ALL;
+        a.blockRuntimeId = GlobalBlockPalette.getOrCreateRuntimeId(new BlockEnderChest().getFullId());
+        to.dataPacket(bedp);
+        to.dataPacket(a);
     }
 
     //TODO
@@ -376,11 +408,12 @@ public class AuctionFactory implements Listener {
 //    }
 
     public void SetBought(int id) {
-        String sql = "UPDATE `auctions` SET `purchased` = '1' WHERE `auctions`.`id` = "+id+";";
+        String sql = "UPDATE `auctions` SET `purchased` = '1' WHERE `auctions`.`id` = " + id + ";";
         //ExecuteUpdateSQLite(sql);
     }
+
     public void ClaimMoney(int id) {
-        String sql = "UPDATE `auctions` SET `moneysent` = '1' WHERE `auctions`.`id` = "+id+";";
+        String sql = "UPDATE `auctions` SET `moneysent` = '1' WHERE `auctions`.`id` = " + id + ";";
         //ExecuteUpdateSQLite(sql);
     }
 
@@ -407,7 +440,7 @@ public class AuctionFactory implements Listener {
             tag.getCompound("display").putInt("cost", cost);
             tag.getCompound("display").putString("soldby", p.getName());
         } else {
-            tag.putCompound("display", (new CompoundTag("display")).putInt("keyid", id).putInt("cost",cost).putString("soldby",p.getName()));
+            tag.putCompound("display", (new CompoundTag("display")).putInt("keyid", id).putInt("cost", cost).putString("soldby", p.getName()));
         }
 
         i.setNamedTag(tag);

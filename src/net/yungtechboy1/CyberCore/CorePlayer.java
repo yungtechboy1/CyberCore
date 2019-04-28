@@ -10,6 +10,7 @@ import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.form.window.FormWindow;
+import cn.nukkit.inventory.Inventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.level.Location;
@@ -148,6 +149,32 @@ public class CorePlayer extends Player {
         a.Name = getName();
         a.UsedCredit = 0;
         setSettingsData(a);
+    }
+
+    @Override
+    public int addWindow(Inventory inventory, Integer forceId, boolean isPermanent) {
+        if (this.windows.containsKey(inventory)) {
+            return this.windows.get(inventory);
+        }
+        int cnt;
+        if (forceId == null) {
+            this.windowCnt = cnt = Math.max(4, ++this.windowCnt % 99);
+        } else {
+            cnt = forceId;
+        }
+        this.windows.put(inventory, cnt);
+
+        if (isPermanent) {
+            this.permanentWindows.add(cnt);
+        }
+
+        if (inventory.open(this)) {
+            return cnt;
+        } else {
+            this.removeWindow(inventory);
+            sendMessage("ERROR!!!!!!! I FUCKKKKED UUUUPPP");
+            return -1;
+        }
     }
 
     public boolean MakeTransaction(double price) {

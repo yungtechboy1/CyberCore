@@ -6,13 +6,16 @@ import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.blockentity.BlockEntityChest;
 import cn.nukkit.blockentity.BlockEntityEnderChest;
 import cn.nukkit.entity.EntityHuman;
+import cn.nukkit.inventory.BaseInventory;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
+import cn.nukkit.level.Level;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ListTag;
+import cn.nukkit.network.protocol.BlockEventPacket;
 import cn.nukkit.network.protocol.ContainerOpenPacket;
 import cn.nukkit.network.protocol.UpdateBlockPacket;
 import cn.nukkit.utils.TextFormat;
@@ -23,22 +26,20 @@ import java.util.*;
 /**
  * Created by carlt_000 on 2/22/2017.
  */
-public class AuctionHouse implements Inventory {
+public class AuctionHouse extends BaseInventory implements Inventory {
 
     protected final String name;
     protected final String title;
     protected final Map<Integer, Item> slots = new HashMap<>();
     protected final Set<Player> viewers = new HashSet<>();
     public int Page = 1;
+    public boolean ConfirmPurchase = false;
+    public int ConfirmPurchaseSlot = 0;
     protected int maxStackSize = Inventory.MAX_STACK;
     protected int size;
     EntityHuman holder;
     Vector3 BA;
     CyberCoreMain CCM;
-
-    public boolean ConfirmPurchase = false;
-    public int ConfirmPurchaseSlot = 0;
-
     BlockEntity blockEntity2 = null;
     BlockEntity blockEntity = null;
 
@@ -47,8 +48,10 @@ public class AuctionHouse implements Inventory {
     }
 
     public AuctionHouse(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba, int page) {
+        super(Holder, InventoryType.ENDER_CHEST, new HashMap<>(), 9 * 6);//54??
+        //TODO SHOULD SIZE BE 54!?!?
         holder = Holder;
-        this.size = 9 * 6;
+//        this.size = 9 * 6;
 
         CCM = ccm;
         Page = page;
@@ -58,7 +61,8 @@ public class AuctionHouse implements Inventory {
         this.title = "Auction House Page" + page;
 
         this.name = title;
-        setContents(CCM.AuctionFactory.getPage(page));
+        if (CyberCoreMain.getInstance().AuctionFactory.getPageHash(page) == null) System.out.println("NUUUUUUUUUUU");
+        setContents(CyberCoreMain.getInstance().AuctionFactory.getPageHash(page));
     }
 
     public void setPage(Integer page) {
@@ -69,74 +73,101 @@ public class AuctionHouse implements Inventory {
 
     @Override
     public void onOpen(Player who) {
-who.sendMessage("OPENINGGGGG");
-new BlockEnderChest()
-        UpdateBlockPacket fullBlock1 = new UpdateBlockPacket();
-        fullBlock1.x = (int) BA.x;
-        fullBlock1.y = (int) BA.y - 2;
-        fullBlock1.z = (int) BA.z;
-        fullBlock1.blockRuntimeId = Block.CHEST;
-        fullBlock1.dataLayer = 5;
-        fullBlock1.flags = 0;
-        who.dataPacket(fullBlock1);
-        /*Block b = new BlockChest();
-        b.set*/
-        UpdateBlockPacket fullBlock2 = new UpdateBlockPacket();
-        fullBlock2.x = (int) BA.x;
-        fullBlock2.y = (int) BA.y - 2;
-        fullBlock2.z = (int) BA.z - 1;
-        fullBlock2.blockRuntimeId = Block.CHEST;
-        fullBlock2.dataLayer = 5;
-        fullBlock2.flags = 0;
-        who.dataPacket(fullBlock2);
-        CompoundTag nbt = new CompoundTag("")
-                .putList(new ListTag<>("Items"))
-                .putString("id", BlockEntity.CHEST)
-                .putInt("x", (int) BA.x)
-                .putInt("y", (int) BA.y - 2)
-                .putInt("z", (int) BA.z);
-        CompoundTag nbt2 = new CompoundTag("")
-                .putList(new ListTag<>("Items"))
-                .putString("id", BlockEntity.CHEST)
-                .putInt("x", (int) BA.x)
-                .putInt("y", (int) BA.y - 2)
-                .putInt("z", (int) BA.z - 1);
+        super.onOpen(who);
+        ContainerOpenPacket containerOpenPacket = new ContainerOpenPacket();
+        containerOpenPacket.windowId = who.getWindowId(this);
+        containerOpenPacket.type = this.getType().getNetworkType();
+        BlockEnderChest chest = null;//who.getViewingEnderChest();
+        containerOpenPacket.x = who.getFloorX();
+        containerOpenPacket.y = who.getFloorY() - 2;
+        containerOpenPacket.z = who.getFloorZ();
 
-        nbt.putInt("pairx", (int) BA.x);
-        nbt.putInt("pairz", (int) BA.z - 1);
-        nbt2.putInt("pairx", (int) BA.x);
-        nbt2.putInt("pairz", (int) BA.z);
 
-        blockEntity = new BlockEntityChest(who.getLevel().getChunk((int) (BA.x) >> 4, (int) (BA.z) >> 4), nbt);
-        blockEntity2 = new BlockEntityChest(who.getLevel().getChunk((int) (BA.x) >> 4, (int) (BA.z) >> 4), nbt2);
-
-        BlockEntity t = this.getLevel().getBlockEntity(this);
-        BlockEntityEnderChest chest;
-        if(t instanceof BlockEntityEnderChest) {
-            chest = (BlockEntityEnderChest)t;
-        } else {
-            CompoundTag nbt = (new CompoundTag("")).putString("id", "EnderChest").putInt("x", (int)this.x).putInt("y", (int)this.y).putInt("z", (int)this.z);
-            chest = new BlockEntityEnderChest(this.getLevel().getChunk((int)this.x >> 4, (int)this.z >> 4), nbt);
-         }
-
-        this.viewers.add(who);
-        ContainerOpenPacket pk = new ContainerOpenPacket();
-        pk.windowId = (byte) who.getWindowId(this);
-        pk.type = (byte) this.getType().getNetworkType();
-        //pk.type = 9;
-        pk.x = BA.getFloorX();
-        pk.y = BA.getFloorY() - 2;
-        pk.z = BA.getFloorZ();
-
-        /*pk.x = 85;
-        pk.y = 77;
-        pk.z = 323;*/
-        //57.0|83.0|336.0
-
-        CCM.AuctionFactory.getListOfItems();
-
-        who.batchDataPacket(pk);
+        who.dataPacket(containerOpenPacket);
         this.sendContents(who);
+        if (chest != null && chest.getViewers().size() == 1) {
+            BlockEventPacket blockEventPacket = new BlockEventPacket();
+            blockEventPacket.x = (int) chest.getX();
+            blockEventPacket.y = (int) chest.getY();
+            blockEventPacket.z = (int) chest.getZ();
+            blockEventPacket.case1 = 1;
+            blockEventPacket.case2 = 2;
+            Level level = this.getHolder().getLevel();
+            if (level != null) {
+                level.addLevelSoundEvent(this.getHolder().add(0.5D, 0.5D, 0.5D), 71);
+                level.addChunkPacket((int) this.getHolder().getX() >> 4, (int) this.getHolder().getZ() >> 4, blockEventPacket);
+            }
+        }
+
+
+        who.sendMessage("OPENINGGGGG");
+////        new BlockEnderChest()
+//        UpdateBlockPacket fullBlock1 = new UpdateBlockPacket();
+//        fullBlock1.x = (int) BA.x;
+//        fullBlock1.y = (int) BA.y - 2;
+//        fullBlock1.z = (int) BA.z;
+//        fullBlock1.blockRuntimeId = Block.CHEST;
+//        fullBlock1.dataLayer = 5;
+//        fullBlock1.flags = 0;
+//        who.dataPacket(fullBlock1);
+//        /*Block b = new BlockChest();
+//        b.set*/
+////        UpdateBlockPacket fullBlock2 = new UpdateBlockPacket();
+////        fullBlock2.x = (int) BA.x;
+////        fullBlock2.y = (int) BA.y - 2;
+////        fullBlock2.z = (int) BA.z - 1;
+////        fullBlock2.blockRuntimeId = Block.CHEST;
+////        fullBlock2.dataLayer = 5;
+////        fullBlock2.flags = 0;
+////        who.dataPacket(fullBlock2);
+//        CompoundTag nbt = new CompoundTag("")
+//                .putList(new ListTag<>("Items"))
+//                .putString("id", BlockEntity.CHEST)
+//                .putInt("x", (int) BA.x)
+//                .putInt("y", (int) BA.y - 2)
+//                .putInt("z", (int) BA.z);
+//        CompoundTag nbt2 = new CompoundTag("")
+//                .putList(new ListTag<>("Items"))
+//                .putString("id", BlockEntity.CHEST)
+//                .putInt("x", (int) BA.x)
+//                .putInt("y", (int) BA.y - 2)
+//                .putInt("z", (int) BA.z - 1);
+//
+////        nbt.putInt("pairx", (int) BA.x);
+////        nbt.putInt("pairz", (int) BA.z - 1);
+////        nbt2.putInt("pairx", (int) BA.x);
+////        nbt2.putInt("pairz", (int) BA.z);
+//
+//        blockEntity = new BlockEntityChest(who.getLevel().getChunk((int) (BA.x) >> 4, (int) (BA.z) >> 4), nbt);
+////        blockEntity2 = new BlockEntityChest(who.getLevel().getChunk((int) (BA.x) >> 4, (int) (BA.z) >> 4), nbt2);
+//
+//        BlockEntity t = this.getLevel().getBlockEntity(this);
+//        BlockEntityEnderChest chest;
+//        if (t instanceof BlockEntityEnderChest) {
+//            chest = (BlockEntityEnderChest) t;
+//        } else {
+//            CompoundTag nbt = (new CompoundTag("")).putString("id", "EnderChest").putInt("x", (int) this.x).putInt("y", (int) this.y).putInt("z", (int) this.z);
+//            chest = new BlockEntityEnderChest(this.getLevel().getChunk((int) this.x >> 4, (int) this.z >> 4), nbt);
+//        }
+//
+//        this.viewers.add(who);
+//        ContainerOpenPacket pk = new ContainerOpenPacket();
+//        pk.windowId = (byte) who.getWindowId(this);
+//        pk.type = (byte) this.getType().getNetworkType();
+//        //pk.type = 9;
+//        pk.x = BA.getFloorX();
+//        pk.y = BA.getFloorY() - 2;
+//        pk.z = BA.getFloorZ();
+//
+//        /*pk.x = 85;
+//        pk.y = 77;
+//        pk.z = 323;*/
+//        //57.0|83.0|336.0
+
+//        CCM.AuctionFactory.getListOfItems();
+
+//        who.batchDataPacket(pk);
+//        this.sendContents(who);
     }
 
     @Override
@@ -230,21 +261,15 @@ new BlockEnderChest()
         return new HashMap<>(this.slots);
     }
 
+//    public void setContents(ArrayList<Item> items) {
+//
+//        super.setContents(items);
+//        ReloadInv();
+//    }
+
     @Override
     public void setContents(Map<Integer, Item> items) {
-        this.slots.clear();
-        for (Map.Entry<Integer, Item> a : items.entrySet()) {
-            slots.put(a.getKey(), a.getValue());
-        }
-        ReloadInv();
-    }
-
-    public void setContents(ArrayList<Item> items) {
-        this.slots.clear();
-        int aa = 0;
-        for (Item a : items) {
-            slots.put(aa++, a);
-        }
+        super.setContents(items);
         ReloadInv();
     }
 
@@ -278,13 +303,13 @@ new BlockEnderChest()
         chest.setCustomName(
                 TextFormat.GOLD + "" + TextFormat.BOLD + "Categories"
         );
-        this.slots.put(45, diamond);
-        this.slots.put(46, potato);
-        this.slots.put(48, redglass);
-        this.slots.put(49, netherstar);
-        this.slots.put(50, greenglass);
-        this.slots.put(52, chest);
-        sendContents((Player) holder);
+        setItem(getSize() - 16, diamond);
+        setItem(getSize() - 15, potato);
+        setItem(getSize() - 14, redglass);
+        setItem(getSize() - 13, netherstar);
+        setItem(getSize() - 12, greenglass);
+        setItem(getSize() - 11, chest);
+//        sendContents((Player) holder);
     }
 
 
@@ -322,7 +347,7 @@ new BlockEnderChest()
     }
 
     public void setItem2(int index, Item item) {
-        this.slots.put(index, item.clone());
+        setItem(index, item.clone());
         this.onSlotChange(index, null);
     }
 
@@ -337,7 +362,7 @@ new BlockEnderChest()
 
 
         Item old = this.getItem(index);
-        this.slots.put(index, item.clone());
+        setItem(index, item.clone());
         this.onSlotChange(index, old);
         //if (getItem(0).getId() == 0 || getItem(4).getId() == 0) setItem2(2, Item.get(Item.ANVIL));
 
@@ -551,7 +576,7 @@ new BlockEnderChest()
             Item item = new ItemBlock(new BlockAir(), null, 0);
             Item old = this.slots.get(index);
             if (item.getId() != Item.AIR) {
-                this.slots.put(index, item.clone());
+                setItem(index, item.clone());
             } else {
                 this.slots.remove(index);
             }
@@ -609,32 +634,11 @@ new BlockEnderChest()
         this.sendSlot(index, this.getViewers());
     }
 
-    @Override
-    public void sendContents(Player player) {
-        this.sendContents(new Player[]{player});
-    }
-
-    @Override
-    public void sendContents(Player[] players) {
-
-    }
-//    public void sendContents(Player[] players) {
-//        ContainerSetContentPacket pk = new ContainerSetContentPacket();
-//        pk.slots = new Item[this.getSize()];
-//        for (int i = 0; i < this.getSize(); ++i) {
-//            pk.slots[i] = this.getItem(i);
-//        }
-//
-//        for (Player player : players) {
-//            int id = player.getWindowId(this);
-//            if (id == -1 || !player.spawned) {
-//                this.close(player);
-//                continue;
-//            }
-//            pk.windowid = (byte) id;
-//            player.batchDataPacket(pk);
-//        }
+//    @Override
+//    public void sendContents(Player player) {
+//        this.sendContents(new Player[]{player});
 //    }
+
 
     @Override
     public void sendContents(Collection<Player> players) {
@@ -673,6 +677,6 @@ new BlockEnderChest()
 
     @Override
     public InventoryType getType() {
-        return InventoryType.DOUBLE_CHEST;
+        return InventoryType.ENDER_CHEST;
     }
 }
