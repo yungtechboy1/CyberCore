@@ -87,74 +87,6 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         this.sendContents(who);
 
 
-        who.sendMessage("OPENINGGGGG");
-////        new BlockEnderChest()
-//        UpdateBlockPacket fullBlock1 = new UpdateBlockPacket();
-//        fullBlock1.x = (int) BA.x;
-//        fullBlock1.y = (int) BA.y - 2;
-//        fullBlock1.z = (int) BA.z;
-//        fullBlock1.blockRuntimeId = Block.CHEST;
-//        fullBlock1.dataLayer = 5;
-//        fullBlock1.flags = 0;
-//        who.dataPacket(fullBlock1);
-//        /*Block b = new BlockChest();
-//        b.set*/
-////        UpdateBlockPacket fullBlock2 = new UpdateBlockPacket();
-////        fullBlock2.x = (int) BA.x;
-////        fullBlock2.y = (int) BA.y - 2;
-////        fullBlock2.z = (int) BA.z - 1;
-////        fullBlock2.blockRuntimeId = Block.CHEST;
-////        fullBlock2.dataLayer = 5;
-////        fullBlock2.flags = 0;
-////        who.dataPacket(fullBlock2);
-//        CompoundTag nbt = new CompoundTag("")
-//                .putList(new ListTag<>("Items"))
-//                .putString("id", BlockEntity.CHEST)
-//                .putInt("x", (int) BA.x)
-//                .putInt("y", (int) BA.y - 2)
-//                .putInt("z", (int) BA.z);
-//        CompoundTag nbt2 = new CompoundTag("")
-//                .putList(new ListTag<>("Items"))
-//                .putString("id", BlockEntity.CHEST)
-//                .putInt("x", (int) BA.x)
-//                .putInt("y", (int) BA.y - 2)
-//                .putInt("z", (int) BA.z - 1);
-//
-////        nbt.putInt("pairx", (int) BA.x);
-////        nbt.putInt("pairz", (int) BA.z - 1);
-////        nbt2.putInt("pairx", (int) BA.x);
-////        nbt2.putInt("pairz", (int) BA.z);
-//
-//        blockEntity = new BlockEntityChest(who.getLevel().getChunk((int) (BA.x) >> 4, (int) (BA.z) >> 4), nbt);
-////        blockEntity2 = new BlockEntityChest(who.getLevel().getChunk((int) (BA.x) >> 4, (int) (BA.z) >> 4), nbt2);
-//
-//        BlockEntity t = this.getLevel().getBlockEntity(this);
-//        BlockEntityEnderChest chest;
-//        if (t instanceof BlockEntityEnderChest) {
-//            chest = (BlockEntityEnderChest) t;
-//        } else {
-//            CompoundTag nbt = (new CompoundTag("")).putString("id", "EnderChest").putInt("x", (int) this.x).putInt("y", (int) this.y).putInt("z", (int) this.z);
-//            chest = new BlockEntityEnderChest(this.getLevel().getChunk((int) this.x >> 4, (int) this.z >> 4), nbt);
-//        }
-//
-//        this.viewers.add(who);
-//        ContainerOpenPacket pk = new ContainerOpenPacket();
-//        pk.windowId = (byte) who.getWindowId(this);
-//        pk.type = (byte) this.getType().getNetworkType();
-//        //pk.type = 9;
-//        pk.x = BA.getFloorX();
-//        pk.y = BA.getFloorY() - 2;
-//        pk.z = BA.getFloorZ();
-//
-//        /*pk.x = 85;
-//        pk.y = 77;
-//        pk.z = 323;*/
-//        //57.0|83.0|336.0
-
-//        CCM.AuctionFactory.getListOfItems();
-
-//        who.batchDataPacket(pk);
-//        this.sendContents(who);
     }
 
     @Override
@@ -166,48 +98,6 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     public void onSlotChange(int index, Item before, boolean send) {
 
     }
-//    public void onClose(Player who) {
-//        UpdateBlockPacket fullBlock1 = new UpdateBlockPacket();
-//        fullBlock1.x = (int) BA.x;
-//        fullBlock1.y = BA.getFloorY() - 2;
-//        fullBlock1.z = (int) BA.z;
-//
-//        Block OB = who.getLevel().getBlock(BA);
-//
-//        fullBlock1.blockId = OB.getId();
-//        fullBlock1.blockData = OB.getDamage();
-//
-//        fullBlock1.flags = 0;
-//        who.dataPacket(fullBlock1);
-//
-//
-//        UpdateBlockPacket fullBlock2 = new UpdateBlockPacket();
-//        fullBlock2.x = (int) BA.x;
-//        fullBlock2.y = BA.getFloorY() - 2;
-//        fullBlock2.z = (int) BA.z - 1;
-//
-//        Block OB2 = who.getLevel().getBlock(BA.add(0, 0, -1));
-//
-//        fullBlock2.blockId = OB2.getId();
-//        fullBlock2.blockData = OB2.getDamage();
-//
-//        fullBlock2.flags = 0;
-//        who.dataPacket(fullBlock2);
-//
-//        ContainerClosePacket pk = new ContainerClosePacket();
-//        pk.windowid = (byte) who.getWindowId(this);
-//        who.dataPacket(pk);
-//        this.viewers.remove(who);
-//
-//        if (blockEntity != null) {
-//            blockEntity.close();
-//            blockEntity = null;
-//        }
-//        if (blockEntity2 != null) {
-//            blockEntity2.close();
-//            blockEntity2 = null;
-//        }
-//    }
 
 
     public void setSize(int size) {
@@ -226,12 +116,6 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
         return contents;
     }
-
-//    public void setContents(ArrayList<Item> items) {
-//
-//        super.setContents(items);
-//        ReloadInv();
-//    }
 
     @Override
     public void setContents(Map<Integer, Item> items) {
@@ -282,7 +166,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         setItem(getSize() - k--, chest);
         setItem(getSize() - k--, grayglass);
         setItem(getSize() - k--, grayglass);
-        setItem(getSize() - k--, greenglass);
+        setItem(getSize() - k, greenglass);
 //        sendContents((Player) holder);
     }
 
