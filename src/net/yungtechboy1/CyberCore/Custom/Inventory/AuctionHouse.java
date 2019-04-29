@@ -377,7 +377,17 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     }
 
     public void onSlotChange(int index, Item before) {
+
+        switch (index) {
+            case MainPageItemRef.Reload:
+                SendPage(Page);
+                break;
+        }
         this.sendSlot(index, this.getViewers());
+    }
+
+    public void SendPage(int page){
+
     }
 
     @Override

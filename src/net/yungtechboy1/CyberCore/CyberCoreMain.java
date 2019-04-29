@@ -13,10 +13,6 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
 import cn.nukkit.item.Item;
-import cn.nukkit.level.GlobalBlockPalette;
-import cn.nukkit.level.Position;
-import cn.nukkit.network.Network;
-import cn.nukkit.network.protocol.ProtocolInfo;
 import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.Commands.*;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
@@ -27,22 +23,17 @@ import net.yungtechboy1.CyberCore.Commands.Homes.SetHome;
 import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
-import net.yungtechboy1.CyberCore.Custom.CustomGlobalBlockPalette;
-import net.yungtechboy1.CyberCore.Custom.CustomStartGamePacket;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
 import net.yungtechboy1.CyberCore.Data.ServerSqlite;
-import net.yungtechboy1.CyberCore.Data.UserSQL;
-import net.yungtechboy1.CyberCore.Factory.AuctionFactory;
 import net.yungtechboy1.CyberCore.Factory.AuctionFactoryPE;
+import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
 import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
-import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Home;
-import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionListener;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
@@ -126,7 +117,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     //FactoriesA
     public HomeManager HomeFactory;
     public net.yungtechboy1.CyberCore.Rank.RankFactory RankFactory;
-    public net.yungtechboy1.CyberCore.Factory.AuctionFactoryPE AuctionFactory;
+    public net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory AuctionFactory;
     public net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager PurgeManager;
     public List<String> Final = new ArrayList<>();
     public List<String> TPING = new ArrayList<>();
@@ -275,7 +266,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         HomeFactory = new HomeManager(this);
         RankFactory = new RankFactory(this);
         //TODO
-        AuctionFactory = new AuctionFactoryPE(this);
+        AuctionFactory = new AuctionFactory(this);
 
         MuteConfig = new Config(new File(getDataFolder(), "Mute.yml"), Config.YAML);
 

@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Factory;
+package net.yungtechboy1.CyberCore.Factory.AuctionHouse;
 
 import cn.nukkit.item.Item;
 import net.yungtechboy1.CyberCore.CorePlayer;
