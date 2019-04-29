@@ -20,6 +20,7 @@ import cn.nukkit.network.protocol.ContainerOpenPacket;
 import cn.nukkit.network.protocol.UpdateBlockPacket;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 import java.util.*;
 
@@ -123,6 +124,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         ReloadInv();
     }
 
+
     public void ReloadInv() {
         Item diamond = Item.get(Item.DIAMOND);
         diamond.setCustomName(
@@ -157,19 +159,24 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         chest.setCustomName(
                 TextFormat.GOLD + "" + TextFormat.BOLD + "Categories"
         );
+
+        Item map = Item.get(Item.MAP);
+        map.setCustomName(TextFormat.GOLD + "" + TextFormat.BOLD + "List Item In Hand");
+
+        Item paper = Item.get(Item.PAPER);
+        paper.setCustomName(TextFormat.GOLD + "" + TextFormat.BOLD + "Search Auction House For Item");
         int k = 9;
         setItem(getSize() - k--, redglass);
-        setItem(getSize() - k--, grayglass);
+        setItem(getSize() - k--, paper);
         setItem(getSize() - k--, grayglass);
         setItem(getSize() - k--, diamond);
         setItem(getSize() - k--, netherstar);
         setItem(getSize() - k--, chest);
         setItem(getSize() - k--, grayglass);
-        setItem(getSize() - k--, grayglass);
+        setItem(getSize() - k--, map);
         setItem(getSize() - k, greenglass);
 //        sendContents((Player) holder);
     }
-
 
     public void ConfirmItemPurchase(int slot) {
         Item confrim = Item.get(Item.EMERALD_BLOCK);
@@ -209,6 +216,23 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         this.onSlotChange(index, null);
     }
 
+    @Override
+    public boolean contains(Item item) {
+        int count = Math.max(1, item.getCount());
+        boolean checkDamage = item.hasMeta();
+        boolean checkTag = item.getCompoundTag() != null;
+        for (Item i : this.getContents().values()) {
+            if (item.equals(i, checkDamage, checkTag)) {
+                count -= i.getCount();
+                if (count <= 0) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
 //    @Override
 //    public boolean setItem(int index, Item item) {
 //        item = item.clone();
@@ -231,23 +255,6 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 //    public boolean setItem(int index, Item item, boolean send) {
 //        return false;
 //    }
-
-    @Override
-    public boolean contains(Item item) {
-        int count = Math.max(1, item.getCount());
-        boolean checkDamage = item.hasMeta();
-        boolean checkTag = item.getCompoundTag() != null;
-        for (Item i : this.getContents().values()) {
-            if (item.equals(i, checkDamage, checkTag)) {
-                count -= i.getCount();
-                if (count <= 0) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
 
     @Override
     public Map<Integer, Item> all(Item item) {
@@ -308,7 +315,6 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     public void decreaseCount(int slot) {
 
     }
-
 
     @Override
     public boolean clear(int index) {
@@ -374,16 +380,15 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         this.sendSlot(index, this.getViewers());
     }
 
-//    @Override
-//    public void sendContents(Player player) {
-//        this.sendContents(new Player[]{player});
-//    }
-
-
     @Override
     public void sendContents(Collection<Player> players) {
         this.sendContents(players.stream().toArray(Player[]::new));
     }
+
+//    @Override
+//    public void sendContents(Player player) {
+//        this.sendContents(new Player[]{player});
+//    }
 
     @Override
     public void sendSlot(int index, Player player) {
@@ -393,6 +398,11 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     @Override
     public void sendSlot(int index, Player[] players) {
 
+    }
+
+    @Override
+    public void sendSlot(int index, Collection<Player> players) {
+        this.sendSlot(index, players.stream().toArray(Player[]::new));
     }
 //    public void sendSlot(int index, Player[] players) {
 //        ContainerSetSlotPacket pk = new ContainerSetSlotPacket();
@@ -411,12 +421,20 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 //    }
 
     @Override
-    public void sendSlot(int index, Collection<Player> players) {
-        this.sendSlot(index, players.stream().toArray(Player[]::new));
-    }
-
-    @Override
     public InventoryType getType() {
         return InventoryType.DOUBLE_CHEST;
+    }
+
+    public class MainPageItemRef {
+        public static final int Size = 6 * 9;
+        public static final int LastPage = Size - 9;
+        public static final int Search = Size - 8;
+        //        public static final int NULL = Size - 7;
+        public static final int PlayerSelling = Size - 6;
+        public static final int Reload = Size - 5;
+        public static final int Catagories = Size - 4;
+        //        public static final int MULL = Size - 3;
+        public static final int ListItem = Size - 2;
+        public static final int NextPage = Size - 1;
     }
 }
