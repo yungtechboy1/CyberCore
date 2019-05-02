@@ -26,7 +26,6 @@ import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
 import net.yungtechboy1.CyberCore.Data.ServerSqlite;
-import net.yungtechboy1.CyberCore.Factory.AuctionFactoryPE;
 import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
@@ -348,7 +347,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ChatEnchant(this));
 //
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new AuctionHouseCmd(this));
-//        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SellHand(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SellHand(this));
     }
 
     public void onLoad() {

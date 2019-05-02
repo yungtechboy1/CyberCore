@@ -18,20 +18,15 @@ public class SQLite {
 
 
     public CyberCoreMain plugin;
-
-    protected boolean enabled;
-
     public String table = "mcpe";
     public String file = "cyber_core_data.db";
-
-    public String createSQL = "create table if not exists "+table+" (";
-    public String insertQuery = "insert into "+table+" (";
-    public String addQuery = "insert into "+table+" (uuid) values (:uuid)";
-    public String loadQuery = "select * from "+table+" where uuid=':uuid'";
-    public String saveQuery = "update "+table+" set ";
-
+    public String createSQL = "create table if not exists " + table + " (";
+    public String insertQuery = "insert into " + table + " (";
+    public String addQuery = "insert into " + table + " (uuid) values (:uuid)";
+    public String loadQuery = "select * from " + table + " where uuid=':uuid'";
+    public String saveQuery = "update " + table + " set ";
     public HashMap<String, String> columns;
-
+    protected boolean enabled;
 
 
     public SQLite(CyberCoreMain plugin, String settings) {
@@ -64,19 +59,16 @@ public class SQLite {
     }
 
     /**
-     *      * Connects to the MYSQL database assigned in config.yml for GLOBAL data
-     *      * @return Connection
+     * * Connects to the MYSQL database assigned in config.yml for GLOBAL data
+     * * @return Connection
      */
     public Connection connectToDb() {
         enabled = (plugin.getServer().getPluginManager().getPlugin("DbLib") != null);
         if (!enabled) return null;
-        java.sql.Connection connection = DbLib.getSQLiteConnection(new File(plugin.getDataFolder() + File.separator +file));
+        java.sql.Connection connection = DbLib.getSQLiteConnection(new File(plugin.getDataFolder() + File.separator + file));
         if (connection == null) enabled = false;
         return connection;
     }
-
-
-
 
 
     public boolean executeUpdate(String query) throws SQLException {
@@ -84,30 +76,38 @@ public class SQLite {
         if (connection == null) return false;
         try {
             connection.createStatement().executeUpdate(query);
-        }catch (Exception e){
-            CyberCoreMain.getInstance().getLogger().error("QUERRY : "+query);
-            CyberCoreMain.getInstance().getLogger().error("ERROR!!!!!!!!!",e);
+        } catch (Exception e) {
+            CyberCoreMain.getInstance().getLogger().error("QUERRY : " + query);
+            CyberCoreMain.getInstance().getLogger().error("ERROR!!!!!!!!!", e);
         }
         connection.close();
         return true;
     }
 
 
+    public ResultSet ExecuteQuerySQLite(String sql) throws SQLException {
+        Connection connection = connectToDb();
+        if (connection == null) return null;
+        ResultSet resultSet = connection.createStatement().executeQuery(sql);
+        if (resultSet == null) return null;
+        return resultSet;
+    }
+
     public List<HashMap<String, Object>> executeSelect(String query, String identifier, String search, Set<String> selectors) throws SQLException {
         List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
         Connection connection = connectToDb();
         if (connection == null) return null;
-        ResultSet resultSet = connection.createStatement().executeQuery(query.replace(":"+identifier, search));
+        ResultSet resultSet = connection.createStatement().executeQuery(query.replace(":" + identifier, search));
         if (resultSet == null) return null;
         while (resultSet.next()) {
-            HashMap<String,Object> map = new HashMap<>();
-            for (String selector:selectors) {
+            HashMap<String, Object> map = new HashMap<>();
+            for (String selector : selectors) {
                 map.put(selector, resultSet.getObject(selector));
             }
             data.add(map);
         }
         if (connection != null) connection.close();
-        return data.isEmpty() ? null: data;
+        return data.isEmpty() ? null : data;
     }
 
     public List<HashMap<String, Object>> executeSelect(String query, Set<String> selectors) throws SQLException {
@@ -117,14 +117,14 @@ public class SQLite {
         ResultSet resultSet = connection.createStatement().executeQuery(query);
         if (resultSet == null) return null;
         while (resultSet.next()) {
-            HashMap<String,Object> map = new HashMap<>();
-            for (String selector:selectors) {
+            HashMap<String, Object> map = new HashMap<>();
+            for (String selector : selectors) {
                 map.put(selector, resultSet.getObject(selector));
             }
             data.add(map);
         }
         if (connection != null) connection.close();
-        return data.isEmpty() ? null: data;
+        return data.isEmpty() ? null : data;
     }
 
     public List<HashMap<String, Object>> executeSelect(String query) throws SQLException {
@@ -134,7 +134,7 @@ public class SQLite {
         ResultSet resultSet = connection.createStatement().executeQuery(query);
         if (resultSet == null) return null;
         while (resultSet.next()) {
-            HashMap<String,Object> map = new HashMap<>();
+            HashMap<String, Object> map = new HashMap<>();
             ResultSet rs = resultSet;
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();
@@ -144,7 +144,7 @@ public class SQLite {
             data.add(map);
         }
         if (connection != null) connection.close();
-        return data.isEmpty() ? null: data;
+        return data.isEmpty() ? null : data;
     }
 
 }

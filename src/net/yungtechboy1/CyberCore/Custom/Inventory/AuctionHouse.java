@@ -126,13 +126,17 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
 
     public void ReloadInv() {
+        CompoundTag T = new CompoundTag();
+        T.putBoolean("AHITEM", true);
         Item diamond = Item.get(Item.DIAMOND);
+        diamond.setCompoundTag(T);
         diamond.setCustomName(
                 TextFormat.GOLD + "" + TextFormat.BOLD + "Items you are Selling" + TextFormat.RESET + "\n" +
                         TextFormat.GREEN + " Click here to view all the items" + TextFormat.RESET + "\n" + TextFormat.GREEN + "you are currently selling on the auction" + TextFormat.RESET + "\n\n" +
                         TextFormat.GREEN + "Can also use " + TextFormat.DARK_GREEN + "/ah listed"
         );
         Item potato = Item.get(Item.POISONOUS_POTATO, 1);
+        potato.setCompoundTag(T);
         potato.setCustomName(
                 TextFormat.GOLD + "" + TextFormat.BOLD + "Collect Expired Items" + TextFormat.RESET + "\n" +
                         TextFormat.GREEN + " Click here to view all the items" + TextFormat.RESET + "\n" + TextFormat.GREEN + " you have canceled or experied" + TextFormat.RESET + "\n\n" +
@@ -140,22 +144,28 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         );
 
         Item grayglass = Item.get(Item.STAINED_GLASS_PANE, 7);
+        grayglass.setCompoundTag(T);
         grayglass.setCustomName(
                 TextFormat.DARK_GRAY + "" + TextFormat.BOLD + "-------------"
         );
         Item redglass = Item.get(Item.STAINED_GLASS_PANE, 14);
+        redglass.setCompoundTag(T);
         redglass.setCustomName(
                 TextFormat.YELLOW + "" + TextFormat.BOLD + "Previous Page"
         );
         Item greenglass = Item.get(Item.STAINED_GLASS_PANE, 5);
+        greenglass.setCompoundTag(T);
         greenglass.setCustomName(
                 TextFormat.YELLOW + "" + TextFormat.BOLD + "Next Page"
         );
         Item netherstar = Item.get(Item.NETHER_STAR);
+        netherstar.setCompoundTag(T);
         netherstar.setCustomName(
                 TextFormat.GREEN + "" + TextFormat.BOLD + "Refresh Page"
         );
+        netherstar.getNamedTag().putInt("page", Page);
         Item chest = Item.get(Item.CHEST);
+        chest.setCompoundTag(T);
         chest.setCustomName(
                 TextFormat.GOLD + "" + TextFormat.BOLD + "Categories"
         );
@@ -386,8 +396,20 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         this.sendSlot(index, this.getViewers());
     }
 
-    public void SendPage(int page){
+    public void SendPage(int page) {
 
+    }
+
+    @Override
+    public Item[] addItem(Item... slots) {
+        if (slots.length > 5 * 9) {
+            ArrayList<Item> I = new ArrayList<>();
+            for (int i = 0; i < 5 * 9; i++) {
+                I.add(slots[i]);
+            }
+        }
+        CyberCoreMain.getInstance().getLogger().error("ERROR TRIED TO ADD " + slots.length);
+        return super.addItem(slots);
     }
 
     @Override

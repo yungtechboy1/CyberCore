@@ -6,6 +6,7 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.item.Item;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
@@ -15,7 +16,7 @@ public class SellHand extends Command {
     CyberCoreMain Owner;
 
     public SellHand(CyberCoreMain server) {
-        super("SellHand", "Sell hand to auction", "/sellhand [key]", new String[]{"sh"});
+        super("SellHand", "Sell hand to auction", "/sellhand [price]", new String[]{"sh"});
         Owner = server;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
@@ -28,7 +29,7 @@ public class SellHand extends Command {
     public boolean execute(CommandSender s, String label, String[] args) {
         s.sendMessage("IMA TAKE YOUR HAND!");
         if(s instanceof Player){
-            Player p = (Player) s;
+            CorePlayer p = (CorePlayer) s;
             Item hand = p.getInventory().getItemInHand();
             try {
                 int price = Integer.parseInt(args[0]);
