@@ -63,7 +63,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
         this.name = title;
         System.out.println("Creating AuctionHouse Class");
-        if (CyberCoreMain.getInstance().AuctionFactory.getPageHash(page) == null) System.out.println("NUUUUUUUUUUU");
+//        if (CyberCoreMain.getInstance().AuctionFactory.getPageHash(page) == null) System.out.println("NUUUUUUUUUUU");
 //        setContents(CyberCoreMain.getInstance().AuctionFactory.getPageHash(page));
     }
 

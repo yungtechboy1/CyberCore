@@ -27,7 +27,6 @@ public class AuctionItemData {
     }
 
     public AuctionItemData(ResultSet rs) throws Exception {
-        int id = rs.getInt("id");
         int item_id = rs.getInt("item-id");
         int item_meta = rs.getInt("item-meta");
         int item_count = rs.getInt("item-count");
@@ -39,9 +38,6 @@ public class AuctionItemData {
 
         item = Item.get(item_id, item_meta, item_count);
         item.setCompoundTag(namedtag);
-
-        CompoundTag tag = item.getNamedTag();
-        if (tag == null) tag = new CompoundTag();
 
         Soldby = soldby;
         Soldbyn = soldbyn;
@@ -64,7 +60,9 @@ public class AuctionItemData {
     }
 
     public Item MakePretty() {
-        CompoundTag tag = item.getNamedTag();
+        CompoundTag tag;
+        if (item.hasCompoundTag()) tag = item.getNamedTag();
+        else tag = new CompoundTag();
         tag.putCompound("display", new CompoundTag());
 
         if (!item.getCustomName().equals("") && tag.contains("display") && tag.get("display") instanceof CompoundTag)

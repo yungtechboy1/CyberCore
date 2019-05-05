@@ -79,10 +79,10 @@ public class AuctionFactory implements Listener {
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    CCM.getLogger().info("Error loading Items!");
+                    CCM.getLogger().info("Error loading Items3!");
                     return null;
                 }
-                CCM.getLogger().info("Loaded " + is.size() + " Items for AH");
+                CCM.getLogger().info("Loaded " + is.size() + " Items for AH1");
                 return is;
             }
         } catch (Exception e) {
@@ -95,7 +95,7 @@ public class AuctionFactory implements Listener {
     public ArrayList<AuctionItemData> GetAllItemsLimit(int start, int stop) {
         ArrayList<AuctionItemData> is = new ArrayList<>();
         try {
-            ResultSet rs = Sqlite.ExecuteQuerySQLite("SELECT * FROM `AuctionHouse` WHERE `purchased` != 1 LIMIT " + start + "," + stop);
+            ResultSet rs = Sqlite.ExecuteQuerySQLite("SELECT * FROM `AuctionHouse` WHERE `purchased` != true LIMIT " + start + "," + stop);
             if (rs != null) {
                 try {
                     while (rs.next()) {
@@ -104,10 +104,10 @@ public class AuctionFactory implements Listener {
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    CCM.getLogger().info("Error loading Items!");
+                    CCM.getLogger().info("Error loading Items33!");
                     return null;
                 }
-                CCM.getLogger().info("Loaded " + is.size() + " Items for AH");
+                CCM.getLogger().info("Loaded " + is.size() + " Items for AH2");
                 return is;
             }
         } catch (Exception e) {
@@ -185,7 +185,7 @@ public class AuctionFactory implements Listener {
 
     public ArrayList<Item> getListOfItemsBetween(int start, int stop) {
         ArrayList<Item> il = new ArrayList<>();
-        if(GetAllItemsLimit(start, stop) == null)System.out.println("YEAAAAAAAAAA THISSSSS SSSHSHHHHIIIITTT NUUUULLLLLLIINNNNN~!!!!!!!!");
+//        if(GetAllItemsLimit(start, stop) == null)System.out.println("YEAAAAAAAAAA THISSSSS SSSHSHHHHIIIITTT NUUUULLLLLLIINNNNN~!!!!!!!!");
         for (AuctionItemData ahd : GetAllItemsLimit(start, stop)) {
             il.add(ahd.MakePretty());
         }
@@ -214,11 +214,13 @@ public class AuctionFactory implements Listener {
         System.out.println(page);
         int stop = page * 45;
         int start = stop - 46;
+        System.out.println("START = "+start+", STOP = "+stop);
         ArrayList<Item> list2 = getListOfItemsBetween(start, stop);
         if (45 > list2.size()) {
             ArrayList<Item> a = new ArrayList<Item>();
             for (int i = 0; i < 45; i++) {
-                if (list2.contains(i)) {
+//                list2.iterator().n
+                if (list2.size() > i && list2.get(i) != null) {
                     System.out.println("ADDING ACTUAL ITEM "+list2.get(i).getId());
                     a.add(list2.get(i));
                 } else {
