@@ -158,7 +158,7 @@ public class FactionListener implements Listener {
         @EventHandler(priority = EventPriority.HIGHEST)
         public void FationsJoinEvent(PlayerJoinEvent event) {
             //plugin.uuid[event.getPlayer().getName()][event.getPlayer().getClientId()] = date(DATE_COOKIE);
-            String player = event.getPlayer().getName();
+//            String player = event.getPlayer().getName();
             factions.LoadPlayer(event.getPlayer());
 
 

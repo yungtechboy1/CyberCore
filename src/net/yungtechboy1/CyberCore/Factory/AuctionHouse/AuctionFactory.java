@@ -70,7 +70,32 @@ public class AuctionFactory implements Listener {
     public ArrayList<AuctionItemData> GetAllItems() {
         ArrayList<AuctionItemData> is = new ArrayList<>();
         try {
-            ResultSet rs = Sqlite.ExecuteQuerySQLite("SELECT * FROM `auctions` WHERE `purchased` != 1");
+            ResultSet rs = Sqlite.ExecuteQuerySQLite("SELECT * FROM `AuctionHouse` WHERE `purchased` != 1");
+            if (rs != null) {
+                try {
+                    while (rs.next()) {
+                        AuctionItemData aid = new AuctionItemData(rs);
+                        is.add(aid);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    CCM.getLogger().info("Error loading Items!");
+                    return null;
+                }
+                CCM.getLogger().info("Loaded " + is.size() + " Items for AH");
+                return is;
+            }
+        } catch (Exception e) {
+            CCM.getLogger().error("ERRRORRROOROORORR", e);
+        }
+        return is;
+    }
+
+
+    public ArrayList<AuctionItemData> GetAllItemsLimit(int start, int stop) {
+        ArrayList<AuctionItemData> is = new ArrayList<>();
+        try {
+            ResultSet rs = Sqlite.ExecuteQuerySQLite("SELECT * FROM `AuctionHouse` WHERE `purchased` != 1 LIMIT " + start + "," + stop);
             if (rs != null) {
                 try {
                     while (rs.next()) {
@@ -158,6 +183,15 @@ public class AuctionFactory implements Listener {
         return il;
     }
 
+    public ArrayList<Item> getListOfItemsBetween(int start, int stop) {
+        ArrayList<Item> il = new ArrayList<>();
+        if(GetAllItemsLimit(start, stop) == null)System.out.println("YEAAAAAAAAAA THISSSSS SSSHSHHHHIIIITTT NUUUULLLLLLIINNNNN~!!!!!!!!");
+        for (AuctionItemData ahd : GetAllItemsLimit(start, stop)) {
+            il.add(ahd.MakePretty());
+        }
+        return il;
+    }
+
 //    public Item getItem(int page, int slot) {
 //        int stop = page * 45;
 //        int start = stop - 45;
@@ -180,25 +214,35 @@ public class AuctionFactory implements Listener {
         System.out.println(page);
         int stop = page * 45;
         int start = stop - 46;
-        if (start > getListOfItems().size()) {
+        ArrayList<Item> list2 = getListOfItemsBetween(start, stop);
+        if (45 > list2.size()) {
             ArrayList<Item> a = new ArrayList<Item>();
             for (int i = 0; i < 45; i++) {
-                a.add(new ItemBlock(new BlockAir(), (Integer) null, 0));
+                if (list2.contains(i)) {
+                    System.out.println("ADDING ACTUAL ITEM "+list2.get(i).getId());
+                    a.add(list2.get(i));
+                } else {
+                    a.add(new ItemBlock(new BlockAir(), 0, 0));
+                    System.out.println("ADDING AIR");
+                }
             }
-            return (Item[]) a.toArray();
+
+            return a.toArray(new Item[45]);
+        } else {
+            return list2.toArray(new Item[45]);
         }
-
-        ArrayList<Item> list = new ArrayList<>();
-
-        for (int a = start; a < getListOfItems().size(); a++) {
-            if (a >= stop) break;
-            Item newitem = getListOfItems().get(a).clone();
-            System.out.println(newitem.toString());
-            if (newitem == null) list.add(new ItemBlock(new BlockAir(), (Integer) null, 0));
-            else list.add(newitem);
-        }
-
-        return (Item[]) list.toArray();
+//
+//        ArrayList<Item> list = new ArrayList<>();
+//
+//        for (int a = start; a < list2.size(); a++) {
+//            if (a >= stop) break;
+//            Item newitem = list2.get(a).clone();
+//            System.out.println(newitem.toString());
+//            if (newitem == null) list.add(new ItemBlock(new BlockAir(), (Integer) null, 0));
+//            else list.add(newitem);
+//        }
+//
+//        return (Item[]) list.toArray();
 
         /*
         1 => 0 | 44
@@ -209,7 +253,9 @@ public class AuctionFactory implements Listener {
     public void OpenAH(CorePlayer p, Integer pg) {
         SpawnFakeBlockAndEntity(p, new CompoundTag().putString("CustomName", "Auction House!"));
         AuctionHouse b = new AuctionHouse(p, CCM, p, pg);
+        System.out.println("B4 ADD!! --------------");
         b.addItem(getPage(1));
+        System.out.println("A4 ADD!! --------------");
         CyberCoreMain.getInstance().getLogger().info(b.getContents().values().size() + " < SIZZEEE" + b.getSize());
         CyberCoreMain.getInstance().getServer().getScheduler().scheduleDelayedTask(new OpenAH(p, b), 10);
 //        b.open()
@@ -269,17 +315,15 @@ public class AuctionFactory implements Listener {
 //                    t.g
                         if (si.getId() == BlockID.STAINED_GLASS_PANE) {//Next, Previous, & Null
                             //Confirm Item
-                            if(si.getDamage() == 14){
+                            if (si.getDamage() == 14) {
                                 //red
                                 Page--;
                                 return;
-                            }
-                            else if(si.getDamage() == 5){
+                            } else if (si.getDamage() == 5) {
                                 //green
                                 Page++;
                                 return;
-                            }
-                            else if(si.getDamage() == 7){
+                            } else if (si.getDamage() == 7) {
                                 return;
                                 //Gray Glass
                             }
@@ -364,12 +408,12 @@ public class AuctionFactory implements Listener {
     }
 
     public void SetBought(int id) {
-        String sql = "UPDATE `auctions` SET `purchased` = '1' WHERE `auctions`.`id` = " + id + ";";
+        String sql = "UPDATE `AuctionHouse` SET `purchased` = '1' WHERE `auctions`.`id` = " + id + ";";
         //ExecuteUpdateSQLite(sql);
     }
 
     public void ClaimMoney(int id) {
-        String sql = "UPDATE `auctions` SET `moneysent` = '1' WHERE `auctions`.`id` = " + id + ";";
+        String sql = "UPDATE `AuctionHouse` SET `moneysent` = '1' WHERE `auctions`.`id` = " + id + ";";
         //ExecuteUpdateSQLite(sql);
     }
 

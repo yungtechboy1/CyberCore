@@ -49,11 +49,12 @@ public class AHSqlite extends SQLite {
         try {
             if (data.masterid != -1)
                 executeUpdate("DELETE FROM `AuctionHouse` WHERE `master_id` == '" + data.masterid + "'");
-
+            String fnt =  "";
+            if(data.item.hasCompoundTag())fnt = new String(data.item.writeCompoundTag(data.item.getNamedTag()));
             executeUpdate(
-                    "INSERT INTO `AuctionHouse` VALUES (0," +
+                    "INSERT INTO `AuctionHouse` VALUES (null," +
                             data.item.getId() + "," + data.item.getDamage() + "," + data.item.getCount() + ",'" +
-                            NBTIO.write(data.item.getNamedTag()).toString() + "'," + data.Cost + ",'" + data.Soldby + "','" + data.Soldbyn + "')");
+                           fnt + "'," + data.Cost + ",'" + data.Soldby + "','" + data.Soldbyn + "',false)");
 
             plugin.getLogger().info("AH saved for " + data.toString());
                 ExecuteQuerySQLite("SELECT * FROM `AuctionHouse` ");
@@ -68,7 +69,7 @@ public class AHSqlite extends SQLite {
     public Item GetItemfromDB(int idd) {
         try {
             if (idd == 0) return null;
-            ResultSet rs = ExecuteQuerySQLite("SELECT * FROM `auctions` WHERE `master_id` = '" + idd + "'");
+            ResultSet rs = ExecuteQuerySQLite("SELECT * FROM `AuctionHouse` WHERE `master_id` = '" + idd + "'");
             if (rs != null) {
                 try {
                     if (rs.next()) {

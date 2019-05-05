@@ -292,7 +292,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        getServer().getPluginManager().registerEvents(ClassFactory, this);
 //        getServer().getPluginManager().registerEvents(AuctionFactory, this);
         getServer().getPluginManager().registerEvents(this, this);
-        getServer().getPluginManager().registerEvents(new FactionListener(this, FM), this);
+//        getServer().getPluginManager().registerEvents(new FactionListener(this, FM), this);
 
 //        getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
 //        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec
@@ -314,26 +314,26 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Vote(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new Wild(this));
 //
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new net.yungtechboy1.CyberCore.Commands.Homes.Home(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SetHome(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new DelHome(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands/Home", new net.yungtechboy1.CyberCore.Commands.Homes.Home(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands/Home", new SetHome(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands/Home", new DelHome(this));
 //
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new AA(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ClassCmd(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SetClass(this));
 //
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Hud(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new Hud(this));
 //
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new FT(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new FTS(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new FTR(this));
 //
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPR(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new TPR(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPD(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TPA(this));
 //
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Warp(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SetWarp(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new Warp(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new SetWarp(this));
 //
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ClassCmd(this));
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new AClassCmd(this));
@@ -346,8 +346,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //
 //        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ChatEnchant(this));
 //
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new AuctionHouseCmd(this));
-        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new SellHand(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new AuctionHouseCmd(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new SellHand(this));
     }
 
     public void onLoad() {

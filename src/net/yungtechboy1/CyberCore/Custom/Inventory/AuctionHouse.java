@@ -48,7 +48,8 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     }
 
     public AuctionHouse(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba, int page) {
-        super(Holder, InventoryType.DOUBLE_CHEST, CyberCoreMain.getInstance().AuctionFactory.getPageHash(page), 9 * 6);//54??
+//        super(Holder, InventoryType.DOUBLE_CHEST, CyberCoreMain.getInstance().AuctionFactory.getPageHash(page), 9 * 6);//54??
+        super(Holder, InventoryType.DOUBLE_CHEST, new HashMap<>(), 9 * 6);//54??
         //TODO SHOULD SIZE BE 54!?!?
         holder = Holder;
 //        this.size = 9 * 6;
@@ -61,6 +62,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         this.title = "Auction House Page" + page;
 
         this.name = title;
+        System.out.println("Creating AuctionHouse Class");
         if (CyberCoreMain.getInstance().AuctionFactory.getPageHash(page) == null) System.out.println("NUUUUUUUUUUU");
 //        setContents(CyberCoreMain.getInstance().AuctionFactory.getPageHash(page));
     }

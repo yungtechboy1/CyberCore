@@ -1,5 +1,7 @@
 package net.yungtechboy1.CyberCore;
 
+import cn.nukkit.command.Command;
+import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
 import java.util.Date;
@@ -11,6 +13,9 @@ public class Utils {
 
     public static final String NAME = TextFormat.DARK_AQUA+"Cyber"+TextFormat.GOLD+"Tech"+TextFormat.GREEN+"++";
 
+    public static void SendCommandUsage(Command c, CommandSender s) {
+        s.sendMessage(TextFormat.YELLOW+"Usage: "+c.getUsage());
+    }
     public static String getDifferenceBtwTime(Long dateTime) {
 
         long timeDifferenceMilliseconds = dateTime - new Date().getTime();

@@ -29,6 +29,7 @@ public class SendHUD extends Thread implements InterruptibleThread {
                 lasttick = tick;
                 CyberCoreMain Main = CyberCoreMain.getInstance();
                 for (Player p : Main.getServer().getOnlinePlayers().values()) {
+                    if(p.isAlive() && p.isOnline())
                     FormatHUD((CorePlayer) p);
                 }
                 try {
