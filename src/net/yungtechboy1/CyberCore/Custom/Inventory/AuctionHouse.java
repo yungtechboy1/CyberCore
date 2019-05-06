@@ -126,67 +126,18 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         ReloadInv();
     }
 
-
     public void ReloadInv() {
-        CompoundTag T = new CompoundTag();
-        T.putBoolean("AHITEM", true);
-        Item diamond = Item.get(Item.DIAMOND);
-        diamond.setCompoundTag(T);
-        diamond.setCustomName(
-                TextFormat.GOLD + "" + TextFormat.BOLD + "Items you are Selling" + TextFormat.RESET + "\n" +
-                        TextFormat.GREEN + " Click here to view all the items" + TextFormat.RESET + "\n" + TextFormat.GREEN + "you are currently selling on the auction" + TextFormat.RESET + "\n\n" +
-                        TextFormat.GREEN + "Can also use " + TextFormat.DARK_GREEN + "/ah listed"
-        );
-        Item potato = Item.get(Item.POISONOUS_POTATO, 1);
-        potato.setCompoundTag(T);
-        potato.setCustomName(
-                TextFormat.GOLD + "" + TextFormat.BOLD + "Collect Expired Items" + TextFormat.RESET + "\n" +
-                        TextFormat.GREEN + " Click here to view all the items" + TextFormat.RESET + "\n" + TextFormat.GREEN + " you have canceled or experied" + TextFormat.RESET + "\n\n" +
-                        TextFormat.GREEN + "Can also use " + TextFormat.DARK_GREEN + "/ah expired"
-        );
-
-        Item grayglass = Item.get(Item.STAINED_GLASS_PANE, 7);
-        grayglass.setCompoundTag(T);
-        grayglass.setCustomName(
-                TextFormat.DARK_GRAY + "" + TextFormat.BOLD + "-------------"
-        );
-        Item redglass = Item.get(Item.STAINED_GLASS_PANE, 14);
-        redglass.setCompoundTag(T);
-        redglass.setCustomName(
-                TextFormat.YELLOW + "" + TextFormat.BOLD + "Previous Page"
-        );
-        Item greenglass = Item.get(Item.STAINED_GLASS_PANE, 5);
-        greenglass.setCompoundTag(T);
-        greenglass.setCustomName(
-                TextFormat.YELLOW + "" + TextFormat.BOLD + "Next Page"
-        );
-        Item netherstar = Item.get(Item.NETHER_STAR);
-        netherstar.setCompoundTag(T);
-        netherstar.setCustomName(
-                TextFormat.GREEN + "" + TextFormat.BOLD + "Refresh Page"
-        );
-        netherstar.getNamedTag().putInt("page", Page);
-        Item chest = Item.get(Item.CHEST);
-        chest.setCompoundTag(T);
-        chest.setCustomName(
-                TextFormat.GOLD + "" + TextFormat.BOLD + "Categories"
-        );
-
-        Item map = Item.get(Item.MAP);
-        map.setCustomName(TextFormat.GOLD + "" + TextFormat.BOLD + "List Item In Hand");
-
-        Item paper = Item.get(Item.PAPER);
-        paper.setCustomName(TextFormat.GOLD + "" + TextFormat.BOLD + "Search Auction House For Item");
+        StaticItems si = new StaticItems(Page);
         int k = 9;
-        setItem(getSize() - k--, redglass);
-        setItem(getSize() - k--, paper);
-        setItem(getSize() - k--, grayglass);
-        setItem(getSize() - k--, diamond);
-        setItem(getSize() - k--, netherstar);
-        setItem(getSize() - k--, chest);
-        setItem(getSize() - k--, grayglass);
-        setItem(getSize() - k--, map);
-        setItem(getSize() - k, greenglass);
+        setItem(getSize() - k--, si.Redglass);
+        setItem(getSize() - k--, si.Paper);
+        setItem(getSize() - k--, si.Grayglass);
+        setItem(getSize() - k--, si.Diamond);
+        setItem(getSize() - k--, si.Netherstar);
+        setItem(getSize() - k--, si.Chest);
+        setItem(getSize() - k--, si.Grayglass);
+        setItem(getSize() - k--, si.Map);
+        setItem(getSize() - k, si.Greenglass);
 //        sendContents((Player) holder);
     }
 
@@ -245,6 +196,20 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         return false;
     }
 
+    @Override
+    public Map<Integer, Item> all(Item item) {
+        Map<Integer, Item> slots = new HashMap<>();
+        boolean checkDamage = item.hasMeta();
+        boolean checkTag = item.getCompoundTag() != null;
+        for (Map.Entry<Integer, Item> entry : this.getContents().entrySet()) {
+            if (item.equals(entry.getValue(), checkDamage, checkTag)) {
+                slots.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return slots;
+    }
+
 //    @Override
 //    public boolean setItem(int index, Item item) {
 //        item = item.clone();
@@ -267,20 +232,6 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 //    public boolean setItem(int index, Item item, boolean send) {
 //        return false;
 //    }
-
-    @Override
-    public Map<Integer, Item> all(Item item) {
-        Map<Integer, Item> slots = new HashMap<>();
-        boolean checkDamage = item.hasMeta();
-        boolean checkTag = item.getCompoundTag() != null;
-        for (Map.Entry<Integer, Item> entry : this.getContents().entrySet()) {
-            if (item.equals(entry.getValue(), checkDamage, checkTag)) {
-                slots.put(entry.getKey(), entry.getValue());
-            }
-        }
-
-        return slots;
-    }
 
     @Override
     public void remove(Item item) {
@@ -419,15 +370,15 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         this.sendContents(players.stream().toArray(Player[]::new));
     }
 
-//    @Override
-//    public void sendContents(Player player) {
-//        this.sendContents(new Player[]{player});
-//    }
-
     @Override
     public void sendSlot(int index, Player player) {
         this.sendSlot(index, new Player[]{player});
     }
+
+//    @Override
+//    public void sendContents(Player player) {
+//        this.sendContents(new Player[]{player});
+//    }
 
     @Override
     public void sendSlot(int index, Player[] players) {
@@ -437,6 +388,11 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     @Override
     public void sendSlot(int index, Collection<Player> players) {
         this.sendSlot(index, players.stream().toArray(Player[]::new));
+    }
+
+    @Override
+    public InventoryType getType() {
+        return InventoryType.DOUBLE_CHEST;
     }
 //    public void sendSlot(int index, Player[] players) {
 //        ContainerSetSlotPacket pk = new ContainerSetSlotPacket();
@@ -454,9 +410,71 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 //        }
 //    }
 
-    @Override
-    public InventoryType getType() {
-        return InventoryType.DOUBLE_CHEST;
+    public class StaticItems {
+        public final Item Diamond;
+        public final Item Potato;
+        public final Item Grayglass;
+        public final Item Redglass;
+        public final Item Greenglass;
+        public final Item Netherstar;
+        public final Item Chest;
+        public final Item Paper;
+        public final Item Map;
+
+        StaticItems() {
+            this(-1);
+        }
+        StaticItems(int page) {
+            CompoundTag T = new CompoundTag();
+            T.putBoolean("AHITEM", true);
+            Diamond = Item.get(Item.DIAMOND);
+            Diamond.setCompoundTag(T);
+            Diamond.setCustomName(
+                    TextFormat.GOLD + "" + TextFormat.BOLD + "Items you are Selling" + TextFormat.RESET + "\n" +
+                            TextFormat.GREEN + " Click here to view all the items" + TextFormat.RESET + "\n" + TextFormat.GREEN + "you are currently selling on the auction" + TextFormat.RESET + "\n\n" +
+                            TextFormat.GREEN + "Can also use " + TextFormat.DARK_GREEN + "/ah listed"
+            );
+            Potato = Item.get(Item.POISONOUS_POTATO, 1);
+            Potato.setCompoundTag(T);
+            Potato.setCustomName(
+                    TextFormat.GOLD + "" + TextFormat.BOLD + "Collect Expired Items" + TextFormat.RESET + "\n" +
+                            TextFormat.GREEN + " Click here to view all the items" + TextFormat.RESET + "\n" + TextFormat.GREEN + " you have canceled or experied" + TextFormat.RESET + "\n\n" +
+                            TextFormat.GREEN + "Can also use " + TextFormat.DARK_GREEN + "/ah expired"
+            );
+
+            Grayglass = Item.get(Item.STAINED_GLASS_PANE, 7);
+            Grayglass.setCompoundTag(T);
+            Grayglass.setCustomName(
+                    TextFormat.DARK_GRAY + "" + TextFormat.BOLD + "-------------"
+            );
+            Redglass = Item.get(Item.STAINED_GLASS_PANE, 14);
+            Redglass.setCompoundTag(T);
+            Redglass.setCustomName(
+                    TextFormat.YELLOW + "" + TextFormat.BOLD + "Previous Page"
+            );
+            Greenglass = Item.get(Item.STAINED_GLASS_PANE, 5);
+            Greenglass.setCompoundTag(T);
+            Greenglass.setCustomName(
+                    TextFormat.YELLOW + "" + TextFormat.BOLD + "Next Page"
+            );
+            Netherstar = Item.get(Item.NETHER_STAR);
+            Netherstar.setCompoundTag(T);
+            Netherstar.setCustomName(
+                    TextFormat.GREEN + "" + TextFormat.BOLD + "Refresh Page"
+            );
+            if(page != -1)Netherstar.getNamedTag().putInt("page", page);
+            Chest = Item.get(Item.CHEST);
+            Chest.setCompoundTag(T);
+            Chest.setCustomName(
+                    TextFormat.GOLD + "" + TextFormat.BOLD + "Categories"
+            );
+
+            Map = Item.get(Item.MAP);
+            Map.setCustomName(TextFormat.GOLD + "" + TextFormat.BOLD + "List Item In Hand");
+
+            Paper = Item.get(Item.PAPER);
+            Paper.setCustomName(TextFormat.GOLD + "" + TextFormat.BOLD + "Search Auction House For Item");
+        }
     }
 
     public class MainPageItemRef {
