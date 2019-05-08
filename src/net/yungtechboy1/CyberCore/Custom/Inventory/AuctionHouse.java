@@ -1,26 +1,22 @@
 package net.yungtechboy1.CyberCore.Custom.Inventory;
 
 import cn.nukkit.Player;
-import cn.nukkit.block.*;
+import cn.nukkit.block.BlockAir;
+import cn.nukkit.block.BlockEnderChest;
 import cn.nukkit.blockentity.BlockEntity;
-import cn.nukkit.blockentity.BlockEntityChest;
-import cn.nukkit.blockentity.BlockEntityEnderChest;
 import cn.nukkit.entity.EntityHuman;
 import cn.nukkit.inventory.BaseInventory;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
-import cn.nukkit.level.Level;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.nbt.tag.ListTag;
-import cn.nukkit.network.protocol.BlockEventPacket;
 import cn.nukkit.network.protocol.ContainerOpenPacket;
-import cn.nukkit.network.protocol.UpdateBlockPacket;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import org.omg.CORBA.PUBLIC_MEMBER;
+import net.yungtechboy1.CyberCore.Data.AuctionItemData;
+import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
 
 import java.util.*;
 
@@ -42,6 +38,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     CyberCoreMain CCM;
     BlockEntity blockEntity2 = null;
     BlockEntity blockEntity = null;
+    public AuctionFactory AF = null;
 
     public AuctionHouse(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba) {
         this(Holder, ccm, ba, 1);
@@ -55,6 +52,8 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 //        this.size = 9 * 6;
 
         CCM = ccm;
+        AF = CCM.AuctionFactory;
+        addItem(AF.getPage(Page));
         Page = page;
 
         BA = ba;
@@ -120,12 +119,6 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         return contents;
     }
 
-    @Override
-    public void setContents(Map<Integer, Item> items) {
-        super.setContents(items);
-        ReloadInv();
-    }
-
     public void ReloadInv() {
         StaticItems si = new StaticItems(Page);
         int k = 9;
@@ -142,37 +135,150 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     }
 
     public void ConfirmItemPurchase(int slot) {
-        Item confrim = Item.get(Item.EMERALD_BLOCK);
-        confrim.setCustomName(TextFormat.GREEN + "Confirm Purchase");
-        Item deny = Item.get(Item.REDSTONE_BLOCK);
-        deny.setCustomName(TextFormat.GREEN + "Cancel Purchase");
-        Item item = slots.get(slot);
+        AuctionItemData aid = AF.getAIDFromPage(Page, slot);
+        SetupPageToConfirmSingleItem(aid);
         slots.clear();
         ConfirmPurchase = true;
-        for (int i = 0; i < 6; i++) {
-            for (int ii = 0; ii < 9; ii++) {
-                int key = (i * 9) + ii;
-                if (ii >= 0 && ii < 4) {
-                    //RED
-                    slots.put(key, deny.clone());
-                } else if (ii == 4) {
-                    //White or Item
-                    if (i == 3) {
-                        //@TODO Get ITem
-                        slots.put(key, item);
-                    } else {
-                        slots.put(key, Item.get(160));
-                    }
-                } else {
-                    //GREEN
-                    slots.put(key, confrim.clone());
-                }
-            }
-        }
-        sendContents((Player) holder);
+
+//        sendContents((Player) holder);
 
 
     }
+
+    /**
+     * Maybe use later... Probablly wont work well with /ah I think...
+     * @deprecated
+     * @param aid
+     */
+    public void SetupPageToConfirmMultiItem(AuctionItemData aid) {
+        StaticItems si = new StaticItems(Page);
+        Item item = aid.MakePretty();
+        Item confrim = si.Confirm;
+        Item deny = si.Deny;
+        for (int i = 0; i < 5; i++) {
+            for (int ii = 0; ii < 9; ii++) {
+                int key = (i * 9) + ii;
+                Item add = null;
+                switch (ii) {
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                        add = si.Deny.clone();
+                        setItem(key, add, true);
+                        break;
+//                    case 1:
+//                        if (item.count >= 32) add = si.RmvX32.clone();
+//                        else add = si.Deny.clone();
+//                        setItem(key,add,true);
+//                        break;
+//                    case 2:
+//                        if (item.count >= 10) add = si.RmvX10.clone();
+//                        else add = si.Deny.clone();
+//                        setItem(key,add,true);
+//                        break;
+//                    case 3:
+//                        if (item.count >= 1) add = si.RmvX1.clone();
+//                        else add = si.Deny.clone();
+//                        setItem(key,add,true);
+//                        break;
+                    case 4:
+                        if (i == 2) add = item.clone();
+                        else add = Item.get(160).clone();
+                        setItem(key,add,true);
+                        break;
+                    case 5:
+                        if (item.count >= 1) add = si.AddX1.clone();
+                        else add = si.Deny.clone();
+                        setItem(key,add,true);
+                        break;
+                }
+
+
+                if (ii < 4) {
+                    //RED
+                    setItem(key, deny.clone(), true);
+                } else if (ii == 4) {
+                    //White or Item
+                    if (i == 2) {
+                        //@TODO Get ITem
+                        setItem(key, item, true);
+                    } else {
+                        setItem(key, Item.get(160), true);
+                    }
+                } else {
+                    //GREEN
+                    setItem(key, confrim.clone(), true);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void setContents(Map<Integer, Item> items) {
+        super.setContents(items);
+        if(holder != null)SendAllSlots((Player)holder);
+//        setContents(items,true);
+    }
+
+    public void setContents(Map<Integer, Item> items, boolean send) {
+
+        for(int i = 0; i < this.size; ++i) {
+            if (!items.containsKey(i)) {
+                if (this.slots.containsKey(i)) {
+                    this.clear(i);
+                }
+            } else if (!this.setItem(i, (Item)((Map)items).get(i),send)) {
+                this.clear(i);
+            }
+        }
+
+
+        ReloadInv();
+    }
+
+    @Override
+    public void sendContents(Player player) {
+        ArrayList<Player> al = new ArrayList<>();
+        al.add(player);
+        this.sendContents(al.toArray(new Player[1]));
+    }
+
+    public void SendAllSlots(Player p){
+        ArrayList<Player> al = new ArrayList<>();
+        al.add(p);
+        for(int i = 0; i < getSize(); i++){
+            sendSlot(i,p);
+        }
+    }
+
+    public void SetupPageToConfirmSingleItem(AuctionItemData aid) {
+        StaticItems si = new StaticItems(Page);
+        Item item = aid.MakePretty();
+        Item confrim = si.Confirm.clone();
+        Item deny = si.Deny.clone();
+        for (int i = 0; i < 5; i++) {
+            for (int ii = 0; ii < 9; ii++) {
+                int key = (i * 9) + ii;
+                if (ii < 4) {
+                    //RED
+                    setItem(key, deny.clone(), true);
+                } else if (ii == 4) {
+                    //White or Item
+                    if (i == 2) {
+                        //@TODO Get ITem
+                        setItem(key, item, true);
+                    } else {
+                        setItem(key, Item.get(160), true);
+                    }
+                } else {
+                    //GREEN
+                    setItem(key, confrim.clone(), true);
+                }
+            }
+        }
+    }
+
 
     public void setItem2(int index, Item item) {
         setItem(index, item.clone());
@@ -291,7 +397,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
             }
             this.onSlotChange(index, old);
         }
-        System.out.println("CLEARRRR###"+index);
+        System.out.println("CLEARRRR###" + index);
         return true;
     }
 
@@ -380,15 +486,6 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 //        this.sendContents(new Player[]{player});
 //    }
 
-    @Override
-    public void sendSlot(int index, Player[] players) {
-
-    }
-
-    @Override
-    public void sendSlot(int index, Collection<Player> players) {
-        this.sendSlot(index, players.stream().toArray(Player[]::new));
-    }
 
     @Override
     public InventoryType getType() {
@@ -420,6 +517,14 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         public final Item Chest;
         public final Item Paper;
         public final Item Map;
+        public final Item Confirm;
+        public final Item AddX1;
+        public final Item AddX10;
+        public final Item AddX32;
+        public final Item RmvX1;
+        public final Item RmvX10;
+        public final Item RmvX32;
+        public final Item Deny;
 
         StaticItems() {
             this(-1);
@@ -428,6 +533,50 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         StaticItems(int page) {
             CompoundTag T = new CompoundTag();
             T.putBoolean("AHITEM", true);
+            AddX1 = Item.get(Item.EMERALD_BLOCK);
+            AddX1.setCompoundTag(T);
+            AddX1.getNamedTag().putInt("ADD", 1);
+            AddX1.setCount(1);
+            AddX1.setCustomName(TextFormat.GREEN + " Add 1 To Cart");
+
+            AddX10 = Item.get(Item.EMERALD_BLOCK);
+            AddX10.setCompoundTag(T);
+            AddX10.getNamedTag().putInt("ADD", 10);
+            AddX10.setCount(10);
+            AddX10.setCustomName(TextFormat.GREEN + " Add 10 To Cart");
+
+
+            AddX32 = Item.get(Item.EMERALD_BLOCK);
+            AddX32.setCompoundTag(T);
+            AddX32.getNamedTag().putInt("ADD", 32);
+            AddX32.setCount(32);
+            AddX32.setCustomName(TextFormat.GREEN + " Add 32 To Cart");
+
+
+            RmvX1 = Item.get(Item.REDSTONE_BLOCK);
+            RmvX1.setCompoundTag(T);
+            RmvX1.getNamedTag().putInt("RMV", 1);
+            RmvX1.setCustomName(TextFormat.GREEN + "Remove 1 From Cart");
+
+
+            RmvX10 = Item.get(Item.REDSTONE_BLOCK);
+            RmvX10.setCompoundTag(T);
+            RmvX10.getNamedTag().putInt("RMV", 10);
+            RmvX10.setCustomName(TextFormat.GREEN + "Remove 10 From Cart");
+
+
+            RmvX32 = Item.get(Item.REDSTONE_BLOCK);
+            RmvX32.setCompoundTag(T);
+            RmvX32.getNamedTag().putInt("RMV", 32);
+            RmvX32.setCustomName(TextFormat.GREEN + "Remove 32 From Cart");
+
+
+            Confirm = Item.get(Item.EMERALD_BLOCK);
+            Confirm.setCompoundTag(T);
+            Confirm.setCustomName(TextFormat.GREEN + "Confirm Cart Purchase");
+            Deny = Item.get(Item.REDSTONE_BLOCK);
+            Deny.setCompoundTag(T);
+            Deny.setCustomName(TextFormat.GREEN + "Cancel Cart Purchase");
             Diamond = Item.get(Item.DIAMOND);
             Diamond.setCompoundTag(T);
             Diamond.setCustomName(

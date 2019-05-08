@@ -21,6 +21,22 @@ Specalizations
         - 21-30 - 15% Faster
         - 31-40 - 20% Faster
         - 41-50 - 25% Faster
+   - Ore Bomb
+    - Spawns Ore Blocks with Random values with a Box
+    - Levels:
+        - Level 1: 5 X 5 Box
+        - Level 2: 10 X 10 Box
+        - Level 3: 15 X 15 Box
+        - Level 4: 20 X 20 Box
+        - Level 5: 30 X 30 Box
+    - Data:
+        - SpawnRates:
+            - Coal: 0 - 100
+            - Iron: 0 - 100
+            - Gold: 0 - 100
+            - Diamond: 0 - 100
+            - Emeralds: 0 - 100
+            
 - enchanter - Enchanting, Producing rare Potion and Books
     - Every other class has a max 65% Success rate, and 100% Fail rate. Enchanters will always have a 100% Max Success rate and max 80% Fail rate
       - The fail rate will decrease with each level

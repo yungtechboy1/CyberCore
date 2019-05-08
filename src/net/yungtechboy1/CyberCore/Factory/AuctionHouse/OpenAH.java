@@ -13,8 +13,8 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
  * Created by carlt on 4/28/2019.
  */
 public class OpenAH extends Task implements Runnable {
-    Player P;
-    Inventory B;
+    CorePlayer P;
+    AuctionHouse B;
     public OpenAH(CorePlayer p, AuctionHouse b) {
     P = p;
     B = b;
@@ -25,6 +25,7 @@ public class OpenAH extends Task implements Runnable {
 //        B.addItem(new ItemBook());
         CyberCoreMain.getInstance().getLogger().info(B.getContents().values().size()+" < SIZZEEE"+B.getSize());
             P.addWindow(B);
+            P.AH = B;
         CyberCoreMain.getInstance().getLogger().info(B.getContents().values().size()+" < SIZZEEE"+B.getSize());
 //            B.sendContents(P);
     }

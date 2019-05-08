@@ -28,6 +28,7 @@ import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Spring;
+import net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse;
 import net.yungtechboy1.CyberCore.Data.HomeData;
 import net.yungtechboy1.CyberCore.Manager.Econ.PlayerEconData;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
@@ -78,6 +79,7 @@ public class CorePlayer extends Player {
     private boolean isInTeleportingProcess = false;
     private CorePlayer TargetTeleporting = null;
     private Position TargetTeleportingLoc;
+    public AuctionHouse AH = null;
 
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
         super(interfaz, clientID, ip, port);

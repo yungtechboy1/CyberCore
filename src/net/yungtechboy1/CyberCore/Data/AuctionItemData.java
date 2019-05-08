@@ -95,6 +95,26 @@ public class AuctionItemData {
 
     }
 
+    public Item getItem() {
+        return item;
+    }
+
+    public int getCost() {
+        return Cost;
+    }
+
+    public String getSoldby() {
+        return Soldby;
+    }
+
+    public String getSoldbyn() {
+        return Soldbyn;
+    }
+
+    public int getMasterid() {
+        return masterid;
+    }
+
     @Override
     public String toString() {
         return item.getName() + " | " + item.getCustomName() + " | " + Soldby + " | " + masterid;
