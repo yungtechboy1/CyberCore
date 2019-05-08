@@ -291,7 +291,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
             }
             this.onSlotChange(index, old);
         }
-        System.out.println("CLEARRRR");
+        System.out.println("CLEARRRR###"+index);
         return true;
     }
 
@@ -424,6 +424,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         StaticItems() {
             this(-1);
         }
+
         StaticItems(int page) {
             CompoundTag T = new CompoundTag();
             T.putBoolean("AHITEM", true);
@@ -462,7 +463,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
             Netherstar.setCustomName(
                     TextFormat.GREEN + "" + TextFormat.BOLD + "Refresh Page"
             );
-            if(page != -1)Netherstar.getNamedTag().putInt("page", page);
+            if (page != -1) Netherstar.getNamedTag().putInt("page", page);
             Chest = Item.get(Item.CHEST);
             Chest.setCompoundTag(T);
             Chest.setCustomName(

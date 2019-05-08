@@ -31,7 +31,7 @@ public class AuctionItemData {
         int item_meta = rs.getInt("item-meta");
         int item_count = rs.getInt("item-count");
         byte[] namedtag = rs.getString("namedtag").getBytes();
-        int cost = rs.getInt("cost");
+        Cost = rs.getInt("cost");
         String soldbyn = rs.getString("soldbyn");
         String soldby = rs.getString("soldby");
         int mid = rs.getInt("master_id");

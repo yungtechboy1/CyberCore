@@ -22,7 +22,7 @@ public class OpenAH extends Task implements Runnable {
 
     @Override
     public void onRun(int i) {
-        B.addItem(new ItemBook());
+//        B.addItem(new ItemBook());
         CyberCoreMain.getInstance().getLogger().info(B.getContents().values().size()+" < SIZZEEE"+B.getSize());
             P.addWindow(B);
         CyberCoreMain.getInstance().getLogger().info(B.getContents().values().size()+" < SIZZEEE"+B.getSize());

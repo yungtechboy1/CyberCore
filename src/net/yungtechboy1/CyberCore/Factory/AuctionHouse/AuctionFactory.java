@@ -8,16 +8,14 @@ import cn.nukkit.block.BlockChest;
 import cn.nukkit.block.BlockID;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
+import cn.nukkit.event.inventory.InventoryClickEvent;
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.inventory.transaction.InventoryTransaction;
 import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.inventory.transaction.action.SlotChangeAction;
-import cn.nukkit.item.Item;
-import cn.nukkit.item.ItemBlock;
-import cn.nukkit.item.ItemBook;
-import cn.nukkit.item.ItemID;
+import cn.nukkit.item.*;
 import cn.nukkit.level.GlobalBlockPalette;
 import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
@@ -236,7 +234,7 @@ public class AuctionFactory implements Listener {
     public Item[] SetPagePlayerSelling(String seller, int page) {
         int stop = page * 45;
         int start = stop - 46;
-        System.out.println("START = " + start + ", STOP = " + stop);
+        System.out.println("START = " + start + ", STOP = " + stop+" Seller"+seller);
         ArrayList<Item> list2 = getListOfItemsBetween(start, stop, seller);
         if (45 > list2.size()) {
             ArrayList<Item> a = new ArrayList<Item>();
@@ -302,7 +300,7 @@ public class AuctionFactory implements Listener {
         SpawnFakeBlockAndEntity(p, new CompoundTag().putString("CustomName", "Auction House!"));
         AuctionHouse b = new AuctionHouse(p, CCM, p, pg);
         System.out.println("B4 ADD!! --------------");
-        b.addItem(getPage(1));
+        b.addItem(getPage(pg));
         System.out.println("A4 ADD!! --------------");
         CyberCoreMain.getInstance().getLogger().info(b.getContents().values().size() + " < SIZZEEE" + b.getSize());
         CyberCoreMain.getInstance().getServer().getScheduler().scheduleDelayedTask(new OpenAH(p, b), 10);
@@ -348,138 +346,67 @@ public class AuctionFactory implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
+    public void TTE(InventoryClickEvent event) {
+
+        System.out.println("++++++++++++++++++++++++++++++++++++++++");
+        System.out.println("++++++++++++++++++++++++++++++++++++++++");
+        System.out.println(event.getSlot());
+        System.out.println(event.getInventory().getClass().getName());
+    }
+        @EventHandler(ignoreCancelled = true)
     public void TE(InventoryTransactionEvent event) {
         System.out.println("CALLLL");
         InventoryTransaction transaction = event.getTransaction();
         Set<InventoryAction> traa = transaction.getActions();
         for (InventoryAction t : traa) {
-            System.out.println("CALLLL TTTTTTTTTTTTTTTTTTT");
+            System.out.println("CALLLL TTTTTTTTTTTTTTTTTTT"+t.getClass().getName());
             if (t instanceof SlotChangeAction) {
                 System.out.println("CALLLL SLOTCCCCCCCC");
-                SlotChangeAction sca  = (SlotChangeAction)t;
+                SlotChangeAction sca = (SlotChangeAction) t;
 
 //                sca.getInventory()
 
                 Inventory inv = sca.getInventory();
-                System.out.println("CHECK INNNNNVVVVVVV "+inv.getClass().getName());
-                if (inv.isEmpty()) return;
+                System.out.println("CHECK INNNNNVVVVVVV " + inv.getClass().getName());
+//                if (inv.isEmpty()) return;
 
                 System.out.println("NEEEEEEE" + inv.getClass().getTypeName());
                 if (inv instanceof PlayerInventory) {
-                    t.
-                }
-                if (inv instanceof AuctionHouse) {
 
                 }
-                if (inv instanceof HashSet) {
-                    System.out.println("AHHHHHH");
-                    HashSet AHINV = ((HashSet) inv);
-                    if (true) {
-//                    if (!AHINV.ConfirmPurchase) {
-                        System.out.println("CPPPPP");
-                        Item si = t.getSourceItem();
-                        System.out.println("SOURCE ITEM ID SELECTED: " + si.getId());
-                        if (si.hasCompoundTag() && si.getNamedTag().contains("AHITEM") && si.getNamedTag().getBoolean("AHITEM")) {
-//                    Static UI Element
-                            System.out.println("STATIC UI ITEM SELECTED!");
-                            if (si.getId() == BlockID.STAINED_GLASS_PANE) {//Next, Previous, & Null
-                                //Confirm Item
-                                if (si.getDamage() == 14) {
-                                    //red
-                                    Page--;
-                                    if (Page < 1) Page = 1;
-//                                    Server.getInstance().getPlayerExact(AHINV.getHolder().getName()).sendMessage("Auction House - Page " + Page);
-                                    return;
-                                } else if (si.getDamage() == 5) {
-                                    //green
-                                    Page++;
-//                                    Server.getInstance().getPlayerExact(AHINV.getHolder().getName()).sendMessage("Auction House - Page " + Page);
-                                    return;
-                                } else if (si.getDamage() == 7) {
-                                    return;
-                                    //Gray Glass
-                                }
-                            } else if (si.getId() == ItemID.DIAMOND) {
-                                Page = 1;
-                                //@TODO Show Items they are selling
-//                                AHINV.setContents(getPageHash(Page, AHINV.getHolder().getName()));
-//                                AHINV.ReloadInv();
-//                                AHINV.sendContents(Server.getInstance().getPlayerExact(AHINV.getHolder().getName()));
-                                return;
-                            }
-                        }
-                    } else {
-                        if (t.getSourceItem().getId() == Item.EMERALD_BLOCK) {
-                            event.setCancelled();
-//                            Player p = (Player) AHINV.getHolder();
-//                            if (p == null) {
-//                                System.out.println("?!??!?! Ahh222222hhh");
-//                                return;
-//                            }
-                            //DONE!
-                            //Give Item
-//                            Item TI = AHINV.getItem(31);
-//                        if (TI.hasCompoundTag()) {
-//                            CompoundTag tag = TI.getNamedTag();
-//                            if (tag.contains("display") && tag.get("display") instanceof CompoundTag) {
-//                                CompoundTag tag2 = tag.getCompound("display");
-//                                if (tag2 != null) {
-//                                    ArchEconMain AA = (ArchEconMain) CCM.getServer().getPluginManager().getPlugin("ArchEcon");
-//                                    int id = tag2.getInt("keyid");
-//                                    int price = tag2.getInt("cost");
-//                                    if (AA == null) {
-//                                        p.sendMessage(TextFormat.RED + "Error! 258");
-//                                        AHINV.close(p);
-//                                        return;
-//                                    }
-//                                    //@TODO Check Items
-//                                    Item checkitem = GetItemfromDB(id);
-//                                    if (checkitem == null && !checkitem.equals(TI)) {
-//                                        p.sendMessage(TextFormat.RED + "Error! 273");
-//                                        AHINV.close(p);
-//                                        System.out.println("?!??!?! Ahhhhh");
-//                                        return;
-//                                    }
-//
-//                                    //@TODO reset all my custom shit!
-//                                    String soldby = tag2.getString("soldby");
-//                                    tag2.remove("keyid");
-//                                    tag2.remove("cost");
-//                                    tag2.remove("soldby");
-//                                    String CN = tag2.getString("Name2");
-//                                    tag2.remove("Name");
-//                                    if (CN != null && CN.length() != 0) tag2.putString("Name", CN);
-//                                    tag2.remove("Name2");
-//                                    TI.setNamedTag(tag);
-//
-////                                    if (!AA.TakeMoney(p.getName(), 1.0 * price, false)) {
-////                                        p.sendMessage(TextFormat.RED + "Error! You don't have enough money!");
-////                                        AHINV.close(p);
-////                                        return;
-////                                    }
-//
-//                                    SetBought(id);
-////                                    AA.GiveMoney(soldby, 1.0 * price);
-//                                    p.getInventory().addItem(TI);
-//                                    AHINV.close(p);
-//                                    //p.getLevel().dropItem(p,TI.clone());
-//
-//
-//                                    System.out.println("Braasssssa");
-//                                    return;
-//                                    //Take Money
-//                                    //DEl Item
-//                                }
-//                            } else {
-//                                System.out.println("Braaaaaaaaa");
-//                            }
-//                        } else {
-//                            System.out.println("Braaa");
-//                        }
-                        }
-                        System.out.println("Other Blokc ");
-                    }
+                if (inv instanceof AuctionHouse) {
+                    AuctionHouse ah = (AuctionHouse) inv;
+                    System.out.println(sca.getSlot());
+                    int slot = sca.getSlot();
                     event.setCancelled();
+                    if (slot < 5 * 9) {
+                        //TODO CONFIRM AND SHOW ITEM
+                        ah.ConfirmItemPurchase(slot);
+                    } else {
+                        switch (slot) {
+                            case AuctionHouse.MainPageItemRef.LastPage:
+                                Page--;
+                                if (Page < 1) Page = 1;
+                                Server.getInstance().getPlayerExact(ah.getHolder().getName()).sendPopup("PAGE SET TO " + Page);
+
+                                break;
+                            case AuctionHouse.MainPageItemRef.NextPage:
+                                Server.getInstance().getPlayerExact(ah.getHolder().getName()).sendTip("PAGE SET TO " + Page);
+                                Page++;
+                                break;
+                            case AuctionHouse.MainPageItemRef.Search:
+                            case AuctionHouse.MainPageItemRef.Reload:
+                                ah.clearAll();
+                                break;
+                            case AuctionHouse.MainPageItemRef.PlayerSelling:
+                                ah.addItem(new ItemSwordWood());
+                                ah.setContents(getPageHash(Page,ah.getHolder().getName()));
+                                ah.sendContents((Player)ah.getHolder());
+                                event.setCancelled(false);
+                                break;
+
+                        }
+                    }
                 }
             }
         }
