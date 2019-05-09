@@ -1,12 +1,16 @@
 package net.yungtechboy1.CyberCore.Custom.Inventory;
 
 import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.block.BlockEnderChest;
 import cn.nukkit.blockentity.BlockEntity;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityHuman;
+import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.inventory.BaseInventory;
 import cn.nukkit.inventory.Inventory;
+import cn.nukkit.inventory.InventoryHolder;
 import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
@@ -32,13 +36,13 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     public int Page = 1;
     public boolean ConfirmPurchase = false;
     public int ConfirmPurchaseSlot = 0;
+    public AuctionFactory AF = null;
     protected int maxStackSize = Inventory.MAX_STACK;
     EntityHuman holder;
     Vector3 BA;
     CyberCoreMain CCM;
     BlockEntity blockEntity2 = null;
     BlockEntity blockEntity = null;
-    public AuctionFactory AF = null;
 
     public AuctionHouse(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba) {
         this(Holder, ccm, ba, 1);
@@ -98,7 +102,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
     @Override
     public void onSlotChange(int index, Item before, boolean send) {
-
+        super.onSlotChange(index,before,send);
     }
 
 
@@ -117,6 +121,13 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         }
 
         return contents;
+    }
+
+    @Override
+    public void setContents(Map<Integer, Item> items) {
+//        super.setContents(items);
+//        if (holder != null) SendAllSlots((Player) holder);
+        setContents(items,true);
     }
 
     public void ReloadInv() {
@@ -147,8 +158,9 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
     /**
      * Maybe use later... Probablly wont work well with /ah I think...
-     * @deprecated
+     *
      * @param aid
+     * @deprecated
      */
     public void SetupPageToConfirmMultiItem(AuctionItemData aid) {
         StaticItems si = new StaticItems(Page);
@@ -185,12 +197,12 @@ public class AuctionHouse extends BaseInventory implements Inventory {
                     case 4:
                         if (i == 2) add = item.clone();
                         else add = Item.get(160).clone();
-                        setItem(key,add,true);
+                        setItem(key, add, true);
                         break;
                     case 5:
                         if (item.count >= 1) add = si.AddX1.clone();
                         else add = si.Deny.clone();
-                        setItem(key,add,true);
+                        setItem(key, add, true);
                         break;
                 }
 
@@ -215,21 +227,47 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     }
 
     @Override
-    public void setContents(Map<Integer, Item> items) {
-        super.setContents(items);
-        if(holder != null)SendAllSlots((Player)holder);
-//        setContents(items,true);
+    public boolean setItem(int index, Item item, boolean send) {
+        item = item.clone();
+        if (index >= 0 && index < this.size && item != null) {
+            if (item.getId() != 0 && item.getCount() > 0) {
+                InventoryHolder holder = this.getHolder();
+                if (holder instanceof Entity &&!send) {
+                    EntityInventoryChangeEvent ev = new EntityInventoryChangeEvent((Entity) holder, this.getItem(index), item, index);
+                    Server.getInstance().getPluginManager().callEvent(ev);
+                    if (ev.isCancelled() && !send) {
+                        this.sendSlot(index, (Collection) this.getViewers());
+                        return false;
+                    }
+
+                    item = ev.getNewItem();
+                }
+
+                if (holder instanceof BlockEntity) {
+                    ((BlockEntity) holder).setDirty();
+                }
+
+                Item old = this.getItem(index);
+                this.slots.put(index, item.clone());
+                this.onSlotChange(index, old, send);
+                return true;
+            } else {
+                return this.clear(index, send);
+            }
+        } else {
+            return false;
+        }
     }
 
     public void setContents(Map<Integer, Item> items, boolean send) {
+        System.out.println("SETTINNGG CCCOONNNTTTZ " + items.size());
+        for (int i = 0; i < this.size-1; ++i) {
 
-        for(int i = 0; i < this.size; ++i) {
+//            System.out.println("SETTING ITEM IN KEY " + i + " VVVVVVVV " + items.get(i).getClass().getName());
             if (!items.containsKey(i)) {
-                if (this.slots.containsKey(i)) {
-                    this.clear(i);
-                }
-            } else if (!this.setItem(i, (Item)((Map)items).get(i),send)) {
-                this.clear(i);
+                clear(i,true);
+            } else if (!this.setItem(i, items.get(i), send)) {
+                clear(i,true);
             }
         }
 
@@ -244,11 +282,11 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         this.sendContents(al.toArray(new Player[1]));
     }
 
-    public void SendAllSlots(Player p){
+    public void SendAllSlots(Player p) {
         ArrayList<Player> al = new ArrayList<>();
         al.add(p);
-        for(int i = 0; i < getSize(); i++){
-            sendSlot(i,p);
+        for (int i = 0; i < getSize()-1; i++) {
+            sendSlot(i, p);
         }
     }
 
@@ -387,6 +425,12 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
     @Override
     public boolean clear(int index) {
+        return this.clear(index, true);
+    }
+
+    @Override
+    public boolean clear(int index, boolean send) {
+        System.out.println("AAAAAAAAAAAAAA" + index);
         if (this.slots.containsKey(index)) {
             Item item = new ItemBlock(new BlockAir(), null, 0);
             Item old = this.slots.get(index);
@@ -395,16 +439,17 @@ public class AuctionHouse extends BaseInventory implements Inventory {
             } else {
                 this.slots.remove(index);
             }
-            this.onSlotChange(index, old);
+            this.onSlotChange(index, old, send);
+        }else if(send){
+            Item item = new ItemBlock(new BlockAir(), null, 0);
+            Item old = this.slots.get(index);
+            setItem(index, item.clone(),true);
+//            this.onSlotChange(index, old, true);
         }
         System.out.println("CLEARRRR###" + index);
         return true;
     }
 
-    @Override
-    public boolean clear(int index, boolean send) {
-        return false;
-    }
 
     @Override
     public void clearAll() {
