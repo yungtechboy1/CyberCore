@@ -68,7 +68,6 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         System.out.println("Creating AuctionHouse Class");
 //        if (CyberCoreMain.getInstance().AuctionFactory.getPageHash(page) == null) System.out.println("NUUUUUUUUUUU");
 //        setContents(CyberCoreMain.getInstance().AuctionFactory.getPageHash(page));
-        Init = true;
     }
 
     public void setPage(Integer page) {
@@ -227,38 +226,6 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         }
     }
 
-    @Override
-    public boolean setItem(int index, Item item, boolean send) {
-        item = item.clone();
-        if (index >= 0 && index < this.size && item != null) {
-            if (item.getId() != 0 && item.getCount() > 0) {
-                InventoryHolder holder = this.getHolder();
-                if (holder instanceof Entity &&!send) {
-                    EntityInventoryChangeEvent ev = new EntityInventoryChangeEvent((Entity) holder, this.getItem(index), item, index);
-                    Server.getInstance().getPluginManager().callEvent(ev);
-                    if (ev.isCancelled() && !send) {
-                        this.sendSlot(index, (Collection) this.getViewers());
-                        return false;
-                    }
-
-                    item = ev.getNewItem();
-                }
-
-                if (holder instanceof BlockEntity) {
-                    ((BlockEntity) holder).setDirty();
-                }
-
-                Item old = this.getItem(index);
-                this.slots.put(index, item.clone());
-                this.onSlotChange(index, old, send);
-                return true;
-            } else {
-                return this.clear(index, send);
-            }
-        } else {
-            return false;
-        }
-    }
 
     public void setContents(Map<Integer, Item> items, boolean send) {
         System.out.println("SETTINNGG CCCOONNNTTTZ " + items.size());
