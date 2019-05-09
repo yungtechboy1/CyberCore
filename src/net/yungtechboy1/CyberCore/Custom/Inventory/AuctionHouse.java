@@ -1,12 +1,16 @@
 package net.yungtechboy1.CyberCore.Custom.Inventory;
 
 import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.block.BlockEnderChest;
 import cn.nukkit.blockentity.BlockEntity;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityHuman;
+import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.inventory.BaseInventory;
 import cn.nukkit.inventory.Inventory;
+import cn.nukkit.inventory.InventoryHolder;
 import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
@@ -27,18 +31,19 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
     protected final String name;
     protected final String title;
-    protected final Map<Integer, Item> slots = new HashMap<>();
+//    public static HashMap<Integer, Item> slots = new HashMap<>();
     protected final Set<Player> viewers = new HashSet<>();
     public int Page = 1;
     public boolean ConfirmPurchase = false;
     public int ConfirmPurchaseSlot = 0;
+    public AuctionFactory AF = null;
     protected int maxStackSize = Inventory.MAX_STACK;
     EntityHuman holder;
     Vector3 BA;
     CyberCoreMain CCM;
     BlockEntity blockEntity2 = null;
     BlockEntity blockEntity = null;
-    public AuctionFactory AF = null;
+    public static boolean Init = false;
 
     public AuctionHouse(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba) {
         this(Holder, ccm, ba, 1);
@@ -46,14 +51,14 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
     public AuctionHouse(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba, int page) {
 //        super(Holder, InventoryType.DOUBLE_CHEST, CyberCoreMain.getInstance().AuctionFactory.getPageHash(page), 9 * 6);//54??
-        super(Holder, InventoryType.DOUBLE_CHEST, new HashMap<>(), 9 * 6);//54??
+        super(Holder, InventoryType.DOUBLE_CHEST, ccm.AuctionFactory.getPageHash(page), 9 * 6);//54??
         //TODO SHOULD SIZE BE 54!?!?
         holder = Holder;
 //        this.size = 9 * 6;
 
         CCM = ccm;
         AF = CCM.AuctionFactory;
-        addItem(AF.getPage(Page));
+//        addItem(AF.getPage(Page));
         Page = page;
 
         BA = ba;
@@ -64,6 +69,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         System.out.println("Creating AuctionHouse Class");
 //        if (CyberCoreMain.getInstance().AuctionFactory.getPageHash(page) == null) System.out.println("NUUUUUUUUUUU");
 //        setContents(CyberCoreMain.getInstance().AuctionFactory.getPageHash(page));
+        Init = true;
     }
 
     public void setPage(Integer page) {
@@ -98,7 +104,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
     @Override
     public void onSlotChange(int index, Item before, boolean send) {
-
+        if(Init)super.onSlotChange(index, before, send);
     }
 
 
@@ -117,6 +123,13 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         }
 
         return contents;
+    }
+
+    @Override
+    public void setContents(Map<Integer, Item> items) {
+        super.setContents(items);
+        if (holder != null) SendAllSlots((Player) holder);
+//        setContents(items,true);
     }
 
     public void ReloadInv() {
@@ -147,8 +160,9 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
     /**
      * Maybe use later... Probablly wont work well with /ah I think...
-     * @deprecated
+     *
      * @param aid
+     * @deprecated
      */
     public void SetupPageToConfirmMultiItem(AuctionItemData aid) {
         StaticItems si = new StaticItems(Page);
@@ -185,12 +199,12 @@ public class AuctionHouse extends BaseInventory implements Inventory {
                     case 4:
                         if (i == 2) add = item.clone();
                         else add = Item.get(160).clone();
-                        setItem(key,add,true);
+                        setItem(key, add, true);
                         break;
                     case 5:
                         if (item.count >= 1) add = si.AddX1.clone();
                         else add = si.Deny.clone();
-                        setItem(key,add,true);
+                        setItem(key, add, true);
                         break;
                 }
 
@@ -214,21 +228,14 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         }
     }
 
-    @Override
-    public void setContents(Map<Integer, Item> items) {
-        super.setContents(items);
-        if(holder != null)SendAllSlots((Player)holder);
-//        setContents(items,true);
-    }
-
     public void setContents(Map<Integer, Item> items, boolean send) {
 
-        for(int i = 0; i < this.size; ++i) {
+        for (int i = 0; i < this.size; ++i) {
             if (!items.containsKey(i)) {
                 if (this.slots.containsKey(i)) {
                     this.clear(i);
                 }
-            } else if (!this.setItem(i, (Item)((Map)items).get(i),send)) {
+            } else if (!this.setItem(i, (Item) ((Map) items).get(i), send)) {
                 this.clear(i);
             }
         }
@@ -238,17 +245,96 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     }
 
     @Override
+public boolean setItem(int index, Item item, boolean send) {
+    item = item.clone();
+    System.out.println("INNNNEEDDDDEDEE >> "+index);
+    System.out.println("INNNNEEDDDDEDEE >> "+item.getClass().getName());
+        System.out.println("INNNNEEDDDDEDEE >> "+item.getCount());
+        System.out.println("INNNNEEDDDDEDEE >> "+item.getId());
+    if(index >= 0 && index < getSize()) {
+        if(item.getId() != 0 && item.getCount() > 0) {
+//            InventoryHolder holder = this.getHolder();
+//            if(holder instanceof Entity) {
+//                EntityInventoryChangeEvent ev = new EntityInventoryChangeEvent((Entity)holder, this.getItem(index), item, index);
+//                Server.getInstance().getPluginManager().callEvent(ev);
+//                if(ev.isCancelled()) {
+//                    this.sendSlot(index, (Collection)this.getViewers());
+//                    return false;
+//                }
+//
+//                item = ev.getNewItem();
+//            }
+//
+//            if(holder instanceof BlockEntity) {
+//                ((BlockEntity)holder).setDirty();
+//            }
+//
+            Item old = this.getItem(index);
+            slots.put(index, item.clone());
+            this.onSlotChange(index, old, send);
+            return true;
+
+//            return super.setItem(index,item,send);
+        } else {
+            return this.clear(index);
+        }
+    } else {
+        return false;
+    }
+}
+
+//    public boolean setItem(int index, Item item, boolean send) {
+//        item = item.clone();
+//        if (index >= 0 && index < this.size) {
+//            if (item.getId() != 0 && item.getCount() > 0) {
+//                InventoryHolder holder = this.getHolder();
+//                if (holder instanceof Entity && !send) {
+//                    EntityInventoryChangeEvent ev = new EntityInventoryChangeEvent((Entity) holder, this.getItem(index), item, index);
+//                    Server.getInstance().getPluginManager().callEvent(ev);
+//                    if (ev.isCancelled()) {
+//                        this.sendSlot(index, (Collection) this.getViewers());
+//                        return false;
+//                    }
+//
+//                    item = ev.getNewItem();
+//                }
+//
+//                if (holder instanceof BlockEntity) {
+//                    ((BlockEntity) holder).setDirty();
+//                }
+//
+//                Item old = this.getItem(index);
+//                System.out.println("SEEEEETTTTT >> "+index);
+//                System.out.println("SEEEEETTTTT >> "+item.getClass().getName());
+//                System.out.println("SEEEEETTTTT >> "+item.clone().getClass().getName());
+//                System.out.println("SEEEEETTTTT >> "+slots.getClass().getName());
+//                slots.put((Integer) index, item.clone());
+//                this.onSlotChange(index, old, send);
+//                return true;
+//            } else {
+//                slots.put(index, new ItemBlock(new BlockAir(), 0, 0));
+//                this.onSlotChange(index, this.getItem(index), send);
+//                System.out.println("MAN CLLEEAARRR");
+////                return this.clear(index);
+//                return true;
+//            }
+//        } else {
+//            return false;
+//        }
+//    }
+
+    @Override
     public void sendContents(Player player) {
         ArrayList<Player> al = new ArrayList<>();
         al.add(player);
         this.sendContents(al.toArray(new Player[1]));
     }
 
-    public void SendAllSlots(Player p){
+    public void SendAllSlots(Player p) {
         ArrayList<Player> al = new ArrayList<>();
         al.add(p);
-        for(int i = 0; i < getSize(); i++){
-            sendSlot(i,p);
+        for (int i = 0; i < getSize(); i++) {
+            sendSlot(i, p);
         }
     }
 
@@ -402,11 +488,6 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     }
 
     @Override
-    public boolean clear(int index, boolean send) {
-        return false;
-    }
-
-    @Override
     public void clearAll() {
         for (Integer index : this.getContents().keySet()) {
             this.clear(index);
@@ -429,8 +510,8 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     }
 
     @Override
-    public EntityHuman getHolder() {
-        return (EntityHuman) this.holder;
+    public Player getHolder() {
+        return (Player) this.holder;
     }
 
     @Override
@@ -466,8 +547,9 @@ public class AuctionHouse extends BaseInventory implements Inventory {
             for (int i = 0; i < 5 * 9; i++) {
                 I.add(slots[i]);
             }
+            CyberCoreMain.getInstance().getLogger().error("ERROR TRIED TO ADD " + slots.length);
+            return this.addItem(I.toArray(new Item[45]));
         }
-        CyberCoreMain.getInstance().getLogger().error("ERROR TRIED TO ADD " + slots.length);
         return super.addItem(slots);
     }
 

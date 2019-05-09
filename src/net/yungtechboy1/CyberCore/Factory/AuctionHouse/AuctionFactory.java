@@ -247,7 +247,7 @@ public class AuctionFactory implements Listener {
 
     public Item[] SetPagePlayerSelling(String seller, int page) {
         int stop = page * 45;
-        int start = stop - 46;
+        int start = stop - 45;
         System.out.println("START = " + start + ", STOP = " + stop + " Seller" + seller);
         ArrayList<Item> list2 = getListOfItemsBetween(start, stop, seller);
         if (45 > list2.size()) {
@@ -299,7 +299,7 @@ public class AuctionFactory implements Listener {
 
     public AuctionItemData[] getPageAID(int page) {
         int stop = page * 45;
-        int start = stop - 46;
+        int start = stop - 45;
         System.out.println("START = " + start + ", STOP = " + stop);
         ArrayList<AuctionItemData> list2 = getListOfAIDBetween(start, stop);
         if (45 > list2.size()) {
@@ -323,7 +323,7 @@ public class AuctionFactory implements Listener {
 
     public Item[] getPage(int page) {
         int stop = page * 45;
-        int start = stop - 46;
+        int start = stop - 45;
         System.out.println("START = " + start + ", STOP = " + stop);
         ArrayList<Item> list2 = getListOfItemsBetween(start, stop);
         if (45 > list2.size()) {
@@ -331,11 +331,11 @@ public class AuctionFactory implements Listener {
             for (int i = 0; i < 45; i++) {
 //                list2.iterator().n
                 if (list2.size() > i && list2.get(i) != null) {
-                    System.out.println("ADDING ACTUAL ITEM " + list2.get(i).getId());
+                    System.out.println("ADDING ACTUAL ITEM || " + list2.get(i).getId());
                     a.add(list2.get(i));
                 } else {
                     a.add(new ItemBlock(new BlockAir(), 0, 0));
-                    System.out.println("ADDING AIR");
+                    System.out.println("ADDING AIR ||");
                 }
             }
 
@@ -439,11 +439,13 @@ public class AuctionFactory implements Listener {
 
                 }
                 if (inv instanceof AuctionHouse) {
+
                     AuctionHouse ah = (AuctionHouse) inv;
+//                    if(!ah.Init)return;
                     System.out.println(sca.getSlot() + " || " + ah.getHolder().getName() + " || " + ah.getHolder().getClass().getName());
                     CorePlayer ccpp = (CorePlayer) ah.getHolder();
                     int slot = sca.getSlot();
-                    event.setCancelled();
+//                    event.setCancelled();
                     if (slot < 5 * 9) {
                         //TODO CONFIRM AND SHOW ITEM
                         if (!ah.ConfirmPurchase) {
@@ -466,15 +468,21 @@ public class AuctionFactory implements Listener {
                                 Page--;
                                 if (Page < 1) Page = 1;
                                 Server.getInstance().getPlayerExact(ah.getHolder().getName()).sendPopup("PAGE SET TO " + Page);
+                                ah.clearAll();
+                                ah.addItem(getPage(Page));
 
                                 break;
                             case AuctionHouse.MainPageItemRef.NextPage:
                                 Server.getInstance().getPlayerExact(ah.getHolder().getName()).sendTip("PAGE SET TO " + Page);
                                 Page++;
+
+                                ah.clearAll();
+                                ah.addItem(getPage(Page));
                                 break;
                             case AuctionHouse.MainPageItemRef.Search:
                             case AuctionHouse.MainPageItemRef.Reload:
                                 ah.clearAll();
+                                ah.addItem(getPage(Page));
                                 break;
                             case AuctionHouse.MainPageItemRef.PlayerSelling:
                                 ah.setContents(getPageHash(Page, ah.getHolder().getName()),true);
