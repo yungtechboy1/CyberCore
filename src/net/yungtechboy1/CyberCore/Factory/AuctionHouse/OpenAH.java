@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.inventory.InventoryHolder;
 import cn.nukkit.item.ItemBook;
+import cn.nukkit.item.ItemDiamond;
 import cn.nukkit.scheduler.Task;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse;
@@ -26,6 +27,10 @@ public class OpenAH extends Task implements Runnable {
         CyberCoreMain.getInstance().getLogger().info(B.getContents().values().size()+" < SIZZEEE"+B.getSize());
             P.addWindow(B);
             P.AH = B;
+            System.out.println("------------------------------------------------!!!!!!!!!!");
+            B.sendContents(P);
+            B.SendAllSlots(P);
+            B.addItem(new ItemDiamond(0,10));
         CyberCoreMain.getInstance().getLogger().info(B.getContents().values().size()+" < SIZZEEE"+B.getSize());
 //            B.sendContents(P);
     }
