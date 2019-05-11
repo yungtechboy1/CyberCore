@@ -2,8 +2,10 @@ package net.yungtechboy1.CyberCore.Custom.Inventory;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
+import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.block.BlockEnderChest;
+import cn.nukkit.block.BlockGlassPaneStained;
 import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityHuman;
@@ -33,7 +35,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     protected final String title;
 //    public static HashMap<Integer, Item> slots = new HashMap<>();
     protected final Set<Player> viewers = new HashSet<>();
-    public int Page = 1;
+    private int Page = 1;
     public boolean ConfirmPurchase = false;
     public int ConfirmPurchaseSlot = 0;
     public AuctionFactory AF = null;
@@ -43,6 +45,55 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     CyberCoreMain CCM;
     BlockEntity blockEntity2 = null;
     BlockEntity blockEntity = null;
+    CurrentPageEnum CurrentPage;
+
+    public void GoToSellerPage() {
+        clearAll();
+        setPage(1);
+        setContents(AF.getPageHash(getPage(), getHolder().getName()), true);
+        ReloadInv();
+        sendContents(getHolder());
+        SendAllSlots(getHolder());
+    }
+
+    public void ReloadCurrentPage() {
+        switch (CurrentPage){
+            case ItemPage:
+                clearAll();
+                setPage(getPage());
+                break;
+            case PlayerSellingPage:
+                setPagePlayerSelling(getPage());
+                break;
+
+
+        }
+    }
+
+    public void ClearConfirmPurchase() {
+
+        ConfirmPurchase = false;
+        ConfirmPurchaseSlot = -1;
+    }
+
+    public void DisplayCatagories() {
+        clearAll();
+        for(int i = 0; i < 5*9; i++){
+            Block itm = new BlockGlassPaneStained(7);
+            Item bi = new ItemBlock(itm);
+            bi.setCustomName(TextFormat.GRAY+"FEATURE CURRENTLY DISABLED!");
+            setItem(i,bi,true);
+        }
+        ReloadInv();
+        SendAllSlots(getHolder());
+    }
+
+    public enum CurrentPageEnum{
+        ItemPage,
+        PlayerSellingPage,
+        Expired,
+        Confirm_Purchase
+    }
 
     public AuctionHouse(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba) {
         this(Holder, ccm, ba, 1);
@@ -70,9 +121,38 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 //        setContents(CyberCoreMain.getInstance().AuctionFactory.getPageHash(page));
     }
 
+    public void GoToNextPage(){
+        setPage(getPage() + 1);
+    }
+
+    public void GoToPrevPage(){
+        setPage(getPage() - 1);
+    }
+
     public void setPage(Integer page) {
         if (1 > page) page = 1;
         Page = page;
+        CurrentPage = CurrentPageEnum.ItemPage;
+        clearAll();
+        addItem(AF.getPage(getPage()));
+        ReloadInv();
+        SendAllSlots(getHolder());
+    }
+
+    public void setPagePlayerSelling() {
+        setPagePlayerSelling(1);
+    }
+    public void setPagePlayerSelling(Integer page) {
+        Page = page;
+        CurrentPage = CurrentPageEnum.PlayerSellingPage;
+        clearAll();
+        setContents(AF.getPageHash(getPage(),getHolder().getName()));
+        ReloadInv();
+        SendAllSlots(getHolder());
+    }
+
+    public int getPage(){
+        return Page;
     }
 
 
@@ -146,10 +226,12 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     }
 
     public void ConfirmItemPurchase(int slot) {
+        clearAll();
         AuctionItemData aid = AF.getAIDFromPage(Page, slot);
         SetupPageToConfirmSingleItem(aid);
-        slots.clear();
+        ReloadInv();
         ConfirmPurchase = true;
+        ConfirmPurchaseSlot = slot;
 
 //        sendContents((Player) holder);
 
@@ -254,25 +336,29 @@ public boolean setItem(int index, Item item, boolean send) {
         System.out.println("INNNNEEDDDDEDEE >> "+item.getId());
     if(index >= 0 && index < getSize()) {
         if(item.getId() != 0 && item.getCount() > 0) {
-//            InventoryHolder holder = this.getHolder();
-//            if(holder instanceof Entity) {
-//                EntityInventoryChangeEvent ev = new EntityInventoryChangeEvent((Entity)holder, this.getItem(index), item, index);
-//                Server.getInstance().getPluginManager().callEvent(ev);
-//                if(ev.isCancelled()) {
-//                    this.sendSlot(index, (Collection)this.getViewers());
-//                    return false;
-//                }
-//
-//                item = ev.getNewItem();
-//            }
-//
-//            if(holder instanceof BlockEntity) {
-//                ((BlockEntity)holder).setDirty();
-//            }
+            InventoryHolder holder = this.getHolder();
+            if(holder instanceof Entity && !send) {
+                EntityInventoryChangeEvent ev = new EntityInventoryChangeEvent((Entity)holder, this.getItem(index), item, index);
+                Server.getInstance().getPluginManager().callEvent(ev);
+                if(ev.isCancelled()) {
+                    this.sendSlot(index, (Collection)this.getViewers());
+                    return false;
+                }
+
+                item = ev.getNewItem();
+            }
+
+            if(holder instanceof BlockEntity) {
+                ((BlockEntity)holder).setDirty();
+            }
 //
             Item old = this.getItem(index);
             slots.put(index, item.clone());
-            this.onSlotChange(index, old, send);
+            System.out.println("AAAAAAAAAAAAAAAAAAAA >> "+index);
+            System.out.println("AAAAAAAAAAAAAAAAAAAA >> "+old);
+            System.out.println("AAAAAAAAAAAAAAAAAAAA >> "+send);
+//            this.onSlotChange(index, old, send);
+            if(getHolder() != null)sendSlot(index,getHolder());
             return true;
 
 //            return super.setItem(index,item,send);
@@ -483,18 +569,20 @@ public boolean setItem(int index, Item item, boolean send) {
         if (this.slots.containsKey(index)) {
             Item item = new ItemBlock(new BlockAir(), null, 0);
             Item old = this.slots.get(index);
-            if (item.getId() != Item.AIR) {
-                setItem(index, item.clone());
-            } else {
+//            if (item.getId() != Item.AIR) {
+//                setItem(index, item.clone());
+//            } else {
                 this.slots.remove(index);
-            }
-            this.onSlotChange(index, old, send);
+//            }
+//            this.onSlotChange(index, old, send);
         }else if(send){
             Item item = new ItemBlock(new BlockAir(), null, 0);
             Item old = this.slots.get(index);
-            setItem(index, item.clone(),true);
+//            setItem(index, item.clone(),true);
 //            this.onSlotChange(index, old, true);
+            slots.remove(index);
         }
+        if(getHolder() != null)sendSlot(index,getHolder());
         System.out.println("CLEARRRR###" + index);
         return true;
     }
@@ -671,7 +759,7 @@ public boolean setItem(int index, Item item, boolean send) {
             Confirm.setCustomName(TextFormat.GREEN + "Confirm Cart Purchase");
             Deny = Item.get(Item.REDSTONE_BLOCK);
             Deny.setCompoundTag(T);
-            Deny.setCustomName(TextFormat.GREEN + "Cancel Cart Purchase");
+            Deny.setCustomName(TextFormat.RED + "Cancel Cart Purchase");
             Diamond = Item.get(Item.DIAMOND);
             Diamond.setCompoundTag(T);
             Diamond.setCustomName(
@@ -705,7 +793,8 @@ public boolean setItem(int index, Item item, boolean send) {
             Netherstar = Item.get(Item.NETHER_STAR);
             Netherstar.setCompoundTag(T);
             Netherstar.setCustomName(
-                    TextFormat.GREEN + "" + TextFormat.BOLD + "Refresh Page"
+                    TextFormat.GREEN + "" + TextFormat.BOLD + "Refresh Page\n"
+                    + TextFormat.GRAY+" Current Page "+page
             );
             if (page != -1) Netherstar.getNamedTag().putInt("page", page);
             Chest = Item.get(Item.CHEST);

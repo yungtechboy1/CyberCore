@@ -8,10 +8,15 @@ import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.*;
 import cn.nukkit.form.element.ElementButton;
+import cn.nukkit.form.element.ElementInput;
+import cn.nukkit.form.element.ElementLabel;
+import cn.nukkit.form.element.ElementToggle;
 import cn.nukkit.form.response.FormResponseCustom;
 import cn.nukkit.form.response.FormResponseData;
 import cn.nukkit.form.response.FormResponseModal;
 import cn.nukkit.form.response.FormResponseSimple;
+import cn.nukkit.form.window.FormWindowCustom;
+import cn.nukkit.form.window.FormWindowModal;
 import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
@@ -63,6 +68,27 @@ public class MasterListener implements Listener {
         Player p = pr.getPlayer();
         CorePlayer cp = ((CorePlayer) p);
         switch (cp.LastSentFormType) {
+            case Faction_Create_0:
+                new FormWindowModal("CyberFactions | Create Faction (2/2)!", "Faction Created!", "OK", "OK");
+                FormResponseCustom frc = (FormResponseCustom) pr.getResponse();
+                String fn = frc.getInputResponse(0);
+                if (plugin.FM.FFactory.CheckFactionName(fn)) {
+                    //TODO RESEND LAST MODAL
+                    FormWindowCustom FWM = new FormWindowCustom("CyberFactions | Create Faction (1/2)");
+//        Element e = null;
+                    FWM.addElement(new ElementLabel(TextFormat.RED +""+TextFormat.BOLD+"ERROR! The name '"+fn+"' is invalid and can not be used! \n Make sure your name is less than 20 letters and is not currently taken."));
+                    FWM.addElement(new ElementInput("Desired Faction Name"));
+                    FWM.addElement(new ElementInput("MOTD", "A CyberTech Faction"));
+                    FWM.addElement(new ElementLabel("Enabeling Faction Privacy will require a player to have an invite to join your faction."));
+                    FWM.addElement(new ElementToggle("Faction Privacy", false));
+                    cp.showFormWindow(FWM);
+                    cp.LastSentFormType = Faction_Create_0;
+                    return;
+                }
+                String motd = frc.getInputResponse(1);
+                boolean privacy = frc.getToggleResponse(2);
+                plugin.FM.FFactory.CreateFaction(fn, cp, motd, privacy);
+                break;
             case Class_0:
             case Enchanting_0:
                 FormResponseModal frm = (FormResponseModal) pr.getResponse();
@@ -125,12 +151,12 @@ public class MasterListener implements Listener {
                 }
                 break;
             case Enchanting_1:
-                FormResponseCustom frc = (FormResponseCustom) pr.getResponse();
-                FormResponseData frd = frc.getStepSliderResponse(3);
+                FormResponseCustom frc1 = (FormResponseCustom) pr.getResponse();
+                FormResponseData frd = frc1.getStepSliderResponse(3);
                 int ke = frd.getElementID();
-                cp.sendMessage(frd.getElementContent()+"<<<<<<<");
+                cp.sendMessage(frd.getElementContent() + "<<<<<<<");
                 Enchantment e = cp.GetStoredEnchants().get(ke);
-                if(e == null){
+                if (e == null) {
                     cp.sendMessage("Error!");
                 }
 /*

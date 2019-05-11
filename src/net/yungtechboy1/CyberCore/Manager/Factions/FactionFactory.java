@@ -56,8 +56,8 @@ public class FactionFactory {
 
 
     private Connection getMySqlConnection() {
-        System.out.println("YEAAAA |||||||"+ Main.factionData.connectToDb());
-        System.out.println("YEAAAA %%% |||||||"+ Main.factionData);
+        System.out.println("YEAAAA |||||||" + Main.factionData.connectToDb());
+        System.out.println("YEAAAA %%% |||||||" + Main.factionData);
         return Main.factionData.connectToDb();
     }
 
@@ -321,7 +321,7 @@ public class FactionFactory {
             return r;
         } catch (Exception ex) {
 
-            getServer().getLogger().info(ex.getClass().getName() + ":8 " + ex.getMessage(),ex);
+            getServer().getLogger().info(ex.getClass().getName() + ":8 " + ex.getMessage(), ex);
             return null;
         }
     }
@@ -499,7 +499,7 @@ public class FactionFactory {
             }
             return results;
         } catch (Exception e) {
-            Main.plugin.getLogger().info("EEE",e);
+            Main.plugin.getLogger().info("EEE", e);
 //            throw new RuntimeException(e);
             return results;
         }
@@ -576,11 +576,50 @@ public class FactionFactory {
     }
 
     public Faction CreateFaction(String name, Player p) {
+        return CreateFaction(name, p, "Just a CyberTech Faction", false);
+    }
+
+    public boolean CheckFactionName(String n){
+        return n.matches("^[a-zA-Z0-9]*");
+    }
+
+    private ArrayList<String> bannednames = new ArrayList<String>() {{
+        add("wilderness");
+        add("safezone");
+        add("peace");
+    }};
+
+    public Faction CreateFaction(String name, Player p, String motd, boolean privacy) {
+
+        if(!CheckFactionName(name)) {
+            p.sendMessage(FactionsMain.NAME+TextFormat.RED+"You may only use letters and numbers!");
+            return null;
+        }
+        if(bannednames.contains(name.toLowerCase())){
+            p.sendMessage(FactionsMain.NAME+TextFormat.RED+"That is a Banned faction Name!");
+            return null;
+        }
+        if(Main.factionExists(name)) {
+            p.sendMessage(FactionsMain.NAME+TextFormat.RED+"Faction already exists");
+            return null;
+        }
+        if(name.length() > 20) {
+            p.sendMessage(FactionsMain.NAME+TextFormat.RED+"Faction name is too long. Please try again!");
+            return null;
+        }
+        if(Main.isInFaction(p.getName())) {
+            p.sendMessage(FactionsMain.NAME+TextFormat.RED+"You must leave your faction first");
+            return null;
+        }
+
+
         Faction fac = new Faction(Main, name, name, p.getName().toLowerCase(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         List.put(name.toLowerCase(), fac);
         FacList.put(p.getName().toLowerCase(), name);
         fac.SetPower(2);
-        fac.SetDesc("Just a Cyber Faction!");
+        fac.SetDesc(motd);
+        if (privacy) fac.SetPrivacy(1);
+        else fac.SetPrivacy(0);
         p.sendMessage(TextFormat.GREEN + "[CyboticFactions] Faction successfully created!");
         RegitsterToRich(fac);
         return fac;

@@ -60,25 +60,26 @@ public class AuctionItemData {
     }
 
     public Item MakePretty() {
+        Item titem = item.clone();
         CompoundTag tag;
-        if (item.hasCompoundTag()) tag = item.getNamedTag();
+        if (titem.hasCompoundTag()) tag = titem.getNamedTag();
         else tag = new CompoundTag();
-        tag.putCompound("display", new CompoundTag());
+        if(tag.contains("ah-data"))tag.putCompound("ah-data", new CompoundTag());
 
-        if (!item.getCustomName().equals("") && tag.contains("display") && tag.get("display") instanceof CompoundTag)
-            tag.getCompound("display").putString("Name2", item.getCustomName());
+        if (!titem.getCustomName().equals("") && tag.contains("ah-data") && tag.get("ah-data") instanceof CompoundTag)
+            tag.getCompound("ah-data").putString("Name", titem.getCustomName());
 
-        tag.getCompound("display").putInt("masterid", masterid);
-        tag.getCompound("display").putInt("cost", Cost);
-        tag.getCompound("display").putString("soldbyn", Soldbyn);
-        tag.getCompound("display").putString("soldby", Soldby);
+        tag.getCompound("ah-data").putInt("masterid", masterid);
+        tag.getCompound("ah-data").putInt("cost", Cost);
+        tag.getCompound("ah-data").putString("soldbyn", Soldbyn);
+        tag.getCompound("ah-data").putString("soldby", Soldby);
 
-        item.setNamedTag(tag);
+        titem.setNamedTag(tag);
 
 
-        String cn = item.getCustomName();
+        String cn = titem.getCustomName();
 
-        if (cn.equalsIgnoreCase("")) cn = item.getName();
+        if (cn.equalsIgnoreCase("")) cn = titem.getName();
 
         cn += TextFormat.RESET + "\n" + TextFormat.AQUA +
                 "-------------" + TextFormat.RESET + "\n" +
@@ -87,8 +88,8 @@ public class AuctionItemData {
         // + TextFormat.RESET + "\n" +TextFormat.BLACK+"{#"+id;
         ;
 
-        item.setCustomName(cn);
-        return item;
+        titem.setCustomName(cn);
+        return titem.clone();
     }
 
     public void AddToDB() {
@@ -118,5 +119,20 @@ public class AuctionItemData {
     @Override
     public String toString() {
         return item.getName() + " | " + item.getCustomName() + " | " + Soldby + " | " + masterid;
+    }
+
+    public Item getKeepItem() {
+        Item titem = item.clone();
+        CompoundTag tag;
+        if (titem.hasCompoundTag()) tag = titem.getNamedTag();
+        else tag = new CompoundTag();
+        if(tag.contains("ah-data")){
+            CompoundTag ctah = tag.getCompound("ah-data");
+            if(ctah.contains("Name"))titem.setCustomName(ctah.getString("Name"));
+            tag.remove("ah-data");
+        }
+
+        titem.setCompoundTag(tag);
+        return titem.clone();
     }
 }

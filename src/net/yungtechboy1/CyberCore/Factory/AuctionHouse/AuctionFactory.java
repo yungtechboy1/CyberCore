@@ -44,7 +44,6 @@ import java.util.Set;
  */
 public class AuctionFactory implements Listener {
     private final AHSqlite Sqlite;
-    public int Page;
     CyberCoreMain CCM;
     /**
      * Settings:
@@ -66,7 +65,6 @@ public class AuctionFactory implements Listener {
         this.CCM = CCM;
         Settings = new Config(new File(CCM.getDataFolder(), "Auctions.yml"), Config.YAML);
         Sqlite = new AHSqlite(CCM, "server");
-        Page = 1;
     }
 
 
@@ -300,18 +298,18 @@ public class AuctionFactory implements Listener {
     public AuctionItemData[] getPageAID(int page) {
         int stop = page * 45;
         int start = stop - 45;
-        System.out.println("START = " + start + ", STOP = " + stop);
+//        System.out.println("START = " + start + ", STOP = " + stop);
         ArrayList<AuctionItemData> list2 = getListOfAIDBetween(start, stop);
         if (45 > list2.size()) {
             ArrayList<AuctionItemData> a = new ArrayList<AuctionItemData>();
             for (int i = 0; i < 45; i++) {
 //                list2.iterator().n
                 if (list2.size() > i && list2.get(i) != null) {
-                    System.out.println("ADDING ACTUAL ITEM " + list2.get(i).toString());
+//                    System.out.println("ADDING ACTUAL ITEM " + list2.get(i).toString());
                     a.add(list2.get(i));
                 } else {
                     a.add(null);
-                    System.out.println("ADDING AIR");
+//                    System.out.println("ADDING AIR");
                 }
             }
 
@@ -366,7 +364,7 @@ public class AuctionFactory implements Listener {
         SpawnFakeBlockAndEntity(p, new CompoundTag().putString("CustomName", "Auction House!"));
         AuctionHouse b = new AuctionHouse(p, CCM, p, pg);
         CyberCoreMain.getInstance().getLogger().info(b.getContents().values().size() + " < SIZZEEE" + b.getSize());
-        CyberCoreMain.getInstance().getServer().getScheduler().scheduleDelayedTask(new OpenAH(p, b), 10);
+        CyberCoreMain.getInstance().getServer().getScheduler().scheduleDelayedTask(new OpenAH(p, b), 5);
 //        b.open()
     }
 
@@ -408,14 +406,97 @@ public class AuctionFactory implements Listener {
         to.dataPacket(bedp2);
     }
 
-    @EventHandler(ignoreCancelled = true)
-    public void TTE(InventoryClickEvent event) {
+//    @EventHandler(ignoreCancelled = true)
+//    public void TTE(InventoryClickEvent event) {
+//
+//        System.out.println("++++++++++++++++++++++++++++++++++++++++");
+//        System.out.println("++++++++++++++++++++++++++++++++++++++++");
+//        System.out.println(event.getSlot());
+//        System.out.println(event.getInventory().getClass().getName());
+//
+//        System.out.println("CALLLLCLLIICCCKKK");
+//                System.out.println("CALLLL SLOTCCCCCCCC");
+//                int slott = event.getSlot();
+//
+////                sca.getInventory()
+//
+//                Inventory inv = event.getInventory();
+//                System.out.println("CHECK INNNNNVVVVVVV " + inv.getClass().getName());
+////                if (inv.isEmpty()) return;
+//
+//                System.out.println("NEEEEEEE" + inv.getClass().getTypeName());
+//                if (inv instanceof PlayerInventory) {
+//
+//                }
+//                if (inv instanceof AuctionHouse) {
+//
+//                    AuctionHouse ah = (AuctionHouse) inv;
+////                    if(!ah.Init)return;
+//                    System.out.println(slott + " || " + ah.getHolder().getName() + " || " + ah.getHolder().getClass().getName());
+//                    CorePlayer ccpp = (CorePlayer) ah.getHolder();
+//                    int slot = slott;
+////                    event.setCancelled();
+//                    if (slot < 5 * 9) {
+//                        System.out.println("TOP INV");
+//                        //TODO CONFIRM AND SHOW ITEM
+//                        if (!ah.ConfirmPurchase) {
+//                            ah.ConfirmItemPurchase(slot);
+//                            event.setCancelled();
+//                            System.out.println("SSSSSSSSSSSSCPPPPPPPP");
+////                        ccpp.AH.ConfirmItemPurchase(slot);
+//                        } else {
+//                            System.out.println("CPPPPPPPP");
+//                            Item si = ah.getContents().get(slot);
+//                            if (si != null) {
+//                                if (si.getId() == BlockID.EMERALD_BLOCK) {
+//                                    System.out.println("CONFIRM PURCHASE!!!!!!!");
+////                                    ah.AF.PurchaseItem((CorePlayer) ah.getHolder(), Page, slot);
+//                                } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
+//                                    System.out.println("DENCLINE PURCHASE!!!!!!!!");
+//                                }
+//                            }
+//                        }
+//                    } else {
+//                        switch (slot) {
+//                            case AuctionHouse.MainPageItemRef.LastPage:
+//                                Page--;
+//                                if (Page < 1) Page = 1;
+//                                Server.getInstance().getPlayerExact(ah.getHolder().getName()).sendPopup("PAGE SET TO " + Page);
+//                                ah.clearAll();
+//                                ah.addItem(getPage(Page));
+//                                ah.ReloadInv();
+//                                ah.sendContents(ah.getHolder());
+//
+//                                break;
+//                            case AuctionHouse.MainPageItemRef.NextPage:
+//                                Server.getInstance().getPlayerExact(ah.getHolder().getName()).sendTip("PAGE SET TO " + Page);
+//                                Page++;
+//
+//                                ah.clearAll();
+//                                ah.addItem(getPage(Page));
+//                                ah.ReloadInv();
+//                                ah.sendContents(ah.getHolder());
+//                                break;
+//                            case AuctionHouse.MainPageItemRef.Search:
+//                                break;
+//                            case AuctionHouse.MainPageItemRef.Reload:
+//                                ah.clearAll();
+//                                ah.addItem(getPage(Page));
+//                                ah.ReloadInv();
+//                                ah.SendAllSlots(ah.getHolder());
+//                                break;
+//                            case AuctionHouse.MainPageItemRef.PlayerSelling:
+//                                ah.setContents(getPageHash(Page, ah.getHolder().getName()), true);
+//                                ah.sendContents((Player) ah.getHolder());
+//                                ah.SendAllSlots((Player) ah.getHolder());
+//                                event.setCancelled(false);
+//                                break;
+//
+//                        }
+//                    }
+//                }
+//            }
 
-        System.out.println("++++++++++++++++++++++++++++++++++++++++");
-        System.out.println("++++++++++++++++++++++++++++++++++++++++");
-        System.out.println(event.getSlot());
-        System.out.println(event.getInventory().getClass().getName());
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void TE(InventoryTransactionEvent event) {
@@ -446,48 +527,54 @@ public class AuctionFactory implements Listener {
                     CorePlayer ccpp = (CorePlayer) ah.getHolder();
                     int slot = sca.getSlot();
 //                    event.setCancelled();
+                    event.setCancelled();
                     if (slot < 5 * 9) {
+                        System.out.println("TOP INV");
                         //TODO CONFIRM AND SHOW ITEM
                         if (!ah.ConfirmPurchase) {
                             ah.ConfirmItemPurchase(slot);
+                            System.out.println("SSSSSSSSSSSSCPPPPPPPP");
 //                        ccpp.AH.ConfirmItemPurchase(slot);
                         } else {
+                            System.out.println("CPPPPPPPP");
                             Item si = ah.getContents().get(slot);
                             if (si != null) {
                                 if (si.getId() == BlockID.EMERALD_BLOCK) {
                                     System.out.println("CONFIRM PURCHASE!!!!!!!");
-                                    ah.AF.PurchaseItem((CorePlayer) ah.getHolder(), Page, slot);
+                                    ah.AF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot);
+                                    ah.ClearConfirmPurchase();
+                                    break;
                                 } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
                                     System.out.println("DENCLINE PURCHASE!!!!!!!!");
+                                    ah.setPage(1);
+                                    ah.ClearConfirmPurchase();
+                                    break;
+                                } else {
+                                    ah.setPage(1);
+                                    System.out.println("UNKNOWNMNNN!!!!!!!!");
+                                    ah.ClearConfirmPurchase();
+                                    break;
                                 }
                             }
                         }
                     } else {
                         switch (slot) {
                             case AuctionHouse.MainPageItemRef.LastPage:
-                                Page--;
-                                if (Page < 1) Page = 1;
-                                Server.getInstance().getPlayerExact(ah.getHolder().getName()).sendPopup("PAGE SET TO " + Page);
-                                ah.clearAll();
-                                ah.addItem(getPage(Page));
-
+                                ah.GoToPrevPage();
                                 break;
                             case AuctionHouse.MainPageItemRef.NextPage:
-                                Server.getInstance().getPlayerExact(ah.getHolder().getName()).sendTip("PAGE SET TO " + Page);
-                                Page++;
-
-                                ah.clearAll();
-                                ah.addItem(getPage(Page));
+                                ah.GoToNextPage();
                                 break;
                             case AuctionHouse.MainPageItemRef.Search:
+                                break;
                             case AuctionHouse.MainPageItemRef.Reload:
-                                ah.clearAll();
-                                ah.addItem(getPage(Page));
+                                ah.ReloadCurrentPage();
+                                break;
+                            case AuctionHouse.MainPageItemRef.Catagories:
+                                ah.DisplayCatagories();
                                 break;
                             case AuctionHouse.MainPageItemRef.PlayerSelling:
-                                ah.setContents(getPageHash(Page, ah.getHolder().getName()),true);
-                                ah.sendContents((Player) ah.getHolder());
-                                ah.SendAllSlots((Player)ah.getHolder());
+                                ah.GoToSellerPage();
                                 event.setCancelled(false);
                                 break;
 
@@ -500,15 +587,16 @@ public class AuctionFactory implements Listener {
 
     private void PurchaseItem(CorePlayer holder, int page, int slot) {
         AuctionItemData aid = getAIDFromPage(page, slot);
-        if (aid.getCost() > holder.GetMoney()) {
+        if (aid == null) {
+            System.out.println("ERROR IN SELECTION!!!!");
+        } else if (aid.getCost() > holder.GetMoney()) {
             holder.sendMessage(TextFormat.RED + "Error! " + aid.getSoldbyn() + "'s " + aid.getItem().getName() + " Item costs " + aid.getCost() + " but you only have " + holder.GetMoney());
-            holder.AH.clearAll();
-            holder.AH.addItem(getPage(page));
-            holder.AH.sendContents(holder);
+            holder.AH.setPage(1);
             return;
         }
-        SetBought(aid.getMasterid());
+//        SetBought(aid.getMasterid());
         holder.TakeMoney(aid.getCost());
+        holder.getInventory().addItem(aid.getKeepItem());
     }
 
     public void SetBought(int id) {

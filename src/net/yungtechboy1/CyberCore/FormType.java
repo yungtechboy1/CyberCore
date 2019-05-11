@@ -18,6 +18,7 @@ public final class FormType {
         Class_1,
         Class_2,
         Class_3,
+        Faction_Create_0
     }
 
     public static enum SubMenu {
