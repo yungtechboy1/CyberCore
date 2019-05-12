@@ -296,11 +296,11 @@ public class FactionFactory {
                     //for(String member: fac.GetGenerals())stmt2.executeUpdate(String.format("INSERT OR IGNORE INTO `master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');",member,name,"General"));
                     System.out.println(fac.GetName() + " > " + fac.GetLeader());
                     stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `player` = '%s';", fac.GetLeader()));
-                    stmt.executeUpdate(String.format("INSERT IGNORE INTO `master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');", fac.GetLeader(), name, "Leader"));
+                    stmt.executeUpdate(String.format("INSERT INTO `master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');", fac.GetLeader(), name, "Leader"));
                     //stmt2.executeUpdate(String.format("INSERT INTO `master`(`player`,`faction`,`rank`) VALUES (''%s'',''%s'',''%s'');",fac.GetLeader(),name,"Leader"));
                     Main.plugin.getLogger().info(TextFormat.GREEN + "[Factions] Saving Faction " + name);
                 } catch (Exception ex) {
-                    Main.plugin.getLogger().info(TextFormat.GREEN + "[Factions] Error! Faction " + e.getKey());
+                    Main.plugin.getLogger().error(TextFormat.RED + "[Factions] Error! Faction " + e.getKey(),ex);
                     ex.printStackTrace();
                     getServer().getLogger().info(ex.getClass().getName() + ":77 " + ex.getMessage());
                 }
