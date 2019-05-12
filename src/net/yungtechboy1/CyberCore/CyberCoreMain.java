@@ -422,6 +422,32 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         return result;
     }
 
+    public ArrayList<Player> getAllPlayerNamesCloseTo(String name) {
+        ArrayList<Player> found = new ArrayList<>();
+        name = name.toLowerCase();
+        int delta = 2147483647;
+        Iterator var4 = getServer().getOnlinePlayers().values().iterator();
+
+        while(var4.hasNext()) {
+            Player player = (Player)var4.next();
+            if(player.getName().toLowerCase().startsWith(name) || player.getName().toLowerCase().contains(name)) {
+                int curDelta = player.getName().length() - name.length();
+                if(curDelta < delta) {
+                    found.add(player);
+                    delta = curDelta;
+                }
+
+                if(curDelta == 0) {
+                    found.clear();
+                    found.add(player);
+                    return found;
+                }
+            }
+        }
+
+        return found;
+    }
+
     @Override
     public void onDisable() {
         super.onDisable();

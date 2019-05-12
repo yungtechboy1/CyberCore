@@ -24,15 +24,13 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
+import net.yungtechboy1.CyberCore.Manager.Factions.FactionString;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static net.yungtechboy1.CyberCore.FormType.MainForm.*;
-import static net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain.FactionString.*;
+import static net.yungtechboy1.CyberCore.Manager.Factions.FactionString.*;
 
 /**
  * Created by carlt_000 on 1/22/2017.
@@ -71,31 +69,57 @@ public class MasterListener implements Listener {
         Player p = pr.getPlayer();
         CorePlayer cp = ((CorePlayer) p);
         switch (cp.LastSentFormType) {
+            case Faction_Invite_Choose:
+                FormResponseSimple fic = (FormResponseSimple) pr.getResponse();
+                String pn = fic.getClickedButton().getText();
+                CorePlayer cpp = (CorePlayer) CyberCoreMain.getInstance().getServer().getPlayerExact(pn);
+                if (cpp == null) {
+                    cp.sendMessage("Error! The name '" + pn + "' could not be found on server!");
+                    return;
+                } else {
+                    if (null == plugin.FM.FFactory.getPlayerFaction(cpp)) {
+                        //TODO Allow Setting to ignore Faction messages
+                        cp.sendMessage(Error_PlayerInFaction.getMsg());
+                        return;
+                    }
+                    Integer time = (int) (Calendar.getInstance().getTime().getTime() / 1000) + 60 * 5;
+                    Faction fac = plugin.FM.FFactory.getFaction(cp.Faction);
+                    if(fac == null){
+                        cp.sendMessage(Error_SA224.getMsg());
+                        return;
+                    }
+                    fac.AddInvite(cpp.getName().toLowerCase(), time);
+                    plugin.FM.FFactory.InvList.put(cpp.getName().toLowerCase(), fac.GetName());
+
+                    cp.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Successfully invited " + cpp.getName() + "!");
+                    cpp.sendMessage(FactionsMain.NAME + TextFormat.YELLOW + "You have been invited to faction.\n" + TextFormat.GREEN + "Type '/f accept' or '/f deny' into chat to accept or deny!");
+                }
+                break;
             case Faction_Admin_Page_SLR:
                 FormResponseSimple fapp = (FormResponseSimple) pr.getResponse();
                 int idd = fapp.getClickedButtonId();
-                switch (idd){
+                switch (idd) {
                     case 0:
                         plugin.FM.FFactory.SaveAllFactions();
                         cp.sendMessage(Success_ADMIN_Faction_Saved.getMsg());
                         break;
                     case 1:
-                        plugin. FM = new FactionsMain(plugin, new FactionSQL(plugin, "FDB"));
+                        plugin.FM = new FactionsMain(plugin, new FactionSQL(plugin, "FDB"));
                         cp.sendMessage(Success_ADMIN_Faction_Saved.getMsg());
                         break;
                     case 2:
                         plugin.FM.FFactory.SaveAllFactions();
-                        plugin. FM = new FactionsMain(plugin, new FactionSQL(plugin, "FDB"));
+                        plugin.FM = new FactionsMain(plugin, new FactionSQL(plugin, "FDB"));
                         break;
                 }
                 break;
             case Faction_Admin_Page_1:
                 FormResponseSimple fap = (FormResponseSimple) pr.getResponse();
                 int id = fap.getClickedButtonId();
-                switch (id){
+                switch (id) {
                     case 0:
                         cp.LastSentFormType = Faction_Admin_Page_SLR;
-                        FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Admin Page > SLR","");
+                        FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Admin Page > SLR", "");
                         FWM.addButton(new ElementButton("Save"));
                         FWM.addButton(new ElementButton("Load"));
                         FWM.addButton(new ElementButton("Reload"));
@@ -108,20 +132,20 @@ public class MasterListener implements Listener {
                 new FormWindowModal("CyberFactions | Create Faction (2/2)!", "Faction Created!", "OK", "OK");
                 FormResponseCustom frc = (FormResponseCustom) pr.getResponse();
                 String fn;
-                if(cp.LastSentFormType == Faction_Create_0){
+                if (cp.LastSentFormType == Faction_Create_0) {
 
-                fn = frc.getInputResponse(0);
-                }else{
+                    fn = frc.getInputResponse(0);
+                } else {
                     fn = frc.getInputResponse(1);
                 }
-                if(fn == null || fn.length() == 0)return;
-                System.out.println("PRINGING THE NAME "+fn);
+                if (fn == null || fn.length() == 0) return;
+                System.out.println("PRINGING THE NAME " + fn);
                 int r = plugin.FM.FFactory.CheckFactionName(fn);
                 if (r != 0) {
                     FormWindowCustom FWM = new FormWindowCustom("CyberFactions | Create Faction (1/2)");
 //        Element e = null;
-                    FactionsMain.FactionString fs = FactionsMain.getInstance().TextList.getOrDefault(r,null);
-                    if(fs == null)fs = Error_SA221;
+                    FactionString fs = FactionsMain.getInstance().TextList.getOrDefault(r, null);
+                    if (fs == null) fs = Error_SA221;
                     FWM.addElement(new ElementInput("Desired Faction Name"));
                     FWM.addElement(new ElementLabel(fs.getMsg()));
                     FWM.addElement(new ElementInput("MOTD", "A CyberTech Faction"));
@@ -133,16 +157,16 @@ public class MasterListener implements Listener {
                 }
                 String motd;
                 boolean privacy;
-                if(cp.LastSentFormType == Faction_Create_0_Error){
+                if (cp.LastSentFormType == Faction_Create_0_Error) {
                     motd = frc.getInputResponse(2);
                     privacy = frc.getToggleResponse(4);
-                }else {
+                } else {
                     motd = frc.getInputResponse(1);
                     privacy = frc.getToggleResponse(3);
                 }
 
                 Faction f = plugin.FM.FFactory.CreateFaction(fn, cp, motd, privacy);
-                if(f == null){
+                if (f == null) {
                     cp.sendMessage(Error_SA223.getMsg());
                 }
                 break;

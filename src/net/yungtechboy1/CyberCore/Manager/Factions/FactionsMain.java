@@ -3,10 +3,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
-import cn.nukkit.command.Command;
-import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.ConfigSection;
-import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.FactionBaseCMD;
@@ -240,52 +237,7 @@ public class FactionsMain {
 
     }
 
-    public enum FactionString {
-        NO_ERROR("NO ERROR", 0),
-        Success_FactionCreated(TextFormat.GREEN + "[CyboticFactions] Faction successfully created!",101),
-        Success_ADMIN_Faction_Saved(TextFormat.GREEN + "[CyboticFactions] All Factions Successfully Saved!",102),
-        Success_ADMIN_Faction_Load(TextFormat.GREEN + "[CyboticFactions] All Factions Successfully Saved!",103),
-        Success_ADMIN_Faction_Reload(TextFormat.GREEN + "[CyboticFactions] All Factions Successfully Saved!",104),
-        Error_OnlyNumbersNLetters(FactionsMain.NAME + TextFormat.RED + "You may only use letters and numbers!", 1),
-        Error_BannedName(FactionsMain.NAME + TextFormat.RED + "That is a Banned faction Name!", 2),
-        Error_FactionExists(FactionsMain.NAME + TextFormat.RED + "Faction already exists", 3),
-        Error_NameTooLong(FactionsMain.NAME + TextFormat.RED + "Faction name is too long. Please try again!", 4),
-        Error_InFaction(FactionsMain.NAME + TextFormat.RED + "You must leave your faction first", 5),
-        Error_NameTooShort(FactionsMain.NAME + TextFormat.RED + "Your faction name must be at least 3 Letters long", 6),
-        Error_SA221("Seems like an error occured! Please report Error: SA221", 221),
-        Error_SA223("Seems like an error occured while creating your faction! Please report Error: SA223", 223);
-//        FactionExists(FactionsMain.NAME+TextFormat.RED+"Faction already exists",2),
-//        FactionExists(FactionsMain.NAME+TextFormat.RED+"Faction already exists",2),
-
-
-        static int k = 0;
-        private String Msg;
-        private int ID;
-
-
-        FactionString(String s, int id) {
-            Msg = s;
-            ID = id;
-            FactionsMain.getInstance().TextList.put(id, this);
-
-        }
-
-        public String getMsg() {
-            return Msg;
-        }
-
-        public int getID() {
-            return ID;
-        }
-
-
-        @Override
-        public String toString() {
-            return getMsg();
-        }
-    }
-
-//    public ConfigSection getBBN() {
+    //    public ConfigSection getBBN() {
 //        return BBN;
 //    }
 //    public void setBBN(ConfigSection BBN) {

@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain.FactionString.*;
+import static net.yungtechboy1.CyberCore.Manager.Factions.FactionString.*;
 
 /**
  * Created by carlt_000 on 5/13/2016.
@@ -37,6 +37,11 @@ public class FactionFactory {
     public Map<String, Integer> Top = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public Map<String, Integer> Rich = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public FactionsMain Main;
+    private ArrayList<String> bannednames = new ArrayList<String>() {{
+        add("wilderness");
+        add("safezone");
+        add("peace");
+    }};
 
     public FactionFactory(FactionsMain main) {
         Main = main;
@@ -56,7 +61,6 @@ public class FactionFactory {
         }
         return null;
     }
-
 
     private Connection getMySqlConnection() {
         System.out.println("YEAAAA |||||||" + Main.factionData.connectToDb());
@@ -117,7 +121,6 @@ public class FactionFactory {
             getServer().getLogger().info(ex.getClass().getName() + ":9 " + ex.getMessage() + " > " + ex.getStackTrace()[0].getLineNumber() + " ? " + ex.getCause());
         }
     }
-
 
     public void SaveAllFactions() {
         try {
@@ -300,7 +303,7 @@ public class FactionFactory {
                     //stmt2.executeUpdate(String.format("INSERT INTO `master`(`player`,`faction`,`rank`) VALUES (''%s'',''%s'',''%s'');",fac.GetLeader(),name,"Leader"));
                     Main.plugin.getLogger().info(TextFormat.GREEN + "[Factions] Saving Faction " + name);
                 } catch (Exception ex) {
-                    Main.plugin.getLogger().error(TextFormat.RED + "[Factions] Error! Faction " + e.getKey(),ex);
+                    Main.plugin.getLogger().error(TextFormat.RED + "[Factions] Error! Faction " + e.getKey(), ex);
                     ex.printStackTrace();
                     getServer().getLogger().info(ex.getClass().getName() + ":77 " + ex.getMessage());
                 }
@@ -312,20 +315,6 @@ public class FactionFactory {
         } catch (Exception ex) {
             ex.printStackTrace();
             getServer().getLogger().info(ex.getClass().getName() + ":7 " + ex.getMessage());
-        }
-    }
-
-    public ResultSet ExecuteQuerySQL(String s) {
-        try {
-
-            Statement stmt = this.getMySqlConnection().createStatement();
-            ResultSet r = stmt.executeQuery(s);
-            //this.getServer().getLogger().info( s );
-            return r;
-        } catch (Exception ex) {
-
-            getServer().getLogger().info(ex.getClass().getName() + ":8 " + ex.getMessage(), ex);
-            return null;
         }
     }
 
@@ -341,6 +330,20 @@ public class FactionFactory {
             return false;
         }
     }*/
+
+    public ResultSet ExecuteQuerySQL(String s) {
+        try {
+
+            Statement stmt = this.getMySqlConnection().createStatement();
+            ResultSet r = stmt.executeQuery(s);
+            //this.getServer().getLogger().info( s );
+            return r;
+        } catch (Exception ex) {
+
+            getServer().getLogger().info(ex.getClass().getName() + ":8 " + ex.getMessage(), ex);
+            return null;
+        }
+    }
 
     public Boolean factionExistsInDB(String name) {
         try {
@@ -582,41 +585,35 @@ public class FactionFactory {
         return CreateFaction(name, p, "Just a CyberTech Faction", false);
     }
 
-    public int CheckFactionName(String name){
-       if(!name.matches("^[a-zA-Z0-9]*")){
-           return Error_OnlyNumbersNLetters.getID();
-       }
-        if(bannednames.contains(name.toLowerCase())){
+    public int CheckFactionName(String name) {
+        if (!name.matches("^[a-zA-Z0-9]*")) {
+            return Error_OnlyNumbersNLetters.getID();
+        }
+        if (bannednames.contains(name.toLowerCase())) {
             return Error_BannedName.getID();
         }
-        if(Main.factionExists(name)) {
+        if (Main.factionExists(name)) {
             return Error_FactionExists.getID();
         }
-        if(name.length() > 20) {
+        if (name.length() > 20) {
             return Error_NameTooLong.getID();
         }
-        if(name.length() < 3) {
+        if (name.length() < 3) {
             return Error_NameTooShort.getID();
         }
         return 0;
     }
 
-    private ArrayList<String> bannednames = new ArrayList<String>() {{
-        add("wilderness");
-        add("safezone");
-        add("peace");
-    }};
-
     public Faction CreateFaction(String name, CorePlayer p, String motd, boolean privacy) {
 
-        if(p.Faction == null) {
+        if (p.Faction == null) {
             p.sendMessage(Error_InFaction.getMsg());
             return null;
         }
 
 
         Faction fac = new Faction(Main, name, name, p.getName().toLowerCase(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-        System.out.println(fac+" <<<<<< FFFFFFFFFFFFFFFF");
+        System.out.println(fac + " <<<<<< FFFFFFFFFFFFFFFF");
         List.put(name.toLowerCase(), fac);
         FacList.put(p.getName().toLowerCase(), name);
         fac.SetPower(2);
@@ -652,7 +649,16 @@ public class FactionFactory {
     }
 
     public Faction getPlayerFaction(Player name) {
-        return getPlayerFaction(name.getName().toLowerCase());
+        Faction f = getPlayerFaction(name.getName().toLowerCase());
+        if (name instanceof CorePlayer) {
+            if (f != null) {
+                ((CorePlayer) name).Faction = f.GetName();
+            }else
+            {
+                ((CorePlayer) name).Faction = null;
+            }
+        }
+        return f;
     }
 
     public Faction getPlayerFaction(CommandSender name) {

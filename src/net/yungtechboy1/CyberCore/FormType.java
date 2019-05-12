@@ -19,7 +19,10 @@ public final class FormType {
         Class_2,
         Class_3,
         Faction_Create_0,
-        Faction_Admin_Page_1, Faction_Admin_Page_SLR, Faction_Create_0_Error
+        Faction_Admin_Page_1,
+        Faction_Admin_Page_SLR,
+        Faction_Create_0_Error, Faction_Invite_Choose,
+
     }
 
     public static enum SubMenu {
