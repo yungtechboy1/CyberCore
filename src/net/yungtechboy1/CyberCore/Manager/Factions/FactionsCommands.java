@@ -342,6 +342,6 @@ public class FactionsCommands {
                 sender.sendMessage(FactionsMain.NAME+TextFormat.GRAY+"Please use /f help for a list of commands");
                 return true;
         }
-        return true;
+        return false;
     }
 }

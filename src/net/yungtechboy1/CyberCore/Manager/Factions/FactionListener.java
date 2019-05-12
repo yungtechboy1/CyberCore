@@ -46,6 +46,7 @@ public class FactionListener implements Listener {
 //        event = ce.Event;
     }
 
+
     @EventHandler
     public void FactionPlayerDeath(PlayerDeathEvent event) {
         if (event == null) return;

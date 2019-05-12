@@ -6,6 +6,7 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.CorePlayer;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+
+import static net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain.FactionString.*;
 
 /**
  * Created by carlt_000 on 5/13/2016.
@@ -575,12 +578,27 @@ public class FactionFactory {
         return a;
     }
 
-    public Faction CreateFaction(String name, Player p) {
+    public Faction CreateFaction(String name, CorePlayer p) {
         return CreateFaction(name, p, "Just a CyberTech Faction", false);
     }
 
-    public boolean CheckFactionName(String n){
-        return n.matches("^[a-zA-Z0-9]*");
+    public int CheckFactionName(String name){
+       if(!name.matches("^[a-zA-Z0-9]*")){
+           return Error_OnlyNumbersNLetters.getID();
+       }
+        if(bannednames.contains(name.toLowerCase())){
+            return Error_BannedName.getID();
+        }
+        if(Main.factionExists(name)) {
+            return Error_FactionExists.getID();
+        }
+        if(name.length() > 20) {
+            return Error_NameTooLong.getID();
+        }
+        if(name.length() < 3) {
+            return Error_NameTooShort.getID();
+        }
+        return 0;
     }
 
     private ArrayList<String> bannednames = new ArrayList<String>() {{
@@ -589,31 +607,16 @@ public class FactionFactory {
         add("peace");
     }};
 
-    public Faction CreateFaction(String name, Player p, String motd, boolean privacy) {
+    public Faction CreateFaction(String name, CorePlayer p, String motd, boolean privacy) {
 
-        if(!CheckFactionName(name)) {
-            p.sendMessage(FactionsMain.NAME+TextFormat.RED+"You may only use letters and numbers!");
-            return null;
-        }
-        if(bannednames.contains(name.toLowerCase())){
-            p.sendMessage(FactionsMain.NAME+TextFormat.RED+"That is a Banned faction Name!");
-            return null;
-        }
-        if(Main.factionExists(name)) {
-            p.sendMessage(FactionsMain.NAME+TextFormat.RED+"Faction already exists");
-            return null;
-        }
-        if(name.length() > 20) {
-            p.sendMessage(FactionsMain.NAME+TextFormat.RED+"Faction name is too long. Please try again!");
-            return null;
-        }
-        if(Main.isInFaction(p.getName())) {
+        if(p.Faction == null) {
             p.sendMessage(FactionsMain.NAME+TextFormat.RED+"You must leave your faction first");
             return null;
         }
 
 
         Faction fac = new Faction(Main, name, name, p.getName().toLowerCase(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        System.out.println(fac+" <<<<<< FFFFFFFFFFFFFFFF");
         List.put(name.toLowerCase(), fac);
         FacList.put(p.getName().toLowerCase(), name);
         fac.SetPower(2);

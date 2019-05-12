@@ -98,7 +98,7 @@ public class CoreSQL extends MySQL {
             p.deaths = 0;
             p.fixcoins = 0;
             p.money = 300;
-            p.faction_id = "no_faction";
+            p.Faction = "no_faction";
             p.setBanned(false);
 //            plugin.UserSQL.saveUser(p);
             return;

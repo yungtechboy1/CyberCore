@@ -33,6 +33,8 @@ import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
+import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.FactionBaseCMD;
+import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionListener;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
@@ -255,7 +257,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        GOOD
         ECON = new EconManager(this);
-//        FM = new FactionsMain(this, new FactionSQL(this, "FDB"));
+        FM = new FactionsMain(this, new FactionSQL(this, "FDB"));
 //        getServer().getScheduler().scheduleRepeatingTask(new UnMuteTask(this), 20 * 15);
 //        getServer().getScheduler().scheduleRepeatingTask(new ClearSpamTick(this), 20 * 5);
 //        getServer().getScheduler().scheduleRepeatingTask(new CheckOP(this), 20 * 60);//1 Min
@@ -348,7 +350,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new AuctionHouseCmd(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new SellHand(this));
-    }
+       }
 
     public void onLoad() {
 
@@ -625,6 +627,12 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     @Override
     public boolean onCommand(CommandSender s, Command cmd, String label, String[] args) {
         String cmdd = cmd.getName().toLowerCase();
+        if(FM != null && FM.FC != null) {
+            if(FM.FC.onCommand(FM,s,cmd,label,args)){
+                return true;
+            }
+        }
+//        factions.FC.onCommand(this,pcppe.getPlayer(),pcppe.getMessage(),label,args);
         switch (cmdd) {
             case "wild":
                 Wild.runCommand(s, this);

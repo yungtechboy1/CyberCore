@@ -16,15 +16,21 @@ import cn.nukkit.inventory.InventoryHolder;
 import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
+import cn.nukkit.item.ItemID;
+import cn.nukkit.item.ItemIngotGold;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.ContainerOpenPacket;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Data.AuctionItemData;
 import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
 
 import java.util.*;
+
+import static net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse.CurrentPageEnum.Confirm_Purchase;
+import static net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money;
 
 /**
  * Created by carlt_000 on 2/22/2017.
@@ -33,9 +39,8 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
     protected final String name;
     protected final String title;
-//    public static HashMap<Integer, Item> slots = new HashMap<>();
+    //    public static HashMap<Integer, Item> slots = new HashMap<>();
     protected final Set<Player> viewers = new HashSet<>();
-    private int Page = 1;
     public boolean ConfirmPurchase = false;
     public int ConfirmPurchaseSlot = 0;
     public AuctionFactory AF = null;
@@ -45,55 +50,17 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     CyberCoreMain CCM;
     BlockEntity blockEntity2 = null;
     BlockEntity blockEntity = null;
+
+    public CurrentPageEnum getCurrentPage() {
+        return CurrentPage;
+    }
+
+    public void setCurrentPage(CurrentPageEnum currentPage) {
+        CurrentPage = currentPage;
+    }
+
     CurrentPageEnum CurrentPage;
-
-    public void GoToSellerPage() {
-        clearAll();
-        setPage(1);
-        setContents(AF.getPageHash(getPage(), getHolder().getName()), true);
-        ReloadInv();
-        sendContents(getHolder());
-        SendAllSlots(getHolder());
-    }
-
-    public void ReloadCurrentPage() {
-        switch (CurrentPage){
-            case ItemPage:
-                clearAll();
-                setPage(getPage());
-                break;
-            case PlayerSellingPage:
-                setPagePlayerSelling(getPage());
-                break;
-
-
-        }
-    }
-
-    public void ClearConfirmPurchase() {
-
-        ConfirmPurchase = false;
-        ConfirmPurchaseSlot = -1;
-    }
-
-    public void DisplayCatagories() {
-        clearAll();
-        for(int i = 0; i < 5*9; i++){
-            Block itm = new BlockGlassPaneStained(7);
-            Item bi = new ItemBlock(itm);
-            bi.setCustomName(TextFormat.GRAY+"FEATURE CURRENTLY DISABLED!");
-            setItem(i,bi,true);
-        }
-        ReloadInv();
-        SendAllSlots(getHolder());
-    }
-
-    public enum CurrentPageEnum{
-        ItemPage,
-        PlayerSellingPage,
-        Expired,
-        Confirm_Purchase
-    }
+    private int Page = 1;
 
     public AuctionHouse(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba) {
         this(Holder, ccm, ba, 1);
@@ -121,12 +88,70 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 //        setContents(CyberCoreMain.getInstance().AuctionFactory.getPageHash(page));
     }
 
-    public void GoToNextPage(){
+    public void GoToSellerPage() {
+        clearAll();
+        setPage(1);
+        setContents(AF.getPageHash(getPage(), getHolder().getName()), true);
+        ReloadInv();
+        sendContents(getHolder());
+        SendAllSlots(getHolder());
+    }
+
+    public void ReloadCurrentPage() {
+        switch (CurrentPage) {
+            case ItemPage:
+                clearAll();
+                setPage(getPage());
+                break;
+            case PlayerSellingPage:
+                setPagePlayerSelling(getPage());
+                break;
+
+
+        }
+    }
+
+    public void ClearConfirmPurchase() {
+
+        ConfirmPurchase = false;
+        ConfirmPurchaseSlot = -1;
+    }
+
+    public void DisplayCatagories() {
+        clearAll();
+        for (int i = 0; i < 5 * 9; i++) {
+            Block itm = new BlockGlassPaneStained(7);
+            Item bi = new ItemBlock(itm);
+            bi.setCustomName(TextFormat.GRAY + "FEATURE CURRENTLY DISABLED!");
+            setItem(i, bi, true);
+        }
+        ReloadInv();
+        SendAllSlots(getHolder());
+    }
+
+    public void GoToNextPage() {
         setPage(getPage() + 1);
     }
 
-    public void GoToPrevPage(){
+    public void GoToPrevPage() {
         setPage(getPage() - 1);
+    }
+
+    public void setPagePlayerSelling() {
+        setPagePlayerSelling(1);
+    }
+
+    public void setPagePlayerSelling(Integer page) {
+        Page = page;
+        CurrentPage = CurrentPageEnum.PlayerSellingPage;
+        clearAll();
+        setContents(AF.getPageHash(getPage(), getHolder().getName()));
+        ReloadInv();
+        SendAllSlots(getHolder());
+    }
+
+    public int getPage() {
+        return Page;
     }
 
     public void setPage(Integer page) {
@@ -138,23 +163,6 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         ReloadInv();
         SendAllSlots(getHolder());
     }
-
-    public void setPagePlayerSelling() {
-        setPagePlayerSelling(1);
-    }
-    public void setPagePlayerSelling(Integer page) {
-        Page = page;
-        CurrentPage = CurrentPageEnum.PlayerSellingPage;
-        clearAll();
-        setContents(AF.getPageHash(getPage(),getHolder().getName()));
-        ReloadInv();
-        SendAllSlots(getHolder());
-    }
-
-    public int getPage(){
-        return Page;
-    }
-
 
     @Override
     public void onOpen(Player who) {
@@ -182,14 +190,12 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
     @Override
     public void onSlotChange(int index, Item before, boolean send) {
-        super.onSlotChange(index,before,send);
+        super.onSlotChange(index, before, send);
     }
-
 
     public void setSize(int size) {
         this.size = size;
     }
-
 
     @Override
     public Map<Integer, Item> getContents() {
@@ -207,7 +213,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     public void setContents(Map<Integer, Item> items) {
 //        super.setContents(items);
 //        if (holder != null) SendAllSlots((Player) holder);
-        setContents(items,true);
+        setContents(items, true);
     }
 
     public void ReloadInv() {
@@ -308,10 +314,9 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         }
     }
 
-
     public void setContents(Map<Integer, Item> items, boolean send) {
         System.out.println("SETTINNGG CCCOONNNTTTZ " + items.size());
-        for (int i = 0; i < this.size-1; ++i) {
+        for (int i = 0; i < this.size - 1; ++i) {
 
 //            System.out.println("SETTING ITEM IN KEY " + i + " VVVVVVVV " + items.get(i).getClass().getName());
             if (!items.containsKey(i)) {
@@ -328,47 +333,54 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     }
 
     @Override
-public boolean setItem(int index, Item item, boolean send) {
-    item = item.clone();
-    System.out.println("INNNNEEDDDDEDEE >> "+index);
-    System.out.println("INNNNEEDDDDEDEE >> "+item.getClass().getName());
-        System.out.println("INNNNEEDDDDEDEE >> "+item.getCount());
-        System.out.println("INNNNEEDDDDEDEE >> "+item.getId());
-    if(index >= 0 && index < getSize()) {
-        if(item.getId() != 0 && item.getCount() > 0) {
-            InventoryHolder holder = this.getHolder();
-            if(holder instanceof Entity && !send) {
-                EntityInventoryChangeEvent ev = new EntityInventoryChangeEvent((Entity)holder, this.getItem(index), item, index);
-                Server.getInstance().getPluginManager().callEvent(ev);
-                if(ev.isCancelled()) {
-                    this.sendSlot(index, (Collection)this.getViewers());
-                    return false;
+    public boolean setItem(int index, Item item, boolean send) {
+        item = item.clone();
+//    System.out.println("INNNNEEDDDDEDEE >> "+index);
+//    System.out.println("INNNNEEDDDDEDEE >> "+item.getClass().getName());
+//        System.out.println("INNNNEEDDDDEDEE >> "+item.getCount());
+//        System.out.println("INNNNEEDDDDEDEE >> "+item.getId());
+        if (index >= 0 && index < getSize()) {
+            if (item.getId() != 0 && item.getCount() > 0) {
+                InventoryHolder holder = this.getHolder();
+                if (holder instanceof Entity && !send) {
+                    EntityInventoryChangeEvent ev = new EntityInventoryChangeEvent((Entity) holder, this.getItem(index), item, index);
+                    Server.getInstance().getPluginManager().callEvent(ev);
+                    if (ev.isCancelled()) {
+                        this.sendSlot(index, (Collection) this.getViewers());
+                        return false;
+                    }
+
+                    item = ev.getNewItem();
                 }
 
-                item = ev.getNewItem();
-            }
-
-            if(holder instanceof BlockEntity) {
-                ((BlockEntity)holder).setDirty();
-            }
+                if (holder instanceof BlockEntity) {
+                    ((BlockEntity) holder).setDirty();
+                }
 //
-            Item old = this.getItem(index);
-            slots.put(index, item.clone());
-            System.out.println("AAAAAAAAAAAAAAAAAAAA >> "+index);
-            System.out.println("AAAAAAAAAAAAAAAAAAAA >> "+old);
-            System.out.println("AAAAAAAAAAAAAAAAAAAA >> "+send);
+                Item old = this.getItem(index);
+                slots.put(index, item.clone());
+//            System.out.println("AAAAAAAAAAAAAAAAAAAA >> "+index);
+//            System.out.println("AAAAAAAAAAAAAAAAAAAA >> "+old);
+//            System.out.println("AAAAAAAAAAAAAAAAAAAA >> "+send);
 //            this.onSlotChange(index, old, send);
-            if(getHolder() != null)sendSlot(index,getHolder());
-            return true;
+                if (getHolder() != null) sendSlot(index, getHolder());
+                return true;
 
 //            return super.setItem(index,item,send);
+            } else {
+                return this.clear(index);
+            }
         } else {
-            return this.clear(index);
+            return false;
         }
-    } else {
-        return false;
     }
-}
+
+    @Override
+    public void sendContents(Player player) {
+        ArrayList<Player> al = new ArrayList<>();
+        al.add(player);
+        this.sendContents(al.toArray(new Player[1]));
+    }
 
 //    public boolean setItem(int index, Item item, boolean send) {
 //        item = item.clone();
@@ -410,13 +422,6 @@ public boolean setItem(int index, Item item, boolean send) {
 //        }
 //    }
 
-    @Override
-    public void sendContents(Player player) {
-        ArrayList<Player> al = new ArrayList<>();
-        al.add(player);
-        this.sendContents(al.toArray(new Player[1]));
-    }
-
     public void SendAllSlots(Player p) {
         ArrayList<Player> al = new ArrayList<>();
         al.add(p);
@@ -425,7 +430,42 @@ public boolean setItem(int index, Item item, boolean send) {
         }
     }
 
+    public void SetupPageNotEnoughMoney(AuctionItemData aid) {
+        CorePlayer cp = (CorePlayer) getHolder();
+        StaticItems si = new StaticItems(Page);
+        Item item = aid.MakePretty();
+        Item deny = si.Deny.clone();
+        Item deny2 = si.Deny.clone();
+        CurrentPage = Confirm_Purchase_Not_Enough_Money;
+        deny.setCustomName(TextFormat.RED + "Not Enough Money!");
+        for (int i = 0; i < 5; i++) {
+            for (int ii = 0; ii < 9; ii++) {
+                int key = (i * 9) + ii;
+                if (ii != 4) {
+                    //RED
+                    setItem(key, deny.clone(), true);
+                } else {
+                    //White or Item
+                    if (i == 2) {
+                        //@TODO Get ITem
+                        setItem(key, item, true);
+                    } else if (i == 0) {
+                        Item g = si.Gold.clone();
+                        g.setCustomName(TextFormat.GOLD + " Your money: "+ cp.GetMoney());
+                        setItem(key, g, true);
+                    } else {
+                        Item r = Item.get(160, 14);
+                        r.setCustomName(TextFormat.RED + "Not Enough Money \n" + TextFormat.YELLOW + " Your Balance : " + cp.GetMoney() + "\n" + TextFormat.AQUA + "Item Cost : " + aid.getCost());
+                        setItem(key, r, true);
+                    }
+                }
+            }
+        }
+    }
+
     public void SetupPageToConfirmSingleItem(AuctionItemData aid) {
+        CurrentPage = Confirm_Purchase;
+        CorePlayer cp = (CorePlayer) getHolder();
         StaticItems si = new StaticItems(Page);
         Item item = aid.MakePretty();
         Item confrim = si.Confirm.clone();
@@ -441,6 +481,11 @@ public boolean setItem(int index, Item item, boolean send) {
                     if (i == 2) {
                         //@TODO Get ITem
                         setItem(key, item, true);
+
+                    } else if (i == 0) {
+                        Item g = si.Gold.clone();
+                        g.setCustomName(TextFormat.GOLD + " Your money: " + cp.GetMoney());
+                        setItem(key, g, true);
                     } else {
                         setItem(key, Item.get(160), true);
                     }
@@ -451,7 +496,6 @@ public boolean setItem(int index, Item item, boolean send) {
             }
         }
     }
-
 
     public void setItem2(int index, Item item) {
         setItem(index, item.clone());
@@ -489,6 +533,17 @@ public boolean setItem(int index, Item item, boolean send) {
         return slots;
     }
 
+    @Override
+    public void remove(Item item) {
+        boolean checkDamage = item.hasMeta();
+        boolean checkTag = item.getCompoundTag() != null;
+        for (Map.Entry<Integer, Item> entry : this.getContents().entrySet()) {
+            if (item.equals(entry.getValue(), checkDamage, checkTag)) {
+                this.clear(entry.getKey());
+            }
+        }
+    }
+
 //    @Override
 //    public boolean setItem(int index, Item item) {
 //        item = item.clone();
@@ -511,17 +566,6 @@ public boolean setItem(int index, Item item, boolean send) {
 //    public boolean setItem(int index, Item item, boolean send) {
 //        return false;
 //    }
-
-    @Override
-    public void remove(Item item) {
-        boolean checkDamage = item.hasMeta();
-        boolean checkTag = item.getCompoundTag() != null;
-        for (Map.Entry<Integer, Item> entry : this.getContents().entrySet()) {
-            if (item.equals(entry.getValue(), checkDamage, checkTag)) {
-                this.clear(entry.getKey());
-            }
-        }
-    }
 
     @Override
     public int first(Item item) {
@@ -565,28 +609,27 @@ public boolean setItem(int index, Item item, boolean send) {
 
     @Override
     public boolean clear(int index, boolean send) {
-        System.out.println("AAAAAAAAAAAAAA" + index);
+//        System.out.println("AAAAAAAAAAAAAA" + index);
         if (this.slots.containsKey(index)) {
             Item item = new ItemBlock(new BlockAir(), null, 0);
             Item old = this.slots.get(index);
 //            if (item.getId() != Item.AIR) {
 //                setItem(index, item.clone());
 //            } else {
-                this.slots.remove(index);
+            this.slots.remove(index);
 //            }
 //            this.onSlotChange(index, old, send);
-        }else if(send){
+        } else if (send) {
             Item item = new ItemBlock(new BlockAir(), null, 0);
             Item old = this.slots.get(index);
 //            setItem(index, item.clone(),true);
 //            this.onSlotChange(index, old, true);
             slots.remove(index);
         }
-        if(getHolder() != null)sendSlot(index,getHolder());
-        System.out.println("CLEARRRR###" + index);
+        if (getHolder() != null) sendSlot(index, getHolder());
+//        System.out.println("CLEARRRR###" + index);
         return true;
     }
-
 
     @Override
     public void clearAll() {
@@ -664,15 +707,24 @@ public boolean setItem(int index, Item item, boolean send) {
         this.sendSlot(index, new Player[]{player});
     }
 
+    @Override
+    public InventoryType getType() {
+        return InventoryType.DOUBLE_CHEST;
+    }
+
 //    @Override
 //    public void sendContents(Player player) {
 //        this.sendContents(new Player[]{player});
 //    }
 
 
-    @Override
-    public InventoryType getType() {
-        return InventoryType.DOUBLE_CHEST;
+    public enum CurrentPageEnum {
+        ItemPage,
+        PlayerSellingPage,
+        Expired,
+        Confirm_Purchase,
+        Confirm_Purchase_Not_Enough_Money,
+
     }
 //    public void sendSlot(int index, Player[] players) {
 //        ContainerSetSlotPacket pk = new ContainerSetSlotPacket();
@@ -708,6 +760,7 @@ public boolean setItem(int index, Item item, boolean send) {
         public final Item RmvX10;
         public final Item RmvX32;
         public final Item Deny;
+        public final Item Gold;
 
         StaticItems() {
             this(-1);
@@ -716,6 +769,10 @@ public boolean setItem(int index, Item item, boolean send) {
         StaticItems(int page) {
             CompoundTag T = new CompoundTag();
             T.putBoolean("AHITEM", true);
+            Gold =Item.get(ItemID.GOLD_INGOT,0, 1);
+            Gold.setCompoundTag(T);
+            Gold.setCustomName(TextFormat.GOLD + " Your money: ");
+
             AddX1 = Item.get(Item.EMERALD_BLOCK);
             AddX1.setCompoundTag(T);
             AddX1.getNamedTag().putInt("ADD", 1);
@@ -794,7 +851,7 @@ public boolean setItem(int index, Item item, boolean send) {
             Netherstar.setCompoundTag(T);
             Netherstar.setCustomName(
                     TextFormat.GREEN + "" + TextFormat.BOLD + "Refresh Page\n"
-                    + TextFormat.GRAY+" Current Page "+page
+                            + TextFormat.GRAY + " Current Page " + page
             );
             if (page != -1) Netherstar.getNamedTag().putInt("page", page);
             Chest = Item.get(Item.CHEST);

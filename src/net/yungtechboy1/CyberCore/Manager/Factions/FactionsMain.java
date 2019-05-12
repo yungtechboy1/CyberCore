@@ -9,6 +9,7 @@ import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.FactionBaseCMD;
 import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Utils;
 
@@ -20,33 +21,33 @@ import java.util.*;
  */
 public class FactionsMain {
 
-    private static FactionsMain instance = null;
-    //private Statement Statement = null;
-    private PreparedStatement PreparedStatement = null;
-    private ResultSet ResultSet = null;
-    public ConfigSection BossBar = new ConfigSection();
-    public ConfigSection BBN = new ConfigSection();
-
-    public ConfigSection War = new ConfigSection();
-    private FactionsCommands FC = new FactionsCommands(this);
-//    public Map<String,Integer> killed = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-//    public Map<String,Integer> death = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-//    public Map<String,Integer> pvplog = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    public Map<Long,CustomFloatingTextParticle> popups = new HashMap<>();
-    public FactionFactory FFactory = null;
-    public CyberCoreMain plugin;
     //public static final String NAME = "[ArchFactions]";
     public static final String NAME = Utils.NAME;
-    //public Map<String,Integer> death;
-
+    private static FactionsMain instance = null;
+    public ConfigSection BossBar = new ConfigSection();
+    public ConfigSection BBN = new ConfigSection();
+    public ConfigSection War = new ConfigSection();
+    public FactionsCommands FC = new FactionsCommands(this);
+    //    public Map<String,Integer> killed = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+//    public Map<String,Integer> death = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+//    public Map<String,Integer> pvplog = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    public Map<Long, CustomFloatingTextParticle> popups = new HashMap<>();
+    public FactionFactory FFactory = null;
+    public CyberCoreMain plugin;
     public FactionSQL factionData;
+    public HashMap<Integer, FactionString> TextList = new HashMap<>();
+    //private Statement Statement = null;
+    private PreparedStatement PreparedStatement = null;
+    //public Map<String,Integer> death;
+    private ResultSet ResultSet = null;
 
-    public FactionsMain(CyberCoreMain main, FactionSQL factionData){
+    public FactionsMain(CyberCoreMain main, FactionSQL factionData) {
         plugin = main;
         this.factionData = factionData;
         onLoad();
 
-        getServer().getPluginManager().registerEvents(new FactionListener(main,this),main);
+        getServer().getPluginManager().registerEvents(new FactionListener(main, this), main);
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Manager/Factions/Cmds", new FactionBaseCMD(plugin));
 
 //        getServer().getScheduler().scheduleDelayedRepeatingTask(new FactionPower(this),20*10,20*60*5);
 //        getServer().getScheduler().scheduleDelayedRepeatingTask(new Purge(this,false,60),20*60*5,20*60*15);//15 mINS
@@ -58,9 +59,9 @@ public class FactionsMain {
         boolean wilderness = false;
         System.out.println(FFactory == null);
         System.out.println(FFactory.GetAllFactions() == null);
-        for(String fn : FFactory.GetAllFactions()) {
+        for (String fn : FFactory.GetAllFactions()) {
             Faction f = FFactory.getFaction(fn);
-            if(f == null){
+            if (f == null) {
                 continue;
                 /*Connection c = FFactory.getMySqlConnection();
                 try {
@@ -76,13 +77,13 @@ public class FactionsMain {
                 } catch (Exception  ex) {
                     getServer().getLogger().info( ex.getClass().getName() + ":9 " + ex.getMessage()+" > "+ex.getStackTrace()[0].getLineNumber()+" ? "+ex.getCause());
                 }*/
-            }else{
-                FFactory.Top.put(f.GetName(),f.GetMoney());
-                FFactory.Rich.put(f.GetName(),f.GetRich());
+            } else {
+                FFactory.Top.put(f.GetName(), f.GetMoney());
+                FFactory.Rich.put(f.GetName(), f.GetRich());
             }
-            if(fn.equalsIgnoreCase("peace")){
+            if (fn.equalsIgnoreCase("peace")) {
                 peace = true;
-            }else if(fn.equalsIgnoreCase("wilderness")){
+            } else if (fn.equalsIgnoreCase("wilderness")) {
                 wilderness = true;
             }
             Count++;
@@ -102,37 +103,31 @@ public class FactionsMain {
 //        getServer().getLogger().info("SUCCESSFUL Loading of "+Count+" Factions from the database!");
     }
 
-    public Server getServer(){
-        return plugin.getServer();
-    }
-
-
-
-    public static FactionsMain getInstance(){
+    public static FactionsMain getInstance() {
         return FactionsMain.instance;
     }
 
-    public void onLoad(){
+    public Server getServer() {
+        return plugin.getServer();
+    }
+
+    public void onLoad() {
         FactionsMain.instance = this;
-       FFactory = new FactionFactory(this);
+        FFactory = new FactionFactory(this);
     }
 
     public void initiatePlayer(CorePlayer player) {
     }
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        return FC.onCommand(this,sender,command,label,args);
-    }
-
     public boolean isFactionsAllyed(String faction1, String faction2) {
         Faction fac1 = FFactory.getFaction(faction1);
-        if(fac1 != null && fac1.isAllied(faction2))return true;
+        if (fac1 != null && fac1.isAllied(faction2)) return true;
         return false;
     }
 
-    public void AddFactionPower(String faction ,Integer power) {
+    public void AddFactionPower(String faction, Integer power) {
         Faction fac = FFactory.getFaction(faction);
-        if (fac != null){
+        if (fac != null) {
             Integer power1 = fac.GetPowerBonus() * power;
             fac.AddPower(power1);
         }
@@ -143,17 +138,14 @@ public class FactionsMain {
     }
 
     public boolean isInFaction(CorePlayer player) {
-        if(player == null)return false;
-        return player.faction_id != null;
+        return player != null && player.Faction != null;
     }
 
     public boolean isInFaction(String name) {
         return isInFaction(plugin.getCorePlayer(name));
     }
 
-
     /**
-     *
      * @param player CorePlayer
      * @return String
      */
@@ -162,7 +154,6 @@ public class FactionsMain {
     }
 
     /**
-     *
      * @param uuid String
      * @return String
      */
@@ -176,7 +167,7 @@ public class FactionsMain {
     }
 
     public int getNumberOfPlayers(Faction faction) {
-        if(faction != null){
+        if (faction != null) {
             Integer a = 1;
             a += faction.GetMembers().toArray().length;
             a += faction.GetOfficers().toArray().length;
@@ -188,12 +179,12 @@ public class FactionsMain {
 
     public int GetMaxPlayers(String faction) {
         Faction fac = FFactory.getFaction(faction);
-        if(fac != null)return fac.GetMaxPlayers();
+        if (fac != null) return fac.GetMaxPlayers();
         return 25;
     }
 
     public int GetMaxPlayers(Faction faction) {
-        if(faction != null)return faction.GetMaxPlayers();
+        if (faction != null) return faction.GetMaxPlayers();
         return 25;
     }
 
@@ -202,31 +193,31 @@ public class FactionsMain {
     }
 
     public Boolean isLeader(String player) {
-       if(FFactory.FacList.containsKey(player.toLowerCase())){
-           Faction fac = FFactory.getFaction(FFactory.FacList.get(player.toLowerCase()));
-           if(fac != null)return fac.GetLeader().toLowerCase().equalsIgnoreCase(player);
-       }
+        if (FFactory.FacList.containsKey(player.toLowerCase())) {
+            Faction fac = FFactory.getFaction(FFactory.FacList.get(player.toLowerCase()));
+            if (fac != null) return fac.GetLeader().toLowerCase().equalsIgnoreCase(player);
+        }
         return false;
     }
 
     public Boolean factionExists(String fac) {
-        if(FFactory.List.containsKey(fac.toLowerCase()))return true;
+        if (FFactory.List.containsKey(fac.toLowerCase())) return true;
         return false;
     }
 
     public String GetChunkOwner(int x, int z) {
-        if(FFactory.PlotsList.containsKey(x+"|"+z)){
-            return FFactory.PlotsList.get(x+"|"+z);
+        if (FFactory.PlotsList.containsKey(x + "|" + z)) {
+            return FFactory.PlotsList.get(x + "|" + z);
         }
         return null;
     }
 
     public boolean isOfficer(String player) {
-        if(FFactory.FacList.containsKey(player.toLowerCase())){
+        if (FFactory.FacList.containsKey(player.toLowerCase())) {
             Faction fac = FFactory.getFaction(FFactory.FacList.get(player.toLowerCase()));
-            if(fac != null){
-                for(String name: fac.GetOfficers()){
-                    if(name.equalsIgnoreCase(player))return true;
+            if (fac != null) {
+                for (String name : fac.GetOfficers()) {
+                    if (name.equalsIgnoreCase(player)) return true;
                 }
             }
         }
@@ -234,11 +225,11 @@ public class FactionsMain {
     }
 
     public boolean isGeneral(String player) {
-        if(FFactory.FacList.containsKey(player.toLowerCase())){
+        if (FFactory.FacList.containsKey(player.toLowerCase())) {
             Faction fac = FFactory.getFaction(FFactory.FacList.get(player.toLowerCase()));
-            if(fac != null){
-                for(String name: fac.GetGenerals()){
-                    if(name.equalsIgnoreCase(player))return true;
+            if (fac != null) {
+                for (String name : fac.GetGenerals()) {
+                    if (name.equalsIgnoreCase(player)) return true;
                 }
             }
         }
@@ -246,6 +237,43 @@ public class FactionsMain {
     }
 
     public void LoadPlayer(Player player) {
+
+    }
+
+    public enum FactionString {
+        NO_ERROR("NO ERROR", 0),
+        Error_OnlyNumbersNLetters(FactionsMain.NAME + TextFormat.RED + "You may only use letters and numbers!", 1),
+        Error_BannedName(FactionsMain.NAME + TextFormat.RED + "That is a Banned faction Name!", 2),
+        Error_FactionExists(FactionsMain.NAME + TextFormat.RED + "Faction already exists", 3),
+        Error_NameTooLong(FactionsMain.NAME + TextFormat.RED + "Faction name is too long. Please try again!", 4),
+        Error_InFaction(FactionsMain.NAME + TextFormat.RED + "You must leave your faction first", 5),
+        Error_NameTooShort(FactionsMain.NAME + TextFormat.RED + "Your faction name must be at least 3 Letters long", 6),
+        Error_SA221("Seems like an error occured! Please report Error: SA221", 221),
+        Error_SA223("Seems like an error occured while creating your faction! Please report Error: SA223", 223);
+//        FactionExists(FactionsMain.NAME+TextFormat.RED+"Faction already exists",2),
+//        FactionExists(FactionsMain.NAME+TextFormat.RED+"Faction already exists",2),
+
+
+        static int k = 0;
+        private String Msg;
+        private int ID;
+
+
+        FactionString(String s, int id) {
+            Msg = s;
+            ID = id;
+            FactionsMain.getInstance().TextList.put(id, this);
+
+        }
+
+        public String getMsg() {
+            return Msg;
+        }
+
+        public int getID() {
+            return ID;
+        }
+
 
     }
 

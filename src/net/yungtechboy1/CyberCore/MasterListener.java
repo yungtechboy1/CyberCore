@@ -23,6 +23,7 @@ import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
+import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static net.yungtechboy1.CyberCore.FormType.MainForm.*;
+import static net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain.FactionString.*;
 
 /**
  * Created by carlt_000 on 1/22/2017.
@@ -69,25 +71,47 @@ public class MasterListener implements Listener {
         CorePlayer cp = ((CorePlayer) p);
         switch (cp.LastSentFormType) {
             case Faction_Create_0:
+            case Faction_Create_0_Error:
                 new FormWindowModal("CyberFactions | Create Faction (2/2)!", "Faction Created!", "OK", "OK");
                 FormResponseCustom frc = (FormResponseCustom) pr.getResponse();
-                String fn = frc.getInputResponse(0);
-                if (plugin.FM.FFactory.CheckFactionName(fn)) {
-                    //TODO RESEND LAST MODAL
+                String fn;
+                if(cp.LastSentFormType == Faction_Create_0){
+
+                fn = frc.getInputResponse(0);
+                }else{
+                    fn = frc.getInputResponse(1);
+                }
+                if(fn == null || fn.length() == 0)return;
+                System.out.println("PRINGING THE NAME "+fn);
+                int r = plugin.FM.FFactory.CheckFactionName(fn);
+                if (r != 0) {
                     FormWindowCustom FWM = new FormWindowCustom("CyberFactions | Create Faction (1/2)");
 //        Element e = null;
-                    FWM.addElement(new ElementLabel(TextFormat.RED +""+TextFormat.BOLD+"ERROR! The name '"+fn+"' is invalid and can not be used! \n Make sure your name is less than 20 letters and is not currently taken."));
+                    FactionsMain.FactionString fs = FactionsMain.getInstance().TextList.getOrDefault(r,null);
+                    if(fs == null)fs = Error_SA221;
                     FWM.addElement(new ElementInput("Desired Faction Name"));
+                    FWM.addElement(new ElementLabel(fs.getMsg()));
                     FWM.addElement(new ElementInput("MOTD", "A CyberTech Faction"));
                     FWM.addElement(new ElementLabel("Enabeling Faction Privacy will require a player to have an invite to join your faction."));
                     FWM.addElement(new ElementToggle("Faction Privacy", false));
                     cp.showFormWindow(FWM);
-                    cp.LastSentFormType = Faction_Create_0;
+                    cp.LastSentFormType = Faction_Create_0_Error;
                     return;
                 }
-                String motd = frc.getInputResponse(1);
-                boolean privacy = frc.getToggleResponse(2);
-                plugin.FM.FFactory.CreateFaction(fn, cp, motd, privacy);
+                String motd;
+                boolean privacy;
+                if(cp.LastSentFormType == Faction_Create_0_Error){
+                    motd = frc.getInputResponse(2);
+                    privacy = frc.getToggleResponse(4);
+                }else {
+                    motd = frc.getInputResponse(1);
+                    privacy = frc.getToggleResponse(3);
+                }
+
+                Faction f = plugin.FM.FFactory.CreateFaction(fn, cp, motd, privacy);
+                if(f == null){
+                    cp.sendMessage(Error_SA223.getMsg());
+                }
                 break;
             case Class_0:
             case Enchanting_0:

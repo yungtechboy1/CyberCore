@@ -28,11 +28,16 @@ public class Create extends Commands {
         add("peace");
     }};
 
+//    public Create(FactionsMain main, String name, String description, String usageMessage, String[] aliases) {
+//        super(main, name, description, usageMessage, aliases);
+//    }
+//
+
     public Create(CommandSender s, String[] a, FactionsMain m) {
-        super(s, a, "/f create <Name>", m);
+        super(s, a, "/f create", m);
         senderMustBePlayer = true;
         sendUsageOnFail = true;
-
+        Sender = s;
         if (run()) {
             RunCommand();
         }

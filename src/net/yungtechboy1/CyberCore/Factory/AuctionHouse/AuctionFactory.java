@@ -246,18 +246,18 @@ public class AuctionFactory implements Listener {
     public Item[] SetPagePlayerSelling(String seller, int page) {
         int stop = page * 45;
         int start = stop - 45;
-        System.out.println("START = " + start + ", STOP = " + stop + " Seller" + seller);
+//        System.out.println("START = " + start + ", STOP = " + stop + " Seller" + seller);
         ArrayList<Item> list2 = getListOfItemsBetween(start, stop, seller);
         if (45 > list2.size()) {
             ArrayList<Item> a = new ArrayList<Item>();
             for (int i = 0; i < 45; i++) {
 //                list2.iterator().n
                 if (list2.size() > i && list2.get(i) != null) {
-                    System.out.println("ADDING ACTUAL ITEM " + list2.get(i).getId());
+//                    System.out.println("ADDING ACTUAL ITEM " + list2.get(i).getId());
                     a.add(list2.get(i));
                 } else {
                     a.add(new ItemBlock(new BlockAir(), 0, 0));
-                    System.out.println("ADDING AIR");
+//                    System.out.println("ADDING AIR");
                 }
             }
 
@@ -322,18 +322,18 @@ public class AuctionFactory implements Listener {
     public Item[] getPage(int page) {
         int stop = page * 45;
         int start = stop - 45;
-        System.out.println("START = " + start + ", STOP = " + stop);
+//        System.out.println("START = " + start + ", STOP = " + stop);
         ArrayList<Item> list2 = getListOfItemsBetween(start, stop);
         if (45 > list2.size()) {
             ArrayList<Item> a = new ArrayList<Item>();
             for (int i = 0; i < 45; i++) {
 //                list2.iterator().n
                 if (list2.size() > i && list2.get(i) != null) {
-                    System.out.println("ADDING ACTUAL ITEM || " + list2.get(i).getId());
+//                    System.out.println("ADDING ACTUAL ITEM || " + list2.get(i).getId());
                     a.add(list2.get(i));
                 } else {
                     a.add(new ItemBlock(new BlockAir(), 0, 0));
-                    System.out.println("ADDING AIR ||");
+//                    System.out.println("ADDING AIR ||");
                 }
             }
 
@@ -536,24 +536,37 @@ public class AuctionFactory implements Listener {
                             System.out.println("SSSSSSSSSSSSCPPPPPPPP");
 //                        ccpp.AH.ConfirmItemPurchase(slot);
                         } else {
-                            System.out.println("CPPPPPPPP");
                             Item si = ah.getContents().get(slot);
                             if (si != null) {
-                                if (si.getId() == BlockID.EMERALD_BLOCK) {
-                                    System.out.println("CONFIRM PURCHASE!!!!!!!");
-                                    ah.AF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot);
-                                    ah.ClearConfirmPurchase();
-                                    break;
-                                } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
-                                    System.out.println("DENCLINE PURCHASE!!!!!!!!");
-                                    ah.setPage(1);
-                                    ah.ClearConfirmPurchase();
-                                    break;
+                                if (ah.getCurrentPage() == AuctionHouse.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money) {
+                                    if (si.getId() == BlockID.REDSTONE_BLOCK) {
+                                        ah.setPage(1);
+                                        ah.ClearConfirmPurchase();
+                                        break;
+                                    } else {
+                                        ah.setPage(1);
+                                        System.out.println("UNKNOWNMNNN!!!!!!!!");
+                                        ah.ClearConfirmPurchase();
+                                        break;
+                                    }
                                 } else {
-                                    ah.setPage(1);
-                                    System.out.println("UNKNOWNMNNN!!!!!!!!");
-                                    ah.ClearConfirmPurchase();
-                                    break;
+                                    System.out.println("CPPPPPPPP");
+
+                                    if (si.getId() == BlockID.EMERALD_BLOCK) {
+                                        System.out.println("CONFIRM PURCHASE!!!!!!!");
+                                        ah.AF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot);
+                                        break;
+                                    } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
+                                        System.out.println("DENCLINE PURCHASE!!!!!!!!");
+                                        ah.setPage(1);
+                                        ah.ClearConfirmPurchase();
+                                        break;
+                                    } else {
+                                        ah.setPage(1);
+                                        System.out.println("UNKNOWNMNNN!!!!!!!!");
+                                        ah.ClearConfirmPurchase();
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -590,13 +603,13 @@ public class AuctionFactory implements Listener {
         if (aid == null) {
             System.out.println("ERROR IN SELECTION!!!!");
         } else if (aid.getCost() > holder.GetMoney()) {
-            holder.sendMessage(TextFormat.RED + "Error! " + aid.getSoldbyn() + "'s " + aid.getItem().getName() + " Item costs " + aid.getCost() + " but you only have " + holder.GetMoney());
-            holder.AH.setPage(1);
+            holder.AH.SetupPageNotEnoughMoney(aid);
             return;
         }
 //        SetBought(aid.getMasterid());
         holder.TakeMoney(aid.getCost());
         holder.getInventory().addItem(aid.getKeepItem());
+        holder.AH.ClearConfirmPurchase();
     }
 
     public void SetBought(int id) {
