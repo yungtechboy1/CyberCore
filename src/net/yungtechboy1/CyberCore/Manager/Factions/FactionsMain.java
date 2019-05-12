@@ -242,6 +242,10 @@ public class FactionsMain {
 
     public enum FactionString {
         NO_ERROR("NO ERROR", 0),
+        Success_FactionCreated(TextFormat.GREEN + "[CyboticFactions] Faction successfully created!",101),
+        Success_ADMIN_Faction_Saved(TextFormat.GREEN + "[CyboticFactions] All Factions Successfully Saved!",102),
+        Success_ADMIN_Faction_Load(TextFormat.GREEN + "[CyboticFactions] All Factions Successfully Saved!",103),
+        Success_ADMIN_Faction_Reload(TextFormat.GREEN + "[CyboticFactions] All Factions Successfully Saved!",104),
         Error_OnlyNumbersNLetters(FactionsMain.NAME + TextFormat.RED + "You may only use letters and numbers!", 1),
         Error_BannedName(FactionsMain.NAME + TextFormat.RED + "That is a Banned faction Name!", 2),
         Error_FactionExists(FactionsMain.NAME + TextFormat.RED + "Faction already exists", 3),
@@ -275,6 +279,10 @@ public class FactionsMain {
         }
 
 
+        @Override
+        public String toString() {
+            return getMsg();
+        }
     }
 
 //    public ConfigSection getBBN() {

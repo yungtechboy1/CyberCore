@@ -22,6 +22,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
@@ -70,6 +71,38 @@ public class MasterListener implements Listener {
         Player p = pr.getPlayer();
         CorePlayer cp = ((CorePlayer) p);
         switch (cp.LastSentFormType) {
+            case Faction_Admin_Page_SLR:
+                FormResponseSimple fapp = (FormResponseSimple) pr.getResponse();
+                int idd = fapp.getClickedButtonId();
+                switch (idd){
+                    case 0:
+                        plugin.FM.FFactory.SaveAllFactions();
+                        cp.sendMessage(Success_ADMIN_Faction_Saved.getMsg());
+                        break;
+                    case 1:
+                        plugin. FM = new FactionsMain(plugin, new FactionSQL(plugin, "FDB"));
+                        cp.sendMessage(Success_ADMIN_Faction_Saved.getMsg());
+                        break;
+                    case 2:
+                        plugin.FM.FFactory.SaveAllFactions();
+                        plugin. FM = new FactionsMain(plugin, new FactionSQL(plugin, "FDB"));
+                        break;
+                }
+                break;
+            case Faction_Admin_Page_1:
+                FormResponseSimple fap = (FormResponseSimple) pr.getResponse();
+                int id = fap.getClickedButtonId();
+                switch (id){
+                    case 0:
+                        cp.LastSentFormType = Faction_Admin_Page_SLR;
+                        FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Admin Page > SLR","");
+                        FWM.addButton(new ElementButton("Save"));
+                        FWM.addButton(new ElementButton("Load"));
+                        FWM.addButton(new ElementButton("Reload"));
+                        cp.showFormWindow(FWM);
+                        break;
+                }
+                break;
             case Faction_Create_0:
             case Faction_Create_0_Error:
                 new FormWindowModal("CyberFactions | Create Faction (2/2)!", "Faction Created!", "OK", "OK");

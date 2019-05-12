@@ -610,7 +610,7 @@ public class FactionFactory {
     public Faction CreateFaction(String name, CorePlayer p, String motd, boolean privacy) {
 
         if(p.Faction == null) {
-            p.sendMessage(FactionsMain.NAME+TextFormat.RED+"You must leave your faction first");
+            p.sendMessage(Error_InFaction.getMsg());
             return null;
         }
 
@@ -623,7 +623,8 @@ public class FactionFactory {
         fac.SetDesc(motd);
         if (privacy) fac.SetPrivacy(1);
         else fac.SetPrivacy(0);
-        p.sendMessage(TextFormat.GREEN + "[CyboticFactions] Faction successfully created!");
+        p.sendMessage(Success_FactionCreated.getMsg());
+        p.Faction = fac.GetName();
         RegitsterToRich(fac);
         return fac;
     }
