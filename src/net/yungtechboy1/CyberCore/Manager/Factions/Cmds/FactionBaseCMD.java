@@ -53,6 +53,10 @@ public class FactionBaseCMD extends Command {
                 case "a":
                     new Admin(commandSender, args, Owner.FM);
                     break;
+                case "inv":
+                case "invite":
+                    new Invite(commandSender, args, Owner.FM);
+                    break;
             }
         }else{
 
