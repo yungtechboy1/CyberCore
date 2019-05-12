@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import static net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse.CurrentPageEnum.*;
+
 /**
  * Created by carlt_000 on 2/22/2017.
  */
@@ -538,17 +540,11 @@ public class AuctionFactory implements Listener {
                         } else {
                             Item si = ah.getContents().get(slot);
                             if (si != null) {
-                                if (ah.getCurrentPage() == AuctionHouse.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money) {
-                                    if (si.getId() == BlockID.REDSTONE_BLOCK) {
-                                        ah.setPage(1);
-                                        ah.ClearConfirmPurchase();
-                                        break;
-                                    } else {
-                                        ah.setPage(1);
-                                        System.out.println("UNKNOWNMNNN!!!!!!!!");
-                                        ah.ClearConfirmPurchase();
-                                        break;
-                                    }
+                                if (ah.getCurrentPage() == Confirm_Purchase_Not_Enough_Money) {
+                                    ah.setPage(1);
+                                    ah.ClearConfirmPurchase();
+                                    //Back Home
+                                    break;
                                 } else {
                                     System.out.println("CPPPPPPPP");
 
