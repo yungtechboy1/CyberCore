@@ -59,7 +59,7 @@ public class CorePlayer extends Player {
     public Integer deaths = 0;
     public Integer fixcoins = 0;
     public Integer banned = 0;
-//    public String faction_id = null;
+    public String faction_id = null;
     public HashMap<String, Object> extraData = new HashMap<>();
     public ArrayList<Enchantment> MasterEnchantigList = null;
     public ArrayList<HomeData> HD = new ArrayList<>();
@@ -479,8 +479,22 @@ public class CorePlayer extends Player {
         if (f < max) setOnFire(nr.nextRange(1, 4));
     }
 
+    public int FactionCheck = -10;
+
     @Override
     public boolean onUpdate(int currentTick) {
+        //Check for Faction!
+        FactionCheck++;
+        if(FactionCheck > 100 || FactionCheck < 0){
+            FactionCheck = 0;
+            Faction f = CyberCoreMain.getInstance().FM.FFactory.IsPlayerInFaction(this);
+            if(f == null) {
+                Faction = null;
+            }else{
+                Faction = f.GetName();
+            }
+        }
+
         //Check to see if Player as medic or Restoration
         PlayerFood pf = getFoodData();
         if (TPR != null && TPRTimeout != 0 && TPRTimeout < currentTick && !isInTeleportingProcess) {

@@ -606,6 +606,7 @@ public class AuctionFactory implements Listener {
         holder.TakeMoney(aid.getCost());
         holder.getInventory().addItem(aid.getKeepItem());
         holder.AH.ClearConfirmPurchase();
+        holder.AH.setPage(1);
     }
 
     public void SetBought(int id) {

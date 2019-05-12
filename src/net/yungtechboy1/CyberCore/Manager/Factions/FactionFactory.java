@@ -7,6 +7,7 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -63,8 +64,6 @@ public class FactionFactory {
     }
 
     private Connection getMySqlConnection() {
-        System.out.println("YEAAAA |||||||" + Main.factionData.connectToDb());
-        System.out.println("YEAAAA %%% |||||||" + Main.factionData);
         return Main.factionData.connectToDb();
     }
 
@@ -310,11 +309,12 @@ public class FactionFactory {
             }
             stmt.executeUpdate("COMMIT;");
             stmt.close();
+            stmt.getConnection().close();
             //stmt2.close();
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            getServer().getLogger().info(ex.getClass().getName() + ":7 " + ex.getMessage());
+            getServer().getLogger().error(":7 ",ex);
         }
     }
 
@@ -337,6 +337,7 @@ public class FactionFactory {
             Statement stmt = this.getMySqlConnection().createStatement();
             ResultSet r = stmt.executeQuery(s);
             //this.getServer().getLogger().info( s );
+            stmt.close();
             return r;
         } catch (Exception ex) {
 
@@ -495,12 +496,14 @@ public class FactionFactory {
     }
 
     public ArrayList<String> GetAllFactions() {
+        Main.plugin.getLogger().info("GETTINGALL FACS" );
         ArrayList<String> results = new ArrayList<>();
         try {
             ResultSet r = this.ExecuteQuerySQL("select * from settings");
             if (r == null) return null;
             while (r.next()) {
                 String ff = r.getString("faction");
+                Main.plugin.getLogger().info("FOUNDDDDDDD FACCCCCCCCCCCCCCC" +ff );
                 if (!results.contains(ff)) results.add(ff);
             }
             return results;
@@ -606,7 +609,7 @@ public class FactionFactory {
 
     public Faction CreateFaction(String name, CorePlayer p, String motd, boolean privacy) {
 
-        if (p.Faction == null) {
+        if (p.Faction != null) {
             p.sendMessage(Error_InFaction.getMsg());
             return null;
         }
@@ -665,8 +668,17 @@ public class FactionFactory {
         return getPlayerFaction(name.getName().toLowerCase());
     }
 
+    public Faction IsPlayerInFaction(CorePlayer p){
+        String f = GetFactionFromMember(p.getName());
+        if(f == null && FacList.containsKey(p.getName().toLowerCase()))f = FacList.get(p.getName().toLowerCase());
+        System.out.println("FACCCCC >>>>>>> "+f);
+        if(f == null || f.length() == 0) return null;
+        return getFaction(f);
+    }
+
     public String GetFactionFromMember(String faction) {
         try {
+            System.out.println(String.format("select * from master where `player` LIKE '%s'", faction));
             ResultSet r = this.ExecuteQuerySQL(String.format("select * from master where `player` LIKE '%s'", faction));
             if (r == null) return null;
             while (r.next()) {
@@ -674,8 +686,10 @@ public class FactionFactory {
             }
             return null;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            CyberCoreMain.getInstance().getLogger().error("ERROR 1544",e);
         }
+        return null;
+
     }
 
     public Faction getPlayerFaction(String name) {

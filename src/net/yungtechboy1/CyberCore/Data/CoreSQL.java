@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CoreSQL extends MySQL {
+public class CoreSQL extends SQLite {
 
 
-    public CoreSQL(CyberCoreMain plugin) {
-        super(plugin);
+    public CoreSQL(CyberCoreMain plugin, String file) {
+        super(plugin,file);
     }
 
 

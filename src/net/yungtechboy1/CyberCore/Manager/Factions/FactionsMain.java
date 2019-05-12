@@ -55,8 +55,8 @@ public class FactionsMain {
         boolean peace = false;
         boolean wilderness = false;
         System.out.println(FFactory == null);
-        System.out.println(FFactory.GetAllFactions() == null);
         for (String fn : FFactory.GetAllFactions()) {
+            System.out.println("Loading Faction "+fn);
             Faction f = FFactory.getFaction(fn);
             if (f == null) {
                 continue;

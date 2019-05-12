@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Data;
 import cn.nukkit.Player;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Warp.WarpData;
 import org.apache.logging.log4j.core.Core;
 
@@ -42,6 +43,13 @@ public class ServerSqlite extends SQLite {
 
     public void LoadPlayer(Player p){
         LoadHomes((CorePlayer)p);
+        Faction f = plugin.FM.FFactory.IsPlayerInFaction((CorePlayer)p);
+        if(f == null){
+            p.sendMessage("NO FACTION FOUNNN!!!!");
+            System.out.println("NOOO FACCC");
+        }else{
+            ((CorePlayer)p).Faction = f.GetName();
+        }
     }
     public void LoadPlayer(CorePlayer p){
         LoadHomes(p);

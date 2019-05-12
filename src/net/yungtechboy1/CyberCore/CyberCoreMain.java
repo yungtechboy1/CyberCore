@@ -135,7 +135,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     /**
      * DATA: UUID, GAMERTAG, CREATED(TIMESTAMP), LAST_LOGIN(TIMESTAMP), RANK(INT), LAST_IP
      */
-    public CoreSQL CoreSQL;
+    public CoreSQL CoreSQL = null;
 
     /**
      * DATA: ECON, K/D,
@@ -235,7 +235,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         //Save = new SaveMain(this);
         SQLSaveManager = new SQLManager(this);
 
-        CoreSQL = new CoreSQL(this);
+//        CoreSQL = new CoreSQL(this,"Core");
         ServerSQL = new ServerSqlite(this,"server");
         ServerSQL.LoadAllWarps();
 //        UserSQL = new UserSQL(this, "server-data");

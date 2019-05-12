@@ -17,7 +17,9 @@ public class FactionSQL extends SQLite {
 
 
     public FactionSQL(CyberCoreMain plugin, String settings) {
+
         super(plugin, settings);
+
     }
 
     public boolean checkUser(String identity) {
@@ -58,7 +60,7 @@ public class FactionSQL extends SQLite {
     public void loadUser(String uuid) {
         List<? extends HashMap> list = null;
         try {
-            List<HashMap<String,Object>> data = executeSelect(loadQuery,"uuid", uuid, columns.keySet());
+            List<HashMap<String,Object>> data = executeSelect(loadQuery,"uuid", uuid, (String[])columns.keySet().toArray());
             CorePlayer p = plugin.getCorePlayer(uuid);
             p.kills = (Integer) data.get(0).get("kills");
             p.deaths = (Integer) data.get(0).get("deaths");

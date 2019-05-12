@@ -4,6 +4,7 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import static net.yungtechboy1.CyberCore.Manager.Factions.FactionStringDic.RegisterMessage;
 
@@ -72,6 +73,7 @@ class FactionStringDic {
     public static void RegisterMessage(FactionString fs) {
         CyberCoreMain.getInstance().getLogger().notice("Registering Message " + fs.getMsg() + " to " + fs.getID());
         if (list.containsKey(fs.getID())) {
+            if(Objects.equals(list.get(fs.getID()).getMsg(), fs.getMsg()))return;
             //Set new ID
             //200 Tries
             for (int i = 0; i < 200; i++) {
