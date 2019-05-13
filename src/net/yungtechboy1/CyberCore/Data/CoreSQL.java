@@ -17,11 +17,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CoreSQL extends SQLite {
+public class CoreSQL extends MySQL {
 
 
-    public CoreSQL(CyberCoreMain plugin, String file) {
-        super(plugin,file);
+    public CoreSQL(CyberCoreMain plugin) {
+        super(plugin);
+    }
+
+
+    @Override
+    public Connection connectToDb() {
+        String host = plugin.MainConfig.getSection("db2").getString("mysql-host");
+        String pass = plugin.MainConfig.getSection("db2").getString("mysql-pass");
+        int port = plugin.MainConfig.getSection("db2").getInt("mysql-port");
+        String user = plugin.MainConfig.getSection("db2").getString("mysql-user");
+        String db = plugin.MainConfig.getSection("db2").getString("mysql-db-Server");
+        if (!enabled) return null;
+        Connection connection = DbLib.getMySqlConnection(host, port,
+                db, user, pass);
+
+        if (connection == null) enabled = false;
+        return connection;
     }
 
 

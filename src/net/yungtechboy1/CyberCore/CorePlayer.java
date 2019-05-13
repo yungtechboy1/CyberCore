@@ -485,7 +485,7 @@ public class CorePlayer extends Player {
     public boolean onUpdate(int currentTick) {
         //Check for Faction!
         FactionCheck++;
-        if(FactionCheck > 100 || FactionCheck < 0){
+        if(FactionCheck > 20*60*5 || FactionCheck < 0){//5 Min faction Check
             FactionCheck = 0;
             Faction f = CyberCoreMain.getInstance().FM.FFactory.IsPlayerInFaction(this);
             if(f == null) {

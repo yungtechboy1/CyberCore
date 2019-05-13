@@ -104,12 +104,12 @@ public class MasterListener implements Listener {
                         cp.sendMessage(Success_ADMIN_Faction_Saved.getMsg());
                         break;
                     case 1:
-                        plugin.FM = new FactionsMain(plugin, new FactionSQL(plugin, "FDB"));
+                        plugin.FM = new FactionsMain(plugin, new FactionSQL(plugin));
                         cp.sendMessage(Success_ADMIN_Faction_Saved.getMsg());
                         break;
                     case 2:
                         plugin.FM.FFactory.SaveAllFactions();
-                        plugin.FM = new FactionsMain(plugin, new FactionSQL(plugin, "FDB"));
+                        plugin.FM = new FactionsMain(plugin, new FactionSQL(plugin));
                         break;
                 }
                 break;

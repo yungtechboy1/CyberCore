@@ -6,8 +6,11 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import ru.nukkit.dblib.DbLib;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,18 +19,33 @@ import java.util.List;
 /**
  * Created by carlt on 5/1/2019.
  */
-public class AHSqlite extends SQLite {
+public class AHSqlite extends MySQL {
 
 
-
-    public AHSqlite(CyberCoreMain plugin, String settings) {
-        super(plugin, settings);
+    public AHSqlite(CyberCoreMain plugin) {
+        super(plugin);
         LoadAllItems();
+    }
+
+
+    @Override
+    public Connection connectToDb() {
+        String host = plugin.MainConfig.getSection("db2").getString("mysql-host");
+        String pass = plugin.MainConfig.getSection("db2").getString("mysql-pass");
+        int port = plugin.MainConfig.getSection("db2").getInt("mysql-port");
+        String user = plugin.MainConfig.getSection("db2").getString("mysql-user");
+        String db = plugin.MainConfig.getSection("db2").getString("mysql-db-Server");
+        if (!enabled) return null;
+        Connection connection = DbLib.getMySqlConnection(host, port,
+                db, user, pass);
+
+        if (connection == null) enabled = false;
+        return connection;
     }
 
     public void LoadAllItems() {
         try {
-            List<HashMap<String, Object>> data = executeSelect("SELECT * FROM `AuctionHouse`");
+            ArrayList<HashMap<String, Object>> data = executeSelect("SELECT * FROM `AuctionHouse`");
             if (data == null) {
                 CyberCoreMain.getInstance().getLogger().error("Error Loading Auctions from Sqlite!");
                 return;
@@ -45,24 +63,52 @@ public class AHSqlite extends SQLite {
 
     }
 
+    public ArrayList<HashMap<String, Object>> executeSelect(String query) throws SQLException {
+        ArrayList<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
+        Connection connection = connectToDb();
+        if (connection == null) return null;
+        ResultSet resultSet = connection.createStatement().executeQuery(query);
+        if (resultSet == null) return null;
+        while (resultSet.next()) {
+            HashMap<String, Object> map = new HashMap<>();
+            ResultSet rs = resultSet;
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            for (int i = 1; i <= columnCount; i++) {
+                map.put(metaData.getColumnName(i), resultSet.getObject(i));
+            }
+            data.add(map);
+        }
+        if (connection != null) connection.close();
+        return data.isEmpty() ? null : data;
+    }
+
     public AuctionItemData Save(AuctionItemData data) {
         try {
             if (data.masterid != -1)
                 executeUpdate("DELETE FROM `AuctionHouse` WHERE `master_id` == '" + data.masterid + "'");
-            String fnt =  "";
-            if(data.item.hasCompoundTag())fnt = new String(data.item.writeCompoundTag(data.item.getNamedTag()));
+            String fnt = "";
+            if (data.item.hasCompoundTag()) fnt = new String(data.item.writeCompoundTag(data.item.getNamedTag()));
             executeUpdate(
                     "INSERT INTO `AuctionHouse` VALUES (null," +
                             data.item.getId() + "," + data.item.getDamage() + "," + data.item.getCount() + ",'" +
-                           fnt + "'," + data.Cost + ",'" + data.Soldby + "','" + data.Soldbyn + "',false)");
+                            fnt + "'," + data.Cost + ",'" + data.Soldby + "','" + data.Soldbyn + "',false)");
 
             plugin.getLogger().info("AH saved for " + data.toString());
-                ExecuteQuerySQLite("SELECT * FROM `AuctionHouse` ");
+            ExecuteQuerySQLite("SELECT * FROM `AuctionHouse` ");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         return data;
+    }
+
+    public ResultSet ExecuteQuerySQLite(String sql) throws SQLException {
+        Connection connection = connectToDb();
+        if (connection == null) return null;
+        ResultSet resultSet = connection.createStatement().executeQuery(sql);
+        if (resultSet == null) return null;
+        return resultSet;
     }
 
 

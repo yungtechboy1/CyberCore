@@ -268,6 +268,10 @@ public class FactionFactory {
                     }
                     //stmt2.executeUpdate(String.format("DELETE FROM `home` WHERE `faction` LIKE '%s';",name));
                     //stmt2.executeUpdate(String.format("INSERT INTO `home` VALUES ('"+name+"',%s,%s,%s) ;",home.getX(),home.getY(),home.getZ()));
+                    System.out.println(String.format("INSERT INTO `settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');"
+                            , name, maxplayers, powerbonus, motd, displayName, desc, perms, privacy, power, money, point, xp, lvl, CMID, am, rich));
+                    CyberCoreMain.getInstance().getLogger().error(String.format("INSERT INTO `settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');"
+                            , name, maxplayers, powerbonus, motd, displayName, desc, perms, privacy, power, money, point, xp, lvl, CMID, am, rich));
                     stmt.executeUpdate(String.format("DELETE FROM `settings` WHERE `faction` LIKE '%s';", fac.GetName()));
                     stmt.executeUpdate(String.format("INSERT INTO `settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');"
                             , name, maxplayers, powerbonus, motd, displayName, desc, perms, privacy, power, money, point, xp, lvl, CMID, am, rich));
@@ -309,7 +313,6 @@ public class FactionFactory {
             }
             stmt.executeUpdate("COMMIT;");
             stmt.close();
-            stmt.getConnection().close();
             //stmt2.close();
 
         } catch (Exception ex) {
@@ -337,7 +340,7 @@ public class FactionFactory {
             Statement stmt = this.getMySqlConnection().createStatement();
             ResultSet r = stmt.executeQuery(s);
             //this.getServer().getLogger().info( s );
-            stmt.close();
+//            stmt.close();
             return r;
         } catch (Exception ex) {
 
@@ -506,6 +509,8 @@ public class FactionFactory {
                 Main.plugin.getLogger().info("FOUNDDDDDDD FACCCCCCCCCCCCCCC" +ff );
                 if (!results.contains(ff)) results.add(ff);
             }
+            r.close();
+//            r.getStatement().close();
             return results;
         } catch (Exception e) {
             Main.plugin.getLogger().info("EEE", e);

@@ -257,7 +257,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        GOOD
         ECON = new EconManager(this);
-        FM = new FactionsMain(this, new FactionSQL(this, "FDB"));
+        FM = new FactionsMain(this, new FactionSQL(this));
 //        getServer().getScheduler().scheduleRepeatingTask(new UnMuteTask(this), 20 * 15);
 //        getServer().getScheduler().scheduleRepeatingTask(new ClearSpamTick(this), 20 * 5);
 //        getServer().getScheduler().scheduleRepeatingTask(new CheckOP(this), 20 * 60);//1 Min

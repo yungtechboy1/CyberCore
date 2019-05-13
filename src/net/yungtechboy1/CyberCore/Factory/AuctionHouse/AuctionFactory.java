@@ -66,7 +66,7 @@ public class AuctionFactory implements Listener {
     public AuctionFactory(CyberCoreMain CCM) {
         this.CCM = CCM;
         Settings = new Config(new File(CCM.getDataFolder(), "Auctions.yml"), Config.YAML);
-        Sqlite = new AHSqlite(CCM, "server");
+        Sqlite = new AHSqlite(CCM);
     }
 
 

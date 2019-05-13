@@ -19,6 +19,13 @@ public class MySQL {
     public CyberCoreMain plugin;
     public boolean enabled = true;
 
+
+//    public String createSQL = "create table if not exists " + table + " (";
+//    public String insertQuery = "insert into " + table + " (";
+//    public String addQuery = "insert into " + table + " (uuid) values (:uuid)";
+//    public String loadQuery = "select * from " + table + " where uuid=':uuid'";
+//    public String saveQuery = "update " + table + " set ";
+
     public MySQL(CyberCoreMain plugin) {
 
         this.plugin = plugin;
@@ -51,6 +58,8 @@ public class MySQL {
         if (connection != null) connection.close();
         return true;
     }
+
+
 
     public ArrayList<HashMap<String, Object>> executeSelect(String query, String identifier, String search, String[] selectors) throws SQLException {
         ArrayList<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();

@@ -41,29 +41,27 @@ public class ServerSqlite extends SQLite {
 
     }
 
-    public void LoadPlayer(Player p){
-        LoadHomes((CorePlayer)p);
-        Faction f = plugin.FM.FFactory.IsPlayerInFaction((CorePlayer)p);
-        if(f == null){
-            p.sendMessage("NO FACTION FOUNNN!!!!");
-            System.out.println("NOOO FACCC");
-        }else{
-            ((CorePlayer)p).Faction = f.GetName();
-        }
+    public void LoadPlayer(Player p) {
+        LoadHomes((CorePlayer) p);
+        Faction f = plugin.FM.FFactory.IsPlayerInFaction((CorePlayer) p);
+        ((CorePlayer) p).Faction = f.GetName();
     }
-    public void LoadPlayer(CorePlayer p){
+
+    public void LoadPlayer(CorePlayer p) {
         LoadHomes(p);
     }
-    public void UnLoadPlayer(Player p){
-        SaveHomes((CorePlayer)p);
+
+    public void UnLoadPlayer(Player p) {
+        SaveHomes((CorePlayer) p);
     }
-    public void UnLoadPlayer(CorePlayer p){
+
+    public void UnLoadPlayer(CorePlayer p) {
         SaveHomes(p);
     }
 
     private void LoadHomes(CorePlayer p) {
         try {
-            List<HashMap<String, Object>> data = executeSelect("SELECT * FROM `Homes` WHERE `owneruuid` == '"+p.getUniqueId()+"'");
+            List<HashMap<String, Object>> data = executeSelect("SELECT * FROM `Homes` WHERE `owneruuid` == '" + p.getUniqueId() + "'");
             if (data == null) {
                 CyberCoreMain.getInstance().getLogger().error("Error Loading Warps from Sqlite!");
                 return;
@@ -72,7 +70,7 @@ public class ServerSqlite extends SQLite {
             }
 
             for (HashMap<String, Object> v : data) {
-                p.AddHome(new HomeData((String) v.get("name"), (Double) v.get("x"), (Double) v.get("y"), (Double) v.get("z"), (String) v.get("level"),p));
+                p.AddHome(new HomeData((String) v.get("name"), (Double) v.get("x"), (Double) v.get("y"), (Double) v.get("z"), (String) v.get("level"), p));
             }
 
         } catch (SQLException e) {
@@ -82,11 +80,11 @@ public class ServerSqlite extends SQLite {
 
     private void SaveHomes(CorePlayer p) {
         try {
-            executeUpdate("DELETE FROM `Homes` WHERE `owneruuid` == '"+p.getUniqueId()+"'");
-            for(HomeData h : p.HD){
-                executeUpdate("INSERT INTO `Homes` VALUES (0,'"+h.getName()+"',"+h.getX()+","+h.getY()+","+h.getZ()+",'"+h.getLevel()+"','"+h.getOwner()+"','"+h.getOwneruuid()+"')");
+            executeUpdate("DELETE FROM `Homes` WHERE `owneruuid` == '" + p.getUniqueId() + "'");
+            for (HomeData h : p.HD) {
+                executeUpdate("INSERT INTO `Homes` VALUES (0,'" + h.getName() + "'," + h.getX() + "," + h.getY() + "," + h.getZ() + ",'" + h.getLevel() + "','" + h.getOwner() + "','" + h.getOwneruuid() + "')");
             }
-            plugin.getLogger().info("Homes saved for "+p.getName());
+            plugin.getLogger().info("Homes saved for " + p.getName());
             p.sendTip("Homes Saved!");
         } catch (SQLException e) {
             e.printStackTrace();
