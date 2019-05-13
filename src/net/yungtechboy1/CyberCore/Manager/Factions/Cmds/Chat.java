@@ -36,33 +36,22 @@ public class Chat extends Commands {
         CorePlayer p = (CorePlayer) Sender;
         if (p == null) return;
 
-        String chat = "";
+        StringBuilder chat = new StringBuilder();
         int a = 0;
         if (Args.length == 1) {
             FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Faction/Ally Chat Window", "");
             int k = 0;
             FWM.addButton(new ElementButton("Open Faction Chat Window"));
             FWM.addButton(new ElementButton("Open Ally Chat Window"));
-
             p.showFormWindow(FWM);
             p.LastSentFormType = FormType.MainForm.Faction_Chat_Choose;
         }
         for (String c : Args) {
             a++;
             if (a == 1) continue;
-            chat += c + " ";
+            chat.append(c).append(" ");
         }
         String n = Sender.getName();
-        if (fac.Leader.equalsIgnoreCase(Sender.getName())) {
-            fac.AddFactionChatMessage(TextFormat.YELLOW + "[" + n + "] " + chat);
-        } else if (fac.IsGeneral(Sender.getName())) {
-            fac.AddFactionChatMessage(TextFormat.YELLOW + "~**[" + n + "]**~: " + chat);
-        } else if (fac.IsOfficer(Sender.getName())) {
-            fac.AddFactionChatMessage(TextFormat.YELLOW + "~*[" + n + "]*~: " + chat);
-        } else if (fac.IsMember(Sender.getName())) {
-            fac.AddFactionChatMessage(TextFormat.YELLOW + "~[" + n + "]~: " + chat);
-        } else {
-            fac.AddFactionChatMessage(TextFormat.YELLOW + "-[" + n + "]-: " + chat);
-        }
+        fac.AddFactionChatMessage(chat.toString(),p);
     }
 }

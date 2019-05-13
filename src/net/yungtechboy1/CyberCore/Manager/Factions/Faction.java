@@ -46,6 +46,10 @@ public class Faction {
     private Integer XP = 0;
     private Integer Level = 0;
 
+    public FactionSettings getSettings() {
+        return Settings;
+    }
+
     private FactionSettings Settings = new FactionSettings();
 
     private ArrayList<Integer> CompletedMissionIDs = new ArrayList<>();
@@ -56,6 +60,53 @@ public class Faction {
 
     LinkedList<String> LastFactionChat = new LinkedList<>();
     LinkedList<String> LastAllyChat = new LinkedList<>();
+
+    public void PromotePlayer(Player pp) {
+        PromotePlayer(pp, false);
+    }
+    public void PromotePlayer(Player pp, boolean leaderConfirm) {
+        FactionRank cr = getPlayerRank(pp);
+        String pn = pp.getName().toLowerCase();
+        switch (cr){
+            case Recruit:
+                Recruits.remove(pn);
+                Members.add(pn);
+                break;
+            case Member:
+                Members.remove(pn);
+                Officers.add(pn);
+                break;
+            case Officer:
+                Officers.remove(pn);
+                Generals.add(pn);
+                break;
+            case General:
+                if(!leaderConfirm)break;
+                Generals.remove(pn);
+                Generals.add(Leader);
+                Leader = (pn);
+                break;
+        }
+    }
+
+    public void DemotePlayer(Player pp) {
+        FactionRank cr = getPlayerRank(pp);
+        String pn = pp.getName().toLowerCase();
+        switch (cr){
+            case Member:
+                Members.remove(pn);
+                Recruits.add(pn);
+                break;
+            case Officer:
+                Officers.remove(pn);
+                Members.add(pn);
+                break;
+            case General:
+                Generals.remove(pn);
+                Officers.add(pn);
+                break;
+        }
+    }
 
 
     public class AllyRequest {
@@ -854,12 +905,8 @@ public class Faction {
 
 
     public String GetFactionNameTag(String p) {
-        String prefix = "R";
-        if (IsMember(p)) prefix = "M";
-        if (IsOfficer(p)) prefix = "O";
-        if (IsGeneral(p)) prefix = "G";
-        if (Leader.equalsIgnoreCase(p)) prefix = "L";
-        return prefix + "-" + DisplayName;
+        FactionRank fr = getPlayerRank(p);
+        return fr.GetChatPrefix() +TextFormat.RESET+ " - " + DisplayName;
     }
 
     public String GetFactionNameTag(Player p) {
@@ -991,12 +1038,8 @@ public class Faction {
     }
 
     public Integer GetPlayerPerm(String name) {
-        for (String player : GetRecruits()) if (player.equalsIgnoreCase(name)) return 1;
-        for (String player : GetMembers()) if (player.equalsIgnoreCase(name)) return 2;
-        for (String player : GetOfficers()) if (player.equalsIgnoreCase(name)) return 3;
-        for (String player : GetGenerals()) if (player.equalsIgnoreCase(name)) return 4;
-        if (GetLeader().equalsIgnoreCase(name)) return 5;
-        return 0;
+        FactionRank fr = getPlayerRank(name);
+        return fr.getPower();
     }
 
     public ArrayList<Player> GetOnlinePlayers() {
@@ -1089,8 +1132,10 @@ public class Faction {
 //        Main.FFactory.allyrequest.put(GetName(), fac.GetName());
     }
 
-    public void AddFactionChatMessage(String message) {
-        BroadcastMessage(message);
+    public void AddFactionChatMessage(String message, CorePlayer p) {
+        FactionRank r = getPlayerRank(p);
+        message = TextFormat.GRAY+"["+r.GetChatPrefix()+TextFormat.GRAY+"] - "+r.GetChatColor()+p.getDisplayName()+TextFormat.GRAY+" > "+TextFormat.WHITE+message;
+        BroadcastMessage("Faction> "+message);
         LastFactionChat.addFirst(message);
         if(LastFactionChat.size() > Settings.getMaxFactionChat()){
             LastFactionChat.removeLast();
@@ -1098,8 +1143,10 @@ public class Faction {
     }
 
 
-    public void AddAllyChatMessage(String message) {
-        BroadcastMessage(message);
+    public void AddAllyChatMessage(String message, CorePlayer p) {
+        FactionRank r = getPlayerRank(p);
+        message = TextFormat.GRAY+"["+r.GetChatPrefix()+TextFormat.GRAY+"] - "+r.GetChatColor()+p.getDisplayName()+TextFormat.GRAY+" > "+TextFormat.WHITE+message;
+        BroadcastMessage("Ally> "+message);
         LastAllyChat.addFirst(message);
         if(LastAllyChat.size() > Settings.getMaxAllyChat()){
             LastAllyChat.removeLast();

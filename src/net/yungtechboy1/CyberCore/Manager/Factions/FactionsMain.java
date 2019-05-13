@@ -255,7 +255,7 @@ public class FactionsMain {
     }
 
     public Integer GetIntTime() {
-        return (int) (Calendar.getInstance().getTime().getTime() / 1000);
+        return plugin.GetIntTime();
     }
 
     //    public ConfigSection getBBN() {

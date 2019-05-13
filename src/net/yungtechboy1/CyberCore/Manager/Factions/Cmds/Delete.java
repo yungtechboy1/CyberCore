@@ -1,8 +1,13 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.form.element.ElementButton;
+import cn.nukkit.form.window.FormWindowModal;
+import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**
@@ -26,9 +31,11 @@ public class Delete extends Commands {
     @Override
     public void RunCommand() {
         if (fac.Leader.equalsIgnoreCase(Sender.getName())) {
-            Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN + "Faction Deleted!");
-            fac.BroadcastMessage(FactionsMain.NAME+TextFormat.YELLOW+"!!~~!!Faction has been Deleted by "+Sender.getName());
-            Main.FFactory.RemoveFaction(fac);
+            CorePlayer p = (CorePlayer)Sender;
+
+            FormWindowModal FWM = new FormWindowModal("CyberFactions | Faction Delete Confirmation", TextFormat.RED+""+TextFormat.BOLD+"WARNING!!!!\n Are you sure you want to delete your faction?","Confirm and Delete", "Cancel");
+            p.showFormWindow(FWM);
+            p.LastSentFormType = FormType.MainForm.Faction_Delete_Confirm;
         } else {
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "You are not the leader!");
         }

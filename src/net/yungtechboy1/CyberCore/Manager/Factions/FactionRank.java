@@ -2,7 +2,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions;
 
 import cn.nukkit.utils.TextFormat;
 
-public enum FactionRank{
+public enum FactionRank {
     Recruit(0),
     Member(1),
     Officer(2),
@@ -10,28 +10,57 @@ public enum FactionRank{
     Leader(4),
     All(-1);
 
+    public int getPower() {
+        return Power;
+    }
+
+    public void setPower(int power) {
+        Power = power;
+    }
+
     private int Power = -1;
 
-    FactionRank(int p){
+    FactionRank(int p) {
         Power = -1;
     }
 
-    public String GetChatPrefix(){
-        switch (Power){
+    public TextFormat GetChatColor() {
+        switch (Power) {
             case 0:
-                return TextFormat.GRAY+ "R";
+                return TextFormat.GRAY;
             case 1:
-                return TextFormat.AQUA+ "M";
+                return TextFormat.AQUA ;
             case 2:
-                return TextFormat.YELLOW+ "G";
+                return TextFormat.YELLOW;
             case 3:
-                return TextFormat.GREEN+ "O";
+                return TextFormat.GREEN;
             case 4:
-                return TextFormat.GOLD+ "L";
+                return TextFormat.GOLD;
             default:
-                return TextFormat.LIGHT_PURPLE+"-";
+                return TextFormat.LIGHT_PURPLE;
         }
-        return
+    }
+
+
+    public boolean HasPerm(FactionRank target){
+        return Power >= target.Power;
+    }
+
+    public String GetChatPrefix() {
+        switch (Power) {
+            case 0:
+                return TextFormat.GRAY + "R";
+            case 1:
+                return TextFormat.AQUA + "M";
+            case 2:
+                return TextFormat.YELLOW + "G";
+            case 3:
+                return TextFormat.GREEN + "O";
+            case 4:
+                return TextFormat.GOLD + "L";
+            default:
+                return TextFormat.LIGHT_PURPLE + "-";
+        }
     }
 
 }

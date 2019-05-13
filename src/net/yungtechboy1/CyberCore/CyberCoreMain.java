@@ -522,6 +522,10 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         return null;
     }
 
+    public Integer GetIntTime() {
+        return (int) (Calendar.getInstance().getTime().getTime() / 1000);
+    }
+
     public Player getPlayer(String p) {
         Player player;
         if ((player = getServer().getPlayer(p)) != null) {

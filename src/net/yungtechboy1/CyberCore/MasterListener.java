@@ -69,6 +69,18 @@ public class MasterListener implements Listener {
         Player p = pr.getPlayer();
         CorePlayer cp = ((CorePlayer) p);
         switch (cp.LastSentFormType) {
+            case Faction_Delete_Confirm:
+                FormResponseModal fi = (FormResponseModal) pr.getResponse();
+//                fi.
+                if(fi.getClickedButtonId() == 0) {
+                    Faction fac = plugin.FM.FFactory.getFaction(cp.Faction);
+
+
+                    cp.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Faction Deleted!");
+                    fac.BroadcastMessage(FactionsMain.NAME + TextFormat.YELLOW + "!!~~!!Faction has been Deleted by " + cp.getName());
+                    plugin.FM.FFactory.RemoveFaction(fac);
+                }
+                break;
             case Faction_Invited:
                 FormResponseSimple frsi = (FormResponseSimple) pr.getResponse();
                 if (cp.FactionInvite != null) {
@@ -96,8 +108,9 @@ public class MasterListener implements Listener {
                     cp.sendMessage("Error! The name '" + pn + "' could not be found on server!");
                     return;
                 } else {
-                    if (null == plugin.FM.FFactory.getPlayerFaction(cpp)) {
+                    if (null != plugin.FM.FFactory.getPlayerFaction(cpp)) {
                         //TODO Allow Setting to ignore Faction messages
+                        //Sounds like a lot of work lol >:(
                         cp.sendMessage(Error_PlayerInFaction.getMsg());
                         return;
                     }

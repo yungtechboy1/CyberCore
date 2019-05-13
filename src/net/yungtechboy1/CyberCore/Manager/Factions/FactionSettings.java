@@ -4,6 +4,25 @@ public class FactionSettings {
     private FactionRank AllowedToViewInbox = FactionRank.Officer;
     private FactionRank AllowedToAcceptAlly = FactionRank.General;
 
+    public FactionRank getAllowedToPromote() {
+        return AllowedToPromote;
+    }
+
+    public void setAllowedToPromote(FactionRank allowedToPromote) {
+        AllowedToPromote = allowedToPromote;
+    }
+
+    public FactionRank getAllowedToDemote() {
+        return AllowedToDemote;
+    }
+
+    public void setAllowedToDemote(FactionRank allowedToDemote) {
+        AllowedToDemote = allowedToDemote;
+    }
+
+    private FactionRank AllowedToPromote = FactionRank.Member;
+    private FactionRank AllowedToDemote = FactionRank.Member;
+
     private int MaxFactionChat = 30;
 
     public int getMaxFactionChat() {
@@ -57,9 +76,20 @@ public class FactionSettings {
     }
 
     private FactionRank AllowedToInvite = FactionRank.Member;
-    private FactionRank DefaultJoinRank = FactionRank.Guest;
+    private FactionRank DefaultJoinRank = FactionRank.Recruit;
+
+    public FactionRank getAllowedToClaim() {
+        return AllowedToClaim;
+    }
+
+    public void setAllowedToClaim(FactionRank allowedToClaim) {
+        AllowedToClaim = allowedToClaim;
+    }
+
+    private FactionRank AllowedToClaim = FactionRank.General;
 
     public FactionSettings() {
 
     }
+
 }

@@ -27,7 +27,7 @@ public class Balance extends Commands {
     public void RunCommand() {
         if (Args.length >= 1) {
             String f = Args[0];
-            FactionFactory cff = CyberCoreMain.getInstance().FM.FFactory;
+            FactionFactory cff = Main.FFactory;
             Faction ff = cff.getFaction(cff.factionPartialName(f));
             if (ff == null) {
                 Sender.sendMessage(FactionsMain.NAME + TextFormat.RED + "Faction not found!");

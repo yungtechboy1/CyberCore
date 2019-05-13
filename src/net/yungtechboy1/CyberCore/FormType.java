@@ -23,7 +23,7 @@ public final class FormType {
         Faction_Admin_Page_SLR,
         Faction_Create_0_Error,
         Faction_Invite_Choose,
-        Faction_Invited, Faction_Chat_Choose,
+        Faction_Invited, Faction_Chat_Choose, Faction_Delete_Confirm,
 
     }
 

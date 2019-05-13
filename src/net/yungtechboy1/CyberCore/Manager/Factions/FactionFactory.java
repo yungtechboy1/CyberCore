@@ -657,6 +657,10 @@ public class FactionFactory {
     }
 
     public Faction getPlayerFaction(Player name) {
+        if(name instanceof CorePlayer){
+            String ff = ((CorePlayer)name).Faction;
+            if(ff != null)return getFaction(ff);
+        }
         Faction f = getPlayerFaction(name.getName().toLowerCase());
         if (name instanceof CorePlayer) {
             if (f != null) {

@@ -5,15 +5,13 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.utils.TextFormat;
-
-import com.sun.org.apache.xpath.internal.Arg;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
+import net.yungtechboy1.CyberCore.Manager.Factions.FactionRank;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import static net.yungtechboy1.CyberCore.Manager.Factions.FactionString.*;
 
@@ -38,10 +36,6 @@ public class Invite extends Commands {
 
     @Override
     public void RunCommand() {
-        if (Args.length == 2) {
-            SendUseage();
-            return;
-        }
         if (fac == null) {
             Sender.sendMessage(Error_NotInFaction.getMsg());
             return;
@@ -51,43 +45,51 @@ public class Invite extends Commands {
             return;
         }
 
-
-        CorePlayer invited = (CorePlayer) Main.getServer().getPlayerExact(Args[1]);
-        if (invited == null) {
-            ArrayList<Player> l = CyberCoreMain.getInstance().getAllPlayerNamesCloseTo(Args[1]);
-            if (l.size() == 0) {
-                Sender.sendMessage(Error_UnableToFindPlayer.getMsg());
+        FactionRank r = fac.getPlayerRank((CorePlayer) Sender);
+        if(r != null){
+            if(!r.HasPerm(fac.getSettings().getAllowedToInvite())){
+                Sender.sendMessage("Error! You dont have permission to Invite players!");
                 return;
-            } else if (l.size() == 1) {
-                invited = (CorePlayer) l.get(0);
-            } else {
-                FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Invite Player", "");
-                int k = 0;
-                FWM.addButton(new ElementButton("Grinch!"));
-                for(Player p: l){
-                    k++;
-                    if(k > 20)break;
-                    FWM.addButton(new ElementButton(p.getName()));
-                }
-
-                CorePlayer cp = (CorePlayer) CyberCoreMain.getInstance().getServer().getPlayerExact(Sender.getName());
-                cp.showFormWindow(FWM);
-                cp.LastSentFormType = FormType.MainForm.Faction_Invite_Choose;
-
             }
         }
 
+        if (Args.length == 2) {
+            CorePlayer invited = (CorePlayer) Main.getServer().getPlayerExact(Args[1]);
+            if (invited == null) {
+                ArrayList<Player> l = CyberCoreMain.getInstance().getAllPlayerNamesCloseTo(Args[1]);
+                if (l.size() == 0) {
+                    Sender.sendMessage(Error_UnableToFindPlayer.getMsg());
+                    return;
+                } else if (l.size() == 1) {
+                    invited = (CorePlayer) l.get(0);
+                } else {
+                    FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Invite Player", "");
+                    int k = 0;
+                    FWM.addButton(new ElementButton("Grinch!"));
+                    for (Player p : l) {
+                        k++;
+                        if (k > 20) break;
+                        FWM.addButton(new ElementButton(p.getName()));
+                    }
 
-        if (invited == null) {
-            Sender.sendMessage(Error_UnableToFindPlayer.getMsg());
-            return;
-        }
-        if (null == Main.FFactory.getPlayerFaction(Sender)) {
-            //TODO Allow Setting to ignore Faction messages
-            Sender.sendMessage(Error_PlayerInFaction.getMsg());
-            return;
-        }
-        //PERMS
+                    CorePlayer cp = (CorePlayer) CyberCoreMain.getInstance().getServer().getPlayerExact(Sender.getName());
+                    cp.showFormWindow(FWM);
+                    cp.LastSentFormType = FormType.MainForm.Faction_Invite_Choose;
+
+                }
+            }
+
+
+            if (invited == null) {
+                Sender.sendMessage(Error_UnableToFindPlayer.getMsg());
+                return;
+            }
+            if (null == Main.FFactory.getPlayerFaction(Sender)) {
+                //TODO Allow Setting to ignore Faction messages
+                Sender.sendMessage(Error_PlayerInFaction.getMsg());
+                return;
+            }
+            //PERMS
         /*Integer perm = fac.GetPerm(4);
         if(perm < fac.GetPlayerPerm(Sender.getName())){
             if(perm == 1)Sender.sendMessage(TextFormat.RED+"Only Members and above may invite!");
@@ -97,16 +99,17 @@ public class Invite extends Commands {
             return;
         }*/
 
-        Integer time = Main.GetIntTime()+ 60 * 5;
-        fac.AddInvite(invited.getName().toLowerCase(), time);
+            Integer time = Main.GetIntTime() + 60 * 5;//5 Mins
+            fac.AddInvite(invited.getName().toLowerCase(), time);
 //        Main.FFactory.InvList.put(invited.getName().toLowerCase(), fac.GetName());
 
-        Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Successfully invited " + invited.getName() + "!");
-        invited.sendMessage(FactionsMain.NAME + TextFormat.YELLOW + "You have been invited to faction.\n" + TextFormat.GREEN + "Type '/f accept' or '/f deny' into chat to accept or deny!");
+            Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Successfully invited " + invited.getName() + "!");
+            invited.sendMessage(FactionsMain.NAME + TextFormat.YELLOW + "You have been invited to faction.\n" + TextFormat.GREEN + "Type '/f accept' or '/f deny' into chat to accept or deny!");
 
-        invited.FactionInvite = fac.GetName();
-        invited.FactionInviteTimeout = time;
+            invited.FactionInvite = fac.GetName();
+            invited.FactionInviteTimeout = time;
 
-        Main.PlayerInvitedToFaction(invited,fac);
+            Main.PlayerInvitedToFaction(invited, fac);
+        }
     }
 }

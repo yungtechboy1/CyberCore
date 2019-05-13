@@ -477,13 +477,12 @@ public class CorePlayer extends Player {
         if (f < max) setOnFire(nr.nextRange(1, 4));
     }
 
-    private int FactionCheck = -10;
-
+    private int FactionCheck = -1;
     @Override
     public boolean onUpdate(int currentTick) {
         //Check for Faction!
         FactionCheck++;
-        if (FactionCheck > 20 * 60 * 5 || FactionCheck < 0) {//5 Min faction Check
+        if (FactionCheck > 20 * 60 * 2.5 || FactionCheck < 0) {//5 Min faction Check
             FactionCheck = 0;
             Faction f = CyberCoreMain.getInstance().FM.FFactory.IsPlayerInFaction(this);
             if (f == null) {
@@ -491,7 +490,18 @@ public class CorePlayer extends Player {
             } else {
                 Faction = f.GetName();
             }
+            //Check to See if Faction Invite Expired
+            if (FactionInvite != null && FactionInviteTimeout > 0) {
+                int t = CyberCoreMain.getInstance().GetIntTime();
+                if (t < FactionInviteTimeout){
+                    Faction fac = CyberCoreMain.getInstance().FM.FFactory.getFaction(FactionInvite);
+                    fac.BroadcastMessage(TextFormat.YELLOW+getName()+" has declined your faction invite");
+                    ClearFactionInvite(true);
+                }
+            }
         }
+
+
 
         //Check to see if Player as medic or Restoration
         PlayerFood pf = getFoodData();
