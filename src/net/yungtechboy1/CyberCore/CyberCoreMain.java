@@ -76,6 +76,7 @@ import static cn.nukkit.item.Item.addCreativeItem;
 public class CyberCoreMain extends PluginBase implements CommandExecutor, Listener {
 
     public static final String NAME = TextFormat.GOLD + "" + TextFormat.BOLD + "§eTERRA§6CORE " + TextFormat.RESET + TextFormat.GOLD + "» " + TextFormat.RESET;
+    public SendHUD SH ;
     private EconManager ECON;
     private static CyberCoreMain instance;
     public BossBarManager BBM;
@@ -298,7 +299,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
 //        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec
-        new SendHUD().start();
+        SH = new SendHUD();
+        SH.start();
 
         //COMMANDS
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ChooseClass(this));

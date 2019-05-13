@@ -61,7 +61,7 @@ public class SendHUD extends Thread implements InterruptibleThread {
         String pnl = p.getDisplayName();
         Faction fac = null;
         if (Main.FM != null) {
-            fac = Main.FM.FFactory.getPlayerFaction(p);
+            fac = Main.FM.FFactory.getFaction(p.Faction);
         }
         String fn = "No Faction";
         Integer flvl = 0;

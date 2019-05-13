@@ -2,6 +2,8 @@ package net.yungtechboy1.CyberCore;
 
 import cn.nukkit.nbt.tag.CompoundTag;
 
+import java.util.HashMap;
+
 /**
  * Created by carlt on 4/12/2019.
  */
@@ -10,6 +12,13 @@ public class CoreSettings {
     private boolean HudClassOff = false;
     private boolean HudPosOff = false;
     private boolean HudFactionOff = false;
+
+    public CoreSettings(HashMap<String, Object> v) {
+        HudOff = (boolean)v.getOrDefault("HUD_OFF",false);
+        HudClassOff = (boolean)v.getOrDefault("HUD_CLASS_OFF",false);
+        HudPosOff = (boolean)v.getOrDefault("HUD_POS_OFF",false);
+        HudFactionOff = (boolean)v.getOrDefault("HUD_FAC_OFF",false);
+    }
 
     public CoreSettings(boolean hudOff, boolean hudClassOff, boolean hudPosOff, boolean hudFactionOff) {
         HudOff = hudOff;

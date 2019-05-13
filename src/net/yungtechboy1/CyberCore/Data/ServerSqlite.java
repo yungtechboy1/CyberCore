@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Data;
 
 import cn.nukkit.Player;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.CoreSettings;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Warp.WarpData;
@@ -43,6 +44,7 @@ public class ServerSqlite extends SQLite {
 
     public void LoadPlayer(Player p) {
         LoadHomes((CorePlayer) p);
+        LoadSettings((CorePlayer) p);
         Faction f = plugin.FM.FFactory.IsPlayerInFaction((CorePlayer) p);
         ((CorePlayer) p).Faction = f.GetName();
     }
@@ -53,6 +55,7 @@ public class ServerSqlite extends SQLite {
 
     public void UnLoadPlayer(Player p) {
         SaveHomes((CorePlayer) p);
+        SaveSettings((CorePlayer)p);
     }
 
     public void UnLoadPlayer(CorePlayer p) {
@@ -78,6 +81,24 @@ public class ServerSqlite extends SQLite {
         }
     }
 
+    private void LoadSettings(CorePlayer p) {
+        try {
+            List<HashMap<String, Object>> data = executeSelect("SELECT * FROM `Settings` WHERE `name` LIKE '" + p.getName().toLowerCase() + "'");
+            if (data == null || data.size() < 1) {
+                CyberCoreMain.getInstance().getLogger().error("Error Loading Settings from Sql!");
+                return;
+            } else {
+                plugin.getLogger().info(p.getDisplayName() + "'s Settings Loaded!");
+            }
+
+            p.settings = new CoreSettings(data.get(0));
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void SaveHomes(CorePlayer p) {
         try {
             executeUpdate("DELETE FROM `Homes` WHERE `owneruuid` == '" + p.getUniqueId() + "'");
@@ -86,6 +107,16 @@ public class ServerSqlite extends SQLite {
             }
             plugin.getLogger().info("Homes saved for " + p.getName());
             p.sendTip("Homes Saved!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void SaveSettings(CorePlayer p) {
+        try {
+            executeUpdate("DELETE FROM `Settings` WHERE `name` LIKE '" + p.getName().toLowerCase() + "'");
+            executeUpdate("INSERT INTO `Settings` VALUES ('" + p.getName().toLowerCase() + "'," + p.settings.isHudOff() + "," + p.settings.isHudClassOff() + "," + p.settings.isHudPosOff() + "," + p.settings.isHudFactionOff() + ")");
+            plugin.getLogger().info("Settings saved for " + p.getName());
         } catch (SQLException e) {
             e.printStackTrace();
         }
