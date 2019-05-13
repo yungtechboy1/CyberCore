@@ -112,7 +112,7 @@ public class FactionFactory {
             stmt.executeUpdate(String.format("DELETE FROM `plots` WHERE `faction` LIKE '%s';", name));
             stmt.executeUpdate(String.format("DELETE FROM `confirm` WHERE `faction` LIKE '%s';", name));
             stmt.executeUpdate(String.format("DELETE FROM `home` WHERE `faction` LIKE '%s';", name));
-            stmt.executeUpdate(String.format("DELETE FROM `settings` WHERE `faction` LIKE '%s';", name));
+            stmt.executeUpdate(String.format("DELETE FROM `Settings` WHERE `faction` LIKE '%s';", name));
             stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `faction` LIKE '%s';", name));
             stmt.close();
         } catch (Exception ex) {
@@ -154,7 +154,7 @@ public class FactionFactory {
                     "            `x` int(250) NOT NULL,  " +
                     "            `z` int(250) NOT NULL  " +
                     "            );";
-            String sql6 = "CREATE TABLE IF NOT EXISTS \"settings\" (" +
+            String sql6 = "CREATE TABLE IF NOT EXISTS \"Settings\" (" +
                     "`faction`varchar(250) NOT NULL UNIQUE," +
                     "`max`int(250) NOT NULL," +
                     "`powerbonus`int(50) NOT NULL," +
@@ -174,7 +174,7 @@ public class FactionFactory {
             stmt2.executeUpdate(sql3);
             stmt2.executeUpdate(sql4);
             stmt2.executeUpdate(sql6);*/
-            //stmt.executeUpdate("DELETE FROM allies; DELETE FROM confirm; DELETE FROM home; DELETE FROM plots; DELETE FROM settings; DELETE FROM master;");
+            //stmt.executeUpdate("DELETE FROM allies; DELETE FROM confirm; DELETE FROM home; DELETE FROM plots; DELETE FROM Settings; DELETE FROM master;");
             Main.plugin.getLogger().info("Going to save: " + List.size());
             stmt.executeUpdate("BEGIN;");
             String yaml = "";
@@ -268,16 +268,16 @@ public class FactionFactory {
                     }
                     //stmt2.executeUpdate(String.format("DELETE FROM `home` WHERE `faction` LIKE '%s';",name));
                     //stmt2.executeUpdate(String.format("INSERT INTO `home` VALUES ('"+name+"',%s,%s,%s) ;",home.getX(),home.getY(),home.getZ()));
-                    System.out.println(String.format("INSERT INTO `settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');"
+                    System.out.println(String.format("INSERT INTO `Settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');"
                             , name, maxplayers, powerbonus, motd, displayName, desc, perms, privacy, power, money, point, xp, lvl, CMID, am, rich));
-                    CyberCoreMain.getInstance().getLogger().error(String.format("INSERT INTO `settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');"
+                    CyberCoreMain.getInstance().getLogger().error(String.format("INSERT INTO `Settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');"
                             , name, maxplayers, powerbonus, motd, displayName, desc, perms, privacy, power, money, point, xp, lvl, CMID, am, rich));
-                    stmt.executeUpdate(String.format("DELETE FROM `settings` WHERE `faction` LIKE '%s';", fac.GetName()));
-                    stmt.executeUpdate(String.format("INSERT INTO `settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');"
+                    stmt.executeUpdate(String.format("DELETE FROM `Settings` WHERE `faction` LIKE '%s';", fac.GetName()));
+                    stmt.executeUpdate(String.format("INSERT INTO `Settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');"
                             , name, maxplayers, powerbonus, motd, displayName, desc, perms, privacy, power, money, point, xp, lvl, CMID, am, rich));
                     ;
-                    //stmt2.executeUpdate(String.format("DELETE FROM `settings` WHERE `faction` LIKE '%s';",name));
-                    //stmt2.executeUpdate(String.format("INSERT INTO `settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s'); ",name,maxplayers,powerbonus,motd,displayName,desc,perms,privacy,power,money));
+                    //stmt2.executeUpdate(String.format("DELETE FROM `Settings` WHERE `faction` LIKE '%s';",name));
+                    //stmt2.executeUpdate(String.format("INSERT INTO `Settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s'); ",name,maxplayers,powerbonus,motd,displayName,desc,perms,privacy,power,money));
                     //Saving Members, Leader, And Officers
                     stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `faction` = '%s';", name));
                     for (String member : fac.GetRecruits()) {
@@ -351,7 +351,7 @@ public class FactionFactory {
 
     public Boolean factionExistsInDB(String name) {
         try {
-            ResultSet r = this.ExecuteQuerySQL(String.format("select count(*) from settings where faction = '%s'", name));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select count(*) from Settings where faction = '%s'", name));
             if (r == null) return false;
             if (r.next()) if (r.getInt(1) > 0) return true;
             r.close();
@@ -363,7 +363,7 @@ public class FactionFactory {
 
     public Object GetFromSettings(String key, String faction) {
         try {
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from settings where faction = '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from Settings where faction = '%s'", faction));
             if (r == null) return null;
             if (r.next()) return r.getObject(key);
             return null;
@@ -374,7 +374,7 @@ public class FactionFactory {
 
     public String GetDisplayName(String faction) {
         try {
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from settings where faction = '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from Settings where faction = '%s'", faction));
             if (r == null) return null;
             if (r.next()) {
                 return r.getString("displayname");
@@ -502,7 +502,7 @@ public class FactionFactory {
         Main.plugin.getLogger().info("GETTINGALL FACS" );
         ArrayList<String> results = new ArrayList<>();
         try {
-            ResultSet r = this.ExecuteQuerySQL("select * from settings");
+            ResultSet r = this.ExecuteQuerySQL("select * from Settings");
             if (r == null) return null;
             while (r.next()) {
                 String ff = r.getString("faction");

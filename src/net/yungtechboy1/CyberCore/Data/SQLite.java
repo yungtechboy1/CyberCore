@@ -31,12 +31,12 @@ public class SQLite {
         System.setProperty("java.io.tmpdir", plugin.getDataFolder() + "/../../");
         this.plugin = plugin;
 //        columns = new HashMap<>();
-//        this.table = plugin.MainConfig.getString(settings + ".table");
+//        this.table = plugin.MainConfig.getString(Settings + ".table");
 //        int valueCount = 0;
 //        String insertValues = "";
-//        for (String columnName: plugin.MainConfig.getSection(settings + ".data").getAllMap().keySet()) {
+//        for (String columnName: plugin.MainConfig.getSection(Settings + ".data").getAllMap().keySet()) {
 //            plugin.log(columnName);
-//            String columntype = plugin.MainConfig.getString(settings + ".data." + columnName + ".type");
+//            String columntype = plugin.MainConfig.getString(Settings + ".data." + columnName + ".type");
 //            createSQL += columnName + " " + columntype + ", ";
 //            insertQuery += columnName + ", ";
 //            saveQuery += columnName + "=" + ":" + columnName + ", ";

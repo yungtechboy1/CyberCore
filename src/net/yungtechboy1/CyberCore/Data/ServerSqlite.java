@@ -6,7 +6,6 @@ import net.yungtechboy1.CyberCore.CoreSettings;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Warp.WarpData;
-import org.apache.logging.log4j.core.Core;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -91,7 +90,7 @@ public class ServerSqlite extends SQLite {
                 plugin.getLogger().info(p.getDisplayName() + "'s Settings Loaded!");
             }
 
-            p.settings = new CoreSettings(data.get(0));
+            p.Settings = new CoreSettings(data.get(0));
 
 
         } catch (SQLException e) {
@@ -115,7 +114,7 @@ public class ServerSqlite extends SQLite {
     private void SaveSettings(CorePlayer p) {
         try {
             executeUpdate("DELETE FROM `Settings` WHERE `name` LIKE '" + p.getName().toLowerCase() + "'");
-            executeUpdate("INSERT INTO `Settings` VALUES ('" + p.getName().toLowerCase() + "'," + p.settings.isHudOff() + "," + p.settings.isHudClassOff() + "," + p.settings.isHudPosOff() + "," + p.settings.isHudFactionOff() + ")");
+            executeUpdate("INSERT INTO `Settings` VALUES ('" + p.getName().toLowerCase() + "'," + p.Settings.isHudOff() + "," + p.Settings.isHudClassOff() + "," + p.Settings.isHudPosOff() + "," + p.Settings.isHudFactionOff() + ")");
             plugin.getLogger().info("Settings saved for " + p.getName());
         } catch (SQLException e) {
             e.printStackTrace();

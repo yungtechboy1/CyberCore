@@ -3,9 +3,13 @@ package net.yungtechboy1.CyberCore.Manager.Factions;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
+import cn.nukkit.form.element.ElementButton;
+import cn.nukkit.form.window.FormWindowModal;
+import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.FactionBaseCMD;
 import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Utils;
@@ -68,7 +72,7 @@ public class FactionsMain {
                     stmt.executeUpdate(String.format("DELETE FROM `plots` WHERE `faction` LIKE '%s';",fn));
                     stmt.executeUpdate(String.format("DELETE FROM `confirm` WHERE `faction` LIKE '%s';",fn));
                     stmt.executeUpdate(String.format("DELETE FROM `home` WHERE `faction` LIKE '%s';",fn));
-                    stmt.executeUpdate(String.format("DELETE FROM `settings` WHERE `faction` LIKE '%s';",fn));
+                    stmt.executeUpdate(String.format("DELETE FROM `Settings` WHERE `faction` LIKE '%s';",fn));
                     stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `faction` LIKE '%s';",fn));
                     stmt.close();
                 } catch (Exception  ex) {
@@ -235,6 +239,23 @@ public class FactionsMain {
 
     public void LoadPlayer(Player player) {
 
+    }
+
+    public void PlayerInvitedToFaction(Player invited, Faction fac) {
+        if( (CorePlayer) invited == null)return;
+        CorePlayer cp = (CorePlayer) invited;
+//        invited.
+        if(!cp.Settings.isAllowFactionRequestPopUps())return;
+        FormWindowModal FWS = new FormWindowModal("CyberFactions | Faction Invite",
+                "Greetings "+invited.getDisplayName()+"!\n The faction "+fac.GetDisplayName()+" would like to recruit you!",
+                "Accept Faction Invite", "Deny Faction Invite");
+        cp.showFormWindow(FWS);
+        cp.LastSentFormType = FormType.MainForm.Faction_Invited;
+
+    }
+
+    public Integer GetIntTime() {
+        return (int) (Calendar.getInstance().getTime().getTime() / 1000);
     }
 
     //    public ConfigSection getBBN() {

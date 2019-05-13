@@ -46,6 +46,9 @@ public class FactionBaseCMD extends Command {
         String[] args = PushOne(strings);
         if (key != null) {
             switch (key.toLowerCase()) {
+                case "accept":
+                    new Accept(commandSender,args,Owner.FM);
+                    break;
                 case "create":
                     new Create(commandSender, args, Owner.FM);
                     break;

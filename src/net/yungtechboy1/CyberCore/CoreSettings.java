@@ -13,14 +13,26 @@ public class CoreSettings {
     private boolean HudPosOff = false;
     private boolean HudFactionOff = false;
 
+    public boolean isAllowFactionRequestPopUps() {
+        return AllowFactionRequestPopUps;
+    }
+
+    public void setAllowFactionRequestPopUps(boolean allowFactionRequestPopUps) {
+        AllowFactionRequestPopUps = allowFactionRequestPopUps;
+    }
+
+    private boolean AllowFactionRequestPopUps = false;
+
     public CoreSettings(HashMap<String, Object> v) {
-        HudOff = (boolean)v.getOrDefault("HUD_OFF",false);
-        HudClassOff = (boolean)v.getOrDefault("HUD_CLASS_OFF",false);
-        HudPosOff = (boolean)v.getOrDefault("HUD_POS_OFF",false);
-        HudFactionOff = (boolean)v.getOrDefault("HUD_FAC_OFF",false);
+        super();
+        HudOff = (boolean) v.getOrDefault("HUD_OFF", false);
+        HudClassOff = (boolean) v.getOrDefault("HUD_CLASS_OFF", false);
+        HudPosOff = (boolean) v.getOrDefault("HUD_POS_OFF", false);
+        HudFactionOff = (boolean) v.getOrDefault("HUD_FAC_OFF", false);
     }
 
     public CoreSettings(boolean hudOff, boolean hudClassOff, boolean hudPosOff, boolean hudFactionOff) {
+        super();
         HudOff = hudOff;
         HudClassOff = hudClassOff;
         HudPosOff = hudPosOff;
@@ -32,9 +44,11 @@ public class CoreSettings {
         HudClassOff = false;
         HudPosOff = false;
         HudFactionOff = false;
+        AllowFactionRequestPopUps = true;
     }
 
     public CoreSettings(CompoundTag ct) {
+        super();
         if (ct.contains("HudOff")) HudOff = ct.getBoolean("HudOff");
         if (ct.contains("HudClassOff")) HudClassOff = ct.getBoolean("HudClassOff");
         if (ct.contains("HudPosOff")) HudPosOff = ct.getBoolean("HudPosOff");

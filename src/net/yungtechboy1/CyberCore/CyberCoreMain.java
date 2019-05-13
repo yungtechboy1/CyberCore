@@ -93,7 +93,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public Config cooldowns;
     //HUD Off
     //TODO add PlayerSetting Object to allow players to save
-    //TODO add /settings commands that adds GUI
+    //TODO add /Settings commands that adds GUI
     public Config RankChatColor;
     public Config RankConfig;
     public Config MainConfig;

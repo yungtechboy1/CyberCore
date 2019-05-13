@@ -69,6 +69,25 @@ public class MasterListener implements Listener {
         Player p = pr.getPlayer();
         CorePlayer cp = ((CorePlayer) p);
         switch (cp.LastSentFormType) {
+            case Faction_Invited:
+                FormResponseSimple frsi = (FormResponseSimple) pr.getResponse();
+                if (cp.FactionInvite != null) {
+                    Faction f = plugin.FM.FFactory.getFaction(cp.FactionInvite);
+                    if (frsi.getClickedButtonId() == 0) {
+                        //Accept
+                        if (f.AcceptInvite(cp.getName()))
+                            cp.sendMessage("Welcome to " + f.GetDisplayName());
+                        else
+                            cp.sendMessage("Error! Invite timed out!");
+                    } else if(frsi.getClickedButtonId() == 1) {
+                        //Ignore / deny
+                        cp.ClearFactionInvite(true);
+                    }else{
+                        CyberCoreMain.getInstance().getLogger().error("UNKNOWN CLICKED BUTTON");
+                    }
+                }
+                cp.ClearFactionInvite();
+                break;
             case Faction_Invite_Choose:
                 FormResponseSimple fic = (FormResponseSimple) pr.getResponse();
                 String pn = fic.getClickedButton().getText();
@@ -84,7 +103,7 @@ public class MasterListener implements Listener {
                     }
                     Integer time = (int) (Calendar.getInstance().getTime().getTime() / 1000) + 60 * 5;
                     Faction fac = plugin.FM.FFactory.getFaction(cp.Faction);
-                    if(fac == null){
+                    if (fac == null) {
                         cp.sendMessage(Error_SA224.getMsg());
                         return;
                     }

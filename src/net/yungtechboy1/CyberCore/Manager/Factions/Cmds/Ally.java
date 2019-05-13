@@ -66,8 +66,9 @@ public class Ally extends Commands {
         }
 
         target.BroadcastMessage(TextFormat.AQUA+"[ArchFactions] "+fac.GetDisplayName()+" wants to be Ally's with you!");
-        target.BroadcastMessage(TextFormat.AQUA+"[ArchFactions] Use `/f ally accept` or `/f ally deny` to respond");
-        Main.FFactory.allyrequest.put(target.GetName(),fac.GetName());
+        target.BroadcastMessage(TextFormat.AQUA+"[ArchFactions] Respond to the request using `/f inbox`");
+//        target.AddAllyRequest(fac);
+        target.AddAllyRequest(fac,Main.GetIntTime() + 60*60*3);//3 Day Time out
         Sender.sendMessage(TextFormat.AQUA+"[ArchFactions] Ally request sent to "+target.GetDisplayName());
     }
 }

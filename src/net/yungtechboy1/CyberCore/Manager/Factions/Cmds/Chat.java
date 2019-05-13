@@ -1,9 +1,14 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
+import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.form.element.ElementButton;
+import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FactionSettings;
+import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**
@@ -23,6 +28,9 @@ public class Chat extends Commands {
         }
     }
 
+
+    ///f chat - Brings up Chat window
+
     @Override
     public void RunCommand() {
         CorePlayer p = (CorePlayer) Sender;
@@ -30,21 +38,14 @@ public class Chat extends Commands {
 
         String chat = "";
         int a = 0;
-        if (Args.length == 2) {
-            String name = Sender.getName().toLowerCase();
-            if (Args[1].equalsIgnoreCase("fac") || Args[1].equalsIgnoreCase("on")) {
-                p.fsettings.setChatSelection(FactionSettings.ChatSetting.Fac);
-                Sender.sendMessage(TextFormat.GREEN + "Faction Chat Activated!");
-                return;
-            } else if (Args[1].equalsIgnoreCase("ally")) {
+        if (Args.length == 1) {
+            FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Faction/Ally Chat Window", "");
+            int k = 0;
+            FWM.addButton(new ElementButton("Open Faction Chat Window"));
+            FWM.addButton(new ElementButton("Open Ally Chat Window"));
 
-                p.fsettings.setChatSelection(FactionSettings.ChatSetting.All);
-                Sender.sendMessage(TextFormat.GREEN + "Ally Chat Activated!");
-            } else if (Args[1].equalsIgnoreCase("off")) {
-                p.fsettings.setChatSelection(FactionSettings.ChatSetting.All);
-                Sender.sendMessage(TextFormat.RED + "Faction / Ally Chat Disabled!");
-                return;
-            }
+            p.showFormWindow(FWM);
+            p.LastSentFormType = FormType.MainForm.Faction_Chat_Choose;
         }
         for (String c : Args) {
             a++;
@@ -53,15 +54,15 @@ public class Chat extends Commands {
         }
         String n = Sender.getName();
         if (fac.Leader.equalsIgnoreCase(Sender.getName())) {
-            fac.BroadcastMessage(TextFormat.YELLOW + "~***[" + n + "]***~: " + chat);
+            fac.AddFactionChatMessage(TextFormat.YELLOW + "[" + n + "] " + chat);
         } else if (fac.IsGeneral(Sender.getName())) {
-            fac.BroadcastMessage(TextFormat.YELLOW + "~**[" + n + "]**~: " + chat);
+            fac.AddFactionChatMessage(TextFormat.YELLOW + "~**[" + n + "]**~: " + chat);
         } else if (fac.IsOfficer(Sender.getName())) {
-            fac.BroadcastMessage(TextFormat.YELLOW + "~*[" + n + "]*~: " + chat);
+            fac.AddFactionChatMessage(TextFormat.YELLOW + "~*[" + n + "]*~: " + chat);
         } else if (fac.IsMember(Sender.getName())) {
-            fac.BroadcastMessage(TextFormat.YELLOW + "~[" + n + "]~: " + chat);
+            fac.AddFactionChatMessage(TextFormat.YELLOW + "~[" + n + "]~: " + chat);
         } else {
-            fac.BroadcastMessage(TextFormat.YELLOW + "-[" + n + "]-: " + chat);
+            fac.AddFactionChatMessage(TextFormat.YELLOW + "-[" + n + "]-: " + chat);
         }
     }
 }

@@ -52,14 +52,14 @@ public class Invite extends Commands {
         }
 
 
-        Player invited = Main.getServer().getPlayerExact(Args[1]);
+        CorePlayer invited = (CorePlayer) Main.getServer().getPlayerExact(Args[1]);
         if (invited == null) {
             ArrayList<Player> l = CyberCoreMain.getInstance().getAllPlayerNamesCloseTo(Args[1]);
             if (l.size() == 0) {
                 Sender.sendMessage(Error_UnableToFindPlayer.getMsg());
                 return;
             } else if (l.size() == 1) {
-                invited = l.get(0);
+                invited = (CorePlayer) l.get(0);
             } else {
                 FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Invite Player", "");
                 int k = 0;
@@ -97,11 +97,16 @@ public class Invite extends Commands {
             return;
         }*/
 
-        Integer time = (int) (Calendar.getInstance().getTime().getTime() / 1000) + 60 * 5;
+        Integer time = Main.GetIntTime()+ 60 * 5;
         fac.AddInvite(invited.getName().toLowerCase(), time);
-        Main.FFactory.InvList.put(invited.getName().toLowerCase(), fac.GetName());
+//        Main.FFactory.InvList.put(invited.getName().toLowerCase(), fac.GetName());
 
         Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Successfully invited " + invited.getName() + "!");
         invited.sendMessage(FactionsMain.NAME + TextFormat.YELLOW + "You have been invited to faction.\n" + TextFormat.GREEN + "Type '/f accept' or '/f deny' into chat to accept or deny!");
+
+        invited.FactionInvite = fac.GetName();
+        invited.FactionInviteTimeout = time;
+
+        Main.PlayerInvitedToFaction(invited,fac);
     }
 }

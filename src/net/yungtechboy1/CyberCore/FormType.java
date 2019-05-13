@@ -21,7 +21,9 @@ public final class FormType {
         Faction_Create_0,
         Faction_Admin_Page_1,
         Faction_Admin_Page_SLR,
-        Faction_Create_0_Error, Faction_Invite_Choose,
+        Faction_Create_0_Error,
+        Faction_Invite_Choose,
+        Faction_Invited, Faction_Chat_Choose,
 
     }
 

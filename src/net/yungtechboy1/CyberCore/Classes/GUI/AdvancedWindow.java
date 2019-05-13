@@ -152,7 +152,7 @@ public class AdvancedWindow extends FormWindow {
 
     /**
      * Set Elements from Response
-     * Used on ServerSettings Form Response. After players set settings, we need to sync these settings to the server.
+     * Used on ServerSettings Form Response. After players set Settings, we need to sync these Settings to the server.
      */
     public void setElementsFromResponse() {
         if (this.response != null) {

@@ -13,7 +13,6 @@ import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
-import cn.nukkit.level.Location;
 import cn.nukkit.level.Position;
 import cn.nukkit.level.Sound;
 import cn.nukkit.math.*;
@@ -23,7 +22,6 @@ import cn.nukkit.potion.Effect;
 import cn.nukkit.utils.TextFormat;
 import co.aikar.timings.Timing;
 import co.aikar.timings.Timings;
-import javafx.geometry.Pos;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
@@ -34,8 +32,6 @@ import net.yungtechboy1.CyberCore.Manager.Econ.PlayerEconData;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Rank.Rank;
 import net.yungtechboy1.CyberCore.Rank.RankList;
-import net.yungtechboy1.CyberCore.Tasks.TPToHome;
-import net.yungtechboy1.CyberCore.Tasks.TeleportEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,8 +45,9 @@ public class CorePlayer extends Player {
     public boolean MuteMessage = false;
     public String LastMessageSentTo = null;
     public String Faction = null;
+    public String FactionInvite = null;
     public FactionSettings fsettings = new FactionSettings();
-    public CoreSettings settings = new CoreSettings();
+    public CoreSettings Settings = new CoreSettings();
     /**
      * @@deprecated
      */
@@ -65,6 +62,7 @@ public class CorePlayer extends Player {
     public ArrayList<HomeData> HD = new ArrayList<>();
     public int MaxHomes = 5;
     public int TPRTimeout;
+    public Integer FactionInviteTimeout = -1;
     long uct = 0;
     boolean uw = false;
     private FormWindow nw;
@@ -479,18 +477,18 @@ public class CorePlayer extends Player {
         if (f < max) setOnFire(nr.nextRange(1, 4));
     }
 
-    public int FactionCheck = -10;
+    private int FactionCheck = -10;
 
     @Override
     public boolean onUpdate(int currentTick) {
         //Check for Faction!
         FactionCheck++;
-        if(FactionCheck > 20*60*5 || FactionCheck < 0){//5 Min faction Check
+        if (FactionCheck > 20 * 60 * 5 || FactionCheck < 0) {//5 Min faction Check
             FactionCheck = 0;
             Faction f = CyberCoreMain.getInstance().FM.FFactory.IsPlayerInFaction(this);
-            if(f == null) {
+            if (f == null) {
                 Faction = null;
-            }else{
+            } else {
                 Faction = f.GetName();
             }
         }
@@ -499,9 +497,9 @@ public class CorePlayer extends Player {
         PlayerFood pf = getFoodData();
         if (TPR != null && TPRTimeout != 0 && TPRTimeout < currentTick && !isInTeleportingProcess) {
             TPRTimeout = 0;
-            CorePlayer cp  = CyberCoreMain.getInstance().getCorePlayer(TPR);
-            if(cp != null)cp.sendPopup(TextFormat.YELLOW+"Teleport request expired");
-            sendPopup(TextFormat.YELLOW+"Teleport request expired");
+            CorePlayer cp = CyberCoreMain.getInstance().getCorePlayer(TPR);
+            if (cp != null) cp.sendPopup(TextFormat.YELLOW + "Teleport request expired");
+            sendPopup(TextFormat.YELLOW + "Teleport request expired");
             TPR = null;
         }
 
@@ -699,6 +697,23 @@ public class CorePlayer extends Player {
         TeleportTick = getServer().getTick() + 20 * delay;
         TargetTeleporting = null;
         TargetTeleportingLoc = pos;
+    }
+
+    public void ClearFactionInvite() {
+        ClearFactionInvite(false);
+    }
+
+    public void ClearFactionInvite(boolean fromfac) {
+        if (fromfac) {
+            Faction f = CyberCoreMain.getInstance().FM.FFactory.getFaction(FactionInvite);
+            if (f != null) {
+                f.DelInvite(getName().toLowerCase());
+            } else {
+                getServer().getLogger().error("ERROR! Faction from CorePlayer invite not found! E3333");
+            }
+        }
+        FactionInvite = null;
+        FactionInviteTimeout = -1;
     }
 
 

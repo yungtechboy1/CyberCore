@@ -52,7 +52,7 @@ public class SendHUD extends Thread implements InterruptibleThread {
     }
 
     private void FormatHUD(CorePlayer p) {
-        if (p == null || p.settings.isHudOff()) return;
+        if (p == null || p.Settings.isHudOff()) return;
         CyberCoreMain Main = CyberCoreMain.getInstance();
 
         int px = p.getFloorX();
@@ -75,11 +75,11 @@ public class SendHUD extends Thread implements InterruptibleThread {
         }
 
         String f = "";
-        if (!p.settings.isHudPosOff())
+        if (!p.Settings.isHudPosOff())
             f += TextFormat.GRAY + " ----------- " + TextFormat.GREEN + "X: " + px + " Y: " + py + " Z:" + pz + TextFormat.GRAY + " ----------- " + TextFormat.RESET + "\n";
-        if (!p.settings.isHudFactionOff())
+        if (!p.Settings.isHudFactionOff())
             f += TextFormat.GRAY + " -- " + TextFormat.GRAY + "Faction : " + TextFormat.AQUA + fn + TextFormat.GRAY + " | " + TextFormat.GREEN + fxp + TextFormat.AQUA + " / " + TextFormat.GOLD + fxpm + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + flvl + TextFormat.GRAY + " -- " + TextFormat.RESET + "\n";
-        if (!p.settings.isHudClassOff()) {
+        if (!p.Settings.isHudClassOff()) {
 //            TODO
 //              String pclass = "NONE";
 //            BaseClass bc = getOwner().ClassFactory.GetClass(p);
