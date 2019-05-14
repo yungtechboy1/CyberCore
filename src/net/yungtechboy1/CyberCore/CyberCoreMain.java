@@ -76,14 +76,13 @@ import static cn.nukkit.item.Item.addCreativeItem;
 public class CyberCoreMain extends PluginBase implements CommandExecutor, Listener {
 
     public static final String NAME = TextFormat.GOLD + "" + TextFormat.BOLD + "§eTERRA§6CORE " + TextFormat.RESET + TextFormat.GOLD + "» " + TextFormat.RESET;
-    public SendHUD SH ;
-    private EconManager ECON;
-    private static CyberCoreMain instance;
-    public BossBarManager BBM;
     //CyberChat
     public static Connection Connect = null;
     public static Connection Connect2 = null;
     public static String Prefix = TextFormat.AQUA + "[TerraTP]";
+    private static CyberCoreMain instance;
+    public SendHUD SH;
+    public BossBarManager BBM;
     public Config job;
     public Config Homes;
     public Config ban;
@@ -128,25 +127,26 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     //public CyberTech.CyberChat.Main CC;
     public Map<String, String> tpr = new HashMap<>();
     public ArrayList<Ban> bans = new ArrayList<>();
-    Vector3 p1;
-    Vector3 p2;
-
     public SQLManager SQLSaveManager;
-
     /**
      * DATA: UUID, GAMERTAG, CREATED(TIMESTAMP), LAST_LOGIN(TIMESTAMP), RANK(INT), LAST_IP
      */
     public CoreSQL CoreSQL = null;
-
     /**
      * DATA: ECON, K/D,
      */
 //    public net.yungtechboy1.CyberCore.Data.UserSQL UserSQL;
     public net.yungtechboy1.CyberCore.Manager.Warp.WarpManager WarpManager;
     public ServerSqlite ServerSQL;
+    Vector3 p1;
+    Vector3 p2;
+    private EconManager ECON;
 
+    public static CyberCoreMain getInstance() {
+        return CyberCoreMain.instance;
+    }
 
-    public void ReloadBlockList(int id, Class c){
+    public void ReloadBlockList(int id, Class c) {
         if (c != null) {
             Block block;
             try {
@@ -191,16 +191,16 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
             }
         }
 
-        if(Block.fullList[id << 4] == null){
+        if (Block.fullList[id << 4] == null) {
             System.out.println("----------------------------");
             System.out.println("IS NULLL");
             System.out.println("----------------------------");
-        }else{
+        } else {
             System.out.println("----------------------------");
-            System.out.println("IS "+Block.fullList[id << 4]);
+            System.out.println("IS " + Block.fullList[id << 4]);
             System.out.println("----------------------------");
-            System.out.println("IS "+Block.fullList[(id << 4) | 5]);
-            System.out.println("IS "+Block.fullList[(id << 4) | 5].getDamage());
+            System.out.println("IS " + Block.fullList[(id << 4) | 5]);
+            System.out.println("IS " + Block.fullList[(id << 4) | 5].getDamage());
             System.out.println("----------------------------");
 
         }
@@ -218,18 +218,17 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        CustomGlobalBlockPalette.getOrCreateRuntimeId(0,0);
 //        getServer().getNetwork().registerPacket(ProtocolInfo.START_GAME_PACKET, CustomStartGamePacket.class);
 
-        Block.list[Block.ENCHANTING_TABLE]  = BlockEnchantingTable.class;
+        Block.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
 //        Item.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         addCreativeItem(Item.get(Block.ENCHANT_TABLE, 5, 1).setCustomName("TTTTTTTTTTTTTT"));
-        ReloadBlockList(Block.ENCHANTING_TABLE,BlockEnchantingTable.class);
+        ReloadBlockList(Block.ENCHANTING_TABLE, BlockEnchantingTable.class);
 
         Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
-        ReloadBlockList(Block.MONSTER_SPAWNER,SpawnerWithLevelBlock.class);
+        ReloadBlockList(Block.MONSTER_SPAWNER, SpawnerWithLevelBlock.class);
         Item.list[Item.BOOK] = CItemBook.class;
         Item.list[Item.ENCHANT_BOOK] = CItemBookEnchanted.class;
 
         WarpManager = new WarpManager(this);
-
 
 
         MainConfig = new Config(new File(getDataFolder(), "config.yml"));
@@ -237,7 +236,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         SQLSaveManager = new SQLManager(this);
 
 //        CoreSQL = new CoreSQL(this,"Core");
-        ServerSQL = new ServerSqlite(this,"server");
+        ServerSQL = new ServerSqlite(this);
         ServerSQL.LoadAllWarps();
 //        UserSQL = new UserSQL(this, "server-data");
 
@@ -249,7 +248,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         //Threaded ONLY RUN FOR TESTING
         //TESTING
         FTM = new FloatingTextFactory(this);
-        FloatingTextFactory.AddFloatingText(new FloatingTextContainer(FTM, getServer().getLevelByName("world").getSafeSpawn().add(0,5,0), TextFormat.GREEN+"This is Spawn!"));
+        FloatingTextFactory.AddFloatingText(new FloatingTextContainer(FTM, getServer().getLevelByName("world").getSafeSpawn().add(0, 5, 0), TextFormat.GREEN + "This is Spawn!"));
 
 
         //Mob Plugin
@@ -352,11 +351,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new AuctionHouseCmd(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new SellHand(this));
-       }
+    }
 
     public void onLoad() {
 
-        Entity.registerEntity(EntityPig.NETWORK_ID+"",Pig.class);
+        Entity.registerEntity(EntityPig.NETWORK_ID + "", Pig.class);
 
         BlockEntity.registerBlockEntity("MonsterSpawner", SpawnerWithLevelBlockEntity.class);
 
@@ -370,10 +369,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         //BossBar Manager
         //GOOD - Test Refine
         BBM = new BossBarManager(this);
-    }
-
-    public static CyberCoreMain getInstance() {
-        return CyberCoreMain.instance;
     }
 
 
@@ -430,16 +425,16 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         int delta = 2147483647;
         Iterator var4 = getServer().getOnlinePlayers().values().iterator();
 
-        while(var4.hasNext()) {
-            Player player = (Player)var4.next();
-            if(player.getName().toLowerCase().startsWith(name) || player.getName().toLowerCase().contains(name)) {
+        while (var4.hasNext()) {
+            Player player = (Player) var4.next();
+            if (player.getName().toLowerCase().startsWith(name) || player.getName().toLowerCase().contains(name)) {
                 int curDelta = player.getName().length() - name.length();
-                if(curDelta < delta) {
+                if (curDelta < delta) {
                     found.add(player);
                     delta = curDelta;
                 }
 
-                if(curDelta == 0) {
+                if (curDelta == 0) {
                     found.clear();
                     found.add(player);
                     return found;
@@ -660,8 +655,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     @Override
     public boolean onCommand(CommandSender s, Command cmd, String label, String[] args) {
         String cmdd = cmd.getName().toLowerCase();
-        if(FM != null && FM.FC != null) {
-            if(FM.FC.onCommand(FM,s,cmd,label,args)){
+        if (FM != null && FM.FC != null) {
+            if (FM.FC.onCommand(FM, s, cmd, label, args)) {
                 return true;
             }
         }
@@ -824,6 +819,33 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         //TODO Implement \/
 //        cp.LastSentFormType = CorePlayer.FormType.Class_0;
-        if(me.getFrom().distance(me.getTo()) > .1 )FloatingTextFactory.AddFloatingText(new PopupFT(FTM, me.getPlayer().add(0, 1.5, 0), TextFormat.AQUA + me.getPlayer().getName() + " was Here!"));
+        if (me.getFrom().distance(me.getTo()) > .1)
+            FloatingTextFactory.AddFloatingText(new PopupFT(FTM, me.getPlayer().add(0, 1.5, 0), TextFormat.AQUA + me.getPlayer().getName() + " was Here!"));
+    }
+
+    public ArrayList<Faction> getAllFactionNamesCloseTo(String arg) {
+        ArrayList<Faction> found = new ArrayList<>();
+        arg = arg.toLowerCase();
+        int delta = 2147483647;
+        Iterator var4 = FM.FFactory.List.values().iterator();
+
+        while (var4.hasNext()) {
+            Faction player = (Faction) var4.next();
+            if (player.GetName().toLowerCase().startsWith(arg) || player.GetName().toLowerCase().contains(arg)) {
+                int curDelta = player.GetName().length() - arg.length();
+                if (curDelta < delta) {
+                    found.add(player);
+                    delta = curDelta;
+                }
+
+                if (curDelta == 0) {
+                    found.clear();
+                    found.add(player);
+                    return found;
+                }
+            }
+        }
+
+        return found;
     }
 }

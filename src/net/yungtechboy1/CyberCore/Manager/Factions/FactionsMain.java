@@ -72,7 +72,7 @@ public class FactionsMain {
                     stmt.executeUpdate(String.format("DELETE FROM `plots` WHERE `faction` LIKE '%s';",fn));
                     stmt.executeUpdate(String.format("DELETE FROM `confirm` WHERE `faction` LIKE '%s';",fn));
                     stmt.executeUpdate(String.format("DELETE FROM `home` WHERE `faction` LIKE '%s';",fn));
-                    stmt.executeUpdate(String.format("DELETE FROM `Settings` WHERE `faction` LIKE '%s';",fn));
+                    stmt.executeUpdate(String.format("DELETE FROM `settings` WHERE `faction` LIKE '%s';",fn));
                     stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `faction` LIKE '%s';",fn));
                     stmt.close();
                 } catch (Exception  ex) {

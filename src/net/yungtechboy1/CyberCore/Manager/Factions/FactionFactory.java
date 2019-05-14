@@ -112,7 +112,7 @@ public class FactionFactory {
             stmt.executeUpdate(String.format("DELETE FROM `plots` WHERE `faction` LIKE '%s';", name));
             stmt.executeUpdate(String.format("DELETE FROM `confirm` WHERE `faction` LIKE '%s';", name));
             stmt.executeUpdate(String.format("DELETE FROM `home` WHERE `faction` LIKE '%s';", name));
-            stmt.executeUpdate(String.format("DELETE FROM `Settings` WHERE `faction` LIKE '%s';", name));
+            stmt.executeUpdate(String.format("DELETE FROM `settings` WHERE `faction` LIKE '%s';", name));
             stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `faction` LIKE '%s';", name));
             stmt.close();
         } catch (Exception ex) {
@@ -268,16 +268,16 @@ public class FactionFactory {
                     }
                     //stmt2.executeUpdate(String.format("DELETE FROM `home` WHERE `faction` LIKE '%s';",name));
                     //stmt2.executeUpdate(String.format("INSERT INTO `home` VALUES ('"+name+"',%s,%s,%s) ;",home.getX(),home.getY(),home.getZ()));
-                    System.out.println(String.format("INSERT INTO `Settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');"
+                    System.out.println(String.format("INSERT INTO `settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');"
                             , name, maxplayers, powerbonus, motd, displayName, desc, perms, privacy, power, money, point, xp, lvl, CMID, am, rich));
-                    CyberCoreMain.getInstance().getLogger().error(String.format("INSERT INTO `Settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');"
+                    CyberCoreMain.getInstance().getLogger().error(String.format("INSERT INTO `settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');"
                             , name, maxplayers, powerbonus, motd, displayName, desc, perms, privacy, power, money, point, xp, lvl, CMID, am, rich));
-                    stmt.executeUpdate(String.format("DELETE FROM `Settings` WHERE `faction` LIKE '%s';", fac.GetName()));
-                    stmt.executeUpdate(String.format("INSERT INTO `Settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');"
+                    stmt.executeUpdate(String.format("DELETE FROM `settings` WHERE `faction` LIKE '%s';", fac.GetName()));
+                    stmt.executeUpdate(String.format("INSERT INTO `settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s');"
                             , name, maxplayers, powerbonus, motd, displayName, desc, perms, privacy, power, money, point, xp, lvl, CMID, am, rich));
                     ;
-                    //stmt2.executeUpdate(String.format("DELETE FROM `Settings` WHERE `faction` LIKE '%s';",name));
-                    //stmt2.executeUpdate(String.format("INSERT INTO `Settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s'); ",name,maxplayers,powerbonus,motd,displayName,desc,perms,privacy,power,money));
+                    //stmt2.executeUpdate(String.format("DELETE FROM `settings` WHERE `faction` LIKE '%s';",name));
+                    //stmt2.executeUpdate(String.format("INSERT INTO `settings` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s'); ",name,maxplayers,powerbonus,motd,displayName,desc,perms,privacy,power,money));
                     //Saving Members, Leader, And Officers
                     stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `faction` = '%s';", name));
                     for (String member : fac.GetRecruits()) {
@@ -351,7 +351,7 @@ public class FactionFactory {
 
     public Boolean factionExistsInDB(String name) {
         try {
-            ResultSet r = this.ExecuteQuerySQL(String.format("select count(*) from Settings where faction = '%s'", name));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select count(*) from `settings` where `faction` LIKE '%s'", name));
             if (r == null) return false;
             if (r.next()) if (r.getInt(1) > 0) return true;
             r.close();
@@ -363,7 +363,7 @@ public class FactionFactory {
 
     public Object GetFromSettings(String key, String faction) {
         try {
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from Settings where faction = '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `settings` where faction = '%s'", faction));
             if (r == null) return null;
             if (r.next()) return r.getObject(key);
             return null;
@@ -374,7 +374,7 @@ public class FactionFactory {
 
     public String GetDisplayName(String faction) {
         try {
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from Settings where faction = '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `settings` where faction = '%s'", faction));
             if (r == null) return null;
             if (r.next()) {
                 return r.getString("displayname");
@@ -387,7 +387,7 @@ public class FactionFactory {
 
     public String GetLeader(String faction) {
         try {
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from master where faction = '%s' and rank LIKE 'leader'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `master` where `faction` = '%s' and rank LIKE 'leader'", faction));
             if (r == null) return null;
             if (r.next()) {
                 return r.getString("player");
@@ -401,7 +401,7 @@ public class FactionFactory {
     public ArrayList<String> GetRecruits(String faction) {
         try {
             ArrayList<String> result = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from master where faction LIKE '%s' AND rank LIKE '%s'", faction, "recruit"));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `master` where `faction` LIKE '%s' AND `rank` LIKE '%s'", faction, "recruit"));
             if (r == null) return null;
             while (r.next()) {
                 result.add(r.getString("player").toLowerCase());
@@ -416,7 +416,7 @@ public class FactionFactory {
     public ArrayList<String> GetMemebrs(String faction) {
         try {
             ArrayList<String> result = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from master where faction LIKE '%s' AND rank LIKE '%s'", faction, "Member"));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `master` where `faction` LIKE '%s' AND `rank` LIKE '%s'", faction, "Member"));
             if (r == null) return null;
             while (r.next()) {
                 result.add(r.getString("player").toLowerCase());
@@ -431,7 +431,7 @@ public class FactionFactory {
     public ArrayList<String> GetOfficers(String faction) {
         try {
             ArrayList<String> result = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from master where faction LIKE '%s' AND rank LIKE '%s'", faction, "Officer"));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `master` where `faction` LIKE '%s' AND `rank` LIKE '%s'", faction, "Officer"));
             if (r == null) return null;
             while (r.next()) {
                 result.add(r.getString("player").toLowerCase());
@@ -446,7 +446,7 @@ public class FactionFactory {
     public ArrayList<String> GetGenerals(String faction) {
         try {
             ArrayList<String> result = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from master where faction LIKE '%s' AND rank LIKE '%s'", faction, "General"));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `master` where `faction` LIKE '%s' AND `rank` LIKE '%s'", faction, "General"));
             if (r == null) return null;
             while (r.next()) {
                 result.add(r.getString("player").toLowerCase());
@@ -461,7 +461,7 @@ public class FactionFactory {
     public ArrayList<String> GetPlots(String faction) {
         try {
             ArrayList<String> results = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from plots where faction LIKE '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `plots` where `faction` LIKE '%s'", faction));
             if (r == null) return null;
             while (r.next()) {
                 results.add(r.getInt("x") + "|" + r.getInt("z"));
@@ -482,7 +482,7 @@ public class FactionFactory {
         try {
             ConfigSection results = new ConfigSection();
 
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from war where attackingfaction LIKE '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `war` where `attackingfaction` LIKE '%s'", faction));
             if (r == null) return null;
             while (r.next()) {
                 War.put(r.getString("attackingfaction"), r.getString("defendingfaction"));
@@ -502,7 +502,7 @@ public class FactionFactory {
         Main.plugin.getLogger().info("GETTINGALL FACS" );
         ArrayList<String> results = new ArrayList<>();
         try {
-            ResultSet r = this.ExecuteQuerySQL("select * from Settings");
+            ResultSet r = this.ExecuteQuerySQL("select * from `settings`");
             if (r == null) return null;
             while (r.next()) {
                 String ff = r.getString("faction");
@@ -522,7 +522,7 @@ public class FactionFactory {
     public ArrayList<String> GetAllies(String faction) {
         try {
             ArrayList<String> results = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from allies where factiona LIKE '%s' OR factionb LIKE '%s'", faction, faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `allies` where `factiona` LIKE '%s' OR `factionb` LIKE '%s'", faction, faction));
             if (r == null) return null;
             while (r.next()) {
                 if (r.getString("factiona").equalsIgnoreCase(faction)) results.add(r.getString("factionb"));
@@ -537,7 +537,7 @@ public class FactionFactory {
     public ArrayList<String> GetEnemies(String faction) {
         try {
             ArrayList<String> results = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from enemies where factiona LIKE '%s' OR factionb LIKE '%s'", faction, faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `enemies` where `factiona` LIKE '%s' OR `factionb` LIKE '%s'", faction, faction));
             if (r == null) return null;
             while (r.next()) {
                 if (r.getString("factiona").equalsIgnoreCase(faction)) results.add(r.getString("factionb"));
@@ -551,7 +551,7 @@ public class FactionFactory {
 
     public Vector3 GetHome(String faction) {
         try {
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from home where faction LIKE '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `home` where `faction` LIKE '%s'", faction));
             if (r == null) return null;
             if (r.next()) return new Vector3(r.getInt("x"), r.getInt("y"), r.getInt("z"));
         } catch (Exception e) {
@@ -563,7 +563,7 @@ public class FactionFactory {
     public Map<String, Integer> GetInvites(String faction) {
         try {
             Map<String, Integer> result = new HashMap<>();
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from confirm where faction LIKE '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `confirm` where `faction` LIKE '%s'", faction));
             if (r == null) return null;
             while (r.next()) {
                 result.put(r.getString("player").toLowerCase(), r.getInt("timestamp"));
@@ -644,7 +644,7 @@ public class FactionFactory {
 
     public String factionPartialName(String name) {
         try {
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from master where faction= '%s'", name + "%"));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `master` where `faction`= '%s'", name + "%"));
             if (r == null) return null;
             if (r.next()) {
                 return r.getString("faction");
@@ -679,6 +679,7 @@ public class FactionFactory {
 
     public Faction IsPlayerInFaction(CorePlayer p){
         String f = GetFactionFromMember(p.getName());
+        System.out.println("FACCCCC >>>>>>> "+f);
         if(f == null && FacList.containsKey(p.getName().toLowerCase()))f = FacList.get(p.getName().toLowerCase());
         System.out.println("FACCCCC >>>>>>> "+f);
         if(f == null || f.length() == 0) return null;
@@ -687,8 +688,8 @@ public class FactionFactory {
 
     public String GetFactionFromMember(String faction) {
         try {
-            System.out.println(String.format("select * from master where `player` LIKE '%s'", faction));
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from master where `player` LIKE '%s'", faction));
+            System.out.println(String.format("select * from `master` where `player` LIKE '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `master` where `player` LIKE '%s'", faction));
             if (r == null) return null;
             while (r.next()) {
                 return r.getString("faction").toLowerCase();
@@ -734,7 +735,7 @@ public class FactionFactory {
             fac.SetDisplayName(GetDisplayName(name));
             fac.SetPower((Integer) GetFromSettings("power", name));
             fac.SetMoney((Integer) GetFromSettings("money", name));
-            fac.SetPoints((Integer) GetFromSettings("point", name));
+            fac.SetPoints((Integer) GetFromSettings("points", name));
             fac.SetXP((Integer) GetFromSettings("xp", name));
             fac.SetLevel((Integer) GetFromSettings("level", name));
             fac.RetrieveActiveMission((String) GetFromSettings("am", name));

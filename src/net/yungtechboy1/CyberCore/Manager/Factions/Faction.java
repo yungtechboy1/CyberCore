@@ -42,7 +42,7 @@ public class Faction {
     private Integer Power = 0;
     private Integer Rich = 0;
 
-    private Integer Points = 0;
+    private int Points = 0;
     private Integer XP = 0;
     private Integer Level = 0;
 
@@ -258,6 +258,7 @@ public class Faction {
     }
 
     public void SetPoints(Integer value) {
+        if(value == null)value = 0;
         Points = value;
     }
 

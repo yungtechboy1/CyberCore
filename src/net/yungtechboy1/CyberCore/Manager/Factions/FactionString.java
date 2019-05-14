@@ -23,6 +23,7 @@ public enum FactionString {
     Error_NotInFaction(FactionsMain.NAME + TextFormat.RED + "Your Not in a faction!", 7),
     Error_FactionFull(FactionsMain.NAME + TextFormat.RED + "Error! Your Faction is full. Please kick players to make more room.", 8),
     Error_UnableToFindPlayer(FactionsMain.NAME + TextFormat.RED + "Error! No Player By That Name Is Online!", 9),
+    Error_UnableToFindFaction(FactionsMain.NAME + TextFormat.RED + "Error! Unable to find faction By That Name!", 9),
     Error_PlayerInFaction(FactionsMain.NAME + TextFormat.RED + "Error! Player is currently in a faction", 9),
     Error_SA221("Seems like an error occured! Please report Error: SA221", 221),
     Error_SA224("Seems like an error occured! Please report Error: SA224", 221),
@@ -40,7 +41,7 @@ public enum FactionString {
         Msg = s;
         ID = id;
         FactionsMain.getInstance().TextList.put(id, this);
-        RegisterMessage(this);
+//        RegisterMessage(this);
 
     }
 

@@ -178,7 +178,7 @@ public class AHSqlite extends MySQL {
 
     private void SaveAll(CorePlayer p) {
         try {
-            executeUpdate("DELETE FROM `Homes` WHERE `owneruuid` == '" + p.getUniqueId() + "'");
+            executeUpdate("DELETE FROM `Homes` WHERE `owneruuid` LIKE '" + p.getUniqueId() + "'");
             for (HomeData h : p.HD) {
                 executeUpdate("INSERT INTO `Homes` VALUES (0,'" + h.getName() + "'," + h.getX() + "," + h.getY() + "," + h.getZ() + ",'" + h.getLevel() + "','" + h.getOwner() + "','" + h.getOwneruuid() + "')");
             }
