@@ -13,6 +13,7 @@ import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
+import cn.nukkit.level.Location;
 import cn.nukkit.level.Position;
 import cn.nukkit.level.Sound;
 import cn.nukkit.math.*;
@@ -669,6 +670,10 @@ public class CorePlayer extends Player {
         BeginTeleportEffects(pl, delay);
     }
 
+    public void StartTeleport(Vector3 v3, Player pl, int delay) {
+        BeginTeleportEffects(new Location(v3.x,v3.y,v3.z,pl.getLevel()), delay);
+    }
+
     public void StartTeleport(Position pl) {
         StartTeleport(pl, 3);
     }
@@ -678,19 +683,7 @@ public class CorePlayer extends Player {
     }
 
     private void BeginTeleportEffects(CorePlayer corePlayer, int delay) {
-        Effect e1 = Effect.getEffect(9);
-        Effect e2 = Effect.getEffect(2);
-        e1.setAmplifier(2);
-        e2.setAmplifier(2);
-        e1.setDuration(20 * 600);
-        e2.setDuration(20 * 600);
-        addEffect(e1);
-        addEffect(e2);
-        isTeleporting = true;
-        isInTeleportingProcess = true;
-        TeleportTick = getServer().getTick() + 20 * delay;
-        TargetTeleporting = corePlayer;
-        TargetTeleportingLoc = null;
+        BeginTeleportEffects(corePlayer.getLocation(),delay);
     }
 
     private void BeginTeleportEffects(Position pos, int delay) {

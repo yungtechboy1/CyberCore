@@ -53,7 +53,7 @@ public class Enemy extends Commands {
             } else if (l.size() == 1) {
                 target = l.get(0);
             } else {
-                FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Invite Player", "");
+                FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Add Ebemy Factino", "Mulitple factions were found with that name, please choose one.");
                 int k = 0;
                 FWM.addButton(new ElementButton("Grinch!"));
                 for (Faction p : l) {

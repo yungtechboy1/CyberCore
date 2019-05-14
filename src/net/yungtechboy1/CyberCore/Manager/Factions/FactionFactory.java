@@ -317,7 +317,7 @@ public class FactionFactory {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            getServer().getLogger().error(":7 ",ex);
+            getServer().getLogger().error(":7 ", ex);
         }
     }
 
@@ -499,14 +499,14 @@ public class FactionFactory {
     }
 
     public ArrayList<String> GetAllFactions() {
-        Main.plugin.getLogger().info("GETTINGALL FACS" );
+        Main.plugin.getLogger().info("GETTINGALL FACS");
         ArrayList<String> results = new ArrayList<>();
         try {
             ResultSet r = this.ExecuteQuerySQL("select * from `settings`");
             if (r == null) return null;
             while (r.next()) {
                 String ff = r.getString("faction");
-                Main.plugin.getLogger().info("FOUNDDDDDDD FACCCCCCCCCCCCCCC" +ff );
+                Main.plugin.getLogger().info("FOUNDDDDDDD FACCCCCCCCCCCCCCC" + ff);
                 if (!results.contains(ff)) results.add(ff);
             }
             r.close();
@@ -657,16 +657,15 @@ public class FactionFactory {
     }
 
     public Faction getPlayerFaction(Player name) {
-        if(name instanceof CorePlayer){
-            String ff = ((CorePlayer)name).Faction;
-            if(ff != null)return getFaction(ff);
+        if (name instanceof CorePlayer) {
+            String ff = ((CorePlayer) name).Faction;
+            if (ff != null) return getFaction(ff);
         }
         Faction f = getPlayerFaction(name.getName().toLowerCase());
         if (name instanceof CorePlayer) {
             if (f != null) {
                 ((CorePlayer) name).Faction = f.GetName();
-            }else
-            {
+            } else {
                 ((CorePlayer) name).Faction = null;
             }
         }
@@ -677,12 +676,12 @@ public class FactionFactory {
         return getPlayerFaction(name.getName().toLowerCase());
     }
 
-    public Faction IsPlayerInFaction(CorePlayer p){
+    public Faction IsPlayerInFaction(CorePlayer p) {
         String f = GetFactionFromMember(p.getName());
-        System.out.println("FACCCCC >>>>>>> "+f);
-        if(f == null && FacList.containsKey(p.getName().toLowerCase()))f = FacList.get(p.getName().toLowerCase());
-        System.out.println("FACCCCC >>>>>>> "+f);
-        if(f == null || f.length() == 0) return null;
+        System.out.println("FACCCCC >>>>>>> " + f);
+        if (f == null && FacList.containsKey(p.getName().toLowerCase())) f = FacList.get(p.getName().toLowerCase());
+        System.out.println("FACCCCC >>>>>>> " + f);
+        if (f == null || f.length() == 0) return null;
         return getFaction(f);
     }
 
@@ -696,7 +695,7 @@ public class FactionFactory {
             }
             return null;
         } catch (Exception e) {
-            CyberCoreMain.getInstance().getLogger().error("ERROR 1544",e);
+            CyberCoreMain.getInstance().getLogger().error("ERROR 1544", e);
         }
         return null;
 
@@ -750,4 +749,34 @@ public class FactionFactory {
     }
 
 
+    public ArrayList<Faction> GetAllOpenFactions() {
+        ArrayList<Faction> found = new ArrayList<>();
+        try {
+            ResultSet r = this.ExecuteQuerySQL("select * from `settings` where `privacy`= '1'");
+            if (r == null) return null;
+            while (r.next()) {
+//                return r.getString("faction");
+                Faction f = Main.FFactory.getFaction(r.getString("faction"));
+                if(f != null)found.add(f);
+            }
+        } catch (Exception e) {
+            Main.plugin.getLogger().error("ERROR GETTING ALL OPEN FACTIONS",e);
+        }
+        return found;
+    }
+    public ArrayList<Faction> GetAllOpenFactions(String name) {
+        ArrayList<Faction> found = new ArrayList<>();
+        try {
+            ResultSet r = this.ExecuteQuerySQL("select * from `settings` where `privacy`= '1' and `faction` LIKE '"+name+"'");
+            if (r == null) return null;
+            while (r.next()) {
+//                return r.getString("faction");
+                Faction f = Main.FFactory.getFaction(r.getString("faction"));
+                if(f != null)found.add(f);
+            }
+        } catch (Exception e) {
+            Main.plugin.getLogger().error("ERROR GETTING ALL OPEN FACTIONS",e);
+        }
+        return found;
+    }
 }

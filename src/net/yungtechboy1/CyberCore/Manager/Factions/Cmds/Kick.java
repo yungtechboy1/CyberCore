@@ -2,10 +2,16 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.form.element.ElementButton;
+import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
+
+import java.util.ArrayList;
 
 /**
  * Created by carlt_000 on 7/9/2016.
@@ -33,10 +39,29 @@ public class Kick extends Commands {
 
     @Override
     public void RunCommand() {
-        if (Args.length < 2) {
-            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "Usage /f kick <player>");
-            return;
+
+
+        ArrayList<String> af = fac.GetRecruits();
+        af.addAll(fac.GetMembers());
+        af.addAll(fac.GetOfficers());
+        af.addAll(fac.GetGenerals());
+        FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Joining an Open Faction", "");
+        if (af.size() == 0) {
+            FWM.addButton(new ElementButton("--No Public Faction--"));
+        } else {
+            int i = 0;
+            for(Faction f: af){
+                i++;
+                if(i > 20)continue;
+                FWM.addButton(new ElementButton(f.GetDisplayName()));
+            }
         }
+        CorePlayer cp = (CorePlayer) Sender;
+        cp.showFormWindow(FWM);
+        cp.LastSentFormType = FormType.MainForm.Faction_Join_List;
+
+
+
         Player pp = Main.getServer().getPlayer(Args[1]);
         if (pp == null) {
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "Player Is Not Online or Does Not Exist!");

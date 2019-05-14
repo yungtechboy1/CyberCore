@@ -21,6 +21,7 @@ public class FactionSettings {
     }
 
     private FactionRank AllowedToPromote = FactionRank.Member;
+    private FactionRank AllowedToKick = FactionRank.General;
     private FactionRank AllowedToDemote = FactionRank.Member;
 
     private int MaxFactionChat = 30;
@@ -92,4 +93,11 @@ public class FactionSettings {
 
     }
 
+    public FactionRank getAllowedToKick() {
+        return AllowedToKick;
+    }
+
+    public void setAllowedToKick(FactionRank allowedToKick) {
+        AllowedToKick = allowedToKick;
+    }
 }

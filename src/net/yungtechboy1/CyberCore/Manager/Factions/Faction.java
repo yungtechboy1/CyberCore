@@ -108,6 +108,40 @@ public class Faction {
         }
     }
 
+    public Faction GetAllyFromName(String name) {
+        String found = null;
+        name = name.toLowerCase();
+        int delta = 2147483647;
+        Iterator<String> var4 = getFAlly().iterator();
+
+        while (var4.hasNext()) {
+            String fn = var4.next();
+            if (fn.toLowerCase().startsWith(name) || fn.toLowerCase().contains(name)) {
+                int curDelta = fn.length() - name.length();
+                if (curDelta < delta) {
+                    found = fn;
+                    delta = curDelta;
+                }
+
+                if (curDelta == 0) {
+                    found = fn;
+                }
+            }
+        }
+
+        return Main.FFactory.getFaction(found);
+    }
+
+    public int GetPlayerCount() {
+        int c = 0;
+        c += GetMembers().size();
+        c += GetRecruits().size();
+        c += GetOfficers().size();
+        c += GetGenerals().size();
+        if(GetLeader() != null)c++;
+        return c;
+    }
+
 
     public class AllyRequest {
         int Timeout = -1;
@@ -661,6 +695,10 @@ public class Faction {
         Allies.add(fac);
     }
 
+    public void RemoveAlly(Faction fac) {
+        if(fac == null)return;
+        RemoveAlly(fac.GetName());
+    }
     public void RemoveAlly(String fac) {
         Allies.remove(fac);
     }
@@ -669,6 +707,9 @@ public class Faction {
         return Allies;
     }
 
+    public Boolean isAllied(Faction fac) {
+        return isAllied(fac.GetName());
+    }
     public Boolean isAllied(String fac) {
         if (Allies.contains(fac.toLowerCase())) return true;
         return false;
