@@ -9,6 +9,7 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
+import net.yungtechboy1.CyberCore.Manager.Factions.FactionRank;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class Kick extends Commands {
     public static final int GENERAL = 4;
     public static final int LEADER = 5;
 
-    public Kick(CommandSender s, String[] a, FactionsMain m) {
+    public Kick(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f Kick <player>", m);
         senderMustBeInFaction = true;
         senderMustBeMember = true;
@@ -39,73 +40,55 @@ public class Kick extends Commands {
 
     @Override
     public void RunCommand() {
-
-
-        ArrayList<String> af = fac.GetRecruits();
-        af.addAll(fac.GetMembers());
-        af.addAll(fac.GetOfficers());
-        af.addAll(fac.GetGenerals());
-        FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Joining an Open Faction", "");
-        if (af.size() == 0) {
-            FWM.addButton(new ElementButton("--No Public Faction--"));
-        } else {
-            int i = 0;
-            for(Faction f: af){
-                i++;
-                if(i > 20)continue;
-                FWM.addButton(new ElementButton(f.GetDisplayName()));
-            }
-        }
-        CorePlayer cp = (CorePlayer) Sender;
-        cp.showFormWindow(FWM);
-        cp.LastSentFormType = FormType.MainForm.Faction_Join_List;
-
-
-
-        Player pp = Main.getServer().getPlayer(Args[1]);
-        if (pp == null) {
-            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "Player Is Not Online or Does Not Exist!");
+        FactionRank perm = fac.getSettings().getAllowedToKick();
+        FactionRank fr = fac.getPlayerRank((Player)Sender);
+        if(fr ==  null || !fr.HasPerm(perm)){
+            Sender.sendMessage("ERror you dont have perms to kick players!");
             return;
         }
-        String ppn = pp.getName();
-        Faction ofaction = Main.FFactory.getPlayerFaction(pp);
-        if (ofaction == null) {
-            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "Player Not In Faction!");
-            return;
-        }
-        String fn = fac.GetName();
-        if (!ofaction.GetName().equalsIgnoreCase(fn)) {
-            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "Player is not in this faction!");
-            return;
-        }
-        //Perms System
-        Integer perm = fac.GetPlayerPerm(Sender.getName());
-        Integer ppnperm = fac.GetPlayerPerm(ppn);
 
-        if (perm > ppnperm) {
-            if (ppnperm == LEADER) {
-                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "You can not kick your leader!");
+        if(Args.length == 2){
+            Player pp = Main.getServer().getPlayer(Args[1]);
+            if (pp == null) {
+                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "Player Is Not Online or Does Not Exist!");
                 return;
-            } else if (ppnperm == GENERAL) {
-                fac.DelGeneral(ppn);
-            } else if (ppnperm == OFFICER) {
-                fac.DelOfficer(ppn);
-            } else if (ppnperm == MEMBER) {
-                fac.DelMember(ppn);
-            } else if (ppnperm == RECRUIT) {
-                fac.DelRecruit(ppn);
             }
-            Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN + "You successfully kicked " + ppn + "!");
-            pp.sendMessage(FactionsMain.NAME+TextFormat.GREEN + "You Have Been Kicked From factionName!!!");
-            Main.FFactory.FacList.remove(ppn);
-            fac.TakePower(2);
-//            Main.CC.Setnametag(ppn);
-//            Main.sendBossBar(pp);
+            String ppn = pp.getName();
+            Faction ofaction = Main.FFactory.getPlayerFaction(pp);
+            if (ofaction == null) {
+                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "Player Not In Faction!");
+                return;
+            }
+            String fn = fac.GetName();
+            if (!ofaction.GetName().equalsIgnoreCase(fn)) {
+                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "Player is not in this faction!");
+                return;
+            }
 
-        } else if (perm == ppnperm) {
-            Sender.sendMessage(FactionsMain.NAME+TextFormat.YELLOW + "You can not kick those who are the same rank as you!");
-        } else if (perm < ppnperm) {
-            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "You can not kick those who are a higher rank than you!");
+            fac.KickPlayer(pp);
+        }else {
+            ArrayList<String> af = fac.GetRecruits();
+            af.addAll(fac.GetMembers());
+            af.addAll(fac.GetOfficers());
+            af.addAll(fac.GetGenerals());
+            FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Faction Kick Page", "");
+            if (af.size() == 0) {
+                FWM.addButton(new ElementButton("--No Other Members In Faction--"));
+            } else {
+                int i = 0;
+                for (String f : af) {
+                    i++;
+                    if (i > 20) continue;
+                    FWM.addButton(new ElementButton(f));
+                }
+            }
+            FWM.addButton(new ElementButton("CJ123"));
+            CorePlayer cp = (CorePlayer) Sender;
+            cp.showFormWindow(FWM);
+            cp.LastSentFormType = FormType.MainForm.Faction_Kick_List;
+
         }
+
+
     }
 }

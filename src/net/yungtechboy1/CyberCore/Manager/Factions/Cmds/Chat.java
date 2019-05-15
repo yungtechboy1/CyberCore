@@ -16,7 +16,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class Chat extends Commands {
 
-    public Chat(CommandSender s, String[] a, FactionsMain m) {
+    public Chat(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f chat [Text]", m);
         senderMustBeInFaction = true;
         senderMustBePlayer = true;

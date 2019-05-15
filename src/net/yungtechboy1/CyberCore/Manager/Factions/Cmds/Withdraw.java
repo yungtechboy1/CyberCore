@@ -10,7 +10,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class Withdraw extends Commands {
 
-    public Withdraw(CommandSender s, String[] a, FactionsMain m) {
+    public Withdraw(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f withdraw <amount>", m);
         senderMustBePlayer = true;
         senderMustBeGeneral = true;

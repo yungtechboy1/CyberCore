@@ -15,7 +15,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 public class Home extends Commands {
 
 
-    public Home(CommandSender s, String[] a, FactionsMain m) {
+    public Home(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f Home [faction]", m);
         senderMustBeInFaction = true;
         senderMustBePlayer = true;

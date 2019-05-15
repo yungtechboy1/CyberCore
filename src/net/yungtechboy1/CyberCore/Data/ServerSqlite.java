@@ -158,8 +158,8 @@ public class ServerSqlite extends MySQL {
 
     private void SaveSettings(CorePlayer p) {
         try {
-            executeUpdate("DELETE FROM `settings` WHERE `name` LIKE '" + p.getName().toLowerCase() + "'");
-            executeUpdate("INSERT INTO `settings` VALUES ('" + p.getName().toLowerCase() + "'," + p.Settings.isHudOff() + "," + p.Settings.isHudClassOff() + "," + p.Settings.isHudPosOff() + "," + p.Settings.isHudFactionOff() + ")");
+            executeUpdate("DELETE FROM `Settings` WHERE `name` LIKE '" + p.getName().toLowerCase() + "'");
+            executeUpdate("INSERT INTO `Settings` VALUES ('" + p.getName().toLowerCase() + "'," + p.Settings.isHudOff() + "," + p.Settings.isHudClassOff() + "," + p.Settings.isHudPosOff() + "," + p.Settings.isHudFactionOff() + ")");
             plugin.getLogger().info("Settings saved for " + p.getName());
         } catch (SQLException e) {
             e.printStackTrace();

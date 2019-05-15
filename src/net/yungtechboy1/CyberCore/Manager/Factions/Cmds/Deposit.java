@@ -11,7 +11,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class Deposit extends Commands {
 
-    public Deposit(CommandSender s, String[] a, FactionsMain m) {
+    public Deposit(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f deposit <amount>", m);
         senderMustBePlayer = true;
         senderMustBeMember = true;

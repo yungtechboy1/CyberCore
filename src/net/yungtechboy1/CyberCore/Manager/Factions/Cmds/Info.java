@@ -27,7 +27,7 @@ public class Info extends Commands {
     public static final int OFFICER = 3;
     public static final int GENERAL = 4;
     public static final int LEADER = 5;
-    public Info(CommandSender s, String[] a, FactionsMain m) {
+    public Info(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f info <faction>", m);
         senderMustBeInFaction = true;
         senderMustBePlayer = true;

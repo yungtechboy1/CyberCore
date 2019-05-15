@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**
@@ -10,7 +11,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class Mission extends Commands {
 
-    public Mission(CommandSender s, String[] a, FactionsMain m){
+    public Mission(CorePlayer s, String[] a, FactionsMain m){
         super(s,a,"/f mission [radius = 1]",m);
         senderMustBeInFaction = true;
         senderMustBePlayer = true;

@@ -21,7 +21,7 @@ import static net.yungtechboy1.CyberCore.Manager.Factions.FactionString.*;
 public class Invite extends Commands {
 
 
-    public Invite(CommandSender s, String[] a, FactionsMain m) {
+    public Invite(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f Invite <player> or /f invite", m);
         senderMustBeInFaction = true;
         senderMustBeMember = true;

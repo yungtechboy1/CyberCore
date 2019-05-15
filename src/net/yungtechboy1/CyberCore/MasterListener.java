@@ -68,12 +68,23 @@ public class MasterListener implements Listener {
         int fid = pr.getFormID();
         Player p = pr.getPlayer();
         CorePlayer cp = ((CorePlayer) p);
+        Faction fac = null;
+        if(cp.Faction != null) fac = plugin.FM.FFactory.getFaction(cp.Faction);
         switch (cp.LastSentFormType) {
+            case Faction_Kick_List:
+                FormResponseSimple frrs = (FormResponseSimple) pr.getResponse();
+                String tp = frrs.getClickedButton().getText();
+                if(fac == null){
+                    p.sendMessage("Errpr #251036");
+                    return;
+                }else{
+                    System.out.println("STARTTING KICKKING >>> "+tp);
+                    fac.KickPlayer(tp);
+                }
             case Faction_Delete_Confirm:
                 FormResponseModal fi = (FormResponseModal) pr.getResponse();
 //                fi.
                 if(fi.getClickedButtonId() == 0) {
-                    Faction fac = plugin.FM.FFactory.getFaction(cp.Faction);
 
 
                     cp.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Faction Deleted!");
@@ -115,8 +126,7 @@ public class MasterListener implements Listener {
                         return;
                     }
                     Integer time = (int) (Calendar.getInstance().getTime().getTime() / 1000) + 60 * 5;
-                    Faction fac = plugin.FM.FFactory.getFaction(cp.Faction);
-                    if (fac == null) {
+                   if (fac == null) {
                         cp.sendMessage(Error_SA224.getMsg());
                         return;
                     }

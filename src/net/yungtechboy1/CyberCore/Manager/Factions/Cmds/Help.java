@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
  */
 public class Help extends Commands {
 
-    public Help(CommandSender s, String[] a, FactionsMain m) {
+    public Help(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f help [page]", m);
         senderMustBePlayer = true;
         sendFailReason = true;

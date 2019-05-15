@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
@@ -14,7 +15,7 @@ import java.util.Calendar;
  */
 public class War extends Commands {
 
-    public War(CommandSender s, String[] a, FactionsMain m){
+    public War(CorePlayer s, String[] a, FactionsMain m){
         super(s,a,"/f war <Faction>",m);
         senderMustBeInFaction = true;
         senderMustBeGeneral = true;

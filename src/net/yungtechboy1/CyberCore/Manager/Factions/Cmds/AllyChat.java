@@ -11,7 +11,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class AllyChat extends Commands {
 
-    public AllyChat(CommandSender s, String[] a, FactionsMain m) {
+    public AllyChat(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f allychat [Text]", m);
         senderMustBeInFaction = true;
         senderMustBePlayer = true;

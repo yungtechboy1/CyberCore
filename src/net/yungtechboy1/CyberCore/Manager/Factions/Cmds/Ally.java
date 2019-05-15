@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
@@ -10,7 +11,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class Ally extends Commands {
 
-    public Ally(CommandSender s, String[] a, FactionsMain m) {
+    public Ally(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f ally <fac>", m);
         senderMustBeInFaction = true;
         senderMustBeLeader = true;

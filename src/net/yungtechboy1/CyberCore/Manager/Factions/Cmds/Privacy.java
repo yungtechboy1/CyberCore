@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**
@@ -11,7 +12,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 public class Privacy extends Commands {
 
 
-    public Privacy(CommandSender s, String[] a, FactionsMain m){
+    public Privacy(CorePlayer s, String[] a, FactionsMain m){
         super(s,a,"/f privacy <on/off>",m);
         senderMustBeInFaction = true;
         senderMustBeGeneral = true;

@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.command.CommandSender;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**
@@ -9,7 +10,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class Kits extends Commands {
 
-    public Kits(CommandSender s, String[] a, FactionsMain m){
+    public Kits(CorePlayer s, String[] a, FactionsMain m){
         super(s,a,"/f kist ",m);
         senderMustBePlayer = true;
         senderMustBeMember = true;

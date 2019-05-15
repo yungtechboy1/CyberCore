@@ -21,14 +21,14 @@ public class FChat extends CommandBase{
 
     @Override
     public boolean execute(CommandSender commandSender, String s, String[] strings) {
-        String[] b = new String[strings.length];
-        int c = 0;
-        for(String a: strings){
-            b[c] = a;
-            c++;
-        }
-        Chat cmd = new Chat(commandSender,b,main);
-        cmd.run();
+//        String[] b = new String[strings.length];
+//        int c = 0;
+//        for(String a: strings){
+//            b[c] = a;
+//            c++;
+//        }
+//        Chat cmd = new Chat(commandSender,b,main);
+//        cmd.run();
         return true;
     }
 }

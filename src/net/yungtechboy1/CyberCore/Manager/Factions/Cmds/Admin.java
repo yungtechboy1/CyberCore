@@ -23,7 +23,7 @@ import java.util.ArrayList;
  */
 public class Admin extends Commands {
 
-    public Admin(CommandSender s, String[] a, FactionsMain m) {
+    public Admin(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f Admin", m);
         senderMustBePlayer = true;
         senderMustBeInFaction = true;

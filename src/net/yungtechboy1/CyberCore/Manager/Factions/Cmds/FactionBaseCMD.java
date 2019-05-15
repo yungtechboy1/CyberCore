@@ -35,35 +35,34 @@ public class FactionBaseCMD extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender commandSender, String command, String[] strings) {
+    public boolean execute(CommandSender vs, String command, String[] strings) {
         System.out.println("CALLL BBBBB333");
-        if (!(commandSender instanceof CorePlayer)) return false;
+        CorePlayer commandSender = Owner.getCorePlayer(vs.getName());
+        if (commandSender == null) return false;
         System.out.println("CALLL FFFF" + command);
-        CorePlayer cp = (CorePlayer) commandSender;
-        String key;
-        if (strings.length == 0) key = null;
-        else key = strings[0];
-        String[] args = PushOne(strings);
-        if (key != null) {
-            switch (key.toLowerCase()) {
-                case "accept":
-                    new Accept(commandSender,args,Owner.FM);
-                    break;
-                case "create":
-                    new Create(commandSender, args, Owner.FM);
-                    break;
-                case "admin":
-                case "a":
-                    new Admin(commandSender, args, Owner.FM);
-                    break;
-                case "inv":
-                case "invite":
-                    new Invite(commandSender, args, Owner.FM);
-                    break;
-            }
-        }else{
-
-        }
+//            switch (key.toLowerCase()) {
+//                case "accept":
+//                    new Accept(commandSender,args,Owner.FM);
+//                    break;
+//                case "create":
+//                    new Create(commandSender, args, Owner.FM);
+//                    break;
+//                case "admin":
+//                case "a":
+//                    new Admin(commandSender, args, Owner.FM);
+//                    break;
+//                case "inv":
+//                case "invite":
+//                    new Invite(commandSender, args, Owner.FM);
+//                    break;
+//                case "desc":
+//                    new Desc(commandSender, args, Owner.FM);
+//                    break;
+//                case "kick":
+//                    new Kick(commandSender, args, Owner.FM);
+//                    break;
+//            }
+            Owner.FM.FC.onCommand(Owner.FM,commandSender,command,strings);
         return true;
     }
 }

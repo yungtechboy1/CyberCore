@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.Factions;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.*;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
@@ -23,9 +24,9 @@ public class FactionsCommands {
     }
 
 
-    public boolean onCommand(FactionsMain main,CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(FactionsMain main, CorePlayer sender, String command, String[] args) {
         Faction faction = Main.FFactory.getPlayerFaction(sender);
-        switch (command.getName()) {
+        switch (command.toLowerCase()) {
             case "mystats":
 //            case "kdr":
 //                sender.sendMessage(TextFormat.GREEN+"-------My Status-------");

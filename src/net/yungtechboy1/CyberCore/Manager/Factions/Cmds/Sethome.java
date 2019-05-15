@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**
@@ -12,7 +13,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 public class Sethome extends Commands {
 
 
-    public Sethome(CommandSender s, String[] a, FactionsMain m) {
+    public Sethome(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f sethome <player>", m);
         senderMustBeInFaction = true;
         senderMustBeMember = true;

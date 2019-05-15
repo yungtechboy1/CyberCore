@@ -11,7 +11,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class Deny extends Commands {
 
-    public Deny(CommandSender s, String[] a, FactionsMain m) {
+    public Deny(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f Deny", m);
         senderMustBePlayer = true;
         sendFailReason = true;

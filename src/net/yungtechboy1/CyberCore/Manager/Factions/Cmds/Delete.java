@@ -15,7 +15,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class Delete extends Commands {
 
-    public Delete(CommandSender s, String[] a, FactionsMain m) {
+    public Delete(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f delete", m);
         senderMustBeInFaction = true;
         senderMustBeLeader = true;

@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class Join extends Commands {
 
-    public Join(CommandSender s, String[] a, FactionsMain m) {
+    public Join(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f join <faction>", m);
         senderMustBePlayer = true;
         senderMustBeMember = true;

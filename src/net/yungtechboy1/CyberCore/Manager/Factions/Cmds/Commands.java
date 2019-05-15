@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
@@ -15,7 +16,7 @@ public abstract class Commands {
 
     public String[] Args;
     public String Usage;
-    public CommandSender Sender;
+    public CorePlayer Sender;
     public FactionsMain Main;
     public boolean senderMustBeInFaction = false;
     public boolean senderMustBePlayer = false;
@@ -29,7 +30,7 @@ public abstract class Commands {
     public LinkedHashMap<String, String> optionalArgs;
     Faction fac;
 
-    public Commands(CommandSender s, String[] a, String usage, FactionsMain main){
+    public Commands(CorePlayer s, String[] a, String usage, FactionsMain main){
         Args = a;
         Sender = s;
         Usage = usage;

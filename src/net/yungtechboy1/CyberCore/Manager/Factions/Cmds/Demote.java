@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionRank;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
@@ -18,7 +19,7 @@ public class Demote extends Commands {
     public static final int GENERAL = 4;
     public static final int LEADER = 5;
 
-    public Demote(CommandSender s, String[] a, FactionsMain m) {
+    public Demote(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f Demote <player>", m);
         senderMustBeInFaction = true;
         senderMustBeMember = true;

@@ -13,7 +13,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class Claim extends Commands {
 
-    public Claim(CommandSender s, String[] a, FactionsMain m){
+    public Claim(CorePlayer s, String[] a, FactionsMain m){
         super(s,a,"/f claim [radius = 1]",m);
         senderMustBeInFaction = true;
         senderMustBePlayer = true;

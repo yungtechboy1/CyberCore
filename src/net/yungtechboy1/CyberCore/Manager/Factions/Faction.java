@@ -142,6 +142,54 @@ public class Faction {
         return c;
     }
 
+    public void KickPlayer(String pn) {
+        FactionRank r = getPlayerRank(pn);
+        switch (r){
+            case Recruit:
+                DelRecruit(pn);
+                break;
+            case Member:
+                DelMember(pn);
+                break;
+            case Officer:
+                DelOfficer(pn);
+                break;
+            case General:
+                DelGeneral(pn);
+                break;
+        }
+
+
+        BroadcastMessage(FactionsMain.NAME+TextFormat.YELLOW + pn+" has been  kicked from the faction!");
+//        Main.FFactory.FacList.remove(pn);
+        TakePower(2);
+    }
+
+    public void KickPlayer(Player p) {
+        FactionRank r = getPlayerRank(p);
+        String pn = p.getName();
+        switch (r){
+            case Recruit:
+                DelRecruit(pn);
+                break;
+            case Member:
+                DelMember(pn);
+                break;
+            case Officer:
+                DelOfficer(pn);
+                break;
+            case General:
+                DelGeneral(pn);
+                break;
+        }
+
+
+        BroadcastMessage(FactionsMain.NAME+TextFormat.YELLOW + p.getName()+" has been  kicked from the faction!");
+        p.sendMessage(FactionsMain.NAME+TextFormat.GREEN + "You Have Been Kicked From factionName!!!");
+//        Main.FFactory.FacList.remove(pn);
+        TakePower(2);
+    }
+
 
     public class AllyRequest {
         int Timeout = -1;

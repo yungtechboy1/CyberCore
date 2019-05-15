@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**
@@ -11,7 +12,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class Unclaim extends Commands {
 
-    public Unclaim(CommandSender s, String[] a, FactionsMain m){
+    public Unclaim(CorePlayer s, String[] a, FactionsMain m){
         super(s,a,"/f unclaim [radius = 1]",m);
         senderMustBeInFaction = true;
         senderMustBeGeneral = true;

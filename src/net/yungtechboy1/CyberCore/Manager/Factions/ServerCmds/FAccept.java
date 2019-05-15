@@ -12,11 +12,11 @@ public class FAccept extends CommandBase{
         super("faccept","DESC","USEAGE",main);
         commandParameters.clear();
     }
-
+//TODO
     @Override
     public boolean execute(CommandSender commandSender, String s, String[] strings) {
-        Accept cmd = new Accept(commandSender,strings,main);
-        cmd.run();
+//        Accept cmd = new Accept(commandSender,strings,main);
+//        cmd.run();
         return true;
     }
 }

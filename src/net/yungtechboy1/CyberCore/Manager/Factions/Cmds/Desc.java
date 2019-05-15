@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**
@@ -10,7 +11,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class Desc extends Commands {
 
-    public Desc(CommandSender s, String[] a, FactionsMain m){
+    public Desc(CorePlayer s, String[] a, FactionsMain m){
         super(s,a,"/f desc <Description>",m);
         senderMustBePlayer = true;
         senderMustBeOfficer = true;

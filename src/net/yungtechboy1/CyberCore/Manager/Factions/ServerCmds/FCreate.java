@@ -22,8 +22,8 @@ public class FCreate extends CommandBase{
 
     @Override
     public boolean execute(CommandSender commandSender, String s, String[] strings) {
-        Create cmd = new Create(commandSender,strings,main);
-        cmd.run();
+//        Create cmd = new Create(commandSender,strings,main);
+//        cmd.run();
         return true;
     }
 }

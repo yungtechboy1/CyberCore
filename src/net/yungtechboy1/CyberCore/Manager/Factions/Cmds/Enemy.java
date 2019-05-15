@@ -22,7 +22,7 @@ import static net.yungtechboy1.CyberCore.Manager.Factions.FactionString.Error_Un
  */
 public class Enemy extends Commands {
 
-    public Enemy(CommandSender s, String[] a, FactionsMain m) {
+    public Enemy(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f enemy <fac>", m);
         senderMustBeInFaction = true;
         senderMustBeLeader = true;
@@ -53,7 +53,7 @@ public class Enemy extends Commands {
             } else if (l.size() == 1) {
                 target = l.get(0);
             } else {
-                FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Add Ebemy Factino", "Mulitple factions were found with that name, please choose one.");
+                FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Add Enemy Factino", "Mulitple factions were found with that name, please choose one.");
                 int k = 0;
                 FWM.addButton(new ElementButton("Grinch!"));
                 for (Faction p : l) {
@@ -75,6 +75,6 @@ public class Enemy extends Commands {
 
         fac.AddEnemy(target.GetName());
         target.BroadcastMessage(TextFormat.AQUA+"[ArchFactions] "+fac.GetDisplayName()+" Has added you as an enemy!");
-        Sender.sendMessage(TextFormat.AQUA+"[ArchFactions] "+target.GetDisplayName()+" is now an enemy");
+        Sender.sendMessage(TextFormat .AQUA+"[ArchFactions] "+target.GetDisplayName()+" is now an enemy");
     }
 }

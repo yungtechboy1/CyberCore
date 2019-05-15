@@ -21,8 +21,8 @@ public class FClaim extends CommandBase{
 
     @Override
     public boolean execute(CommandSender commandSender, String s, String[] strings) {
-        Claim cmd = new Claim(commandSender,strings,main);
-        cmd.run();
+//        Claim cmd = new Claim(commandSender,strings,main);
+//        cmd.run();
         return true;
     }
 }

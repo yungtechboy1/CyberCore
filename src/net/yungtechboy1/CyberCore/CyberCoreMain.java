@@ -655,11 +655,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     @Override
     public boolean onCommand(CommandSender s, Command cmd, String label, String[] args) {
         String cmdd = cmd.getName().toLowerCase();
-        if (FM != null && FM.FC != null) {
-            if (FM.FC.onCommand(FM, s, cmd, label, args)) {
-                return true;
-            }
-        }
+//        if (FM != null && FM.FC != null) {
+//            if (FM.FC.onCommand(FM, s, cmd, label, args)) {
+//                return true;
+//            }
+//        }
 //        factions.FC.onCommand(this,pcppe.getPlayer(),pcppe.getMessage(),label,args);
         switch (cmdd) {
             case "wild":

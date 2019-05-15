@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**
@@ -12,7 +13,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 public class Leader extends Commands {
 
 
-    public Leader(CommandSender s, String[] a, FactionsMain m) {
+    public Leader(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f leader <player>", m);
         senderMustBeInFaction = true;
         senderMustBeLeader = true;

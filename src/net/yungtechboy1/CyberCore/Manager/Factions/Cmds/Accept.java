@@ -13,7 +13,7 @@ import ru.nukkit.dblib.core.M;
  */
 public class Accept extends Commands {
 
-    public Accept(CommandSender s, String[] a, FactionsMain m) {
+    public Accept(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f Accept", m);
         senderMustBePlayer = true;
         sendFailReason = true;

@@ -33,7 +33,7 @@ public class Create extends Commands {
 //    }
 //
 
-    public Create(CommandSender s, String[] a, FactionsMain m) {
+    public Create(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f create", m);
         senderMustBePlayer = true;
         sendUsageOnFail = true;

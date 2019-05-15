@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
@@ -12,7 +13,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class OverClaim extends Commands {
 
-    public OverClaim(CommandSender s, String[] a, FactionsMain m) {
+    public OverClaim(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f overclaim [radius = 1]", m);
         senderMustBeInFaction = true;
         senderMustBePlayer = true;
