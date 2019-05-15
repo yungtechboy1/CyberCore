@@ -71,6 +71,20 @@ public class MasterListener implements Listener {
         Faction fac = null;
         if(cp.Faction != null) fac = plugin.FM.FFactory.getFaction(cp.Faction);
         switch (cp.LastSentFormType) {
+            case Faction_Chat_Choose:
+                FormResponseSimple fr = (FormResponseSimple) pr.getResponse();
+                switch (fr.getClickedButtonId()){
+                    case 0:
+                        //Faction Chat
+                        fac.SendFactionChatWindow(cp);
+                        break;
+                    case 1:
+                        //Ally Chat
+                        break;
+                    default:
+                        cp.LastSentFormType = null;
+                }
+                break;
             case Faction_Kick_List:
                 FormResponseSimple frrs = (FormResponseSimple) pr.getResponse();
                 String tp = frrs.getClickedButton().getText();

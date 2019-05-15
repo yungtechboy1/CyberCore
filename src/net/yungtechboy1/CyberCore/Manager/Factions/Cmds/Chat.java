@@ -17,7 +17,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 public class Chat extends Commands {
 
     public Chat(CorePlayer s, String[] a, FactionsMain m) {
-        super(s, a, "/f chat [Text]", m);
+        super(s, a, "/f chat", m);
         senderMustBeInFaction = true;
         senderMustBePlayer = true;
         sendFailReason = true;
@@ -46,12 +46,12 @@ public class Chat extends Commands {
             p.showFormWindow(FWM);
             p.LastSentFormType = FormType.MainForm.Faction_Chat_Choose;
         }
-        for (String c : Args) {
-            a++;
-            if (a == 1) continue;
-            chat.append(c).append(" ");
-        }
-        String n = Sender.getName();
-        fac.AddFactionChatMessage(chat.toString(),p);
+//        for (String c : Args) {
+//            a++;
+//            if (a == 1) continue;
+//            chat.append(c).append(" ");
+//        }
+//        String n = Sender.getName();
+//        fac.AddFactionChatMessage(chat.toString(),p);
     }
 }

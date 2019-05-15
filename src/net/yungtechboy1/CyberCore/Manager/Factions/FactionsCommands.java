@@ -124,6 +124,11 @@ public class FactionsCommands {
                     new Balance(sender,args,main);return true;
                 }
 
+                //F Ally
+                if(args[0].equalsIgnoreCase("ally")) {
+                    new Ally(sender,args,main);return true;
+                }
+
                 //Join
                 //Usage: /f Join <fac>
                 //Example: /f Join CyberFaction

@@ -5,10 +5,14 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.player.PlayerDeathEvent;
+import cn.nukkit.form.element.ElementButton;
+import cn.nukkit.form.window.FormWindowCustom;
+import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.Mission.ActiveMission;
 
 import java.util.*;
@@ -188,6 +192,14 @@ public class Faction {
         p.sendMessage(FactionsMain.NAME+TextFormat.GREEN + "You Have Been Kicked From factionName!!!");
 //        Main.FFactory.FacList.remove(pn);
         TakePower(2);
+    }
+
+    public void SendFactionChatWindow(CorePlayer cp) {
+        FormWindowSimple FWM = new FormWindowCustom("CyberFactions | Faction Chat Window", "");
+        FWM.addButton(new ElementButton("Open Faction Chat Window"));
+        FWM.addButton(new ElementButton("Open Ally Chat Window"));
+        cp.showFormWindow(FWM);
+        cp.LastSentFormType = FormType.MainForm.Faction_Chat_Choose;
     }
 
 
@@ -1020,7 +1032,7 @@ public class Faction {
         return getPlayerRank(p.getName().toLowerCase());
     }
     public FactionRank getPlayerRank(CorePlayer p){
-        return getPlayerRank(p);
+        return getPlayerRank((Player)p);
     }
 
     public void BroadcastMessage(String message, FactionRank rank) {

@@ -28,36 +28,36 @@ public class Ally extends Commands {
     @Override
     public void RunCommand() {
         if (Args.length <= 1) {
-            Sender.sendMessage(TextFormat.RED + "[ArchFactions] Usage: /f ally <fac>");
+            Sender.sendMessage(TextFormat.RED + "[ArchFactions] Usage: /f ally or /f ally <fac>");
             return;
         }
 
-        if (Args[1].equalsIgnoreCase("accept")) {
-            if (Main.FFactory.allyrequest.containsKey(fac.GetName())) {
-                Faction tf = Main.FFactory.getFaction(Main.FFactory.allyrequest.get(fac.GetName()));
-                if (tf == null) {
-                    Sender.sendMessage(TextFormat.RED + "ERROR 5556! Try again!");
-                    Main.FFactory.allyrequest.remove(fac.GetName());
-                    return;
-                }
-                fac.AddAlly(tf.GetName());
-                tf.AddAlly(fac.GetName());
-                fac.BroadcastMessage(TextFormat.AQUA + "[ArchFactions] Your faction is now allied with " + tf.GetDisplayName());
-                tf.BroadcastMessage(TextFormat.AQUA + "[ArchFactions] Your faction is now allied with " + fac.GetDisplayName());
-                return;
-            } else {
-                Sender.sendMessage(TextFormat.RED + " No ally request exists for your faction!");
-                return;
-            }
-        } else if (Args[1].equalsIgnoreCase("deny")) {
-            if (Main.FFactory.allyrequest.containsKey(fac.GetName())) {
-                Main.FFactory.allyrequest.remove(fac.GetName());
-                return;
-            } else {
-                Sender.sendMessage(TextFormat.RED + " No ally request exists for your faction!");
-                return;
-            }
-        }
+//        if (Args[1].equalsIgnoreCase("accept")) {
+//            if (Main.FFactory.allyrequest.containsKey(fac.GetName())) {
+//                Faction tf = Main.FFactory.getFaction(Main.FFactory.allyrequest.get(fac.GetName()));
+//                if (tf == null) {
+//                    Sender.sendMessage(TextFormat.RED + "ERROR 5556! Try again!");
+//                    Main.FFactory.allyrequest.remove(fac.GetName());
+//                    return;
+//                }
+//                fac.AddAlly(tf.GetName());
+//                tf.AddAlly(fac.GetName());
+//                fac.BroadcastMessage(TextFormat.AQUA + "[ArchFactions] Your faction is now allied with " + tf.GetDisplayName());
+//                tf.BroadcastMessage(TextFormat.AQUA + "[ArchFactions] Your faction is now allied with " + fac.GetDisplayName());
+//                return;
+//            } else {
+//                Sender.sendMessage(TextFormat.RED + " No ally request exists for your faction!");
+//                return;
+//            }
+//        } else if (Args[1].equalsIgnoreCase("deny")) {
+//            if (Main.FFactory.allyrequest.containsKey(fac.GetName())) {
+//                Main.FFactory.allyrequest.remove(fac.GetName());
+//                return;
+//            } else {
+//                Sender.sendMessage(TextFormat.RED + " No ally request exists for your faction!");
+//                return;
+//            }
+//        }
 
         Faction target = Main.FFactory.getFaction(Args[1]);
         if (target == null) {

@@ -27,10 +27,15 @@ public class Balance extends Commands {
     @Override
     public void RunCommand() {
         if (Args.length >= 1) {
-            String f = Args[0];
+            String f = Args[1];
             FactionFactory cff = Main.FFactory;
             Faction ff = cff.getFaction(cff.factionPartialName(f));
             if (ff == null) {
+                ff = Main.FFactory.getFaction(Main.FFactory.factionPartialName(Args[1]));
+                if (ff == null) {
+                    Sender.sendMessage(TextFormat.RED + "Error the faction containing '" + Args[1] + "' could not be found!");
+                    return;
+                }
                 Sender.sendMessage(FactionsMain.NAME + TextFormat.RED + "Faction not found!");
                 return;
             }
