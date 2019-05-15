@@ -3,6 +3,19 @@ package net.yungtechboy1.CyberCore.Manager.Factions;
 public class FactionSettings {
     private FactionRank AllowedToViewInbox = FactionRank.Officer;
     private FactionRank AllowedToAcceptAlly = FactionRank.General;
+    private FactionRank AllowedToEditSettings = FactionRank.General;
+    private FactionRank AllowedToPromote = FactionRank.Member;
+    private FactionRank AllowedToKick = FactionRank.General;
+    private FactionRank AllowedToDemote = FactionRank.Member;
+    private int MaxFactionChat = 30;
+    private int MaxAllyChat = 30;
+    private FactionRank AllowedToInvite = FactionRank.Member;
+    private FactionRank DefaultJoinRank = FactionRank.Recruit;
+    private FactionRank AllowedToClaim = FactionRank.General;
+
+    public FactionSettings() {
+
+    }
 
     public FactionRank getAllowedToPromote() {
         return AllowedToPromote;
@@ -20,12 +33,6 @@ public class FactionSettings {
         AllowedToDemote = allowedToDemote;
     }
 
-    private FactionRank AllowedToPromote = FactionRank.Member;
-    private FactionRank AllowedToKick = FactionRank.General;
-    private FactionRank AllowedToDemote = FactionRank.Member;
-
-    private int MaxFactionChat = 30;
-
     public int getMaxFactionChat() {
         return MaxFactionChat;
     }
@@ -41,8 +48,6 @@ public class FactionSettings {
     public void setMaxAllyChat(int maxAllyChat) {
         MaxAllyChat = maxAllyChat;
     }
-
-    private int MaxAllyChat = 30;
 
     public FactionRank getAllowedToViewInbox() {
         return AllowedToViewInbox;
@@ -76,9 +81,6 @@ public class FactionSettings {
         DefaultJoinRank = defaultJoinRank;
     }
 
-    private FactionRank AllowedToInvite = FactionRank.Member;
-    private FactionRank DefaultJoinRank = FactionRank.Recruit;
-
     public FactionRank getAllowedToClaim() {
         return AllowedToClaim;
     }
@@ -87,17 +89,19 @@ public class FactionSettings {
         AllowedToClaim = allowedToClaim;
     }
 
-    private FactionRank AllowedToClaim = FactionRank.General;
-
-    public FactionSettings() {
-
-    }
-
     public FactionRank getAllowedToKick() {
         return AllowedToKick;
     }
 
     public void setAllowedToKick(FactionRank allowedToKick) {
         AllowedToKick = allowedToKick;
+    }
+
+    public FactionRank getAllowedToEditSettings() {
+        return AllowedToEditSettings;
+    }
+
+    public void setAllowedToEditSettings(FactionRank allowedToEditSettings) {
+        this.AllowedToEditSettings = allowedToEditSettings;
     }
 }

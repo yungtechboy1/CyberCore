@@ -4,17 +4,18 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Manager.Factions.FactionRank;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**
  * Created by carlt_000 on 7/9/2016.
  */
-public class Motd extends Commands {
+public class Settings extends Commands {
 
-    public Motd(CorePlayer s, String[] a, FactionsMain m){
-        super(s,a,"/f motd <Description>",m);
+    public Settings(CorePlayer s, String[] a, FactionsMain m){
+        super(s,a,"/f settings",m);
         senderMustBePlayer = true;
-        senderMustBeOfficer = true;
+        senderMustBe = FactionRank.Recruit;
         sendUsageOnFail = true;
 
         if(run()){
@@ -24,6 +25,12 @@ public class Motd extends Commands {
 
     @Override
     public void RunCommand(){
+        FactionRank nr = fac.getSettings().getAllowedToEditSettings();
+        FactionRank pr = fac.getPlayerRank(Sender);
+        if(pr.HasPerm(nr)){
+            
+        }
+
         //@todo
         if(Args.length < 2){
             SendUseage();

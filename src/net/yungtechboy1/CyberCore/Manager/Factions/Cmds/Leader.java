@@ -29,7 +29,7 @@ public class Leader extends Commands {
     @Override
     public void RunCommand() {
         if(fac.Leader.equalsIgnoreCase(Sender.getName())) {
-            if(Args.length <= 1){
+            if(Args.length == 0){
                 SendUseage();
                 return;
             }

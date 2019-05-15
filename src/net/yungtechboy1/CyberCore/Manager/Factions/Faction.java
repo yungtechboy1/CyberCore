@@ -6,8 +6,10 @@ import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.player.PlayerDeathEvent;
 import cn.nukkit.form.element.ElementButton;
+import cn.nukkit.form.element.ElementInput;
+import cn.nukkit.form.element.ElementLabel;
+import cn.nukkit.form.response.FormResponseCustom;
 import cn.nukkit.form.window.FormWindowCustom;
-import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
@@ -68,10 +70,11 @@ public class Faction {
     public void PromotePlayer(Player pp) {
         PromotePlayer(pp, false);
     }
+
     public void PromotePlayer(Player pp, boolean leaderConfirm) {
         FactionRank cr = getPlayerRank(pp);
         String pn = pp.getName().toLowerCase();
-        switch (cr){
+        switch (cr) {
             case Recruit:
                 Recruits.remove(pn);
                 Members.add(pn);
@@ -85,7 +88,7 @@ public class Faction {
                 Generals.add(pn);
                 break;
             case General:
-                if(!leaderConfirm)break;
+                if (!leaderConfirm) break;
                 Generals.remove(pn);
                 Generals.add(Leader);
                 Leader = (pn);
@@ -96,7 +99,7 @@ public class Faction {
     public void DemotePlayer(Player pp) {
         FactionRank cr = getPlayerRank(pp);
         String pn = pp.getName().toLowerCase();
-        switch (cr){
+        switch (cr) {
             case Member:
                 Members.remove(pn);
                 Recruits.add(pn);
@@ -142,13 +145,13 @@ public class Faction {
         c += GetRecruits().size();
         c += GetOfficers().size();
         c += GetGenerals().size();
-        if(GetLeader() != null)c++;
+        if (GetLeader() != null) c++;
         return c;
     }
 
     public void KickPlayer(String pn) {
         FactionRank r = getPlayerRank(pn);
-        switch (r){
+        switch (r) {
             case Recruit:
                 DelRecruit(pn);
                 break;
@@ -164,7 +167,7 @@ public class Faction {
         }
 
 
-        BroadcastMessage(FactionsMain.NAME+TextFormat.YELLOW + pn+" has been  kicked from the faction!");
+        BroadcastMessage(FactionsMain.NAME + TextFormat.YELLOW + pn + " has been  kicked from the faction!");
 //        Main.FFactory.FacList.remove(pn);
         TakePower(2);
     }
@@ -172,7 +175,7 @@ public class Faction {
     public void KickPlayer(Player p) {
         FactionRank r = getPlayerRank(p);
         String pn = p.getName();
-        switch (r){
+        switch (r) {
             case Recruit:
                 DelRecruit(pn);
                 break;
@@ -188,20 +191,37 @@ public class Faction {
         }
 
 
-        BroadcastMessage(FactionsMain.NAME+TextFormat.YELLOW + p.getName()+" has been  kicked from the faction!");
-        p.sendMessage(FactionsMain.NAME+TextFormat.GREEN + "You Have Been Kicked From factionName!!!");
+        BroadcastMessage(FactionsMain.NAME + TextFormat.YELLOW + p.getName() + " has been  kicked from the faction!");
+        p.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "You Have Been Kicked From factionName!!!");
 //        Main.FFactory.FacList.remove(pn);
         TakePower(2);
     }
 
     public void SendFactionChatWindow(CorePlayer cp) {
-        FormWindowSimple FWM = new FormWindowCustom("CyberFactions | Faction Chat Window", "");
-        FWM.addButton(new ElementButton("Open Faction Chat Window"));
-        FWM.addButton(new ElementButton("Open Ally Chat Window"));
+        FormWindowCustom FWM = new FormWindowCustom("CyberFactions | Faction Chat Window");
+        for (String s : LastFactionChat) {
+            FWM.addElement(new ElementLabel(s));
+        }
+        FWM.addElement(new ElementInput("Send Message","Type Message Here"));
         cp.showFormWindow(FWM);
-        cp.LastSentFormType = FormType.MainForm.Faction_Chat_Choose;
+        cp.LastSentFormType = FormType.MainForm.Faction_Chat_Faction;
     }
 
+
+    public void HandleFactionChatWindow(FormResponseCustom frc, CorePlayer cp){
+        if(frc == null){
+            System.out.println("Error @ 12255");
+            return;
+        }
+        String msg = frc.getInputResponse(frc.getResponses().size()-1);
+        if(msg == null){
+            //No Message Send?
+            //CLose windows
+            return;
+        }
+        AddFactionChatMessage(msg,cp);
+        SendFactionChatWindow(cp);
+    }
 
     public class AllyRequest {
         int Timeout = -1;
@@ -352,7 +372,7 @@ public class Faction {
     }
 
     public void SetPoints(Integer value) {
-        if(value == null)value = 0;
+        if (value == null) value = 0;
         Points = value;
     }
 
@@ -756,9 +776,10 @@ public class Faction {
     }
 
     public void RemoveAlly(Faction fac) {
-        if(fac == null)return;
+        if (fac == null) return;
         RemoveAlly(fac.GetName());
     }
+
     public void RemoveAlly(String fac) {
         Allies.remove(fac);
     }
@@ -770,6 +791,7 @@ public class Faction {
     public Boolean isAllied(Faction fac) {
         return isAllied(fac.GetName());
     }
+
     public Boolean isAllied(String fac) {
         if (Allies.contains(fac.toLowerCase())) return true;
         return false;
@@ -1008,19 +1030,19 @@ public class Faction {
 
     public String GetFactionNameTag(String p) {
         FactionRank fr = getPlayerRank(p);
-        return fr.GetChatPrefix() +TextFormat.RESET+ " - " + DisplayName;
+        return fr.GetChatPrefix() + TextFormat.RESET + " - " + DisplayName;
     }
 
     public String GetFactionNameTag(Player p) {
         FactionRank fr = getPlayerRank(p);
-        return fr.GetChatPrefix() +TextFormat.RESET+ " - " + DisplayName;
+        return fr.GetChatPrefix() + TextFormat.RESET + " - " + DisplayName;
     }
 
     public void BroadcastMessage(String message) {
         BroadcastMessage(message, FactionRank.All);
     }
 
-    public FactionRank getPlayerRank(String p){
+    public FactionRank getPlayerRank(String p) {
         FactionRank rank = FactionRank.Recruit;
         if (IsMember(p)) rank = FactionRank.Member;
         if (IsOfficer(p)) rank = FactionRank.Officer;
@@ -1028,11 +1050,13 @@ public class Faction {
         if (Leader.equalsIgnoreCase(p)) rank = FactionRank.Leader;
         return rank;
     }
-    public FactionRank getPlayerRank(Player p){
+
+    public FactionRank getPlayerRank(Player p) {
         return getPlayerRank(p.getName().toLowerCase());
     }
-    public FactionRank getPlayerRank(CorePlayer p){
-        return getPlayerRank((Player)p);
+
+    public FactionRank getPlayerRank(CorePlayer p) {
+        return getPlayerRank((Player) p);
     }
 
     public void BroadcastMessage(String message, FactionRank rank) {
@@ -1236,10 +1260,10 @@ public class Faction {
 
     public void AddFactionChatMessage(String message, CorePlayer p) {
         FactionRank r = getPlayerRank(p);
-        message = TextFormat.GRAY+"["+r.GetChatPrefix()+TextFormat.GRAY+"] - "+r.GetChatColor()+p.getDisplayName()+TextFormat.GRAY+" > "+TextFormat.WHITE+message;
-        BroadcastMessage("Faction> "+message);
+        message = TextFormat.GRAY + "[" + r.GetChatPrefix() + TextFormat.GRAY + "] - " + r.GetChatColor() + p.getDisplayName() + TextFormat.GRAY + " > " + TextFormat.WHITE + message;
+        BroadcastMessage("Faction> " + message);
         LastFactionChat.addFirst(message);
-        if(LastFactionChat.size() > Settings.getMaxFactionChat()){
+        if (LastFactionChat.size() > Settings.getMaxFactionChat()) {
             LastFactionChat.removeLast();
         }
     }
@@ -1247,10 +1271,10 @@ public class Faction {
 
     public void AddAllyChatMessage(String message, CorePlayer p) {
         FactionRank r = getPlayerRank(p);
-        message = TextFormat.GRAY+"["+r.GetChatPrefix()+TextFormat.GRAY+"] - "+r.GetChatColor()+p.getDisplayName()+TextFormat.GRAY+" > "+TextFormat.WHITE+message;
-        BroadcastMessage("Ally> "+message);
+        message = TextFormat.GRAY + "[" + r.GetChatPrefix() + TextFormat.GRAY + "] - " + r.GetChatColor() + p.getDisplayName() + TextFormat.GRAY + " > " + TextFormat.WHITE + message;
+        BroadcastMessage("Ally> " + message);
         LastAllyChat.addFirst(message);
-        if(LastAllyChat.size() > Settings.getMaxAllyChat()){
+        if (LastAllyChat.size() > Settings.getMaxAllyChat()) {
             LastAllyChat.removeLast();
         }
     }

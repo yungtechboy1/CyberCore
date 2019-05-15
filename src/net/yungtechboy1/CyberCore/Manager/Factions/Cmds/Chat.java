@@ -1,13 +1,8 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
-import cn.nukkit.Player;
-import cn.nukkit.command.CommandSender;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.window.FormWindowSimple;
-import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.FactionSettings;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
@@ -33,18 +28,27 @@ public class Chat extends Commands {
 
     @Override
     public void RunCommand() {
-        CorePlayer p = (CorePlayer) Sender;
-        if (p == null) return;
+        CorePlayer p = Sender;
+        if (p == null) {
+            System.out.println("ERRORRRR NULLLLIN CHAT");
+            return;
+        }
 
         StringBuilder chat = new StringBuilder();
+        for (String s : Args) {
+            chat.append(s).append(" ");
+        }
         int a = 0;
-        if (Args.length == 1) {
+        if (Args.length == 0) {
             FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Faction/Ally Chat Window", "");
             int k = 0;
             FWM.addButton(new ElementButton("Open Faction Chat Window"));
             FWM.addButton(new ElementButton("Open Ally Chat Window"));
             p.showFormWindow(FWM);
             p.LastSentFormType = FormType.MainForm.Faction_Chat_Choose;
+//            p.showFormWindow(FWM);
+        } else {
+            fac.AddFactionChatMessage(chat.toString(), p);
         }
 //        for (String c : Args) {
 //            a++;

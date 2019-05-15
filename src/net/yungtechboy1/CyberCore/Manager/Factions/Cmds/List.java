@@ -53,7 +53,7 @@ public class List extends Commands {
             //Privacy
             a += TextFormat.DARK_GREEN+""+x+" > ";
             if (f.GetPrivacy() == 1) {
-                a += TextFormat.RED + "[C]";
+                a += TextFormat.RED + "[P]";
             } else {
                 a += TextFormat.GREEN + "[O]";
             }

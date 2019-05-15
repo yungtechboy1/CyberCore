@@ -82,24 +82,24 @@ public class ServerSqlite extends MySQL {
 
     }
 
-    public void LoadPlayer(Player p) {
-        try{
-        LoadHomes((CorePlayer) p);
-        LoadSettings((CorePlayer) p);
-        Faction f = plugin.FM.FFactory.IsPlayerInFaction((CorePlayer) p);
-        ((CorePlayer) p).Faction = f.GetName();
-    }catch (Exception e){
-            CyberCoreMain.getInstance().getLogger().error("EEEEE11122223333",e);
-        }
-    }
+    public void LoadPlayer(CorePlayer p)
+    {
 
-    public void LoadPlayer(CorePlayer p) {
-        LoadHomes(p);
+        if(p == null)System.out.println("PLAYER NULL");
+        System.out.println("PLAYER >>> "+p.getClass().getName());
+        try {
+            LoadHomes(p);
+            LoadSettings(p);
+            Faction f = plugin.FM.FFactory.IsPlayerInFaction(p);
+            p.Faction = f.GetName();
+        } catch (Exception e) {
+            CyberCoreMain.getInstance().getLogger().error("EEEEE11122223333", e);
+        }
     }
 
     public void UnLoadPlayer(Player p) {
         SaveHomes((CorePlayer) p);
-        SaveSettings((CorePlayer)p);
+        SaveSettings((CorePlayer) p);
     }
 
     public void UnLoadPlayer(CorePlayer p) {

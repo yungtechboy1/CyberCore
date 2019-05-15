@@ -2,12 +2,9 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
-import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
-import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Messages;
 
 import java.util.ArrayList;
 
@@ -62,7 +59,12 @@ public class FactionBaseCMD extends Command {
 //                    new Kick(commandSender, args, Owner.FM);
 //                    break;
 //            }
-            Owner.FM.FC.onCommand(Owner.FM,commandSender,command,strings);
+
+        String key = null;
+        if (strings.length == 0) key = null;
+        else key = strings[0];
+        String[] args = PushOne(strings);
+        Owner.FM.FC.onCommand(Owner.FM, commandSender, key, args);
         return true;
     }
 }

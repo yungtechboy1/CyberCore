@@ -51,7 +51,7 @@ public class MasterListener implements Listener {
         p.sendTitle(plugin.colorize("&l&bCyberTech"), plugin.colorize("&l&2Welcome!"), 30, 30, 10);
 
 //        plugin.initiatePlayer(p);
-        plugin.ServerSQL.LoadPlayer(p);
+        plugin.ServerSQL.LoadPlayer(plugin.getCorePlayer(p));
         String rank = plugin.RankFactory.getPlayerRank(p).getDisplayName();
         p.sendMessage(plugin.colorize("&2You Have Joined with the Rank: " + rank));
         if (rank != null && rank.equalsIgnoreCase("op")) {
@@ -71,6 +71,10 @@ public class MasterListener implements Listener {
         Faction fac = null;
         if(cp.Faction != null) fac = plugin.FM.FFactory.getFaction(cp.Faction);
         switch (cp.LastSentFormType) {
+            case Faction_Chat_Faction:
+                if(fac == null)break;
+                fac.HandleFactionChatWindow((FormResponseCustom)pr.getResponse(),cp);
+                break;
             case Faction_Chat_Choose:
                 FormResponseSimple fr = (FormResponseSimple) pr.getResponse();
                 switch (fr.getClickedButtonId()){

@@ -514,7 +514,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         if (p instanceof CorePlayer) {
             return (CorePlayer) p;
         }
-        return null;
+        return (CorePlayer) getPlayer(p.getName());
     }
 
     public Integer GetIntTime() {

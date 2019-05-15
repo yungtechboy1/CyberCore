@@ -41,20 +41,21 @@ public class Kick extends Commands {
     @Override
     public void RunCommand() {
         FactionRank perm = fac.getSettings().getAllowedToKick();
-        FactionRank fr = fac.getPlayerRank((Player)Sender);
+        FactionRank fr = fac.getPlayerRank(Sender);
         if(fr ==  null || !fr.HasPerm(perm)){
             Sender.sendMessage("ERror you dont have perms to kick players!");
             return;
         }
 
-        if(Args.length == 2){
-            Player pp = Main.getServer().getPlayer(Args[1]);
+        if(Args.length == 1){
+            CorePlayer pp = (CorePlayer)Main.getServer().getPlayer(Args[0]);
             if (pp == null) {
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "Player Is Not Online or Does Not Exist!");
                 return;
             }
+
             String ppn = pp.getName();
-            Faction ofaction = Main.FFactory.getPlayerFaction(pp);
+            Faction ofaction = Main.FFactory.getFaction(pp.Faction);
             if (ofaction == null) {
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "Player Not In Faction!");
                 return;
@@ -83,9 +84,8 @@ public class Kick extends Commands {
                 }
             }
             FWM.addButton(new ElementButton("CJ123"));
-            CorePlayer cp = (CorePlayer) Sender;
-            cp.showFormWindow(FWM);
-            cp.LastSentFormType = FormType.MainForm.Faction_Kick_List;
+            Sender.showFormWindow(FWM);
+            Sender.LastSentFormType = FormType.MainForm.Faction_Kick_List;
 
         }
 
