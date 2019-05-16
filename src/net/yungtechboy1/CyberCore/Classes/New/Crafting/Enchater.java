@@ -3,18 +3,18 @@ package net.yungtechboy1.CyberCore.Classes.New.Crafting;
 import cn.nukkit.Player;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.CoolDown;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+
+import java.util.ArrayList;
 
 /**
  * Created by carlt on 3/13/2019.
  */
 public class Enchater extends BaseClass {
-    public Enchater(CyberCoreMain main, Player player, int mid, int rank, int xp, ConfigSection cooldowns) {
-        super(main, player, mid, rank, xp, cooldowns);
-    }
-
-    public Enchater(CyberCoreMain main, Player player, int mid, ConfigSection cs) {
-        super(main, player, mid, cs);
+    public Enchater(CyberCoreMain main, CorePlayer player, int xp, ArrayList<CoolDown> cooldowns) {
+        super(main, player, ClassType.Class_Miner_TNT_Specialist, xp, cooldowns);
     }
 
     public int GetMaxFail(){

@@ -22,7 +22,9 @@ import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemMap;
 import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemMap;
 import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
@@ -298,7 +300,9 @@ public class MasterListener implements Listener {
                 } else if (cp.LastSentSubMenu == FormType.SubMenu.Miner) {
                     switch (k) {
                         case 0:
-                            cp.SetPlayerClass(new TNTSpecialist(plugin,cp));
+//                            cp.SetPlayerClass();
+                            plugin.ClassFactory.SetClass(cp, new TNTSpecialist(plugin,cp));
+                            p.sendMessage("Class Set!");
                             break;//TNT-Specialist
                         case 1:
                             break;//Knight

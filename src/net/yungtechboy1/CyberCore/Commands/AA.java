@@ -7,7 +7,8 @@ import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Abilities.Ability;
-import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
@@ -30,7 +31,7 @@ public class AA extends Command {
 
     @Override
     public boolean execute(CommandSender s, String label, String[] args) {
-        BaseClass bc = Owner.ClassFactory.GetClass((Player) s);
+        BaseClass bc = Owner.ClassFactory.GetClass((CorePlayer) s);
         String send = "------- ABILITIES -------\n";
         if (bc != null) {
             //@TODO Finish!
@@ -43,7 +44,7 @@ public class AA extends Command {
                 int i = 1;
                 for (Ability c : bc.PossibleAbillity()) {
                     String a = TextFormat.GREEN + "";
-                    if (bc.HasCooldown(c.ID)) a = TextFormat.RED + "";
+                    if (bc.HasCooldown(c.ID+"")) a = TextFormat.RED + "";
                     a += "[" + i++ + "] > " + c.getName() + TextFormat.RESET + "\n";
                     send += a;
                 }

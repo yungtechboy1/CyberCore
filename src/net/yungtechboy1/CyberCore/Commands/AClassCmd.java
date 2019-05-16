@@ -1,6 +1,7 @@
 package net.yungtechboy1.CyberCore.Commands;
 
 import cn.nukkit.command.data.CommandParamType;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Old.*;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
@@ -9,6 +10,7 @@ import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Old.*;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
@@ -32,13 +34,13 @@ public class AClassCmd extends Command {
                 new CommandParameter("setclass", CommandParamType.STRING, false),
                 new CommandParameter("class", CommandParamType.INT, false)
         });
-        this.setPermission("CyberTech.CyberCore.op");
+//        this.setPermission("CyberTech.CyberCore.op");
     }
 
     @Override
     public boolean execute(CommandSender s, String label, String[] args) {
-        if(!(s instanceof Player))return false;
-        BaseClass bc = Owner.ClassFactory.GetClass((Player) s);
+        if(!(s instanceof CorePlayer))return false;
+        BaseClass bc = Owner.ClassFactory.GetClass((CorePlayer) s);
         if (args.length == 0) {
             if (bc == null) {
                 s.sendMessage("ERROR You don't have a class! Please go to our site to pick a class!");

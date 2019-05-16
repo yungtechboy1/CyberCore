@@ -12,6 +12,10 @@ public class TNTSpecialistPower extends Power {
     }
 
     public void UsePower(Vector3 spawnto){
+        if(getAvailbleQuantity() > 0){
 
+        }else{
+
+        }
     }
 }

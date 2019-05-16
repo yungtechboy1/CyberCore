@@ -1,40 +1,40 @@
 package net.yungtechboy1.CyberCore.Custom.Block;
 
 import cn.nukkit.Player;
+import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.block.BlockTNT;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.item.EntityPrimedTNT;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Sound;
+import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.NukkitRandom;
+import cn.nukkit.metadata.MetadataValue;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.DoubleTag;
 import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.utils.BlockColor;
+import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Custom.Item.CustomItemTNT;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
+
+import java.util.List;
 
 /**
  * Created by carlt on 5/16/2019.
  */
 public class CustomBlockTNT extends BlockTNT {
-    public enum TNTTypes{
-        Regular,
-        Level_1,
-        Level_2,
-        Level_3,
-        Level_4,
-        Level_5,
-    }
+    int TNTLevel = 1;
 
     public CustomBlockTNT() {
+        setTNTLevel(getTNTLevel());
     }
-
-
 
     @Override
     public String getName() {
-        return "TNT";
+        return TextFormat.AQUA + "TNT Level" + getTNTLevel();
     }
 
     @Override
@@ -67,26 +67,75 @@ public class CustomBlockTNT extends BlockTNT {
         return 100;
     }
 
-    public int getFuse(){
-        switch (Level){
-
+    public int getFuse() {
+        NukkitRandom nr = new NukkitRandom();
+        switch (getTNTLevel()) {
+            case 1:
+                return nr.nextRange(150, 250);
+            case 2:
+                return nr.nextRange(100, 200);
+            case 3:
+                return nr.nextRange(80, 170);
+            case 4:
+                return nr.nextRange(70, 130);
+            case 5:
+                return nr.nextRange(70, 90);
+            default:
+                return nr.nextRange(150, 250);
         }
     }
 
     @Override
+    public boolean place(Item item, Block block, Block target, BlockFace face, double fx, double fy, double fz, Player player) {
+        if (this.getLevel().setBlock(this, this, true, true)) {
+            try {
+                setMetadata("Level", new TNTMetaDataValue(CustomItemTNT.GetLevelFromTags(item)));
+            } catch (Exception e) {
+                CyberCoreMain.getInstance().getLogger().error("ERRRRR1111111112312", e);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public int getTNTLevel() {
+        try {
+            List<MetadataValue> lm = getMetadata("Level");
+            if (lm.size() > 0) {
+                for (MetadataValue mv : lm) {
+                    if (mv instanceof TNTMetaDataValue) {
+                        return ((TNTMetaDataValue) mv).lvl;
+                    }
+                }
+            } else {
+                CyberCoreMain.getInstance().getLogger().warning("TOO SMALLLLL|||||||");
+            }
+        } catch (Exception e) {
+
+            CyberCoreMain.getInstance().getLogger().error("ERRRRR1111111112312|||||||", e);
+        }
+        CyberCoreMain.getInstance().getLogger().error("NONE TNT LVL FOUND!|||||||");
+        return 1;
+    }
+
+    public void setTNTLevel(int TNTLevel) {
+        this.TNTLevel = TNTLevel;
+    }
+
+    @Override
     public void prime() {
-        this.prime(80);
+        this.prime(getFuse());
     }
 
     @Override
     public void prime(int fuse) {
-        this.prime(fuse, (Entity)null);
+        this.prime(fuse, (Entity) null);
     }
 
     @Override
     public void prime(int fuse, Entity source) {
         this.getLevel().setBlock(this, new BlockAir(), true);
-        double mot = (double)(new NukkitRandom()).nextSignedFloat() * 3.141592653589793D * 2.0D;
+        double mot = (double) (new NukkitRandom()).nextSignedFloat() * 3.141592653589793D * 2.0D;
         CompoundTag nbt = (new CompoundTag()).putList((new ListTag("Pos")).add(new DoubleTag("", this.x + 0.5D)).add(new DoubleTag("", this.y)).add(new DoubleTag("", this.z + 0.5D))).putList((new ListTag("Motion")).add(new DoubleTag("", -Math.sin(mot) * 0.02D)).add(new DoubleTag("", 0.2D)).add(new DoubleTag("", -Math.cos(mot) * 0.02D))).putList((new ListTag("Rotation")).add(new FloatTag("", 0.0F)).add(new FloatTag("", 0.0F))).putShort("Fuse", fuse);
         Entity tnt = new EntityPrimedTNT(this.getLevel().getChunk(this.getFloorX() >> 4, this.getFloorZ() >> 4), nbt, source);
         tnt.spawnToAll();
@@ -95,7 +144,7 @@ public class CustomBlockTNT extends BlockTNT {
 
     @Override
     public int onUpdate(int type) {
-        if((type == 1 || type == 6) && this.level.isBlockPowered(this.getLocation())) {
+        if ((type == 1 || type == 6) && this.level.isBlockPowered(this.getLocation())) {
             this.prime();
         }
 
@@ -104,12 +153,12 @@ public class CustomBlockTNT extends BlockTNT {
 
     @Override
     public boolean onActivate(Item item, Player player) {
-        if(item.getId() == 259) {
+        if (item.getId() == 259) {
             item.useOn(this);
             this.prime(80, player);
             return true;
-        } else if(item.getId() == 385) {
-            if(!player.isCreative()) {
+        } else if (item.getId() == 385) {
+            if (!player.isCreative()) {
                 player.getInventory().removeItem(new Item[]{Item.get(385, Integer.valueOf(0), 1)});
             }
 
@@ -124,5 +173,34 @@ public class CustomBlockTNT extends BlockTNT {
     @Override
     public BlockColor getColor() {
         return BlockColor.TNT_BLOCK_COLOR;
+    }
+
+    public enum TNTTypes {
+        Regular,
+        Level_1,
+        Level_2,
+        Level_3,
+        Level_4,
+        Level_5,
+    }
+
+    public class TNTMetaDataValue extends MetadataValue {
+
+        int lvl = 1;
+
+        public TNTMetaDataValue(int l) {
+            super(CyberCoreMain.getInstance());
+            lvl = l;
+        }
+
+        @Override
+        public Object value() {
+            return lvl;
+        }
+
+        @Override
+        public void invalidate() {
+
+        }
     }
 }

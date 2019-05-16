@@ -1,10 +1,7 @@
 package net.yungtechboy1.CyberCore;
 
 import cn.nukkit.Server;
-import cn.nukkit.block.Block;
-import cn.nukkit.block.BlockIce;
-import cn.nukkit.block.BlockLiquid;
-import cn.nukkit.block.BlockUnknown;
+import cn.nukkit.block.*;
 import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.entity.passive.EntityPig;
 import cn.nukkit.event.EventHandler;
@@ -21,10 +18,13 @@ import net.yungtechboy1.CyberCore.Commands.Homes.DelHome;
 import net.yungtechboy1.CyberCore.Commands.Homes.HomeManager;
 import net.yungtechboy1.CyberCore.Commands.Homes.SetHome;
 import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
+import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
+import net.yungtechboy1.CyberCore.Custom.Item.CustomItemMap;
+import net.yungtechboy1.CyberCore.Custom.Item.CustomItemTNT;
 import net.yungtechboy1.CyberCore.Data.ServerSqlite;
 import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
@@ -110,7 +110,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public MobPlugin MP;
     //KDR
     //Classes / MMO
-    public net.yungtechboy1.CyberCore.Factory.ClassFactory ClassFactory;
+    public net.yungtechboy1.CyberCore.Factory.ClassFactory ClassFactory = null;
     //PasswordFactoy
     public net.yungtechboy1.CyberCore.Factory.PasswordFactoy PasswordFactoy;
     //CustomFactory
@@ -219,6 +219,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        getServer().getNetwork().registerPacket(ProtocolInfo.START_GAME_PACKET, CustomStartGamePacket.class);
 
         Block.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
+        Block.list[Block.TNT] = CustomBlockTNT.class;
 //        Item.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         addCreativeItem(Item.get(Block.ENCHANT_TABLE, 5, 1).setCustomName("TTTTTTTTTTTTTT"));
         ReloadBlockList(Block.ENCHANTING_TABLE, BlockEnchantingTable.class);
@@ -227,6 +228,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         ReloadBlockList(Block.MONSTER_SPAWNER, SpawnerWithLevelBlock.class);
         Item.list[Item.BOOK] = CItemBook.class;
         Item.list[Item.ENCHANT_BOOK] = CItemBookEnchanted.class;
+        Item.list[BlockID.TNT] = CustomItemTNT.class;
 
         WarpManager = new WarpManager(this);
 
@@ -286,7 +288,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        PasswordFactoy = new PasswordFactoy(this);
 //
-//        ClassFactory = new ClassFactory(this);
+        ClassFactory = new ClassFactory(this);
 //
 //        CustomFactory = new CustomFactory(this);
 

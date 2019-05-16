@@ -151,9 +151,9 @@ Has `Success` and `fail` Rates
     - Levels:
         - 1 
             - Base TNT
-            - 80 - 250 Fuse
+            - 150 - 250 Fuse
         - 2 
-            - 80 - 200 Fuse
+            - 100 - 200 Fuse
         - 3 
             - Adds 3 Blocks to range
             - 80 - 170 Fuse

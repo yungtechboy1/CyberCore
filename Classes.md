@@ -12,7 +12,7 @@ Specalizations
    - TNT-Specialist
    - Mining any block with a Pickaxe adds 1 -3 XP
      - Level 1 - 9:
-        - Player will regerate 1 TNT every Level - 200 Secs
+        - Player will regerate 1 TNT every 160 Secs - level
         - Holds a Max of 10 TNT blocks
      - Level 10 - 19:
         - Mining with a pickaxe reduces regin time by 1 Sec after Level 10

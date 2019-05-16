@@ -4,6 +4,7 @@ import cn.nukkit.InterruptibleThread;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
@@ -29,8 +30,8 @@ public class SendHUD extends Thread implements InterruptibleThread {
                 lasttick = tick;
                 CyberCoreMain Main = CyberCoreMain.getInstance();
                 for (Player p : Main.getServer().getOnlinePlayers().values()) {
-                    if(p.isAlive() && p.isOnline())
-                    FormatHUD((CorePlayer) p);
+                    if (p.isAlive() && p.isOnline())
+                        FormatHUD((CorePlayer) p);
                 }
                 try {
                     Thread.sleep(200);//4 Ticks
@@ -81,19 +82,21 @@ public class SendHUD extends Thread implements InterruptibleThread {
             f += TextFormat.GRAY + " -- " + TextFormat.GRAY + "Faction : " + TextFormat.AQUA + fn + TextFormat.GRAY + " | " + TextFormat.GREEN + fxp + TextFormat.AQUA + " / " + TextFormat.GOLD + fxpm + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + flvl + TextFormat.GRAY + " -- " + TextFormat.RESET + "\n";
         if (!p.Settings.isHudClassOff()) {
 //            TODO
-//              String pclass = "NONE";
-//            BaseClass bc = getOwner().ClassFactory.GetClass(p);
-//            int pxp = 0;
-//            int pxpof = 0;
-//            int plvl = 0;
-//            if (bc != null) {
-//                int lvl = bc.XPToLevel(bc.getXP());
-//                pclass = bc.getName();
-//                pxp = bc.XPRemainder(bc.getXP());
-//                pxpof = bc.calculateRequireExperience(lvl + 1);
-//                plvl = lvl;
-//                f += TextFormat.GRAY + "Class : " + TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl;
-//            }
+            if (Main.ClassFactory != null) {
+                String pclass = "NONE";
+                BaseClass bc = Main.ClassFactory.GetClass(p);
+                int pxp = 0;
+                int pxpof = 0;
+                int plvl = 0;
+                if (bc != null) {
+                    int lvl = bc.XPToLevel(bc.getXP());
+                    pclass = bc.getName();
+                    pxp = bc.XPRemainder(bc.getXP());
+                    pxpof = bc.calculateRequireExperience(lvl + 1);
+                    plvl = lvl;
+                    f += TextFormat.GRAY + "Class : " + TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl;
+                }
+            }
         }
         p.sendTip(f);
     }
