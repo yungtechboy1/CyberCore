@@ -26,8 +26,8 @@ public class Admin extends Commands {
     public Admin(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f Admin", m);
         senderMustBePlayer = true;
-        senderMustBeInFaction = true;
-        senderMustBeAdmin = true;
+//        senderMustBeInFaction = true;
+//        senderMustBeAdmin = true;
         sendUsageOnFail = true;
 
         if (run()) {

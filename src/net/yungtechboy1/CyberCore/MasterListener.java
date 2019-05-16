@@ -23,6 +23,8 @@ import cn.nukkit.item.ItemMap;
 import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
+import net.yungtechboy1.CyberCore.Custom.Item.CustomItemMap;
 import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionString;
@@ -188,9 +190,9 @@ public class MasterListener implements Listener {
                         cp.showFormWindow(FWM);
                         break;
                     case 1:
-                        ItemMap im = new ItemMap();
+                        CustomItemMap im = new CustomItemMap();
                         PositionImage pi = new PositionImage(128,p.getFloorX(),p.getFloorY(),p.getFloorZ(),p.getLevel());
-                        im.setImage(pi.CreatImg());
+                        im.setImage(pi);
                         p.getInventory().addItem(im);
                         break;
                 }
@@ -265,7 +267,7 @@ public class MasterListener implements Listener {
                 int k = frs.getClickedButtonId();
                 if (cp.LastSentSubMenu == FormType.SubMenu.MainMenu) {
                     if (k == 0) {//Offense
-                        cp.showFormWindow(new FormWindowSimple("Choose your Class Catagory!", "Visit Cybertechpp.com for more info on classes!",
+                        cp.showFormWindow(new FormWindowSimple("Choose your Class Catagory Offense!", "Visit Cybertechpp.com for more info on classes!",
                                 new ArrayList<ElementButton>() {{
                                     add(new ElementButton("Assassin"));
                                     add(new ElementButton("Knight"));
@@ -274,6 +276,13 @@ public class MasterListener implements Listener {
                                 }}));
                         cp.LastSentFormType = Class_1;
                         cp.LastSentSubMenu = FormType.SubMenu.Offense;
+                    } else if (k == 1) {
+                        cp.showFormWindow(new FormWindowSimple("Choose your Class Catagory Miner!", "Visit Cybertechpp.com for more info on classes!",
+                            new ArrayList<ElementButton>() {{
+                                add(new ElementButton("TNT-Specialist"));
+                            }}));
+                        cp.LastSentFormType = Class_1;
+                        cp.LastSentSubMenu = FormType.SubMenu.Miner;
                     } else if (k == 4) {
                         //TEMP-GIVE SPAWNER
                         Item i = Item.get(Item.MONSTER_SPAWNER, 0, 1);
@@ -286,7 +295,19 @@ public class MasterListener implements Listener {
                         cp.sendMessage("Gave ITem!");
                         cp.getInventory().addItem(i);
                     }
-                } else if (cp.LastSentSubMenu == FormType.SubMenu.Offense) {
+                } else if (cp.LastSentSubMenu == FormType.SubMenu.Miner) {
+                    switch (k) {
+                        case 0:
+                            cp.SetPlayerClass(new TNTSpecialist(plugin,cp));
+                            break;//TNT-Specialist
+                        case 1:
+                            break;//Knight
+                        case 2:
+                            break;//Raider
+                        case 3:
+                            break;//Theif
+                    }
+                }else if (cp.LastSentSubMenu == FormType.SubMenu.Offense) {
                     switch (k) {
                         case 0:
                             break;//Assassin

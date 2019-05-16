@@ -286,13 +286,13 @@ public class FactionsCommands {
                 //@todo Add Auto unclaim and Claim Radius
                 if(command.equalsIgnoreCase("admin")) {
                     String gar = null;
-                    if(sender.isOp()) {
+//                    if(sender.isOp()) {
                         new Admin(sender, args, main);
                         return true;
-                    }else{
-                        sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Error! You dont have access to this command!");
-                        return true;
-                    }
+//                    }else{
+//                        sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Error! You dont have access to this command!");
+//                        return true;
+//                    }
                 }
 
                 //Accept

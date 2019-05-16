@@ -140,3 +140,26 @@ Data:
 Can increase the Damage or Speed on a Custom Modified Sword.
 
 Has `Success` and `fail` Rates
+
+000:0 - TNT
+---
+
+- Data:
+    - Type:
+        - Regular
+        - Class-Miner
+    - Levels:
+        - 1 
+            - Base TNT
+            - 80 - 250 Fuse
+        - 2 
+            - 80 - 200 Fuse
+        - 3 
+            - Adds 3 Blocks to range
+            - 80 - 170 Fuse
+        - 4 
+            - 70 - 130 Fuse
+        - 5 
+            - 70 - 90 Fuse
+            - Adds 8 Blocks to range
+            - Breaks Obsidian

@@ -29,7 +29,6 @@ public abstract class Commands {
     public boolean senderMustBeGeneral = false;
     @Deprecated
     public boolean senderMustBeLeader = false;
-    @Deprecated
     public boolean senderMustBeAdmin = false;
     public boolean sendUsageOnFail = false;
     public boolean sendFailReason = false;

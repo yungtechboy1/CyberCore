@@ -9,7 +9,24 @@ Base Classes
 Specalizations
     
  - Miner - Mining and Digging
-   - TNT-Specalist
+   - TNT-Specialist
+   - Mining any block with a Pickaxe adds 1 -3 XP
+     - Level 1 - 9:
+        - Player will regerate 1 TNT every Level - 200 Secs
+        - Holds a Max of 10 TNT blocks
+     - Level 10 - 19:
+        - Mining with a pickaxe reduces regin time by 1 Sec after Level 10
+     - Level 20 - 29:
+        - Add 10 More TNT blocks to your capacity
+     - Level 30 - 39:
+        - Spawns TNT Level 2, Which Expands the range of TNT by 5 Blocks
+     - Level 30 - 39:
+        - Spawns TNT Level 2
+     - Level 30 - 39:
+        - Spawns TNT Level 2
+     - Level 30 - 39:
+        - Spawns TNT Level 2
+     
      - Chance of spawning TNT that can destroy ores & Cobblestone when Mining
        - 20% increase in power with TNT
         - MineLife

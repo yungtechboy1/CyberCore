@@ -28,19 +28,23 @@ public class PositionImage {
         Level = level;
     }
 
-    public BufferedImage CreatImg() {
+    public BufferedImage CreateImg() {
         //image dimension
         int width = Size;
         int height = Size;
 //create buffered image object img
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);//PNG
+        for (int zz = 0; zz < height; zz++) {
+            for (int xx = 0; xx < width; xx++) {
+                img.setRGB(xx,zz,RGBit(125, 233, 58));
+            }
+        }
 
-
-        for (int z = 0; z < height; z++) {
-            for (int x = 0; x < width; x++) {
-                Vector3 b = GetTopBlock(new Vector3(this.x+x,0,this.z+z));
+        for (int zz = 0; zz < height; zz++) {
+            for (int xx = 0; xx < width; xx++) {
+                Vector3 b = GetTopBlock(new Vector3(this.x+xx,0,this.z+zz));
                 int k = GetBlockColor(Level.getBlock(b));
-                img.setRGB(x, z, k);
+                img.setRGB(xx,zz,k);
             }
         }
         return img;
@@ -53,7 +57,7 @@ public class PositionImage {
         return RGBit(r,g,g,100);
     }
     private int RGBit(int r,int g, int b){
-        return RGBit(r,g,b,0);
+        return RGBit(r,g,b,100);
     }
     private int RGBit(int r,int g, int b, int a){
         return (a << 24) | (r << 16) | (g << 8) | b;
@@ -146,8 +150,8 @@ public class PositionImage {
     public Vector3 GetTopBlock(Vector3 spawn) {
         Vector3 v = spawn.floor();
         FullChunk chunk = Level.getChunk((int) v.x >> 4, (int) v.z >> 4, false);
-        int x = (int) v.x & 15;
-        int z = (int) v.z & 15;
+        int xx = (int) v.x & 15;
+        int zz = (int) v.z & 15;
         if (chunk != null) {
             int y = 254;
 
@@ -155,16 +159,16 @@ public class PositionImage {
             Block block;
             for (int i = 254; i > 0; i--) {
 //                System.out.println(x+' '+i+" "+z+' ');
-                int bid = chunk.getBlockId(x, i, z);
+                int bid = chunk.getBlockId(xx, i, zz);
                 boolean wasAir = bid == 0;
                 if (wasAir || GetBlockColor(Block.get(bid)) == Integer.MIN_VALUE) continue;
-                System.out.println(x+" "+i+" "+z+" >>> "+bid);
-                System.out.println("PASS");
-                b = chunk.getFullBlock(x, i, z);
+//                System.out.println(xx+" "+i+" "+zz+" >>> "+bid);
+//                System.out.println("PASS");
+                b = chunk.getFullBlock(xx, i, zz);
                 block = Block.get(b >> 4, b & 15);
                 if(!block.isSolid())continue;
-                System.out.println("PASS!");
-                return new Vector3(x,i,z);
+//                System.out.println("PASS!");
+                return new Vector3(spawn.getFloorX(), i, spawn.getFloorZ());
             }
             v.y = 200;
         }

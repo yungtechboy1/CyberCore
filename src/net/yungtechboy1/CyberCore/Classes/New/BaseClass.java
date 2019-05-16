@@ -13,6 +13,7 @@ import cn.nukkit.event.player.PlayerToggleSprintEvent;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Abilities.Ability;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -37,7 +38,11 @@ public abstract class BaseClass {
     protected final static int TYPE_Farming_LumberJack = 11;
     protected final static int TYPE_Farming_Miner = 12;
 
-    public ConfigSection COOLDOWNS = new ConfigSection();
+    public enum ClassType{
+        Class_Miner_TNT_Specialist;
+    }
+
+    public ArrayList<Integer> COOLDOWNS = new ArrayList<>();
     public boolean Prime = false;
     public int PrimeKey = 0;
     public int SwingTime = 20;
@@ -74,30 +79,40 @@ public abstract class BaseClass {
         put(Block.SOUL_SAND, 40);
         put(Block.CLAY_BLOCK, 40);
     }};
-    private Player P;
-    private int TYPE = 0;
+    private CorePlayer P;
+    private ClassType TYPE = ClassType.Class_Miner_TNT_Specialist;
     private int LVL = 0;
     private int XP = 0;
     private Ability ActiveAbility;
 
-    public BaseClass(CyberCoreMain main, Player player, int mid, int rank, int xp, ConfigSection cooldowns) {
+    public ArrayList<Power> getPowers() {
+        return Powers;
+    }
+
+    public void AddPower(Power power) {
+        Powers.add(power);
+    }
+
+    private ArrayList<Power> Powers = new ArrayList<>();
+
+    public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank, int xp, ArrayList<Integer> cooldowns) {
         CCM = main;
-        MainID = mid;
+//        MainID = mid;
         P = player;
         TYPE = rank;
         XP = xp;
         LVL = XPToLevel(xp);
-        COOLDOWNS = cooldowns;
+        if(cooldowns != null)COOLDOWNS = cooldowns;
     }
-
-    public BaseClass(CyberCoreMain main, Player player, int mid, ConfigSection cs) {
-        CCM = main;
-        MainID = mid;
-        P = player;
-        XP = cs.getInt("XP");
-        TYPE = cs.getInt("TYPE");
-        LVL = XPToLevel(XP);
-        COOLDOWNS = cs.getSection("COOLDOWNS");
+    public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank) {
+//        CCM = main;
+////        MainID = mid;
+//        P = player;
+//        XP = 0;
+//        TYPE = rank;
+//        LVL = XPToLevel(XP);
+////        COOLDOWNS = cs.getSection("COOLDOWNS");
+        this(main,player,rank,0, null);
     }
 
     public ArrayList<Ability> PossibleAbillity() {
@@ -162,9 +177,14 @@ public abstract class BaseClass {
         COOLDOWNS.put(key, value);
     }
 
+    public void ReduceCooldown(int perk, int value){
+        if(!HasCooldown(perk))return;
+        COOLDOWNS.put(perk, COOLDOWNS.getInt(perk) -value);
+    }
+
     public boolean HasCooldown(int perk) {
         String key = "" + perk;
-        Integer time = (int) (Calendar.getInstance().getTime().getTime() / 1000);
+        Integer time = CCM.GetIntTime();
         return time < COOLDOWNS.getInt(key);
     }
 

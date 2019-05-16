@@ -23,6 +23,7 @@ import cn.nukkit.potion.Effect;
 import cn.nukkit.utils.TextFormat;
 import co.aikar.timings.Timing;
 import co.aikar.timings.Timings;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
@@ -64,6 +65,7 @@ public class CorePlayer extends Player {
     public int MaxHomes = 5;
     public int TPRTimeout;
     public Integer FactionInviteTimeout = -1;
+    public AuctionHouse AH = null;
     long uct = 0;
     boolean uw = false;
     private FormWindow nw;
@@ -78,10 +80,19 @@ public class CorePlayer extends Player {
     private boolean isInTeleportingProcess = false;
     private CorePlayer TargetTeleporting = null;
     private Position TargetTeleportingLoc;
-    public AuctionHouse AH = null;
+    private BaseClass PlayerClass = null;
+    private int FactionCheck = -1;
 
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
         super(interfaz, clientID, ip, port);
+    }
+
+    public void SetPlayerClass(BaseClass bc) {
+        PlayerClass = bc;
+    }
+
+    public BaseClass GetPlayerClass(BaseClass bc) {
+        return PlayerClass;
     }
 
     public boolean isInTeleportingProcess() {
@@ -478,7 +489,6 @@ public class CorePlayer extends Player {
         if (f < max) setOnFire(nr.nextRange(1, 4));
     }
 
-    private int FactionCheck = -1;
     @Override
     public boolean onUpdate(int currentTick) {
         //Check for Faction!
@@ -494,14 +504,13 @@ public class CorePlayer extends Player {
             //Check to See if Faction Invite Expired
             if (FactionInvite != null && FactionInviteTimeout > 0) {
                 int t = CyberCoreMain.getInstance().GetIntTime();
-                if (t < FactionInviteTimeout){
+                if (t < FactionInviteTimeout) {
                     Faction fac = CyberCoreMain.getInstance().FM.FFactory.getFaction(FactionInvite);
-                    fac.BroadcastMessage(TextFormat.YELLOW+getName()+" has declined your faction invite");
+                    fac.BroadcastMessage(TextFormat.YELLOW + getName() + " has declined your faction invite");
                     ClearFactionInvite(true);
                 }
             }
         }
-
 
 
         //Check to see if Player as medic or Restoration
@@ -671,7 +680,7 @@ public class CorePlayer extends Player {
     }
 
     public void StartTeleport(Vector3 v3, Player pl, int delay) {
-        BeginTeleportEffects(new Location(v3.x,v3.y,v3.z,pl.getLevel()), delay);
+        BeginTeleportEffects(new Location(v3.x, v3.y, v3.z, pl.getLevel()), delay);
     }
 
     public void StartTeleport(Position pl) {
@@ -683,7 +692,7 @@ public class CorePlayer extends Player {
     }
 
     private void BeginTeleportEffects(CorePlayer corePlayer, int delay) {
-        BeginTeleportEffects(corePlayer.getLocation(),delay);
+        BeginTeleportEffects(corePlayer.getLocation(), delay);
     }
 
     private void BeginTeleportEffects(Position pos, int delay) {
