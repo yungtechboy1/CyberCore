@@ -12,6 +12,7 @@ import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerToggleSprintEvent;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
+import net.yungtechboy1.CyberCore.MobAI.FileLogger;
 import net.yungtechboy1.CyberCore.Abilities.Ability;
 import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -135,7 +136,7 @@ public abstract class BaseClass {
         return new ConfigSection() {{
             put("COOLDOWNS", COOLDOWNS);
             put("XP", XP);
-            put("TYPE", TYPE);
+            put("TYPE", TYPE.getKey());
         }};
     }
 

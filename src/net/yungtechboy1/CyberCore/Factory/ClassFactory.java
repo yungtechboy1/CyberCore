@@ -34,7 +34,7 @@ public class ClassFactory implements Listener {
         CCM = main;
         MMOSave = new Config(new File(CCM.getDataFolder(), "MMOSave.yml"), Config.YAML);
         LumberJackTreePlants = new Config(new File(CCM.getDataFolder(), "LumberJackTreePlants.yml"), Config.YAML);
-        CCM.getServer().getScheduler().scheduleDelayedRepeatingTask(new LumberJackTreeCheckerTask(main), 20 * 60, 20 * 60);//Every Min
+//        CCM.getServer().getScheduler().scheduleDelayedRepeatingTask(new LumberJackTreeCheckerTask(main), 20 * 60, 20 * 60);//Every Min
     }
 
     public BaseClass GetClass(CorePlayer p) {
@@ -53,14 +53,19 @@ public class ClassFactory implements Listener {
         return ClassList.get(p.getName().toLowerCase());
     }
 
-//    public void AddToClassListAfterSave(String p) {
-//        Object o = MMOSave.get(p.toLowerCase());
-//        if (o != null && o instanceof ConfigSection) {
-//            BaseClass data = new BaseClass(CCM, null, (ConfigSection) o);
-//            ClassList.put(p.toLowerCase(), data);
-//            return;
-//        }
-//    }
+    public void AddToClassListAfterSave(Player p) {
+        ConfigSection o = (ConfigSection)MMOSave.get(p.getName().toLowerCase());
+        if (o != null && o.containsKey("TYPE")) {
+            int i = o.getInt("TYPE");
+
+            BaseClass data = null;
+            if(i == BaseClass.ClassType.Class_Miner_TNT_Specialist.getKey()){
+                data = new TNTSpecialist(CCM,(CorePlayer) p);
+            }
+            if(data != null)ClassList.put(p.getName().toLowerCase(), data);
+            return;
+        }
+    }
 
     public void SetClass(Player p, BaseClass bc) {
         ClassList.put(p.getName().toLowerCase(), bc);

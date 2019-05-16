@@ -6,6 +6,7 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 
+import java.nio.ByteOrder;
 import java.sql.ResultSet;
 import java.util.HashMap;
 
@@ -46,10 +47,10 @@ public class AuctionItemData {
     }
 
     public AuctionItemData(HashMap<String, Object> v) {
-        String nt = (String) v.get("namedtag");
+        byte[] nt = (byte[]) v.get("namedtag");
         item = Item.get((int) v.get("item-id"), (int) v.get("item-meta"), (int) v.get("item-count"));
         try {
-            item.setCompoundTag(NBTIO.read(nt.getBytes()));
+            item.setCompoundTag(NBTIO.read(nt, ByteOrder.LITTLE_ENDIAN));
         } catch (Exception e) {
             System.out.println("ERROR TRING TO FORMAT NAMEDTAG!!!!");
         }

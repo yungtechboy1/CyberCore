@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Data;
 
 import cn.nukkit.item.Item;
-import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -14,7 +13,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by carlt on 5/1/2019.
@@ -91,8 +89,7 @@ public class AHSqlite extends MySQL {
             if (data.item.hasCompoundTag()) fnt = new String(data.item.writeCompoundTag(data.item.getNamedTag()));
             executeUpdate(
                     "INSERT INTO `AuctionHouse` VALUES (null," +
-                            data.item.getId() + "," + data.item.getDamage() + "," + data.item.getCount() + ",'" +
-                            fnt + "'," + data.Cost + ",'" + data.Soldby + "','" + data.Soldbyn + "',false)");
+                            data.item.getId() + "," + data.item.getDamage() + "," + data.item.getCount() + ",?," + data.Cost + ",'" + data.Soldby + "','" + data.Soldbyn + "',false)", data.item.getNamedTag());
 
             plugin.getLogger().info("AH saved for " + data.toString());
             ExecuteQuerySQLite("SELECT * FROM `AuctionHouse` ");

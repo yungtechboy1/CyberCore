@@ -5,13 +5,13 @@
     <output-test url="file:///test/CyberCore" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/out" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/Backup" />
+      <excludeFolder url="file://$MODULE_DIR$/Level" />
+      <excludeFolder url="file://$MODULE_DIR$/worlds" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="library" name="DbLib-1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="nukkit-master" level="project" />
-    <orderEntry type="library" exported="" name="CJ DEPS" level="project" />
+    <orderEntry type="library" name="CJ DEPS" level="project" />
   </component>
 </module>

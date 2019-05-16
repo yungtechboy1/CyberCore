@@ -1,15 +1,16 @@
 package net.yungtechboy1.CyberCore.Data;
 
 import cn.nukkit.Player;
+import cn.nukkit.nbt.NBTIO;
+import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.Config;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import ru.nukkit.dblib.DbLib;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.IOException;
+import java.nio.ByteOrder;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -55,6 +56,26 @@ public class MySQL {
         Statement statement = connection.prepareStatement(query);
         statement.executeUpdate(query);
         if (statement != null) statement.close();
+        if (connection != null) connection.close();
+        return true;
+    }
+    public boolean executeUpdate(String query, CompoundTag ct) throws SQLException {
+        Connection connection = connectToDb();
+        if (connection == null) return false;
+
+        PreparedStatement pstmt = connection.prepareStatement(query);
+        try {
+//            ct.setName("");
+            byte[] ba = NBTIO.write(ct, ByteOrder.LITTLE_ENDIAN);
+
+            pstmt.setBytes(1, ba);
+            pstmt.execute();
+            CyberCoreMain.getInstance().getLogger().error("ALL GGGGAAADDDD");
+        } catch (IOException var3) {
+           CyberCoreMain.getInstance().getLogger().error(">>>assda>>sd asda.>",var3);
+        }
+
+        if (pstmt != null) pstmt.close();
         if (connection != null) connection.close();
         return true;
     }

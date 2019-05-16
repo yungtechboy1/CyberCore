@@ -4,6 +4,7 @@ import net.yungtechboy1.CyberCore.Commands.Constructors.CheckPermCommand;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Rank.RankList;
 
@@ -33,7 +34,7 @@ public class SetClass extends CheckPermCommand {
             put("TYPE", type);
         }};
         Owner.ClassFactory.MMOSave.set(name.toLowerCase(),data);
-        Owner.ClassFactory.AddToClassListAfterSave(name);
+        Owner.ClassFactory.AddToClassListAfterSave((CorePlayer)commandSender);
 
         return true;
     }

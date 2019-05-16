@@ -13,8 +13,8 @@ import java.util.ArrayList;
  * Created by carlt on 3/13/2019.
  */
 public class Enchater extends BaseClass {
-    public Enchater(CyberCoreMain main, CorePlayer player, int xp, ArrayList<CoolDown> cooldowns) {
-        super(main, player, ClassType.Class_Miner_TNT_Specialist, xp, cooldowns);
+    public Enchater(CyberCoreMain main, CorePlayer player, int xp) {
+        super(main, player, ClassType.Class_Miner_TNT_Specialist);
     }
 
     public int GetMaxFail(){
