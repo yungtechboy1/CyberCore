@@ -23,7 +23,15 @@ public final class FormType {
         Faction_Admin_Page_SLR,
         Faction_Create_0_Error,
         Faction_Invite_Choose,
-        Faction_Invited, Faction_Chat_Choose, Faction_Delete_Confirm, Faction_Enemy_Choose, Faction_Info_Self, Faction_Info_Other, Faction_Join_List, Faction_Kick_List, Faction_Chat_Faction,
+        Faction_Invited,
+        Faction_Chat_Choose,
+        Faction_Delete_Confirm,
+        Faction_Enemy_Choose,
+        Faction_Info_Self,
+        Faction_Info_Other,
+        Faction_Join_List,
+        Faction_Kick_List,
+        Faction_Chat_Faction,
 
     }
 

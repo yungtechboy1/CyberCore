@@ -199,10 +199,13 @@ public class Faction {
 
     public void SendFactionChatWindow(CorePlayer cp) {
         FormWindowCustom FWM = new FormWindowCustom("CyberFactions | Faction Chat Window");
-        for (String s : LastFactionChat) {
+        FWM.addElement(new ElementInput("Send Message","Type Message Here"));
+        LinkedList<String> ls = (LinkedList<String>)LastFactionChat.clone();
+        if(ls == null)System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+        String s;
+        while ((s = ls.removeFirst()) != null) {
             FWM.addElement(new ElementLabel(s));
         }
-        FWM.addElement(new ElementInput("Send Message","Type Message Here"));
         cp.showFormWindow(FWM);
         cp.LastSentFormType = FormType.MainForm.Faction_Chat_Faction;
     }
@@ -213,7 +216,7 @@ public class Faction {
             System.out.println("Error @ 12255");
             return;
         }
-        String msg = frc.getInputResponse(frc.getResponses().size()-1);
+        String msg = frc.getInputResponse(0);
         if(msg == null){
             //No Message Send?
             //CLose windows

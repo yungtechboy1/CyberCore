@@ -43,7 +43,7 @@ public class Leader extends Commands {
                     if(r == 2)fac.DelOfficer(ppn);
                     if(r == 3)fac.DelGeneral(ppn);
                     fac.SetLeader(ppn.toLowerCase());
-                    fac.AddMember(Sender.getName());
+                    fac.AddGeneral(Sender.getName());
                     fac.BroadcastMessage(FactionsMain.NAME+TextFormat.YELLOW+""+ppn+" Is your New Leader!");
                     Sender.sendMessage(FactionsMain.NAME+TextFormat.YELLOW+"You are no longer leader!");
 //                    Main.CC.Setnametag((Player) Sender);

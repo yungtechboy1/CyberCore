@@ -19,6 +19,7 @@ import cn.nukkit.form.window.FormWindowCustom;
 import cn.nukkit.form.window.FormWindowModal;
 import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemMap;
 import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
@@ -26,6 +27,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionString;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
+import net.yungtechboy1.CyberCore.Manager.PositionImage;
 
 import java.util.*;
 
@@ -184,6 +186,12 @@ public class MasterListener implements Listener {
                         FWM.addButton(new ElementButton("Load"));
                         FWM.addButton(new ElementButton("Reload"));
                         cp.showFormWindow(FWM);
+                        break;
+                    case 1:
+                        ItemMap im = new ItemMap();
+                        PositionImage pi = new PositionImage(128,p.getFloorX(),p.getFloorY(),p.getFloorZ(),p.getLevel());
+                        im.setImage(pi.CreatImg());
+                        p.getInventory().addItem(im);
                         break;
                 }
                 break;

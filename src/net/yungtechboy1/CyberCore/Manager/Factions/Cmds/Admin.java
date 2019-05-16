@@ -40,6 +40,7 @@ public class Admin extends Commands {
         FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Admin Page (1/2)","");
 //        Element e = null;
         FWM.addButton(new ElementButton("Save/Load/Reload"));
+        FWM.addButton(new ElementButton("GiveTestImage"));
 
         CorePlayer cp = (CorePlayer) CyberCoreMain.getInstance().getServer().getPlayerExact(Sender.getName());
         cp.showFormWindow(FWM);
