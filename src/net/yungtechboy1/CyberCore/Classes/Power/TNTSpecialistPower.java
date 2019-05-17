@@ -22,6 +22,7 @@ public class TNTSpecialistPower extends PowerStackable {
 
     @Override
     public Object UsePower(Object ...args) {
+        System.out.println("NO USEDDDDD>>>>>"+GetTNTMotionPower());
         if(args != null && args.length == 2){
             CorePlayer p = (CorePlayer) args[0];
             int fuse = (int)args[1];
@@ -31,15 +32,20 @@ public class TNTSpecialistPower extends PowerStackable {
     }
 
     private double GetTNTMotionPower(){
-        int x = Level;
+        int x = Level+1;
         double t = Math.sqrt(x)*x;
-        double b = 5*x;
-        return (t/b+1.8);
+        double b = 5d*x;
+        double z =t/b;
+        NukkitRandom nr = new NukkitRandom();
+        return nr.nextRange((int)(z+1.2d*100d),(int)(z+1.8*100d))/100d;
     }
 
     public Object UsePower(CorePlayer p,int fuse) {
+        System.out.println("POWER>>>>>"+GetTNTMotionPower());
         if (getAvailbleQuantity() > 0 || p.isOp()) {
+            System.out.println("POWER>>>>>"+GetTNTMotionPower());
             TakeAvailbleQuantity();
+            System.out.println("POWER>>>>>"+GetTNTMotionPower());
             double mot = (double) (new NukkitRandom()).nextSignedFloat() * 3.141592653589793D * 5.0D;//Was 2
             CompoundTag nbt = (new CompoundTag()).putList((new ListTag("Pos")).add(new DoubleTag("", p.x + 0.5D)).add(new DoubleTag("", p.y)).add(new DoubleTag("", p.z + 0.5D))).putList(new ListTag<DoubleTag>("Motion")
                     .add(new DoubleTag("", -Math.sin(p.yaw / 180 * Math.PI) * Math.cos(p.pitch / 180 * Math.PI)))

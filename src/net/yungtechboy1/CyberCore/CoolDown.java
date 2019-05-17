@@ -1,37 +1,47 @@
 package net.yungtechboy1.CyberCore;
 
+import cn.nukkit.utils.ConfigSection;
+
 /**
  * Created by carlt on 5/16/2019.
  */
-public class CoolDown {
-    public int t = -1;
-    public String k = null;
+public class CoolDown extends ConfigSection {
+    public int Time = -1;
+    public String Key = null;
 
-    public CoolDown(String name){
+    public CoolDown(String name) {
 //        t = tick;
-        k = name;
+        Key = name;
     }
-    public CoolDown(String name, int tick){
-        t = tick;
-        k = name;
+    public CoolDown(String key, int tick) {
+        Time = tick;
+        Key = key;
     }
 
-    public CoolDown AddSecs(int s){
-        t =+ s;
+    public CoolDown AddSecs(int s) {
+        Time = +s;
         return this;
     }
 
-    public int getTime(){
-        return t;
+    public int getTime() {
+        return Time;
     }
 
-    public String getKey(){
-        return k;
+    public void setTime(int time) {
+        Time = time;
     }
 
-    public boolean isValid(){
+    public String getKey() {
+        return Key;
+    }
+
+    public void setKey(String key) {
+        Key = key;
+    }
+
+    public boolean isValid() {
         int ct = CyberCoreMain.getInstance().GetIntTime();
-        return ct > t;
+        return ct > Time;
     }
 
 }

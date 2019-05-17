@@ -29,14 +29,20 @@ public class TNT extends CheckPermCommand {
 
     @Override
     public boolean execute(CommandSender commandSender, String s, String[] strings) {
-        if (!super.execute(commandSender, s, strings)) return SendError();
+        System.out.println(CheckPerms(commandSender));
+        if (!super.execute(commandSender, s, strings)) {
+            System.out.println("EEE112312 1233312 122");
+            return SendError();
+        }
         if (commandSender instanceof CorePlayer) {
+            System.out.println("CCCCCCCC");
             CorePlayer p = (CorePlayer) commandSender;
             BaseClass c = p.GetPlayerClass();
-            if (c == null || !(c instanceof TNTSpecialist)) {
+            if (!(c instanceof TNTSpecialist)) {
                 commandSender.sendMessage(CyberCoreMain.NAME + TextFormat.RED + "Error! You don't have access to this command!");
                 return true;
             }
+            System.out.println("CCCCCCCC");
 
             TNTSpecialist ts = (TNTSpecialist) c;
             TNTSpecialistPower tsp = (TNTSpecialistPower) ts.GetPower(Power.TNT_Specialist);
@@ -45,7 +51,11 @@ public class TNT extends CheckPermCommand {
                 return true;
             }
             if (ts.TryRunPower(Power.TNT_Specialist)) {
+                System.out.println("CCCCCCCC");
                 ts.RunPower(Power.TNT_Specialist, p);
+                System.out.println("CCCCCCCC------");
+            }else{
+                commandSender.sendMessage("Error! Could not run power!");
             }
 
 
@@ -53,17 +63,6 @@ public class TNT extends CheckPermCommand {
             commandSender.sendMessage(CyberCoreMain.NAME + Messages.NEED_TO_BE_PLAYER);
         }
         return true;
-    }
-
-    public Position getHighestStandablePositionAt(Position pos) {
-        int x = pos.getFloorX();
-        int z = pos.getFloorZ();
-        for (int y = 256; y >= 0; y--) {
-            if (pos.level.getBlock(this.temporalVector.setComponents(x, y, z)).isSolid()) {
-                return new Position(x + 0.5, pos.level.getBlock(this.temporalVector.setComponents(x, y, z)).getBoundingBox().getMaxY(), z + 0.5, pos.level);
-            }
-        }
-        return null;
     }
 }
 

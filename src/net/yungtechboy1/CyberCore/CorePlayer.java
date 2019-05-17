@@ -165,7 +165,7 @@ public class CorePlayer extends Player {
     @Override
     public void close(TextContainer message, String reason, boolean notify) {
         CyberCoreMain.getInstance().ServerSQL.UnLoadPlayer(this);
-        super.close();
+        super.close(message, reason, notify);
     }
 
     public void CreateDefaultSettingsData() {
@@ -519,17 +519,46 @@ public class CorePlayer extends Player {
         if (f < max) setOnFire(nr.nextRange(1, 4));
     }
 
+    private final String Cooldown_Faction = "Faction";
+    private final String Cooldown_Class = "Class";
+    private ArrayList<CoolDown> CDL = new ArrayList<>();
+
+    private void AddCoolDown(String key, int secs){
+        CDL.add(new CoolDown(key, CyberCoreMain.getInstance().GetIntTime()+secs));
+    }
+
+    private CoolDown GetCooldown(String key){
+        return GetCooldown(key,false);
+    }
+    private CoolDown GetCooldown(String key, boolean checkvalid){
+        int k = 0;
+        for(CoolDown c: (ArrayList<CoolDown>)CDL.clone()){
+            k++;
+            if(c.Key.equalsIgnoreCase(key)){
+                if(checkvalid && c.isValid()){//CT !> Set Time
+                    CDL.remove(c);
+                    return null;
+                }
+                return c;
+            }
+        }
+        return null;
+    }
+
     @Override
     public boolean onUpdate(int currentTick) {
         //Check for Faction!
-        FactionCheck++;
-        if (FactionCheck > 20 * 60 * 2.5 || FactionCheck < 0) {//5 Min faction Check
-            FactionCheck = 0;
-            Faction f = CyberCoreMain.getInstance().FM.FFactory.IsPlayerInFaction(this);
-            if (f == null) {
-                Faction = null;
-            } else {
-                Faction = f.GetName();
+        CoolDown fc = GetCooldown(Cooldown_Faction,true);
+        if(fc == null) {
+            System.out.println("RUNNNING FACTION CHECK IN CP");
+            AddCoolDown(Cooldown_Faction, 60);//3 mins
+            if(Faction == null) {
+                Faction f = CyberCoreMain.getInstance().FM.FFactory.IsPlayerInFaction(this);
+                if (f == null) {
+                    Faction = null;
+                } else {
+                    Faction = f.GetName();
+                }
             }
             //Check to See if Faction Invite Expired
             if (FactionInvite != null && FactionInviteTimeout > 0) {
@@ -542,9 +571,11 @@ public class CorePlayer extends Player {
             }
         }
         //Class Check
-        ClassCheck++;
-        if (ClassCheck > 20 * 5 || FactionCheck < 0) {//5 sec Class Check
-            ClassCheck = 0;
+
+        CoolDown cc = GetCooldown(Cooldown_Class,true);
+        if(cc == null) {
+            System.out.println("RUNNNING CLASS CHECK IN CP");
+            AddCoolDown(Cooldown_Class,5);
             BaseClass  bc = GetPlayerClass();
             if (bc != null) bc.onUpdate(currentTick);
         }

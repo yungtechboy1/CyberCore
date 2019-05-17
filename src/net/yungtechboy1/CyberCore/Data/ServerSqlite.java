@@ -151,6 +151,7 @@ public class ServerSqlite extends MySQL {
     public void UnLoadPlayer(CorePlayer p) {
         SaveHomes(p);
         SaveSettings(p);
+        plugin.ClassFactory.SaveClassToFile(p);
     }
 
     private void LoadHomes(CorePlayer p) {

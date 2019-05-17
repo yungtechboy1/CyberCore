@@ -29,7 +29,7 @@ public class CheckPermCommand extends Command {
     @Override
     public boolean execute(CommandSender commandSender, String s, String[] strings) {
         CS = commandSender;
-        if(MinRank.getID() > CheckPerms(commandSender))return SendError(Messages.NO_PERM);
+        if(MinRank.getID() > CheckPerms(commandSender))return !SendError(Messages.NO_PERM);
         Error = null;
         return true;
     }

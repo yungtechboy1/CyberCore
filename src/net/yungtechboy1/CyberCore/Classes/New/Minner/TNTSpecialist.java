@@ -55,11 +55,13 @@ public class TNTSpecialist extends MinnerBaseClass {
     @Override
     public Object RunPower(int powerid, Object... args) {
         if(powerid == Power.TNT_Specialist && args.length == 1){
+            System.out.println("GGGGGG");
             CorePlayer p = (CorePlayer)args[0];
             TNTSpecialistPower tsp = (TNTSpecialistPower) GetPower(Power.TNT_Specialist);
             tsp.UsePower(p,getFuse());
+            System.out.println("aaaaaa"+p.getClass().getName());
         }else{
-
+            System.out.println("ERRRRRRRRRRRRRRRR");
         }
         return null;
     }
@@ -115,7 +117,8 @@ public class TNTSpecialist extends MinnerBaseClass {
 //        }
 
         public int GetTNTAddWaitTime() {
-            return 160 - getLVL();
+//            return 160 - getLVL();
+            return 10;
         }
 
 //    @Override

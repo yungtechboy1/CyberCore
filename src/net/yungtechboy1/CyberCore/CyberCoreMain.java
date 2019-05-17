@@ -468,11 +468,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         //Classes
         ClassFactory.Saveall();
-
-        try {
-            //getMySqlConnection().close();
-        } catch (Exception ex) {
-        }
         FM.FFactory.SaveAllFactions();
     }
 

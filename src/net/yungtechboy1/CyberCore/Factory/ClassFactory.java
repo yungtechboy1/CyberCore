@@ -60,6 +60,9 @@ public class ClassFactory implements Listener {
         BaseClass bc = p.GetPlayerClass();
         if(bc!= null){
             MMOSave.set(p.getName().toLowerCase(), p.GetPlayerClass().export());
+            System.out.println("SAVEEE");
+        }else {
+            System.out.println(p.getName()+" HASS NUNN CLASS???");
         }
     }
 
@@ -107,12 +110,14 @@ public class ClassFactory implements Listener {
     }
 
     public void Saveall() {
+        CCM.getLogger().info("SAving All Classes!");
         for (Player p : CCM.getServer().getOnlinePlayers().values()) {
             if (!(p instanceof CorePlayer)) continue;
             CorePlayer cp = (CorePlayer)p;
             if(cp.GetPlayerClass() == null)continue;
             MMOSave.set(cp.getName().toLowerCase(), cp.GetPlayerClass().export());
         }
+        CCM.getLogger().info("SAving File!");
         MMOSave.save();
     }
 }
