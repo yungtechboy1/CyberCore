@@ -23,12 +23,14 @@ public class MineLifeClass extends  MinnerBaseClass{
         Powers.add(Power.MineLife, new MineLifePower(getLVL()));
     }
 
+    @Override
     public boolean TryRunPower(int powerid){
         Power p = Powers.get(powerid);
         if(p == null)return false;
         return p.CanRun();
     }
 
+    @Override
     public void RunPower(int powerid){
 
         Power p = Powers.get(powerid);

@@ -95,7 +95,7 @@ public class CorePlayer extends Player {
         PlayerClass = bc;
     }
 
-    public BaseClass GetPlayerClass(BaseClass bc) {
+    public BaseClass GetPlayerClass() {
         return PlayerClass;
     }
 

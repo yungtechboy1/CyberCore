@@ -5,6 +5,7 @@ import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.Classes.Power.TNTSpecialistPower;
 import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
@@ -42,7 +43,13 @@ public class TNTSpecialist extends MinnerBaseClass {
             Powers.add(Power.TNT_Specialist, new TNTSpecialistPower(getLVL(),0, GetMaxTNTPower()));
         }
 
-        @Override
+    @Override
+    public Object RunPower(int powerid, Object... args) {
+        
+        return null;
+    }
+
+    @Override
         public String getName() {
             return "TNT Specialist";
         }
@@ -112,7 +119,7 @@ public class TNTSpecialist extends MinnerBaseClass {
             } else {
                 if (!tntaddcd.isValid()) {
                     //Add Tnt & reset
-                    Powers.get(Power_TNT_Specialist).AddAvailbleQuantity();
+                    ((TNTSpecialistPower)Powers.get(Power_TNT_Specialist)).AddAvailbleQuantity();
                     AddCooldown(TNT_Specialist_Add_Tick, GetTNTAddWaitTime());
                 }
             }
@@ -126,4 +133,8 @@ public class TNTSpecialist extends MinnerBaseClass {
                 put("TYPE", getTYPE().getKey());
             }};
         }
+
+    public int getFuse() {
+        return 120;
+    }
 }
