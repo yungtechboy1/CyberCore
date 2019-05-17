@@ -24,7 +24,7 @@ public class Top extends CheckPermCommand {
     private Vector3 temporalVector = new Vector3();
 
     public Top(CyberCoreMain server) {
-        super(server, "top", "Teleport to Top Block", "/top", RankList.PERM_ADMIN_1);
+        super(server, "top", "Teleport to Top Block", "/top", RankList.PERM_OP);
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
                 new CommandParameter("player", CommandParamType.TARGET, true)

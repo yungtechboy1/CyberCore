@@ -33,7 +33,17 @@ public class Knight extends BaseClass {
     }
 
     @Override
+    public void SetPowers() {
+
+    }
+
+    @Override
     public int getMainID() {
         return BaseClass.TYPE_Offensive_Raider;
+    }
+
+    @Override
+    public Object RunPower(int powerid, Object... args) {
+        return null;
     }
 }

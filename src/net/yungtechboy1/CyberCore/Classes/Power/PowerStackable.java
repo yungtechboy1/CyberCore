@@ -11,10 +11,14 @@ public class PowerStackable extends Power {
      * @param aq
      * @param maq
      */
-    public PowerStackable(int psc,int lvl, int aq, int maq) {
-        super(psc,lvl);
+    public PowerStackable(int psc, int lvl, int aq, int maq) {
+        super(psc, lvl);
         AvailbleQuantity = aq;
         MaxAvailbleQuantity = maq;
+    }
+
+    public int getMaxAvailbleQuantity() {
+        return MaxAvailbleQuantity;
     }
 
     public void AddAvailbleQuantity(int i) {
@@ -47,7 +51,7 @@ public class PowerStackable extends Power {
         NukkitRandom nr = new NukkitRandom();
         if (nr.nextRange(0, 100) <= PowerSuccessChance || force) {
             //Success
-            if(getAvailbleQuantity() <= 0)return false;
+            if (getAvailbleQuantity() <= 0) return false;
             return true;
         }
         return false;

@@ -10,11 +10,10 @@ import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.event.inventory.CraftItemEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerToggleSprintEvent;
-import cn.nukkit.item.Item;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
+import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
-import net.yungtechboy1.CyberCore.Classes.Power.MineLifePower;
 import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -73,15 +72,11 @@ public abstract class BaseClass {
         put(Block.CLAY_BLOCK, 40);
     }};
     private CorePlayer P;
-
-    public ClassType getTYPE() {
-        return TYPE;
-    }
-
     private ClassType TYPE = ClassType.Class_Miner_TNT_Specialist;
     private int LVL = 0;
     private int XP = 0;
     private Ability ActiveAbility;
+
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank, ConfigSection data) {
         this(main, player, rank);
         if (data != null) {
@@ -100,6 +95,7 @@ public abstract class BaseClass {
             }
         }
     }
+
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank) {
         CCM = main;
 //        MainID = mid;
@@ -108,9 +104,13 @@ public abstract class BaseClass {
         LVL = XPToLevel(XP);
     }
 
+    public ClassType getTYPE() {
+        return TYPE;
+    }
+
     public abstract void SetPowers();
 
-        public int getMainID() {
+    public int getMainID() {
         return MainID;
     }
 
@@ -122,7 +122,7 @@ public abstract class BaseClass {
         return Powers.get(key);
     }
 
-    public abstract Object RunPower(int powerid, Object ...args);
+    public abstract Object RunPower(int powerid, Object... args);
 //        Power p = Powers.get(powerid);
 //        if(p == null || args.length != 3 ){
 //            CCM.getLogger().error("No Power found or Incorrect Args For MineLife E334221");
@@ -139,16 +139,16 @@ public abstract class BaseClass {
         Powers.add(power);
     }
 
-     public boolean TryRunPower(int powerid){
+    public boolean TryRunPower(int powerid) {
         Power p = Powers.get(powerid);
-        if(p == null)return false;
+        if (p == null) return false;
         return p.CanRun();
     }
 
-    public void RunPower(int powerid){
+    public void RunPower(int powerid) {
 
         Power p = Powers.get(powerid);
-        if(p == null)return;
+        if (p == null) return;
 
     }
 
@@ -210,7 +210,7 @@ public abstract class BaseClass {
     }
 
     public void AddCooldown(String perk, int value) {
-        COOLDOWNS.add(new CoolDown(perk, value));
+        COOLDOWNS.add(new CoolDown(perk, CCM.GetIntTime()+value));
     }
 
     public void RemoveCooldown(String perk) {
@@ -397,9 +397,20 @@ public abstract class BaseClass {
 
     }
 
+    public String FormatHudText() {
+        String f = "";
+        int lvl = XPToLevel(getXP());
+        String pclass = getName();
+        int pxp = XPRemainder(getXP());
+        int pxpof = calculateRequireExperience(lvl + 1);
+        int plvl = lvl;
+        f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl;
+        return f;
+    }
+
 
     public enum ClassType {
-        Class_Miner_TNT_Specialist(1);
+        Class_Miner_TNT_Specialist(1), Class_Miner_MineLife(0);
 
         int k = -1;
 

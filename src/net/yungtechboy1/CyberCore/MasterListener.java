@@ -301,7 +301,9 @@ public class MasterListener implements Listener {
                     switch (k) {
                         case 0:
 //                            cp.SetPlayerClass();
-                            plugin.ClassFactory.SetClass(cp, new TNTSpecialist(plugin,cp));
+                            TNTSpecialist ts = new TNTSpecialist(plugin,cp);
+                            cp.SetPlayerClass(ts);
+                            plugin.ClassFactory.SaveClassToFile(cp);
                             p.sendMessage("Class Set!");
                             break;//TNT-Specialist
                         case 1:
@@ -371,7 +373,6 @@ public class MasterListener implements Listener {
         String Msg = (String) plugin.MainConfig.get("Leave-Message");
         event.setQuitMessage(Msg.replace("{player}", event.getPlayer().getName()));
 
-        plugin.ServerSQL.UnLoadPlayer(event.getPlayer());
     }
 
 

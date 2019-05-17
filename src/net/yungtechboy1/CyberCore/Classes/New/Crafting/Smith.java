@@ -14,4 +14,14 @@ public class Smith extends BaseClass {
 
         super(main, player, ClassType.Class_Miner_TNT_Specialist);
     }
+
+    @Override
+    public void SetPowers() {
+
+    }
+
+    @Override
+    public Object RunPower(int powerid, Object... args) {
+        return null;
+    }
 }

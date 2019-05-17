@@ -1,6 +1,15 @@
 package net.yungtechboy1.CyberCore.Classes.New.Minner;
 
+import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.item.EntityPrimedTNT;
+import cn.nukkit.level.Sound;
+import cn.nukkit.math.NukkitRandom;
+import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.nbt.tag.DoubleTag;
+import cn.nukkit.nbt.tag.FloatTag;
+import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.utils.ConfigSection;
+import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.Classes.Power.TNTSpecialistPower;
 import net.yungtechboy1.CyberCore.CoolDown;
@@ -40,12 +49,18 @@ public class TNTSpecialist extends MinnerBaseClass {
 
         @Override
         public void SetPowers() {
-            Powers.add(Power.TNT_Specialist, new TNTSpecialistPower(getLVL(),0, GetMaxTNTPower()));
+            Powers.add(Power.TNT_Specialist, new TNTSpecialistPower(getLVL(),3, GetMaxTNTPower()));
         }
 
     @Override
     public Object RunPower(int powerid, Object... args) {
-        
+        if(powerid == Power.TNT_Specialist && args.length == 1){
+            CorePlayer p = (CorePlayer)args[0];
+            TNTSpecialistPower tsp = (TNTSpecialistPower) GetPower(Power.TNT_Specialist);
+            tsp.UsePower(p,getFuse());
+        }else{
+
+        }
         return null;
     }
 
@@ -136,5 +151,17 @@ public class TNTSpecialist extends MinnerBaseClass {
 
     public int getFuse() {
         return 120;
+    }
+
+    @Override
+    public String FormatHudText() {
+        String f = super.FormatHudText();
+        //Show TNT Power
+        TNTSpecialistPower p = (TNTSpecialistPower)GetPower(Power.TNT_Specialist);
+        if(p == null)return f;
+        int q = p.getAvailbleQuantity();
+        int m = p.getMaxAvailbleQuantity();
+        String n = TextFormat.GRAY+" | "+TextFormat.RED+" TNT: "+q;
+        return f+n;
     }
 }

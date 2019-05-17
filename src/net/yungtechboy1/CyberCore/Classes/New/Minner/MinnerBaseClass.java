@@ -23,6 +23,11 @@ public class MinnerBaseClass extends BaseClass {
 
     }
 
+    @Override
+    public Object RunPower(int powerid, Object... args) {
+        return null;
+    }
+
 
     @Override
     public String getName() {

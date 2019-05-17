@@ -20,6 +20,10 @@ public class Power {
         return CanRun(false);
     }
 
+    public Object UsePower(Object... args) {
+        return null;
+    }
+
     public boolean CanRun(boolean force) {
         NukkitRandom nr = new NukkitRandom();
         if (nr.nextRange(0, 100) <= PowerSuccessChance || force) {

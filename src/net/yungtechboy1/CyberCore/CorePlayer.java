@@ -85,6 +85,7 @@ public class CorePlayer extends Player {
     private CorePlayer TargetTeleporting = null;
     private Position TargetTeleportingLoc;
     private BaseClass PlayerClass = null;
+    private int ClassCheck = -1;
     private int FactionCheck = -1;
 
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
@@ -458,9 +459,18 @@ public class CorePlayer extends Player {
                                 //Done by lmlstarqaq
                                 double breakTime = Math.ceil(target.getBreakTime(this.inventory.getItemInHand(), this) * 20);
                                 if(PlayerClass != null){
+                                    double obreaktime = breakTime;
                                     if(PlayerClass instanceof MineLifeClass && ((MineLifeClass)PlayerClass).TryRunPower(Power.MineLife)){
-                                        double nbt = ((MineLifeClass)PlayerClass).RunPower(Power.MineLife,this.inventory.getItemInHand(),target,breakTime);
-                                        if(nbt != -1)breakTime = nbt;
+                                        Object nbt = ((MineLifeClass)PlayerClass).RunPower(Power.MineLife,this.inventory.getItemInHand(),target,breakTime);
+                                        if(nbt !=null){
+                                            double nd = (double)nbt;
+                                            if(nd > 0){
+                                                double dec = obreaktime - nd;
+                                                double dp = (dec / obreaktime) *100d;
+                                                breakTime = nd;
+                                                sendMessage("Break Time Redueced by "+dp);
+                                            }
+                                        }
                                     }
                                 }
                                 if (breakTime > 0) {
@@ -530,6 +540,13 @@ public class CorePlayer extends Player {
                     ClearFactionInvite(true);
                 }
             }
+        }
+        //Class Check
+        ClassCheck++;
+        if (ClassCheck > 20 * 5 || FactionCheck < 0) {//5 sec Class Check
+            ClassCheck = 0;
+            BaseClass  bc = GetPlayerClass();
+            if (bc != null) bc.onUpdate(currentTick);
         }
 
 

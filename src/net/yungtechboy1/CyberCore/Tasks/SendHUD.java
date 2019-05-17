@@ -82,20 +82,11 @@ public class SendHUD extends Thread implements InterruptibleThread {
             f += TextFormat.GRAY + " -- " + TextFormat.GRAY + "Faction : " + TextFormat.AQUA + fn + TextFormat.GRAY + " | " + TextFormat.GREEN + fxp + TextFormat.AQUA + " / " + TextFormat.GOLD + fxpm + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + flvl + TextFormat.GRAY + " -- " + TextFormat.RESET + "\n";
         if (!p.Settings.isHudClassOff()) {
 //            TODO
-            if (Main.ClassFactory != null) {
+            if (p.GetPlayerClass() != null) {
                 String pclass = "NONE";
-                BaseClass bc = Main.ClassFactory.GetClass(p);
-                int pxp = 0;
-                int pxpof = 0;
-                int plvl = 0;
-                if (bc != null) {
-                    int lvl = bc.XPToLevel(bc.getXP());
-                    pclass = bc.getName();
-                    pxp = bc.XPRemainder(bc.getXP());
-                    pxpof = bc.calculateRequireExperience(lvl + 1);
-                    plvl = lvl;
-                    f += TextFormat.GRAY + "Class : " + TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl;
-                }
+                BaseClass bc = p.GetPlayerClass();
+                String t = bc.FormatHudText();
+                if (t != null && t.length() != 0) f += t;
             }
         }
         p.sendTip(f);

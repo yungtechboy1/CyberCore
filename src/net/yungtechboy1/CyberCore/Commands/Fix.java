@@ -30,7 +30,7 @@ public class Fix extends CheckPermCommand {
     public Fix(CyberCoreMain server) {
         //@TODO Check the min Rank for this
         //@TODO Add MustBePlayer bool in Constructor
-        super(server, "fix", "Fixes Item in hand", "/fix", RankList.PERM_ISLANDER);
+        super(server, "fix", "Fixes Item in hand", "/fix", RankList.PERM_VIP);
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
                 new CommandParameter("player", CommandParamType.TARGET, true)

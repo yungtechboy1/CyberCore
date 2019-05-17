@@ -1,19 +1,10 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Data;
 
-import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Data.CoreSQL;
 import net.yungtechboy1.CyberCore.Data.MySQL;
-import net.yungtechboy1.CyberCore.Data.SQLite;
 import ru.nukkit.dblib.DbLib;
 
-import java.io.File;
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class FactionSQL extends MySQL {
 

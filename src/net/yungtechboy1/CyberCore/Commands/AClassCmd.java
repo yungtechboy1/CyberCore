@@ -48,7 +48,7 @@ public class AClassCmd extends Command {
             }
         } else if (args.length == 1) {
             if(args[0].equals("del")){
-                Owner.ClassFactory.SetClass((Player) s,null);
+                ((CorePlayer) s).SetPlayerClass(null);
                 s.sendMessage("Class Removed!");
             }
         }

@@ -1,19 +1,10 @@
 package net.yungtechboy1.CyberCore.Commands;
 
-import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
-import cn.nukkit.entity.Entity;
-import cn.nukkit.entity.item.EntityPrimedTNT;
 import cn.nukkit.level.Position;
-import cn.nukkit.level.Sound;
-import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.math.Vector3;
-import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.nbt.tag.DoubleTag;
-import cn.nukkit.nbt.tag.FloatTag;
-import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
@@ -47,24 +38,16 @@ public class TNT extends CheckPermCommand {
                 return true;
             }
 
-            TNTSpecialist ts = (TNTSpecialist)c;
+            TNTSpecialist ts = (TNTSpecialist) c;
             TNTSpecialistPower tsp = (TNTSpecialistPower) ts.GetPower(Power.TNT_Specialist);
-            if(tsp == null){
+            if (tsp == null) {
                 commandSender.sendMessage(CyberCoreMain.NAME + TextFormat.RED + "Error! GETTING POWER");
                 return true;
             }
-            if(ts.TryRunPower(Power.TNT_Specialist)){
-                tsp.
+            if (ts.TryRunPower(Power.TNT_Specialist)) {
+                ts.RunPower(Power.TNT_Specialist, p);
             }
-            double mot = (double) (new NukkitRandom()).nextSignedFloat() * 3.141592653589793D * 5.0D;//Was 2
-            CompoundTag nbt = (new CompoundTag()).putList((new ListTag("Pos")).add(new DoubleTag("", p.x + 0.5D)).add(new DoubleTag("", p.y)).add(new DoubleTag("", p.z + 0.5D))).putList(new ListTag<DoubleTag>("Motion")
-                    .add(new DoubleTag("", -Math.sin(p.yaw / 180 * Math.PI) * Math.cos(p.pitch / 180 * Math.PI)))
-                    .add(new DoubleTag("", -Math.sin(p.pitch / 180 * Math.PI)))
-                    .add(new DoubleTag("", Math.cos(p.yaw / 180 * Math.PI) * Math.cos(p.pitch / 180 * Math.PI)))).putList((new ListTag("Rotation")).add(new FloatTag("", 0.0F)).add(new FloatTag("", 0.0F))).putShort("Fuse", ts.getFuse());
-            Entity tnt = new EntityPrimedTNT(p.getLevel().getChunk(p.getFloorX() >> 4, p.getFloorZ() >> 4), nbt, p);
-            tnt.setMotion(tnt.getMotion().multiply(4));
-            tnt.spawnToAll();
-            p.level.addSound(p, Sound.RANDOM_FUSE);
+
 
         } else {
             commandSender.sendMessage(CyberCoreMain.NAME + Messages.NEED_TO_BE_PLAYER);
@@ -82,14 +65,5 @@ public class TNT extends CheckPermCommand {
         }
         return null;
     }
+}
 
-    public void gototp(Player s) {
-        Position pos = getHighestStandablePositionAt(s.getPosition());
-        if (pos == null) {
-            s.sendMessage(CyberCoreMain.NAME + TextFormat.RED + "Error! Could not teleport to top!");
-        } else {
-            s.teleport(pos);
-            s.sendMessage(CyberCoreMain.NAME + TextFormat.GREEN + "Teleport to top!");
-        }
-
-    }

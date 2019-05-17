@@ -23,7 +23,6 @@ import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
-import net.yungtechboy1.CyberCore.Custom.Item.CustomItemMap;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemTNT;
 import net.yungtechboy1.CyberCore.Data.ServerSqlite;
 import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
@@ -34,10 +33,8 @@ import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
-import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.FactionBaseCMD;
 import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionListener;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager;
 import net.yungtechboy1.CyberCore.Manager.SQLManager;
@@ -57,7 +54,6 @@ import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Data.CoreSQL;
 import net.yungtechboy1.CyberCore.Rank.RankFactory;
 import net.yungtechboy1.CyberCore.Tasks.SendHUD;
 import net.yungtechboy1.CyberCore.entities.animal.walking.Pig;
@@ -65,7 +61,6 @@ import net.yungtechboy1.CyberCore.entities.animal.walking.Pig;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -132,7 +127,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     /**
      * DATA: UUID, GAMERTAG, CREATED(TIMESTAMP), LAST_LOGIN(TIMESTAMP), RANK(INT), LAST_IP
      */
-    public CoreSQL CoreSQL = null;
+//    public CoreSQL CoreSQL = null;
     /**
      * DATA: ECON, K/D,
      */
@@ -231,6 +226,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Item.list[Item.ENCHANT_BOOK] = CItemBookEnchanted.class;
         Item.list[BlockID.TNT] = CustomItemTNT.class;
 
+        ClassFactory = new ClassFactory(this);
         WarpManager = new WarpManager(this);
 
 
@@ -289,7 +285,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        PasswordFactoy = new PasswordFactoy(this);
 //
-        ClassFactory = new ClassFactory(this);
 //
 //        CustomFactory = new CustomFactory(this);
 
@@ -313,6 +308,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Msg(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Reply(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Spawn(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TNT(this));
         //All Commands Up to this point are Updated
         ///TODO FIX REST OF COMMANDS!
         //getServer().getCommandMap().register("CyberCore", new Tban(this));
@@ -450,7 +446,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     @Override
     public void onDisable() {
-        super.onDisable();
 //        ConfigSection bc = new ConfigSection();
 //        for (Ban b : bans) {
 //            bc.put(b.name, b.toconfig());

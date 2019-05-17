@@ -39,8 +39,8 @@ public class Info extends Commands {
 
     @Override
     public void RunCommand() {
-        if (Args.length > 1) {
-            if (!Args[1].matches("^[a-zA-Z0-9]*")) {
+        if (Args.length >= 1) {
+            if (!Args[0].matches("^[a-zA-Z0-9]*")) {
                 Sender.sendMessage(TextFormat.RED + "Invalid Faction Name");
                 return;
             }

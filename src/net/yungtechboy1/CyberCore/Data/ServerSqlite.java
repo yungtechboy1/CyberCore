@@ -88,16 +88,20 @@ public class ServerSqlite extends MySQL {
     {
 
         if(p == null)System.out.println("PLAYER NULL");
-        System.out.println("PLAYER >>> "+p.getClass().getName());
         try {
             LoadHomes(p);
             LoadSettings(p);
             LoadRank(p);
+            LoadClass(p);
             Faction f = plugin.FM.FFactory.IsPlayerInFaction(p);
             p.Faction = f.GetName();
         } catch (Exception e) {
             CyberCoreMain.getInstance().getLogger().error("EEEEE11122223333", e);
         }
+    }
+
+    private void LoadClass(CorePlayer p) {
+        plugin.ClassFactory.GetClass(p);
     }
 
     private void LoadRank(CorePlayer p) {
@@ -139,10 +143,10 @@ public class ServerSqlite extends MySQL {
         return;
     }
 
-    public void UnLoadPlayer(Player p) {
-        SaveHomes((CorePlayer) p);
-        SaveSettings((CorePlayer) p);
-    }
+//    public void UnLoadPlayer(Player p) {
+//        SaveHomes((CorePlayer) p);
+//        SaveSettings((CorePlayer) p);
+//    }
 
     public void UnLoadPlayer(CorePlayer p) {
         SaveHomes(p);
@@ -193,7 +197,7 @@ public class ServerSqlite extends MySQL {
                 executeUpdate("INSERT INTO `Homes` VALUES (0,'" + h.getName() + "'," + h.getX() + "," + h.getY() + "," + h.getZ() + ",'" + h.getLevel() + "','" + h.getOwner() + "','" + h.getOwneruuid() + "')");
             }
             plugin.getLogger().info("Homes saved for " + p.getName());
-            p.sendTip("Homes Saved!");
+//            p.sendTip("Homes Saved!");
         } catch (SQLException e) {
             e.printStackTrace();
         }

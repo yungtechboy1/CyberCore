@@ -11,10 +11,12 @@ import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Tasks.LumberJackTreeCheckerTask;
+import org.apache.logging.log4j.core.Core;
 
 import java.io.File;
 import java.util.HashMap;
@@ -28,7 +30,7 @@ public class ClassFactory implements Listener {
     public Config MMOSave;
     public Config LumberJackTreePlants;
     CyberCoreMain CCM;
-    private HashMap<String, BaseClass> ClassList = new HashMap<>();
+//    private HashMap<String, BaseClass> ClassList = new HashMap<>();
 
     public ClassFactory(CyberCoreMain main) {
         CCM = main;
@@ -38,42 +40,30 @@ public class ClassFactory implements Listener {
     }
 
     public BaseClass GetClass(CorePlayer p) {
-        if (!ClassList.containsKey(p.getName().toLowerCase())) {
             ConfigSection o = (ConfigSection) MMOSave.get(p.getName().toLowerCase());
             if (o != null) {
                 BaseClass data = null;//new BaseClass(CCM, p, (ConfigSection) o);
+                if (o.getInt("TYPE", -1) == BaseClass.ClassType.Class_Miner_MineLife.getKey()) {
+                    data = new MineLifeClass(CCM, p, o);
+                }
                 if (o.getInt("TYPE", -1) == BaseClass.ClassType.Class_Miner_TNT_Specialist.getKey()) {
                     data = new TNTSpecialist(CCM, p, o);
                 }
-                if (data != null) ClassList.put(p.getName().toLowerCase(), data);
+//                if (data != null) ClassList.put(p.getName().toLowerCase(), data);
+                p.SetPlayerClass(data);
                 return data;
             }
             return null;
-        }
-        return ClassList.get(p.getName().toLowerCase());
     }
 
-    public void AddToClassListAfterSave(Player p) {
-        ConfigSection o = (ConfigSection)MMOSave.get(p.getName().toLowerCase());
-        if (o != null && o.containsKey("TYPE")) {
-            int i = o.getInt("TYPE");
-
-            BaseClass data = null;
-            if(i == BaseClass.ClassType.Class_Miner_TNT_Specialist.getKey()){
-                data = new TNTSpecialist(CCM,(CorePlayer) p);
-            }
-            if(data != null)ClassList.put(p.getName().toLowerCase(), data);
-            return;
+    public void SaveClassToFile(CorePlayer p) {
+        BaseClass bc = p.GetPlayerClass();
+        if(bc!= null){
+            MMOSave.set(p.getName().toLowerCase(), p.GetPlayerClass().export());
         }
     }
 
-    public void SetClass(Player p, BaseClass bc) {
-        ClassList.put(p.getName().toLowerCase(), bc);
-    }
-    public void SetClass(CorePlayer p, BaseClass bc) {
-        ClassList.put(p.getName().toLowerCase(), bc);
-        p.SetPlayerClass(bc);
-    }
+
 
     @EventHandler
     public void OnEvent(BlockBreakEvent event) {
@@ -117,11 +107,12 @@ public class ClassFactory implements Listener {
     }
 
     public void Saveall() {
-        for (Map.Entry<String, BaseClass> o : ClassList.entrySet()) {
-            if (o.getValue() == null) continue;
-            MMOSave.set(o.getKey(), o.getValue().export());
+        for (Player p : CCM.getServer().getOnlinePlayers().values()) {
+            if (!(p instanceof CorePlayer)) continue;
+            CorePlayer cp = (CorePlayer)p;
+            if(cp.GetPlayerClass() == null)continue;
+            MMOSave.set(cp.getName().toLowerCase(), cp.GetPlayerClass().export());
         }
         MMOSave.save();
-        LumberJackTreePlants.save();
     }
 }

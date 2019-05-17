@@ -15,7 +15,7 @@ public class SetClass extends CheckPermCommand {
     private Vector3 temporalVector = new Vector3();
 
     public SetClass(CyberCoreMain server) {
-        super(server, "setclass", "[OP] Set Player's Class for Server", "/setclass <Player-Name-Exact> <type> <xp>", RankList.PERM_OP.getID());
+        super(server, "setclass", "[OP] Set Player's Class for Server", "/setclass <Player-Name-Exact> <type> <xp>", RankList.PERM_OP);
         this.commandParameters.clear();
         this.setPermission("CyberTech.CyberCore.op");
     }
@@ -34,7 +34,7 @@ public class SetClass extends CheckPermCommand {
             put("TYPE", type);
         }};
         Owner.ClassFactory.MMOSave.set(name.toLowerCase(),data);
-        Owner.ClassFactory.AddToClassListAfterSave((CorePlayer)commandSender);
+        Owner.ClassFactory.SaveClassToFile((CorePlayer)commandSender);
 
         return true;
     }

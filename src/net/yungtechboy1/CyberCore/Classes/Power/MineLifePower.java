@@ -10,7 +10,7 @@ public class MineLifePower extends Power {
         int psc = ((int) Math.floor(.65d*level)+1);
     }
 
-    public double GetBreakTime(Item itemInHand, Block target, double cbreakTime){
+    private double GetBreakTime(Item itemInHand, Block target, double cbreakTime){
         CyberCoreMain.getInstance().getLogger().info("BREAKTIMMMMM >> "+cbreakTime);
         if(itemInHand == null || target == null || cbreakTime < .5d)return cbreakTime;
         double fbreaktime = cbreakTime;
@@ -20,6 +20,12 @@ public class MineLifePower extends Power {
         return fbreaktime;
     }
 
+    public Object UsePower(Item itemInHand, Block target, double cbreakTime) {
+       return GetBreakTime(itemInHand,target,cbreakTime);
 
-
+    }
+    @Override
+    public Object UsePower(Object... args) {
+        return super.UsePower(args);
+    }
 }

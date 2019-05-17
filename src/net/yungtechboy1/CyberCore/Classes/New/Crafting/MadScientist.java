@@ -46,4 +46,13 @@ public class MadScientist extends BaseClass {
         return mi;
     }
 
+    @Override
+    public void SetPowers() {
+
+    }
+
+    @Override
+    public Object RunPower(int powerid, Object... args) {
+        return null;
+    }
 }
