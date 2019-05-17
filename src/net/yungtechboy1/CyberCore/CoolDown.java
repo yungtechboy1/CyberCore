@@ -41,7 +41,8 @@ public class CoolDown extends ConfigSection {
 
     public boolean isValid() {
         int ct = CyberCoreMain.getInstance().GetIntTime();
-        return ct > Time;
+//        System.out.println(ct+" > "+Time);
+        return ct < Time;
     }
 
 }

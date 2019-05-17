@@ -1,75 +1,66 @@
 package net.yungtechboy1.CyberCore.Classes.New.Minner;
 
-import cn.nukkit.entity.Entity;
-import cn.nukkit.entity.item.EntityPrimedTNT;
-import cn.nukkit.level.Sound;
-import cn.nukkit.math.NukkitRandom;
-import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.nbt.tag.DoubleTag;
-import cn.nukkit.nbt.tag.FloatTag;
-import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.Classes.Power.TNTSpecialistPower;
 import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
  * Created by carlt on 5/16/2019.
  */
 public class TNTSpecialist extends MinnerBaseClass {
-        public static final String TNT_Specialist_Add_Tick = "TSAT";
-        public static final int Power_TNT_Specialist = 0;
+    public static final String TNT_Specialist_Add_Tick = "TSAT";
+    public static final int Power_TNT_Specialist = 0;
 
     public TNTSpecialist(CyberCoreMain main, CorePlayer player, ConfigSection data) {
-            super(main, player, ClassType.Class_Miner_TNT_Specialist, data);
-            SetPowers();
-        }
+        super(main, player, ClassType.Class_Miner_TNT_Specialist, data);
+        SetPowers();
+    }
 
 
     public TNTSpecialist(CyberCoreMain main, CorePlayer player) {
-            this(main, player, null);
-        }
+        this(main, player, null);
+    }
 
-        public int GetMaxTNTPower() {
-            double mi = getLVL() / 10;
-            int m = (int) Math.round(mi);
-            switch (m) {
-                case 0:
-                case 1:
-                case 2:
-                    return 10;
-                default:
-                    return 10;
-            }
+    public int GetMaxTNTPower() {
+        double mi = getLVL() / 10;
+        int m = (int) Math.round(mi);
+        switch (m) {
+            case 0:
+            case 1:
+            case 2:
+                return 10;
+            default:
+                return 10;
         }
+    }
 
-        @Override
-        public void SetPowers() {
-            Powers.add(Power.TNT_Specialist, new TNTSpecialistPower(getLVL(),3, GetMaxTNTPower()));
-        }
+    @Override
+    public void SetPowers() {
+        Powers.add(Power.TNT_Specialist, new TNTSpecialistPower(getLVL(), 3, GetMaxTNTPower()));
+    }
 
     @Override
     public Object RunPower(int powerid, Object... args) {
-        if(powerid == Power.TNT_Specialist && args.length == 1){
+        if (powerid == Power.TNT_Specialist && args.length == 1) {
             System.out.println("GGGGGG");
-            CorePlayer p = (CorePlayer)args[0];
+            CorePlayer p = (CorePlayer) args[0];
             TNTSpecialistPower tsp = (TNTSpecialistPower) GetPower(Power.TNT_Specialist);
-            tsp.UsePower(p,getFuse());
-            System.out.println("aaaaaa"+p.getClass().getName());
-        }else{
+            tsp.UsePower(p, getFuse());
+            System.out.println("aaaaaa" + p.getClass().getName());
+        } else {
             System.out.println("ERRRRRRRRRRRRRRRR");
         }
         return null;
     }
 
     @Override
-        public String getName() {
-            return "TNT Specialist";
-        }
+    public String getName() {
+        return "TNT Specialist";
+    }
 
 //        @Override
 //        public BlockBreakEvent BlockBreakEvent(BlockBreakEvent event) {
@@ -101,7 +92,6 @@ public class TNTSpecialist extends MinnerBaseClass {
 //        }
 
 
-
 //        @Override
 //        public BlockPlaceEvent BlockPlaceEvent(BlockPlaceEvent event) {
 //            event = super.BlockPlaceEvent(event);
@@ -116,10 +106,10 @@ public class TNTSpecialist extends MinnerBaseClass {
 //            return event;
 //        }
 
-        public int GetTNTAddWaitTime() {
+    public int GetTNTAddWaitTime() {
 //            return 160 - getLVL();
-            return 10;
-        }
+        return 10;
+    }
 
 //    @Override
 //    public ArrayList<Ability> PossibleAbillity() {
@@ -128,29 +118,25 @@ public class TNTSpecialist extends MinnerBaseClass {
 //        return a;
 //    }
 
-        @Override
-        public void onUpdate(int tick) {
-            super.onUpdate(tick);
-            CoolDown tntaddcd = GetCooldown(TNT_Specialist_Add_Tick);
-            if (tntaddcd == null) {
-                AddCooldown(TNT_Specialist_Add_Tick, GetTNTAddWaitTime());
-            } else {
-                if (!tntaddcd.isValid()) {
-                    //Add Tnt & reset
-                    ((TNTSpecialistPower)Powers.get(Power_TNT_Specialist)).AddAvailbleQuantity();
-                    AddCooldown(TNT_Specialist_Add_Tick, GetTNTAddWaitTime());
-                }
-            }
+    @Override
+    public void onUpdate(int tick) {
+        super.onUpdate(tick);
+        CoolDown tntaddcd = GetCooldown(TNT_Specialist_Add_Tick);
+        if (tntaddcd == null) {
+            AddCooldown(TNT_Specialist_Add_Tick, GetTNTAddWaitTime());
+            //Add Tnt
+            ((TNTSpecialistPower) Powers.get(Power_TNT_Specialist)).AddAvailbleQuantity();
         }
+    }
 
-        @Override
-        public ConfigSection export() {
-            return new ConfigSection() {{
-                put("COOLDOWNS", COOLDOWNS);
-                put("XP", getXP());
-                put("TYPE", getTYPE().getKey());
-            }};
-        }
+    @Override
+    public ConfigSection export() {
+        return new ConfigSection() {{
+            put("COOLDOWNS", COOLDOWNS);
+            put("XP", getXP());
+            put("TYPE", getTYPE().getKey());
+        }};
+    }
 
     public int getFuse() {
         return 120;
@@ -160,11 +146,11 @@ public class TNTSpecialist extends MinnerBaseClass {
     public String FormatHudText() {
         String f = super.FormatHudText();
         //Show TNT Power
-        TNTSpecialistPower p = (TNTSpecialistPower)GetPower(Power.TNT_Specialist);
-        if(p == null)return f;
+        TNTSpecialistPower p = (TNTSpecialistPower) GetPower(Power.TNT_Specialist);
+        if (p == null) return f;
         int q = p.getAvailbleQuantity();
         int m = p.getMaxAvailbleQuantity();
-        String n = TextFormat.GRAY+" | "+TextFormat.RED+" TNT: "+q;
-        return f+n;
+        String n = TextFormat.GRAY + " | " + TextFormat.RED + " TNT: " + q;
+        return f + n;
     }
 }

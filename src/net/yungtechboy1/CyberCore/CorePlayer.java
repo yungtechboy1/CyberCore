@@ -38,6 +38,7 @@ import net.yungtechboy1.CyberCore.Manager.Econ.PlayerEconData;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Rank.Rank;
 import net.yungtechboy1.CyberCore.Rank.RankList;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -535,7 +536,7 @@ public class CorePlayer extends Player {
         for(CoolDown c: (ArrayList<CoolDown>)CDL.clone()){
             k++;
             if(c.Key.equalsIgnoreCase(key)){
-                if(checkvalid && c.isValid()){//CT !> Set Time
+                if(checkvalid && !c.isValid()){//CT !> Set Time
                     CDL.remove(c);
                     return null;
                 }
@@ -544,40 +545,47 @@ public class CorePlayer extends Player {
         }
         return null;
     }
-
+private static boolean CooldownLock = false;
     @Override
     public boolean onUpdate(int currentTick) {
         //Check for Faction!
-        CoolDown fc = GetCooldown(Cooldown_Faction,true);
-        if(fc == null) {
-            System.out.println("RUNNNING FACTION CHECK IN CP");
-            AddCoolDown(Cooldown_Faction, 60);//3 mins
-            if(Faction == null) {
-                Faction f = CyberCoreMain.getInstance().FM.FFactory.IsPlayerInFaction(this);
-                if (f == null) {
-                    Faction = null;
-                } else {
-                    Faction = f.GetName();
+        if(!CooldownLock && isAlive() && spawned){
+            CooldownLock = true;
+//            CyberCoreMain.getInstance().getLogger().info("RUNNNING "+CDL.size());
+            CoolDown fc = GetCooldown(Cooldown_Faction, true);
+            if (fc == null) {
+                CyberCoreMain.getInstance().getLogger().info("RUNNNING FACTION CHECK IN CP");
+                AddCoolDown(Cooldown_Faction, 60);//3 mins
+                if (Faction == null) {
+                    Faction f = CyberCoreMain.getInstance().FM.FFactory.IsPlayerInFaction(this);
+                    if (f == null) {
+                        Faction = null;
+                    } else {
+                        Faction = f.GetName();
+                    }
+                }
+                //Check to See if Faction Invite Expired
+                if (FactionInvite != null && FactionInviteTimeout > 0) {
+                    int t = CyberCoreMain.getInstance().GetIntTime();
+                    if (t < FactionInviteTimeout) {
+                        Faction fac = CyberCoreMain.getInstance().FM.FFactory.getFaction(FactionInvite);
+                        fac.BroadcastMessage(TextFormat.YELLOW + getName() + " has declined your faction invite");
+                        ClearFactionInvite(true);
+                    }
                 }
             }
-            //Check to See if Faction Invite Expired
-            if (FactionInvite != null && FactionInviteTimeout > 0) {
-                int t = CyberCoreMain.getInstance().GetIntTime();
-                if (t < FactionInviteTimeout) {
-                    Faction fac = CyberCoreMain.getInstance().FM.FFactory.getFaction(FactionInvite);
-                    fac.BroadcastMessage(TextFormat.YELLOW + getName() + " has declined your faction invite");
-                    ClearFactionInvite(true);
-                }
-            }
-        }
-        //Class Check
+            //Class Check
 
-        CoolDown cc = GetCooldown(Cooldown_Class,true);
-        if(cc == null) {
-            System.out.println("RUNNNING CLASS CHECK IN CP");
-            AddCoolDown(Cooldown_Class,5);
-            BaseClass  bc = GetPlayerClass();
-            if (bc != null) bc.onUpdate(currentTick);
+            //FIX HERE
+            //TODO FIX HERE
+            CoolDown cc = GetCooldown(Cooldown_Class, true);
+            if (cc == null) {
+                CyberCoreMain.getInstance().getLogger().info("RUNNNING CLASS CHECK IN CP");
+                AddCoolDown(Cooldown_Class, 5);
+                BaseClass bc = GetPlayerClass();
+                if (bc != null) bc.onUpdate(currentTick);
+            }
+            CooldownLock = false;
         }
 
 

@@ -258,9 +258,13 @@ public abstract class BaseClass {
     }
 
     public boolean HasCooldown(String perk) {
-        for (CoolDown c : COOLDOWNS) {
+        for (CoolDown c : (ArrayList<CoolDown>)COOLDOWNS.clone()) {
             if (c.getKey().equalsIgnoreCase(perk)) {
-                return c.isValid();
+                if(!c.isValid()){
+                    COOLDOWNS.remove(c);
+                    return false;
+                }
+                return true;
             }
         }
         return false;

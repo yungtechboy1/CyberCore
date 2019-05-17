@@ -289,7 +289,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        CustomFactory = new CustomFactory(this);
 
         getServer().getPluginManager().registerEvents(new MasterListener(this), this);
-//        getServer().getPluginManager().registerEvents(ClassFactory, this);
+        getServer().getPluginManager().registerEvents(ClassFactory, this);
         getServer().getPluginManager().registerEvents(AuctionFactory, this);
         getServer().getPluginManager().registerEvents(this, this);
 //        getServer().getPluginManager().registerEvents(new FactionListener(this, FM), this);
