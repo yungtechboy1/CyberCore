@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.ConsoleCommandSender;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Messages;
 import net.yungtechboy1.CyberCore.Rank.RankList;
@@ -35,7 +36,8 @@ public class CheckPermCommand extends Command {
     public int CheckPerms(CommandSender s) {
         if (s instanceof ConsoleCommandSender) {
             return RankList.PERM_SERVER;
-        } else if (s instanceof Player) {
+        } else if (s instanceof CorePlayer) {
+            ((CorePlayer)s).GetRank();
             return Owner.GetPlayerRankInt((Player) s, true);
         }
         return RankList.PERM_GUEST.getID();

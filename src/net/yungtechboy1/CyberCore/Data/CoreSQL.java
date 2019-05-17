@@ -89,7 +89,6 @@ public class CoreSQL extends MySQL {
 
     public void loadUser(CorePlayer player) throws SQLException {
         String uuid = player.getUniqueId().toString();
-        String ip = player.getAddress();
         if (checkUser(uuid)) {
             String[] selectors = {"uuid", "last_ip", "rank"};
             String query = "SELECT * FROM mcpe WHERE uuid=':uuid'";

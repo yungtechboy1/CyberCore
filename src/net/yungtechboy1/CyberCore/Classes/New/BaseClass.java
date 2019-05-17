@@ -12,8 +12,8 @@ import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerToggleSprintEvent;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
-import net.yungtechboy1.CyberCore.MobAI.FileLogger;
-import net.yungtechboy1.CyberCore.Abilities.Ability;
+import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
+import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
@@ -106,8 +106,9 @@ public abstract class BaseClass {
         LVL = XPToLevel(XP);
     }
 
+    public abstract void SetPowers();
 
-    public int getMainID() {
+        public int getMainID() {
         return MainID;
     }
 
@@ -367,6 +368,7 @@ public abstract class BaseClass {
     public void onUpdate(int tick) {
 
     }
+
 
     public enum ClassType {
         Class_Miner_TNT_Specialist(1);

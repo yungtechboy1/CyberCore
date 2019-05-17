@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Abilities;
+package net.yungtechboy1.CyberCore.Classes.Abilities;
 
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.CorePlayer;

@@ -5,7 +5,7 @@ package net.yungtechboy1.CyberCore.Rank;
  * Created by carlt_000 on 1/22/2017.
  */
 public class Rank {
-
+    public RankList rl = RankList.PERM_GUEST;
     public String display_name = "";
     public String chat_prefix = "&7";
     int id = 0;
@@ -19,6 +19,13 @@ public class Rank {
     }
 
     ChatFormats.RankChatFormat chat_format = ChatFormats.RankChatFormat.Default;
+
+    public Rank(RankList r) {
+        this.id = r.getID();
+        this.display_name = r.getName();
+        this.chat_prefix = r.getChat_prefix();
+        rl = r;
+    }
 
     public Rank(Integer id, String display_name) {
         this.id = id;
@@ -41,5 +48,9 @@ public class Rank {
 
     public String getChat_prefix() {
         return chat_prefix;
+    }
+
+    public RankList getRankList(){
+        return rl;
     }
 }

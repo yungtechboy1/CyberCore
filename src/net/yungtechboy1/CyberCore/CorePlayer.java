@@ -13,6 +13,7 @@ import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
+import cn.nukkit.lang.TextContainer;
 import cn.nukkit.level.Location;
 import cn.nukkit.level.Position;
 import cn.nukkit.level.Sound;
@@ -24,6 +25,9 @@ import cn.nukkit.utils.TextFormat;
 import co.aikar.timings.Timing;
 import co.aikar.timings.Timings;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
+import net.yungtechboy1.CyberCore.Classes.New.Minner.MinnerBaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
@@ -147,10 +151,20 @@ public class CorePlayer extends Player {
         }
     }
 
-    public PlayerEconData GetData() {
+    public PlayerEconData GetEconData() {
+        return GetData();
+    }
+
+    public PlayerSettingsData GetData() {
         if (getSettingsData() == null) CreateDefaultSettingsData();
         if (getSettingsData() == null) return null;
         return getSettingsData();
+    }
+
+    @Override
+    public void close(TextContainer message, String reason, boolean notify) {
+        CyberCoreMain.getInstance().ServerSQL.UnLoadPlayer(this);
+        super.close();
     }
 
     public void CreateDefaultSettingsData() {
@@ -443,6 +457,12 @@ public class CorePlayer extends Player {
                                 //improved this to take stuff like swimming, ladders, enchanted tools into account, fix wrong tool break time calculations for bad tools (pmmp/PocketMine-MP#211)
                                 //Done by lmlstarqaq
                                 double breakTime = Math.ceil(target.getBreakTime(this.inventory.getItemInHand(), this) * 20);
+                                if(PlayerClass != null){
+                                    if(PlayerClass instanceof MineLifeClass && ((MineLifeClass)PlayerClass).TryRunPower(Power.MineLife)){
+                                        double nbt = ((MineLifeClass)PlayerClass).RunPower(Power.MineLife,this.inventory.getItemInHand(),target,breakTime);
+                                        if(nbt != -1)breakTime = nbt;
+                                    }
+                                }
                                 if (breakTime > 0) {
                                     LevelEventPacket pk = new LevelEventPacket();
                                     pk.evid = LevelEventPacket.EVENT_BLOCK_START_BREAK;

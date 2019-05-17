@@ -9,10 +9,19 @@ Base Classes
 Specalizations
     
  - Miner - Mining and Digging
-   - TNT-Specialist
-   - Mining any block with a Pickaxe adds 1 -3 XP
+   
+   TNT-Specialist
+   ---
+     - use /tnt to use TNT in bar 
+     - Mining any block with a Pickaxe adds 1 -5 XP
+        - Stone : 1;
+        - CobbleStone : 1;
+        - Iron Ore : 2;
+        - Gold Ore : 3;
+        - Diamond Ore : 5;
+        - Silver Ore : 4;
      - Level 1 - 9:
-        - Player will regerate 1 TNT every 160 Secs - level
+        - Player will regerate 1 TNT every 160 Secs - levelwd
         - Holds a Max of 10 TNT blocks
      - Level 10 - 19:
         - Mining with a pickaxe reduces regin time by 1 Sec after Level 10
@@ -20,24 +29,32 @@ Specalizations
         - Add 10 More TNT blocks to your capacity
      - Level 30 - 39:
         - Spawns TNT Level 2, Which Expands the range of TNT by 5 Blocks
-     - Level 30 - 39:
-        - Spawns TNT Level 2
-     - Level 30 - 39:
-        - Spawns TNT Level 2
-     - Level 30 - 39:
+     - Level 40 - 49:
+        - Add 10 More TNT blocks to your capacity
+     - Level 50 - 59:
+        - Add 5 More TNT blocks to your capacity
+     - Level 60 - 69:
         - Spawns TNT Level 2
      
      - Chance of spawning TNT that can destroy ores & Cobblestone when Mining
        - 20% increase in power with TNT
         - MineLife
           - 10% increase in mine speed
-   - MineLife
+   - MineLife  
+     - Mining any block with a Pickaxe adds 1 -5 XP
+         - Stone : 1;
+         - CobbleStone : 1;
+         - Iron Ore : 2;
+         - Gold Ore : 3;
+         - Diamond Ore : 5;
+         - Silver Ore : 4;
+     - Chance to Fast break blocks
+        - Level/10*
+        - `f(x) = ((.65x)/100) + 1`
      - Faster break times with each level
-        - 1-10 - 5% Faster
-        - 11-20 - 10% Faster
-        - 21-30 - 15% Faster
-        - 31-40 - 20% Faster
-        - 41-50 - 25% Faster
+        - BreakTime = `(1-((getLVL()/10d)/2));`
+        - BreakTime = `(a/500)+(a*.0065)`
+        - Level
    - Ore Bomb
         - Spawns Ore Blocks with Random values with a Box
         - Levels:

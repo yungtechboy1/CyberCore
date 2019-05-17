@@ -472,7 +472,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        PasswordFactoy.onDisable();
 
         //Classes
-//        ClassFactory.Saveall();
+        ClassFactory.Saveall();
 
         try {
             //getMySqlConnection().close();
@@ -803,13 +803,13 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         return ECON;
     }
 
-    public void initiatePlayer(Player p) {
-        try {
-            CoreSQL.loadUser((CorePlayer) p);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void initiatePlayer(Player p) {
+//        try {
+//            CoreSQL.loadUser((CorePlayer) p);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     @EventHandler(priority = EventPriority.HIGHEST)
