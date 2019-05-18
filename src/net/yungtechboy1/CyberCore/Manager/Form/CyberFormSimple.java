@@ -99,7 +99,7 @@ public class CyberFormSimple extends CyberForm {
     @Override
     public void setResponse(String data, CorePlayer p) {
         setResponse(data);
-        if(data != null)onRun(p);
+        if(!closed)onRun(p);
     }
 
     @Override

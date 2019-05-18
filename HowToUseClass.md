@@ -4,12 +4,25 @@ TNT-Specialist
 
 /tnt - Use the TNT you regenerate to mine
 
+===Available Items===
+
+- TNT Rod(Blaze Rod) - Uses the TNT you regenerate to spawn TNT by tapping instead of using /tnt
+- TNT Air Strike- Spawns a 3X3 gid of tnt where the snowball lands
+    - Requires 9 Nukes
+    - How to make Nukes
+        - 6 TNT
+        - 3 TNT From bag
+
+
 ===Powers / Abilities===
 - TNT Regen
     - Default TNT Bag Size = 10
    - Regenerate 1 TNT every 160 secs - Level
 - TNT Resistance
     - Take no TNT Damage (Experimental Excluded)
+- Resourceful - Level 30+
+    - Craft TNT with 1 less Gun Powder in the Class merchant
+    
     
 === Upgrades / Unlocks ===
 - Level 1
@@ -29,7 +42,7 @@ TNT-Specialist
 - Level 60
     - Add 5 extra slots to TNT Storage
 - Level 70
-    - Player can now trade for TNT Snowball
+    - Player can now trade for TNT Air Strikes(Snowball)
         - Whereever the snowball lands will spawn a 3 X 3 grid of 9 TNT in the middle of the snowball with a 40-120 Tick fuse
 - Level 80
     - Spawns Super TNT Level 3, Which Expands the range of TNT by 10 Blocks

@@ -29,6 +29,8 @@ TNTSpecialist C;
         if(k == 0){
             //TODO
             p.showFormWindow(C.getHowToUseClassWindow());
+        }else if(k == 1){
+
         }
     }
 }

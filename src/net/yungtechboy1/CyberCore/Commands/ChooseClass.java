@@ -28,7 +28,7 @@ public class ChooseClass extends Command {
 if(p.GetPlayerClass() == null) {
     p.showFormWindow(new Class0Window());
 }else{
-    p.showFormWindow(p.GetPlayerClass().getHowToUseClassWindow());
+    p.showFormWindow(p.GetPlayerClass().GetSettingsWindow());
 }
         return true;
     }

@@ -46,6 +46,7 @@ class ClassHowToUseTNTCommands extends CyberFormCustom{
         _tt = title;
         addElement(new ElementLabel("===Available Commands==="));
         addElement(new ElementLabel("/tnt - Use the TNT you regenerate to mine"));
+        System.out.println("TTTT >>>> "+title);
     }
 
     @Override

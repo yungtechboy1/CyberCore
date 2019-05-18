@@ -4,7 +4,10 @@ import cn.nukkit.form.element.*;
 import cn.nukkit.form.response.FormResponseCustom;
 import cn.nukkit.form.response.FormResponseData;
 import cn.nukkit.form.window.FormWindowCustom;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
@@ -92,8 +95,23 @@ public class CyberFormCustom extends CyberForm {
         this.icon = icon;
     }
 
+    @Override
     public String getJSONData() {
-        String toModify = (new Gson()).toJson(this);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                return f.getName().contains("_");
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> aClass) {
+                return false;
+            }
+
+        });
+        Gson gson = gsonBuilder.create();
+        String toModify = (gson).toJson(this);
         return toModify.replace("defaultOptionIndex", "default").replace("defaultText", "default").replace("defaultValue", "default").replace("defaultStepIndex", "default");
     }
 
