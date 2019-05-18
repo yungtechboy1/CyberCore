@@ -22,10 +22,12 @@ public class PowerStackable extends Power {
     }
 
     public void AddAvailbleQuantity(int i) {
+        if(AvailbleQuantity >= MaxAvailbleQuantity)return;
         AvailbleQuantity = AvailbleQuantity + i;
     }
 
     public void AddAvailbleQuantity() {
+        if(AvailbleQuantity >= MaxAvailbleQuantity)return;
         AvailbleQuantity++;
     }
 

@@ -33,16 +33,16 @@ public class FactionAdminPageSLRWindow extends CyberFormSimple {
         int idd = fapp.getClickedButtonId();
         switch (idd) {
             case 0:
-                plugin.FM.FFactory.SaveAllFactions();
+                _plugin.FM.FFactory.SaveAllFactions();
                 cp.sendMessage(Success_ADMIN_Faction_Saved.getMsg());
                 break;
             case 1:
-                plugin.FM = new FactionsMain(plugin, new FactionSQL(plugin));
+                _plugin.FM = new FactionsMain(_plugin, new FactionSQL(_plugin));
                 cp.sendMessage(Success_ADMIN_Faction_Saved.getMsg());
                 break;
             case 2:
-                plugin.FM.FFactory.SaveAllFactions();
-                plugin.FM = new FactionsMain(plugin, new FactionSQL(plugin));
+                _plugin.FM.FFactory.SaveAllFactions();
+                _plugin.FM = new FactionsMain(_plugin, new FactionSQL(_plugin));
                 break;
         }
     }

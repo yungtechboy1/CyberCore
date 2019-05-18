@@ -40,6 +40,26 @@ public class CyberFormCustom extends CyberForm {
         this.content = contents;
         this.icon = icon;
     }
+    public CyberFormCustom(String title) {
+            this(title, new ArrayList());
+    }
+
+    public CyberFormCustom(String title, List<Element> contents) {
+        this(title, contents, (ElementButtonImageData)null);
+    }
+
+    public CyberFormCustom(String title, List<Element> contents, String icon) {
+        this(title, contents, icon.isEmpty() ? null : new ElementButtonImageData("url", icon));
+    }
+
+    public CyberFormCustom( String title, List<Element> contents, ElementButtonImageData icon) {
+        super();
+        this.type = "custom_form";
+        this.title = "";
+        this.title = title;
+        this.content = contents;
+        this.icon = icon;
+    }
 
     public String getTitle() {
         return this.title;

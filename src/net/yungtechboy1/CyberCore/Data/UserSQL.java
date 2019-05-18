@@ -72,7 +72,7 @@ public class UserSQL extends SQLite{
 //    public void loadUser(String uuid) {
 //        try {
 //            List<HashMap<String,Object>> data = executeSelect(loadQuery, "uuid", uuid, columns.keySet());
-//            CorePlayer p = plugin.getCorePlayer(uuid);
+//            CorePlayer p = _plugin.getCorePlayer(uuid);
 //            for(String sel: columns.keySet()) {
 //                if(!sel.equalsIgnoreCase("uuid")) {
 //                    p.getClass().getField(sel).set(p, data.get(0).get(sel));

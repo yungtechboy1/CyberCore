@@ -20,6 +20,9 @@ import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
+import net.yungtechboy1.CyberCore.Manager.Form.CyberFormCustom;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassHowToUse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -184,9 +187,11 @@ public abstract class BaseClass {
 
     public void takeXP(int xp) {
         XP -= xp;
+        LVL = XPToLevel(XP);
     }
 
     public int getXP() {
+        LVL = XPToLevel(XP);
         return XP;
     }
 
@@ -304,6 +309,10 @@ public abstract class BaseClass {
         return event;
     }
 
+    public CyberForm GetSettingsWindow(){
+        return null;
+    }
+
     @Deprecated
     public void activateAbility() {
 //        if (HasCooldown(PrimeKey)) {
@@ -410,6 +419,10 @@ public abstract class BaseClass {
         int plvl = lvl;
         f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl;
         return f;
+    }
+
+    public CyberForm getHowToUseClassWindow() {
+        return null;
     }
 
 

@@ -35,12 +35,12 @@ public class FactionKickListWindow extends CyberFormSimple {
         super.onRun(cp);
         FormResponseSimple frrs = (FormResponseSimple) getResponse();
         String tp = frrs.getClickedButton().getText();
-        if(Fac == null){
+        if(_Fac == null){
             cp.sendMessage("Errpr #251036");
             return;
         }else{
             System.out.println("STARTTING KICKKING >>> "+tp);
-            Fac.KickPlayer(tp);
+            _Fac.KickPlayer(tp);
         }
     }
 }

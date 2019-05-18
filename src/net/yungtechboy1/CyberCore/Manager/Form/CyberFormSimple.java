@@ -32,6 +32,20 @@ public class CyberFormSimple extends CyberForm {
         this.content = content;
         this.buttons = buttons;
     }
+    public CyberFormSimple( String title, String content) {
+        this( title, content, new ArrayList());
+    }
+
+    public CyberFormSimple(String title, String content, List<ElementButton> buttons) {
+        super();
+        this.type = "form";
+        this.title = "";
+        this.content = "";
+        this.response = null;
+        this.title = title;
+        this.content = content;
+        this.buttons = buttons;
+    }
 
     public String getTitle() {
         return this.title;
@@ -57,12 +71,9 @@ public class CyberFormSimple extends CyberForm {
         this.buttons.add(button);
     }
 
-    public String getJSONData() {
-        return (new Gson()).toJson(this);
-    }
-
+    @Override
     public FormResponseSimple getResponse() {
-        return this.response;
+        return response;
     }
 
     @Override
@@ -88,7 +99,7 @@ public class CyberFormSimple extends CyberForm {
     @Override
     public void setResponse(String data, CorePlayer p) {
         setResponse(data);
-        onRun(p);
+        if(data != null)onRun(p);
     }
 
     @Override

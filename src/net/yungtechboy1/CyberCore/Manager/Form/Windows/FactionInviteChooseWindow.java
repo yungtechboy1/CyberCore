@@ -51,12 +51,12 @@ public class FactionInviteChooseWindow extends CyberFormSimple {
                 return;
             }
             Integer time = (int) (Calendar.getInstance().getTime().getTime() / 1000) + 60 * 5;
-            if (Fac == null) {
+            if (_Fac == null) {
                 cp.sendMessage(Error_SA224.getMsg());
                 return;
             }
-            Fac.AddInvite(cpp.getName().toLowerCase(), time);
-            CyberCoreMain.getInstance().FM.FFactory.InvList.put(cpp.getName().toLowerCase(), Fac.GetName());
+            _Fac.AddInvite(cpp.getName().toLowerCase(), time);
+            CyberCoreMain.getInstance().FM.FFactory.InvList.put(cpp.getName().toLowerCase(), _Fac.GetName());
 
             cp.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Successfully invited " + cpp.getName() + "!");
             cpp.sendMessage(FactionsMain.NAME + TextFormat.YELLOW + "You have been invited to faction.\n" + TextFormat.GREEN + "Type '/f accept' or '/f deny' into chat to accept or deny!");

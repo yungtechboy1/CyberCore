@@ -38,7 +38,21 @@ public class Admin extends Commands {
 
     @Override
     public void RunCommand() {
-        Sender.showFormWindow(new FactionAdminPage1());
+        FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Admin Page (1/2)","");
+//        Element e = null;
+        FWM.addButton(new ElementButton("Save/Load/Reload"));
+        FWM.addButton(new ElementButton("GiveTestImage"));
+    System.out.println(FWM.getJSONData());
+    System.out.println(new FactionAdminPage1().getJSONData());
+        try {
+            Sender.showFormWindow(new FactionAdminPage1());
+        }catch (Exception e){
+            CyberCoreMain.getInstance().getLogger().error("EEE!213111 >>",e);
+        }
+
+
+
+
 
         //TODO MAKE NEAT
 //        if (Args.length == 1) {

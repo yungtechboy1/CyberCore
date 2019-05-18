@@ -2,24 +2,13 @@ package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 
 import cn.nukkit.form.element.*;
 import cn.nukkit.form.response.FormResponseCustom;
-import cn.nukkit.form.response.FormResponseData;
-import cn.nukkit.form.window.FormWindowCustom;
-import cn.nukkit.form.window.FormWindowModal;
-import cn.nukkit.item.Item;
-import cn.nukkit.item.enchantment.Enchantment;
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionString;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormCustom;
 
-import java.util.ArrayList;
-
-import static net.yungtechboy1.CyberCore.FormType.MainForm.Faction_Create_0;
-import static net.yungtechboy1.CyberCore.FormType.MainForm.Faction_Create_0_Error;
-import static net.yungtechboy1.CyberCore.Manager.Factions.FactionString.Error_SA221;
 import static net.yungtechboy1.CyberCore.Manager.Factions.FactionString.Error_SA223;
 
 public class FactionCreate0  extends CyberFormCustom {
@@ -40,7 +29,7 @@ public class FactionCreate0  extends CyberFormCustom {
         String fn = frc.getInputResponse(0);
         if (fn == null || fn.length() == 0) return;
         System.out.println("PRINGING THE NAME " + fn);
-        int r = plugin.FM.FFactory.CheckFactionName(fn);
+        int r = _plugin.FM.FFactory.CheckFactionName(fn);
         if (r != 0) {
             FactionString fs = FactionsMain.getInstance().TextList.getOrDefault(r, null);
             cp.showFormWindow(new FactionCreate0Error(fs));
@@ -49,7 +38,7 @@ public class FactionCreate0  extends CyberFormCustom {
         String  motd = frc.getInputResponse(1);
         boolean privacy = frc.getToggleResponse(3);
 
-        Faction f = plugin.FM.FFactory.CreateFaction(fn, cp, motd, privacy);
+        Faction f = _plugin.FM.FFactory.CreateFaction(fn, cp, motd, privacy);
         if (f == null) cp.sendMessage(Error_SA223.getMsg()+"!!!!!++11<<");
 
     }

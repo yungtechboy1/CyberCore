@@ -332,7 +332,7 @@ public class CorePlayer extends Player {
         this.formWindows.put(packet.formId, window);
         this.dataPacket(packet);
         if(window instanceof CyberForm){
-            FormType.MainForm ft = ((CyberForm)window).FT;
+            FormType.MainForm ft = ((CyberForm)window)._FT;
             if(ft != null && ft != FormType.MainForm.NULL){
                 LastSentFormType = ft;
             }

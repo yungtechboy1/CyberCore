@@ -21,7 +21,7 @@ Specalizations
         - Diamond Ore : 5;
         - Silver Ore : 4;
      - Level 1 - 9:
-        - Player will regerate 1 TNT every 160 Secs - levelwd
+        - Player will regerate 1 TNT every 160 Secs - level
         - Holds a Max of 10 TNT blocks
      - Level 10 - 19:
         - Mining with a pickaxe reduces regin time by 1 Sec after Level 10

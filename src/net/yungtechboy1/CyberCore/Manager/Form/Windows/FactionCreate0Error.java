@@ -36,7 +36,7 @@ public class FactionCreate0Error extends CyberFormCustom {
 
         if (fn == null || fn.length() == 0) return;
         System.out.println("PRINGING THE NAME " + fn);
-        int r = plugin.FM.FFactory.CheckFactionName(fn);
+        int r = _plugin.FM.FFactory.CheckFactionName(fn);
         if (r != 0) {
             FactionString fs = FactionsMain.getInstance().TextList.getOrDefault(r, null);
             cp.showFormWindow(new FactionCreate0Error(fs));
@@ -45,7 +45,7 @@ public class FactionCreate0Error extends CyberFormCustom {
         String motd = frc.getInputResponse(2);
         boolean privacy = frc.getToggleResponse(4);
 
-        Faction f = plugin.FM.FFactory.CreateFaction(fn, cp, motd, privacy);
+        Faction f = _plugin.FM.FFactory.CreateFaction(fn, cp, motd, privacy);
         if (f == null) {
             cp.sendMessage(Error_SA223.getMsg());
         }

@@ -31,7 +31,10 @@ public final class FormType {
         Faction_Info_Other,
         Faction_Join_List,
         Faction_Kick_List,
-        Faction_Chat_Faction,
+        Faction_Chat_Faction, Class_Settings_TNT, Class_HowToUse_TNT, Class_HowToUse_TNT_Commands, Class_HowToUse_TNT_PA, Class_HowToUse_TNT_Unlocks, Class_HowToUse_TNT_EXP;
+        public int getID(){
+            return ordinal();
+        }
 
     }
 

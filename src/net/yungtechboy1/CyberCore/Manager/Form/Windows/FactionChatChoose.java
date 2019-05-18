@@ -1,19 +1,13 @@
 package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 
-import cn.nukkit.block.Block;
 import cn.nukkit.form.element.ElementButton;
-import cn.nukkit.form.response.FormResponseModal;
 import cn.nukkit.form.response.FormResponseSimple;
-import cn.nukkit.item.Item;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static net.yungtechboy1.CyberCore.FormType.MainForm.Enchanting_1;
-import static net.yungtechboy1.CyberCore.FormType.MainForm.NULL;
 
 public class FactionChatChoose extends CyberFormSimple {
     public FactionChatChoose() {
@@ -34,7 +28,7 @@ public class FactionChatChoose extends CyberFormSimple {
         switch (fr.getClickedButtonId()){
             case 0:
                 //Faction Chat
-                Fac.SendFactionChatWindow(cp);
+                _Fac.SendFactionChatWindow(cp);
                 break;
             case 1:
                 //Ally Chat

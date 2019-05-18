@@ -7,6 +7,10 @@ import net.yungtechboy1.CyberCore.Classes.Power.TNTSpecialistPower;
 import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassHowToUse;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassHowToUseTNT;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassSettingsTNTWindow;
 
 /**
  * Created by carlt on 5/16/2019.
@@ -28,14 +32,19 @@ public class TNTSpecialist extends MinnerBaseClass {
     public int GetMaxTNTPower() {
         double mi = getLVL() / 10;
         int m = (int) Math.round(mi);
+        int t = 10;
         switch (m) {
             case 0:
+                break;
             case 1:
+                t += 5;
+                break;
             case 2:
                 return 10;
             default:
                 return 10;
         }
+        return t;
     }
 
     @Override
@@ -107,8 +116,8 @@ public class TNTSpecialist extends MinnerBaseClass {
 //        }
 
     public int GetTNTAddWaitTime() {
-//            return 160 - getLVL();
-        return 10;
+            return 160 - getLVL();
+//        return 10;
     }
 
 //    @Override
@@ -152,5 +161,15 @@ public class TNTSpecialist extends MinnerBaseClass {
         int m = p.getMaxAvailbleQuantity();
         String n = TextFormat.GRAY + " | " + TextFormat.RED + " TNT: " + q;
         return f + n;
+    }
+
+    @Override
+    public CyberForm GetSettingsWindow() {
+        return new ClassSettingsTNTWindow(this);
+    }
+
+    @Override
+    public CyberForm getHowToUseClassWindow() {
+        return new ClassHowToUseTNT(getName());
     }
 }

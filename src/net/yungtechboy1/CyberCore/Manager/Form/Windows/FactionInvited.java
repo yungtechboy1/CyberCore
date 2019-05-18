@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 
 import cn.nukkit.form.response.FormResponseModal;
-import cn.nukkit.form.response.FormResponseSimple;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
@@ -21,7 +20,7 @@ public class FactionInvited extends CyberFormModal {
         super.onRun(cp);
         FormResponseModal frsi =  getResponse();
         if (cp.FactionInvite != null) {
-            Faction f = Fac;
+            Faction f = _Fac;
             if (frsi.getClickedButtonId() == 0) {
                 //Accept
                 if (f.AcceptInvite(cp.getName()))

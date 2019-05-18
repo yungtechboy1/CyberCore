@@ -22,6 +22,13 @@ public class CyberFormModal extends CyberForm {
         this.button1 = trueButtonText;
         this.button2 = falseButtonText;
     }
+    public CyberFormModal(String title, String content, String trueButtonText, String falseButtonText) {
+        super();
+        this.title = title;
+        this.content = content;
+        this.button1 = trueButtonText;
+        this.button2 = falseButtonText;
+    }
 
     public String getTitle() {
         return this.title;
@@ -53,11 +60,6 @@ public class CyberFormModal extends CyberForm {
 
     public void setButton2(String button2) {
         this.button2 = button2;
-    }
-
-    @Override
-    public String getJSONData() {
-        return (new Gson()).toJson(this);
     }
 
     public FormResponseModal getResponse() {

@@ -33,9 +33,9 @@ public class Class1MinnerWindow extends CyberFormSimple
             switch (k) {
                 case 0:
 //                            cp.SetPlayerClass();
-                    TNTSpecialist ts = new TNTSpecialist(plugin, cp);
+                    TNTSpecialist ts = new TNTSpecialist(_plugin, cp);
                     cp.SetPlayerClass(ts);
-                    plugin.ClassFactory.SaveClassToFile(cp);
+                    _plugin.ClassFactory.SaveClassToFile(cp);
                     cp.sendMessage("Class Set!");
                     break;//TNT-Specialist
                 case 1:
