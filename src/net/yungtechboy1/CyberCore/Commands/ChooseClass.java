@@ -4,15 +4,11 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
-import cn.nukkit.form.element.ElementButton;
-import cn.nukkit.form.window.FormWindowModal;
-import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.item.Item;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.FormType;
-
-import java.util.ArrayList;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.Class0Window;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.Class1Window;
 
 /**
  * Created by carlt on 3/22/2019.
@@ -38,23 +34,12 @@ public class ChooseClass extends Command {
                 return true;
             }
 
-            FormWindowModal FWM = new FormWindowModal("Welcome to the Class Picker!",
-                    "Please Choose a class, but please not that after choosing a class you can not change it!\n" +
-                            "Well.. There is one way but its not cheep or easy!\n" +
-                            "I know one of the bosses drops a potion that can allow you to change!\n" +
-                            "But that was only rumors! Good Luck Choose wise!"
-                    , "Go Back", "Learn More >");
-            p.showFormWindow(FWM);
-            cp.LastSentFormType = FormType.MainForm.Class_0;
-            cp.setNewWindow(new FormWindowSimple("Choose your Class Catagory!", "Visit Cybertechpp.com for more info on classes!",
-                    new ArrayList<ElementButton>() {{
-                        add(new ElementButton("Offense"));
-                        add(new ElementButton("Defense"));
-                        add(new ElementButton("Minning"));
-                        add(new ElementButton("Intelligence"));
-                        add(new ElementButton("TEMP-GIVE SPAWNER"));
-                    }}));
+
+            p.showFormWindow(new Class0Window());
         }
         return true;
     }
+
 }
+
+

@@ -13,6 +13,7 @@ import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.FactionCreate0;
 import org.apache.logging.log4j.core.Core;
 
 import java.util.ArrayList;
@@ -53,8 +54,7 @@ public class Create extends Commands {
         FWM.addElement(new ElementToggle("Faction Privacy", false));
 
         CorePlayer cp = (CorePlayer) CyberCoreMain.getInstance().getServer().getPlayerExact(Sender.getName());
-        cp.showFormWindow(FWM);
-        cp.LastSentFormType = FormType.MainForm.Faction_Create_0;
+        cp.showFormWindow(new FactionCreate0());
 //        cp.setNewWindow();
 
 

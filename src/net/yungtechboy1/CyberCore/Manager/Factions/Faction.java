@@ -16,6 +16,7 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.Mission.ActiveMission;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.FactionChatFactionWindow;
 
 import java.util.*;
 
@@ -198,16 +199,7 @@ public class Faction {
     }
 
     public void SendFactionChatWindow(CorePlayer cp) {
-        FormWindowCustom FWM = new FormWindowCustom("CyberFactions | Faction Chat Window");
-        FWM.addElement(new ElementInput("Send Message","Type Message Here"));
-        LinkedList<String> ls = (LinkedList<String>)LastFactionChat.clone();
-        if(ls == null)System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-        String s;
-        while ((s = ls.removeFirst()) != null) {
-            FWM.addElement(new ElementLabel(s));
-        }
-        cp.showFormWindow(FWM);
-        cp.LastSentFormType = FormType.MainForm.Faction_Chat_Faction;
+        cp.showFormWindow(new FactionChatFactionWindow((LinkedList<String>)LastFactionChat.clone()));
     }
 
 

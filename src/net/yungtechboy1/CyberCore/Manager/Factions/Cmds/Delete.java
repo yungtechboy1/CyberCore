@@ -9,6 +9,7 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.FactionConfirmDelete;
 
 /**
  * Created by carlt_000 on 7/9/2016.
@@ -31,11 +32,7 @@ public class Delete extends Commands {
     @Override
     public void RunCommand() {
         if (fac.Leader.equalsIgnoreCase(Sender.getName())) {
-            CorePlayer p = (CorePlayer)Sender;
-
-            FormWindowModal FWM = new FormWindowModal("CyberFactions | Faction Delete Confirmation", TextFormat.RED+""+TextFormat.BOLD+"WARNING!!!!\n Are you sure you want to delete your faction?","Confirm and Delete", "Cancel");
-            p.showFormWindow(FWM);
-            p.LastSentFormType = FormType.MainForm.Faction_Delete_Confirm;
+            Sender.showFormWindow(new FactionConfirmDelete());
         } else {
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "You are not the leader!");
         }

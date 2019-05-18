@@ -10,6 +10,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionRank;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.FactionInviteChooseWindow;
 
 import java.util.ArrayList;
 
@@ -63,19 +64,7 @@ public class Invite extends Commands {
                 } else if (l.size() == 1) {
                     invited = (CorePlayer) l.get(0);
                 } else {
-                    FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Invite Player", "");
-                    int k = 0;
-                    FWM.addButton(new ElementButton("Grinch!"));
-                    for (Player p : l) {
-                        k++;
-                        if (k > 20) break;
-                        FWM.addButton(new ElementButton(p.getName()));
-                    }
-
-                    CorePlayer cp = (CorePlayer) CyberCoreMain.getInstance().getServer().getPlayerExact(Sender.getName());
-                    cp.showFormWindow(FWM);
-                    cp.LastSentFormType = FormType.MainForm.Faction_Invite_Choose;
-
+                    Sender.showFormWindow(new FactionInviteChooseWindow(l));
                 }
             }
 

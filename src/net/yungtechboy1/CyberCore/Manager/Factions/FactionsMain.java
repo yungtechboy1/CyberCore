@@ -12,6 +12,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.FactionBaseCMD;
 import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.FactionInvited;
 import net.yungtechboy1.CyberCore.Utils;
 
 import java.sql.*;
@@ -246,11 +247,7 @@ public class FactionsMain {
         CorePlayer cp = (CorePlayer) invited;
 //        invited.
         if(!cp.Settings.isAllowFactionRequestPopUps())return;
-        FormWindowModal FWS = new FormWindowModal("CyberFactions | Faction Invite",
-                "Greetings "+invited.getDisplayName()+"!\n The faction "+fac.GetDisplayName()+" would like to recruit you!",
-                "Accept Faction Invite", "Deny Faction Invite");
-        cp.showFormWindow(FWS);
-        cp.LastSentFormType = FormType.MainForm.Faction_Invited;
+        cp.showFormWindow(new FactionInvited(invited.getDisplayName(),fac.GetDisplayName()));
 
     }
 

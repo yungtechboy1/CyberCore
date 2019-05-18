@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore;
 
+import cn.nukkit.Server;
 import cn.nukkit.utils.ConfigSection;
 
 /**
@@ -45,4 +46,9 @@ public class CoolDown extends ConfigSection {
         return ct < Time;
     }
 
+    public boolean isValidTick() {
+        int ct = Server.getInstance().getTick();
+//        System.out.println(ct+" > "+Time);
+        return ct < Time;
+    }
 }

@@ -9,9 +9,9 @@ import net.yungtechboy1.CyberCore.Manager.Form.CyberFormModal;
 
 import static net.yungtechboy1.CyberCore.FormType.MainForm.*;
 
-public class ChooseClassWindow extends CyberFormModal {
+public class Class0Window extends CyberFormModal {
 
-    public ChooseClassWindow() {
+    public Class0Window() {
         super(FormType.MainForm.Class_0,"Welcome to the Class Picker!", "Please Choose a class, but please not that after choosing a class you can not change it!\n" +
                 "Well.. There is one way but its not cheep or easy!\n" +
                 "I know one of the bosses drops a potion that can allow you to change!\n" +
@@ -25,9 +25,7 @@ public class ChooseClassWindow extends CyberFormModal {
         if (frm.getClickedButtonId() == 0) {
             cp.LastSentFormType = NULL;
         } else {
-            cp.showFormWindow(cp.getNewWindow());
-            cp.LastSentFormType = Class_1;
-            cp.clearNewWindow();
+            cp.showFormWindow(new Class1Window());
         }
     }
 }

@@ -11,6 +11,7 @@ import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionRank;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.FactionKickListWindow;
 
 import java.util.ArrayList;
 
@@ -72,20 +73,8 @@ public class Kick extends Commands {
             af.addAll(fac.GetMembers());
             af.addAll(fac.GetOfficers());
             af.addAll(fac.GetGenerals());
-            FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Faction Kick Page", "");
-            if (af.size() == 0) {
-                FWM.addButton(new ElementButton("--No Other Members In Faction--"));
-            } else {
-                int i = 0;
-                for (String f : af) {
-                    i++;
-                    if (i > 20) continue;
-                    FWM.addButton(new ElementButton(f));
-                }
-            }
-            FWM.addButton(new ElementButton("CJ123"));
-            Sender.showFormWindow(FWM);
-            Sender.LastSentFormType = FormType.MainForm.Faction_Kick_List;
+            Sender.showFormWindow(new FactionKickListWindow(af));
+//            Sender.LastSentFormType = FormType.MainForm.Faction_Kick_List;
 
         }
 

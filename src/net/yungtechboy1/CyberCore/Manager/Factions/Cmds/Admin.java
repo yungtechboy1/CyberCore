@@ -15,6 +15,7 @@ import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionFactory;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.FactionAdminPage1;
 
 import java.util.ArrayList;
 
@@ -37,18 +38,7 @@ public class Admin extends Commands {
 
     @Override
     public void RunCommand() {
-        FormWindowSimple FWM = new FormWindowSimple("CyberFactions | Admin Page (1/2)","");
-//        Element e = null;
-        FWM.addButton(new ElementButton("Save/Load/Reload"));
-        FWM.addButton(new ElementButton("GiveTestImage"));
-
-        CorePlayer cp = (CorePlayer) CyberCoreMain.getInstance().getServer().getPlayerExact(Sender.getName());
-        cp.showFormWindow(FWM);
-        cp.LastSentFormType = FormType.MainForm.Faction_Admin_Page_1;
-
-
-
-
+        Sender.showFormWindow(new FactionAdminPage1());
 
         //TODO MAKE NEAT
 //        if (Args.length == 1) {

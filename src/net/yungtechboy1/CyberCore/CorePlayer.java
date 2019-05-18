@@ -2,11 +2,13 @@ package net.yungtechboy1.CyberCore;
 
 import cn.nukkit.Player;
 import cn.nukkit.PlayerFood;
+import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.block.BlockDragonEgg;
 import cn.nukkit.block.BlockNoteblock;
 import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.event.player.PlayerFormRespondedEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.form.window.FormWindow;
@@ -26,7 +28,6 @@ import co.aikar.timings.Timing;
 import co.aikar.timings.Timings;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
-import net.yungtechboy1.CyberCore.Classes.New.Minner.MinnerBaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
@@ -36,9 +37,9 @@ import net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse;
 import net.yungtechboy1.CyberCore.Data.HomeData;
 import net.yungtechboy1.CyberCore.Manager.Econ.PlayerEconData;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
+import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
 import net.yungtechboy1.CyberCore.Rank.Rank;
 import net.yungtechboy1.CyberCore.Rank.RankList;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +47,9 @@ import java.util.HashMap;
 public class CorePlayer extends Player {
 
 
+    private static boolean CooldownLock = false;
+    private final String Cooldown_Faction = "Faction";
+    private final String Cooldown_Class = "Class";
     public String TPR = null;
     public FormType.MainForm LastSentFormType = FormType.MainForm.NULL;
     public FormType.SubMenu LastSentSubMenu = FormType.SubMenu.MainMenu;
@@ -88,6 +92,7 @@ public class CorePlayer extends Player {
     private BaseClass PlayerClass = null;
     private int ClassCheck = -1;
     private int FactionCheck = -1;
+    private HashMap<String, CoolDown> CDL = new HashMap<>();
 
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
         super(interfaz, clientID, ip, port);
@@ -320,6 +325,22 @@ public class CorePlayer extends Player {
     }
 
     @Override
+    public int showFormWindow(FormWindow window, int id) {
+        ModalFormRequestPacket packet = new ModalFormRequestPacket();
+        packet.formId = id;
+        packet.data = window.getJSONData();
+        this.formWindows.put(packet.formId, window);
+        this.dataPacket(packet);
+        if(window instanceof CyberForm){
+            FormType.MainForm ft = ((CyberForm)window).FT;
+            if(ft != null && ft != FormType.MainForm.NULL){
+                LastSentFormType = ft;
+            }
+        }
+        return id;
+    }
+
+    @Override
     public void handleDataPacket(DataPacket packet) {
         if (!connected) {
             return;
@@ -339,6 +360,27 @@ public class CorePlayer extends Player {
 
             packetswitch:
             switch (packet.pid()) {
+                case ProtocolInfo.MODAL_FORM_RESPONSE_PACKET:
+                    if (!this.spawned || !this.isAlive()) {
+                        break;
+                    }
+
+                    ModalFormResponsePacket modalFormPacket = (ModalFormResponsePacket) packet;
+
+                    if (formWindows.containsKey(modalFormPacket.formId)) {
+                        FormWindow window = formWindows.remove(modalFormPacket.formId);
+                        if (window instanceof CyberForm)
+                            ((CyberForm)window).setResponse(modalFormPacket.data.trim(), this);
+                        else
+                            window.setResponse(modalFormPacket.data.trim());
+
+                        PlayerFormRespondedEvent event = new PlayerFormRespondedEvent(this, modalFormPacket.formId, window);
+                        getServer().getPluginManager().callEvent(event);
+                        return;
+                    }
+
+//                    return;
+                    break;
 
                 case ProtocolInfo.MOVE_PLAYER_PACKET:
                     super.handleDataPacket(packet);
@@ -459,17 +501,17 @@ public class CorePlayer extends Player {
                                 //improved this to take stuff like swimming, ladders, enchanted tools into account, fix wrong tool break time calculations for bad tools (pmmp/PocketMine-MP#211)
                                 //Done by lmlstarqaq
                                 double breakTime = Math.ceil(target.getBreakTime(this.inventory.getItemInHand(), this) * 20);
-                                if(PlayerClass != null){
+                                if (PlayerClass != null) {
                                     double obreaktime = breakTime;
-                                    if(PlayerClass instanceof MineLifeClass && ((MineLifeClass)PlayerClass).TryRunPower(Power.MineLife)){
-                                        Object nbt = ((MineLifeClass)PlayerClass).RunPower(Power.MineLife,this.inventory.getItemInHand(),target,breakTime);
-                                        if(nbt !=null){
-                                            double nd = (double)nbt;
-                                            if(nd > 0){
+                                    if (PlayerClass instanceof MineLifeClass && ((MineLifeClass) PlayerClass).TryRunPower(Power.MineLife)) {
+                                        Object nbt = ((MineLifeClass) PlayerClass).RunPower(Power.MineLife, this.inventory.getItemInHand(), target, breakTime);
+                                        if (nbt != null) {
+                                            double nd = (double) nbt;
+                                            if (nd > 0) {
                                                 double dec = obreaktime - nd;
-                                                double dp = (dec / obreaktime) *100d;
+                                                double dp = (dec / obreaktime) * 100d;
                                                 breakTime = nd;
-                                                sendMessage("Break Time Redueced by "+dp);
+                                                sendMessage("Break Time Redueced by " + dp);
                                             }
                                         }
                                     }
@@ -520,72 +562,87 @@ public class CorePlayer extends Player {
         if (f < max) setOnFire(nr.nextRange(1, 4));
     }
 
-    private final String Cooldown_Faction = "Faction";
-    private final String Cooldown_Class = "Class";
-    private ArrayList<CoolDown> CDL = new ArrayList<>();
+    private void AddCoolDown(String key, int secs) {
 
-    private void AddCoolDown(String key, int secs){
-        CDL.add(new CoolDown(key, CyberCoreMain.getInstance().GetIntTime()+secs));
+        CDL.put(key, new CoolDown(key, Server.getInstance().getTick() + (secs * 20)));
     }
 
-    private CoolDown GetCooldown(String key){
-        return GetCooldown(key,false);
+    private CoolDown GetCooldown(String key) {
+        return GetCooldown(key, false);
     }
-    private CoolDown GetCooldown(String key, boolean checkvalid){
-        int k = 0;
-        for(CoolDown c: (ArrayList<CoolDown>)CDL.clone()){
-            k++;
-            if(c.Key.equalsIgnoreCase(key)){
-                if(checkvalid && !c.isValid()){//CT !> Set Time
-                    CDL.remove(c);
-                    return null;
-                }
-                return c;
-            }
+
+    private CoolDown GetCooldown(String key, boolean checkvalid) {
+        if (!CDL.containsKey(key)) return null;
+//        CyberCoreMain.getInstance().getLogger().info(" VALID"+key);
+        CoolDown cd = CDL.get(key);
+        if (cd == null) return null;
+//        CyberCoreMain.getInstance().getLogger().info("CVALID"+!cd.isValidTick()+" | "+cd.Time+"|"+Server.getInstance().getTick());
+        if (checkvalid && !cd.isValidTick()) {
+
+//            CyberCoreMain.getInstance().getLogger().info(" EXPIRED "+key);
+            CDL.remove(key);
+            return null;
         }
-        return null;
+//        CyberCoreMain.getInstance().getLogger().info(" GOOD "+key);
+        return cd;
+//
+//
+//        for (CoolDown c : (ArrayList<CoolDown>) CDL.clone()) {
+//            CyberCoreMain.getInstance().getLogger().info("CHECK KEY"+key +" == "+ c.Key);
+//            if (c.Key.equalsIgnoreCase(key)) {
+//                CyberCoreMain.getInstance().getLogger().info("CHECK VALID"+checkvalid +" == "+ !c.isValidTick());
+//                if (checkvalid && !c.isValidTick()) {//CT !> Set Time
+//                    CDL.remove(c);
+//                    return null;
+//                }
+//                return c;
+//            }
+//        }
+//        return null;
     }
-private static boolean CooldownLock = false;
+
     @Override
     public boolean onUpdate(int currentTick) {
         //Check for Faction!
-        if(!CooldownLock && isAlive() && spawned){
-            CooldownLock = true;
+        if (currentTick % 5 == 0) {
+            if (!CooldownLock && isAlive() && spawned) {
+                CooldownLock = true;
 //            CyberCoreMain.getInstance().getLogger().info("RUNNNING "+CDL.size());
-            CoolDown fc = GetCooldown(Cooldown_Faction, true);
-            if (fc == null) {
-                CyberCoreMain.getInstance().getLogger().info("RUNNNING FACTION CHECK IN CP");
-                AddCoolDown(Cooldown_Faction, 60);//3 mins
-                if (Faction == null) {
-                    Faction f = CyberCoreMain.getInstance().FM.FFactory.IsPlayerInFaction(this);
-                    if (f == null) {
-                        Faction = null;
-                    } else {
-                        Faction = f.GetName();
+                CoolDown fc = GetCooldown(Cooldown_Faction, true);
+                if (fc == null) {
+                    CyberCoreMain.getInstance().getLogger().info("RUNNNING FACTION CHECK IN CP" + CDL.size());
+                    AddCoolDown(Cooldown_Faction, 60);//3 mins
+                    if (Faction == null) {
+                        Faction f = CyberCoreMain.getInstance().FM.FFactory.IsPlayerInFaction(this);
+                        if (f == null) {
+                            Faction = null;
+                        } else {
+                            Faction = f.GetName();
+                        }
+                    }
+                    //Check to See if Faction Invite Expired
+                    if (FactionInvite != null && FactionInviteTimeout > 0) {
+                        int t = CyberCoreMain.getInstance().GetIntTime();
+                        if (t < FactionInviteTimeout) {
+                            Faction fac = CyberCoreMain.getInstance().FM.FFactory.getFaction(FactionInvite);
+                            fac.BroadcastMessage(TextFormat.YELLOW + getName() + " has declined your faction invite");
+                            ClearFactionInvite(true);
+                        }
                     }
                 }
-                //Check to See if Faction Invite Expired
-                if (FactionInvite != null && FactionInviteTimeout > 0) {
-                    int t = CyberCoreMain.getInstance().GetIntTime();
-                    if (t < FactionInviteTimeout) {
-                        Faction fac = CyberCoreMain.getInstance().FM.FFactory.getFaction(FactionInvite);
-                        fac.BroadcastMessage(TextFormat.YELLOW + getName() + " has declined your faction invite");
-                        ClearFactionInvite(true);
-                    }
-                }
-            }
-            //Class Check
+                //Class Check
 
-            //FIX HERE
-            //TODO FIX HERE
-            CoolDown cc = GetCooldown(Cooldown_Class, true);
-            if (cc == null) {
-                CyberCoreMain.getInstance().getLogger().info("RUNNNING CLASS CHECK IN CP");
-                AddCoolDown(Cooldown_Class, 5);
-                BaseClass bc = GetPlayerClass();
-                if (bc != null) bc.onUpdate(currentTick);
+                //FIX HERE
+                //TODO FIX HERE
+                CoolDown cc = GetCooldown(Cooldown_Class, true);
+                if (cc == null) {
+                    CyberCoreMain.getInstance().getLogger().info("RUNNNING CLASS CHECK IN CP" + CDL.size());
+                    AddCoolDown(Cooldown_Class, 5);
+                    BaseClass bc = GetPlayerClass();
+                    if (bc != null) bc.onUpdate(currentTick);
+                }
+                CooldownLock = false;
             }
-            CooldownLock = false;
         }
 
 
