@@ -28,7 +28,7 @@ public class Settings extends Commands {
         FactionRank nr = fac.getSettings().getAllowedToEditSettings();
         FactionRank pr = fac.getPlayerRank(Sender);
         if(pr.HasPerm(nr)){
-            
+
         }
 
         //@todo
