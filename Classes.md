@@ -12,6 +12,8 @@ Specalizations
    
    TNT-Specialist
    ---
+   - Regin Time:
+   - `240 - ((Sqrt(40*lvl)*13*lvl)/(8*lvl))`
      - use /tnt to use TNT in bar 
      - Mining any block with a Pickaxe adds 1 -5 XP
         - Stone : 1;
@@ -40,7 +42,30 @@ Specalizations
        - 20% increase in power with TNT
         - MineLife
           - 10% increase in mine speed
-   - MineLife  
+   
+   MineLife  
+     ---
+     - Ability
+        - Mining Haste
+            - effect
+                - Lvl 1: Class lvl 1-29 for 15 Secs
+                - Lvl 2: Class lvl 30-59 for 25 Secs
+                - Lvl 3: Class lvl 60-89 for 35 Secs
+                - Lvl 4: Class lvl 90-100 for 50 Secs
+            - regin
+              - Lvl 1-19:  1% every 9 Secs / 15 min reload time
+              - Lvl 20-39:  1% every 8 Secs / 13.3 min reload time
+              - Lvl 40-59:  1% every 7 Secs / 8.3 min reload time
+              - Lvl 60-79:  1% every 5 Secs / 10 min reload time
+              - Lvl 80-100:  1% every 4 Secs / 7 min reload time
+     - Passive
+        - OreKnowledge
+            - When Breaking ore block there is a Chance that floating text may appear near surround blocks indicating where other ores of the same type are at
+              - Lvl 1-19:  2% Chance - 10 Block Range
+              - Lvl 20-39: 5% Chance - 13 Block Range
+              - Lvl 40-59: 8% Chance - 17 Block Range
+              - Lvl 60-79:  10% Chance - 20 Block Range
+              - Lvl 80-100: 15% Chance - 25 Block Range
      - Mining any block with a Pickaxe adds 1 -5 XP
          - Stone : 1;
          - CobbleStone : 1;

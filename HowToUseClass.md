@@ -18,6 +18,7 @@ TNT-Specialist
 - TNT Regen
     - Default TNT Bag Size = 10
    - Regenerate 1 TNT every 160 secs - Level
+   - Regenerate 1 TNT every 230-137 secs depending on Level
 - TNT Resistance
     - Take no TNT Damage (Experimental Excluded)
 - Resourceful - Level 30+

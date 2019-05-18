@@ -116,7 +116,9 @@ public class TNTSpecialist extends MinnerBaseClass {
 //        }
 
     public int GetTNTAddWaitTime() {
-            return 160 - getLVL();
+        double t = Math.sqrt(40*getLVL())*13*getLVL();
+        double b = 8*getLVL();
+            return (int)(240 - (t/b));
 //        return 10;
     }
 
