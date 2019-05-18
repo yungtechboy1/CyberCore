@@ -81,6 +81,7 @@ Specalizations
         - BreakTime = `(a/500)+(a*.0065)`
         - Level
    - Ore Bomb
+        - ##### Depreciated
         - Spawns Ore Blocks with Random values with a Box
         - Levels:
             - Level 1: 5 X 5 Box
@@ -95,8 +96,6 @@ Specalizations
                 - Gold: 0 - 100
                 - Diamond: 0 - 100
                 - Emeralds: 0 - 100
-    - OreFinder
-        - Spawns Floating Text 
 - enchanter - Enchanting, Producing rare Potion and Books
     - Every other class has a max 65% Success rate, and 100% Fail rate. Enchanters will always have a 100% Max Success rate and max 80% Fail rate
       - The fail rate will decrease with each level
@@ -106,6 +105,7 @@ Specalizations
     - Witch
         - Enchants can have Quality Boosts
             -   1-10 - 5-10% Boost
+        - Can Upgrade Enchant Tiers
 - scholar - Potion Making, Can create "super-food", potions, and splash-potions, BARELs, and Drinks
     -Drinks
         - Give instant Health and Effect
