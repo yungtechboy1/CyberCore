@@ -47,12 +47,14 @@ public class FactionAdminPage1 extends CyberFormSimple {
                 cp.getInventory().addItem(im);
                 break;
             case 2:
-                CyberCoreMain.getInstance().CraftingManager.rebuildPacket();
-                cp.dataPacket(CustomCraftingManager.packet);
+//                CyberCoreMain.getInstance().CraftingManager.rebuildPacket();
+//                cp.dataPacket(CustomCraftingManager.packet);
+                cp.sendMessage("DEPRECATED");
                 break;
             case 3:
                 new CraftingManager().rebuildPacket();
                 cp.dataPacket(CraftingManager.packet);
+                break;
         }
     }
 }

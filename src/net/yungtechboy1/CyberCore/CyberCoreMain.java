@@ -138,7 +138,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //    public net.yungtechboy1.CyberCore.Data.UserSQL UserSQL;
     public net.yungtechboy1.CyberCore.Manager.Warp.WarpManager WarpManager;
     public ServerSqlite ServerSQL;
-    public CustomCraftingManager CraftingManager;
+//    public CustomCraftingManager CraftingManager;
     Vector3 p1;
     Vector3 p2;
     private EconManager ECON;
@@ -192,19 +192,19 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
             }
         }
 
-        if (Block.fullList[id << 4] == null) {
-            System.out.println("----------------------------");
-            System.out.println("IS NULLL");
-            System.out.println("----------------------------");
-        } else {
-            System.out.println("----------------------------");
-            System.out.println("IS " + Block.fullList[id << 4]);
-            System.out.println("----------------------------");
-            System.out.println("IS " + Block.fullList[(id << 4) | 5]);
-            System.out.println("IS " + Block.fullList[(id << 4) | 5].getDamage());
-            System.out.println("----------------------------");
-
-        }
+//        if (Block.fullList[id << 4] == null) {
+////            System.out.println("----------------------------");
+////            System.out.println("IS NULLL");
+////            System.out.println("----------------------------");
+//        } else {
+////            System.out.println("----------------------------");
+////            System.out.println("IS " + Block.fullList[id << 4]);
+////            System.out.println("----------------------------");
+////            System.out.println("IS " + Block.fullList[(id << 4) | 5]);
+////            System.out.println("IS " + Block.fullList[(id << 4) | 5].getDamage());
+////            System.out.println("----------------------------");
+//
+//        }
     }
 
     @Override
@@ -233,44 +233,44 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Item.list[BlockID.TNT] = CustomItemTNT.class;
         Item.list[Item.GUNPOWDER] = CustomItemGunpowder.class;
 
-        CraftingManager = new CustomCraftingManager();
-        List<Item> li = new ArrayList<>();
-        li.add(new Item(289));
-        li.add(new Item(12, -1));
-        li.add(new Item(289));
-        li.add(new Item(12, -1));
-        li.add(new Item(289));
-        li.add(new Item(12, -1));
-        li.add(new Item(289));
-        li.add(new Item(12, -1));
-        li.add(new Item(289));
-        int ri = CustomCraftingManager.getItemHash(new Item(46));
-        UUID ra = CustomCraftingManager.getMultiItemHash(li);
-        Map<UUID, ShapedRecipe> ma = CraftingManager.shapedRecipes.computeIfAbsent(ri, k -> new HashMap<>());
-        if (ma == null || ma.size() == 0) {
-            System.out.println("ERRRORRR NUYN YA HERE!~!!!");
-        } else {
-            ShapedRecipe sr = ma.get(ra);
-            if (sr == null) {
-                System.out.println("ERRRORRR NUYN YA HERE!~!!!22222222222");
-
-            } else {
-                System.out.println("ISSSSAAA HEEERRRRR");
-                ma.remove(ra);
-            }
-        }
-//        CustomItemTNT
-        ShapedRecipe nsr = new ShapedRecipe(Item.get(46), new String[]{"AAA", "BBB", "AAA"}, new CharObjectHashMap<Item>() {{
-            put("A".charAt(0), new CustomItemGunpowder());
-            put("B".charAt(0), Item.get(12));
-        }}, new ArrayList<Item>() {{
-            add(Item.get(46));
-        }});
-
-
-        CraftingManager.registerShapedRecipe(nsr);
-
-        System.out.println("EEEE >>>>> "+CraftingManager.shapedRecipes.size());
+//        CraftingManager = new CustomCraftingManager();
+//        List<Item> li = new ArrayList<>();
+//        li.add(new Item(289));
+//        li.add(new Item(12, -1));
+//        li.add(new Item(289));
+//        li.add(new Item(12, -1));
+//        li.add(new Item(289));
+//        li.add(new Item(12, -1));
+//        li.add(new Item(289));
+//        li.add(new Item(12, -1));
+//        li.add(new Item(289));
+//        int ri = CustomCraftingManager.getItemHash(new Item(46));
+//        UUID ra = CustomCraftingManager.getMultiItemHash(li);
+//        Map<UUID, ShapedRecipe> ma = CraftingManager.shapedRecipes.computeIfAbsent(ri, k -> new HashMap<>());
+//        if (ma == null || ma.size() == 0) {
+//            System.out.println("ERRRORRR NUYN YA HERE!~!!!");
+//        } else {
+//            ShapedRecipe sr = ma.get(ra);
+//            if (sr == null) {
+//                System.out.println("ERRRORRR NUYN YA HERE!~!!!22222222222");
+//
+//            } else {
+//                System.out.println("ISSSSAAA HEEERRRRR");
+//                ma.remove(ra);
+//            }
+//        }
+////        CustomItemTNT
+//        ShapedRecipe nsr = new ShapedRecipe(Item.get(46), new String[]{"AAA", "BBB", "AAA"}, new CharObjectHashMap<Item>() {{
+//            put("A".charAt(0), new CustomItemGunpowder());
+//            put("B".charAt(0), Item.get(12));
+//        }}, new ArrayList<Item>() {{
+//            add(Item.get(46));
+//        }});
+//
+//
+//        CraftingManager.registerShapedRecipe(nsr);
+//
+//        System.out.println("EEEE >>>>> "+CraftingManager.shapedRecipes.size());
 
 //        getServer().getCraftingManager().registerShapelessRecipe();=null;
 

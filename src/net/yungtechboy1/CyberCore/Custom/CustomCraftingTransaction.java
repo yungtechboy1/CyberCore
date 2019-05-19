@@ -132,7 +132,7 @@ public class CustomCraftingTransaction extends InventoryTransaction {
 
     public boolean canExecute() {
         Item[][] inputs = this.reindexInputs();
-        this.recipe = CyberCoreMain.getInstance().CraftingManager.matchRecipe(inputs, this.primaryOutput, this.secondaryOutputs);
+//        this.recipe = CyberCoreMain.getInstance().CraftingManager.matchRecipe(inputs, this.primaryOutput, this.secondaryOutputs);
         return this.recipe != null && super.canExecute();
     }
 

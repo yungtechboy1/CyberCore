@@ -49,10 +49,12 @@ public class AuctionItemData {
     public AuctionItemData(HashMap<String, Object> v) {
         byte[] nt = (byte[]) v.get("namedtag");
         item = Item.get((int) v.get("item-id"), (int) v.get("item-meta"), (int) v.get("item-count"));
-        try {
-            item.setCompoundTag(NBTIO.read(nt, ByteOrder.LITTLE_ENDIAN));
-        } catch (Exception e) {
-            System.out.println("ERROR TRING TO FORMAT NAMEDTAG!!!!");
+        if (nt != null && nt.length != 0) {
+            try {
+                item.setCompoundTag(NBTIO.read(nt, ByteOrder.LITTLE_ENDIAN));
+            } catch (Exception e) {
+                System.out.println("ERROR TRING TO FORMAT NAMEDTAG!!!!");
+            }
         }
         Cost = (int) v.get("cost");
         Soldby = (String) v.get("soldby");
@@ -65,7 +67,7 @@ public class AuctionItemData {
         CompoundTag tag;
         if (titem.hasCompoundTag()) tag = titem.getNamedTag();
         else tag = new CompoundTag();
-        if(tag.contains("ah-data"))tag.putCompound("ah-data", new CompoundTag());
+        if (tag.contains("ah-data")) tag.putCompound("ah-data", new CompoundTag());
 
         if (!titem.getCustomName().equals("") && tag.contains("ah-data") && tag.get("ah-data") instanceof CompoundTag)
             tag.getCompound("ah-data").putString("Name", titem.getCustomName());
@@ -127,9 +129,9 @@ public class AuctionItemData {
         CompoundTag tag;
         if (titem.hasCompoundTag()) tag = titem.getNamedTag();
         else tag = new CompoundTag();
-        if(tag.contains("ah-data")){
+        if (tag.contains("ah-data")) {
             CompoundTag ctah = tag.getCompound("ah-data");
-            if(ctah.contains("Name"))titem.setCustomName(ctah.getString("Name"));
+            if (ctah.contains("Name")) titem.setCustomName(ctah.getString("Name"));
             tag.remove("ah-data");
         }
 

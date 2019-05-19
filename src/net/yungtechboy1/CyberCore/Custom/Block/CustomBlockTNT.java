@@ -105,7 +105,7 @@ public class CustomBlockTNT extends BlockSolidMeta {
     }
 
     public int getTNTLevel() {
-        CyberCoreMain.getInstance().getLogger().error("LVL >>"+getDamage());
+//        CyberCoreMain.getInstance().getLogger().error("LVL >>"+getDamage());
         return getDamage();
     }
 

@@ -28244,9 +28244,9 @@
         }
       ],
       "shape": [
-        "ABA",
-        "BAB",
-        "ABA"
+        "AAA",
+        "BBB",
+        "AAA"
       ],
       "input": {
         "A": {

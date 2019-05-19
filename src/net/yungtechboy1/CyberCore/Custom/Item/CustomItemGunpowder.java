@@ -9,13 +9,22 @@ public class CustomItemGunpowder extends Item {
         this(TNTType.Normal, 1);
     }
 
+    public CustomItemGunpowder(Integer meta) {
+        this(TNTType.getfromint(meta), 1);
+    }
+
+    public CustomItemGunpowder(Integer meta, int count) {
+        this(TNTType.getfromint(meta), count);
+    }
+
     public CustomItemGunpowder(TNTType meta) {
         this(meta, 1);
     }
 
     public CustomItemGunpowder(TNTType meta, int count) {
-        super(289, meta.ordinal(), count,  "Gunpowder");
-        setCustomName(TextFormat.RED + TNTType.getfromint(getDamage()).getName() +TextFormat.YELLOW+name);
+        super(289, meta.ordinal(), count, "Gunpowder");
+        setCustomName(TextFormat.RED + TNTType.getfromint(getDamage()).getName() + TextFormat.YELLOW + "Gunpowder");
+//        name = TextFormat.RED + TNTType.getfromint(getDamage()).getName() + TextFormat.YELLOW + "Gunpowder";
     }
 
     public enum TNTType {
