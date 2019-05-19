@@ -97,21 +97,7 @@ public class CyberFormCustom extends CyberForm {
 
     @Override
     public String getJSONData() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setExclusionStrategies(new ExclusionStrategy() {
-            @Override
-            public boolean shouldSkipField(FieldAttributes f) {
-                return f.getName().contains("_");
-            }
-
-            @Override
-            public boolean shouldSkipClass(Class<?> aClass) {
-                return false;
-            }
-
-        });
-        Gson gson = gsonBuilder.create();
-        String toModify = (gson).toJson(this);
+        String toModify = super.getJSONData();
         return toModify.replace("defaultOptionIndex", "default").replace("defaultText", "default").replace("defaultValue", "default").replace("defaultStepIndex", "default");
     }
 
@@ -197,12 +183,6 @@ public class CyberFormCustom extends CyberForm {
             });
         }
 
-    }
-
-    @Override
-    public void setResponse(String data, CorePlayer p) {
-        setResponse(data);
-        onRun(p);
     }
 
     @Override

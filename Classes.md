@@ -107,14 +107,16 @@ Specalizations
             -   1-10 - 5-10% Boost
         - Can Upgrade Enchant Tiers
 - scholar - Potion Making, Can create "super-food", potions, and splash-potions, BARELs, and Drinks
-    -Drinks
-        - Give instant Health and Effect
+    - Can craft drinks
+        - Drinks
+            - Give instant Health and Effect
+        
+    - Potion maker
+        - Can increase Potions duration by up to 35%
+        
     - Can make Lingering Potions
         - Potions that last 2 - 10 Mins
-   - Extensive knowledge of Potions
-     - Fire Splash Potion
-     - Ice Splash Potion
-     - Nerve Gas Splash potion
+        
             
 - builder - Easier base building, Can create auto-gen walls,/fly within faction plot, craft TNT arrows, Cannon TNT...
     - Snow Hoe Enchant:

@@ -17,7 +17,6 @@ import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
 import cn.nukkit.item.ItemID;
-import cn.nukkit.item.ItemIngotGold;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.ContainerOpenPacket;
@@ -67,14 +66,14 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     }
 
     public AuctionHouse(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba, int page) {
-//        super(Holder, InventoryType.DOUBLE_CHEST, CyberCoreMain.getInstance().AuctionFactory.getPageHash(page), 9 * 6);//54??
-        super(Holder, InventoryType.DOUBLE_CHEST, ccm.AuctionFactory.getPageHash(page), 9 * 6);//54??
+//        super(Holder, InventoryType.DOUBLE_CHEST, CyberCoreMain.getInstance().AF.getPageHash(page), 9 * 6);//54??
+        super(Holder, InventoryType.DOUBLE_CHEST, ccm.AF.getPageHash(page), 9 * 6);//54??
         //TODO SHOULD SIZE BE 54!?!?
         holder = Holder;
 //        this.size = 9 * 6;
 
         CCM = ccm;
-        AF = CCM.AuctionFactory;
+        AF = CCM.AF;
 //        addItem(AF.getPage(Page));
         Page = page;
 
@@ -84,8 +83,8 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
         this.name = title;
         System.out.println("Creating AuctionHouse Class");
-//        if (CyberCoreMain.getInstance().AuctionFactory.getPageHash(page) == null) System.out.println("NUUUUUUUUUUU");
-//        setContents(CyberCoreMain.getInstance().AuctionFactory.getPageHash(page));
+//        if (CyberCoreMain.getInstance().AF.getPageHash(page) == null) System.out.println("NUUUUUUUUUUU");
+//        setContents(CyberCoreMain.getInstance().AF.getPageHash(page));
     }
 
     public void GoToSellerPage() {

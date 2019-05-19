@@ -12,15 +12,15 @@ import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
 /**
  * Created by carlt on 5/16/2019.
  */
-public class CustomItemTNT extends ItemBlock {
+public class CustomItemTNT extends Item {
     int TNTLevel = 1;
     private static String CustomLevel = "customlevel";
 
-    public CustomItemTNT(CustomBlockTNT block ) {
-        this(block,1);
+    public CustomItemTNT() {
+        this(1);
     }
-    public CustomItemTNT(CustomBlockTNT block, int lvl ) {
-        super(block);
+    public CustomItemTNT(int lvl ) {
+        super(Item.TNT);
         setTNTLevel(lvl);
         WriteTags();
     }
@@ -40,8 +40,8 @@ public class CustomItemTNT extends ItemBlock {
 
     }
 
-    public CustomItemTNT(CustomBlockTNT block, Integer meta, int count) {
-        super(block, meta, count);
+    public CustomItemTNT( Integer meta, int count) {
+        super( meta, count);
     }
 
     public int getTNTLevel() {

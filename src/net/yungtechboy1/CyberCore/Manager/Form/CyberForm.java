@@ -55,7 +55,7 @@ public class CyberForm extends FormWindow {
 
     public void setResponse(String data, CorePlayer p) {
         setResponse(data);
-        onRun(p);
+        if(!closed)onRun(p);
 
 
     }

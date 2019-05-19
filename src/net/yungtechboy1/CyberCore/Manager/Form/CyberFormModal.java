@@ -80,11 +80,6 @@ public class CyberFormModal extends CyberForm {
         }
     }
 
-    @Override
-    public void setResponse(String data, CorePlayer p) {
-        setResponse(data);
-        onRun(p);
-    }
 
     @Override
     public void onRun(CorePlayer p){

@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClassSettingsTNTWindow extends CyberFormSimple {
-TNTSpecialist C;
+TNTSpecialist _C;
     public ClassSettingsTNTWindow (TNTSpecialist c){
         super(FormType.MainForm.Class_Settings_TNT, "CyberFactions | TNT-Specialist Settings", TextFormat.AQUA+"Current XP: "+TextFormat.GREEN+c.XPRemainder(c.getXP())+"\n"+TextFormat.AQUA+"Current Level: "+TextFormat.GREEN+c.getLVL());
         addButton(new ElementButton("How to use "+TextFormat.AQUA+c.getName()));
         addButton(new ElementButton("Class Merchant"));
-        C = c;
+        _C = c;
     }
 
     @Override
@@ -28,7 +28,7 @@ TNTSpecialist C;
         int k = getResponse().getClickedButtonId();
         if(k == 0){
             //TODO
-            p.showFormWindow(C.getHowToUseClassWindow());
+            p.showFormWindow(_C.getHowToUseClassWindow());
         }else if(k == 1){
 
         }

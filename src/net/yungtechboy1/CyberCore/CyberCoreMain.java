@@ -1,15 +1,28 @@
 package net.yungtechboy1.CyberCore;
 
+import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.*;
 import cn.nukkit.blockentity.BlockEntity;
+import cn.nukkit.command.Command;
+import cn.nukkit.command.CommandExecutor;
+import cn.nukkit.command.CommandSender;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.passive.EntityPig;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
+import cn.nukkit.inventory.ShapedRecipe;
 import cn.nukkit.item.Item;
+import cn.nukkit.level.Level;
+import cn.nukkit.math.Vector3;
+import cn.nukkit.plugin.PluginBase;
+import cn.nukkit.utils.Config;
+import cn.nukkit.utils.ConfigSection;
+import cn.nukkit.utils.TextFormat;
+import io.netty.util.collection.CharObjectHashMap;
 import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.Commands.*;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
@@ -23,12 +36,14 @@ import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
+import net.yungtechboy1.CyberCore.Custom.Item.CustomItemGunpowder;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemTNT;
 import net.yungtechboy1.CyberCore.Data.ServerSqlite;
 import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
 import net.yungtechboy1.CyberCore.Factory.ClassFactory;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
+import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
 import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
@@ -43,17 +58,6 @@ import net.yungtechboy1.CyberCore.MobAI.AutoSpawnTask;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
 import net.yungtechboy1.CyberCore.Rank.ChatFormats;
 import net.yungtechboy1.CyberCore.Rank.Rank;
-import cn.nukkit.Player;
-import cn.nukkit.command.Command;
-import cn.nukkit.command.CommandExecutor;
-import cn.nukkit.command.CommandSender;
-import cn.nukkit.entity.Entity;
-import cn.nukkit.level.Level;
-import cn.nukkit.math.Vector3;
-import cn.nukkit.plugin.PluginBase;
-import cn.nukkit.utils.Config;
-import cn.nukkit.utils.ConfigSection;
-import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Rank.RankFactory;
 import net.yungtechboy1.CyberCore.Tasks.SendHUD;
 import net.yungtechboy1.CyberCore.entities.animal.walking.Pig;
@@ -113,9 +117,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public net.yungtechboy1.CyberCore.Factory.CustomFactory CustomFactory;
     //FactoriesA
     public HomeManager HomeFactory;
-    public net.yungtechboy1.CyberCore.Rank.RankFactory RankFactory;
-    public net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory AuctionFactory;
-    public net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager PurgeManager;
+    public net.yungtechboy1.CyberCore.Rank.RankFactory RF;
+    public net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory AF;
+    public net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager PM;
     public List<String> Final = new ArrayList<>();
     public List<String> TPING = new ArrayList<>();
     public HashMap<String, HashMap<String, Object>> cache = new HashMap<>();
@@ -134,6 +138,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //    public net.yungtechboy1.CyberCore.Data.UserSQL UserSQL;
     public net.yungtechboy1.CyberCore.Manager.Warp.WarpManager WarpManager;
     public ServerSqlite ServerSQL;
+    public CustomCraftingManager CraftingManager;
     Vector3 p1;
     Vector3 p2;
     private EconManager ECON;
@@ -216,6 +221,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         Block.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         Block.list[Block.TNT] = CustomBlockTNT.class;
+        ReloadBlockList(Block.TNT, CustomBlockTNT.class);
 //        Item.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         addCreativeItem(Item.get(Block.ENCHANT_TABLE, 5, 1).setCustomName("TTTTTTTTTTTTTT"));
         ReloadBlockList(Block.ENCHANTING_TABLE, BlockEnchantingTable.class);
@@ -225,6 +231,53 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Item.list[Item.BOOK] = CItemBook.class;
         Item.list[Item.ENCHANT_BOOK] = CItemBookEnchanted.class;
         Item.list[BlockID.TNT] = CustomItemTNT.class;
+        Item.list[Item.GUNPOWDER] = CustomItemGunpowder.class;
+
+        CraftingManager = new CustomCraftingManager();
+        CustomCraftingManager cm = CraftingManager;
+        List<Item> li = new ArrayList<>();
+        li.add(new Item(289));
+        li.add(new Item(12, -1));
+        li.add(new Item(289));
+        li.add(new Item(12, -1));
+        li.add(new Item(289));
+        li.add(new Item(12, -1));
+        li.add(new Item(289));
+        li.add(new Item(12, -1));
+        li.add(new Item(289));
+        int ri = cm.getItemHash(new Item(46));
+        UUID ra = cm.getMultiItemHash(li);
+        Map<UUID, ShapedRecipe> ma = cm.shapedRecipes.computeIfAbsent(ri, k -> new HashMap<>());
+        if (ma == null || ma.size() == 0) {
+            System.out.println("ERRRORRR NUYN YA HERE!~!!!");
+        } else {
+            ShapedRecipe sr = ma.get(ra);
+            if (sr == null) {
+                System.out.println("ERRRORRR NUYN YA HERE!~!!!22222222222");
+
+            } else {
+                System.out.println("ISSSSAAA HEEERRRRR");
+                ma.remove(ra);
+            }
+        }
+//        CustomItemTNT
+        ShapedRecipe nsr = new ShapedRecipe(new Item(46), new String[]{"AAA", "BBB", "AAA"}, new CharObjectHashMap<Item>() {{
+            put("A".charAt(0), new CustomItemGunpowder());
+            put("B".charAt(0), Item.get(12));
+        }}, new ArrayList<Item>() {{
+            add(Item.get(46));
+        }});
+
+
+        cm.registerShapedRecipe(nsr);
+
+        System.out.println("EEEE >>>>> "+cm.shapedRecipes.size());
+
+//        getServer().getCraftingManager().registerShapelessRecipe();=null;
+
+//        getServer().getCraftingManager().get()
+//
+//        getServer().getCraftingManager().registerShapelessRecipe();
 
         ClassFactory = new ClassFactory(this);
         WarpManager = new WarpManager(this);
@@ -240,7 +293,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        UserSQL = new UserSQL(this, "server-data");
 
 
-        PurgeManager = new PurgeManager(this);
+        PM = new PurgeManager(this);
         //KDR Manager - All Good
         //GOOD
         //Floating Text
@@ -264,9 +317,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Homes = new Config(new File(this.getDataFolder(), "homes.yml"), Config.YAML, new ConfigSection());
 
         HomeFactory = new HomeManager(this);
-        RankFactory = new RankFactory(this);
+        RF = new RankFactory(this);
         //TODO
-        AuctionFactory = new AuctionFactory(this);
+        AF = new AuctionFactory(this);
 
         MuteConfig = new Config(new File(getDataFolder(), "Mute.yml"), Config.YAML);
 
@@ -290,7 +343,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         getServer().getPluginManager().registerEvents(new MasterListener(this), this);
         getServer().getPluginManager().registerEvents(ClassFactory, this);
-        getServer().getPluginManager().registerEvents(AuctionFactory, this);
+        getServer().getPluginManager().registerEvents(AF, this);
         getServer().getPluginManager().registerEvents(this, this);
 //        getServer().getPluginManager().registerEvents(new FactionListener(this, FM), this);
 
@@ -543,7 +596,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 
     public Rank getPlayerRank(Player p) {
-        return RankFactory.getPlayerRank(p);
+        return RF.getPlayerRank(p);
     }
 
     public boolean checkSpam(Player p) {
@@ -565,7 +618,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public void Setnametag(Player p) {
 
         ChatFormats.RankChatFormat RankFormat;
-        Rank r = RankFactory.getPlayerRank(p);
+        Rank r = RF.getPlayerRank(p);
         String a = r.getDisplayName();
         RankFormat = r.getChat_format();
         String pn = p.getName();
@@ -591,11 +644,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     }
 
     public Integer GetPlayerRankInt(Player p, Boolean all) {
-        return RankFactory.getPlayerRank(p).getId();
+        return RF.getPlayerRank(p).getId();
     }
 
 //    public Integer GetPlayerRankInt(String p, Boolean all) {
-//        return RankFactory.getPlayerRank(p).getRank();
+//        return RF.getPlayerRank(p).getRank();
 //    }
 
 //    @EventHandler(ignoreCancelled = true)
@@ -704,22 +757,22 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
                 }
                 return false;
             case "rank":
-                if (RankFactory.RankCache.containsKey(s.getName())) {
-                    RankFactory.RankCache.remove(s.getName());
+                if (RF.RankCache.containsKey(s.getName())) {
+                    RF.RankCache.remove(s.getName());
                 }
-                if (RankFactory.GARC.containsKey(s.getName())) {
-                    RankFactory.GARC.remove(s.getName());
+                if (RF.GARC.containsKey(s.getName())) {
+                    RF.GARC.remove(s.getName());
                 }
-                if (RankFactory.MRC.containsKey(s.getName())) {
-                    RankFactory.MRC.remove(s.getName());
+                if (RF.MRC.containsKey(s.getName())) {
+                    RF.MRC.remove(s.getName());
                 }
-                if (RankFactory.SRC.containsKey(s.getName())) {
-                    RankFactory.SRC.remove(s.getName());
+                if (RF.SRC.containsKey(s.getName())) {
+                    RF.SRC.remove(s.getName());
                 }
                 String a = "";
-//                a = RankFactory.getR;
-//                if (a == null) a = RankFactory.GetMasterRank(s.getName());
-//                if (a == null) a = RankFactory.GetSecondaryRank(s.getName());
+//                a = RF.getR;
+//                if (a == null) a = RF.GetMasterRank(s.getName());
+//                if (a == null) a = RF.GetSecondaryRank(s.getName());
 //                if (a != null && a.equalsIgnoreCase("op")) s.setOp(true);
 //                s.sendMessage(TextFormat.GREEN + "[TerraTide] Your Rank is: " + a);
                 break;

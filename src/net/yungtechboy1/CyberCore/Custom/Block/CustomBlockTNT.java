@@ -3,7 +3,7 @@ package net.yungtechboy1.CyberCore.Custom.Block;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
-import cn.nukkit.block.BlockTNT;
+import cn.nukkit.block.BlockSolidMeta;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.item.EntityPrimedTNT;
 import cn.nukkit.item.Item;
@@ -25,16 +25,22 @@ import java.util.List;
 /**
  * Created by carlt on 5/16/2019.
  */
-public class CustomBlockTNT extends BlockTNT {
+public class CustomBlockTNT extends BlockSolidMeta {
     int TNTLevel = 1;
 
+    public CustomBlockTNT(int meta) {
+        super(meta);
+        setTNTLevel(getTNTLevel());
+    }
+
     public CustomBlockTNT() {
+        super(0);
         setTNTLevel(getTNTLevel());
     }
 
     @Override
     public String getName() {
-        return TextFormat.AQUA + "TNT Level" + getTNTLevel();
+        return TextFormat.AQUA + "TNT Level" + getTNTLevel() + "||" + getDamage();
     }
 
     @Override
@@ -99,40 +105,22 @@ public class CustomBlockTNT extends BlockTNT {
     }
 
     public int getTNTLevel() {
-        try {
-            List<MetadataValue> lm = getMetadata("Level");
-            if (lm.size() > 0) {
-                for (MetadataValue mv : lm) {
-                    if (mv instanceof TNTMetaDataValue) {
-                        return ((TNTMetaDataValue) mv).lvl;
-                    }
-                }
-            } else {
-                CyberCoreMain.getInstance().getLogger().warning("TOO SMALLLLL|||||||");
-            }
-        } catch (Exception e) {
-
-            CyberCoreMain.getInstance().getLogger().error("ERRRRR1111111112312|||||||", e);
-        }
-        CyberCoreMain.getInstance().getLogger().error("NONE TNT LVL FOUND!|||||||");
-        return 1;
+        CyberCoreMain.getInstance().getLogger().error("LVL >>"+getDamage());
+        return getDamage();
     }
 
     public void setTNTLevel(int TNTLevel) {
         this.TNTLevel = TNTLevel;
     }
 
-    @Override
     public void prime() {
         this.prime(getFuse());
     }
 
-    @Override
     public void prime(int fuse) {
         this.prime(fuse, (Entity) null);
     }
 
-    @Override
     public void prime(int fuse, Entity source) {
         this.getLevel().setBlock(this, new BlockAir(), true);
         double mot = (double) (new NukkitRandom()).nextSignedFloat() * 3.141592653589793D * 2.0D;
@@ -203,4 +191,6 @@ public class CustomBlockTNT extends BlockTNT {
 
         }
     }
+
+
 }

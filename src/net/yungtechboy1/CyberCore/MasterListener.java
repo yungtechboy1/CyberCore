@@ -2,42 +2,14 @@ package net.yungtechboy1.CyberCore;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
-import cn.nukkit.block.Block;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.*;
-import cn.nukkit.form.element.ElementButton;
-import cn.nukkit.form.element.ElementInput;
-import cn.nukkit.form.element.ElementLabel;
-import cn.nukkit.form.element.ElementToggle;
-import cn.nukkit.form.response.FormResponseCustom;
-import cn.nukkit.form.response.FormResponseData;
-import cn.nukkit.form.response.FormResponseModal;
-import cn.nukkit.form.response.FormResponseSimple;
-import cn.nukkit.form.window.FormWindowCustom;
-import cn.nukkit.form.window.FormWindowModal;
-import cn.nukkit.form.window.FormWindowSimple;
-import cn.nukkit.item.Item;
-import cn.nukkit.item.ItemMap;
-import cn.nukkit.item.enchantment.Enchantment;
-import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
-import net.yungtechboy1.CyberCore.Custom.Item.CustomItemMap;
-import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionString;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
-import net.yungtechboy1.CyberCore.Manager.Form.Windows.FactionAdminPageSLRWindow;
-import net.yungtechboy1.CyberCore.Manager.PositionImage;
 
 import java.util.*;
-
-import static net.yungtechboy1.CyberCore.FormType.MainForm.*;
-import static net.yungtechboy1.CyberCore.Manager.Factions.FactionString.*;
 
 /**
  * Created by carlt_000 on 1/22/2017.
@@ -59,7 +31,7 @@ public class MasterListener implements Listener {
 
 //        _plugin.initiatePlayer(p);
         plugin.ServerSQL.LoadPlayer(plugin.getCorePlayer(p));
-        String rank = plugin.RankFactory.getPlayerRank(p).getDisplayName();
+        String rank = plugin.RF.getPlayerRank(p).getDisplayName();
         p.sendMessage(plugin.colorize("&2You Have Joined with the Rank: " + rank));
         if (rank != null && rank.equalsIgnoreCase("op")) {
             p.setOp(true);
@@ -164,7 +136,7 @@ public class MasterListener implements Listener {
         //ANTI WORK AROUND BADWORDS
         //@TODO remove all spaces and use Regex to replace all Instaces of it
 
-        return plugin.RankFactory.getPlayerRank(player).getChat_format().format(faction, plugin.RankFactory.getPlayerRank(player).getDisplayName(), player, chatafter);
+        return plugin.RF.getPlayerRank(player).getChat_format().format(faction, plugin.RF.getPlayerRank(player).getDisplayName(), player, chatafter);
 /*
         put("Chat-Format", "{rank}{faction}{player-name} > {msg}");
         put("Faction-Format", "[{value}]");

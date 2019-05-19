@@ -7,11 +7,8 @@ import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.*;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
-import org.apache.logging.log4j.core.Core;
-import sun.applet.Main;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +33,7 @@ public class CyberChatEvent implements Listener {
 
 //        _plugin.initiatePlayer(p);
 //        _plugin.getLogger().info(p.getName());
-//        String rank = _plugin.RankFactory.getPlayerRank(p).getDisplayName();
+//        String rank = _plugin.RF.getPlayerRank(p).getDisplayName();
 //        p.sendMessage(_plugin.colorize( "&2You Have Joined with the Rank: " + rank));
 //        //_plugin.Setnametag(event.getPlayer().getName());
 //        if (rank != null && rank.equalsIgnoreCase("op")) {
@@ -127,7 +124,7 @@ public class CyberChatEvent implements Listener {
         //ANTI WORK AROUND BADWORDS
         //@TODO remove all spaces and use Regex to replace all Instaces of it
 
-        return plugin.RankFactory.getPlayerRank(player).getChat_format().format(faction,plugin.RankFactory.getPlayerRank(player).getDisplayName(),player,chatafter);
+        return plugin.RF.getPlayerRank(player).getChat_format().format(faction,plugin.RF.getPlayerRank(player).getDisplayName(),player,chatafter);
 /*
         put("Chat-Format", "{rank}{faction}{player-name} > {msg}");
         put("Faction-Format", "[{value}]");

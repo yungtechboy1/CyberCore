@@ -97,12 +97,6 @@ public class CyberFormSimple extends CyberForm {
     }
 
     @Override
-    public void setResponse(String data, CorePlayer p) {
-        setResponse(data);
-        if(!closed)onRun(p);
-    }
-
-    @Override
     public void onRun(CorePlayer p) {
        super.onRun(p);
     }

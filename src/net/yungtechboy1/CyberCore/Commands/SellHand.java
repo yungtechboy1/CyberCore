@@ -1,6 +1,5 @@
 package net.yungtechboy1.CyberCore.Commands;
 
-import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParamType;
@@ -38,7 +37,7 @@ public class SellHand extends Command {
                 Item hand = p.getInventory().getItemInHand();
                 try {
                     int price = Integer.parseInt(args[0]);
-                    Owner.AuctionFactory.additem(hand.clone(), p, price);
+                    Owner.AF.additem(hand.clone(), p, price);
                     p.getInventory().remove(hand);
                 } catch (Exception ex) {
                     ex.printStackTrace();

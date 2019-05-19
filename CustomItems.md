@@ -80,6 +80,19 @@ Spread Calculations :
     - 4 Blaze Powder
     - 1 Cobblestone
     
+289:1 - Compacted Gun Powder
+---
+- Ingredients
+    - 9 Gun Powder    
+
+000:0 - TNT
+---
+- 6 Gunpowder
+- 3 Compacted Gunpowder
+- Ingredients
+    - 8 Cobwebs
+    - 1 TNT    
+
 000:0 - Silent TNT
 ---
 - TNT mixed with cob webbs

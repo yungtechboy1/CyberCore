@@ -12,6 +12,7 @@ import cn.nukkit.event.player.PlayerFormRespondedEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.form.window.FormWindow;
+import cn.nukkit.inventory.CraftingManager;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
@@ -35,6 +36,7 @@ import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Spring;
 import net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse;
 import net.yungtechboy1.CyberCore.Data.HomeData;
+import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
 import net.yungtechboy1.CyberCore.Manager.Econ.PlayerEconData;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
@@ -313,6 +315,15 @@ public class CorePlayer extends Player {
             }
         }
         return super.attack(source);
+    }
+
+    @Override
+    protected void doFirstSpawn() {
+        super.doFirstSpawn();
+
+//        player.dataPacket(CraftingManager.packet);
+        CyberCoreMain.getInstance().CraftingManager.rebuildPacket();
+        dataPacket(CustomCraftingManager.packet);
     }
 
     public boolean CheckGround() {
