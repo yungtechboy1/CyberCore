@@ -2,9 +2,12 @@ package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
+import cn.nukkit.inventory.CraftingManager;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemMap;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
+import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
 import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
@@ -24,6 +27,7 @@ public class FactionAdminPage1 extends CyberFormSimple {
         super(FormType.MainForm.Faction_Admin_Page_1, "CyberFactions | Admin Page (1/2)","", buttons);
         addButton(new ElementButton("Save/Load/Reload"));
         addButton(new ElementButton("GiveTestImage"));
+        addButton(new ElementButton("Send Crafting Packet"));
     }
 
 
@@ -42,6 +46,13 @@ public class FactionAdminPage1 extends CyberFormSimple {
                 im.setImage(pi);
                 cp.getInventory().addItem(im);
                 break;
+            case 2:
+                CyberCoreMain.getInstance().CraftingManager.rebuildPacket();
+                cp.dataPacket(CustomCraftingManager.packet);
+                break;
+            case 3:
+                new CraftingManager().rebuildPacket();
+                cp.dataPacket(CraftingManager.packet);
         }
     }
 }

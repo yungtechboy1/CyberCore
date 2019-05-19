@@ -234,7 +234,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Item.list[Item.GUNPOWDER] = CustomItemGunpowder.class;
 
         CraftingManager = new CustomCraftingManager();
-        CustomCraftingManager cm = CraftingManager;
         List<Item> li = new ArrayList<>();
         li.add(new Item(289));
         li.add(new Item(12, -1));
@@ -245,9 +244,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         li.add(new Item(289));
         li.add(new Item(12, -1));
         li.add(new Item(289));
-        int ri = cm.getItemHash(new Item(46));
-        UUID ra = cm.getMultiItemHash(li);
-        Map<UUID, ShapedRecipe> ma = cm.shapedRecipes.computeIfAbsent(ri, k -> new HashMap<>());
+        int ri = CustomCraftingManager.getItemHash(new Item(46));
+        UUID ra = CustomCraftingManager.getMultiItemHash(li);
+        Map<UUID, ShapedRecipe> ma = CraftingManager.shapedRecipes.computeIfAbsent(ri, k -> new HashMap<>());
         if (ma == null || ma.size() == 0) {
             System.out.println("ERRRORRR NUYN YA HERE!~!!!");
         } else {
@@ -261,7 +260,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
             }
         }
 //        CustomItemTNT
-        ShapedRecipe nsr = new ShapedRecipe(new Item(46), new String[]{"AAA", "BBB", "AAA"}, new CharObjectHashMap<Item>() {{
+        ShapedRecipe nsr = new ShapedRecipe(Item.get(46), new String[]{"AAA", "BBB", "AAA"}, new CharObjectHashMap<Item>() {{
             put("A".charAt(0), new CustomItemGunpowder());
             put("B".charAt(0), Item.get(12));
         }}, new ArrayList<Item>() {{
@@ -269,9 +268,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         }});
 
 
-        cm.registerShapedRecipe(nsr);
+        CraftingManager.registerShapedRecipe(nsr);
 
-        System.out.println("EEEE >>>>> "+cm.shapedRecipes.size());
+        System.out.println("EEEE >>>>> "+CraftingManager.shapedRecipes.size());
 
 //        getServer().getCraftingManager().registerShapelessRecipe();=null;
 

@@ -52,6 +52,7 @@ public class AHSqlite extends MySQL {
             }
 
             for (HashMap<String, Object> v : data) {
+                System.out.println(v+" << "+v.getClass().getName());
                 AuctionItemData a = new AuctionItemData(v);
             }
 

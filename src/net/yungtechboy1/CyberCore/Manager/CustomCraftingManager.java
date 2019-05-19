@@ -234,7 +234,7 @@ public class CustomCraftingManager {
 
     public void registerShapedRecipe(ShapedRecipe recipe) {
         int resultHash = getItemHash(recipe.getResult());
-        Map<UUID, ShapedRecipe> map = (Map)this.shapedRecipes.computeIfAbsent(resultHash, (k) -> {
+        Map<UUID, ShapedRecipe> map = this.shapedRecipes.computeIfAbsent(resultHash, (k) -> {
             return new HashMap();
         });
         map.put(getMultiItemHash(recipe.getIngredientList()), recipe);
