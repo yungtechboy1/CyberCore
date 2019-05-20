@@ -80,12 +80,20 @@ Spread Calculations :
     - 4 Blaze Powder
     - 1 Cobblestone
     
-289:1 - Compacted Gun Powder
+289 - Gunpowder
 ---
-- Ingredients
-    - 9 Gun Powder    
+Meta:
+ - 0-4 - Compacted Gun Powder
+    - Ingredients
+        - 3 Gun Powder
+            - Any Meta
+            
+- 5-9 - Compacted Gun Powder
+    - Ingredients
+        - 3 Gun Powder
+            - Any Meta    
 
-000:0 - TNT
+000:0-4 - TNT
 ---
 - 6 Gunpowder
 - 3 Compacted Gunpowder

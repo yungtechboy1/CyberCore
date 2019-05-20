@@ -108,7 +108,7 @@ public class CustomEnchantment extends Enchantment {
                 case Standard:
                     return "Standard";
                 case Upgraded:
-                    return "Upgraded";
+                    return "Lvl_3";
                 case Eternal:
                     return "Eternal";
                 case Legendary:

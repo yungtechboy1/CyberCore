@@ -66,7 +66,7 @@ class ClassHowToUseTNTPA extends CyberFormCustom{
         addElement(new ElementLabel("   - Default TNT Bag Size = 10"));
         addElement(new ElementLabel("   - Regenerate 1 TNT every 160 secs - Level"));
         addElement(new ElementLabel("- TNT Resistance"));
-        addElement(new ElementLabel("   - Take no TNT Damage (Experimental Excluded)"));
+        addElement(new ElementLabel("   - Take no TNT Damage (Lvl_5 Excluded)"));
     }
 
     @Override
@@ -101,11 +101,11 @@ class ClassHowToUseTNTUnlocks extends CyberFormCustom{
         addElement(new ElementLabel("   - Player can now trade for TNT Snowball"));
         addElement(new ElementLabel("   -   Whereever the snowball lands will spawn a 3 X 3 grid of 9 TNT in the middle of the snowball with a 40-120 Tick fuse"));
         addElement(new ElementLabel("- Level 80"));
-        addElement(new ElementLabel("   - Spawns Super TNT Level 3, Which Expands the range of TNT by 10 Blocks"));
+        addElement(new ElementLabel("   - Spawns Lvl_4 TNT Level 3, Which Expands the range of TNT by 10 Blocks"));
         addElement(new ElementLabel("- Level 90"));
-        addElement(new ElementLabel("   - Spawns Experimental TNT Level 4, Which Expands the range of TNT by 15 Blocks and can break Obsidian"));
+        addElement(new ElementLabel("   - Spawns Lvl_5 TNT Level 4, Which Expands the range of TNT by 15 Blocks and can break Obsidian"));
         addElement(new ElementLabel("- Level 100"));
-        addElement(new ElementLabel("   - Gain Experimental TNT Damage Resistance"));
+        addElement(new ElementLabel("   - Gain Lvl_5 TNT Damage Resistance"));
     }
 
     @Override
@@ -125,8 +125,8 @@ class ClassHowToUseTNTEXP extends CyberFormCustom{
         addElement(new ElementLabel("- Using TNT :"));
         addElement(new ElementLabel("   - Basic: 5 XP"));
         addElement(new ElementLabel("   - Charged: 10 XP"));
-        addElement(new ElementLabel("   - Super: 20 XP"));
-        addElement(new ElementLabel("   - Experimental: 30 XP"));
+        addElement(new ElementLabel("   - Lvl_4: 20 XP"));
+        addElement(new ElementLabel("   - Lvl_5: 30 XP"));
         addElement(new ElementLabel("- Breaking Blocks:"));
         addElement(new ElementLabel("   - Stone & CobbleStone: 1 XP"));
         addElement(new ElementLabel("   - Iron Ore: 2 XP"));
