@@ -12,48 +12,41 @@ import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
 /**
  * Created by carlt on 5/16/2019.
  */
-public class CustomItemTNT extends Item {
-    int TNTLevel = 1;
+public class CustomItemTNT extends ItemBlock {
+    CustomBlockTNT.TNTType TNTLevel = CustomBlockTNT.TNTType.Basic;
     private static String CustomLevel = "customlevel";
 
     public CustomItemTNT() {
-        this(1);
+        this(CustomBlockTNT.TNTType.Basic);
     }
-    public CustomItemTNT(int lvl ) {
-        super(Item.TNT);
-        setTNTLevel(lvl);
-        WriteTags();
-    }
-
-    public static int GetLevelFromTags(Item b) {
-        CompoundTag ct = b.getNamedTag();
-        if(ct == null)ct = new CompoundTag();
-        if(ct.contains(CustomLevel)){
-            return ct.getInt(CustomLevel);
-        }
-        return 1;
-    }
-    private void WriteTags() {
-        CompoundTag ct = getNamedTag();
-        if(ct == null)ct = new CompoundTag();
-        ct.putInt(CustomLevel,getTNTLevel());
-
+    public CustomItemTNT(CustomBlockTNT.TNTType lvl ) {
+        super(new CustomBlockTNT(lvl));
+        setTNTType(lvl);
     }
 
     public CustomItemTNT( Integer meta, int count) {
-        super( meta, count);
+        super( new CustomBlockTNT(CustomBlockTNT.TNTType.getfromint(meta)), count);
+        setTNTType(CustomBlockTNT.TNTType.getfromint(meta));
     }
 
-    public int getTNTLevel() {
+    public CustomBlockTNT.TNTType getTNTType() {
         return TNTLevel;
     }
 
-    public void setTNTLevel(int t) {
+    public void setTNTType(CustomBlockTNT.TNTType t) {
         this.TNTLevel = t;
     }
 
+    @Override
+    public boolean onActivate(Level level, Player player, Block block, Block target, BlockFace face, double fx, double fy, double fz) {
+        return super.onActivate(level, player, block, target, face, fx, fy, fz);
+    }
 
+    @Override
+    public boolean useOn(Block block) {
+        return super.useOn(block);
+    }
 
-//setCustomBlockData
+    //setCustomBlockData
 //   pla
 }

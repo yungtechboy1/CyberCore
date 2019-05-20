@@ -24,7 +24,7 @@ public class SendHUD extends Thread implements InterruptibleThread {
         while (Server.getInstance().isRunning()) {
 //System.out.println("======");
             int tick = Server.getInstance().getTick();
-            if (tick >= lasttick + 10) {
+            if (tick >= lasttick + 20) {
 
 //                System.out.println("||||||||======");
                 lasttick = tick;
@@ -34,13 +34,13 @@ public class SendHUD extends Thread implements InterruptibleThread {
                         FormatHUD((CorePlayer) p);
                 }
                 try {
-                    Thread.sleep(200);//4 Ticks
+                    Thread.sleep(750);//17.5 Ticks
                 } catch (InterruptedException e) {
                     //ignore
                 }
             }
             try {
-                Thread.sleep(200);//4 Ticks
+                Thread.sleep(750);//17.5 Ticks
             } catch (InterruptedException e) {
                 //ignore
             }

@@ -14,17 +14,18 @@ import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
+import cn.nukkit.inventory.ShapedRecipe;
+import cn.nukkit.inventory.ShapelessRecipe;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemBlock;
 import cn.nukkit.level.Level;
 import cn.nukkit.math.Vector3;
-import cn.nukkit.nbt.NBTIO;
-import cn.nukkit.nbt.stream.NBTInputStream;
-import cn.nukkit.nbt.stream.NBTOutputStream;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Binary;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
+import io.netty.util.collection.CharObjectHashMap;
 import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.Commands.*;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
@@ -45,6 +46,7 @@ import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
 import net.yungtechboy1.CyberCore.Factory.ClassFactory;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
+import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
 import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
@@ -63,10 +65,8 @@ import net.yungtechboy1.CyberCore.Rank.RankFactory;
 import net.yungtechboy1.CyberCore.Tasks.SendHUD;
 import net.yungtechboy1.CyberCore.entities.animal.walking.Pig;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.Constructor;
-import java.nio.ByteOrder;
 import java.sql.Connection;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -141,7 +141,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //    public net.yungtechboy1.CyberCore.Data.UserSQL UserSQL;
     public net.yungtechboy1.CyberCore.Manager.Warp.WarpManager WarpManager;
     public ServerSqlite ServerSQL;
-    //    public CustomCraftingManager CraftingManager;
+    public CustomCraftingManager CraftingManager;
     Vector3 p1;
     Vector3 p2;
     private EconManager ECON;
@@ -236,46 +236,48 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Item.list[BlockID.TNT] = CustomItemTNT.class;
         Item.list[Item.GUNPOWDER] = CustomItemGunpowder.class;
 
-        System.out.println(">>>>>>>>>>0x" + Binary.bytesToHexString( new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_1).getCompoundTag()));
-        
-//        CraftingManager = new CustomCraftingManager();
-//        List<Item> li = new ArrayList<>();
-//        li.add(new Item(289));
-//        li.add(new Item(12, -1));
-//        li.add(new Item(289));
-//        li.add(new Item(12, -1));
-//        li.add(new Item(289));
-//        li.add(new Item(12, -1));
-//        li.add(new Item(289));
-//        li.add(new Item(12, -1));
-//        li.add(new Item(289));
-//        int ri = CustomCraftingManager.getItemHash(new Item(46));
-//        UUID ra = CustomCraftingManager.getMultiItemHash(li);
-//        Map<UUID, ShapedRecipe> ma = CraftingManager.shapedRecipes.computeIfAbsent(ri, k -> new HashMap<>());
-//        if (ma == null || ma.size() == 0) {
-//            System.out.println("ERRRORRR NUYN YA HERE!~!!!");
-//        } else {
-//            ShapedRecipe sr = ma.get(ra);
-//            if (sr == null) {
-//                System.out.println("ERRRORRR NUYN YA HERE!~!!!22222222222");
-//
-//            } else {
-//                System.out.println("ISSSSAAA HEEERRRRR");
-//                ma.remove(ra);
-//            }
-//        }
-////        CustomItemTNT
-//        ShapedRecipe nsr = new ShapedRecipe(Item.get(46), new String[]{"AAA", "BBB", "AAA"}, new CharObjectHashMap<Item>() {{
-//            put("A".charAt(0), new CustomItemGunpowder());
-//            put("B".charAt(0), Item.get(12));
-//        }}, new ArrayList<Item>() {{
-//            add(Item.get(46));
-//        }});
-//
-//
-//        CraftingManager.registerShapedRecipe(nsr);
-//
-//        System.out.println("EEEE >>>>> "+CraftingManager.shapedRecipes.size());
+//        System.out.println(">>>>>>>>>>0x" + Binary.bytesToHexString(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_1).getCompoundTag()));
+
+        CraftingManager = new CustomCraftingManager();
+        List<Item> li = new ArrayList<>();
+        li.add(new Item(289));
+        li.add(new Item(12, -1));
+        li.add(new Item(289));
+        li.add(new Item(12, -1));
+        li.add(new Item(289));
+        li.add(new Item(12, -1));
+        li.add(new Item(289));
+        li.add(new Item(12, -1));
+        li.add(new Item(289));
+        int ri = CustomCraftingManager.getItemHash(new Item(46));
+        UUID ra = CustomCraftingManager.getMultiItemHash(li);
+        Map<UUID, ShapedRecipe> ma = CraftingManager.shapedRecipes.computeIfAbsent(ri, k -> new HashMap<>());
+        if (ma == null || ma.size() == 0) {
+            System.out.println("ERRRORRR NUYN YA HERE!~!!!");
+        } else {
+            ShapedRecipe sr = ma.get(ra);
+            if (sr == null) {
+                System.out.println("ERRRORRR NUYN YA HERE!~!!!22222222222");
+
+            } else {
+                System.out.println("ISSSSAAA HEEERRRRR");
+                ma.remove(ra);
+            }
+        }
+//        Custom TNT
+        ShapelessRecipe nsr = new ShapelessRecipe(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_4),new ArrayList<Item>(){{
+            add(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));
+            add(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));
+            add(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));
+            add(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));
+            add(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));
+            add(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));
+        }});
+
+
+        CraftingManager.registerRecipe(nsr);
+
+        System.out.println("EEEE >>>>> "+CraftingManager.shapedRecipes.size());
 
 //        getServer().getCraftingManager().registerShapelessRecipe();=null;
 

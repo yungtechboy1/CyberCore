@@ -1,18 +1,19 @@
 package net.yungtechboy1.CyberCore.Custom;
 
 import cn.nukkit.Player;
-import cn.nukkit.event.inventory.CraftItemEvent;
 import cn.nukkit.inventory.BigCraftingGrid;
 import cn.nukkit.inventory.CraftingRecipe;
 import cn.nukkit.inventory.transaction.CraftingTransaction;
 import cn.nukkit.inventory.transaction.InventoryTransaction;
+import cn.nukkit.inventory.transaction.action.CraftingTakeResultAction;
+import cn.nukkit.inventory.transaction.action.CraftingTransferMaterialAction;
 import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.item.Item;
 import cn.nukkit.network.protocol.ContainerClosePacket;
 import cn.nukkit.scheduler.Task;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class CustomCraftingTransaction extends InventoryTransaction {
@@ -32,7 +33,7 @@ public class CustomCraftingTransaction extends InventoryTransaction {
 
         int var6;
         Item[] a;
-        for(var6 = 0; var6 < var5; ++var6) {
+        for (var6 = 0; var6 < var5; ++var6) {
             a = var4[var6];
             Arrays.fill(a, air);
         }
@@ -41,13 +42,42 @@ public class CustomCraftingTransaction extends InventoryTransaction {
         var4 = this.secondaryOutputs;
         var5 = var4.length;
 
-        for(var6 = 0; var6 < var5; ++var6) {
+        for (var6 = 0; var6 < var5; ++var6) {
             a = var4[var6];
             Arrays.fill(a, air);
         }
 
-        this.init(source, actions);
+        this.init2(source, actions);
     }
+
+    protected void init2(Player source, List<InventoryAction> actions) {
+//        this.creationTime = System.currentTimeMillis();
+        this.source = source;
+        Iterator var3 = actions.iterator();
+
+        while (var3.hasNext()) {
+            InventoryAction action = (InventoryAction) var3.next();
+//            if ( action instanceof CraftingTransferMaterialAction) {
+//                CraftingTransferMaterialAction a = (CraftingTransferMaterialAction)action;
+//                if (a.getSourceItem().isNull()) {
+//                    setInput(a.slot, a.targetItem);
+//                } else {
+//                    if (!this.targetItem.isNull()) {
+//                        throw new RuntimeException("Invalid " + this.getClass().getName() + ", either source or target item must be air, got source: " + this.sourceItem + ", target: " + this.targetItem);
+//                    }
+//
+//                    ((CraftingTransaction)transaction).setExtraOutput(this.slot, this.sourceItem);
+//                }
+//            }else
+            if (action instanceof CraftingTakeResultAction || action instanceof CraftingTransferMaterialAction) {
+                setPrimaryOutput((action).getSourceItem());
+            } else {
+                this.addAction(action);
+            }
+        }
+
+    }
+
 
     public void setInput(int index, Item item) {
         int y = index / this.gridSize;
@@ -99,10 +129,10 @@ public class CustomCraftingTransaction extends InventoryTransaction {
         int yMax = 0;
 
         int y;
-        for(y = 0; y < this.inputs.length; ++y) {
+        for (y = 0; y < this.inputs.length; ++y) {
             Item[] row = this.inputs[y];
 
-            for(int x = 0; x < row.length; ++x) {
+            for (int x = 0; x < row.length; ++x) {
                 Item item = row[x];
                 if (!item.isNull()) {
                     xMin = Math.min(x, xMin);
@@ -119,7 +149,7 @@ public class CustomCraftingTransaction extends InventoryTransaction {
             Item[][] reindexed = new Item[y][width];
             int my = yMin;
 
-            for(int i = 0; my <= yMax; ++i) {
+            for (int i = 0; my <= yMax; ++i) {
                 System.arraycopy(this.inputs[my], xMin, reindexed[i], 0, width);
                 ++my;
             }
@@ -156,7 +186,7 @@ public class CustomCraftingTransaction extends InventoryTransaction {
 
     public boolean execute() {
         if (super.execute()) {
-            switch(this.primaryOutput.getId()) {
+            switch (this.primaryOutput.getId()) {
                 case 58:
                     this.source.awardAchievement("buildWorkBench");
                     break;

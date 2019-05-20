@@ -8,6 +8,7 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.item.EntityPrimedTNT;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Sound;
+import cn.nukkit.math.AxisAlignedBB;
 import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.metadata.MetadataValue;
@@ -26,6 +27,10 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 public class CustomBlockTNT extends BlockSolidMeta {
     TNTType TType = TNTType.Basic;
 
+    public CustomBlockTNT(TNTType meta) {
+        super(meta.ordinal());
+        TType = meta;
+    }
     public CustomBlockTNT(int meta) {
         super(meta);
         setTNTType();
@@ -50,6 +55,16 @@ public class CustomBlockTNT extends BlockSolidMeta {
     }
 
     @Override
+    public boolean canBeReplaced() {
+        return false;
+    }
+
+    @Override
+    public AxisAlignedBB getBoundingBox() {
+        return super.getBoundingBox();
+    }
+
+    @Override
     public double getHardness() {
         return 0.0D;
     }
@@ -67,6 +82,11 @@ public class CustomBlockTNT extends BlockSolidMeta {
     @Override
     public int getBurnChance() {
         return 15;
+    }
+
+    @Override
+    public boolean canBePlaced() {
+        return true;
     }
 
     @Override
@@ -95,11 +115,7 @@ public class CustomBlockTNT extends BlockSolidMeta {
     @Override
     public boolean place(Item item, Block block, Block target, BlockFace face, double fx, double fy, double fz, Player player) {
         if (this.getLevel().setBlock(this, this, true, true)) {
-            try {
-                setMetadata("Level", new TNTMetaDataValue(CustomItemTNT.GetLevelFromTags(item)));
-            } catch (Exception e) {
-                CyberCoreMain.getInstance().getLogger().error("ERRRRR1111111112312", e);
-            }
+
             return true;
         }
         return false;

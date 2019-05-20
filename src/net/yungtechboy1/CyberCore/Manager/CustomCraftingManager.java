@@ -45,74 +45,74 @@ public class CustomCraftingManager {
     };
 
     public CustomCraftingManager() {
-//        String path = Server.getInstance().getDataPath() + "recipes.json";
-//        if (!(new File(path)).exists()) {
-//            try {
-//                Utils.writeFile(path, Server.class.getClassLoader().getResourceAsStream("recipes.json"));
-//            } catch (IOException var17) {
-//                MainLogger.getLogger().logException(var17);
-//            }
-//        }
-//
-//        List<Map> recipes = (new Config(path, 1)).getMapList("recipes");
-//        MainLogger.getLogger().info("Loading recipes...");
-//        Iterator var3 = recipes.iterator();
-//
-//        while(var3.hasNext()) {
-//            Map recipe = (Map)var3.next();
-//
-//            try {
-//                Map first;
-//                switch(Utils.toInt(recipe.get("type"))) {
-//                    case 0:
-//                        first = (Map)((List)recipe.get("output")).get(0);
-//                        List<Item> sorted = new ArrayList();
-//                        Iterator var7 = ((List)recipe.get("input")).iterator();
-//
-//                        while(var7.hasNext()) {
-//                            Map<String, Object> ingredient = (Map)var7.next();
-//                            sorted.add(Item.fromJson(ingredient));
-//                        }
-//
-//                        sorted.sort(recipeComparator);
-//                        ShapelessRecipe result = new ShapelessRecipe(Item.fromJson(first), sorted);
-//                        this.registerRecipe(result);
-//                        break;
-//                    case 1:
-//                        List<Map> output = (List)recipe.get("output");
-//                        first = (Map)output.remove(0);
-//                        String[] shape = (String[])((List)recipe.get("shape")).toArray(new String[0]);
-//                        Map<Character, Item> ingredients = new CharObjectHashMap();
-//                        List<Item> extraResults = new ArrayList();
-//                        Map<String, Map<String, Object>> input = (Map)recipe.get("input");
-//                        Iterator var21 = input.entrySet().iterator();
-//
-//                        while(var21.hasNext()) {
-//                            java.util.Map.Entry<String, Map<String, Object>> ingredientEntry = (java.util.Map.Entry)var21.next();
-//                            char ingredientChar = ((String)ingredientEntry.getKey()).charAt(0);
-//                            Item ingredient = Item.fromJson((Map)ingredientEntry.getValue());
-//                            ingredients.put(ingredientChar, ingredient);
-//                        }
-//
-//                        var21 = output.iterator();
-//
-//                        while(var21.hasNext()) {
-//                            Map<String, Object> data = (Map)var21.next();
-//                            extraResults.add(Item.fromJson(data));
-//                        }
-//
-//                        this.registerRecipe(new ShapedRecipe(Item.fromJson(first), shape, ingredients, extraResults));
-//                        break;
-//                    case 2:
-//                    case 3:
-//                        Map<String, Object> resultMap = (Map)recipe.get("output");
-//                        Item resultItem = Item.fromJson(resultMap);
-//                        this.registerRecipe(new FurnaceRecipe(resultItem, Item.get(Utils.toInt(recipe.get("inputId")), recipe.containsKey("inputDamage") ? Utils.toInt(recipe.get("inputDamage")) : -1, 1)));
-//                }
-//            } catch (Exception var18) {
-//                MainLogger.getLogger().error("Exception during registering recipe", var18);
-//            }
-//        }
+        String path = Server.getInstance().getDataPath() + "recipes.json";
+        if (!(new File(path)).exists()) {
+            try {
+                Utils.writeFile(path, Server.class.getClassLoader().getResourceAsStream("recipes.json"));
+            } catch (IOException var17) {
+                MainLogger.getLogger().logException(var17);
+            }
+        }
+
+        List<Map> recipes = (new Config(path, 1)).getMapList("recipes");
+        MainLogger.getLogger().info("Loading recipes...");
+        Iterator var3 = recipes.iterator();
+
+        while(var3.hasNext()) {
+            Map recipe = (Map)var3.next();
+
+            try {
+                Map first;
+                switch(Utils.toInt(recipe.get("type"))) {
+                    case 0:
+                        first = (Map)((List)recipe.get("output")).get(0);
+                        List<Item> sorted = new ArrayList();
+                        Iterator var7 = ((List)recipe.get("input")).iterator();
+
+                        while(var7.hasNext()) {
+                            Map<String, Object> ingredient = (Map)var7.next();
+                            sorted.add(Item.fromJson(ingredient));
+                        }
+
+                        sorted.sort(recipeComparator);
+                        ShapelessRecipe result = new ShapelessRecipe(Item.fromJson(first), sorted);
+                        this.registerRecipe(result);
+                        break;
+                    case 1:
+                        List<Map> output = (List)recipe.get("output");
+                        first = (Map)output.remove(0);
+                        String[] shape = (String[])((List)recipe.get("shape")).toArray(new String[0]);
+                        Map<Character, Item> ingredients = new CharObjectHashMap();
+                        List<Item> extraResults = new ArrayList();
+                        Map<String, Map<String, Object>> input = (Map)recipe.get("input");
+                        Iterator var21 = input.entrySet().iterator();
+
+                        while(var21.hasNext()) {
+                            java.util.Map.Entry<String, Map<String, Object>> ingredientEntry = (java.util.Map.Entry)var21.next();
+                            char ingredientChar = ((String)ingredientEntry.getKey()).charAt(0);
+                            Item ingredient = Item.fromJson((Map)ingredientEntry.getValue());
+                            ingredients.put(ingredientChar, ingredient);
+                        }
+
+                        var21 = output.iterator();
+
+                        while(var21.hasNext()) {
+                            Map<String, Object> data = (Map)var21.next();
+                            extraResults.add(Item.fromJson(data));
+                        }
+
+                        this.registerRecipe(new ShapedRecipe(Item.fromJson(first), shape, ingredients, extraResults));
+                        break;
+                    case 2:
+                    case 3:
+                        Map<String, Object> resultMap = (Map)recipe.get("output");
+                        Item resultItem = Item.fromJson(resultMap);
+                        this.registerRecipe(new FurnaceRecipe(resultItem, Item.get(Utils.toInt(recipe.get("inputId")), recipe.containsKey("inputDamage") ? Utils.toInt(recipe.get("inputDamage")) : -1, 1)));
+                }
+            } catch (Exception var18) {
+                MainLogger.getLogger().error("Exception during registering recipe", var18);
+            }
+        }
 
         this.registerBrewing();
         this.rebuildPacket();
@@ -271,8 +271,13 @@ public class CustomCraftingManager {
             this.recipes.add(recipe);
         }
 
-        //TODO CHECK
-        recipe.registerToCraftingManager(Server.getInstance().getCraftingManager());
+        if(recipe instanceof ShapelessRecipe)registerShapelessRecipe((ShapelessRecipe)recipe);
+        else if( recipe instanceof ShapedRecipe)registerShapedRecipe((ShapedRecipe)recipe);
+        else if( recipe instanceof FurnaceRecipe)registerFurnaceRecipe((FurnaceRecipe)recipe);
+        else if( recipe instanceof BrewingRecipe)registerBrewingRecipe((BrewingRecipe)recipe);
+//
+//        //TODO CHECK
+//        recipe.registerToCraftingManager(this);
     }
 
     public void registerShapelessRecipe(ShapelessRecipe recipe) {
