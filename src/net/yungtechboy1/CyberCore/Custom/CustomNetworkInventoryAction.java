@@ -73,7 +73,7 @@ public class CustomNetworkInventoryAction extends NetworkInventoryAction {
                     case SOURCE_TYPE_CONTAINER_DROP_CONTENTS:
                         return new SlotChangeAction(player.getCraftingGrid(), this.inventorySlot, this.oldItem, this.newItem);
                     case SOURCE_TYPE_CRAFTING_RESULT:
-                        return new CraftingTakeResultAction(this.oldItem, this.newItem);
+                        return new CustomCraftingTakeResultAction(this.oldItem, this.newItem);
                     case SOURCE_TYPE_CRAFTING_USE_INGREDIENT:
                         return new CustomCraftingTransferMaterialAction(this.oldItem, this.newItem, this.inventorySlot);
                 }

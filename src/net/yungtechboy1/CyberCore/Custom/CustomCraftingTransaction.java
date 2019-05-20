@@ -3,7 +3,6 @@ package net.yungtechboy1.CyberCore.Custom;
 import cn.nukkit.Player;
 import cn.nukkit.inventory.BigCraftingGrid;
 import cn.nukkit.inventory.CraftingRecipe;
-import cn.nukkit.inventory.transaction.CraftingTransaction;
 import cn.nukkit.inventory.transaction.InventoryTransaction;
 import cn.nukkit.inventory.transaction.action.CraftingTakeResultAction;
 import cn.nukkit.inventory.transaction.action.CraftingTransferMaterialAction;
@@ -11,6 +10,7 @@ import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.item.Item;
 import cn.nukkit.network.protocol.ContainerClosePacket;
 import cn.nukkit.scheduler.Task;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -69,15 +69,28 @@ public class CustomCraftingTransaction extends InventoryTransaction {
 //                    ((CraftingTransaction)transaction).setExtraOutput(this.slot, this.sourceItem);
 //                }
 //            }else
-            if (action instanceof CraftingTakeResultAction || action instanceof CraftingTransferMaterialAction) {
-                setPrimaryOutput((action).getSourceItem());
-            } else {
-                this.addAction(action);
-            }
+//            if (action instanceof CraftingTakeResultAction || action instanceof CraftingTransferMaterialAction) {
+//                setPrimaryOutput((action).getSourceItem());
+//            } else {
+            this.addAction(action);
+//            }
         }
 
     }
 
+    @Override
+    public void addAction(InventoryAction action) {
+        if (!this.actions.contains(action)) {
+            this.actions.add(action);
+            if (action instanceof CraftingTakeResultAction || action instanceof CraftingTransferMaterialAction) {
+                setPrimaryOutput(action.getSourceItem());
+            } else {
+                action.onAddToTransaction(this);
+            }
+        } else {
+            throw new RuntimeException("Tried to add the same action to a transaction twice");
+        }
+    }
 
     public void setInput(int index, Item item) {
         int y = index / this.gridSize;
@@ -162,7 +175,7 @@ public class CustomCraftingTransaction extends InventoryTransaction {
 
     public boolean canExecute() {
         Item[][] inputs = this.reindexInputs();
-//        this.recipe = CyberCoreMain.getInstance().CraftingManager.matchRecipe(inputs, this.primaryOutput, this.secondaryOutputs);
+        this.recipe = CyberCoreMain.getInstance().CraftingManager.matchRecipe(inputs, this.primaryOutput, this.secondaryOutputs);
         return this.recipe != null && super.canExecute();
     }
 
@@ -184,8 +197,58 @@ public class CustomCraftingTransaction extends InventoryTransaction {
         this.source.resetCraftingGridType();
     }
 
+    public boolean preexec() {
+        if (!this.hasExecuted() && this.canExecute()) {
+            System.out.println("CALL 1");
+            if (!this.callExecuteEvent()) {
+                System.out.println("CALL 1.1");
+                this.sendInventories();
+                return true;
+            } else {
+                System.out.println("CALL 1.2");
+                Iterator var1 = this.actions.iterator();
+
+                InventoryAction action;
+                do {
+                    if (!var1.hasNext()) {
+                        var1 = this.actions.iterator();
+
+                        while (var1.hasNext()) {
+                            action = (InventoryAction) var1.next();
+                            if (action.execute(this.source)) {
+                                action.onExecuteSuccess(this.source);
+                            } else {
+                                action.onExecuteFail(this.source);
+                            }
+                        }
+
+                        this.hasExecuted = true;
+
+                        System.out.println("CALL 1.3");
+                        return true;
+                    }
+
+                    System.out.println("CALL 1.4");
+
+                    action = (InventoryAction) var1.next();
+                } while (action.onPreExecute(this.source));
+
+                System.out.println("CALL 1.5");
+                this.sendInventories();
+                return true;
+            }
+        } else {
+            System.out.println("CALL 2");
+            if (this.hasExecuted()) System.out.println("CALL 2.1");
+            if (!this.canExecute()) System.out.println("CALL 2.2");
+            this.sendInventories();
+            return false;
+        }
+    }
+
+    @Override
     public boolean execute() {
-        if (super.execute()) {
+        if (preexec()) {
             switch (this.primaryOutput.getId()) {
                 case 58:
                     this.source.awardAchievement("buildWorkBench");

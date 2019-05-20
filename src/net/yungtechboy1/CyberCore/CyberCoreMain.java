@@ -15,7 +15,6 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
 import cn.nukkit.inventory.ShapedRecipe;
-import cn.nukkit.inventory.ShapelessRecipe;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
 import cn.nukkit.level.Level;
@@ -264,18 +263,16 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
                 ma.remove(ra);
             }
         }
-//        Custom TNT
-        ShapelessRecipe nsr = new ShapelessRecipe(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_4),new ArrayList<Item>(){{
-            add(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));
-            add(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));
-            add(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));
-            add(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));
-            add(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));
-            add(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));
-        }});
+//        CustomItemTNT
+//        ShapedRecipe nsr = new ShapedRecipe(Item.get(46), new String[]{"AAA", "BBB", "AAA"}, new CharObjectHashMap<Item>() {{
+//            put("A".charAt(0), new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));
+//            put("B".charAt(0), Item.get(12));
+//        }}, new ArrayList<Item>() {{
+//            add(new CustomItemTNT());
+//        }});
 
 
-        CraftingManager.registerRecipe(nsr);
+//        CraftingManager.registerShapedRecipe(nsr);
 
         System.out.println("EEEE >>>>> "+CraftingManager.shapedRecipes.size());
 
