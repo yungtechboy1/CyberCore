@@ -72,8 +72,8 @@ public class MinnerBaseClass extends BaseClass {
             case BlockID.TNT:
                 CustomBlockTNT cbt = (CustomBlockTNT) event.getBlock();
                 if (cbt == null) System.out.println("EEEEEEEEEEEEE4735 NULL CustomblockTNT");
-                int l = cbt.getTNTLevel();
-                addXP(l);
+                CustomBlockTNT.TNTType l = cbt.getTNTType();
+                addXP(l.ordinal()+1);
                 break;
         }
         return event;

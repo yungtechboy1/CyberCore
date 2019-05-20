@@ -20,27 +20,28 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemTNT;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
-import java.util.List;
-
 /**
  * Created by carlt on 5/16/2019.
  */
 public class CustomBlockTNT extends BlockSolidMeta {
-    int TNTLevel = 1;
+    TNTType TType = TNTType.Basic;
 
     public CustomBlockTNT(int meta) {
         super(meta);
-        setTNTLevel(getTNTLevel());
+        setTNTType();
     }
 
     public CustomBlockTNT() {
-        super(0);
-        setTNTLevel(getTNTLevel());
+        this(0);
+    }
+
+    private void setTNTType() {
+        TType = TNTType.getfromint(getDamage());
     }
 
     @Override
     public String getName() {
-        return TextFormat.AQUA + "TNT Level" + getTNTLevel() + "||" + getDamage();
+        return TextFormat.AQUA + TType.getName() + TextFormat.RED + " TNT";
     }
 
     @Override
@@ -75,16 +76,16 @@ public class CustomBlockTNT extends BlockSolidMeta {
 
     public int getFuse() {
         NukkitRandom nr = new NukkitRandom();
-        switch (getTNTLevel()) {
-            case 1:
+        switch (getTNTType()) {
+            case Basic:
                 return nr.nextRange(150, 250);
-            case 2:
+            case Silent:
                 return nr.nextRange(100, 200);
-            case 3:
+            case Upgraded:
                 return nr.nextRange(80, 170);
-            case 4:
+            case Super:
                 return nr.nextRange(70, 130);
-            case 5:
+            case Experimental:
                 return nr.nextRange(70, 90);
             default:
                 return nr.nextRange(150, 250);
@@ -104,13 +105,9 @@ public class CustomBlockTNT extends BlockSolidMeta {
         return false;
     }
 
-    public int getTNTLevel() {
+    public TNTType getTNTType() {
 //        CyberCoreMain.getInstance().getLogger().error("LVL >>"+getDamage());
-        return getDamage();
-    }
-
-    public void setTNTLevel(int TNTLevel) {
-        this.TNTLevel = TNTLevel;
+        return TNTType.getfromint(getDamage());
     }
 
     public void prime() {
@@ -163,13 +160,39 @@ public class CustomBlockTNT extends BlockSolidMeta {
         return BlockColor.TNT_BLOCK_COLOR;
     }
 
-    public enum TNTTypes {
-        Regular,
-        Level_1,
-        Level_2,
-        Level_3,
-        Level_4,
-        Level_5,
+    public enum TNTType {
+        Basic,
+        Silent,
+        Upgraded,
+        Super,
+        Experimental;
+
+        public static TNTType getfromint(int i) {
+            if (Basic.ordinal() == i) return Basic;
+            if (Silent.ordinal() == i) return Silent;
+            if (Upgraded.ordinal() == i) return Upgraded;
+            if (Super.ordinal() == i) return Super;
+            if (Experimental.ordinal() == i) return Experimental;
+            return Basic;
+        }
+
+        public String getName() {
+            switch (this) {
+                case Basic:
+                    return "Basic";
+                case Silent:
+                    return "Silent";
+                case Upgraded:
+                    return "Upgraded";
+                case Super:
+                    return "Super";
+                case Experimental:
+                    return "Experimental";
+                default:
+                    return "Unknown Type";
+            }
+        }
+
     }
 
     public class TNTMetaDataValue extends MetadataValue {

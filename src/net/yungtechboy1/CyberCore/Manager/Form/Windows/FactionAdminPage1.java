@@ -3,7 +3,10 @@ package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.inventory.CraftingManager;
+import cn.nukkit.item.Item;
+import cn.nukkit.utils.Binary;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Custom.Item.CustomItemGunpowder;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemMap;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
@@ -27,7 +30,7 @@ public class FactionAdminPage1 extends CyberFormSimple {
         super(FormType.MainForm.Faction_Admin_Page_1, "CyberFactions | Admin Page (1/2)","", buttons);
         addButton(new ElementButton("Save/Load/Reload"));
         addButton(new ElementButton("GiveTestImage"));
-        addButton(new ElementButton("Send Crafting Packet"));
+        addButton(new ElementButton("Print Item NBT to Hex"));
     }
 
 
@@ -47,13 +50,9 @@ public class FactionAdminPage1 extends CyberFormSimple {
                 cp.getInventory().addItem(im);
                 break;
             case 2:
-//                CyberCoreMain.getInstance().CraftingManager.rebuildPacket();
-//                cp.dataPacket(CustomCraftingManager.packet);
-                cp.sendMessage("DEPRECATED");
-                break;
-            case 3:
-                new CraftingManager().rebuildPacket();
-                cp.dataPacket(CraftingManager.packet);
+                Item ih = cp.getInventory().getItemInHand();
+                CyberCoreMain.getInstance().getLogger().info("Printing Item Data"+ih.getName()+" | "+ ih.getCustomName() +" | "+ Binary.bytesToHexString( ih.getCompoundTag()));
+//                cp.sendMessage("DEPRECATED");
                 break;
         }
     }

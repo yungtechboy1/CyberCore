@@ -799,7 +799,7 @@ public class CorePlayer extends Player {
                         CheckGround();
                         if (dif.getY() > 0 && !uw) {
 
-                            //No Super Boost!
+                            //No Lvl_4 Boost!
                             if (0 < dif.x && dif.x > DEFAULT_SPEED) dif.x = DEFAULT_SPEED;
                             if (0 > dif.x && dif.x < (-1 * DEFAULT_SPEED)) dif.x = (-1 * DEFAULT_SPEED);
                             if (0 > dif.z && dif.z > DEFAULT_SPEED) dif.z = DEFAULT_SPEED;
@@ -828,7 +828,7 @@ public class CorePlayer extends Player {
                         CheckGround();
                         if (dif.getY() > 0 && !uw) {
 
-                            //No Super Boost!
+                            //No Lvl_4 Boost!
                             if (0 < dif.x && dif.x > DEFAULT_SPEED) dif.x = DEFAULT_SPEED;
                             if (0 > dif.x && dif.x < (-1 * DEFAULT_SPEED)) dif.x = (-1 * DEFAULT_SPEED);
                             if (0 > dif.z && dif.z > DEFAULT_SPEED) dif.z = DEFAULT_SPEED;

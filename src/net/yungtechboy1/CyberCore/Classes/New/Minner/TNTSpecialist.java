@@ -108,7 +108,7 @@ public class TNTSpecialist extends MinnerBaseClass {
 //                case BlockID.TNT:
 //                    CustomBlockTNT cbt = (CustomBlockTNT) event.getBlock();
 //                    if (cbt == null) System.out.println("EEEEEEEEEEEEE4735 NULL CustomblockTNT");
-//                    int l = cbt.getTNTLevel();
+//                    int l = cbt.getTNTType();
 //                    addXP(l);
 //                    break;
 //            }

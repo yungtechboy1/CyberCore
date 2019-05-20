@@ -3,6 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/CyberCore</output-path>
     <root id="archive" name="CyberCore.jar">
       <element id="module-output" name="CyberCore" />
+      <element id="file-copy" path="$PROJECT_DIR$/recipes.json" />
     </root>
   </artifact>
 </component>
