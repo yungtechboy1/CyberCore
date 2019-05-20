@@ -11,7 +11,7 @@
       <excludeFolder url="file://$MODULE_DIR$/worlds" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="jdk" jdkName="NJ" jdkType="JavaSDK" />
+    <orderEntry type="jdk" jdkName="1.8 Nukkit" jdkType="JavaSDK" />
     <orderEntry type="library" name="CJ DEPS" level="project" />
     <orderEntry type="library" name="DbLib-1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="nukkit-master" level="project" />
