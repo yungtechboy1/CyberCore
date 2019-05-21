@@ -81,7 +81,7 @@ public class CustomCraftingTransaction extends InventoryTransaction {
     public void addAction(InventoryAction action) {
         if (!this.actions.contains(action)) {
             this.actions.add(action);
-            if (action instanceof CraftingTakeResultAction) {
+            if (action instanceof CustomCraftingTakeResultAction) {
                 setPrimaryOutput(action.getSourceItem());
             } else if (action instanceof CustomCraftingTransferMaterialAction) {
                 CustomCraftingTransferMaterialAction a = (CustomCraftingTransferMaterialAction) action;
@@ -184,6 +184,8 @@ public class CustomCraftingTransaction extends InventoryTransaction {
     @Override
     public boolean canExecute() {
         Item[][] inputs = this.reindexInputs();
+//        List<Item> list = recipe.getIngredientList();
+//        list.sort(recipeComparator);
         this.recipe = CyberCoreMain.getInstance().CraftingManager.matchRecipe(inputs, this.primaryOutput, this.secondaryOutputs);
         return this.recipe != null && super.canExecute();
     }

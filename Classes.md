@@ -13,7 +13,7 @@ Specalizations
    TNT-Specialist
    ---
    - Regin Time:
-   - `240 - ((Sqrt(40*lvl)*13*lvl)/(8*lvl))`
+   - `240 - ((Sqrt(40*lvl)*143*lvl)/(8*lvl))`
      - use /tnt to use TNT in bar 
      - Mining any block with a Pickaxe adds 1 -5 XP
         - Stone : 1;

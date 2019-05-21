@@ -302,7 +302,7 @@ public class CustomCraftingManager {
     }
 
     public boolean matchItems(ShapedRecipe sr, Item[][] input, Item[][] output) {
-        System.out.println("5.0");
+        System.out.println("5.0"+sr==null);
         if (!this.matchInputMap(sr,(Item[][])Utils.clone2dArray(input))) {
             System.out.println("5.0.5E");
             Item[][] reverse = (Item[][])Utils.clone2dArray(input);
@@ -370,15 +370,19 @@ public class CustomCraftingManager {
     }
 
     private boolean matchInputMap(ShapedRecipe sr,Item[][] input) {
+        System.out.println("Z1"+sr);
+        System.out.println("Z1"+sr.getIngredientMap());
         Map<Integer, Map<Integer, Item>> map = sr.getIngredientMap();
+        System.out.println("Z2");
         int y = 0;
 
         int y2;
         int x;
         for(y2 = sr.getHeight(); y < y2; ++y) {
-            x = 0;
+            x = 0;System.out.println("Z3");
 
             for(int x2 = sr.getWidth(); x < x2; ++x) {
+                System.out.println("Z4");
                 Item given = input[y][x];
                 Item required = (Item)((Map)map.get(y)).get(x);
                 if (given == null || !required.equals(given, required.hasMeta(), required.hasCompoundTag()) || required.getCount() != given.getCount()) {
@@ -386,10 +390,12 @@ public class CustomCraftingManager {
                     return false;
                 }
 
+                System.out.println("Zz");
                 input[y][x] = null;
             }
         }
 
+        System.out.println("Zzz");
         Item[][] var11 = input;
         y2 = input.length;
 
@@ -449,7 +455,7 @@ public class CustomCraftingManager {
                         System.out.println(ii[k][aaa] +"||+"+iii[k][aaa] );
                     }
                 }
-                if (recipe != null && (recipe.matchItems(this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap)) || recipe.matchItems(this.cloneItemMap(inputMap), new Item[0][]))) {
+                if (recipe != null && (recipe.matchItems(this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap)) || recipe.matchItems(this.cloneItemMap(inputMap), new Item[0][])|| matchItems(recipe,this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap)))){
                     System.out.println("CALL 3.3");
                     return recipe;
                 }
@@ -517,6 +523,7 @@ public class CustomCraftingManager {
             }
         }
 
+
 //        for(Recipe r: this.recipes){
 //            if(r instanceof ShapelessRecipe){
 //                ShapelessRecipe slr = (ShapelessRecipe)r;
@@ -526,6 +533,7 @@ public class CustomCraftingManager {
 
         return null;
     }
+
 
     public static class Entry {
         final int resultItemId;
