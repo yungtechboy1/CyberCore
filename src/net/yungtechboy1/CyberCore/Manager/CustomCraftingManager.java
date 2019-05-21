@@ -329,6 +329,10 @@ public class CustomCraftingManager {
 
         List<Item> needItems = sr.getExtraResults();
         Iterator var12 = (new ArrayList(haveItems)).iterator();
+        Iterator var13 = (new ArrayList(needItems)).iterator();
+        Iterator var14 = (new ArrayList(needItems)).iterator();
+
+        int k = 0;
 
         while(true) {
             while(var12.hasNext()) {
@@ -337,8 +341,8 @@ public class CustomCraftingManager {
                 if (haveItem.isNull()) {
                     System.out.println("5.4.1");
                     haveItems.remove(haveItem);
+                    k++;
                 } else {
-                    Iterator var14 = (new ArrayList(needItems)).iterator();
 
                     System.out.println("5.4.2");
                     while(var14.hasNext()) {
@@ -354,6 +358,10 @@ public class CustomCraftingManager {
                         }
                     }
                 }
+
+                if(k == 9)needItems.clear();
+
+
             }
 
             System.out.println("5.5"+haveItems.isEmpty()+"|"+needItems.isEmpty());
@@ -374,7 +382,7 @@ public class CustomCraftingManager {
                 Item given = input[y][x];
                 Item required = (Item)((Map)map.get(y)).get(x);
                 if (given == null || !required.equals(given, required.hasMeta(), required.hasCompoundTag()) || required.getCount() != given.getCount()) {
-                    System.out.println("5.7");
+                    System.out.println("5.7"+required+"||||||||||"+given);
                     return false;
                 }
 
@@ -400,7 +408,7 @@ public class CustomCraftingManager {
             }
         }
 
-        System.out.println("5.9");
+        System.out.println("5.9 ITEMS GIVEN ARE CORRECT INGREDIENTS");
         return true;
     }
 
