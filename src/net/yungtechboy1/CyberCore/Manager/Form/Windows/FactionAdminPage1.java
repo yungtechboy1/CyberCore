@@ -31,6 +31,8 @@ public class FactionAdminPage1 extends CyberFormSimple {
         addButton(new ElementButton("Save/Load/Reload"));
         addButton(new ElementButton("GiveTestImage"));
         addButton(new ElementButton("Print Item NBT to Hex"));
+        addButton(new ElementButton("Resend Crafting Packet"));
+        addButton(new ElementButton("Resend Creative Packet"));
     }
 
 
@@ -53,6 +55,13 @@ public class FactionAdminPage1 extends CyberFormSimple {
                 Item ih = cp.getInventory().getItemInHand();
                 CyberCoreMain.getInstance().getLogger().info("Printing Item Data"+ih.getName()+" | "+ ih.getCustomName() +" | "+ Binary.bytesToHexString( ih.getCompoundTag()));
 //                cp.sendMessage("DEPRECATED");
+                break;
+            case 3:
+                CyberCoreMain.getInstance().CraftingManager.rebuildPacket();
+                cp.dataPacket(CustomCraftingManager.packet);
+                break;
+            case 4:
+                cp.getInventory().sendCreativeContents();
                 break;
         }
     }

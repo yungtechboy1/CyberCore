@@ -36,6 +36,7 @@ import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
+import net.yungtechboy1.CyberCore.Custom.Crafting.CustomRecipeCraftingManager;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemGunpowder;
@@ -209,6 +210,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        }
     }
 
+    CustomRecipeCraftingManager CRM;
     @Override
     public void onEnable() {
         new File(getDataFolder().toString()).mkdirs();
@@ -238,31 +240,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        System.out.println(">>>>>>>>>>0x" + Binary.bytesToHexString(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_1).getCompoundTag()));
 
         CraftingManager = new CustomCraftingManager();
-        List<Item> li = new ArrayList<>();
-        li.add(new Item(289));
-        li.add(new Item(12, -1));
-        li.add(new Item(289));
-        li.add(new Item(12, -1));
-        li.add(new Item(289));
-        li.add(new Item(12, -1));
-        li.add(new Item(289));
-        li.add(new Item(12, -1));
-        li.add(new Item(289));
-        int ri = CustomCraftingManager.getItemHash(new Item(46));
-        UUID ra = CustomCraftingManager.getMultiItemHash(li);
-        Map<UUID, ShapedRecipe> ma = CraftingManager.shapedRecipes.computeIfAbsent(ri, k -> new HashMap<>());
-        if (ma == null || ma.size() == 0) {
-            System.out.println("ERRRORRR NUYN YA HERE!~!!!");
-        } else {
-            ShapedRecipe sr = ma.get(ra);
-            if (sr == null) {
-                System.out.println("ERRRORRR NUYN YA HERE!~!!!22222222222");
+        CRM = new CustomRecipeCraftingManager(this);
 
-            } else {
-                System.out.println("ISSSSAAA HEEERRRRR");
-                ma.remove(ra);
-            }
-        }
 //        CustomItemTNT
 //        ShapedRecipe nsr = new ShapedRecipe(Item.get(46), new String[]{"AAA", "BBB", "AAA"}, new CharObjectHashMap<Item>() {{
 //            put("A".charAt(0), new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));

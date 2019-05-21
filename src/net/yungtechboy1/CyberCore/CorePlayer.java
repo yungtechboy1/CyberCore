@@ -418,7 +418,7 @@ public class CorePlayer extends Player {
 
 //        player.dataPacket(CraftingManager.packet);
 //        CyberCoreMain.getInstance().CraftingManager.rebuildPacket();
-//        dataPacket(CustomCraftingManager.packet);
+//        dataPacket(CustomRecipeCraftingManager.packet);
     }
 
     public boolean CheckGround() {

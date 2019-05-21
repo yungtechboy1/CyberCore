@@ -5,7 +5,6 @@ import cn.nukkit.inventory.BigCraftingGrid;
 import cn.nukkit.inventory.CraftingRecipe;
 import cn.nukkit.inventory.transaction.InventoryTransaction;
 import cn.nukkit.inventory.transaction.action.CraftingTakeResultAction;
-import cn.nukkit.inventory.transaction.action.CraftingTransferMaterialAction;
 import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.item.Item;
 import cn.nukkit.network.protocol.ContainerClosePacket;
@@ -82,8 +81,17 @@ public class CustomCraftingTransaction extends InventoryTransaction {
     public void addAction(InventoryAction action) {
         if (!this.actions.contains(action)) {
             this.actions.add(action);
-            if (action instanceof CraftingTakeResultAction || action instanceof CraftingTransferMaterialAction) {
+            if (action instanceof CraftingTakeResultAction) {
                 setPrimaryOutput(action.getSourceItem());
+            } else if (action instanceof CustomCraftingTransferMaterialAction) {
+                CustomCraftingTransferMaterialAction a = (CustomCraftingTransferMaterialAction) action;
+                if (a.getSourceItem().isNull()) {
+                    setInput(a.slot, a.getTargetItem());
+                } else if (a.getTargetItem().isNull()) {
+                    setExtraOutput(a.slot, a.getSourceItem());
+                } else {
+                    throw new RuntimeException("Invalid " + getClass().getName() + ", either source or target item must be air, got source: " + a.getSourceItem() + ", target: " + a.getTargetItem());
+                }
             } else {
                 action.onAddToTransaction(this);
             }
@@ -173,12 +181,14 @@ public class CustomCraftingTransaction extends InventoryTransaction {
         }
     }
 
+    @Override
     public boolean canExecute() {
         Item[][] inputs = this.reindexInputs();
         this.recipe = CyberCoreMain.getInstance().CraftingManager.matchRecipe(inputs, this.primaryOutput, this.secondaryOutputs);
         return this.recipe != null && super.canExecute();
     }
 
+    @Override
     protected boolean callExecuteEvent() {
         CustomCraftItemEvent ev;
         this.source.getServer().getPluginManager().callEvent(ev = new CustomCraftItemEvent(this));
@@ -241,6 +251,8 @@ public class CustomCraftingTransaction extends InventoryTransaction {
             System.out.println("CALL 2");
             if (this.hasExecuted()) System.out.println("CALL 2.1");
             if (!this.canExecute()) System.out.println("CALL 2.2");
+            if (this.recipe == null) System.out.println("CALL 2.3");
+            if (super.canExecute()) System.out.println("CALL 2.4");
             this.sendInventories();
             return false;
         }

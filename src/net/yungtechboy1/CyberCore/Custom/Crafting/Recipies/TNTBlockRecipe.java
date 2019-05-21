@@ -5,10 +5,8 @@ import cn.nukkit.inventory.Recipe;
 import cn.nukkit.inventory.ShapedRecipe;
 import cn.nukkit.inventory.ShapelessRecipe;
 import cn.nukkit.item.Item;
-import cn.nukkit.item.ItemID;
 import io.netty.util.collection.CharObjectHashMap;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
-import net.yungtechboy1.CyberCore.Custom.Block.CustomItemTNT;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemGunpowder;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemTNT;
 
@@ -16,83 +14,85 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static net.yungtechboy1.CyberCore.Custom.Crafting.Recipies.GunpowderRecipe.*;
+
 public class TNTBlockRecipe extends CustomRecipe {
-        //Array Fill
-        //https://stackoverflow.com/a/5600690/3884636
-        private CustomItemGunpowder GP1 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_1);
-        private CustomItemGunpowder GP2 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2);
-        private CustomItemGunpowder GP3 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_3);
-        private CustomItemGunpowder GP4 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_4);
-        private CustomItemGunpowder GP5 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_5);
-        private CustomItemTNT TNTBasic = new CustomItemTNT(CustomBlockTNT.TNTType.Basic);
-        private CustomItemTNT TNTSilent = new CustomItemTNT(CustomBlockTNT.TNTType.Silent);
-        private CustomItemTNT TNTUpgraded = new CustomItemTNT(CustomBlockTNT.TNTType.Upgraded);
-        private CustomItemTNT TNTSuper = new CustomItemTNT(CustomBlockTNT.TNTType.Super);
-        private CustomItemTNT TNTExperimental = new CustomItemTNT(CustomBlockTNT.TNTType.Experimental);
+    //Array Fill
+    //https://stackoverflow.com/a/5600690/3884636
+    public static CustomItemTNT TNTBasic = new CustomItemTNT(CustomBlockTNT.TNTType.Basic);
+    public static CustomItemTNT TNTSilent = new CustomItemTNT(CustomBlockTNT.TNTType.Silent);
+    public static CustomItemTNT TNTUpgraded = new CustomItemTNT(CustomBlockTNT.TNTType.Upgraded);
+    public static CustomItemTNT TNTSuper = new CustomItemTNT(CustomBlockTNT.TNTType.Super);
+    public static CustomItemTNT TNTExperimental = new CustomItemTNT(CustomBlockTNT.TNTType.Experimental);
 
     public TNTBlockRecipe() {
-            Recipies.add(TNTBasic());
-            Recipies.add(GunPowderLvl1ToLvl3());
-            Recipies.add(GunPowderLvl1ToLvl4());
-            Recipies.add(GunPowderLvl2ToLvl3());
-            Recipies.add(GunPowderLvl2ToLvl4());
-            Recipies.add(GunPowderLvl2ToLvl5());
-            Recipies.add(GunPowderLvl3ToLvl4());
-            Recipies.add(GunPowderLvl3ToLvl5());
-            Recipies.add(GunPowderLvl4ToLvl5());
+        Recipies.add(TNTBasic());
+        Recipies.add(TNTSilent());
+        Recipies.add(TNTBasic2());
+        Recipies.add(TNTUpgraded());
+        Recipies.add(TNTSuper());
+        Recipies.add(TNTExperimental());
 
 //        CustomItemTNT.TNTType.
-        }
-
-
-        public Recipe TNTBasic() {
-            List<Item> l = Collections.nCopies(6, GP1);
-            l.addAll(Collections.nCopies(3,Item.get(BlockID.SAND)));
-            return new ShapelessRecipe(TNTBasic,l);
-        }
-        public Recipe TNTSilent() {
-            ShapedRecipe nsr = new ShapedRecipe(Item.get(46), new String[]{"WWW", "WTW", "WWW"}, new CharObjectHashMap<Item>() {{
-                put("A".charAt(0), new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));
-                put("B".charAt(0), Item.get(12));
-            }}, new ArrayList<Item>() {{
-                add(new CustomItemTNT());
-            }});
-            return nsr;
-        }
-
-        public Recipe GunPowderLvl1ToLvl3() {
-            return new ShapelessRecipe(GP3, Collections.nCopies(6, GP1));
-        }
-
-        public Recipe GunPowderLvl1ToLvl4() {
-            return new ShapelessRecipe(GP4, Collections.nCopies(9, GP1));
-        }
-
-        public Recipe GunPowderLvl2ToLvl3() {
-            ArrayList<Item> al = new ArrayList<Item>();
-            return new ShapelessRecipe(GP3, Collections.nCopies(3, GP2));
-        }
-
-        public Recipe GunPowderLvl2ToLvl4() {
-            ArrayList<Item> al = new ArrayList<Item>();
-            return new ShapelessRecipe(GP4, Collections.nCopies(6, GP2));
-        }
-
-        public Recipe GunPowderLvl2ToLvl5() {
-            ArrayList<Item> al = new ArrayList<Item>();
-            return new ShapelessRecipe(GP5, Collections.nCopies(9, GP2));
-        }
-
-        public Recipe GunPowderLvl3ToLvl4() {
-            return new ShapelessRecipe(GP4, Collections.nCopies(3, GP3));
-        }
-
-        public Recipe GunPowderLvl3ToLvl5() {
-            return new ShapelessRecipe(GP4, Collections.nCopies(6, GP3));
-        }
-
-
-        public Recipe GunPowderLvl4ToLvl5() {
-            return new ShapelessRecipe(GP5, Collections.nCopies(3, GP4));
-        }
     }
+
+
+    public Recipe TNTBasic() {
+        ShapedRecipe nsr = new ShapedRecipe(TNTBasic, new String[]{"SWS", "WWW", "SWS"}, new CharObjectHashMap<Item>() {{
+            put("W".charAt(0), GP1);
+            put("S".charAt(0), Item.get(BlockID.SAND));
+        }}, new ArrayList<Item>() {{
+            add(TNTBasic);
+        }});
+        return nsr;
+    }
+    public Recipe TNTBasic2() {
+        ShapedRecipe nsr = new ShapedRecipe(TNTBasic, new String[]{"W", "S", "W"}, new CharObjectHashMap<Item>() {{
+            put("W".charAt(0), GP1);
+            put("S".charAt(0), Item.get(BlockID.SAND));
+        }}, new ArrayList<Item>() {{
+            add(TNTBasic);
+        }});
+        return nsr;
+    }
+
+    public Recipe TNTSilent() {
+        ShapedRecipe nsr = new ShapedRecipe(TNTSilent, new String[]{"WWW", "WTW", "WWW"}, new CharObjectHashMap<Item>() {{
+            put("W".charAt(0), Item.get(BlockID.COBWEB));
+            put("T".charAt(0), TNTBasic);
+        }}, new ArrayList<Item>() {{
+            add(TNTSilent);
+        }});
+        return nsr;
+    }
+
+
+    public Recipe TNTUpgraded() {
+        return new ShapedRecipe(TNTUpgraded, new String[]{"GSG", "GTG", "GSG"}, new CharObjectHashMap<Item>() {{
+            put("G".charAt(0), GP3);
+            put("T".charAt(0), TNTBasic);
+            put("S".charAt(0), TNTSilent);
+        }}, new ArrayList<Item>() {{
+            add(TNTUpgraded);
+        }});
+    }
+
+    public Recipe TNTSuper() {
+        return new ShapedRecipe(TNTSuper, new String[]{"BBB", "UUU", "BBB"}, new CharObjectHashMap<Item>() {{
+            put("B".charAt(0), TNTBasic);
+            put("U".charAt(0), TNTUpgraded);
+        }}, new ArrayList<Item>() {{
+            add(TNTSuper);
+        }});
+    }
+
+    public Recipe TNTExperimental() {
+        return new ShapedRecipe(TNTExperimental, new String[]{"BBB", "USU", "BBB"}, new CharObjectHashMap<Item>() {{
+            put("B".charAt(0), GP5);
+            put("U".charAt(0), TNTUpgraded);
+            put("S".charAt(0), TNTSuper);
+        }}, new ArrayList<Item>() {{
+            add(TNTExperimental);
+        }});
+    }
+}
