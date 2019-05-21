@@ -11,11 +11,11 @@ import java.util.Collections;
 public class GunpowderRecipe extends CustomRecipe {
     //Array Fill
     //https://stackoverflow.com/a/5600690/3884636
-    private CustomItemGunpowder GP1 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_1);
-    private CustomItemGunpowder GP2 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2);
-    private CustomItemGunpowder GP3 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_3);
-    private CustomItemGunpowder GP4 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_4);
-    private CustomItemGunpowder GP5 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_5);
+    public static CustomItemGunpowder GP1 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_1);
+    public static CustomItemGunpowder GP2 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2);
+    public static CustomItemGunpowder GP3 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_3);
+    public static CustomItemGunpowder GP4 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_4);
+    public static CustomItemGunpowder GP5 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_5);
 
     public GunpowderRecipe() {
         Recipies.add(GunPowderLvl1ToLvl2());
@@ -42,17 +42,14 @@ public class GunpowderRecipe extends CustomRecipe {
     }
 
     public Recipe GunPowderLvl2ToLvl3() {
-        ArrayList<Item> al = new ArrayList<Item>();
         return new ShapelessRecipe(GP3, Collections.nCopies(3, GP2));
     }
 
     public Recipe GunPowderLvl2ToLvl4() {
-        ArrayList<Item> al = new ArrayList<Item>();
         return new ShapelessRecipe(GP4, Collections.nCopies(6, GP2));
     }
 
     public Recipe GunPowderLvl2ToLvl5() {
-        ArrayList<Item> al = new ArrayList<Item>();
         return new ShapelessRecipe(GP5, Collections.nCopies(9, GP2));
     }
 

@@ -301,6 +301,123 @@ public class CustomCraftingManager {
         return (BrewingRecipe)this.brewingRecipes.get(getItemHash(input.getId(), potion.getDamage()));
     }
 
+    public boolean matchItems(ShapedRecipe sr, Item[][] input, Item[][] output) {
+        System.out.println("5.0"+sr==null);
+        if (!this.matchInputMap(sr,(Item[][])Utils.clone2dArray(input))) {
+            System.out.println("5.0.5E");
+            Item[][] reverse = (Item[][])Utils.clone2dArray(input);
+
+            for(int y = 0; y < reverse.length; ++y) {
+                reverse[y] = (Item[])Utils.reverseArray(reverse[y], false);
+            }
+
+            if (!this.matchInputMap(sr,reverse)) {
+                System.out.println("5.1 DEEAD");
+                return false;
+            }
+        }
+
+        System.out.println("5.2");
+        List<Item> haveItems = new ArrayList();
+        Item[][] var10 = output;
+        int var5 = output.length;
+
+        for(int var6 = 0; var6 < var5; ++var6) {
+            Item[] items = var10[var6];
+            haveItems.addAll(Arrays.asList(items));
+        }
+
+        List<Item> needItems = sr.getExtraResults();
+        Iterator var12 = (new ArrayList(haveItems)).iterator();
+        Iterator var13 = (new ArrayList(needItems)).iterator();
+        Iterator var14 = (new ArrayList(needItems)).iterator();
+
+        int k = 0;
+
+        while(true) {
+            while(var12.hasNext()) {
+                System.out.println("5.3");
+                Item haveItem = (Item)var12.next();
+                if (haveItem.isNull()) {
+                    System.out.println("5.4.1");
+                    haveItems.remove(haveItem);
+                    k++;
+                } else {
+
+                    System.out.println("5.4.2");
+                    while(var14.hasNext()) {
+
+                        System.out.println("5.4.2.1");
+                        Item needItem = (Item)var14.next();
+                        if (needItem.equals(haveItem, needItem.hasMeta(), needItem.hasCompoundTag()) && needItem.getCount() == haveItem.getCount()) {
+
+                            System.out.println("5.4.2.2");
+                            haveItems.remove(haveItem);
+                            needItems.remove(needItem);
+                            break;
+                        }
+                    }
+                }
+
+                if(k == 9)needItems.clear();
+
+
+            }
+
+            System.out.println("5.5"+haveItems.isEmpty()+"|"+needItems.isEmpty());
+            return haveItems.isEmpty() && needItems.isEmpty();
+        }
+    }
+
+    private boolean matchInputMap(ShapedRecipe sr,Item[][] input) {
+        System.out.println("Z1"+sr);
+        System.out.println("Z1"+sr.getIngredientMap());
+        Map<Integer, Map<Integer, Item>> map = sr.getIngredientMap();
+        System.out.println("Z2");
+        int y = 0;
+
+        int y2;
+        int x;
+        for(y2 = sr.getHeight(); y < y2; ++y) {
+            x = 0;System.out.println("Z3");
+
+            for(int x2 = sr.getWidth(); x < x2; ++x) {
+                System.out.println("Z4");
+                Item given = input[y][x];
+                Item required = (Item)((Map)map.get(y)).get(x);
+                if (given == null || !required.equals(given, required.hasMeta(), required.hasCompoundTag()) || required.getCount() != given.getCount()) {
+                    System.out.println("5.7"+required+"||||||||||"+given);
+                    return false;
+                }
+
+                System.out.println("Zz");
+                input[y][x] = null;
+            }
+        }
+
+        System.out.println("Zzz");
+        Item[][] var11 = input;
+        y2 = input.length;
+
+        for(x = 0; x < y2; ++x) {
+            Item[] items = var11[x];
+            Item[] var13 = items;
+            int var14 = items.length;
+
+            for(int var9 = 0; var9 < var14; ++var9) {
+                Item item = var13[var9];
+                if (item != null && !item.isNull()) {
+
+                    System.out.println("5.8");
+                    return false;
+                }
+            }
+        }
+
+        System.out.println("5.9 ITEMS GIVEN ARE CORRECT INGREDIENTS");
+        return true;
+    }
+
     public CraftingRecipe matchRecipe(Item[][] inputMap, Item primaryOutput, Item[][] extraOutputMap) {
         int outputHash = getItemHash(primaryOutput);
         ArrayList list;
@@ -311,7 +428,10 @@ public class CustomCraftingManager {
         UUID inputHash;
         Map recipes;
         Iterator var14;
+        System.out.println("CALL 3"+primaryOutput+" | "+primaryOutput.getCustomName()+"|"+primaryOutput.getName()+"|"+primaryOutput.getId());
+        System.out.println("CALL 3.0.1 >> "+inputMap+" | "+extraOutputMap.toString());
         if (this.shapedRecipes.containsKey(outputHash)) {
+            System.out.println("CALL 3.1");
             list = new ArrayList();
             var6 = inputMap;
             var7 = inputMap.length;
@@ -325,7 +445,18 @@ public class CustomCraftingManager {
             recipes = (Map)this.shapedRecipes.get(outputHash);
             if (recipes != null) {
                 ShapedRecipe recipe = (ShapedRecipe)recipes.get(inputHash);
-                if (recipe != null && recipe.matchItems(this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap))) {
+                System.out.println("CALL 3.2"+recipe);
+                int k = -1;
+                Item[][] ii =this.cloneItemMap(inputMap);
+                Item[][] iii =this.cloneItemMap(extraOutputMap);
+                for(Item[] aa : ii){
+                    k++;
+                    for(int aaa = 0; aaa < aa.length; aaa++){
+                        System.out.println(ii[k][aaa] +"||+"+iii[k][aaa] );
+                    }
+                }
+                if (recipe != null && (recipe.matchItems(this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap)) || recipe.matchItems(this.cloneItemMap(inputMap), new Item[0][])|| matchItems(recipe,this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap)))){
+                    System.out.println("CALL 3.3");
                     return recipe;
                 }
 
@@ -333,14 +464,19 @@ public class CustomCraftingManager {
 
                 while(var14.hasNext()) {
                     ShapedRecipe shapedRecipe = (ShapedRecipe)var14.next();
-                    if (shapedRecipe.matchItems(this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap))) {
+                    System.out.println("CALL 3.4"+shapedRecipe.getResult().getName()+"||"+shapedRecipe.getIngredientList().toString());
+                    if (shapedRecipe.matchItems(this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap))|| shapedRecipe.matchItems(this.cloneItemMap(inputMap), new Item[0][]) || matchItems(shapedRecipe,this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap))) {
+                        System.out.println("CALL 3.5");
                         return shapedRecipe;
                     }
                 }
             }
         }
 
+        System.out.println("CALL 3.6---");
+
         if (this.shapelessRecipes.containsKey(outputHash)) {
+            System.out.println("CALL 4.1");
             list = new ArrayList();
             var6 = inputMap;
             var7 = inputMap.length;
@@ -357,23 +493,47 @@ public class CustomCraftingManager {
                 return null;
             }
 
+
+            int k = -1;
+            Item[][] ii =this.cloneItemMap(inputMap);
+            Item[][] iii =this.cloneItemMap(extraOutputMap);
+            for(Item[] aa : ii){
+                k++;
+                for(int aaa = 0; aaa < aa.length; aaa++){
+                    System.out.println("!!!!"+ii[k][aaa] +"||+"+iii[k][aaa] );
+                }
+            }
+
             ShapelessRecipe recipe = (ShapelessRecipe)recipes.get(inputHash);
-            if (recipe != null && recipe.matchItems(this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap))) {
+            System.out.println("CALL 4.2"+recipe);
+            if(recipe != null)System.out.println("CALL 4.2.1 ER > "+recipe.getExtraResults());
+            if (recipe != null && recipe.matchItems(this.cloneItemMap(inputMap), new Item[0][])) {
                 return recipe;
             }
 
+            System.out.println("CALL 4.3");
             var14 = recipes.values().iterator();
 
             while(var14.hasNext()) {
                 ShapelessRecipe shapelessRecipe = (ShapelessRecipe)var14.next();
-                if (shapelessRecipe.matchItems(this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap))) {
+                System.out.println("CALL 4.4"+shapelessRecipe.getResult().getName()+"||"+shapelessRecipe.getResult()+"||"+shapelessRecipe.getIngredientList());
+                if (shapelessRecipe.matchItems(this.cloneItemMap(inputMap), new Item[0][])) {
                     return shapelessRecipe;
                 }
             }
         }
 
+
+//        for(Recipe r: this.recipes){
+//            if(r instanceof ShapelessRecipe){
+//                ShapelessRecipe slr = (ShapelessRecipe)r;
+//                slr.matchItems()
+//            }
+//        }
+
         return null;
     }
+
 
     public static class Entry {
         final int resultItemId;

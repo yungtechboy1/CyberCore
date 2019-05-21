@@ -16,6 +16,7 @@ public class CustomCraftingTransferMaterialAction  extends InventoryAction {
 
     public void onAddToTransaction(InventoryTransaction transaction) {
         if (transaction instanceof CraftingTransaction) {
+            System.out.println("SNOOOOOOOOOOOOOOOOOOOOOOO");
             if (this.sourceItem.isNull()) {
                 ((CraftingTransaction)transaction).setInput(this.slot, this.targetItem);
             } else {
@@ -28,12 +29,13 @@ public class CustomCraftingTransferMaterialAction  extends InventoryAction {
 
         } else if(transaction instanceof CustomCraftingTransaction){
             if (this.sourceItem.isNull()) {
+                System.out.println("SOURNULLLL ?>>> "+slot+" ||| "+targetItem);
                 ((CustomCraftingTransaction)transaction).setInput(this.slot, this.targetItem);
             } else {
                 if (!this.targetItem.isNull()) {
                     throw new RuntimeException("Invalid " + this.getClass().getName() + ", either source or target item must be air, got source: " + this.sourceItem + ", target: " + this.targetItem);
                 }
-
+                System.out.println("SETEXTRAOUTP ?>>> "+slot+" ||| "+sourceItem);
                 ((CustomCraftingTransaction)transaction).setExtraOutput(this.slot, this.sourceItem);
             }
         } else {

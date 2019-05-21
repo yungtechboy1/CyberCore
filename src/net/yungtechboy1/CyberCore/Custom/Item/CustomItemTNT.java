@@ -20,13 +20,21 @@ public class CustomItemTNT extends ItemBlock {
         this(CustomBlockTNT.TNTType.Basic);
     }
     public CustomItemTNT(CustomBlockTNT.TNTType lvl ) {
-        super(new CustomBlockTNT(lvl));
-        setTNTType(lvl);
+        this(lvl.ordinal(),1);
     }
 
+    public CustomItemTNT( Integer meta) {
+        this(meta,1);
+    }
     public CustomItemTNT( Integer meta, int count) {
-        super( new CustomBlockTNT(CustomBlockTNT.TNTType.getfromint(meta)), count);
+        super( new CustomBlockTNT(CustomBlockTNT.TNTType.getfromint(meta)), meta,count);
         setTNTType(CustomBlockTNT.TNTType.getfromint(meta));
+        setCustomName((block).getName());
+    }
+
+    @Override
+    public String getCustomName() {
+        return block.getName();
     }
 
     public CustomBlockTNT.TNTType getTNTType() {
