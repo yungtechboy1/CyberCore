@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 
+import cn.nukkit.block.BlockID;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.inventory.CraftingManager;
@@ -33,6 +34,7 @@ public class FactionAdminPage1 extends CyberFormSimple {
         addButton(new ElementButton("Print Item NBT to Hex"));
         addButton(new ElementButton("Resend Crafting Packet"));
         addButton(new ElementButton("Resend Creative Packet"));
+        addButton(new ElementButton("SEND STARTER TNT ITEMS"));
     }
 
 
@@ -62,6 +64,13 @@ public class FactionAdminPage1 extends CyberFormSimple {
                 break;
             case 4:
                 cp.getInventory().sendCreativeContents();
+                break;
+            case 5:
+                cp.getInventory().clearAll();
+                cp.getInventory().addItem(Item.get(BlockID.SAND,0,300));
+                cp.getInventory().addItem(Item.get(Item.GUNPOWDER,0,500));
+                cp.getInventory().addItem(Item.get(Item.COBWEB,0,300));
+                cp.getInventory().sendContents(cp);
                 break;
         }
     }

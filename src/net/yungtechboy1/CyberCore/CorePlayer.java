@@ -15,6 +15,7 @@ import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.inventory.transaction.InventoryTransaction;
 import cn.nukkit.inventory.transaction.action.InventoryAction;
+import cn.nukkit.inventory.transaction.action.SlotChangeAction;
 import cn.nukkit.inventory.transaction.data.ReleaseItemData;
 import cn.nukkit.inventory.transaction.data.UseItemData;
 import cn.nukkit.inventory.transaction.data.UseItemOnEntityData;
@@ -44,6 +45,7 @@ import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Spring;
+import net.yungtechboy1.CyberCore.Custom.CustomInventoryTransactionPacket;
 import net.yungtechboy1.CyberCore.Custom.CustomNetworkInventoryAction;
 import net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse;
 import net.yungtechboy1.CyberCore.Data.HomeData;
@@ -55,6 +57,8 @@ import net.yungtechboy1.CyberCore.Rank.Rank;
 import net.yungtechboy1.CyberCore.Rank.RankList;
 
 import java.util.*;
+
+import static cn.nukkit.network.protocol.ProtocolInfo.INVENTORY_TRANSACTION_PACKET;
 
 public class CorePlayer extends Player {
 
@@ -446,6 +450,7 @@ public class CorePlayer extends Player {
         return id;
     }
 
+
     @Override
     public void handleDataPacket(DataPacket packet) {
         if (!connected) {
@@ -487,18 +492,39 @@ public class CorePlayer extends Player {
 
 //                    return;
                     break;
-                case ProtocolInfo.INVENTORY_TRANSACTION_PACKET:
+                case INVENTORY_TRANSACTION_PACKET:
                     if (this.isSpectator()) {
                         this.sendAllInventories();
                         break;
                     }
                     try {
-                        InventoryTransactionPacket transactionPacket = (InventoryTransactionPacket) packet;
+//                        InventoryTransactionPacket transactionPacket = (InventoryTransactionPacket) packet;
+                        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!1");
+                        CustomInventoryTransactionPacket transactionPacket2 = (CustomInventoryTransactionPacket) packet;
 
+                        if(transactionPacket2 == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+                        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!2");
                         List<InventoryAction> actions = new ArrayList<>();
-                        for (NetworkInventoryAction na : transactionPacket.actions) {
+                        for (NetworkInventoryAction na : transactionPacket2.actions) {
+                            System.out.println("zACTIONz z-1+++");
                             CustomNetworkInventoryAction networkInventoryAction = new CustomNetworkInventoryAction(na);
                             InventoryAction a = networkInventoryAction.createInventoryAction(this);
+                            InventoryAction aa = na.createInventoryAction(this);
+
+                            System.out.println("zACTIONz xxxx>"+new CustomNetworkInventoryAction(na));
+                            System.out.println("zACTIONz xxxx>"+na);
+                            System.out.println("zACTIONz z");
+                            System.out.println("zACTIONz z > "+a);
+                            System.out.println("zACTIONz z > "+a.getClass().getName());
+                            if(a instanceof SlotChangeAction && aa instanceof SlotChangeAction){
+                                SlotChangeAction sca = (SlotChangeAction)a;
+                                SlotChangeAction scaa = (SlotChangeAction)aa;
+                                System.out.println("GGGGGGGGGGGGG"+scaa.getSlot());
+                                System.out.println("GGGGGGGGGGGGG"+sca.getSlot());
+                            }
+//                            System.out.println("zACTIONz 5.1.1 > "+a.getTargetItem());
+//                            System.out.println("zACTIONz 5.1.2 > "+a.getSourceItem());
 
                             if (a == null) {
                                 this.getServer().getLogger().debug("Unmatched inventory action from " + this.getName() + ": " + networkInventoryAction);
@@ -506,14 +532,19 @@ public class CorePlayer extends Player {
                                 break packetswitch;
                             }
 
+                            System.out.println("ADDDACCCCCCCC!!!!!!!!");
                             actions.add(a);
                         }
 
-                        if (transactionPacket.isCraftingPart) {
+                        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!3");
+                        if (transactionPacket2.isCraftingPart) {
+                            System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!4");
                             if (this.cct == null) {
+                                System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!5");
                                 this.cct = new CustomCraftingTransaction(this, actions);
                             } else {
                                 for (InventoryAction action : actions) {
+                                    System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!6");
                                     this.cct.addAction(action);
                                 }
                             }
@@ -521,6 +552,7 @@ public class CorePlayer extends Player {
                             if (this.cct.getPrimaryOutput() != null) {
                                 //we get the actions for this in several packets, so we can't execute it until we get the result
 
+                                System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!7");
                                 if(!this.cct.execute()){
                                     server.getLogger().error("ERROR NO EXECITE!");
                                 }
@@ -534,12 +566,18 @@ public class CorePlayer extends Player {
                         }
 
 
-                        switch (transactionPacket.transactionType) {
+                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAA");
+                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAA2"+transactionPacket2.transactionType);
+                        switch (transactionPacket2.transactionType) {
                             case InventoryTransactionPacket.TYPE_NORMAL:
-                                InventoryTransaction transaction = new InventoryTransaction(this, actions);
+                                System.out.println("ZZZZZZZZZZZZZZZZZZ");
+                                CustomInventoryTransaction transaction = new CustomInventoryTransaction(this, actions);
 
+                                System.out.println("ZZZZZZZZZZZZZZZZZZ1"+transaction);
+                                System.out.println("ZZZZZZZZZZZZZZZZZZ2"+transaction.getInventories());
+                                System.out.println("ZZZZZZZZZZZZZZZZZZ3"+transaction.canExecute());
                                 if (!transaction.execute()) {
-                                    this.server.getLogger().debug("Failed to execute inventory transaction from " + this.getName() + " with actions: " + Arrays.toString(transactionPacket.actions));
+                                    this.server.getLogger().debug("Failed to execute inventory transaction from " + this.getName() + " with actions: " + Arrays.toString(transactionPacket2.actions));
                                     break packetswitch; //oops!
                                 }
 
@@ -547,14 +585,14 @@ public class CorePlayer extends Player {
 
                                 break packetswitch;
                             case InventoryTransactionPacket.TYPE_MISMATCH:
-                                if (transactionPacket.actions.length > 0) {
-                                    this.server.getLogger().debug("Expected 0 actions for mismatch, got " + transactionPacket.actions.length + ", " + Arrays.toString(transactionPacket.actions));
+                                if (transactionPacket2.actions.length > 0) {
+                                    this.server.getLogger().debug("Expected 0 actions for mismatch, got " + transactionPacket2.actions.length + ", " + Arrays.toString(transactionPacket2.actions));
                                 }
                                 this.sendAllInventories();
 
                                 break packetswitch;
                             case InventoryTransactionPacket.TYPE_USE_ITEM:
-                                UseItemData useItemData = (UseItemData) transactionPacket.transactionData;
+                                UseItemData useItemData = (UseItemData) transactionPacket2.transactionData;
 
                                 BlockVector3 blockVector = useItemData.blockPos;
                                 BlockFace face = useItemData.face;
@@ -682,7 +720,7 @@ public class CorePlayer extends Player {
                                 }
                                 break;
                             case InventoryTransactionPacket.TYPE_USE_ITEM_ON_ENTITY:
-                                UseItemOnEntityData useItemOnEntityData = (UseItemOnEntityData) transactionPacket.transactionData;
+                                UseItemOnEntityData useItemOnEntityData = (UseItemOnEntityData) transactionPacket2.transactionData;
 
                                 Entity target = this.level.getEntity(useItemOnEntityData.entityRuntimeId);
                                 if (target == null) {
@@ -778,7 +816,7 @@ public class CorePlayer extends Player {
                                     this.sendAllInventories();
                                     break packetswitch;
                                 }
-                                ReleaseItemData releaseItemData = (ReleaseItemData) transactionPacket.transactionData;
+                                ReleaseItemData releaseItemData = (ReleaseItemData) transactionPacket2.transactionData;
 
                                 try {
                                     type = releaseItemData.actionType;
@@ -1034,6 +1072,7 @@ public class CorePlayer extends Player {
                     }
             }
         }
+        if(packet.pid() == INVENTORY_TRANSACTION_PACKET)return;
         super.handleDataPacket(packet);
     }
 
@@ -1091,7 +1130,7 @@ public class CorePlayer extends Player {
 //            CyberCoreMain.getInstance().getLogger().info("RUNNNING "+CDL.size());
                 CoolDown fc = GetCooldown(Cooldown_Faction, true);
                 if (fc == null) {
-                    CyberCoreMain.getInstance().getLogger().info("RUNNNING FACTION CHECK IN CP" + CDL.size());
+//                    CyberCoreMain.getInstance().getLogger().info("RUNNNING FACTION CHECK IN CP" + CDL.size());
                     AddCoolDown(Cooldown_Faction, 60);//3 mins
                     if (Faction == null) {
                         Faction f = CyberCoreMain.getInstance().FM.FFactory.IsPlayerInFaction(this);
@@ -1117,7 +1156,7 @@ public class CorePlayer extends Player {
                 //TODO FIX HERE
                 CoolDown cc = GetCooldown(Cooldown_Class, true);
                 if (cc == null) {
-                    CyberCoreMain.getInstance().getLogger().info("RUNNNING CLASS CHECK IN CP" + CDL.size());
+//                    CyberCoreMain.getInstance().getLogger().info("RUNNNING CLASS CHECK IN CP" + CDL.size());
                     AddCoolDown(Cooldown_Class, 5);
                     BaseClass bc = GetPlayerClass();
                     if (bc != null) bc.onUpdate(currentTick);

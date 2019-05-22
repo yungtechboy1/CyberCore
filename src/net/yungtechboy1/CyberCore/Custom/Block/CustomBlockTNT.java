@@ -18,8 +18,10 @@ import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.utils.BlockColor;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Custom.Item.CustomItemTNT;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Created by carlt on 5/16/2019.
@@ -31,6 +33,7 @@ public class CustomBlockTNT extends BlockSolidMeta {
         super(meta.ordinal());
         TType = meta;
     }
+
     public CustomBlockTNT(int meta) {
         super(meta);
         setTNTType();
@@ -40,13 +43,30 @@ public class CustomBlockTNT extends BlockSolidMeta {
         this(0);
     }
 
+    @Override
+    public Item[] getDrops(Item item) {
+        return new ArrayList<Item>() {
+            {
+                add(toItem());
+            }
+        }.toArray(new Item[1]);
+    }
+
+    @Override
+    public Item toItem() {
+        Item i = super.toItem();
+        i.setCustomName(getName());
+        return i;
+    }
+
     private void setTNTType() {
         TType = TNTType.getfromint(getDamage());
     }
 
     @Override
     public String getName() {
-        return TextFormat.AQUA + TType.getName() + TextFormat.RED + " TNT";
+//        return TextFormat.AQUA + TType.getName() + TextFormat.RED + " TNT";
+        return TType.getName() + " TNT";
     }
 
     @Override
@@ -178,9 +198,11 @@ public class CustomBlockTNT extends BlockSolidMeta {
 
     public enum TNTType {
         Basic,
+//        Experimental,
         Silent,
         Upgraded,
         Super,
+//        UNUSED;
         Experimental;
 
         public static TNTType getfromint(int i) {
@@ -208,6 +230,7 @@ public class CustomBlockTNT extends BlockSolidMeta {
                     return "Unknown Type";
             }
         }
+
 
     }
 

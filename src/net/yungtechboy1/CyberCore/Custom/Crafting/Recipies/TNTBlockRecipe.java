@@ -28,7 +28,7 @@ public class TNTBlockRecipe extends CustomRecipe {
     public TNTBlockRecipe() {
         Recipies.add(TNTBasic());
         Recipies.add(TNTSilent());
-        Recipies.add(TNTBasic2());
+//        Recipies.add(TNTBasic2());
         Recipies.add(TNTUpgraded());
         Recipies.add(TNTSuper());
         Recipies.add(TNTExperimental());
@@ -46,15 +46,15 @@ public class TNTBlockRecipe extends CustomRecipe {
         }});
         return nsr;
     }
-    public Recipe TNTBasic2() {
-        ShapedRecipe nsr = new ShapedRecipe(TNTBasic, new String[]{"W", "S", "W"}, new CharObjectHashMap<Item>() {{
-            put("W".charAt(0), GP1);
-            put("S".charAt(0), Item.get(BlockID.SAND));
-        }}, new ArrayList<Item>() {{
-            add(TNTBasic);
-        }});
-        return nsr;
-    }
+//    public Recipe TNTBasic2() {
+//        ShapedRecipe nsr = new ShapedRecipe(TNTBasic, new String[]{"W", "S", "W"}, new CharObjectHashMap<Item>() {{
+//            put("W".charAt(0), GP1);
+//            put("S".charAt(0), Item.get(BlockID.SAND));
+//        }}, new ArrayList<Item>() {{
+//            add(TNTBasic);
+//        }});
+//        return nsr;
+//    }
 
     public Recipe TNTSilent() {
         ShapedRecipe nsr = new ShapedRecipe(TNTSilent, new String[]{"WWW", "WTW", "WWW"}, new CharObjectHashMap<Item>() {{

@@ -22,18 +22,21 @@ public class CustomItemGunpowder extends Item {
     }
 
     public CustomItemGunpowder(GunpowderType meta, int count) {
-        super(289, meta.ordinal(), count, "Gunpowder");
+        super(289, meta.ordinal(), count, meta.getName() +"Gunpowder");
         setCustomName();
 //        name = TextFormat.RED + GunpowderType.getfromint(getDamage()).getName() + TextFormat.YELLOW + " Gunpowder";
 
     }
 
+
     private void setCustomName() {
         GunpowderType gpt = GunpowderType.getfromint(getDamage());
         if (!gpt.isCompacted())
-            setCustomName(TextFormat.RED + GunpowderType.getfromint(getDamage()).getName() + TextFormat.YELLOW + " Gunpowder");
+            setCustomName(GunpowderType.getfromint(getDamage()).getName() + " Gunpowder");
+//            setCustomName(TextFormat.RED + GunpowderType.getfromint(getDamage()).getName() + TextFormat.YELLOW + " Gunpowder");
         else
-            setCustomName(TextFormat.RED + GunpowderType.getfromint(getDamage()).getName() + TextFormat.YELLOW + " Compacted Gunpowder");
+            setCustomName( GunpowderType.getfromint(getDamage()).getName() + " Compacted Gunpowder");
+//            setCustomName(TextFormat.RED + GunpowderType.getfromint(getDamage()).getName() + TextFormat.YELLOW + " Compacted Gunpowder");
     }
 
     public boolean isCompacted() {

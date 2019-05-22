@@ -302,7 +302,7 @@ public class CustomCraftingManager {
     }
 
     public boolean matchItems(ShapedRecipe sr, Item[][] input, Item[][] output) {
-        System.out.println("5.0"+sr==null);
+        System.out.println("CHECK MATCH 5.0"+sr==null);
         if (!this.matchInputMap(sr,(Item[][])Utils.clone2dArray(input))) {
             System.out.println("5.0.5E");
             Item[][] reverse = (Item[][])Utils.clone2dArray(input);
@@ -344,7 +344,7 @@ public class CustomCraftingManager {
                     k++;
                 } else {
 
-                    System.out.println("5.4.2");
+//                    System.out.println("5.4.2");
                     while(var14.hasNext()) {
 
                         System.out.println("5.4.2.1");
@@ -456,7 +456,7 @@ public class CustomCraftingManager {
                     }
                 }
                 if (recipe != null && (recipe.matchItems(this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap)) || recipe.matchItems(this.cloneItemMap(inputMap), new Item[0][])|| matchItems(recipe,this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap)))){
-                    System.out.println("CALL 3.3");
+                    System.out.println("CALL 3.3-------");
                     return recipe;
                 }
 
