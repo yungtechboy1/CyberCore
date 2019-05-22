@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Custom;
 
+import cn.nukkit.block.BlockID;
 import cn.nukkit.inventory.transaction.data.ReleaseItemData;
 import cn.nukkit.inventory.transaction.data.TransactionData;
 import cn.nukkit.inventory.transaction.data.UseItemData;
@@ -11,6 +12,7 @@ import cn.nukkit.network.protocol.DataPacket;
 import cn.nukkit.network.protocol.InventoryTransactionPacket;
 import cn.nukkit.network.protocol.types.NetworkInventoryAction;
 import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
+import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
 
 import java.io.IOException;
 import java.nio.ByteOrder;
@@ -204,7 +206,10 @@ public class CustomInventoryTransactionPacket extends InventoryTransactionPacket
                     this.getString();
                 }
             }
-
+            if (id == BlockID.TNT && Item.get(id, data, cnt, nbt).getCustomName().equalsIgnoreCase("Experimental TNT ")) {
+                data = CustomBlockTNT.TNTType.Experimental.ordinal();
+                System.out.println("PRINTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+            }
             return Item.get(id, data, cnt, nbt);
         }
     }
