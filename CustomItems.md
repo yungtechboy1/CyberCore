@@ -1,3 +1,82 @@
+Wool
+---
+   - :0
+     - Wool(Regular)
+   - :1
+     - Silk Wool
+        - Crafting:
+            - WWW
+            - SSS
+            - WWW
+            - W = Wool:0
+            - S = Enchanted String:1
+   - :2
+      - Premium Silk Wool
+         - Crafting;
+            - WWW
+            - WWW
+            - WWW
+            - W = Silk Wool:1
+   - :3
+     - Iron Silk
+        - Crafting
+            - III
+            - SPS
+            - III
+            - I = Iron ingot:0
+            - S = Enchanted String:1
+            - P = Premium Silk Wool:2
+String
+---
+   - :0 
+     - String(Regular)
+   - :1
+     - Enchanted String
+     - Crafting
+        - Shape
+            - SSS
+            - STS
+            - SSS
+        - S = Soul Snow 
+        - T = String:0
+
+Apple
+---
+- :0 Apple (Regular)
+    - 3 Hunger
+    - 1.7 Saturation
+- :1 Baked Apple
+    - 4 Hunger
+    - 2 Saturation
+    - Crafting
+        - Furnace
+            - 7.5 Secs to Cook
+- :2 Apple Pie
+    - 7 Hunger
+    - 7 Saturation
+    - Crafting
+        - C4S8C4
+        - AAA
+        - III
+        - C = Bread Crust:1
+        - S = Sugar:0
+        - A = Apple:1
+        - I = Iron Ingot
+        
+
+Bread
+---
+- :0 Bread (Regular)
+    - 3 Hunger
+    - 4 Saturation
+- :1 Bread Crust
+    - 4 Hunger
+    - 2 Saturation
+    - Crafting
+        - Furnace
+            - 10 Secs to Cook
+
+
 351:0 - Pig Gut
 ---
 Extremely strong and resistant to damage

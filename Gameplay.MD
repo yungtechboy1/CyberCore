@@ -1,4 +1,34 @@
 Features:
+ - SoulPower | SP
+    ---
+    
+    Drop Item:
+    - Snow ball
+    
+    `Soul Power`
+    `SP`
+    
+    #####Killing entites will give players `Soul Power`
+    
+    ####`Soul power` can be used to :
+    - get better enchants
+    - Trade with Villagers
+    - Repair Items
+    
+    ####Each Death will Remove up to 100 `sp`
+    
+    ####XP Reward Rate:
+    - Level 1-5 Mobs:
+        - 1-3 XP;
+    - Level 6 - 10 Mobs:
+       - 2 - 4 XP;
+    - Level 11 - 15 Mobs:
+       - 3 - 5 XP
+    - Level 16 - 20
+       - 4 - 6 XP
+        
+    
+---
 
 - Fix Commanmd
     - General Command that uses `FixCoins`
