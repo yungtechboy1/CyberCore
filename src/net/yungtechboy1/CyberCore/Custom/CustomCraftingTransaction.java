@@ -4,9 +4,9 @@ import cn.nukkit.Player;
 import cn.nukkit.inventory.BigCraftingGrid;
 import cn.nukkit.inventory.CraftingRecipe;
 import cn.nukkit.inventory.transaction.InventoryTransaction;
-import cn.nukkit.inventory.transaction.action.CraftingTakeResultAction;
 import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemBlock;
 import cn.nukkit.network.protocol.ContainerClosePacket;
 import cn.nukkit.scheduler.Task;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -71,6 +71,7 @@ public class CustomCraftingTransaction extends InventoryTransaction {
 //            if (action instanceof CraftingTakeResultAction || action instanceof CraftingTransferMaterialAction) {
 //                setPrimaryOutput((action).getSourceItem());
 //            } else {
+            System.out.println("ADDING ACTION LIKE 333333");
             this.addAction(action);
 //            }
         }
@@ -81,23 +82,41 @@ public class CustomCraftingTransaction extends InventoryTransaction {
     public void addAction(InventoryAction action) {
         if (!this.actions.contains(action)) {
             this.actions.add(action);
+            System.out.println("Adding Action : " + action);
+            System.out.println("Adding Action : " + action.getClass().getName());
             if (action instanceof CustomCraftingTakeResultAction) {
+                System.out.println("|||||||0 > OUTPUT : " + action.getSourceItem());
+                System.out.println("|||||||0 > OUTPUT META : " + action.getSourceItem().getDamage());
+                System.out.println("|||||||0 > OUTPUT TARGGG : " + action.getTargetItem());
+                if (action.getSourceItem() instanceof ItemBlock) {
+                    ItemBlock sb = (ItemBlock) action.getSourceItem();
+                    if (sb == null) {
+                        System.out.println("|||||||||SB ====== NULL ");
+                    } else {
+                        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!SB >> " + sb.getBlock().getName());
+                        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!SB >> " + sb.getBlock().getDamage());
+                    }
+                }
                 setPrimaryOutput(action.getSourceItem());
             } else if (action instanceof CustomCraftingTransferMaterialAction) {
                 CustomCraftingTransferMaterialAction a = (CustomCraftingTransferMaterialAction) action;
                 if (a.getSourceItem().isNull()) {
+                    System.out.println("|||||||1");
                     setInput(a.slot, a.getTargetItem());
                 } else if (a.getTargetItem().isNull()) {
                     setExtraOutput(a.slot, a.getSourceItem());
+                    System.out.println("|||||||2");
                 } else {
                     throw new RuntimeException("Invalid " + getClass().getName() + ", either source or target item must be air, got source: " + a.getSourceItem() + ", target: " + a.getTargetItem());
                 }
             } else {
+                System.out.println("|||||||3");
                 action.onAddToTransaction(this);
             }
         } else {
             throw new RuntimeException("Tried to add the same action to a transaction twice");
         }
+        System.out.println("------");
     }
 
     public void setInput(int index, Item item) {
@@ -254,7 +273,7 @@ public class CustomCraftingTransaction extends InventoryTransaction {
             if (this.hasExecuted()) System.out.println("CALL 2.1");
             if (!this.canExecute()) System.out.println("CALL 2.2");
             if (this.recipe == null) System.out.println("CALL 2.3");
-            if (super.canExecute()) System.out.println("CALL 2.4");
+            if (!super.canExecute()) System.out.println("CALL 2.4");
             this.sendInventories();
             return false;
         }

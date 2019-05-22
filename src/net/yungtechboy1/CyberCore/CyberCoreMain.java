@@ -19,7 +19,9 @@ import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
 import cn.nukkit.level.Level;
 import cn.nukkit.math.Vector3;
+import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.plugin.PluginBase;
+import cn.nukkit.raknet.protocol.Packet;
 import cn.nukkit.utils.Binary;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
@@ -37,6 +39,7 @@ import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
 import net.yungtechboy1.CyberCore.Custom.Crafting.CustomRecipeCraftingManager;
+import net.yungtechboy1.CyberCore.Custom.CustomInventoryTransactionPacket;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemGunpowder;
@@ -388,6 +391,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     }
 
     public void onLoad() {
+
+        getServer().getNetwork().registerPacket(ProtocolInfo.INVENTORY_TRANSACTION_PACKET,CustomInventoryTransactionPacket.class);
 
         Entity.registerEntity(EntityPig.NETWORK_ID + "", Pig.class);
 

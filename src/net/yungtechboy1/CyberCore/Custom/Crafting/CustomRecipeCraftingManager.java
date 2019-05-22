@@ -1,36 +1,41 @@
 package net.yungtechboy1.CyberCore.Custom.Crafting;
 
-import cn.nukkit.Server;
 import cn.nukkit.inventory.Recipe;
 import cn.nukkit.item.Item;
-import cn.nukkit.utils.Config;
-import cn.nukkit.utils.MainLogger;
-import cn.nukkit.utils.Utils;
+import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Custom.Crafting.Recipies.GunpowderRecipe;
 import net.yungtechboy1.CyberCore.Custom.Crafting.Recipies.TNTBlockRecipe;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class CustomRecipeCraftingManager {
+    static ArrayList<Recipe> addedtoCreative = new ArrayList<>();
+    public ArrayList<Recipe> Recipies = new ArrayList<>();
     CyberCoreMain CCM = null;
-    public CustomRecipeCraftingManager(CyberCoreMain ccm){
+
+    public CustomRecipeCraftingManager(CyberCoreMain ccm) {
         CCM = ccm;
         Recipies.addAll(new TNTBlockRecipe().Recipies);
         Recipies.addAll(new GunpowderRecipe().Recipies);
         RegisterCustomCraftingRecipies();
     }
 
-    public ArrayList<Recipe> Recipies = new ArrayList<>();
-    public void RegisterCustomCraftingRecipies(){
-        for(Recipe r: Recipies){
-            CCM.CraftingManager.registerRecipe(r);
-            int q = Item.getCreativeItemIndex(r.getResult());
-            if(q == -1)Item.addCreativeItem(r.getResult());
+    public void RegisterCustomCraftingRecipies() {
+        for (Recipe r : Recipies) {
+            if (!addedtoCreative.contains(r)) {
+                CCM.CraftingManager.registerRecipe(r);
+                CCM.getLogger().info("Registering Recipe : " + r);
+                CCM.getLogger().info("Registering Result Item : " + r.getResult());
+                CCM.getLogger().info("Registering Result Item : " + r.getResult().getId());
+                CCM.getLogger().info("Registering Result Item : " + r.getResult().getDamage());
+                CCM.getLogger().info("-------------------------------------");
+                if (!addedtoCreative.contains(r.getResult())) {
+                    CCM.getLogger().info(TextFormat.GREEN+"Added To Creative List!");
+                    Item.addCreativeItem(r.getResult());
+                    addedtoCreative.add(r);
+                }
+            }
         }
     }
 }
