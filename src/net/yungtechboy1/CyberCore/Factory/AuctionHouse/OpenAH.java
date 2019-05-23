@@ -27,7 +27,7 @@ public class OpenAH extends Task implements Runnable {
         CyberCoreMain.getInstance().getLogger().info(B.getContents().values().size()+" < SIZZEEE"+B.getSize());
             P.addWindow(B);
             P.AH = B;
-            System.out.println("------------------------------------------------!!!!!!!!!!");
+//            System.out.println("------------------------------------------------!!!!!!!!!!");
             B.sendContents(P);
             B.SendAllSlots(P);
             B.addItem(new ItemDiamond(0,10));

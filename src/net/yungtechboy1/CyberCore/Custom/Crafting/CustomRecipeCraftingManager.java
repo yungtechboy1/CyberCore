@@ -29,12 +29,12 @@ public class CustomRecipeCraftingManager {
                 CCM.getLogger().info("Registering Result Item : " + r.getResult());
                 CCM.getLogger().info("Registering Result Item : " + r.getResult().getId());
                 CCM.getLogger().info("Registering Result Item : " + r.getResult().getDamage());
-                CCM.getLogger().info("-------------------------------------");
                 if (!addedtoCreative.contains(r.getResult())) {
                     CCM.getLogger().info(TextFormat.GREEN+"Added To Creative List!");
                     Item.addCreativeItem(r.getResult());
                     addedtoCreative.add(r);
                 }
+                CCM.getLogger().info("-------------------------------------");
             }
         }
     }

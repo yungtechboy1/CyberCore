@@ -499,29 +499,30 @@ public class CorePlayer extends Player {
                     }
                     try {
 //                        InventoryTransactionPacket transactionPacket = (InventoryTransactionPacket) packet;
-                        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!1");
+//                        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!1");
                         CustomInventoryTransactionPacket transactionPacket2 = (CustomInventoryTransactionPacket) packet;
 
                         if(transactionPacket2 == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
-                        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!2");
+//                        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!2");
                         List<InventoryAction> actions = new ArrayList<>();
-                        for (NetworkInventoryAction na : transactionPacket2.actions) {
-                            System.out.println("zACTIONz z-1+++");
-                            CustomNetworkInventoryAction networkInventoryAction = new CustomNetworkInventoryAction(na);
+                        for (CustomNetworkInventoryAction na : transactionPacket2.actions) {
+//                            System.out.println("zACTIONz z-1+++");
+//                            CustomNetworkInventoryAction networkInventoryAction = new CustomNetworkInventoryAction(na);
+                            CustomNetworkInventoryAction networkInventoryAction = na;
                             InventoryAction a = networkInventoryAction.createInventoryAction(this);
                             InventoryAction aa = na.createInventoryAction(this);
 
-                            System.out.println("zACTIONz xxxx>"+new CustomNetworkInventoryAction(na));
-                            System.out.println("zACTIONz xxxx>"+na);
-                            System.out.println("zACTIONz z");
-                            System.out.println("zACTIONz z > "+a);
-                            System.out.println("zACTIONz z > "+a.getClass().getName());
+//                            System.out.println("zACTIONz xxxx>"+new CustomNetworkInventoryAction(na));
+//                            System.out.println("zACTIONz xxxx>"+na);
+//                            System.out.println("zACTIONz z");
+//                            System.out.println("zACTIONz z > "+a);
+//                            System.out.println("zACTIONz z > "+a.getClass().getName());
                             if(a instanceof SlotChangeAction && aa instanceof SlotChangeAction){
                                 SlotChangeAction sca = (SlotChangeAction)a;
                                 SlotChangeAction scaa = (SlotChangeAction)aa;
-                                System.out.println("GGGGGGGGGGGGG"+scaa.getSlot());
-                                System.out.println("GGGGGGGGGGGGG"+sca.getSlot());
+//                                System.out.println("GGGGGGGGGGGGG"+scaa.getSlot());
+//                                System.out.println("GGGGGGGGGGGGG"+sca.getSlot());
                             }
 //                            System.out.println("zACTIONz 5.1.1 > "+a.getTargetItem());
 //                            System.out.println("zACTIONz 5.1.2 > "+a.getSourceItem());
@@ -532,19 +533,19 @@ public class CorePlayer extends Player {
                                 break packetswitch;
                             }
 
-                            System.out.println("ADDDACCCCCCCC!!!!!!!!");
+                            System.out.println("Adding Network Action to Regualr Action!!!!!!!!");
                             actions.add(a);
                         }
 
-                        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!3");
+//                        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!3");
                         if (transactionPacket2.isCraftingPart) {
-                            System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!4");
+//                            System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!4 IS CRAFTING");
                             if (this.cct == null) {
-                                System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!5");
+//                                System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!5 WILL CREATE NEW CT");
                                 this.cct = new CustomCraftingTransaction(this, actions);
                             } else {
                                 for (InventoryAction action : actions) {
-                                    System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!6");
+//                                    System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!6 ADDING TO EXISTING CTT");
                                     this.cct.addAction(action);
                                 }
                             }
@@ -552,7 +553,7 @@ public class CorePlayer extends Player {
                             if (this.cct.getPrimaryOutput() != null) {
                                 //we get the actions for this in several packets, so we can't execute it until we get the result
 
-                                System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!7");
+//                                System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!7 CALLING EXECUTE");
                                 if(!this.cct.execute()){
                                     server.getLogger().error("ERROR NO EXECITE!");
                                 }
@@ -566,16 +567,16 @@ public class CorePlayer extends Player {
                         }
 
 
-                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAA");
-                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAA2"+transactionPacket2.transactionType);
+//                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAA");
+//                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAA2"+transactionPacket2.transactionType);
                         switch (transactionPacket2.transactionType) {
                             case InventoryTransactionPacket.TYPE_NORMAL:
-                                System.out.println("ZZZZZZZZZZZZZZZZZZ");
+//                                System.out.println("ZZZZZZZZZZZZZZZZZZ");
                                 CustomInventoryTransaction transaction = new CustomInventoryTransaction(this, actions);
 
-                                System.out.println("ZZZZZZZZZZZZZZZZZZ1"+transaction);
-                                System.out.println("ZZZZZZZZZZZZZZZZZZ2"+transaction.getInventories());
-                                System.out.println("ZZZZZZZZZZZZZZZZZZ3"+transaction.canExecute());
+//                                System.out.println("ZZZZZZZZZZZZZZZZZZ1"+transaction);
+//                                System.out.println("ZZZZZZZZZZZZZZZZZZ2"+transaction.getInventories());
+//                                System.out.println("ZZZZZZZZZZZZZZZZZZ3"+transaction.canExecute());
                                 if (!transaction.execute()) {
                                     this.server.getLogger().debug("Failed to execute inventory transaction from " + this.getName() + " with actions: " + Arrays.toString(transactionPacket2.actions));
                                     break packetswitch; //oops!

@@ -52,16 +52,16 @@ public class CustomInventoryTransaction extends InventoryTransaction {
     public void addAction(InventoryAction action) {
         if (!this.actions.contains(action)) {
             this.actions.add(action);
-            System.out.println("Adding Action : " + action);
-            System.out.println("Adding Action : " + action.getClass().getName());
+//            System.out.println("Adding Action : " + action);
+//            System.out.println("Adding Action : " + action.getClass().getName());
             if(action instanceof SlotChangeAction) {
                 SlotChangeAction sca = (SlotChangeAction)action;
-                System.out.println("|||||||3..");
-                System.out.println("|||||||3"+sca.getSlot());
-                System.out.println("|||||||3"+sca.getInventory().getSize());
+//                System.out.println("|||||||3..");
+//                System.out.println("|||||||3"+sca.getSlot());
+//                System.out.println("|||||||3"+sca.getInventory().getSize());
                 addInventory(sca.getInventory());
             }else{
-                System.out.println("ERRRR");
+//                System.out.println("ERRRR");
                 action.onAddToTransaction(this);
             }
         } else {
@@ -74,18 +74,18 @@ public class CustomInventoryTransaction extends InventoryTransaction {
     @Override
     public boolean canExecute() {
         this.squashDuplicateSlotChanges2();
-        System.out.println("!231231231231231 "+(this.actions.size() > 0));
+//        System.out.println("!231231231231231 "+(this.actions.size() > 0));
         return this.actions.size() > 0;
     }
 
     private boolean squashDuplicateSlotChanges2() {
 
         Map<Integer, List<SlotChangeAction>> slotChanges = new HashMap<>();
-        System.out.println("SQUASSSSHH");
+//        System.out.println("SQUASSSSHH");
         for (InventoryAction action : this.actions) {
-            System.out.println("ACTION ");
+//            System.out.println("ACTION ");
             if (action instanceof SlotChangeAction) {
-                System.out.println("ACTION 2");
+//                System.out.println("ACTION 2");
                 int hash = Objects.hash(((SlotChangeAction) action).getInventory(), ((SlotChangeAction) action).getSlot());
 
                 List<SlotChangeAction> list = slotChanges.get(hash);
@@ -101,12 +101,12 @@ public class CustomInventoryTransaction extends InventoryTransaction {
 
         for (Map.Entry<Integer, List<SlotChangeAction>> entry : new ArrayList<>(slotChanges.entrySet())) {
             int hash = entry.getKey();
-            System.out.println("ACTION 3 HASH > "+hash);
+//            System.out.println("ACTION 3 HASH > "+hash);
             List<SlotChangeAction> list = entry.getValue();
 
             if (list.size() == 1) { //No need to compact inventorySlot changes if there is only one on this inventorySlot
                 slotChanges.remove(hash);
-                System.out.println("ACTION 4 DEL");
+//                System.out.println("ACTION 4 DEL");
                 continue;
             }
 
@@ -118,12 +118,12 @@ public class CustomInventoryTransaction extends InventoryTransaction {
             for (int i = 0; i < list.size(); i++) {
                 SlotChangeAction action = list.get(i);
 
-                System.out.println("ACTION 5 > "+i + " || "+action);
-                System.out.println("ACTION 5.1.1 > "+action.getSlot());
+//                System.out.println("ACTION 5 > "+i + " || "+action);
+//                System.out.println("ACTION 5.1.1 > "+action.getSlot());
 //                System.out.println("ACTION 5.1.2 > "+action.getSourceItem());
-                System.out.println("ACTION 5.2 > "+action.getInventory().getItem(action.getSlot()));
+//                System.out.println("ACTION 5.2 > "+action.getInventory().getItem(action.getSlot()));
                 if (action.getSourceItem() != null) {
-                    System.out.println("ACTION 6");
+//                    System.out.println("ACTION 6");
 //                    if(action.isValid(this.source)) {
                         originalAction = action;
                         lastTargetItem = action.getTargetItem();

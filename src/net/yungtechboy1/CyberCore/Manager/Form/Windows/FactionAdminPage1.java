@@ -34,6 +34,7 @@ public class FactionAdminPage1 extends CyberFormSimple {
         addButton(new ElementButton("Print Item NBT to Hex"));
         addButton(new ElementButton("Resend Crafting Packet"));
         addButton(new ElementButton("Resend Creative Packet"));
+        addButton(new ElementButton("Clear & SEND STARTER TNT ITEMS"));
         addButton(new ElementButton("SEND STARTER TNT ITEMS"));
     }
 
@@ -68,7 +69,15 @@ public class FactionAdminPage1 extends CyberFormSimple {
             case 5:
                 cp.getInventory().clearAll();
                 cp.getInventory().addItem(Item.get(BlockID.SAND,0,300));
-                cp.getInventory().addItem(Item.get(Item.GUNPOWDER,0,500));
+                cp.getInventory().addItem(Item.get(Item.GUNPOWDER,0,200));
+                cp.getInventory().addItem(Item.get(Item.GUNPOWDER,2,200));
+                cp.getInventory().addItem(Item.get(Item.COBWEB,0,300));
+                cp.getInventory().sendContents(cp);
+                break;
+            case 6:
+                cp.getInventory().addItem(Item.get(BlockID.SAND,0,300));
+                cp.getInventory().addItem(Item.get(Item.GUNPOWDER,0,200));
+                cp.getInventory().addItem(Item.get(Item.GUNPOWDER,2,200));
                 cp.getInventory().addItem(Item.get(Item.COBWEB,0,300));
                 cp.getInventory().sendContents(cp);
                 break;

@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
-public class CustomInventoryTransactionPacket extends InventoryTransactionPacket {
+public class CustomInventoryTransactionPacket extends DataPacket {
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_MISMATCH = 1;
     public static final int TYPE_USE_ITEM = 2;
@@ -36,7 +36,7 @@ public class CustomInventoryTransactionPacket extends InventoryTransactionPacket
     public static final int ACTION_MAGIC_SLOT_CREATIVE_DELETE_ITEM = 0;
     public static final int ACTION_MAGIC_SLOT_CREATIVE_CREATE_ITEM = 1;
     public int transactionType;
-    public NetworkInventoryAction[] actions;
+    public CustomNetworkInventoryAction[] actions;
     public TransactionData transactionData;
     public boolean isCraftingPart = false;
 
@@ -52,7 +52,8 @@ public class CustomInventoryTransactionPacket extends InventoryTransactionPacket
     public void decode() {
         this.transactionType = (int) this.getUnsignedVarInt();
 
-        this.actions = new NetworkInventoryAction[(int) this.getUnsignedVarInt()];
+        System.out.println("QQQQQQQQQQ Starting to Decode Inv Packet, Type > "+transactionType);
+        this.actions = new CustomNetworkInventoryAction[(int) this.getUnsignedVarInt()];
         for (int i = 0; i < this.actions.length; i++) {
             this.actions[i] = new CustomNetworkInventoryAction().read(this);
         }
@@ -111,7 +112,7 @@ public class CustomInventoryTransactionPacket extends InventoryTransactionPacket
         this.putUnsignedVarInt(this.transactionType);
 
         this.putUnsignedVarInt(this.actions.length);
-        for (NetworkInventoryAction action : this.actions) {
+        for (CustomNetworkInventoryAction action : this.actions) {
             action.write(this);
         }
 
