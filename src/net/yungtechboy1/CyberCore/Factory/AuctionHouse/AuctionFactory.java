@@ -500,99 +500,99 @@ public class AuctionFactory implements Listener {
 //            }
 
     //TODO MAke Pages with new API
-//    @EventHandler(ignoreCancelled = true)
-//    public void TE(InventoryTransactionEvent event) {
-//        System.out.println("CALLLL");
-//        InventoryTransaction transaction = event.getTransaction();
-//        Set<InventoryAction> traa = transaction.getActions();
-//        for (InventoryAction t : traa) {
-//            System.out.println("CALLLL TTTTTTTTTTTTTTTTTTT" + t.getClass().getName());
-//            if (t instanceof SlotChangeAction) {
-//                System.out.println("CALLLL SLOTCCCCCCCC");
-//                SlotChangeAction sca = (SlotChangeAction) t;
-//
-////                sca.getInventory()
-//
-//                Inventory inv = sca.getInventory();
-//                System.out.println("CHECK INNNNNVVVVVVV " + inv.getClass().getName());
-////                if (inv.isEmpty()) return;
-//
-//                System.out.println("NEEEEEEE" + inv.getClass().getTypeName());
-//                if (inv instanceof PlayerInventory) {
-//
-//                }
-//                if (inv instanceof AuctionHouse) {
-//
-//                    AuctionHouse ah = (AuctionHouse) inv;
-////                    if(!ah.Init)return;
-//                    System.out.println(sca.getSlot() + " || " + ah.getHolder().getName() + " || " + ah.getHolder().getClass().getName());
-//                    CorePlayer ccpp = (CorePlayer) ah.getHolder();
-//                    int slot = sca.getSlot();
-////                    event.setCancelled();
+    @EventHandler(ignoreCancelled = true)
+    public void TE(InventoryTransactionEvent event) {
+        System.out.println("CALLLL");
+        InventoryTransaction transaction = event.getTransaction();
+        Set<InventoryAction> traa = transaction.getActions();
+        for (InventoryAction t : traa) {
+            System.out.println("CALLLL TTTTTTTTTTTTTTTTTTT" + t.getClass().getName());
+            if (t instanceof SlotChangeAction) {
+                System.out.println("CALLLL SLOTCCCCCCCC");
+                SlotChangeAction sca = (SlotChangeAction) t;
+
+//                sca.getInventory()
+
+                Inventory inv = sca.getInventory();
+                System.out.println("CHECK INNNNNVVVVVVV " + inv.getClass().getName());
+//                if (inv.isEmpty()) return;
+
+                System.out.println("NEEEEEEE" + inv.getClass().getTypeName());
+                if (inv instanceof PlayerInventory) {
+
+                }
+                if (inv instanceof AuctionHouse) {
+
+                    AuctionHouse ah = (AuctionHouse) inv;
+//                    if(!ah.Init)return;
+                    System.out.println(sca.getSlot() + " || " + ah.getHolder().getName() + " || " + ah.getHolder().getClass().getName());
+                    CorePlayer ccpp = (CorePlayer) ah.getHolder();
+                    int slot = sca.getSlot();
 //                    event.setCancelled();
-//                    if (slot < 5 * 9) {
-//                        System.out.println("TOP INV");
-//                        //TODO CONFIRM AND SHOW ITEM
-//                        if (!ah.ConfirmPurchase) {
-//                            ah.ConfirmItemPurchase(slot);
-//                            System.out.println("SSSSSSSSSSSSCPPPPPPPP");
-////                        ccpp.AH.ConfirmItemPurchase(slot);
-//                        } else {
-//                            Item si = ah.getContents().get(slot);
-//                            if (si != null) {
-//                                if (ah.getCurrentPage() == Confirm_Purchase_Not_Enough_Money) {
-//                                    ah.setPage(1);
-//                                    ah.ClearConfirmPurchase();
-//                                    //Back Home
-//                                    break;
-//                                } else {
-//                                    System.out.println("CPPPPPPPP");
-//
-//                                    if (si.getId() == BlockID.EMERALD_BLOCK) {
-//                                        System.out.println("CONFIRM PURCHASE!!!!!!!");
-//                                        ah.AF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot);
-//                                        break;
-//                                    } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
-//                                        System.out.println("DENCLINE PURCHASE!!!!!!!!");
-//                                        ah.setPage(1);
-//                                        ah.ClearConfirmPurchase();
-//                                        break;
-//                                    } else {
-//                                        ah.setPage(1);
-//                                        System.out.println("UNKNOWNMNNN!!!!!!!!");
-//                                        ah.ClearConfirmPurchase();
-//                                        break;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    } else {
-//                        switch (slot) {
-//                            case AuctionHouse.MainPageItemRef.LastPage:
-//                                ah.GoToPrevPage();
-//                                break;
-//                            case AuctionHouse.MainPageItemRef.NextPage:
-//                                ah.GoToNextPage();
-//                                break;
-//                            case AuctionHouse.MainPageItemRef.Search:
-//                                break;
-//                            case AuctionHouse.MainPageItemRef.Reload:
-//                                ah.ReloadCurrentPage();
-//                                break;
-//                            case AuctionHouse.MainPageItemRef.Catagories:
-//                                ah.DisplayCatagories();
-//                                break;
-//                            case AuctionHouse.MainPageItemRef.PlayerSelling:
-//                                ah.GoToSellerPage();
-//                                event.setCancelled(false);
-//                                break;
-//
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
+                    event.setCancelled();
+                    if (slot < 5 * 9) {
+                        System.out.println("TOP INV");
+                        //TODO CONFIRM AND SHOW ITEM
+                        if (!ah.ConfirmPurchase) {
+                            ah.ConfirmItemPurchase(slot);
+                            System.out.println("SSSSSSSSSSSSCPPPPPPPP");
+//                        ccpp.AH.ConfirmItemPurchase(slot);
+                        } else {
+                            Item si = ah.getContents().get(slot);
+                            if (si != null) {
+                                if (ah.getCurrentPage() == Confirm_Purchase_Not_Enough_Money) {
+                                    ah.setPage(1);
+                                    ah.ClearConfirmPurchase();
+                                    //Back Home
+                                    break;
+                                } else {
+                                    System.out.println("CPPPPPPPP");
+
+                                    if (si.getId() == BlockID.EMERALD_BLOCK) {
+                                        System.out.println("CONFIRM PURCHASE!!!!!!!");
+                                        ah.AF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot);
+                                        break;
+                                    } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
+                                        System.out.println("DENCLINE PURCHASE!!!!!!!!");
+                                        ah.setPage(1);
+                                        ah.ClearConfirmPurchase();
+                                        break;
+                                    } else {
+                                        ah.setPage(1);
+                                        System.out.println("UNKNOWNMNNN!!!!!!!!");
+                                        ah.ClearConfirmPurchase();
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        switch (slot) {
+                            case AuctionHouse.MainPageItemRef.LastPage:
+                                ah.GoToPrevPage();
+                                break;
+                            case AuctionHouse.MainPageItemRef.NextPage:
+                                ah.GoToNextPage();
+                                break;
+                            case AuctionHouse.MainPageItemRef.Search:
+                                break;
+                            case AuctionHouse.MainPageItemRef.Reload:
+                                ah.ReloadCurrentPage();
+                                break;
+                            case AuctionHouse.MainPageItemRef.Catagories:
+                                ah.DisplayCatagories();
+                                break;
+                            case AuctionHouse.MainPageItemRef.PlayerSelling:
+                                ah.GoToSellerPage();
+                                event.setCancelled(false);
+                                break;
+
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     private void PurchaseItem(CorePlayer holder, int page, int slot) {
         AuctionItemData aid = getAIDFromPage(page, slot);

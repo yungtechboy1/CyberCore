@@ -81,6 +81,13 @@ public class FactionAdminPage1 extends CyberFormSimple {
                 cp.getInventory().addItem(Item.get(Item.COBWEB,0,300));
                 cp.getInventory().sendContents(cp);
                 break;
+            case 7:
+                cp.getInventory().addItem(Item.get(BlockID.SAND,0,300));
+                cp.getInventory().addItem(Item.get(Item.GUNPOWDER,0,200));
+                cp.getInventory().addItem(Item.get(Item.GUNPOWDER,2,200));
+                cp.getInventory().addItem(Item.get(Item.COBWEB,0,300));
+                cp.getInventory().sendContents(cp);
+                break;
         }
     }
 }
