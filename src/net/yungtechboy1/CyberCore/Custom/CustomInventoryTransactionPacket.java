@@ -6,6 +6,7 @@ import cn.nukkit.inventory.transaction.data.TransactionData;
 import cn.nukkit.inventory.transaction.data.UseItemData;
 import cn.nukkit.inventory.transaction.data.UseItemOnEntityData;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemBlock;
 import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.DataPacket;
@@ -13,12 +14,13 @@ import cn.nukkit.network.protocol.InventoryTransactionPacket;
 import cn.nukkit.network.protocol.types.NetworkInventoryAction;
 import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
+import net.yungtechboy1.CyberCore.Custom.Block.CustomElementBlock;
 
 import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
-public class CustomInventoryTransactionPacket extends InventoryTransactionPacket {
+public class CustomInventoryTransactionPacket extends DataPacket {
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_MISMATCH = 1;
     public static final int TYPE_USE_ITEM = 2;
@@ -36,7 +38,7 @@ public class CustomInventoryTransactionPacket extends InventoryTransactionPacket
     public static final int ACTION_MAGIC_SLOT_CREATIVE_DELETE_ITEM = 0;
     public static final int ACTION_MAGIC_SLOT_CREATIVE_CREATE_ITEM = 1;
     public int transactionType;
-    public NetworkInventoryAction[] actions;
+    public CustomNetworkInventoryAction[] actions;
     public TransactionData transactionData;
     public boolean isCraftingPart = false;
 
@@ -52,7 +54,8 @@ public class CustomInventoryTransactionPacket extends InventoryTransactionPacket
     public void decode() {
         this.transactionType = (int) this.getUnsignedVarInt();
 
-        this.actions = new NetworkInventoryAction[(int) this.getUnsignedVarInt()];
+        System.out.println("QQQQQQQQQQ Starting to Decode Inv Packet, Type > "+transactionType);
+        this.actions = new CustomNetworkInventoryAction[(int) this.getUnsignedVarInt()];
         for (int i = 0; i < this.actions.length; i++) {
             this.actions[i] = new CustomNetworkInventoryAction().read(this);
         }
@@ -111,7 +114,7 @@ public class CustomInventoryTransactionPacket extends InventoryTransactionPacket
         this.putUnsignedVarInt(this.transactionType);
 
         this.putUnsignedVarInt(this.actions.length);
-        for (NetworkInventoryAction action : this.actions) {
+        for (CustomNetworkInventoryAction action : this.actions) {
             action.write(this);
         }
 
@@ -158,8 +161,11 @@ public class CustomInventoryTransactionPacket extends InventoryTransactionPacket
         System.out.println("+++++++++++++++++++++++++++");
         int id = this.getVarInt();
         System.out.println("ID !!!!!!>>> "+id);
-        if (id <= 0) {
+        if (id == 0) {
             return Item.get(0, 0, 0);
+        } else if(id == -12){
+            System.out.println("===============================b "+id);
+            return new ItemBlock(new CustomElementBlock());
         } else {
             int auxValue = this.getVarInt();
             int data = auxValue >> 8;

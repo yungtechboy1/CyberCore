@@ -1,37 +1,32 @@
 package net.yungtechboy1.CyberCore.Manager;
 
-        import cn.nukkit.Server;
-        import cn.nukkit.inventory.*;
-        import cn.nukkit.item.Item;
-        import cn.nukkit.network.protocol.BatchPacket;
-        import cn.nukkit.network.protocol.CraftingDataPacket;
-        import cn.nukkit.utils.BinaryStream;
-        import cn.nukkit.utils.Config;
-        import cn.nukkit.utils.MainLogger;
-        import cn.nukkit.utils.Utils;
-        import io.netty.util.collection.CharObjectHashMap;
-        import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-        import java.io.File;
-        import java.io.IOException;
-        import java.util.ArrayDeque;
-        import java.util.ArrayList;
-        import java.util.Arrays;
-        import java.util.Collection;
-        import java.util.Comparator;
-        import java.util.HashMap;
-        import java.util.Iterator;
-        import java.util.List;
-        import java.util.Map;
-        import java.util.UUID;
+import cn.nukkit.Server;
+import cn.nukkit.inventory.*;
+import cn.nukkit.item.Item;
+import cn.nukkit.network.protocol.BatchPacket;
+import cn.nukkit.network.protocol.CraftingDataPacket;
+import cn.nukkit.utils.BinaryStream;
+import cn.nukkit.utils.Config;
+import cn.nukkit.utils.MainLogger;
+import cn.nukkit.utils.Utils;
+import io.netty.util.collection.CharObjectHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class CustomCraftingManager {
-    public final Collection<Recipe> recipes = new ArrayDeque();
-    public static BatchPacket packet = null;
-    public final Map<Integer, Map<UUID, ShapedRecipe>> shapedRecipes = new Int2ObjectOpenHashMap();
-    public final Map<Integer, FurnaceRecipe> furnaceRecipes = new Int2ObjectOpenHashMap();
-    public final Map<Integer, BrewingRecipe> brewingRecipes = new Int2ObjectOpenHashMap();
-    private static int RECIPE_COUNT = 0;
-    public final Map<Integer, Map<UUID, ShapelessRecipe>> shapelessRecipes = new Int2ObjectOpenHashMap();
     public static final Comparator<Item> recipeComparator = (i1, i2) -> {
         if (i1.getId() > i2.getId()) {
             return 1;
@@ -43,6 +38,13 @@ public class CustomCraftingManager {
             return i1.getDamage() < i2.getDamage() ? -1 : Integer.compare(i1.getCount(), i2.getCount());
         }
     };
+    public static BatchPacket packet = null;
+    private static int RECIPE_COUNT = 0;
+    public final Collection<Recipe> recipes = new ArrayDeque();
+    public final Map<Integer, Map<UUID, ShapedRecipe>> shapedRecipes = new Int2ObjectOpenHashMap();
+    public final Map<Integer, FurnaceRecipe> furnaceRecipes = new Int2ObjectOpenHashMap();
+    public final Map<Integer, BrewingRecipe> brewingRecipes = new Int2ObjectOpenHashMap();
+    public final Map<Integer, Map<UUID, ShapelessRecipe>> shapelessRecipes = new Int2ObjectOpenHashMap();
 
     public CustomCraftingManager() {
         String path = Server.getInstance().getDataPath() + "recipes.json";
@@ -58,19 +60,19 @@ public class CustomCraftingManager {
         MainLogger.getLogger().info("Loading recipes...");
         Iterator var3 = recipes.iterator();
 
-        while(var3.hasNext()) {
-            Map recipe = (Map)var3.next();
+        while (var3.hasNext()) {
+            Map recipe = (Map) var3.next();
 
             try {
                 Map first;
-                switch(Utils.toInt(recipe.get("type"))) {
+                switch (Utils.toInt(recipe.get("type"))) {
                     case 0:
-                        first = (Map)((List)recipe.get("output")).get(0);
+                        first = (Map) ((List) recipe.get("output")).get(0);
                         List<Item> sorted = new ArrayList();
-                        Iterator var7 = ((List)recipe.get("input")).iterator();
+                        Iterator var7 = ((List) recipe.get("input")).iterator();
 
-                        while(var7.hasNext()) {
-                            Map<String, Object> ingredient = (Map)var7.next();
+                        while (var7.hasNext()) {
+                            Map<String, Object> ingredient = (Map) var7.next();
                             sorted.add(Item.fromJson(ingredient));
                         }
 
@@ -79,25 +81,25 @@ public class CustomCraftingManager {
                         this.registerRecipe(result);
                         break;
                     case 1:
-                        List<Map> output = (List)recipe.get("output");
-                        first = (Map)output.remove(0);
-                        String[] shape = (String[])((List)recipe.get("shape")).toArray(new String[0]);
+                        List<Map> output = (List) recipe.get("output");
+                        first = (Map) output.remove(0);
+                        String[] shape = (String[]) ((List) recipe.get("shape")).toArray(new String[0]);
                         Map<Character, Item> ingredients = new CharObjectHashMap();
                         List<Item> extraResults = new ArrayList();
-                        Map<String, Map<String, Object>> input = (Map)recipe.get("input");
+                        Map<String, Map<String, Object>> input = (Map) recipe.get("input");
                         Iterator var21 = input.entrySet().iterator();
 
-                        while(var21.hasNext()) {
-                            java.util.Map.Entry<String, Map<String, Object>> ingredientEntry = (java.util.Map.Entry)var21.next();
-                            char ingredientChar = ((String)ingredientEntry.getKey()).charAt(0);
-                            Item ingredient = Item.fromJson((Map)ingredientEntry.getValue());
+                        while (var21.hasNext()) {
+                            java.util.Map.Entry<String, Map<String, Object>> ingredientEntry = (java.util.Map.Entry) var21.next();
+                            char ingredientChar = ((String) ingredientEntry.getKey()).charAt(0);
+                            Item ingredient = Item.fromJson((Map) ingredientEntry.getValue());
                             ingredients.put(ingredientChar, ingredient);
                         }
 
                         var21 = output.iterator();
 
-                        while(var21.hasNext()) {
-                            Map<String, Object> data = (Map)var21.next();
+                        while (var21.hasNext()) {
+                            Map<String, Object> data = (Map) var21.next();
                             extraResults.add(Item.fromJson(data));
                         }
 
@@ -105,7 +107,7 @@ public class CustomCraftingManager {
                         break;
                     case 2:
                     case 3:
-                        Map<String, Object> resultMap = (Map)recipe.get("output");
+                        Map<String, Object> resultMap = (Map) recipe.get("output");
                         Item resultItem = Item.fromJson(resultMap);
                         this.registerRecipe(new FurnaceRecipe(resultItem, Item.get(Utils.toInt(recipe.get("inputId")), recipe.containsKey("inputDamage") ? Utils.toInt(recipe.get("inputDamage")) : -1, 1)));
                 }
@@ -117,6 +119,30 @@ public class CustomCraftingManager {
         this.registerBrewing();
         this.rebuildPacket();
         MainLogger.getLogger().info("Loaded " + this.recipes.size() + " recipes.");
+    }
+
+    public static UUID getMultiItemHash(Collection<Item> items) {
+        BinaryStream stream = new BinaryStream();
+        Iterator var2 = items.iterator();
+
+        while (var2.hasNext()) {
+            Item item = (Item) var2.next();
+            stream.putVarInt(getFullItemHash(item));
+        }
+
+        return UUID.nameUUIDFromBytes(stream.getBuffer());
+    }
+
+    private static int getFullItemHash(Item item) {
+        return 31 * getItemHash(item) + item.getCount();
+    }
+
+    public static int getItemHash(Item item) {
+        return getItemHash(item.getId(), item.getDamage());
+    }
+
+    private static int getItemHash(int id, int meta) {
+        return id << 4 | meta & 15;
     }
 
     protected void registerBrewing() {
@@ -166,19 +192,19 @@ public class CustomCraftingManager {
         pk.cleanRecipes = true;
         Iterator var2 = this.getRecipes().iterator();
 
-        while(var2.hasNext()) {
-            Recipe recipe = (Recipe)var2.next();
+        while (var2.hasNext()) {
+            Recipe recipe = (Recipe) var2.next();
             if (recipe instanceof ShapedRecipe) {
-                pk.addShapedRecipe(new ShapedRecipe[]{(ShapedRecipe)recipe});
+                pk.addShapedRecipe(new ShapedRecipe[]{(ShapedRecipe) recipe});
             } else if (recipe instanceof ShapelessRecipe) {
-                pk.addShapelessRecipe(new ShapelessRecipe[]{(ShapelessRecipe)recipe});
+                pk.addShapelessRecipe(new ShapelessRecipe[]{(ShapelessRecipe) recipe});
             }
         }
 
         var2 = this.getFurnaceRecipes().values().iterator();
 
-        while(var2.hasNext()) {
-            FurnaceRecipe recipe = (FurnaceRecipe)var2.next();
+        while (var2.hasNext()) {
+            FurnaceRecipe recipe = (FurnaceRecipe) var2.next();
             pk.addFurnaceRecipe(new FurnaceRecipe[]{recipe});
         }
 
@@ -195,41 +221,17 @@ public class CustomCraftingManager {
     }
 
     public FurnaceRecipe matchFurnaceRecipe(Item input) {
-        FurnaceRecipe recipe = (FurnaceRecipe)this.furnaceRecipes.get(getItemHash(input));
+        FurnaceRecipe recipe = (FurnaceRecipe) this.furnaceRecipes.get(getItemHash(input));
         if (recipe == null) {
-            recipe = (FurnaceRecipe)this.furnaceRecipes.get(getItemHash(input.getId(), 0));
+            recipe = (FurnaceRecipe) this.furnaceRecipes.get(getItemHash(input.getId(), 0));
         }
 
         return recipe;
     }
 
-    public static UUID getMultiItemHash(Collection<Item> items) {
-        BinaryStream stream = new BinaryStream();
-        Iterator var2 = items.iterator();
-
-        while(var2.hasNext()) {
-            Item item = (Item)var2.next();
-            stream.putVarInt(getFullItemHash(item));
-        }
-
-        return UUID.nameUUIDFromBytes(stream.getBuffer());
-    }
-
-    private static int getFullItemHash(Item item) {
-        return 31 * getItemHash(item) + item.getCount();
-    }
-
     public void registerFurnaceRecipe(FurnaceRecipe recipe) {
         Item input = recipe.getInput();
         this.furnaceRecipes.put(getItemHash(input), recipe);
-    }
-
-    public static int getItemHash(Item item) {
-        return getItemHash(item.getId(), item.getDamage());
-    }
-
-    private static int getItemHash(int id, int meta) {
-        return id << 4 | meta & 15;
     }
 
     public void registerShapedRecipe(ShapedRecipe recipe) {
@@ -245,17 +247,17 @@ public class CustomCraftingManager {
 
         int y;
         Item[] row;
-        for(y = 0; y < newMap.length; ++y) {
+        for (y = 0; y < newMap.length; ++y) {
             row = map[y];
             Item[] n = new Item[row.length];
             System.arraycopy(row, 0, n, 0, n.length);
             newMap[y] = n;
         }
 
-        for(y = 0; y < newMap.length; ++y) {
+        for (y = 0; y < newMap.length; ++y) {
             row = newMap[y];
 
-            for(int x = 0; x < row.length; ++x) {
+            for (int x = 0; x < row.length; ++x) {
                 Item item = newMap[y][x];
                 newMap[y][x] = item.clone();
             }
@@ -267,14 +269,14 @@ public class CustomCraftingManager {
     public void registerRecipe(Recipe recipe) {
         if (recipe instanceof CraftingRecipe) {
             UUID id = Utils.dataToUUID(new String[]{String.valueOf(++RECIPE_COUNT), String.valueOf(recipe.getResult().getId()), String.valueOf(recipe.getResult().getDamage()), String.valueOf(recipe.getResult().getCount()), Arrays.toString(recipe.getResult().getCompoundTag())});
-            ((CraftingRecipe)recipe).setId(id);
+            ((CraftingRecipe) recipe).setId(id);
             this.recipes.add(recipe);
         }
 
-        if(recipe instanceof ShapelessRecipe)registerShapelessRecipe((ShapelessRecipe)recipe);
-        else if( recipe instanceof ShapedRecipe)registerShapedRecipe((ShapedRecipe)recipe);
-        else if( recipe instanceof FurnaceRecipe)registerFurnaceRecipe((FurnaceRecipe)recipe);
-        else if( recipe instanceof BrewingRecipe)registerBrewingRecipe((BrewingRecipe)recipe);
+        if (recipe instanceof ShapelessRecipe) registerShapelessRecipe((ShapelessRecipe) recipe);
+        else if (recipe instanceof ShapedRecipe) registerShapedRecipe((ShapedRecipe) recipe);
+        else if (recipe instanceof FurnaceRecipe) registerFurnaceRecipe((FurnaceRecipe) recipe);
+        else if (recipe instanceof BrewingRecipe) registerBrewingRecipe((BrewingRecipe) recipe);
 //
 //        //TODO CHECK
 //        recipe.registerToCraftingManager(this);
@@ -285,7 +287,7 @@ public class CustomCraftingManager {
         list.sort(recipeComparator);
         UUID hash = getMultiItemHash(list);
         int resultHash = getItemHash(recipe.getResult());
-        Map<UUID, ShapelessRecipe> map = (Map)this.shapelessRecipes.computeIfAbsent(resultHash, (k) -> {
+        Map<UUID, ShapelessRecipe> map = (Map) this.shapelessRecipes.computeIfAbsent(resultHash, (k) -> {
             return new HashMap();
         });
         map.put(hash, recipe);
@@ -298,20 +300,20 @@ public class CustomCraftingManager {
     }
 
     public BrewingRecipe matchBrewingRecipe(Item input, Item potion) {
-        return (BrewingRecipe)this.brewingRecipes.get(getItemHash(input.getId(), potion.getDamage()));
+        return (BrewingRecipe) this.brewingRecipes.get(getItemHash(input.getId(), potion.getDamage()));
     }
 
     public boolean matchItems(ShapedRecipe sr, Item[][] input, Item[][] output) {
-        System.out.println("CHECK MATCH 5.0"+sr==null);
-        if (!this.matchInputMap(sr,(Item[][])Utils.clone2dArray(input))) {
+        System.out.println("CHECK MATCH 5.0" + sr == null);
+        if (!this.matchInputMap(sr, (Item[][]) Utils.clone2dArray(input))) {
             System.out.println("5.0.5E");
-            Item[][] reverse = (Item[][])Utils.clone2dArray(input);
+            Item[][] reverse = (Item[][]) Utils.clone2dArray(input);
 
-            for(int y = 0; y < reverse.length; ++y) {
-                reverse[y] = (Item[])Utils.reverseArray(reverse[y], false);
+            for (int y = 0; y < reverse.length; ++y) {
+                reverse[y] = (Item[]) Utils.reverseArray(reverse[y], false);
             }
 
-            if (!this.matchInputMap(sr,reverse)) {
+            if (!this.matchInputMap(sr, reverse)) {
                 System.out.println("5.1 DEEAD");
                 return false;
             }
@@ -322,7 +324,7 @@ public class CustomCraftingManager {
         Item[][] var10 = output;
         int var5 = output.length;
 
-        for(int var6 = 0; var6 < var5; ++var6) {
+        for (int var6 = 0; var6 < var5; ++var6) {
             Item[] items = var10[var6];
             haveItems.addAll(Arrays.asList(items));
         }
@@ -334,10 +336,10 @@ public class CustomCraftingManager {
 
         int k = 0;
 
-        while(true) {
-            while(var12.hasNext()) {
+        while (true) {
+            while (var12.hasNext()) {
                 System.out.println("5.3");
-                Item haveItem = (Item)var12.next();
+                Item haveItem = (Item) var12.next();
                 if (haveItem.isNull()) {
                     System.out.println("5.4.1");
                     haveItems.remove(haveItem);
@@ -345,10 +347,10 @@ public class CustomCraftingManager {
                 } else {
 
 //                    System.out.println("5.4.2");
-                    while(var14.hasNext()) {
+                    while (var14.hasNext()) {
 
                         System.out.println("5.4.2.1");
-                        Item needItem = (Item)var14.next();
+                        Item needItem = (Item) var14.next();
                         if (needItem.equals(haveItem, needItem.hasMeta(), needItem.hasCompoundTag()) && needItem.getCount() == haveItem.getCount()) {
 
                             System.out.println("5.4.2.2");
@@ -359,34 +361,35 @@ public class CustomCraftingManager {
                     }
                 }
 
-                if(k == 9)needItems.clear();
+                if (k == 9) needItems.clear();
 
 
             }
 
-            System.out.println("5.5"+haveItems.isEmpty()+"|"+needItems.isEmpty());
+            System.out.println("5.5" + haveItems.isEmpty() + "|" + needItems.isEmpty());
             return haveItems.isEmpty() && needItems.isEmpty();
         }
     }
 
-    private boolean matchInputMap(ShapedRecipe sr,Item[][] input) {
-        System.out.println("Z1"+sr);
-        System.out.println("Z1"+sr.getIngredientMap());
+    private boolean matchInputMap(ShapedRecipe sr, Item[][] input) {
+//        System.out.println("Z1"+sr);
+//        System.out.println("Z1"+sr.getIngredientMap());
         Map<Integer, Map<Integer, Item>> map = sr.getIngredientMap();
-        System.out.println("Z2");
+//        System.out.println("Z2");
         int y = 0;
 
         int y2;
         int x;
-        for(y2 = sr.getHeight(); y < y2; ++y) {
-            x = 0;System.out.println("Z3");
+        for (y2 = sr.getHeight(); y < y2; ++y) {
+            x = 0;
+//            System.out.println("Z3");
 
-            for(int x2 = sr.getWidth(); x < x2; ++x) {
-                System.out.println("Z4");
+            for (int x2 = sr.getWidth(); x < x2; ++x) {
+//                System.out.println("Z4");
                 Item given = input[y][x];
-                Item required = (Item)((Map)map.get(y)).get(x);
+                Item required = (Item) ((Map) map.get(y)).get(x);
                 if (given == null || !required.equals(given, required.hasMeta(), required.hasCompoundTag()) || required.getCount() != given.getCount()) {
-                    System.out.println("5.7"+required+"||||||||||"+given);
+//                    System.out.println("5.7"+required+"||||||||||"+given);
                     return false;
                 }
 
@@ -395,26 +398,26 @@ public class CustomCraftingManager {
             }
         }
 
-        System.out.println("Zzz");
+//        System.out.println("Zzz");
         Item[][] var11 = input;
         y2 = input.length;
 
-        for(x = 0; x < y2; ++x) {
+        for (x = 0; x < y2; ++x) {
             Item[] items = var11[x];
             Item[] var13 = items;
             int var14 = items.length;
 
-            for(int var9 = 0; var9 < var14; ++var9) {
+            for (int var9 = 0; var9 < var14; ++var9) {
                 Item item = var13[var9];
                 if (item != null && !item.isNull()) {
 
-                    System.out.println("5.8");
+//                    System.out.println("5.8");
                     return false;
                 }
             }
         }
 
-        System.out.println("5.9 ITEMS GIVEN ARE CORRECT INGREDIENTS");
+//        System.out.println("5.9 ITEMS GIVEN ARE CORRECT INGREDIENTS");
         return true;
     }
 
@@ -428,50 +431,54 @@ public class CustomCraftingManager {
         UUID inputHash;
         Map recipes;
         Iterator var14;
-        System.out.println("CALL 3"+primaryOutput+" | "+primaryOutput.getCustomName()+"|"+primaryOutput.getName()+"|"+primaryOutput.getId());
-        System.out.println("CALL 3.0.1 >> "+inputMap+" | "+extraOutputMap.toString());
+        System.out.println("CALL 3" + primaryOutput + " | " + primaryOutput.getCustomName() + "|" + primaryOutput.getName() + "|" + primaryOutput.getId());
+        System.out.println("CALL 3.0.1 >> " + inputMap + " | " + extraOutputMap.toString());
         if (this.shapedRecipes.containsKey(outputHash)) {
             System.out.println("CALL 3.1");
             list = new ArrayList();
             var6 = inputMap;
             var7 = inputMap.length;
 
-            for(var8 = 0; var8 < var7; ++var8) {
+            for (var8 = 0; var8 < var7; ++var8) {
                 a = var6[var8];
                 list.addAll(Arrays.asList(a));
             }
 
             inputHash = getMultiItemHash(list);
-            recipes = (Map)this.shapedRecipes.get(outputHash);
+            recipes = (Map) this.shapedRecipes.get(outputHash);
             if (recipes != null) {
-                ShapedRecipe recipe = (ShapedRecipe)recipes.get(inputHash);
-                System.out.println("CALL 3.2"+recipe);
+                ShapedRecipe recipe = (ShapedRecipe) recipes.get(inputHash);
+                System.out.println("CALL 3.2" + recipe);
                 int k = -1;
-                Item[][] ii =this.cloneItemMap(inputMap);
-                Item[][] iii =this.cloneItemMap(extraOutputMap);
-                for(Item[] aa : ii){
+                Item[][] ii = this.cloneItemMap(inputMap);
+                Item[][] iii = this.cloneItemMap(extraOutputMap);
+                for (Item[] aa : ii) {
                     k++;
-                    for(int aaa = 0; aaa < aa.length; aaa++){
-                        System.out.println(ii[k][aaa] +"||+"+iii[k][aaa] );
+                    for (int aaa = 0; aaa < aa.length; aaa++) {
+//                        System.out.println(ii[k][aaa] +"||+"+iii[k][aaa] );
                     }
                 }
-                if (recipe != null && (recipe.matchItems(this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap)) || recipe.matchItems(this.cloneItemMap(inputMap), new Item[0][])|| matchItems(recipe,this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap)))){
+                if (recipe != null && (recipe.matchItems(this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap)) || recipe.matchItems(this.cloneItemMap(inputMap), new Item[0][]) || matchItems(recipe, this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap)))) {
                     System.out.println("CALL 3.3-------");
                     return recipe;
                 }
 
                 var14 = recipes.values().iterator();
 
-                while(var14.hasNext()) {
-                    ShapedRecipe shapedRecipe = (ShapedRecipe)var14.next();
-                    System.out.println("CALL 3.4"+shapedRecipe.getResult().getName()+"||"+shapedRecipe.getIngredientList().toString());
-                    if (shapedRecipe.matchItems(this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap))|| shapedRecipe.matchItems(this.cloneItemMap(inputMap), new Item[0][]) || matchItems(shapedRecipe,this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap))) {
+                while (var14.hasNext()) {
+                    ShapedRecipe shapedRecipe = (ShapedRecipe) var14.next();
+                    System.out.println("CALL 3.4" + shapedRecipe.getResult().getName() + "||" + shapedRecipe.getIngredientList().toString());
+                    if (shapedRecipe.matchItems(this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap)) || shapedRecipe.matchItems(this.cloneItemMap(inputMap), new Item[0][]) || matchItems(shapedRecipe, this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap))) {
                         System.out.println("CALL 3.5");
                         return shapedRecipe;
                     }
                 }
             }
         }
+
+        //TODO Check if All Inputs are Right and OutPut name Tag is Same as another Recipe but the Meta is off
+        CraftingRecipe r = CheckForRecipe(inputMap, primaryOutput, true);
+        if (r != null) return r;
 
         System.out.println("CALL 3.6---");
 
@@ -481,32 +488,32 @@ public class CustomCraftingManager {
             var6 = inputMap;
             var7 = inputMap.length;
 
-            for(var8 = 0; var8 < var7; ++var8) {
+            for (var8 = 0; var8 < var7; ++var8) {
                 a = var6[var8];
                 list.addAll(Arrays.asList(a));
             }
 
             list.sort(recipeComparator);
             inputHash = getMultiItemHash(list);
-            recipes = (Map)this.shapelessRecipes.get(outputHash);
+            recipes = (Map) this.shapelessRecipes.get(outputHash);
             if (recipes == null) {
                 return null;
             }
 
 
             int k = -1;
-            Item[][] ii =this.cloneItemMap(inputMap);
-            Item[][] iii =this.cloneItemMap(extraOutputMap);
-            for(Item[] aa : ii){
+            Item[][] ii = this.cloneItemMap(inputMap);
+            Item[][] iii = this.cloneItemMap(extraOutputMap);
+            for (Item[] aa : ii) {
                 k++;
-                for(int aaa = 0; aaa < aa.length; aaa++){
-                    System.out.println("!!!!"+ii[k][aaa] +"||+"+iii[k][aaa] );
+                for (int aaa = 0; aaa < aa.length; aaa++) {
+                    System.out.println("!!!!" + ii[k][aaa] + "||+" + iii[k][aaa]);
                 }
             }
 
-            ShapelessRecipe recipe = (ShapelessRecipe)recipes.get(inputHash);
-            System.out.println("CALL 4.2"+recipe);
-            if(recipe != null)System.out.println("CALL 4.2.1 ER > "+recipe.getExtraResults());
+            ShapelessRecipe recipe = (ShapelessRecipe) recipes.get(inputHash);
+            System.out.println("CALL 4.2" + recipe);
+            if (recipe != null) System.out.println("CALL 4.2.1 ER > " + recipe.getExtraResults());
             if (recipe != null && recipe.matchItems(this.cloneItemMap(inputMap), new Item[0][])) {
                 return recipe;
             }
@@ -514,9 +521,9 @@ public class CustomCraftingManager {
             System.out.println("CALL 4.3");
             var14 = recipes.values().iterator();
 
-            while(var14.hasNext()) {
-                ShapelessRecipe shapelessRecipe = (ShapelessRecipe)var14.next();
-                System.out.println("CALL 4.4"+shapelessRecipe.getResult().getName()+"||"+shapelessRecipe.getResult()+"||"+shapelessRecipe.getIngredientList());
+            while (var14.hasNext()) {
+                ShapelessRecipe shapelessRecipe = (ShapelessRecipe) var14.next();
+                System.out.println("CALL 4.4" + shapelessRecipe.getResult().getName() + "||" + shapelessRecipe.getResult() + "||" + shapelessRecipe.getIngredientList());
                 if (shapelessRecipe.matchItems(this.cloneItemMap(inputMap), new Item[0][])) {
                     return shapelessRecipe;
                 }
@@ -531,6 +538,82 @@ public class CustomCraftingManager {
 //            }
 //        }
 
+        return null;
+    }
+
+    private Recipe CheckForRecipe(Item[][] inputMap, Item primaryOutput) {
+        return CheckForRecipe(inputMap, primaryOutput, false);
+    }
+
+    //    private boolean matchInputMap(ShapedRecipe sr, Item[][] input) {
+//        Map<Integer, Map<Integer, Item>> map = sr.getIngredientMap();
+//        int y = 0;
+//
+//        int y2;
+//        int x;
+//        for(y2 = sr.getHeight(); y < y2; ++y) {
+//            x = 0;
+//
+//            for(int x2 = sr.getWidth(); x < x2; ++x) {
+//                Item given = input[y][x];
+//                Item required = (Item)((Map)map.get(y)).get(x);
+//                if (given == null || !required.equals(given, required.hasMeta(), required.hasCompoundTag()) || required.getCount() != given.getCount()) {
+//                    return false;
+//                }
+//
+//                input[y][x] = null;
+//            }
+//        }
+//
+//        Item[][] var11 = input;
+//        y2 = input.length;
+//
+//        for(x = 0; x < y2; ++x) {
+//            Item[] items = var11[x];
+//            Item[] var13 = items;
+//            int var14 = items.length;
+//
+//            for(int var9 = 0; var9 < var14; ++var9) {
+//                Item item = var13[var9];
+//                if (item != null && !item.isNull()) {
+//                    return false;
+//                }
+//            }
+//        }
+//
+//        return true;
+//    }
+//
+    private CraftingRecipe CheckForRecipe(Item[][] inputMap, Item primaryOutput, boolean CheckNameTag) {
+        int outputHash = getItemHash(primaryOutput);
+        ArrayList list;
+        Item[][] var6;
+        int var7;
+        Item[] a;
+        ArrayList<Item> il = new ArrayList();
+
+        for (int var8 = 0; var8 < inputMap.length; ++var8) {
+            a = inputMap[var8];
+            il.addAll(Arrays.asList(a));
+        }
+        UUID inputHash;
+        Map recipes;
+        Iterator var14;
+        for (Recipe r : getRecipes()) {
+            System.out.println("-------------------CHECKING RECIPE WITH RESULT >>> " + r.getResult());
+            if (r instanceof ShapedRecipe) {
+                ShapedRecipe sr = (ShapedRecipe) r;
+                Item ri = sr.getResult();
+                if (ri.equals(primaryOutput, false, true)) {
+                    System.out.println("-------------------MATCH");
+                    if (matchInputMap(sr, inputMap)) {
+                        System.out.println("-------------------MATCH2");
+                        //Same Ingreds
+                        return sr;
+                    }
+                }
+            }
+        }
         return null;
     }
 

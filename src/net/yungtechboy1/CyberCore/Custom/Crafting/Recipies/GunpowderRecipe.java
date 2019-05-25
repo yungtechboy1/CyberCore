@@ -16,6 +16,11 @@ public class GunpowderRecipe extends CustomRecipe {
     public static CustomItemGunpowder GP3 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_3);
     public static CustomItemGunpowder GP4 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_4);
     public static CustomItemGunpowder GP5 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_5);
+    public static CustomItemGunpowder CGP1 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_1_Compacted);
+    public static CustomItemGunpowder CGP2 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2_Compacted);
+    public static CustomItemGunpowder CGP3 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_3_Compacted);
+    public static CustomItemGunpowder CGP4 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_4_Compacted);
+    public static CustomItemGunpowder CGP5 = new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_5_Compacted);
 
     public GunpowderRecipe() {
         Recipies.add(GunPowderLvl1ToLvl2());
@@ -27,6 +32,11 @@ public class GunpowderRecipe extends CustomRecipe {
         Recipies.add(GunPowderLvl3ToLvl4());
         Recipies.add(GunPowderLvl3ToLvl5());
         Recipies.add(GunPowderLvl4ToLvl5());
+        Recipies.add(CompactedGunPowderLvl1());
+        Recipies.add(CompactedGunPowderLvl2());
+        Recipies.add(CompactedGunPowderLvl3());
+        Recipies.add(CompactedGunPowderLvl4());
+        Recipies.add(CompactedGunPowderLvl5());
     }
 
     public Recipe GunPowderLvl1ToLvl2() {
@@ -61,8 +71,29 @@ public class GunpowderRecipe extends CustomRecipe {
         return new ShapelessRecipe(GP4, Collections.nCopies(6, GP3));
     }
 
-
     public Recipe GunPowderLvl4ToLvl5() {
         return new ShapelessRecipe(GP5, Collections.nCopies(3, GP4));
     }
+
+    public Recipe CompactedGunPowderLvl1() {
+        return new ShapelessRecipe(CGP1, Collections.nCopies(9, GP1));
+    }
+
+    public Recipe CompactedGunPowderLvl2() {
+        return new ShapelessRecipe(CGP2, Collections.nCopies(9, GP2));
+    }
+
+    public Recipe CompactedGunPowderLvl3() {
+        return new ShapelessRecipe(CGP3, Collections.nCopies(9, GP3));
+    }
+
+    public Recipe CompactedGunPowderLvl4() {
+        return new ShapelessRecipe(CGP4, Collections.nCopies(9, GP4));
+    }
+
+    public Recipe CompactedGunPowderLvl5() {
+        return new ShapelessRecipe(CGP5, Collections.nCopies(9, GP5));
+    }
+
+
 }

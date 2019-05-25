@@ -1,38 +1,27 @@
 package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 
-import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockID;
-import cn.nukkit.block.BlockUnknown;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
-import cn.nukkit.inventory.CraftingManager;
 import cn.nukkit.item.Item;
-import cn.nukkit.item.ItemBlock;
-import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.Binary;
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.Custom.Block.CustomElementBlock;
-import net.yungtechboy1.CyberCore.Custom.Item.CustomItemGunpowder;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemMap;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
-import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
 import net.yungtechboy1.CyberCore.Manager.PositionImage;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.yungtechboy1.CyberCore.Manager.Factions.FactionString.Success_ADMIN_Faction_Saved;
-
-public class FactionAdminPage1 extends CyberFormSimple {
-    public FactionAdminPage1() {
+public class AuctionHouseMainWIndow  extends CyberFormSimple {
+    public AuctionHouseMainWIndow() {
         this(new ArrayList());
     }
 
-    public FactionAdminPage1(List<ElementButton> buttons) {
+    public AuctionHouseMainWIndow(List<ElementButton> buttons) {
         super(FormType.MainForm.Faction_Admin_Page_1, "CyberFactions | Admin Page (1/2)","", buttons);
         addButton(new ElementButton("Save/Load/Reload"));
         addButton(new ElementButton("GiveTestImage"));
@@ -41,10 +30,6 @@ public class FactionAdminPage1 extends CyberFormSimple {
         addButton(new ElementButton("Resend Creative Packet"));
         addButton(new ElementButton("Clear & SEND STARTER TNT ITEMS"));
         addButton(new ElementButton("SEND STARTER TNT ITEMS"));
-        addButton(new ElementButton("UNKNWON +"));
-        addButton(new ElementButton("UNKNWON -"));
-        addButton(new ElementButton("TEST2222"));
-        addButton(new ElementButton("-----------------------"));
     }
 
 
@@ -89,27 +74,6 @@ public class FactionAdminPage1 extends CyberFormSimple {
                 cp.getInventory().addItem(Item.get(Item.GUNPOWDER,2,200));
                 cp.getInventory().addItem(Item.get(Item.COBWEB,0,300));
                 cp.getInventory().sendContents(cp);
-                break;
-            case 7:
-                ItemBlock ib = new ItemBlock(new BlockUnknown(267, 0));
-                cp.getInventory().addItem(ib);
-                cp.getInventory().sendContents(cp);
-                break;
-            case 8:
-                cp.getInventory().addItem(new ItemBlock(new BlockUnknown(-12, 0)));
-                cp.getInventory().sendContents(cp);
-                break;
-            case 9:
-                cp.getInventory().addItem(new ItemBlock(new CustomElementBlock()));
-                cp.getInventory().addItem(new ItemBlock(new BlockUnknown(-13, 0)));
-                cp.getInventory().addItem(new ItemBlock(new BlockUnknown(-14, 0)));
-                cp.getInventory().sendContents(cp);
-                break;
-            case 10:
-                Block b = cp.getLevel().getBlock(cp.add(0,-1,0));
-                cp.sendMessage("Current Block ID >> "+b.getId());
-//                cp.getLevel().setBlock(cp.add(0,-1,0), new BlockUnknown(-13));
-                cp.getLevel().setBlock(cp.add(0,-1,1), new BlockUnknown(267),true ,true);
                 break;
         }
     }

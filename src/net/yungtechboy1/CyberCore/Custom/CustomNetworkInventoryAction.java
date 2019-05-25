@@ -12,7 +12,7 @@ import cn.nukkit.network.protocol.types.ContainerIds;
 import cn.nukkit.network.protocol.types.NetworkInventoryAction;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
-public class CustomNetworkInventoryAction extends NetworkInventoryAction {
+public class CustomNetworkInventoryAction {
     public static final int SOURCE_CONTAINER = 0;
     public static final int SOURCE_WORLD = 2;
     public static final int SOURCE_CREATIVE = 3;
@@ -35,6 +35,13 @@ public class CustomNetworkInventoryAction extends NetworkInventoryAction {
     public static final int SOURCE_TYPE_TRADING_OUTPUT = -23;
     public static final int SOURCE_TYPE_BEACON = -24;
     public static final int SOURCE_TYPE_CONTAINER_DROP_CONTENTS = -100;
+
+    public int sourceType;
+    public int windowId;
+    public long unknown;
+    public int inventorySlot;
+    public Item oldItem;
+    public Item newItem;
 
     public CustomNetworkInventoryAction() {
     }
@@ -67,6 +74,7 @@ public class CustomNetworkInventoryAction extends NetworkInventoryAction {
         return this;
     }
 
+
     public CustomNetworkInventoryAction read(CustomInventoryTransactionPacket packet) {
         System.out.println("saaaaaaaaaaaaa READDDDDD ITEM!!!!!!!!");
         this.sourceType = (int)packet.getUnsignedVarInt();
@@ -97,7 +105,7 @@ public class CustomNetworkInventoryAction extends NetworkInventoryAction {
         return this;
     }
 
-    public void write(InventoryTransactionPacket packet) {
+    public void write(CustomInventoryTransactionPacket packet) {
         packet.putUnsignedVarInt((long)this.sourceType);
         switch(this.sourceType) {
             case 0:
@@ -119,7 +127,7 @@ public class CustomNetworkInventoryAction extends NetworkInventoryAction {
     }
 
     public String toString() {
-        return "NetworkInventoryAction(sourceType=" + this.sourceType + ", windowId=" + this.windowId + ", unknown=" + this.unknown + ", inventorySlot=" + this.inventorySlot + ", oldItem=" + this.oldItem + ", newItem=" + this.newItem + ")";
+        return "CUSTOMNetworkInventoryAction(sourceType=" + this.sourceType + ", windowId=" + this.windowId + ", unknown=" + this.unknown + ", inventorySlot=" + this.inventorySlot + ", oldItem=" + this.oldItem + ", newItem=" + this.newItem + ")";
     }
 
 
@@ -174,10 +182,10 @@ public class CustomNetworkInventoryAction extends NetworkInventoryAction {
                 return new CreativeInventoryAction(this.oldItem, this.newItem, type);
             case SOURCE_CRAFT_SLOT:
             case SOURCE_TODO:
-                System.out.println("SOURCE TODO");
-                System.out.println("INV SLOT: >> "+inventorySlot);
-                System.out.println("OLD ITEM: >> "+oldItem);
-                System.out.println("NEW ITEM: >> "+newItem);
+//                System.out.println("SOURCE TODO");
+//                System.out.println("INV SLOT: >> "+inventorySlot);
+//                System.out.println("OLD ITEM: >> "+oldItem);
+//                System.out.println("NEW ITEM: >> "+newItem);
                 //These types need special handling.
                 switch (this.windowId) {
                     case SOURCE_TYPE_CRAFTING_ADD_INGREDIENT:

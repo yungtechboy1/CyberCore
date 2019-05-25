@@ -116,7 +116,7 @@ public class CustomCraftingTransaction extends InventoryTransaction {
         } else {
             throw new RuntimeException("Tried to add the same action to a transaction twice");
         }
-        System.out.println("------");
+        System.out.println("------BBBBBBBBBB");
     }
 
     public void setInput(int index, Item item) {
@@ -230,13 +230,13 @@ public class CustomCraftingTransaction extends InventoryTransaction {
 
     public boolean preexec() {
         if (!this.hasExecuted() && this.canExecute()) {
-            System.out.println("CALL 1");
+//            System.out.println("CALL 1");
             if (!this.callExecuteEvent()) {
-                System.out.println("CALL 1.1");
+//                System.out.println("CALL 1.1");
                 this.sendInventories();
                 return true;
             } else {
-                System.out.println("CALL 1.2");
+//                System.out.println("CALL 1.2");
                 Iterator var1 = this.actions.iterator();
 
                 InventoryAction action;
@@ -255,16 +255,16 @@ public class CustomCraftingTransaction extends InventoryTransaction {
 
                         this.hasExecuted = true;
 
-                        System.out.println("CALL 1.3");
+//                        System.out.println("CALL 1.3");
                         return true;
                     }
 
-                    System.out.println("CALL 1.4");
+//                    System.out.println("CALL 1.4");
 
                     action = (InventoryAction) var1.next();
                 } while (action.onPreExecute(this.source));
 
-                System.out.println("CALL 1.5");
+//                System.out.println("CALL 1.5");
                 this.sendInventories();
                 return true;
             }
