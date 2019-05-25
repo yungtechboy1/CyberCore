@@ -1,12 +1,17 @@
 package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 
+import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockID;
+import cn.nukkit.block.BlockUnknown;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.inventory.CraftingManager;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemBlock;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.Binary;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Custom.Block.CustomElementBlock;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemGunpowder;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemMap;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -36,6 +41,10 @@ public class FactionAdminPage1 extends CyberFormSimple {
         addButton(new ElementButton("Resend Creative Packet"));
         addButton(new ElementButton("Clear & SEND STARTER TNT ITEMS"));
         addButton(new ElementButton("SEND STARTER TNT ITEMS"));
+        addButton(new ElementButton("UNKNWON +"));
+        addButton(new ElementButton("UNKNWON -"));
+        addButton(new ElementButton("TEST2222"));
+        addButton(new ElementButton("-----------------------"));
     }
 
 
@@ -82,11 +91,25 @@ public class FactionAdminPage1 extends CyberFormSimple {
                 cp.getInventory().sendContents(cp);
                 break;
             case 7:
-                cp.getInventory().addItem(Item.get(BlockID.SAND,0,300));
-                cp.getInventory().addItem(Item.get(Item.GUNPOWDER,0,200));
-                cp.getInventory().addItem(Item.get(Item.GUNPOWDER,2,200));
-                cp.getInventory().addItem(Item.get(Item.COBWEB,0,300));
+                ItemBlock ib = new ItemBlock(new BlockUnknown(267, 0));
+                cp.getInventory().addItem(ib);
                 cp.getInventory().sendContents(cp);
+                break;
+            case 8:
+                cp.getInventory().addItem(new ItemBlock(new BlockUnknown(-12, 0)));
+                cp.getInventory().sendContents(cp);
+                break;
+            case 9:
+                cp.getInventory().addItem(new ItemBlock(new CustomElementBlock()));
+                cp.getInventory().addItem(new ItemBlock(new BlockUnknown(-13, 0)));
+                cp.getInventory().addItem(new ItemBlock(new BlockUnknown(-14, 0)));
+                cp.getInventory().sendContents(cp);
+                break;
+            case 10:
+                Block b = cp.getLevel().getBlock(cp.add(0,-1,0));
+                cp.sendMessage("Current Block ID >> "+b.getId());
+//                cp.getLevel().setBlock(cp.add(0,-1,0), new BlockUnknown(-13));
+                cp.getLevel().setBlock(cp.add(0,-1,1), new BlockUnknown(267),true ,true);
                 break;
         }
     }

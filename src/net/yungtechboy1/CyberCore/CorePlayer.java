@@ -539,13 +539,13 @@ public class CorePlayer extends Player {
 
 //                        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!3");
                         if (transactionPacket2.isCraftingPart) {
-//                            System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!4 IS CRAFTING");
+                            System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!4 IS CRAFTING");
                             if (this.cct == null) {
-//                                System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!5 WILL CREATE NEW CT");
+                                System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!5 WILL CREATE NEW CT");
                                 this.cct = new CustomCraftingTransaction(this, actions);
                             } else {
                                 for (InventoryAction action : actions) {
-//                                    System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!6 ADDING TO EXISTING CTT");
+                                    System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!6 ADDING TO EXISTING CTT");
                                     this.cct.addAction(action);
                                 }
                             }
@@ -553,7 +553,7 @@ public class CorePlayer extends Player {
                             if (this.cct.getPrimaryOutput() != null) {
                                 //we get the actions for this in several packets, so we can't execute it until we get the result
 
-//                                System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!7 CALLING EXECUTE");
+                                System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!7 CALLING EXECUTE");
                                 if(!this.cct.execute()){
                                     server.getLogger().error("ERROR NO EXECITE!");
                                 }
@@ -608,14 +608,18 @@ public class CorePlayer extends Player {
                                             if (this.isCreative()) {
                                                 Item i = inventory.getItemInHand();
                                                 if (this.level.useItemOn(blockVector.asVector3(), i, face, useItemData.clickPos.x, useItemData.clickPos.y, useItemData.clickPos.z, this) != null) {
+                                                   System.out.println("wwwwwwwwwwwwww > GOOD");
                                                     break packetswitch;
                                                 }
                                             } else if (inventory.getItemInHand().equals(useItemData.itemInHand)) {
+                                                System.out.println("wwwwwwwwwwwwww > GOOD");
                                                 Item i = inventory.getItemInHand();
                                                 Item oldItem = i.clone();
                                                 //TODO: Implement adventure mode checks
                                                 if ((i = this.level.useItemOn(blockVector.asVector3(), i, face, useItemData.clickPos.x, useItemData.clickPos.y, useItemData.clickPos.z, this)) != null) {
+                                                    System.out.println("wwwwwwwwwwwwww > GOOD2");
                                                     if (!i.equals(oldItem) || i.getCount() != oldItem.getCount()) {
+                                                        System.out.println("wwwwwwwwwwwwww > GOOD3");
                                                         inventory.setItemInHand(i);
                                                         inventory.sendHeldItem(this.getViewers().values());
                                                     }
