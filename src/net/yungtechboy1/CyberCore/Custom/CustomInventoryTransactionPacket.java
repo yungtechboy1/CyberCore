@@ -161,11 +161,12 @@ public class CustomInventoryTransactionPacket extends DataPacket {
         System.out.println("+++++++++++++++++++++++++++");
         int id = this.getVarInt();
         System.out.println("ID !!!!!!>>> "+id);
+//    if(id < 0){
+//            System.out.println("===============================b "+id);
+//            id = 255 +
+//        }
         if (id == 0) {
             return Item.get(0, 0, 0);
-        } else if(id == -12){
-            System.out.println("===============================b "+id);
-            return new ItemBlock(new CustomElementBlock());
         } else {
             int auxValue = this.getVarInt();
             int data = auxValue >> 8;
@@ -212,10 +213,10 @@ public class CustomInventoryTransactionPacket extends DataPacket {
                     this.getString();
                 }
             }
-            if (id == BlockID.TNT && Item.get(id, data, cnt, nbt).getCustomName().equalsIgnoreCase("Experimental TNT ")) {
-                data = CustomBlockTNT.TNTType.Experimental.ordinal();
-                System.out.println("PRINTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
-            }
+//            if (id == BlockID.TNT && Item.get(id, data, cnt, nbt).getCustomName().equalsIgnoreCase("Experimental TNT ")) {
+//                data = CustomBlockTNT.TNTType.Experimental.ordinal();
+//                System.out.println("PRINTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+//            }
             return Item.get(id, data, cnt, nbt);
         }
     }

@@ -36,6 +36,7 @@ import net.yungtechboy1.CyberCore.Commands.Homes.HomeManager;
 import net.yungtechboy1.CyberCore.Commands.Homes.SetHome;
 import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
+import net.yungtechboy1.CyberCore.Custom.Block.CustomElementBlock;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
 import net.yungtechboy1.CyberCore.Custom.Crafting.CustomRecipeCraftingManager;
@@ -228,6 +229,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         Block.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         Block.list[Block.TNT] = CustomBlockTNT.class;
+        Block.list[267] = CustomElementBlock.class;
+        ReloadBlockList(267, CustomElementBlock.class);
         ReloadBlockList(Block.TNT, CustomBlockTNT.class);
 //        Item.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         addCreativeItem(Item.get(Block.ENCHANT_TABLE, 5, 1).setCustomName("TTTTTTTTTTTTTT"));
@@ -239,6 +242,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Item.list[Item.ENCHANT_BOOK] = CItemBookEnchanted.class;
         Item.list[BlockID.TNT] = CustomItemTNT.class;
         Item.list[Item.GUNPOWDER] = CustomItemGunpowder.class;
+        Item.init();
 
 //        System.out.println(">>>>>>>>>>0x" + Binary.bytesToHexString(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_1).getCompoundTag()));
 

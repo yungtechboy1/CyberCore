@@ -13,7 +13,6 @@ import cn.nukkit.event.player.*;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.inventory.Inventory;
-import cn.nukkit.inventory.transaction.InventoryTransaction;
 import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.inventory.transaction.action.SlotChangeAction;
 import cn.nukkit.inventory.transaction.data.ReleaseItemData;
@@ -31,7 +30,6 @@ import cn.nukkit.level.*;
 import cn.nukkit.math.*;
 import cn.nukkit.network.SourceInterface;
 import cn.nukkit.network.protocol.*;
-import cn.nukkit.network.protocol.types.NetworkInventoryAction;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.potion.Potion;
 import cn.nukkit.utils.TextFormat;
@@ -604,16 +602,18 @@ public class CorePlayer extends Player {
                                     case InventoryTransactionPacket.USE_ITEM_ACTION_CLICK_BLOCK:
                                         this.setDataFlag(DATA_FLAGS, DATA_FLAG_ACTION, false);
 
+                                        System.out.println("wwwwwwwwwwwwww > 11111111111111111");
                                         if (this.canInteract(blockVector.add(0.5, 0.5, 0.5), this.isCreative() ? 13 : 7)) {
+                                            System.out.println("wwwwwwwwwwwwww > 22222222222");
                                             if (this.isCreative()) {
                                                 Item i = inventory.getItemInHand();
                                                 if (this.level.useItemOn(blockVector.asVector3(), i, face, useItemData.clickPos.x, useItemData.clickPos.y, useItemData.clickPos.z, this) != null) {
-                                                   System.out.println("wwwwwwwwwwwwww > GOOD");
+                                                    System.out.println("wwwwwwwwwwwwww > GOOD");
                                                     break packetswitch;
                                                 }
                                             } else if (inventory.getItemInHand().equals(useItemData.itemInHand)) {
-                                                System.out.println("wwwwwwwwwwwwww > GOOD");
                                                 Item i = inventory.getItemInHand();
+                                                System.out.println("wwwwwwwwwwwwww > GOOD "+i);
                                                 Item oldItem = i.clone();
                                                 //TODO: Implement adventure mode checks
                                                 if ((i = this.level.useItemOn(blockVector.asVector3(), i, face, useItemData.clickPos.x, useItemData.clickPos.y, useItemData.clickPos.z, this)) != null) {

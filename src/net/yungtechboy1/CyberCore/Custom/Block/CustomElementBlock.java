@@ -15,7 +15,7 @@ public class CustomElementBlock extends Block {
 
     @Override
     public int getId() {
-        return -12;
+        return 267;
     }
     @Override
     public boolean place(Item item, Block block, Block target, BlockFace face, double fx, double fy, double fz, Player player) {
