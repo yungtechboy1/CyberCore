@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**
@@ -12,7 +13,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 public class Leader extends Commands {
 
 
-    public Leader(CommandSender s, String[] a, FactionsMain m) {
+    public Leader(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f leader <player>", m);
         senderMustBeInFaction = true;
         senderMustBeLeader = true;
@@ -28,7 +29,7 @@ public class Leader extends Commands {
     @Override
     public void RunCommand() {
         if(fac.Leader.equalsIgnoreCase(Sender.getName())) {
-            if(Args.length <= 1){
+            if(Args.length == 0){
                 SendUseage();
                 return;
             }
@@ -42,7 +43,7 @@ public class Leader extends Commands {
                     if(r == 2)fac.DelOfficer(ppn);
                     if(r == 3)fac.DelGeneral(ppn);
                     fac.SetLeader(ppn.toLowerCase());
-                    fac.AddMember(Sender.getName());
+                    fac.AddGeneral(Sender.getName());
                     fac.BroadcastMessage(FactionsMain.NAME+TextFormat.YELLOW+""+ppn+" Is your New Leader!");
                     Sender.sendMessage(FactionsMain.NAME+TextFormat.YELLOW+"You are no longer leader!");
 //                    Main.CC.Setnametag((Player) Sender);

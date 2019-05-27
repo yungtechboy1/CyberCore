@@ -18,13 +18,31 @@ public final class FormType {
         Class_1,
         Class_2,
         Class_3,
+        Faction_Create_0,
+        Faction_Admin_Page_1,
+        Faction_Admin_Page_SLR,
+        Faction_Create_0_Error,
+        Faction_Invite_Choose,
+        Faction_Invited,
+        Faction_Chat_Choose,
+        Faction_Delete_Confirm,
+        Faction_Enemy_Choose,
+        Faction_Info_Self,
+        Faction_Info_Other,
+        Faction_Join_List,
+        Faction_Kick_List,
+        Faction_Chat_Faction, Class_Settings_TNT, Class_HowToUse_TNT, Class_HowToUse_TNT_Commands, Class_HowToUse_TNT_PA, Class_HowToUse_TNT_Unlocks, Class_HowToUse_TNT_EXP;
+        public int getID(){
+            return ordinal();
+        }
+
     }
 
     public static enum SubMenu {
         Enchanting_Confirm,
         MainMenu,
         Offense,
-        Defense,
+        Defense, Miner,
 
     }
 

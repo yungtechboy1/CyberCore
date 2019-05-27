@@ -1,43 +1,68 @@
 package net.yungtechboy1.CyberCore.Tasks;
 
-import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
-import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
+import cn.nukkit.InterruptibleThread;
 import cn.nukkit.Player;
-import cn.nukkit.scheduler.PluginTask;
+import cn.nukkit.Server;
 import cn.nukkit.utils.TextFormat;
-
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-
-import java.util.ArrayList;
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 
 /**
  * Created by carlt_000 on 1/28/2017.
  */
-public class SendHUD extends PluginTask<CyberCoreMain> {
-    public ArrayList<String> HUDClassOff = new ArrayList<>();
-    public ArrayList<String> HUDFactionOff = new ArrayList<>();
-    public ArrayList<String> HUDPosOff = new ArrayList<>();
+public class SendHUD extends Thread implements InterruptibleThread {
 
-    public SendHUD(CyberCoreMain owner) {
-        super(owner);
+
+    public SendHUD() {
     }
 
-    @Override
-    public void onRun(int currentTick) {
-        for (Player p : getOwner().getServer().getOnlinePlayers().values()) {
-            FormatHUD(p);
+    public void run() {
+        int lasttick = -1;
+//        System.out.println("11111111111111111111");
+        while (Server.getInstance().isRunning()) {
+//System.out.println("======");
+            int tick = Server.getInstance().getTick();
+            if (tick >= lasttick + 20) {
+
+//                System.out.println("||||||||======");
+                lasttick = tick;
+                CyberCoreMain Main = CyberCoreMain.getInstance();
+                for (Player p : Main.getServer().getOnlinePlayers().values()) {
+                    if (p.isAlive() && p.isOnline())
+                        FormatHUD((CorePlayer) p);
+                }
+                try {
+                    Thread.sleep(750);//17.5 Ticks
+                } catch (InterruptedException e) {
+                    //ignore
+                }
+            }
+            try {
+                Thread.sleep(750);//17.5 Ticks
+            } catch (InterruptedException e) {
+                //ignore
+            }
         }
     }
 
-    private void FormatHUD(Player p) {
-        if (getOwner().HudOff.contains(p.getName().toLowerCase())) return;
+
+    public void CTstop() {
+        if (isAlive()) interrupt();
+    }
+
+    private void FormatHUD(CorePlayer p) {
+        if (p == null || p.Settings.isHudOff()) return;
+        CyberCoreMain Main = CyberCoreMain.getInstance();
+
         int px = p.getFloorX();
         int py = p.getFloorY();
         int pz = p.getFloorZ();
-        String pnl = p.getName().toLowerCase();
+        String pnl = p.getDisplayName();
         Faction fac = null;
-        if(getOwner().FM != null) {
-            fac = getOwner().FM.FFactory.getPlayerFaction(p);
+        if (Main.FM != null) {
+            fac = Main.FM.FFactory.getFaction(p.Faction);
         }
         String fn = "No Faction";
         Integer flvl = 0;
@@ -51,23 +76,17 @@ public class SendHUD extends PluginTask<CyberCoreMain> {
         }
 
         String f = "";
-        if (!getOwner().HUDPosOff.contains(pnl))
+        if (!p.Settings.isHudPosOff())
             f += TextFormat.GRAY + " ----------- " + TextFormat.GREEN + "X: " + px + " Y: " + py + " Z:" + pz + TextFormat.GRAY + " ----------- " + TextFormat.RESET + "\n";
-        if (!getOwner().HUDFactionOff.contains(pnl))
-            f += TextFormat.GRAY + " -- " + TextFormat.GRAY + "Faction : " + TextFormat.AQUA + fn + TextFormat.GRAY + " | " + TextFormat.GREEN + fxp + TextFormat.AQUA+" / " + TextFormat.GOLD+ fxpm + TextFormat.GRAY + " | "+ TextFormat.GREEN+"Level: "+TextFormat.YELLOW + flvl + TextFormat.GRAY + " -- " + TextFormat.RESET + "\n";
-        if (!getOwner().HUDClassOff.contains(pnl)) {
-            String pclass = "NONE";
-            BaseClass bc = getOwner().ClassFactory.GetClass(p);
-            int pxp = 0;
-            int pxpof = 0;
-            int plvl = 0;
-            if (bc != null) {
-                int lvl = bc.XPToLevel(bc.getXP());
-                pclass = bc.getName();
-                pxp = bc.XPRemainder(bc.getXP());
-                pxpof = bc.calculateRequireExperience(lvl + 1);
-                plvl = lvl;
-                f += TextFormat.GRAY + "Class : " + TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl;
+        if (!p.Settings.isHudFactionOff())
+            f += TextFormat.GRAY + " -- " + TextFormat.GRAY + "Faction : " + TextFormat.AQUA + fn + TextFormat.GRAY + " | " + TextFormat.GREEN + fxp + TextFormat.AQUA + " / " + TextFormat.GOLD + fxpm + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + flvl + TextFormat.GRAY + " -- " + TextFormat.RESET + "\n";
+        if (!p.Settings.isHudClassOff()) {
+//            TODO
+            if (p.GetPlayerClass() != null) {
+                String pclass = "NONE";
+                BaseClass bc = p.GetPlayerClass();
+                String t = bc.FormatHudText();
+                if (t != null && t.length() != 0) f += t;
             }
         }
         p.sendTip(f);

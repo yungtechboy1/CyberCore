@@ -4,15 +4,16 @@ import cn.nukkit.Player;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.scheduler.PluginTask;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
  * Created by carlt_000 on 1/7/2017.
  */
 public class TeleportEvent extends PluginTask<CyberCoreMain> {
-    Player P;
+    CorePlayer P;
     Vector3 V3;
-    public TeleportEvent(CyberCoreMain main, Player p, Vector3 v3){
+    public TeleportEvent(CyberCoreMain main, CorePlayer p, Vector3 v3){
         super(main);
         P = p;
         V3 = v3;

@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
  */
 public class Help extends Commands {
 
-    public Help(CommandSender s, String[] a, FactionsMain m) {
+    public Help(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f help [page]", m);
         senderMustBePlayer = true;
         sendFailReason = true;
@@ -50,7 +51,7 @@ public class Help extends Commands {
         a.add("/f list [page] - List all factions");
         a.add("/f map - Show map of area");
         a.add("/f mission - Show all mission commands");
-        a.add("/f motd <Motd> - Set faction MOTD ");
+        a.add("/f motd <Settings> - Set faction MOTD ");
         a.add("/f overclaim [radius] - Overclaim land ");
         a.add("/f perk - View All Faction Perks ");
         a.add("/f power - View faction's power");

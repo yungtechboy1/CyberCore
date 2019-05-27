@@ -22,18 +22,15 @@ import java.util.ArrayList;
 
 public class BlockEntitySpawner extends BlockEntitySpawnable {
 
-    private int entityId = -1;
     public int spawnRange;
     public int maxNearbyEntities;
     public int requiredPlayerRange = 32;
-    private int lvl;
-
-    private int delay = 0;
-
     public boolean wait = false;
-
     public int minSpawnDelay;
     public int maxSpawnDelay;
+    private int entityId = -1;
+    private int lvl;
+    private int delay = 0;
 
     public BlockEntitySpawner(FullChunk chunk, CompoundTag nbt, int eid, int llevel, int spawnRange, int minSpawnDelay, int maxSpawnDelay, int requiredPlayerRange) {
 
@@ -48,19 +45,6 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
         this.namedTag.putShort("RequiredPlayerRange", requiredPlayerRange);
         this.requiredPlayerRange = 32;
 
-    }
-
-    @Override
-    public boolean isValid() {
-        return super.isValid();
-    }
-
-    public int GetSEntityID() {
-        return entityId;
-    }
-
-    public int GetSpawnerLevel() {
-        return lvl;
     }
 
     public BlockEntitySpawner(FullChunk chunk, CompoundTag nbt) {
@@ -97,9 +81,23 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
         this.scheduleUpdate();
     }
 
+    @Override
+    public boolean isValid() {
+        return super.isValid();
+    }
+
+    public int GetSEntityID() {
+        return entityId;
+    }
+
+    public int GetSpawnerLevel() {
+        return lvl;
+    }
+
     public String GetEntityNameFromID() {
         switch (GetSEntityID()) {
             case 4:
+            case 12:
                 return "Pig";
             default:
                 return getName();
@@ -151,11 +149,11 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
                 Entity entity = CustomFactory.SpawnEntityStack(this.entityId, this);
                 if (entity != null) {
                     entity.spawnToAll();
-                    if(((EntityStackable)entity).IsStackable()){
-                        System.out.println("GOING TO + " +((EntityStackable)entity).GetStackCount());
+                    if (((EntityStackable) entity).IsStackable()) {
+                        System.out.println("GOING TO + " + ((EntityStackable) entity).GetStackCount());
                     }
                 }
-            }else{
+            } else {
                 System.out.println("YEAAAAA FULL");
             }
         }
@@ -185,7 +183,7 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
         }
         if (this.namedTag.contains("Level")) {
             this.lvl = this.namedTag.getInt("Level");
-        }else{
+        } else {
             lvl = 1;
         }
 
@@ -198,6 +196,8 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
     public void saveNBT() {
         super.saveNBT();
 
+        this.namedTag.putString("id", "MobSpawner");
+        this.namedTag.putInt("EntityId", this.entityId);
         this.namedTag.putInt("Type", this.entityId);
         this.namedTag.putInt("Level", this.lvl);
         this.namedTag.putShort("SpawnRange", this.spawnRange);
@@ -210,18 +210,21 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
     @Override
     public CompoundTag getSpawnCompound() {
         return new CompoundTag()
-                .putString("id", MOB_SPAWNER)
-                .putString("SpawnData", this.entityId + "")//"minecraft:zombie"
-                .putList(new ListTag<CompoundTag>("SpawnPotentials") {
-                    {
-                        add(new CompoundTag() {{
-                            putInt("Weight", 1);
-                            putCompound("Entity", new CompoundTag() {{
-                                putString("id", entityId + "");
-                            }});
-                        }});
-                    }
-                })
+
+                .putInt("EntityId", this.entityId)
+                .putInt("Type", this.entityId)
+                .putString("id", "MobSpawner")
+//                .putString("SpawnData", this.entityId + "")//"minecraft:zombie"
+//                .putList(new ListTag<CompoundTag>("SpawnPotentials") {
+//                    {
+//                        add(new CompoundTag() {{
+//                            putInt("Weight", 1);
+//                            putCompound("Entity", new CompoundTag() {{
+//                                putString("id", entityId + "");
+//                            }});
+//                        }});
+//                    }
+//                })
                 .putInt("x", (int) this.x)
                 .putInt("y", (int) this.y)
                 .putInt("z", (int) this.z);

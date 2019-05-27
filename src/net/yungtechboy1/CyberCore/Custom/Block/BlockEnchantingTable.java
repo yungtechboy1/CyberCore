@@ -2,30 +2,22 @@ package net.yungtechboy1.CyberCore.Custom.Block;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
-import cn.nukkit.block.BlockTransparent;
 import cn.nukkit.block.BlockTransparentMeta;
 import cn.nukkit.blockentity.BlockEntity;
-import cn.nukkit.blockentity.BlockEntityChest;
 import cn.nukkit.blockentity.BlockEntityEnchantTable;
 import cn.nukkit.form.element.Element;
-import cn.nukkit.form.element.ElementButton;
-import cn.nukkit.form.element.ElementLabel;
 import cn.nukkit.form.element.ElementStepSlider;
 import cn.nukkit.form.window.FormWindowCustom;
-import cn.nukkit.form.window.FormWindowModal;
-import cn.nukkit.form.window.FormWindowSimple;
-import cn.nukkit.inventory.EnchantInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemTool;
 import cn.nukkit.math.BlockFace;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ListTag;
-import cn.nukkit.nbt.tag.StringTag;
 import cn.nukkit.nbt.tag.Tag;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
-import net.yungtechboy1.CyberCore.Custom.Inventory.CustomEnchantInventory;
-import net.yungtechboy1.CyberCore.FormType;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.Enchanting0Window;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.Enchanting1Window;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -39,6 +31,7 @@ public class BlockEnchantingTable extends BlockTransparentMeta {
     public BlockEnchantingTable() {
         super();
     }
+
     public BlockEnchantingTable(int meta) {
         super(meta);
     }
@@ -156,22 +149,8 @@ public class BlockEnchantingTable extends BlockTransparentMeta {
         if (sender != null) {
             Player p = (Player) sender;
             CorePlayer cp = (CorePlayer) p;
-            FormWindowModal FWM = new FormWindowModal(getName(),
-                    "Welcome to the Enchantment GUI\n D AMAGE" +
-                            getDamage() + "\n" +
-                            "The fee to view your enchants is $5000"
-                    , "Go Back", "Pay & Continue >");
-            p.showFormWindow(FWM);
-            cp.LastSentFormType = FormType.MainForm.Enchanting_0;
-            cp.setNewWindow(new FormWindowCustom("Choose your Class Catagory!",
-                    new ArrayList<Element>() {{
-                        addAll(CustomEnchantment.PrepareEnchantList(cp.GetStoredEnchants(GetTier(),3,item)));
-                        add(new ElementStepSlider("TE3", new ArrayList<String>() {{
-                            add("1");
-                            add("2");
-                            add("3");
-                        }}, 0));
-                    }}));
+            p.showFormWindow(new Enchanting0Window(getName()));
+            cp.setNewWindow(new Enchanting1Window(cp,GetTier(),item));
         }
 
         return true;

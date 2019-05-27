@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Commands;
 
+import cn.nukkit.command.data.CommandParamType;
 import net.yungtechboy1.CyberCore.Commands.Constructors.CheckPermCommand;
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
@@ -23,10 +24,10 @@ public class Top extends CheckPermCommand {
     private Vector3 temporalVector = new Vector3();
 
     public Top(CyberCoreMain server) {
-        super(server, "top", "Teleport to Top Block", "/top", RankList.PERM_ADMIN_1);
+        super(server, "top", "Teleport to Top Block", "/top", RankList.PERM_OP);
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
-                new CommandParameter("player", CommandParameter.ARG_TYPE_TARGET, true)
+                new CommandParameter("player", CommandParamType.TARGET, true)
         });
     }
 

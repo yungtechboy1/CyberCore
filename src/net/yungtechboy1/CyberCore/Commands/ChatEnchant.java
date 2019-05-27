@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.item.Item;
 import cn.nukkit.math.Vector3;
@@ -22,7 +23,7 @@ public class ChatEnchant extends Command {
         Owner = server;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
-                new CommandParameter("key", CommandParameter.ARG_TYPE_INT, true),
+                new CommandParameter("key", CommandParamType.INT, true),
         });
     }
     @Override

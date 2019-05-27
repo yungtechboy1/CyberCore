@@ -5,6 +5,7 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.Random;
 
 public class Wartp extends Commands {
 
-    public Wartp(CommandSender s, String[] a, FactionsMain m) {
+    public Wartp(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f wartp", m);
         senderMustBeInFaction = true;
         senderMustBeGeneral = true;

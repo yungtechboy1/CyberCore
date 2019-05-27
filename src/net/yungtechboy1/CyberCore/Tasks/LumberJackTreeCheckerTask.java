@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Tasks;
 
-import net.yungtechboy1.CyberCore.Classes.Old.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Old.Class_LumberJack;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.math.Vector3;
@@ -34,10 +33,10 @@ public class LumberJackTreeCheckerTask extends PluginTask<CyberCoreMain> {
                         Block at = getOwner().getServer().getDefaultLevel().getBlock(v3);
                         if(at.getId() == Block.WOOD || at.getId() == Block.WOOD2){
                             ((ConfigSection) e.getValue()).remove(g.getKey());
-                            BaseClass bc = getOwner().ClassFactory.GetClass(p);
-                            if(bc instanceof Class_LumberJack){
-                                bc.addXP(50);
-                            }
+//                            BaseClass bc = getOwner().ClassFactory.GetClass(p);
+//                            if(bc instanceof Class_LumberJack){
+//                                bc.addXP(50);
+//                            }
                         }
                     }
                 }

@@ -4,6 +4,8 @@ import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Manager.Factions.FactionRank;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**
@@ -11,7 +13,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class Claim extends Commands {
 
-    public Claim(CommandSender s, String[] a, FactionsMain m){
+    public Claim(CorePlayer s, String[] a, FactionsMain m){
         super(s,a,"/f claim [radius = 1]",m);
         senderMustBeInFaction = true;
         senderMustBePlayer = true;
@@ -26,10 +28,18 @@ public class Claim extends Commands {
     @Override
     public void RunCommand(){
         Integer Radius = GetIntegerAtArgs(1,1);
+        FactionRank r = fac.getPlayerRank((CorePlayer) Sender);
+        if(r != null){
+            if(!r.HasPerm(fac.getSettings().getAllowedToClaim())){
+                Sender.sendMessage("Error! You don't have permission to Claim Plots!");
+                return;
+            }
+        }
+
         if(Radius > 1){
             Integer rr = Radius * Radius;
             Integer money = (5000*rr);
-            Integer power = (1*rr);
+            Integer power = (rr);
             if(fac.GetMoney() > money){
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Your Faction does not have $"+money+" in your faction account!");
                 return;

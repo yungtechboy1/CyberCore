@@ -4,6 +4,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.*;
@@ -14,7 +15,7 @@ import java.util.Map;
  */
 public class Top extends Commands {
 
-    public Top(CommandSender s, String[] a, FactionsMain m){
+    public Top(CorePlayer s, String[] a, FactionsMain m){
         super(s,a,"/f Top",m);
         sendUsageOnFail = true;
 

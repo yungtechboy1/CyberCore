@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
@@ -11,7 +12,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class List extends Commands {
 
-    public List(CommandSender s, String[] a, FactionsMain m) {
+    public List(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f List [Page]", m);
         sendFailReason = true;
         sendUsageOnFail = true;
@@ -52,7 +53,7 @@ public class List extends Commands {
             //Privacy
             a += TextFormat.DARK_GREEN+""+x+" > ";
             if (f.GetPrivacy() == 1) {
-                a += TextFormat.RED + "[C]";
+                a += TextFormat.RED + "[P]";
             } else {
                 a += TextFormat.GREEN + "[O]";
             }

@@ -85,17 +85,7 @@ public class CustomFactory implements Listener {
 //        Server.getInstance().getLogger().info("FOUND "+el.length);
         Entity stackEntity = null;
         for (Entity e : el) {
-            if(!(e instanceof EntityStackable)) {
-                System.out.println("BAD WAY");
-                if (e.getNetworkId() == type && e.namedTag.contains("IsStack")) {//Same Entity and Stack
-                    int _c = e.namedTag.getInt("StackCount");
-                    int _m = e.namedTag.getInt("MaxStack");
-
-                    Server.getInstance().getLogger().info("FOUND STACK ENTITY???:");
-                    if (_c < _m) stackEntity = e;
-                    break;
-                }
-            }else{
+            if(e instanceof EntityStackable) {
                 System.out.println("CORRECT WAY");
                 ((EntityStackable) e).AddStackCount(1);
                 stackEntity = e;
@@ -129,7 +119,7 @@ public class CustomFactory implements Listener {
             .putString("CustomName", "Entity Stack Count 1")
             .putBoolean("CustomNameVisible", true);;
 
-            return Entity.createEntity(type, chunk, nbt, args);
+            return Entity.createEntity(type+"", chunk, nbt, args);
         } else {
             stackEntity.onUpdate(Server.getInstance().getTick());
             return stackEntity;

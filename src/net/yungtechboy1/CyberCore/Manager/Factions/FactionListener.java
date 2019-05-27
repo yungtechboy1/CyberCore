@@ -46,6 +46,7 @@ public class FactionListener implements Listener {
 //        event = ce.Event;
     }
 
+
     @EventHandler
     public void FactionPlayerDeath(PlayerDeathEvent event) {
         if (event == null) return;
@@ -63,14 +64,14 @@ public class FactionListener implements Listener {
                     //@TODO Bounty XD
                     /*
                     int tb = 0;
-                    if(isset(plugin.bounty[strtolower(playern)])){
-                        foreach(plugin.bounty[strtolower(playern)] as name=>bounty){
+                    if(isset(_plugin.bounty[strtolower(playern)])){
+                        foreach(_plugin.bounty[strtolower(playern)] as name=>bounty){
                             tb += bounty;
-                            event.getEntity().setNameTag(plugin.nt[strtolower(event.getPlayer().getName())]);
-                            unset(plugin.bounty[strtolower(playern)][name]);
+                            event.getEntity().setNameTag(_plugin.nt[strtolower(event.getPlayer().getName())]);
+                            unset(_plugin.bounty[strtolower(playern)][name]);
                         }
                         if(tb != 0){
-                            plugin.api.addMoney(e,tb);
+                            _plugin.api.addMoney(e,tb);
                             e.sendMessage(TextFormat.GREEN."[Bounty] Bounty Claimed for the Amount of tb");
                             e.addExperience(5);
                         }
@@ -85,20 +86,20 @@ public class FactionListener implements Listener {
                     killer.addKills();
                     if (killer.kills == 5) {
                         plugin.getServer().broadcastMessage(TextFormat.GREEN + killername + " is on a 5 KillStreak!");
-                        //if(kf != null)plugin.AddFactionPower(kf, 5);
+                        //if(kf != null)_plugin.AddFactionPower(kf, 5);
                     }
                     if (killer.kills == 8) {
                         plugin.getServer().broadcastMessage(TextFormat.AQUA + killername + " is on a 8 KillStreak!");
-                        //if(kf != null)plugin.AddFactionPower(kf, 8);
+                        //if(kf != null)_plugin.AddFactionPower(kf, 8);
                     }
                     if (killer.kills == 10) {
                         plugin.getServer().broadcastMessage(TextFormat.LIGHT_PURPLE + killername + " is on a 10 KillStreak!");
-                        //if(kf != null)plugin.AddFactionPower(kf, 10);
+                        //if(kf != null)_plugin.AddFactionPower(kf, 10);
                     }
                     if (killer.kills > 10) {
                         Integer kills = killer.kills;
                         plugin.getServer().broadcastMessage(TextFormat.LIGHT_PURPLE + killername + " is on a " + kills + " KillStreak!");
-                        //if(kf != null)plugin.AddFactionPower(kf, kills*2);
+                        //if(kf != null)_plugin.AddFactionPower(kf, kills*2);
                     }
                 }
             }
@@ -155,37 +156,29 @@ public class FactionListener implements Listener {
 //        }
 //    }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void FationsJoinEvent(PlayerJoinEvent event) {
-        //plugin.uuid[event.getPlayer().getName()][event.getPlayer().getClientId()] = date(DATE_COOKIE);
-        String player = event.getPlayer().getName();
-
-        if(factions.isInFaction(player)) {
-            new NukkitRunnable() {
-                @Override
-                public void run() {
-                    event.getPlayer().sendPopup("Your Faction is : HACKED FACTION");//TODO: Make faction data retrievable and savable.
-                }
-            }.runTaskLater(plugin, 60);
-        }
+        @EventHandler(priority = EventPriority.HIGHEST)
+        public void FationsJoinEvent(PlayerJoinEvent event) {
+            //_plugin.uuid[event.getPlayer().getName()][event.getPlayer().getClientId()] = date(DATE_COOKIE);
+//            String player = event.getPlayer().getName();
+            factions.LoadPlayer(event.getPlayer());
 
 
 /*
         asd = "";
         //CHECK BOUNTY
         tb = 0;
-        if(isset(plugin.bounty[strtolower(sender.getName())])){
-            foreach(plugin.bounty[strtolower(sender.getName())] as name=>bounty){
+        if(isset(_plugin.bounty[strtolower(sender.getName())])){
+            foreach(_plugin.bounty[strtolower(sender.getName())] as name=>bounty){
                 tb += bounty;
             }
             if(tb != 0){
                 asd = "\n".TextFormat.AQUA."[Bounty tb]";
             }
         }
-        faction = plugin.getPlayerFaction(player);
+        faction = _plugin.getPlayerFaction(player);
         if(faction !== false){
-            plugin.MessageFaction(faction, TextFormat.GREEN."player Has Joined!");
-            fc = plugin.DecodeFactionColor(plugin.getFactionColor(faction));
+            _plugin.MessageFaction(faction, TextFormat.GREEN."player Has Joined!");
+            fc = _plugin.DecodeFactionColor(_plugin.getFactionColor(faction));
             if(fc == false){
                 fc = TextFormat.GRAY;
             }
@@ -194,15 +187,15 @@ public class FactionListener implements Listener {
             abcdefg = event.getPlayer().getName();
         }
         event.getPlayer().setNameTag(abcdefg.asd);
-        plugin.nt[strtolower(event.getPlayer().getName())] = abcdefg;
+        _plugin.nt[strtolower(event.getPlayer().getName())] = abcdefg;
 */
         /*
-        rank = plugin.GetRank(player);
+        rank = _plugin.GetRank(player);
         if(sender.isOp() && (rank == false || rank == "Guest")){
             sender.kick("YOu should not be OP");
         }
         a = array();
-        aaa = @mysqli_query( plugin.db2,"SELECT * FROM `ranks` WHERE `name` = 'player'");
+        aaa = @mysqli_query( _plugin.db2,"SELECT * FROM `ranks` WHERE `name` = 'player'");
         if(@mysqli_num_rows(aaa) > 0){
             f = false;
             while(row = @mysqli_fetch_assoc(aaa)){
@@ -217,11 +210,11 @@ public class FactionListener implements Listener {
                 break;
             }
             if(f == false){
-                unset(plugin.CC.yml["prefixs"][player]);
+                unset(_plugin.CC.yml["prefixs"][player]);
                 return true;
             }
         }else{
-            unset(plugin.CC.yml["prefixs"][player]);
+            unset(_plugin.CC.yml["prefixs"][player]);
             return true;
         }
         if(a['color'] !== ""){
@@ -237,13 +230,13 @@ public class FactionListener implements Listener {
         rankt = a['prefix'];
         if(rankt == "")rankt = rank;
         if(rankt == "")rankt = "UNKNOWN";
-        if(rank !== "Guest")plugin.getServer ().getScheduler ().scheduleDelayedTask (new SetNameTeg(Main.FM, event.getPlayer(), color.rankt."\n".abcdefg), 20);
-        if(rank !== "Guest" && rank !== "OP")plugin.CC.yml["prefixs"][player] = color.rankt;
+        if(rank !== "Guest")_plugin.getServer ().getScheduler ().scheduleDelayedTask (new SetNameTeg(Main.FM, event.getPlayer(), color.rankt."\n".abcdefg), 20);
+        if(rank !== "Guest" && rank !== "OP")_plugin.CC.yml["prefixs"][player] = color.rankt;
         if(rank !== "Guest")event.getPlayer().setNameTag (color.rankt."\n".abcdefg);
-        plugin.nt[strtolower(event.getPlayer().getName())] = color.rankt."\n".abcdefg;
+        _plugin.nt[strtolower(event.getPlayer().getName())] = color.rankt."\n".abcdefg;
         echo color.rankt."-rank\n".abcdefg;
         if(rank !== "Guest" && (rank == "OP" || rank == "BUILDER"))event.getPlayer().setOp(true);
-        //if(rank == "Guest")plugin.CC.yml["prefixs"][player] = null;
+        //if(rank == "Guest")_plugin.CC.yml["prefixs"][player] = null;
         if(rank == "Guest")event.getPlayer().setOp (false);
         //this.CC.yml["prefixs"][player] = "§a".rank;
         if(a['claimed'] == 0){
@@ -251,7 +244,7 @@ public class FactionListener implements Listener {
         }
         */
         // }
-    }
+   }
 
     @EventHandler
     public void BucketEmpty(PlayerBucketEmptyEvent ev) {
@@ -344,8 +337,8 @@ public class FactionListener implements Listener {
 //        if (factionDamage instanceof EntityDamageByEntityEvent) {
 //            if ((factionDamage.getEntity() instanceof Player) && (((EntityDamageByEntityEvent) factionDamage).getDamager() instanceof Player)) {
 //                Integer t = (int) (Calendar.getInstance().getTime().getTime() / 1000) + 10;
-//                plugin.pvplog.put(factionDamage.getEntity().getName(), t);
-//                plugin.pvplog.put(((EntityDamageByEntityEvent) factionDamage).getDamager().getName(), t);
+//                _plugin.pvplog.put(factionDamage.getEntity().getName(), t);
+//                _plugin.pvplog.put(((EntityDamageByEntityEvent) factionDamage).getDamager().getName(), t);
 //                float d = factionDamage.getFinalDamage();
 //                String text = TextFormat.RED.toString() + d + " Damage";
 //                long eid = 9999999 + (long) (Math.random() * 50000);
@@ -357,8 +350,8 @@ public class FactionListener implements Listener {
 //                }};
 //                Entity dmger = ((EntityDamageByEntityEvent) factionDamage).getDamager();
 //                dmger.getLevel().addParticle(ft, ps);
-//                plugin.popups.put(eid, ft);
-//                plugin.getServer().getScheduler().scheduleDelayedTask(new PopUp(Main.FM, (Player) ((EntityDamageByEntityEvent) factionDamage).getDamager(), eid, ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel()), 7);
+//                _plugin.popups.put(eid, ft);
+//                _plugin.getServer().getScheduler().scheduleDelayedTask(new PopUp(Main.FM, (Player) ((EntityDamageByEntityEvent) factionDamage).getDamager(), eid, ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel()), 7);
 //            } else if (((EntityDamageByEntityEvent) factionDamage).getDamager() instanceof Player) {
 //                float d = factionDamage.getFinalDamage();
 //                String text = TextFormat.RED.toString() + d + " Damage";
@@ -370,8 +363,8 @@ public class FactionListener implements Listener {
 //                    add((Player) ((EntityDamageByEntityEvent) factionDamage).getDamager());
 //                }};
 //                ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel().addParticle(ft, ps);
-//                plugin.popups.put(eid, ft);
-//                plugin.getServer().getScheduler().scheduleDelayedTask(new PopUp(Main.FM, (Player) ((EntityDamageByEntityEvent) factionDamage).getDamager(), eid, ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel()), 7);
+//                _plugin.popups.put(eid, ft);
+//                _plugin.getServer().getScheduler().scheduleDelayedTask(new PopUp(Main.FM, (Player) ((EntityDamageByEntityEvent) factionDamage).getDamager(), eid, ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel()), 7);
 //            } /*else {
 //                float d = factionDamage.getFinalDamage();
 //                String text = TextFormat.RED.toString() + d + " Damage";
@@ -380,8 +373,8 @@ public class FactionListener implements Listener {
 //                CustomFloatingTextParticle ft = new CustomFloatingTextParticle(new Vector3(e.x, e.y + 1.5, e.z), text);
 //                ft.entityId = eid;
 //                factionDamage.getEntity().getLevel().addParticle(ft);
-//                plugin.popups.put(eid, ft);
-//                plugin.getServer().getScheduler().scheduleDelayedTask(new PopUp(Main.FM, (Player) ((EntityDamageByEntityEvent) factionDamage).getDamager(), eid, ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel()), 7);
+//                _plugin.popups.put(eid, ft);
+//                _plugin.getServer().getScheduler().scheduleDelayedTask(new PopUp(Main.FM, (Player) ((EntityDamageByEntityEvent) factionDamage).getDamager(), eid, ((EntityDamageByEntityEvent) factionDamage).getDamager().getLevel()), 7);
 //
 //            }*/
 //        }

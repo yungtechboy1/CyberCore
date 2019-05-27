@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Messages;
+import net.yungtechboy1.CyberCore.Rank.RankList;
 
 /**
  * Created by carlt_000 on 1/21/2017.
@@ -16,6 +17,12 @@ public class TargetCommand extends CheckPermCommand {
     public boolean OT = true;//Optional Target
 
     public TargetCommand(CyberCoreMain server, String cmd, String desc, String usage, int minrank, int targetKey, boolean canbeequal, boolean checktarget) {
+        super(server, cmd, desc,usage, RankList.GetRankFromInt(minrank));
+        TargetKey = targetKey;
+        CBE = canbeequal;
+        CT = checktarget;
+    }
+    public TargetCommand(CyberCoreMain server, String cmd, String desc, String usage, RankList minrank, int targetKey, boolean canbeequal, boolean checktarget) {
         super(server, cmd, desc,usage, minrank);
         TargetKey = targetKey;
         CBE = canbeequal;

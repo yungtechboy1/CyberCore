@@ -3,11 +3,18 @@ package net.yungtechboy1.CyberCore.Commands.Homes;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandEnum;
+import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
+import cn.nukkit.command.defaults.GamemodeCommand;
+import cn.nukkit.command.defaults.TeleportCommand;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Data.HomeData;
 import net.yungtechboy1.CyberCore.Tasks.TPToHome;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -22,40 +29,48 @@ public class Home extends Command {
     public Home(CyberCoreMain server) {
         super("home", "Home", "/home [key | list]");
         Owner = server;
+        CommandParameter lcp = new CommandParameter("list");
+        CommandParameter kcp = new CommandParameter("key", CommandParamType.TEXT, false);
+        lcp.enumData = new CommandEnum("List", Arrays.asList(new String[]{"list"}));
+//        kcp.enumData = new CommandEnum("Key Name", Arrays.asList();
         this.commandParameters.clear();
-        this.commandParameters.put("default", new CommandParameter[]{
-                new CommandParameter("key | list", CommandParameter.ARG_TYPE_RAW_TEXT, true)
+        this.commandParameters.put("key", new CommandParameter[]{
+                kcp
+        });
+        this.commandParameters.put("list", new CommandParameter[]{
+                lcp
         });
     }
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (args.length != 1 || !(sender instanceof Player)) return false;
-        Player p = (Player) sender;
-        if(args[0].equalsIgnoreCase("list")){
+        CorePlayer p = (CorePlayer) sender;
+        if (args[0].equalsIgnoreCase("list")) {
             String a = "";
-            a += TextFormat.GRAY+"========================"+TextFormat.RESET+"\n";
-            LinkedHashMap<String, String> v = (LinkedHashMap<String, String>)Owner.HomeFactory.homes.get(sender.getName().toLowerCase(), new LinkedHashMap<String, String>());
-            for(Map.Entry<String, String> c: v.entrySet()){
-                String b = c.getKey();
-                String d = c.getValue();
-                a += TextFormat.YELLOW+"------> [ "+b+" ] <------ "+TextFormat.RESET+"\n";
+            a += TextFormat.GRAY + "=========================" + TextFormat.RESET + "\n";
+            a += TextFormat.GRAY + "==========USAGE==========" + TextFormat.RESET + "\n";
+            a += TextFormat.GRAY + "= Use /home <home name> =" + TextFormat.RESET + "\n";
+            a += TextFormat.GRAY + "======= Home Names ======" + TextFormat.RESET + "\n";
+            for (HomeData hd : p.HD) {
+                String b = hd.getName();
+                a += TextFormat.YELLOW + "------> [ " + b + " ] <------ " + TextFormat.RESET + "\n";
             }
-            if(v.size() == 0)a += "----->"+"You have no HomeManager!<-----";
-            a += TextFormat.GRAY+"========================"+TextFormat.RESET;
+            if (p.HD.size() == 0) a += "----->" + "You have no Homes!<-----"+ "\n";;
+            a += TextFormat.GRAY + "========================" + TextFormat.RESET;
             sender.sendMessage(a);
             return true;
         }
-        if (!Owner.HomeFactory.HasHomeAtKey(sender.getName(), args[0])) {
+        if (!p.CheckHomeKey(args[0])) {
             sender.sendMessage(Prefix + "Error! You do not have a home called " + args[0]);
             return true;
         }
-        if (Owner.TPING.contains(sender.getName().toLowerCase())) {
+        if (p.isInTeleportingProcess()) {
             sender.sendMessage(Prefix + "Error! You are in the process of TPing already!");
             return true;
         }
-        Owner.TPING.add(sender.getName().toLowerCase());
-        Owner.getServer().getScheduler().scheduleDelayedTask(new TPToHome(Owner, p, args[0]), 20 * 8);
+        p.setInTeleportingProcess(true);
+        p.TeleportToHome(args[0],10);
         return true;
     }
 }

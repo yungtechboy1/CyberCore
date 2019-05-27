@@ -2,29 +2,14 @@ package net.yungtechboy1.CyberCore;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
-import cn.nukkit.block.Block;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.*;
-import cn.nukkit.form.element.ElementButton;
-import cn.nukkit.form.response.FormResponseCustom;
-import cn.nukkit.form.response.FormResponseData;
-import cn.nukkit.form.response.FormResponseModal;
-import cn.nukkit.form.response.FormResponseSimple;
-import cn.nukkit.form.window.FormWindowSimple;
-import cn.nukkit.item.Item;
-import cn.nukkit.item.enchantment.Enchantment;
-import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import static net.yungtechboy1.CyberCore.FormType.MainForm.*;
+import java.util.*;
 
 /**
  * Created by carlt_000 on 1/22/2017.
@@ -48,9 +33,10 @@ public class MasterListener implements Listener {
         event.setJoinMessage(Msg);
         p.sendTitle(plugin.colorize("&l&bCyberTech"), plugin.colorize("&l&2Welcome!"),30,30, 10);
 
-        plugin.initiatePlayer(p);
-        String rank = plugin.RankFactory.getPlayerRank(p).getDisplayName();
-        p.sendMessage(plugin.colorize( "&eYou Have Joined with the Rank: " + rank));
+//        _plugin.initiatePlayer(p);
+        plugin.ServerSQL.LoadPlayer(plugin.getCorePlayer(p));
+        String rank = plugin.RF.getPlayerRank(p).getDisplayName();
+        p.sendMessage(plugin.colorize("&2You Have Joined with the Rank: " + rank));
         if (rank != null && rank.equalsIgnoreCase("op")) {
             p.setOp(true);
         } else {
@@ -58,102 +44,19 @@ public class MasterListener implements Listener {
         }
     }
 
-    //GUI Listener
-    @EventHandler
-    public void PFRE(PlayerFormRespondedEvent pr) {
-        int fid = pr.getFormID();
-        Player p = pr.getPlayer();
-        CorePlayer cp = ((CorePlayer) p);
-        switch (cp.LastSentFormType) {
-            case Class_0:
-            case Enchanting_0:
-                FormResponseModal frm = (FormResponseModal) pr.getResponse();
-                if (frm.getClickedButtonId() == 0) {
-                    if (cp.LastSentFormType == Enchanting_0) {
-                        Item e = Item.get(Block.ENCHANT_TABLE, 0, 1);
-                        p.getInventory().addItem(e.setCustomName("TTTTTTTTTT"));
-                    }
-                    cp.LastSentFormType = NULL;
-                } else {
-                    cp.showFormWindow(cp.getNewWindow());
-                    if (cp.LastSentFormType == Enchanting_0) {
-                        //Take Hand
-                        cp.ReturnItemBeingEnchanted();
-                        Item i = cp.getInventory().getItemInHand();
-                        cp.getInventory().remove(i);//Take item and Store it
-                        cp.setItemBeingEnchanted(i);
-                        cp.LastSentFormType = Enchanting_1;
-                    } else if (cp.LastSentFormType == Class_0) cp.LastSentFormType = Class_1;
-                    cp.clearNewWindow();
-                }
-                break;
-            case Class_1:
-                FormResponseSimple frs = (FormResponseSimple) pr.getResponse();
-                int k = frs.getClickedButtonId();
-                if (cp.LastSentSubMenu == FormType.SubMenu.MainMenu) {
-                    if (k == 0) {//Offense
-                        cp.showFormWindow(new FormWindowSimple("Choose your Class Catagory!", "Visit Cybertechpp.com for more info on classes!",
-                                new ArrayList<ElementButton>() {{
-                                    add(new ElementButton("Assassin"));
-                                    add(new ElementButton("Knight"));
-                                    add(new ElementButton("Raider"));
-                                    add(new ElementButton("Theif"));
-                                }}));
-                        cp.LastSentFormType = Class_1;
-                        cp.LastSentSubMenu = FormType.SubMenu.Offense;
-                    } else if (k == 4) {
-                        //TEMP-GIVE SPAWNER
-                        Item i = Item.get(Item.MONSTER_SPAWNER, 0, 1);
-                        i.setCompoundTag(new CompoundTag() {{
-                            putInt("Level", 1);
-                            putInt("Type", 12);
-                            putShort("MinSpawnDelay", 20 * 10);
-                            putShort("MaxSpawnDelay", 20 * 10 + 10);
-                        }});
-                        cp.sendMessage("Gave ITem!");
-                        cp.getInventory().addItem(i);
-                    }
-                } else if (cp.LastSentSubMenu == FormType.SubMenu.Offense) {
-                    switch (k) {
-                        case 0:
-                            break;//Assassin
-                        case 1:
-                            break;//Knight
-                        case 2:
-                            break;//Raider
-                        case 3:
-                            break;//Theif
-                    }
-                }
-                break;
-            case Enchanting_1:
-                FormResponseCustom frc = (FormResponseCustom) pr.getResponse();
-                FormResponseData frd = frc.getStepSliderResponse(3);
-                int ke = frd.getElementID();
-                cp.sendMessage(frd.getElementContent()+"<<<<<<<");
-                Enchantment e = cp.GetStoredEnchants().get(ke);
-                if(e == null){
-                    cp.sendMessage("Error!");
-                }
-/*
-* cp.setNewWindow(new FormWindowCustom("Choose your Class Catagory!",
-                    new ArrayList<Element>() {{
-                        addAll(CustomEnchantment.PrepareEnchantList(cp.GetStoredEnchants(GetTier(),3,item)));
-                        add(new ElementStepSlider("TE3", new ArrayList<String>() {{
-                            add("1");
-                            add("2");
-                            add("3");
-                        }}, 0));
-                    }}));
-* */
-                break;
-        }
-    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void spawnEvent(PlayerRespawnEvent event) {
 
     }
+
+
+//    @EventHandler(priority = EventPriority.HIGHEST)
+//    public void onCreation(PlayerCreationEvent event) {
+//        event.setPlayerClass(CorePlayer.class);
+//        event.setBaseClass(CorePlayer.class);
+//    }
+
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCreation(PlayerCreationEvent event) {
@@ -162,10 +65,9 @@ public class MasterListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void quitEvent(PlayerQuitEvent event) {
-        String msg = plugin.colorize(plugin.MainConfig.getString("Leave-Message"), event.getPlayer());
-        event.setQuitMessage(msg);
+        String Msg = (String) plugin.MainConfig.get("Leave-Message");
+        event.setQuitMessage(Msg.replace("{player}", event.getPlayer().getName()));
 
-        plugin.savePlayer(event.getPlayer().getName());
     }
 
 
@@ -238,7 +140,7 @@ public class MasterListener implements Listener {
         //ANTI WORK AROUND BADWORDS
         //@TODO remove all spaces and use Regex to replace all Instaces of it
 
-        return plugin.RankFactory.getPlayerRank(player).getChat_format().format(faction, plugin.RankFactory.getPlayerRank(player).getDisplayName(), player, chatafter);
+        return plugin.RF.getPlayerRank(player).getChat_format().format(faction, plugin.RF.getPlayerRank(player).getDisplayName(), player, chatafter);
 /*
         put("Chat-Format", "{rank}{faction}{player-name} > {msg}");
         put("Faction-Format", "[{value}]");

@@ -1,3 +1,8 @@
+# Sheep
+---
+- Wool:0 - 1-2 Wool
+- 
+
 # Pig
 ---
 

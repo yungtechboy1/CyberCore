@@ -95,11 +95,11 @@ public class MobPlugin implements Listener {
         // Config reading and writing
         pluginConfig = new Config(new File(CCM.getDataFolder(), "MobPlugin.yml"));
 
-        // we need this flag as it's controlled by the plugin's entities
+        // we need this flag as it's controlled by the _plugin's entities
         MOB_AI_ENABLED = true;
         int spawnDelay = 0;
 
-        // register as listener to plugin events
+        // register as listener to _plugin events
         CCM.getServer().getPluginManager().registerEvents(this, CCM);
 
         if (spawnDelay > 0) {
@@ -179,7 +179,7 @@ public class MobPlugin implements Listener {
     }
 
     /**
-     * Returns plugin specific yml configuration
+     * Returns _plugin specific yml configuration
      * 
      * @return a {@link Config} instance
      */

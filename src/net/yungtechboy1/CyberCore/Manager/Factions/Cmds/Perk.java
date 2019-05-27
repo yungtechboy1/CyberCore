@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.*;
@@ -12,7 +13,7 @@ import java.util.*;
  */
 public class Perk extends Commands {
 
-    public Perk(CommandSender s, String[] a, FactionsMain m){
+    public Perk(CorePlayer s, String[] a, FactionsMain m){
         super(s,a,"/f perk",m);
         senderMustBePlayer = true;
         senderMustBeMember = true;

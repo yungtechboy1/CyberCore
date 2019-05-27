@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**
@@ -11,7 +12,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class Map extends Commands {
 
-    public Map(CommandSender s, String[] a, FactionsMain m) {
+    public Map(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f map", m);
         senderMustBeInFaction = false;
         senderMustBePlayer = true;

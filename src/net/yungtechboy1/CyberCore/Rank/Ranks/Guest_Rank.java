@@ -10,10 +10,7 @@ import net.yungtechboy1.CyberCore.Rank.RankList;
  */
 public class Guest_Rank extends Rank {
     public Guest_Rank() {
-        super(0, "Guest");
-        RankList rankData = RankList.PERM_GUEST;
-        display_name = rankData.getName();
-        chat_prefix = rankData.getChat_prefix();
+        super(RankList.PERM_GUEST);
     }
 
 

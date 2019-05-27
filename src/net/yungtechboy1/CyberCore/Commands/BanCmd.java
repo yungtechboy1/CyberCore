@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Commands;
 
+import cn.nukkit.command.data.CommandParamType;
 import net.yungtechboy1.CyberCore.Commands.Constructors.TargetCommand;
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
@@ -21,8 +22,8 @@ public class BanCmd extends TargetCommand {
         OT = false;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
-                new CommandParameter("player", CommandParameter.ARG_TYPE_TARGET, true),
-                new CommandParameter("Message", CommandParameter.ARG_TYPE_RAW_TEXT, true)
+                new CommandParameter("player", CommandParamType.TARGET, true),
+                new CommandParameter("Message", CommandParamType.RAWTEXT, true)
         });
     }
 

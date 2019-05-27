@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
@@ -10,7 +11,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  * Created by carlt_000 on 12/11/2016.
  */
 public class Neutral extends Commands {
-    public Neutral(CommandSender s, String[] a, FactionsMain m) {
+    public Neutral(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f neutral <fac>", m);
         senderMustBeInFaction = true;
         senderMustBeLeader = true;

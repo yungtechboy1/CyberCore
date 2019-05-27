@@ -9,18 +9,93 @@ Base Classes
 Specalizations
     
  - Miner - Mining and Digging
-   - TNT-Specalist
-     - Chance of spawning TNT that can destroy ores
+   
+   TNT-Specialist
+   ---
+   - Regin Time:
+   - `240 - ((Sqrt(40*lvl)*143*lvl)/(8*lvl))`
+     - use /tnt to use TNT in bar 
+     - Mining any block with a Pickaxe adds 1 -5 XP
+        - Stone : 1;
+        - CobbleStone : 1;
+        - Iron Ore : 2;
+        - Gold Ore : 3;
+        - Diamond Ore : 5;
+        - Silver Ore : 4;
+     - Level 1 - 9:
+        - Player will regerate 1 TNT every 160 Secs - level
+        - Holds a Max of 10 TNT blocks
+     - Level 10 - 19:
+        - Mining with a pickaxe reduces regin time by 1 Sec after Level 10
+     - Level 20 - 29:
+        - Add 10 More TNT blocks to your capacity
+     - Level 30 - 39:
+        - Spawns TNT Level 2, Which Expands the range of TNT by 5 Blocks
+     - Level 40 - 49:
+        - Add 10 More TNT blocks to your capacity
+     - Level 50 - 59:
+        - Add 5 More TNT blocks to your capacity
+     - Level 60 - 69:
+        - Spawns TNT Level 2
+     
+     - Chance of spawning TNT that can destroy ores & Cobblestone when Mining
        - 20% increase in power with TNT
         - MineLife
           - 10% increase in mine speed
-   - MineLife
+   
+   MineLife  
+     ---
+     - Ability
+        - Mining Haste
+            - effect
+                - Lvl 1: Class lvl 1-29 for 15 Secs
+                - Lvl 2: Class lvl 30-59 for 25 Secs
+                - Lvl 3: Class lvl 60-89 for 35 Secs
+                - Lvl 4: Class lvl 90-100 for 50 Secs
+            - regin
+              - Lvl 1-19:  1% every 9 Secs / 15 min reload time
+              - Lvl 20-39:  1% every 8 Secs / 13.3 min reload time
+              - Lvl 40-59:  1% every 7 Secs / 8.3 min reload time
+              - Lvl 60-79:  1% every 5 Secs / 10 min reload time
+              - Lvl 80-100:  1% every 4 Secs / 7 min reload time
+     - Passive
+        - OreKnowledge
+            - When Breaking ore block there is a Chance that floating text may appear near surround blocks indicating where other ores of the same type are at
+              - Lvl 1-19:  2% Chance - 10 Block Range
+              - Lvl 20-39: 5% Chance - 13 Block Range
+              - Lvl 40-59: 8% Chance - 17 Block Range
+              - Lvl 60-79:  10% Chance - 20 Block Range
+              - Lvl 80-100: 15% Chance - 25 Block Range
+     - Mining any block with a Pickaxe adds 1 -5 XP
+         - Stone : 1;
+         - CobbleStone : 1;
+         - Iron Ore : 2;
+         - Gold Ore : 3;
+         - Diamond Ore : 5;
+         - Silver Ore : 4;
+     - Chance to Fast break blocks
+        - Level/10*
+        - `f(x) = ((.65x)/100) + 1`
      - Faster break times with each level
-        - 1-10 - 5% Faster
-        - 11-20 - 10% Faster
-        - 21-30 - 15% Faster
-        - 31-40 - 20% Faster
-        - 41-50 - 25% Faster
+        - BreakTime = `(1-((getLVL()/10d)/2));`
+        - BreakTime = `(a/500)+(a*.0065)`
+        - Level
+   - Ore Bomb
+        - ##### Depreciated
+        - Spawns Ore Blocks with Random values with a Box
+        - Levels:
+            - Level 1: 5 X 5 Box
+            - Level 2: 10 X 10 Box
+            - Level 3: 15 X 15 Box
+            - Level 4: 20 X 20 Box
+            - Level 5: 30 X 30 Box
+        - Data:
+            - SpawnRates:
+                - Coal: 0 - 100
+                - Iron: 0 - 100
+                - Gold: 0 - 100
+                - Diamond: 0 - 100
+                - Emeralds: 0 - 100
 - enchanter - Enchanting, Producing rare Potion and Books
     - Every other class has a max 65% Success rate, and 100% Fail rate. Enchanters will always have a 100% Max Success rate and max 80% Fail rate
       - The fail rate will decrease with each level
@@ -30,15 +105,18 @@ Specalizations
     - Witch
         - Enchants can have Quality Boosts
             -   1-10 - 5-10% Boost
+        - Can Upgrade Enchant Tiers
 - scholar - Potion Making, Can create "super-food", potions, and splash-potions, BARELs, and Drinks
-    -Drinks
-        - Give instant Health and Effect
+    - Can craft drinks
+        - Drinks
+            - Give instant Health and Effect
+        
+    - Potion maker
+        - Can increase Potions duration by up to 35%
+        
     - Can make Lingering Potions
         - Potions that last 2 - 10 Mins
-   - Extensive knowledge of Potions
-     - Fire Splash Potion
-     - Ice Splash Potion
-     - Nerve Gas Splash potion
+        
             
 - builder - Easier base building, Can create auto-gen walls,/fly within faction plot, craft TNT arrows, Cannon TNT...
     - Snow Hoe Enchant:

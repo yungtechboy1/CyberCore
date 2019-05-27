@@ -13,6 +13,14 @@ mysql-db: "truelinu_mcpe"
 mysql-user: "truelinu_admin"
 mysql-port: 3306
 
+db2:
+  mysql-host: "198.199.70.100"
+  mysql-pass: "cybertechpp123"
+  mysql-db-Faction: "Faction"
+  mysql-db-Server: "Server"
+  mysql-user: "cybertech"
+  mysql-port: 3306
+
 server-data:
   file: "cyber_core_data.db"
   table: "mcpe"

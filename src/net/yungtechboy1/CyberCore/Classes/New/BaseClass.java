@@ -12,18 +12,22 @@ import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerToggleSprintEvent;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
-import net.yungtechboy1.CyberCore.Abilities.Ability;
+import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
+import net.yungtechboy1.CyberCore.Classes.Power.Power;
+import net.yungtechboy1.CyberCore.CoolDown;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
+import net.yungtechboy1.CyberCore.Manager.Form.CyberFormCustom;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassHowToUse;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 
 public abstract class BaseClass {
-    public static int NONE = 0;
-
     protected final static int TYPE_Offensive_Raider = 1;
     protected final static int TYPE_Offensive_Thief = 2;
     protected final static int TYPE_Offensive_Assassin = 3;
@@ -36,16 +40,12 @@ public abstract class BaseClass {
     protected final static int TYPE_Farming_Farmer = 10;
     protected final static int TYPE_Farming_LumberJack = 11;
     protected final static int TYPE_Farming_Miner = 12;
-
-    public ConfigSection COOLDOWNS = new ConfigSection();
+    public static int NONE = 0;
+    public ArrayList<CoolDown> COOLDOWNS = new ArrayList<>();
     public boolean Prime = false;
     public int PrimeKey = 0;
     public int SwingTime = 20;
-
-    public int getMainID() {
-        return MainID;
-    }
-
+    public ArrayList<Power> Powers = new ArrayList<>();
     protected int MainID = 0;
     protected CyberCoreMain CCM;
     HashMap<Integer, Integer> Herbal = new HashMap<Integer, Integer>() {{
@@ -74,30 +74,85 @@ public abstract class BaseClass {
         put(Block.SOUL_SAND, 40);
         put(Block.CLAY_BLOCK, 40);
     }};
-    private Player P;
-    private int TYPE = 0;
+    private CorePlayer P;
+    private ClassType TYPE = ClassType.Class_Miner_TNT_Specialist;
     private int LVL = 0;
     private int XP = 0;
     private Ability ActiveAbility;
 
-    public BaseClass(CyberCoreMain main, Player player, int mid, int rank, int xp, ConfigSection cooldowns) {
-        CCM = main;
-        MainID = mid;
-        P = player;
-        TYPE = rank;
-        XP = xp;
-        LVL = XPToLevel(xp);
-        COOLDOWNS = cooldowns;
+    public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank, ConfigSection data) {
+        this(main, player, rank);
+        if (data != null) {
+            if (data.containsKey("cooldowns")) {
+                ArrayList<CoolDown> css = (ArrayList<CoolDown>) data.get("cooldowns");
+                if (css == null) {
+                    System.out.println("ERROROORR COOLDOWNS NOT IN CORRECT FOPRMT");
+                } else {
+                    COOLDOWNS = css;
+                }
+            }
+
+            if (data.containsKey("xp")) {
+                int xpi = data.getInt("xp", 0);
+                addXP(xpi);
+            }
+        }
     }
 
-    public BaseClass(CyberCoreMain main, Player player, int mid, ConfigSection cs) {
+    public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank) {
         CCM = main;
-        MainID = mid;
+//        MainID = mid;
         P = player;
-        XP = cs.getInt("XP");
-        TYPE = cs.getInt("TYPE");
+        TYPE = rank;
         LVL = XPToLevel(XP);
-        COOLDOWNS = cs.getSection("COOLDOWNS");
+    }
+
+    public ClassType getTYPE() {
+        return TYPE;
+    }
+
+    public abstract void SetPowers();
+
+    public int getMainID() {
+        return MainID;
+    }
+
+    public ArrayList<Power> getPowers() {
+        return Powers;
+    }
+
+    public Power GetPower(int key) {
+        return Powers.get(key);
+    }
+
+    public abstract Object RunPower(int powerid, Object... args);
+//        Power p = Powers.get(powerid);
+//        if(p == null || args.length != 3 ){
+//            CCM.getLogger().error("No Power found or Incorrect Args For MineLife E334221");
+//            return -1;
+//        }
+//        if(powerid == 1 && p instanceof MineLifePower){
+//            MineLifePower mlp = (MineLifePower) p;
+//            return mlp.GetBreakTime((Item)args[0],(Block)args[1],(double)args[2]);
+//        }
+//        return (double)args[2];
+//    }
+
+    public void AddPower(Power power) {
+        Powers.add(power);
+    }
+
+    public boolean TryRunPower(int powerid) {
+        Power p = Powers.get(powerid);
+        if (p == null) return false;
+        return p.CanRun();
+    }
+
+    public void RunPower(int powerid) {
+
+        Power p = Powers.get(powerid);
+        if (p == null) return;
+
     }
 
     public ArrayList<Ability> PossibleAbillity() {
@@ -113,7 +168,7 @@ public abstract class BaseClass {
         return new ConfigSection() {{
             put("COOLDOWNS", COOLDOWNS);
             put("XP", XP);
-            put("TYPE", TYPE);
+            put("TYPE", TYPE.getKey());
         }};
     }
 
@@ -132,9 +187,11 @@ public abstract class BaseClass {
 
     public void takeXP(int xp) {
         XP -= xp;
+        LVL = XPToLevel(XP);
     }
 
     public int getXP() {
+        LVL = XPToLevel(XP);
         return XP;
     }
 
@@ -146,6 +203,10 @@ public abstract class BaseClass {
         return Prime;
     }
 
+    public void setPrime(boolean prime) {
+        Prime = prime;
+    }
+
     public void setPrime(int key) {
         setPrime(true);
         PrimeKey = key;
@@ -153,19 +214,65 @@ public abstract class BaseClass {
         a.PrimeEvent();
     }
 
-    public void setPrime(boolean prime) {
-        Prime = prime;
+    public void AddCooldown(String perk, int value) {
+        COOLDOWNS.add(new CoolDown(perk, CCM.GetIntTime()+value));
     }
 
-    public void AddCooldown(int perk, int value) {
-        String key = "" + perk;
-        COOLDOWNS.put(key, value);
+    public void RemoveCooldown(String perk) {
+        if (!HasCooldown(perk)) return;
+        CoolDown cr = null;
+        for (CoolDown c : COOLDOWNS) {
+            if (c.getKey().equalsIgnoreCase(perk)) {
+                cr = c;
+                break;
+            }
+        }
+        if (cr != null) {
+            COOLDOWNS.remove(cr);
+        } else {
+            CyberCoreMain.getInstance().getLogger().error("Error! No cooldown to remove!");
+        }
     }
 
-    public boolean HasCooldown(int perk) {
-        String key = "" + perk;
-        Integer time = (int) (Calendar.getInstance().getTime().getTime() / 1000);
-        return time < COOLDOWNS.getInt(key);
+    public void ReduceCooldown(String perk, int value) {
+        if (!HasCooldown(perk)) return;
+
+        CoolDown cr = null;
+        for (CoolDown c : COOLDOWNS) {
+            if (c.getKey().equalsIgnoreCase(perk)) {
+                cr = c;
+                break;
+            }
+        }
+        if (cr != null) {
+            COOLDOWNS.remove(cr);
+            AddCooldown(perk, cr.getTime() - value);
+        } else {
+            CyberCoreMain.getInstance().getLogger().error("Error! No cooldown to reduce!");
+        }
+    }
+
+    public CoolDown GetCooldown(String key) {
+        if (!HasCooldown(key)) return null;
+        for (CoolDown c : COOLDOWNS) {
+            if (c.getKey().equalsIgnoreCase(key)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public boolean HasCooldown(String perk) {
+        for (CoolDown c : (ArrayList<CoolDown>)COOLDOWNS.clone()) {
+            if (c.getKey().equalsIgnoreCase(perk)) {
+                if(!c.isValid()){
+                    COOLDOWNS.remove(c);
+                    return false;
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     //TODO
@@ -202,16 +309,21 @@ public abstract class BaseClass {
         return event;
     }
 
+    public CyberForm GetSettingsWindow(){
+        return null;
+    }
+
+    @Deprecated
     public void activateAbility() {
-        if (HasCooldown(PrimeKey)) {
-            getPlayer().sendMessage("This Has a CoolDown!");
-            return;
-        } else if (PrimeKey <= PossibleAbillity().size() - 1) {
-            Ability a = PossibleAbillity().get(PrimeKey);
-            if (a != null && a.activate()) {
-                setActiveAbility(a);
-            }
-        }
+//        if (HasCooldown(PrimeKey)) {
+//            getPlayer().sendMessage("This Has a CoolDown!");
+//            return;
+//        } else if (PrimeKey <= PossibleAbillity().size() - 1) {
+//            Ability a = PossibleAbillity().get(PrimeKey);
+//            if (a != null && a.activate()) {
+//                setActiveAbility(a);
+//            }
+//        }
     }
 
     public void activateAbility(Vector3 pos) {
@@ -257,8 +369,14 @@ public abstract class BaseClass {
     public CraftItemEvent CraftItemEvent(CraftItemEvent event) {
         return event;
     }
-    public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {return event;}
-    public CustomEntityDamageEvent CustomEntiyDamageEvent(CustomEntityDamageEvent event) {return event;}
+
+    public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
+        return event;
+    }
+
+    public CustomEntityDamageEvent CustomEntiyDamageEvent(CustomEntityDamageEvent event) {
+        return event;
+    }
 
     public int XPToLevel(int xp) {
         int lvl = 0;
@@ -285,6 +403,40 @@ public abstract class BaseClass {
             return 37 + (level - 15) * 5 * 100;
         } else {
             return 7 + level * 2 * 100;
+        }
+    }
+
+    public void onUpdate(int tick) {
+
+    }
+
+    public String FormatHudText() {
+        String f = "";
+        int lvl = XPToLevel(getXP());
+        String pclass = getName();
+        int pxp = XPRemainder(getXP());
+        int pxpof = calculateRequireExperience(lvl + 1);
+        int plvl = lvl;
+        f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl;
+        return f;
+    }
+
+    public CyberForm getHowToUseClassWindow() {
+        return null;
+    }
+
+
+    public enum ClassType {
+        Class_Miner_TNT_Specialist(1), Class_Miner_MineLife(0);
+
+        int k = -1;
+
+        ClassType(int i) {
+            k = i;
+        }
+
+        public int getKey() {
+            return k;
         }
     }
 

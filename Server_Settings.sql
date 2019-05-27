@@ -1,0 +1,1 @@
+INSERT INTO Server.Settings (name, HUD_OFF, HUD_CLASS_OFF, HUD_POS_OFF, HUD_FAC_OFF) VALUES ('TTTTT', 0, 1, 0, 0);

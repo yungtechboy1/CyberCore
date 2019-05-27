@@ -1,0 +1,10 @@
+INSERT INTO Server.AuctionHouse  VALUES (0, 3, 0, 5, '', 1, '84920db2-6e5b-3728-abc6-0efc9b629023', 'yungtechboy1', 0);
+INSERT INTO Server.AuctionHouse  VALUES (1, 32, 0, 7, '', 1, '84920db2-6e5b-3728-abc6-0efc9b629023', 'yungtechboy1', 0);
+INSERT INTO Server.AuctionHouse  VALUES (2, 62, 0, 52, '', 1, '84920db2-6e5b-3728-abc6-0efc9b629023', 'yungtechboy1', 0);
+INSERT INTO Server.AuctionHouse  VALUES (3, 264, 0, 10, '', 5000, '1111--1111', 'YYYEEEEE', 0);
+INSERT INTO Server.AuctionHouse  VALUES (4, 285, 0, 10, '', 5000, '1111--1111', 'YYYEEEEE', 0);
+INSERT INTO Server.AuctionHouse  VALUES (5, 264, 0, 10, '', 5000, '1111--1111', 'YYYEEEEE', 0);
+INSERT INTO Server.AuctionHouse  VALUES (6, 264, 0, 25, '', 200, '11111-1111', 'TestingGuy', 0);
+INSERT INTO Server.AuctionHouse  VALUES (7, 283, 0, 1, '', 150, '84920db2-6e5b-3728-abc6-0efc9b629023', 'yungtechboy1', 0);
+INSERT INTO Server.AuctionHouse  VALUES (8, 145, 0, 64, '', 500, '84920db2-6e5b-3728-abc6-0efc9b629023', 'yungtechboy1', 0);
+INSERT INTO Server.AuctionHouse  VALUES (null, 116, 0, 64, '', 500, '84920db2-6e5b-3728-abc6-0efc9b629023', 'yungtechboy1', 0);

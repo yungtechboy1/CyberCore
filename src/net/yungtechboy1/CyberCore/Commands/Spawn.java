@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Commands;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -23,7 +24,7 @@ public class Spawn extends Command {
         Owner = server;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{
-                new CommandParameter("player", CommandParameter.ARG_TYPE_TARGET, true)
+                new CommandParameter("player",  CommandParamType.TARGET, true)
         });
     }
 
@@ -51,23 +52,10 @@ public class Spawn extends Command {
                     p.teleport(p.getLevel().getSafeSpawn());
                     s.sendMessage(TextFormat.GREEN + "Teleporting you!");
                 }else {
-                    server.getServer().getScheduler().scheduleDelayedTask(new TeleportEvent(server, (Player) s, p.getLevel().getSafeSpawn()), 20 * 5);
+                    p.StartTeleport(((CorePlayer) s).getLevel().getSafeSpawn(),5);
                     s.sendMessage(TextFormat.GREEN + "Teleporting you to spawn in 5 Secs!");
                 }
             }
-        } else {
-            if(args.length == 1){
-                Player t = server.getServer().getPlayer(args[0]);
-                if(t == null){
-                    s.sendMessage(TextFormat.RED+"Error! Target Player Not Found!");
-                    return;
-                }
-                t.teleport(t.getLevel().getSafeSpawn());
-                t.sendMessage(TextFormat.YELLOW+" Your at spawn!");
-                s.sendMessage(TextFormat.GREEN+t.getName()+" Teleported to spawn!");
-                return;
-            }
-            s.sendMessage(Messages.NEED_TO_BE_PLAYER);
         }
     }
 }

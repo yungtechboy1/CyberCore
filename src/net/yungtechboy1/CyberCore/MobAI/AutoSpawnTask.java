@@ -153,8 +153,8 @@ public class AutoSpawnTask implements Runnable {
     }
 
     public void createEntity(Object type, Position pos) {
-//        if (plugin.CCM.FM != null) {
-//            String plotowner = plugin.CCM.FM.FFactory.GetPlotStatus(pos.getFloorX() >> 4, pos.getFloorZ() >> 4);
+//        if (_plugin.CCM.FM != null) {
+//            String plotowner = _plugin.CCM.FM.FFactory.GetPlotStatus(pos.getFloorX() >> 4, pos.getFloorZ() >> 4);
 //            //Mobs only spawn in Wilderness!
 //            if (plotowner != null) return;
 //        }

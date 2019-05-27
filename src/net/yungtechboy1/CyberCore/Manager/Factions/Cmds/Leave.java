@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**
@@ -10,7 +11,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class Leave extends Commands {
 
-    public Leave(CommandSender s, String[] a, FactionsMain m) {
+    public Leave(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f leave", m);
         senderMustBeInFaction = true;
         senderMustBePlayer = true;
