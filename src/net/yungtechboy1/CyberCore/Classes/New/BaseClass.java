@@ -28,18 +28,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class BaseClass {
-    protected final static int TYPE_Offensive_Raider = 1;
-    protected final static int TYPE_Offensive_Thief = 2;
-    protected final static int TYPE_Offensive_Assassin = 3;
-    protected final static int TYPE_Offensive_Knight = 4;
-    protected final static int TYPE_Offensive_Tank = 5;
-    protected final static int TYPE_Crafting_MadScientist = 6;
-    protected final static int TYPE_Crafting_Enchater = 7;
-    protected final static int TYPE_Crafting_Smith = 8;
-    protected final static int TYPE_Crafting_Crafter = 9;
-    protected final static int TYPE_Farming_Farmer = 10;
-    protected final static int TYPE_Farming_LumberJack = 11;
-    protected final static int TYPE_Farming_Miner = 12;
+    public enum ClassType{
+        Unknown,//0
+        Offensive_Raider,//1 -
+        Offensive_Theif,
+        Offensive_Knight,
+        Offensive_Tank,
+        Miner_TNT,
+        Miner_MineLife,
+        Element_Ice_Nation,
+        Element_Water_Nation,
+        Element_Fire_Nation,
+        Element_Air_Nation,
+        Crafter_Smith,
+        Crafter_Forger,
+        Crafter_Builder,
+        ;
+
+        public static ClassType getFromInt(int k) {
+            if(k == -1)return Unknown;
+            return ClassType.values()[k];
+        }
+    }
+
     public static int NONE = 0;
     public ArrayList<CoolDown> COOLDOWNS = new ArrayList<>();
     public boolean Prime = false;
@@ -47,6 +58,7 @@ public abstract class BaseClass {
     public int SwingTime = 20;
     public ArrayList<Power> Powers = new ArrayList<>();
     protected int MainID = 0;
+    public boolean ListenToEvents = false;
     protected CyberCoreMain CCM;
     HashMap<Integer, Integer> Herbal = new HashMap<Integer, Integer>() {{
         put(Block.GRASS, 10);
@@ -75,7 +87,7 @@ public abstract class BaseClass {
         put(Block.CLAY_BLOCK, 40);
     }};
     private CorePlayer P;
-    private ClassType TYPE = ClassType.Class_Miner_TNT_Specialist;
+    private ClassType TYPE = ClassType.Unknown;
     private int LVL = 0;
     private int XP = 0;
     private Ability ActiveAbility;
@@ -121,11 +133,11 @@ public abstract class BaseClass {
         return Powers;
     }
 
-    public Power GetPower(int key) {
-        return Powers.get(key);
+    public Power GetPower(Power.PowerType key) {
+        return Powers.get(key.ordinal());
     }
 
-    public abstract Object RunPower(int powerid, Object... args);
+    public abstract Object RunPower(Power.PowerType powerid, Object... args);
 //        Power p = Powers.get(powerid);
 //        if(p == null || args.length != 3 ){
 //            CCM.getLogger().error("No Power found or Incorrect Args For MineLife E334221");
@@ -142,14 +154,14 @@ public abstract class BaseClass {
         Powers.add(power);
     }
 
-    public boolean TryRunPower(int powerid) {
-        Power p = Powers.get(powerid);
+    public boolean TryRunPower(Power.PowerType powerid) {
+        Power p = Powers.get(powerid.ordinal());
         if (p == null) return false;
         return p.CanRun();
     }
 
-    public void RunPower(int powerid) {
-        Power p = Powers.get(powerid);
+    public void RunPower(Power.PowerType powerid) {
+        Power p = Powers.get(powerid.ordinal());
         if (p == null) return;
         p.usePower(P);
 
@@ -168,11 +180,11 @@ public abstract class BaseClass {
         return new ConfigSection() {{
             put("COOLDOWNS", COOLDOWNS);
             put("XP", XP);
-            put("TYPE", TYPE.getKey());
+            put("TYPE", TYPE.ordinal());
         }};
     }
 
-    public Player getPlayer() {
+    public CorePlayer getPlayer() {
         return P;
     }
 
@@ -426,18 +438,5 @@ public abstract class BaseClass {
     }
 
 
-    public enum ClassType {
-        Class_Miner_TNT_Specialist(1), Class_Miner_MineLife(0);
-
-        int k = -1;
-
-        ClassType(int i) {
-            k = i;
-        }
-
-        public int getKey() {
-            return k;
-        }
-    }
 
 }

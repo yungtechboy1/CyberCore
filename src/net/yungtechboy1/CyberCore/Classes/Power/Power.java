@@ -17,10 +17,22 @@ public abstract class Power {
     int PowerSuccessChance = 100;
     int Level = 0;
     int DurationTicks = 0;
-    public Power(int psc, int lvl) {
+    CorePlayer Player = null;
+    private boolean MasterToggle = false;
+
+    public Power(int lvl, CorePlayer p) {
+        this(100, lvl, p);
+    }
+
+    public Power(int psc, int lvl, CorePlayer p) {
         PowerSuccessChance = psc;
         Level = lvl;
+        Player = p;
         initStages();
+    }
+
+    protected boolean isEvent() {
+        return false;
     }
 
     public void setPowerSuccessChance(int powerSuccessChance) {
@@ -39,25 +51,50 @@ public abstract class Power {
 
     }
 
-    public abstract int getType();
+
+    public boolean getMasterToggle() {
+        return MasterToggle;
+    }
+
+    public void setMasterToggle(boolean masterToggle) {
+        MasterToggle = masterToggle;
+    }
+
+    public void setMasterToggle() {
+        setMasterToggle(true);
+    }
+
+    public abstract PowerType getType();
 
     public boolean CanRun() {
         return CanRun(false);
     }
 
-    public Object usePower(Object... args) {
-        return usePower(null, args);
+    public Object usePower(CorePlayer cp, Object... args) {
+        if (cp == null) return null;
+        if (getEffect() != null) {
+            //Send Effect
+            getEffect().applyEffect(cp);
+        }
+        addCooldown();
+        return null;
     }
 
-    public Object usePower(CorePlayer cp, Object... args) {
-        return null;
+    public void StartPower() {
+        StartPower(Player);
+    }
+
+    public void StartPower(CorePlayer cp) {
+        if (CanRun()) {
+            usePower(cp);
+        }
     }
 
     public boolean CanRun(boolean force) {
         NukkitRandom nr = new NukkitRandom();
         if (nr.nextRange(0, 100) <= PowerSuccessChance || force) {
             //Success
-            if(Cooldown != null && !force)return !Cooldown.isValid();
+            if (Cooldown != null && !force) return !Cooldown.isValid();
             return true;
         }
         return false;
@@ -79,14 +116,31 @@ public abstract class Power {
         return Stage.getStageFromInt((int) Math.floor(Level / 20));
     }
 
-    public CoolDown addCooldown() {
-        return addCooldown(getCooldownTime());
+    public void addCooldown(CoolDown c) {
+        if (!c.isValid()) return;
+        Cooldown = c;
     }
 
-    public CoolDown addCooldown(int secs) {
+    @Deprecated
+    public void addCooldown() {
+        addCooldown(getCooldown());
+    }
+
+    public CoolDown getCooldown() {
+        return getCooldown(getCooldownTime());
+    }
+
+    public CoolDown getCooldown(int secs) {
         CoolDown c = new CoolDown();
         c.setTimeSecs(secs);
         return c;
+    }
+
+    public enum PowerType {
+        Unknown,
+        FactionDamager,
+        Vanisher, RaidRage, MineLife, TNTSpecialistPower,
+
     }
 
     public enum Stage {

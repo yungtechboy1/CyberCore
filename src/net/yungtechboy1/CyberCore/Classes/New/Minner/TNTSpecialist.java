@@ -20,7 +20,7 @@ public class TNTSpecialist extends MinnerBaseClass {
     public static final int Power_TNT_Specialist = 0;
 
     public TNTSpecialist(CyberCoreMain main, CorePlayer player, ConfigSection data) {
-        super(main, player, ClassType.Class_Miner_TNT_Specialist, data);
+        super(main, player, ClassType.Miner_TNT, data);
         SetPowers();
     }
 
@@ -53,11 +53,11 @@ public class TNTSpecialist extends MinnerBaseClass {
     }
 
     @Override
-    public Object RunPower(int powerid, Object... args) {
-        if (powerid == Power.TNT_Specialist && args.length == 1) {
+    public Object RunPower(Power.PowerType powerid, Object... args) {
+        if (powerid == Power.PowerType.TNTSpecialistPower && args.length == 1) {
             System.out.println("GGGGGG");
             CorePlayer p = (CorePlayer) args[0];
-            TNTSpecialistPower tsp = (TNTSpecialistPower) GetPower(Power.TNT_Specialist);
+            TNTSpecialistPower tsp = (TNTSpecialistPower) GetPower(Power.PowerType.TNTSpecialistPower);
             tsp.UsePower(p, getFuse());
             System.out.println("aaaaaa" + p.getClass().getName());
         } else {
@@ -145,7 +145,7 @@ public class TNTSpecialist extends MinnerBaseClass {
         return new ConfigSection() {{
             put("COOLDOWNS", COOLDOWNS);
             put("XP", getXP());
-            put("TYPE", getTYPE().getKey());
+            put("TYPE", getTYPE().ordinal());
         }};
     }
 
@@ -157,7 +157,7 @@ public class TNTSpecialist extends MinnerBaseClass {
     public String FormatHudText() {
         String f = super.FormatHudText();
         //Show TNT Power
-        TNTSpecialistPower p = (TNTSpecialistPower) GetPower(Power.TNT_Specialist);
+        TNTSpecialistPower p = (TNTSpecialistPower) GetPower(Power.PowerType.TNTSpecialistPower);
         if (p == null) return f;
         int q = p.getAvailbleQuantity();
         int m = p.getMaxAvailbleQuantity();

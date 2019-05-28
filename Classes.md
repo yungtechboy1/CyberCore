@@ -1,5 +1,6 @@
 Base Classes
 
+- Offense
 - Minner
 - Enchanter
 - Scholar
@@ -8,7 +9,7 @@ Base Classes
 
 Specalizations
     
- - Miner - Mining and Digging
+ - ##Miner - Mining and Digging
    
    TNT-Specialist
    ---
@@ -43,45 +44,47 @@ Specalizations
         - MineLife
           - 10% increase in mine speed
    
+   
    MineLife  
-     ---
-     - Ability
-        - Mining Haste
-            - effect
-                - Lvl 1: Class lvl 1-29 for 15 Secs
-                - Lvl 2: Class lvl 30-59 for 25 Secs
-                - Lvl 3: Class lvl 60-89 for 35 Secs
-                - Lvl 4: Class lvl 90-100 for 50 Secs
-            - regin
-              - Lvl 1-19:  1% every 9 Secs / 15 min reload time
-              - Lvl 20-39:  1% every 8 Secs / 13.3 min reload time
-              - Lvl 40-59:  1% every 7 Secs / 11 min reload time
-              - Lvl 60-79:  1% every 5 Secs / 8 min reload time
-              - Lvl 80-100:  1% every 4 Secs / 5 min reload time
-     - Passive
-        - OreKnowledge
-            - When Breaking ore block there is a Chance that floating text may appear near surround blocks indicating where other ores of the same type are at
-              - Lvl 1-19:  2% Chance - 10 Block Range
-              - Lvl 20-39: 5% Chance - 13 Block Range
-              - Lvl 40-59: 8% Chance - 17 Block Range
-              - Lvl 60-79:  10% Chance - 20 Block Range
-              - Lvl 80-100: 15% Chance - 25 Block Range
-     - Mining any block with a Pickaxe adds 1 -5 XP
-         - Stone : 1;
-         - CobbleStone : 1;
-         - Iron Ore : 2;
-         - Gold Ore : 3;
-         - Diamond Ore : 5;
-         - Silver Ore : 4;
-     - Chance to Fast break blocks
-        - Level/10*
-        - `f(x) = ((.65x)/100) + 1`
-     - Faster break times with each level
-        - BreakTime = `(1-((getLVL()/10d)/2));`
-        - BreakTime = `(a/500)+(a*.0065)`
-        - Level
+   ---
+ - Ability
+    - Mining Haste
+        - effect
+            - Lvl 1: Class lvl 1-29 for 15 Secs
+            - Lvl 2: Class lvl 30-59 for 25 Secs
+            - Lvl 3: Class lvl 60-89 for 35 Secs
+            - Lvl 4: Class lvl 90-100 for 50 Secs
+        - regin
+          - Lvl 1-19:  1% every 9 Secs / 15 min reload time
+          - Lvl 20-39:  1% every 8 Secs / 13.3 min reload time
+          - Lvl 40-59:  1% every 7 Secs / 11 min reload time
+          - Lvl 60-79:  1% every 5 Secs / 8 min reload time
+          - Lvl 80-100:  1% every 4 Secs / 5 min reload time
+ - Passive
+    - OreKnowledge
+        - When Breaking ore block there is a Chance that floating text may appear near surround blocks indicating where other ores of the same type are at
+          - Lvl 1-19:  2% Chance - 10 Block Range
+          - Lvl 20-39: 5% Chance - 13 Block Range
+          - Lvl 40-59: 8% Chance - 17 Block Range
+          - Lvl 60-79:  10% Chance - 20 Block Range
+          - Lvl 80-100: 15% Chance - 25 Block Range
+ - Mining any block with a Pickaxe adds 1 -5 XP
+     - Stone : 1;
+     - CobbleStone : 1;
+     - Iron Ore : 2;
+     - Gold Ore : 3;
+     - Diamond Ore : 5;
+     - Silver Ore : 4;
+ - Chance to Fast break blocks
+    - Level/10*
+    - `f(x) = ((.65x)/100) + 1`
+ - Faster break times with each level
+    - BreakTime = `(1-((getLVL()/10d)/2));`
+    - BreakTime = `(a/500)+(a*.0065)`
+    - Level
    - Ore Bomb
-        - ##### Depreciated
+             
+             - Depreciated
         - Spawns Ore Blocks with Random values with a Box
         - Levels:
             - Level 1: 5 X 5 Box
@@ -116,8 +119,64 @@ Specalizations
         
     - Can make Lingering Potions
         - Potions that last 2 - 10 Mins
-        
+ - ##Offense - Attacking Classes
+    
+    Raider
+    ---
+    Abilities:
+   
+    - Deals up to 20% more damage while in faction plot;  
+    - Go Invisible for 25-180 secs depending on level
             
+    Passive:
+   
+    - Move Faster through cob webs
+    - Can Craft TNT Cannons
+    
+    Theif
+    ---
+    Abilities:
+        
+    - Chance to steal items in players hand 
+        - T1: 1% Chance - Max 2 Count
+        - T2: 5% Chance - Max 4 Count
+        - T3: 10% Chance - Max 6 Count
+        - T4: 15% Chance - Max 8 Count
+        - T5: 20% Chance - Max 10 Count
+        - Must use `Theif Stick:1`
+    - Can Pick Locks
+        
+    Passives:
+    
+    -  Chance to steal health with each hit
+        - T1: 5% Chance - 1 Heart
+        - T2: 10% Chance - 1 Heart
+        - T3: 12% Chance - 2 Heart
+        - T4: 15% Chance - 2 Heart
+        - T5: 20% Chance - 3 Heart
+    
+    Knight
+    ---
+    Debuffs:
+    
+    - 20% Slower Movement Speed
+    
+    Abilities:
+      
+    - Can Pick Locks
+        
+    Passives:
+      
+      - Earn up to 3X the reward fro Arena
+      - Reinforced Armor
+            - Gives extra Health
+            - T1: 1 Extra Hearts 
+            - T2: 2 Extra Hearts 
+            - T3: 3 Extra Hearts 
+            - T4: 4 Extra Hearts 
+            - T5: 5 Extra Hearts 
+    
+    Tank:        
 - builder - Easier base building, Can create auto-gen walls,/fly within faction plot, craft TNT arrows, Cannon TNT...
     - Snow Hoe Enchant:
         - Only can be used by builder    
