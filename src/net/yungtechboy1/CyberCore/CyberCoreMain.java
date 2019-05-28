@@ -14,19 +14,14 @@ import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
-import cn.nukkit.inventory.ShapedRecipe;
 import cn.nukkit.item.Item;
-import cn.nukkit.item.ItemBlock;
 import cn.nukkit.level.Level;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.plugin.PluginBase;
-import cn.nukkit.raknet.protocol.Packet;
-import cn.nukkit.utils.Binary;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
-import io.netty.util.collection.CharObjectHashMap;
 import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.Commands.*;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
@@ -35,9 +30,7 @@ import net.yungtechboy1.CyberCore.Commands.Homes.DelHome;
 import net.yungtechboy1.CyberCore.Commands.Homes.HomeManager;
 import net.yungtechboy1.CyberCore.Commands.Homes.SetHome;
 import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
-import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
-import net.yungtechboy1.CyberCore.Custom.Block.CustomElementBlock;
-import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
+import net.yungtechboy1.CyberCore.Custom.Block.*;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
 import net.yungtechboy1.CyberCore.Custom.Crafting.CustomRecipeCraftingManager;
 import net.yungtechboy1.CyberCore.Custom.CustomInventoryTransactionPacket;
@@ -148,6 +141,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public CustomCraftingManager CraftingManager;
     Vector3 p1;
     Vector3 p2;
+    CustomRecipeCraftingManager CRM;
     private EconManager ECON;
 
     public static CyberCoreMain getInstance() {
@@ -214,7 +208,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        }
     }
 
-    CustomRecipeCraftingManager CRM;
     @Override
     public void onEnable() {
         new File(getDataFolder().toString()).mkdirs();
@@ -230,8 +223,10 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Block.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         Block.list[Block.TNT] = CustomBlockTNT.class;
         Block.list[267] = CustomElementBlock.class;
+        Block.list[Block.PURPLE_GLAZED_TERRACOTTA] = CustomBlockPurpleGlazedTerraCotta.class;
         ReloadBlockList(267, CustomElementBlock.class);
         ReloadBlockList(Block.TNT, CustomBlockTNT.class);
+        ReloadBlockList(Block.PURPLE_GLAZED_TERRACOTTA, CustomBlockPurpleGlazedTerraCotta.class);
 //        Item.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         addCreativeItem(Item.get(Block.ENCHANT_TABLE, 5, 1).setCustomName("TTTTTTTTTTTTTT"));
         ReloadBlockList(Block.ENCHANTING_TABLE, BlockEnchantingTable.class);
@@ -260,7 +255,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        CraftingManager.registerShapedRecipe(nsr);
 
-        System.out.println("EEEE >>>>> "+CraftingManager.shapedRecipes.size());
+        System.out.println("EEEE >>>>> " + CraftingManager.shapedRecipes.size());
 
 //        getServer().getCraftingManager().registerShapelessRecipe();=null;
 
@@ -396,7 +391,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     public void onLoad() {
 
-        getServer().getNetwork().registerPacket(ProtocolInfo.INVENTORY_TRANSACTION_PACKET,CustomInventoryTransactionPacket.class);
+        getServer().getNetwork().registerPacket(ProtocolInfo.INVENTORY_TRANSACTION_PACKET, CustomInventoryTransactionPacket.class);
 
         Entity.registerEntity(EntityPig.NETWORK_ID + "", Pig.class);
 
@@ -668,7 +663,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         long diffDays = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24);
         long diffWeeks = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 7);
         long diffMonths = (long) (timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 30.41666666));
-        long diffYears = (long) (timeDifferenceMilliseconds / (1000 * 60 * 60 * 24 * 365));
+        long diffYears = timeDifferenceMilliseconds / (1000 * 60 * 60 * 24 * 365);
 
         if (diffSeconds < 1) {
             return "one sec";
@@ -748,9 +743,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
                 }
                 return false;
             case "rank":
-                if (RF.RankCache.containsKey(s.getName())) {
-                    RF.RankCache.remove(s.getName());
-                }
+                RF.RankCache.remove(s.getName());
                 if (RF.GARC.containsKey(s.getName())) {
                     RF.GARC.remove(s.getName());
                 }
@@ -848,7 +841,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PMJ(PlayerJoinEvent me) {
-        BBM.AddBossBar(me.getPlayer(), new BossBarNotification(me.getPlayer(), "TEST TITLE", "TEST MESSAGE", 20 * 60, this));
+        BossBarManager.AddBossBar(me.getPlayer(), new BossBarNotification(me.getPlayer(), "TEST TITLE", "TEST MESSAGE", 20 * 60, this));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

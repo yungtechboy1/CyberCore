@@ -41,10 +41,7 @@ public class FactionAdminPage1 extends CyberFormSimple {
         addButton(new ElementButton("Resend Creative Packet"));
         addButton(new ElementButton("Clear & SEND STARTER TNT ITEMS"));
         addButton(new ElementButton("SEND STARTER TNT ITEMS"));
-        addButton(new ElementButton("UNKNWON +"));//7
-        addButton(new ElementButton("UNKNWON -"));
-        addButton(new ElementButton("TEST2222"));
-        addButton(new ElementButton("-----------------------"));
+        addButton(new ElementButton("TESTCustom Texture"));//7
     }
 
 
@@ -91,25 +88,10 @@ public class FactionAdminPage1 extends CyberFormSimple {
                 cp.getInventory().sendContents(cp);
                 break;
             case 7:
-                ItemBlock ib = new ItemBlock(new CustomElementBlock());
-                cp.getInventory().addItem(ib);
+                cp.getInventory().addItem(Item.get(BlockID.PURPLE_GLAZED_TERRACOTTA,0,1));
+                cp.getInventory().addItem(Item.get(BlockID.PURPLE_GLAZED_TERRACOTTA,1,1));
+                cp.getInventory().addItem(Item.get(BlockID.PURPLE_GLAZED_TERRACOTTA,2,1));
                 cp.getInventory().sendContents(cp);
-                break;
-            case 8:
-                System.out.println(Item.get(-12,0,0));
-                cp.getInventory().addItem(Item.get(-12,0,0));
-                cp.getInventory().sendContents(cp);
-                break;
-            case 9:
-                cp.getInventory().addItem(new ItemBlock(Block.get(267)));
-                cp.getInventory().sendContents(cp);
-                break;
-            case 10:
-                Block b = cp.getLevel().getBlock(cp.add(0,-1,0));
-                cp.sendMessage("Current Block ID >> "+b.getId());
-//                cp.getLevel().setBlock(cp.add(0,-1,0), new BlockUnknown(-13));
-                cp.getLevel().setBlock(cp.add(0,-1,1), Block.get(267),true ,true);
-                break;
         }
     }
 }

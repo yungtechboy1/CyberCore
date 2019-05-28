@@ -1,8 +1,9 @@
 Wool
 ---
+   - Using block : `219`
+      - Name
+        - purple_glazed_terracotta
    - :0
-     - Wool(Regular)
-   - :1
      - Silk Wool
         - Crafting:
             - WWW
@@ -10,14 +11,14 @@ Wool
             - WWW
             - W = Wool:0
             - S = Enchanted String:1
-   - :2
+   - :1
       - Premium Silk Wool
          - Crafting;
             - WWW
             - WWW
             - WWW
             - W = Silk Wool:1
-   - :3
+   - :2
      - Iron Silk
         - Crafting
             - III
