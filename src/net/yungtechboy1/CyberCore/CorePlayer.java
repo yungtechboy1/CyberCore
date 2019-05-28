@@ -402,7 +402,7 @@ public class CorePlayer extends Player {
             this.sendExperienceLevel(this.getExperienceLevel());
         }
 
-        this.teleport(pos, (PlayerTeleportEvent.TeleportCause) null);
+        this.teleport(pos, null);
         if (!this.isSpectator()) {
             this.spawnToAll();
         }
@@ -500,7 +500,8 @@ public class CorePlayer extends Player {
 //                        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!1");
                         CustomInventoryTransactionPacket transactionPacket2 = (CustomInventoryTransactionPacket) packet;
 
-                        if(transactionPacket2 == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                        if (transactionPacket2 == null)
+                            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
 //                        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!2");
                         List<InventoryAction> actions = new ArrayList<>();
@@ -516,9 +517,9 @@ public class CorePlayer extends Player {
 //                            System.out.println("zACTIONz z");
 //                            System.out.println("zACTIONz z > "+a);
 //                            System.out.println("zACTIONz z > "+a.getClass().getName());
-                            if(a instanceof SlotChangeAction && aa instanceof SlotChangeAction){
-                                SlotChangeAction sca = (SlotChangeAction)a;
-                                SlotChangeAction scaa = (SlotChangeAction)aa;
+                            if (a instanceof SlotChangeAction && aa instanceof SlotChangeAction) {
+                                SlotChangeAction sca = (SlotChangeAction) a;
+                                SlotChangeAction scaa = (SlotChangeAction) aa;
 //                                System.out.println("GGGGGGGGGGGGG"+scaa.getSlot());
 //                                System.out.println("GGGGGGGGGGGGG"+sca.getSlot());
                             }
@@ -552,7 +553,7 @@ public class CorePlayer extends Player {
                                 //we get the actions for this in several packets, so we can't execute it until we get the result
 
                                 System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBB!!!!!!!!7 CALLING EXECUTE");
-                                if(!this.cct.execute()){
+                                if (!this.cct.execute()) {
                                     server.getLogger().error("ERROR NO EXECITE!");
                                 }
                                 this.cct = null;
@@ -613,7 +614,7 @@ public class CorePlayer extends Player {
                                                 }
                                             } else if (inventory.getItemInHand().equals(useItemData.itemInHand)) {
                                                 Item i = inventory.getItemInHand();
-                                                System.out.println("wwwwwwwwwwwwww > GOOD "+i);
+                                                System.out.println("wwwwwwwwwwwwww > GOOD " + i);
                                                 Item oldItem = i.clone();
                                                 //TODO: Implement adventure mode checks
                                                 if ((i = this.level.useItemOn(blockVector.asVector3(), i, face, useItemData.clickPos.x, useItemData.clickPos.y, useItemData.clickPos.z, this)) != null) {
@@ -1027,7 +1028,7 @@ public class CorePlayer extends Player {
                                 double breakTime = Math.ceil(target.getBreakTime(this.inventory.getItemInHand(), this) * 20);
                                 if (PlayerClass != null) {
                                     double obreaktime = breakTime;
-                                    if (PlayerClass instanceof MineLifeClass && ((MineLifeClass) PlayerClass).TryRunPower(Power.MineLife)) {
+                                    if (PlayerClass instanceof MineLifeClass && PlayerClass.TryRunPower(Power.MineLife)) {
                                         Object nbt = ((MineLifeClass) PlayerClass).RunPower(Power.MineLife, this.inventory.getItemInHand(), target, breakTime);
                                         if (nbt != null) {
                                             double nd = (double) nbt;
@@ -1077,7 +1078,7 @@ public class CorePlayer extends Player {
                     }
             }
         }
-        if(packet.pid() == INVENTORY_TRANSACTION_PACKET)return;
+        if (packet.pid() == INVENTORY_TRANSACTION_PACKET) return;
         super.handleDataPacket(packet);
     }
 
@@ -1102,7 +1103,7 @@ public class CorePlayer extends Player {
         CoolDown cd = CDL.get(key);
         if (cd == null) return null;
 //        CyberCoreMain.getInstance().getLogger().info("CVALID"+!cd.isValidTick()+" | "+cd.Time+"|"+Server.getInstance().getTick());
-        if (checkvalid && !cd.isValidTick()) {
+        if (checkvalid && !cd.isValid()) {
 
 //            CyberCoreMain.getInstance().getLogger().info(" EXPIRED "+key);
             CDL.remove(key);
@@ -1306,7 +1307,7 @@ public class CorePlayer extends Player {
     }
 
     public void AddHome(String name) {
-        Vector3 v = (Vector3) getPosition();
+        Vector3 v = getPosition();
         HD.add(new HomeData(name, this));
     }
 
@@ -1631,70 +1632,72 @@ public class CorePlayer extends Player {
 //        this.dataPacket(infoPacket);
 //    }
 
-//    @Override
-//    public void completeLoginSequence() {
-//        PlayerLoginEvent ev;
-//        this.server.getPluginManager().callEvent(ev = new PlayerLoginEvent(this, "Plugin reason"));
-//        if (ev.isCancelled()) {
-//            this.close(this.getLeaveMessage(), ev.getKickMessage());
-//            return;
-//        }
-//
-//        CustomStartGamePacket startGamePacket = new CustomStartGamePacket();
-//        startGamePacket.entityUniqueId = this.id;
-//        startGamePacket.entityRuntimeId = this.id;
-//        startGamePacket.playerGamemode = (this.gamemode);
-//        startGamePacket.x = (float) this.x;
-//        startGamePacket.y = (float) this.y;
-//        startGamePacket.z = (float) this.z;
-//        startGamePacket.yaw = (float) this.yaw;
-//        startGamePacket.pitch = (float) this.pitch;
-//        startGamePacket.seed = -1;
-//        startGamePacket.dimension = (byte) (this.level.getDimension() & 0xff);
-//        startGamePacket.worldGamemode = (this.gamemode);
-//        startGamePacket.difficulty = this.server.getDifficulty();
-//        startGamePacket.spawnX = (int) this.x;
-//        startGamePacket.spawnY = (int) this.y;
-//        startGamePacket.spawnZ = (int) this.z;
-//        startGamePacket.hasAchievementsDisabled = true;
-//        startGamePacket.dayCycleStopTime = -1;
-//        startGamePacket.eduMode = false;
-//        startGamePacket.rainLevel = 0;
-//        startGamePacket.lightningLevel = 0;
-//        startGamePacket.commandsEnabled = this.isEnableClientCommand();
-//        startGamePacket.gameRules = getLevel().getGameRules();
-//        startGamePacket.levelId = "";
-//        startGamePacket.worldName = this.getServer().getNetwork().getName();
-//        startGamePacket.generator = 1; //0 old, 1 infinite, 2 flat
-//        this.dataPacket(startGamePacket);
-//
-//        this.dataPacket(new AvailableEntityIdentifiersPacket());
-//
-//        this.loggedIn = true;
-//
-//        this.level.sendTime(this);
-//
-//        this.setMovementSpeed(DEFAULT_SPEED);
-//        this.sendAttributes();
-//        this.setNameTagVisible(true);
-//        this.setNameTagAlwaysVisible(true);
-//        this.setCanClimb(true);
-//
-//        this.server.getLogger().info(this.getServer().getLanguage().translateString("nukkit.player.logIn",
-//                TextFormat.AQUA + this.username + TextFormat.WHITE,
-//                this.ip,
-//                String.valueOf(this.port),
-//                String.valueOf(this.id),
-//                this.level.getName(),
-//                String.valueOf(NukkitMath.round(this.x, 4)),
-//                String.valueOf(NukkitMath.round(this.y, 4)),
-//                String.valueOf(NukkitMath.round(this.z, 4))));
-//
-//        if (this.isOp() || this.hasPermission("nukkit.textcolor")) {
-//            this.setRemoveFormat(false);
-//        }
-//
-//        this.server.addOnlinePlayer(this);
-//        this.server.onPlayerCompleteLoginSequence(this);
-//    }
+    @Override
+    public void completeLoginSequence() {
+        PlayerLoginEvent ev;
+        this.server.getPluginManager().callEvent(ev = new PlayerLoginEvent(this, "Plugin reason"));
+        if (ev.isCancelled()) {
+            this.close(this.getLeaveMessage(), ev.getKickMessage());
+            return;
+        }
+
+        StartGamePacket startGamePacket = new StartGamePacket();
+        startGamePacket.entityUniqueId = this.id;
+        startGamePacket.entityRuntimeId = this.id;
+        startGamePacket.playerGamemode = (this.gamemode);
+        startGamePacket.x = (float) this.x;
+        startGamePacket.y = (float) this.y;
+        startGamePacket.z = (float) this.z;
+        startGamePacket.yaw = (float) this.yaw;
+        startGamePacket.pitch = (float) this.pitch;
+        startGamePacket.seed = -1;
+        startGamePacket.dimension = (byte) (this.level.getDimension() & 0xff);
+        startGamePacket.worldGamemode = (this.gamemode);
+        startGamePacket.difficulty = this.server.getDifficulty();
+        startGamePacket.spawnX = (int) this.x;
+        startGamePacket.spawnY = (int) this.y;
+        startGamePacket.spawnZ = (int) this.z;
+        startGamePacket.hasAchievementsDisabled = true;
+        startGamePacket.dayCycleStopTime = -1;
+        startGamePacket.eduMode = true;
+        startGamePacket.hasEduFeaturesEnabled = true;
+        startGamePacket.rainLevel = 0;
+        startGamePacket.lightningLevel = 0;
+        startGamePacket.commandsEnabled = this.isEnableClientCommand();
+        startGamePacket.gameRules = getLevel().getGameRules();
+        startGamePacket.levelId = "";
+        startGamePacket.worldName = this.getServer().getNetwork().getName();
+        startGamePacket.generator = 1; //0 old, 1 infinite, 2 flat
+        this.dataPacket(startGamePacket);
+
+        this.dataPacket(new AvailableEntityIdentifiersPacket());
+
+        this.loggedIn = true;
+
+        this.level.sendTime(this);
+
+        //todo cHANGE
+        this.setMovementSpeed(DEFAULT_SPEED);
+        this.sendAttributes();
+        this.setNameTagVisible(true);
+        this.setNameTagAlwaysVisible(true);
+        this.setCanClimb(true);
+
+        this.server.getLogger().info(this.getServer().getLanguage().translateString("nukkit.player.logIn",
+                TextFormat.AQUA + this.username + TextFormat.WHITE,
+                this.ip,
+                String.valueOf(this.port),
+                String.valueOf(this.id),
+                this.level.getName(),
+                String.valueOf(NukkitMath.round(this.x, 4)),
+                String.valueOf(NukkitMath.round(this.y, 4)),
+                String.valueOf(NukkitMath.round(this.z, 4))));
+
+        if (this.isOp() || this.hasPermission("nukkit.textcolor")) {
+            this.setRemoveFormat(false);
+        }
+
+        this.server.addOnlinePlayer(this);
+        this.server.onPlayerCompleteLoginSequence(this);
+    }
 }

@@ -4,6 +4,7 @@ import cn.nukkit.inventory.Recipe;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Custom.Crafting.Recipies.GunpowderRecipe;
+import net.yungtechboy1.CyberCore.Custom.Crafting.Recipies.PurpleGlazedTerraRecipe;
 import net.yungtechboy1.CyberCore.Custom.Crafting.Recipies.TNTBlockRecipe;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
@@ -18,6 +19,7 @@ public class CustomRecipeCraftingManager {
         CCM = ccm;
         Recipies.addAll(new TNTBlockRecipe().Recipies);
         Recipies.addAll(new GunpowderRecipe().Recipies);
+        Recipies.addAll(new PurpleGlazedTerraRecipe().Recipies);
         RegisterCustomCraftingRecipies();
     }
 

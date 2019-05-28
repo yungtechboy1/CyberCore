@@ -1,4 +1,4 @@
-Wool
+Wool X
 ---
    - Using block : `219`
       - Name
@@ -27,7 +27,7 @@ Wool
             - I = Iron ingot:0
             - S = Enchanted String:1
             - P = Premium Silk Wool:2
-String
+String X
 ---
    - :0 
      - String(Regular)

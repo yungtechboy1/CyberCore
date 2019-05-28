@@ -149,9 +149,9 @@ public abstract class BaseClass {
     }
 
     public void RunPower(int powerid) {
-
         Power p = Powers.get(powerid);
         if (p == null) return;
+        p.usePower(P);
 
     }
 

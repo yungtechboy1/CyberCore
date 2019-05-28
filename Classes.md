@@ -55,9 +55,9 @@ Specalizations
             - regin
               - Lvl 1-19:  1% every 9 Secs / 15 min reload time
               - Lvl 20-39:  1% every 8 Secs / 13.3 min reload time
-              - Lvl 40-59:  1% every 7 Secs / 8.3 min reload time
-              - Lvl 60-79:  1% every 5 Secs / 10 min reload time
-              - Lvl 80-100:  1% every 4 Secs / 7 min reload time
+              - Lvl 40-59:  1% every 7 Secs / 11 min reload time
+              - Lvl 60-79:  1% every 5 Secs / 8 min reload time
+              - Lvl 80-100:  1% every 4 Secs / 5 min reload time
      - Passive
         - OreKnowledge
             - When Breaking ore block there is a Chance that floating text may appear near surround blocks indicating where other ores of the same type are at

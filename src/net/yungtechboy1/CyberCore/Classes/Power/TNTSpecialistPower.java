@@ -21,7 +21,7 @@ public class TNTSpecialistPower extends PowerStackable {
     }
 
     @Override
-    public Object UsePower(Object ...args) {
+    public Object usePower(Object ...args) {
         System.out.println("NO USEDDDDD>>>>>"+GetTNTMotionPower());
         if(args != null && args.length == 2){
             CorePlayer p = (CorePlayer) args[0];

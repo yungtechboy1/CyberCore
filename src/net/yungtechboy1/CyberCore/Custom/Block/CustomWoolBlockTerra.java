@@ -4,7 +4,11 @@ import cn.nukkit.utils.TextFormat;
 
 public class CustomWoolBlockTerra extends CustomBlockPurpleGlazedTerraCotta {
 
-    protected CustomWoolBlockTerra(int meta) {
+    public CustomWoolBlockTerra(CustomWoolType meta) {
+        super(meta.ordinal());
+    }
+
+    public CustomWoolBlockTerra(int meta) {
         super(meta);
     }
 

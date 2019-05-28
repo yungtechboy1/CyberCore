@@ -34,10 +34,7 @@ import net.yungtechboy1.CyberCore.Custom.Block.*;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
 import net.yungtechboy1.CyberCore.Custom.Crafting.CustomRecipeCraftingManager;
 import net.yungtechboy1.CyberCore.Custom.CustomInventoryTransactionPacket;
-import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
-import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
-import net.yungtechboy1.CyberCore.Custom.Item.CustomItemGunpowder;
-import net.yungtechboy1.CyberCore.Custom.Item.CustomItemTNT;
+import net.yungtechboy1.CyberCore.Custom.Item.*;
 import net.yungtechboy1.CyberCore.Data.ServerSqlite;
 import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
 import net.yungtechboy1.CyberCore.Factory.ClassFactory;
@@ -229,6 +226,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         ReloadBlockList(Block.PURPLE_GLAZED_TERRACOTTA, CustomBlockPurpleGlazedTerraCotta.class);
 //        Item.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         addCreativeItem(Item.get(Block.ENCHANT_TABLE, 5, 1).setCustomName("TTTTTTTTTTTTTT"));
+        addCreativeItem(new CustomItemElement());
         ReloadBlockList(Block.ENCHANTING_TABLE, BlockEnchantingTable.class);
 
         Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
@@ -237,7 +235,10 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Item.list[Item.ENCHANT_BOOK] = CItemBookEnchanted.class;
         Item.list[BlockID.TNT] = CustomItemTNT.class;
         Item.list[Item.GUNPOWDER] = CustomItemGunpowder.class;
-        Item.init();
+        Item.list[Item.PURPLE_GLAZED_TERRACOTTA] = CustomItemPurpleGlazedTerraCotta.class;
+        Item.list[Item.STRING] = CustomItemString.class;
+        Item.list[Item.Element_1] = CustomItemElement.class;
+//        Item.init();
 
 //        System.out.println(">>>>>>>>>>0x" + Binary.bytesToHexString(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_1).getCompoundTag()));
 

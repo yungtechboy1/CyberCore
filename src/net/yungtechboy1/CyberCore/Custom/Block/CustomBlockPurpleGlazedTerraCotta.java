@@ -4,7 +4,7 @@ import cn.nukkit.block.BlockMeta;
 
 public class CustomBlockPurpleGlazedTerraCotta extends BlockMeta {
 
-    protected CustomBlockPurpleGlazedTerraCotta(int meta) {
+    public CustomBlockPurpleGlazedTerraCotta(int meta) {
         super(meta);
     }
 
