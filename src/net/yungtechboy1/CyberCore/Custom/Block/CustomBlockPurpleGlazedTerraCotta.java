@@ -10,11 +10,16 @@ public class CustomBlockPurpleGlazedTerraCotta extends BlockMeta {
 
     @Override
     public String getName() {
-        return "purple_glazed_terracotta";
+        return "purple_glazed_terracotta"+getDamage();
     }
 
     @Override
     public int getId() {
         return 219;
+    }
+
+    @Override
+    public boolean canBePlaced() {
+        return false;
     }
 }

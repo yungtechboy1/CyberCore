@@ -42,6 +42,8 @@ public class FactionAdminPage1 extends CyberFormSimple {
         addButton(new ElementButton("Clear & SEND STARTER TNT ITEMS"));
         addButton(new ElementButton("SEND STARTER TNT ITEMS"));
         addButton(new ElementButton("TESTCustom Texture"));//7
+        addButton(new ElementButton("GET CURRENT BLOCK METAT"));//8
+        addButton(new ElementButton("Test MCPE Educational"));//9
     }
 
 
@@ -91,6 +93,12 @@ public class FactionAdminPage1 extends CyberFormSimple {
                 cp.getInventory().addItem(Item.get(BlockID.PURPLE_GLAZED_TERRACOTTA,0,1));
                 cp.getInventory().addItem(Item.get(BlockID.PURPLE_GLAZED_TERRACOTTA,1,1));
                 cp.getInventory().addItem(Item.get(BlockID.PURPLE_GLAZED_TERRACOTTA,2,1));
+                cp.getInventory().sendContents(cp);
+            case 8:
+                cp.sendMessage(cp.getInventory().getItemInHand().getClass().getName()+"||||"+cp.getInventory().getItemInHand().getDamage());
+                System.out.println(cp.getInventory().getItemInHand().getClass().getName()+"||||"+cp.getInventory().getItemInHand().getDamage());
+            case 9:
+                cp.getInventory().addItem(new ItemBlock(new CustomElementBlock()));
                 cp.getInventory().sendContents(cp);
         }
     }
