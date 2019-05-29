@@ -39,7 +39,7 @@ public class Knight extends BaseClass {
 
     @Override
     public int getMainID() {
-        return BaseClass.TYPE_Offensive_Raider;
+        return BaseClass.ClassType.Offensive_Raider.ordinal();
     }
 
     @Override

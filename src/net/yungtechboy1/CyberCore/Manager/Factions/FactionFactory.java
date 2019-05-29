@@ -31,7 +31,7 @@ public class FactionFactory {
      */
     public Map<String, Faction> List = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public Map<String, String> FacList = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    public Map<String, String> PlotsList = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    public Map<String, Faction> PlotsList = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public Map<String, String> allyrequest = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public HashMap<String, String> InvList = new HashMap<>();
     public Map<String, String> War = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);//Attacking V Defending
@@ -56,7 +56,7 @@ public class FactionFactory {
         return Main.getServer();
     }
 
-    public String GetPlotStatus(Integer x, Integer z) {
+    public Faction GetPlotStatus(Integer x, Integer z) {
         if (PlotsList.containsKey(x + "|" + z)) {
             return PlotsList.get(x + "|" + z);
         }
@@ -757,26 +757,44 @@ public class FactionFactory {
             while (r.next()) {
 //                return r.getString("faction");
                 Faction f = Main.FFactory.getFaction(r.getString("faction"));
-                if(f != null)found.add(f);
+                if (f != null) found.add(f);
             }
         } catch (Exception e) {
-            Main.plugin.getLogger().error("ERROR GETTING ALL OPEN FACTIONS",e);
+            Main.plugin.getLogger().error("ERROR GETTING ALL OPEN FACTIONS", e);
         }
         return found;
     }
+
     public ArrayList<Faction> GetAllOpenFactions(String name) {
         ArrayList<Faction> found = new ArrayList<>();
         try {
-            ResultSet r = this.ExecuteQuerySQL("select * from `settings` where `privacy`= '1' and `faction` LIKE '"+name+"'");
+            ResultSet r = this.ExecuteQuerySQL("select * from `settings` where `privacy`= '1' and `faction` LIKE '" + name + "'");
             if (r == null) return null;
             while (r.next()) {
 //                return r.getString("faction");
                 Faction f = Main.FFactory.getFaction(r.getString("faction"));
-                if(f != null)found.add(f);
+                if (f != null) found.add(f);
             }
         } catch (Exception e) {
-            Main.plugin.getLogger().error("ERROR GETTING ALL OPEN FACTIONS",e);
+            Main.plugin.getLogger().error("ERROR GETTING ALL OPEN FACTIONS", e);
         }
         return found;
+    }
+
+    public Faction GetOwnedChunk(int xx, int zz) {
+        if (PlotsList.containsKey(xx + "|" + zz)) return PlotsList.get(xx + "|" + zz);
+        try {
+            ArrayList<String> results = new ArrayList<>();
+            ResultSet r = this.ExecuteQuerySQL("select * from `plots` where `x` = '" + xx + "' AND `z` = '" + zz + "'");
+            if (r == null) return null;
+            while (r.next()) {
+                String fn = r.getString("faction");
+                Faction f = getFaction(fn);
+                if(f != null)return f;
+            }
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

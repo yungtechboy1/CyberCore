@@ -3,7 +3,6 @@ package net.yungtechboy1.CyberCore.Classes.Power;
 import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
 import cn.nukkit.potion.Effect;
-import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class MineLifePower extends Power {
@@ -35,8 +34,8 @@ public class MineLifePower extends Power {
     }
 
     @Override
-    public int getType() {
-        return Power.MineLife;
+    public PowerType getType() {
+        return PowerType.MineLife;
     }
 
     @Override
@@ -96,14 +95,5 @@ public class MineLifePower extends Power {
         return super.getCooldownTime();
     }
 
-    @Override
-    public Object usePower(CorePlayer cp, Object... args) {
-        if(cp == null)return null;
-        if (Cooldown == null || Cooldown.isValid()) {
-            cp.addEffect(getEffect());
-            addCooldown();
 
-        }
-        return null;
-    }
 }

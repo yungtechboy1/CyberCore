@@ -13,7 +13,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class MineLifeClass extends MinnerBaseClass {
     public MineLifeClass(CyberCoreMain main, CorePlayer player, ConfigSection data) {
-        super(main, player, ClassType.Class_Miner_MineLife, data);
+        super(main, player, ClassType.Miner_MineLife, data);
     }
 //
 //    public MineLifeClass(CyberCoreMain main, CorePlayer player) {
@@ -27,20 +27,20 @@ public class MineLifeClass extends MinnerBaseClass {
     }
 
     @Override
-    public boolean TryRunPower(int powerid) {
-        Power p = Powers.get(powerid);
+    public boolean TryRunPower(Power.PowerType powerid) {
+        Power p = GetPower(powerid);
         if (p == null) return false;
         return p.CanRun();
     }
 
 
-    public Object RunPower(int powerid, Item itemInHand, Block target, double breakTime) {
-        Power p = Powers.get(powerid);
+    public Object RunPower(Power.PowerType powerid, Item itemInHand, Block target, double breakTime) {
+        Power p = GetPower(powerid);
         if (p == null) {
             CCM.getLogger().error("No Power found or Incorrect Args For MineLife E334221");
             return null;
         }
-        if (powerid == Power.MineLife && p instanceof MineLifePower) {
+        if (powerid == Power.PowerType.MineLife && p instanceof MineLifePower) {
             MineLifePower mlp = (MineLifePower) p;
             return mlp.usePower(itemInHand, target, breakTime);
         }
@@ -48,13 +48,13 @@ public class MineLifeClass extends MinnerBaseClass {
     }
 
     @Override
-    public Object RunPower(int powerid, Object... args) {
-        Power p = Powers.get(powerid);
+    public Object RunPower(Power.PowerType powerid, Object... args) {
+        Power p = GetPower(powerid);
         if (p == null || args.length != 3) {
             CCM.getLogger().error("No Power found or Incorrect Args For MineLife E334221");
             return -1;
         }
-        if (powerid == 1 && p instanceof MineLifePower) {
+        if (powerid.ordinal() == 1 && p instanceof MineLifePower) {
             MineLifePower mlp = (MineLifePower) p;
             return mlp.usePower((Item) args[0], (Block) args[1], (double) args[2]);
         }
