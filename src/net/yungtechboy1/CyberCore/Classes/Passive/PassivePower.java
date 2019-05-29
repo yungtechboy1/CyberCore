@@ -1,19 +1,18 @@
 package net.yungtechboy1.CyberCore.Classes.Passive;
 
 import net.yungtechboy1.CyberCore.Classes.Power.Power;
-import net.yungtechboy1.CyberCore.CorePlayer;
 
 public abstract class PassivePower extends Power {
-
-    public PassivePower(int lvl, CorePlayer p) {
-        super(lvl, p);
+    public PassivePower(int lvl) {
+        this(100, lvl);
     }
 
-    public PassivePower(int psc, int lvl, CorePlayer p) {
-        super(psc, lvl, p);
+    public PassivePower(int psc, int lvl) {
+        super(psc, lvl);
     }
 
-    public PowerType getType() {
-        return PowerType.PassivePower;
+
+    public int getType() {
+        return -2;
     }
 }

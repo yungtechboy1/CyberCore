@@ -15,14 +15,9 @@ import java.util.ArrayList;
 public class OreKnowledge extends PassivePower {
     int BlockRange = 10;
 
-    public OreKnowledge(int lvl, CorePlayer p) {
-        super(lvl, p);
+    public OreKnowledge(int lvl) {
+        super(1, lvl);
     }
-
-    public OreKnowledge(int psc, int lvl, CorePlayer p) {
-        super(psc, lvl, p);
-    }
-
 
     @Override
     public void initStages() {
@@ -54,8 +49,8 @@ public class OreKnowledge extends PassivePower {
     }
 
     @Override
-    public PowerType getType() {
-        return PowerType.OreKnowledge;
+    public int getType() {
+        return Power.OreKnowledge;
     }
 
     public void dispalyPreciousOres(CorePlayer p) {

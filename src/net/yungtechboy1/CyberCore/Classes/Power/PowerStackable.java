@@ -1,23 +1,18 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
 import cn.nukkit.math.NukkitRandom;
-import net.yungtechboy1.CyberCore.CorePlayer;
 
-public abstract class PowerStackable extends Power {
+public class PowerStackable extends Power {
     int AvailbleQuantity = 0;
     int MaxAvailbleQuantity = 0;
 
-    public PowerStackable(CorePlayer cp, int lvl, int aq, int maq) {
-        this(cp,100,lvl,aq,maq);
-
-    }
     /**
      * @param psc int Power Success Chance
      * @param aq
      * @param maq
      */
-    public PowerStackable(CorePlayer cp,int psc, int lvl, int aq, int maq) {
-        super(psc, lvl, cp);
+    public PowerStackable(int psc, int lvl, int aq, int maq) {
+        super(psc, lvl);
         AvailbleQuantity = aq;
         MaxAvailbleQuantity = maq;
     }
@@ -49,8 +44,8 @@ public abstract class PowerStackable extends Power {
     }
 
     @Override
-    public PowerType getType() {
-        return PowerType.PowerStackable;
+    public int getType() {
+        return -3;
     }
 
     @Override

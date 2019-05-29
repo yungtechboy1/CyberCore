@@ -47,12 +47,12 @@ public class Unclaim extends Commands {
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Chunk Not Claimed!");
                 return;
             }
-            if(!Main.FFactory.GetPlotStatus(x,z).GetName().equalsIgnoreCase(fac.GetName())){
+            if(!Main.FFactory.PlotsList.get(x+"|"+z).equalsIgnoreCase(fac.GetName())){
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Your Faction Dose not owne this Chunk!");
                 return;
             }
             Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"Plot Removed!");
-            fac.unregisterPlot(x+"|"+z);
+            fac.DelPlots(x+"|"+z);
             Main.FFactory.PlotsList.remove(x+"|"+z);
         }
 
@@ -64,12 +64,12 @@ public class Unclaim extends Commands {
             return;
             //Sender.sendMessage(TextFormat.RED+"That Chunk at X:"+x+" Z:"+z+" is already Claimed by"+Main.FFactory.PlotsList.get(x+"|"+z)+"'s Faction!!");
         }
-        if(!Main.FFactory.GetPlotStatus(x,z).GetName().equalsIgnoreCase(fac.GetName())){
+        if(!Main.FFactory.PlotsList.get(x+"|"+z).equalsIgnoreCase(fac.GetName())){
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Your Faction Dose not own this Chunk!");
             return;
         }
         Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"Plot Removed!");
-        fac.unregisterPlot(x+"|"+z);
+        fac.DelPlots(x+"|"+z);
         Main.FFactory.PlotsList.remove(x+"|"+z);
     }
 }

@@ -3,7 +3,6 @@ package net.yungtechboy1.CyberCore.Classes.New.Crafting;
 import cn.nukkit.Player;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
  */
 public class Enchater extends BaseClass {
     public Enchater(CyberCoreMain main, CorePlayer player, int xp) {
-        super(main, player, ClassType.Miner_TNT);
+        super(main, player, ClassType.Class_Miner_TNT_Specialist);
     }
 
     public int GetMaxFail(){
@@ -54,8 +53,7 @@ public class Enchater extends BaseClass {
     }
 
     @Override
-    public Object RunPower(Power.PowerType powerid, Object... args) {
+    public Object RunPower(int powerid, Object... args) {
         return null;
     }
-
 }

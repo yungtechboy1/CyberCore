@@ -5,7 +5,6 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 /**
@@ -37,11 +36,11 @@ public class Map extends Commands {
             text = text +TextFormat.BLUE+ "|";
             for (int o = -15; o <= 15; o++) {//X
                 //Main.getLogger().info("DOING X:"+(x+o)+" AND Z:"+(z+i));
-                Faction stat = Main.FFactory.GetPlotStatus(x+o,z+i);
+                String stat = Main.FFactory.GetPlotStatus(x+o,z+i);
                 if(i == 0 && o == 0){
-                    if(stat != null && fac != null && stat.GetName().toLowerCase().equalsIgnoreCase(fac.GetName().toLowerCase())) {
+                    if(stat != null && fac != null && stat.toLowerCase().equalsIgnoreCase(fac.GetName().toLowerCase())) {
                         text = text + TextFormat.GREEN + "&";
-                    }else if(stat != null && stat.GetName().equalsIgnoreCase("PEACE")){
+                    }else if(stat != null && stat.equalsIgnoreCase("PEACE")){
                         text = text+TextFormat.AQUA+"&";
                     }else{
                         text = text + TextFormat.GRAY + "&";
@@ -50,9 +49,9 @@ public class Map extends Commands {
                 }
                 if(stat == null){
                     text = text+TextFormat.GRAY+"-";
-                }else if(fac != null && stat.GetName().toLowerCase().equalsIgnoreCase(fac.GetName().toLowerCase())){
+                }else if(fac != null && stat.toLowerCase().equalsIgnoreCase(fac.GetName().toLowerCase())){
                     text = text+TextFormat.GREEN+"\\";
-                }else if(stat.GetName().toLowerCase().equalsIgnoreCase("PEACE")){
+                }else if(stat.toLowerCase().equalsIgnoreCase("PEACE")){
                     text = text+TextFormat.AQUA+"P";
                 }else{
                     text = text+TextFormat.RED+"X";

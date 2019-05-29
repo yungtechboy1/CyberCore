@@ -16,13 +16,19 @@ import net.yungtechboy1.CyberCore.CorePlayer;
  */
 public class TNTSpecialistPower extends PowerStackable {
 
-
-    public TNTSpecialistPower(CorePlayer cp, int lvl, int aq, int maq) {
-        super(cp, lvl, aq, maq);
+    public TNTSpecialistPower(int lvl, int aq, int maq) {
+        super(100, lvl, aq, maq);
     }
 
-    public TNTSpecialistPower(CorePlayer cp, int psc, int lvl, int aq, int maq) {
-        super(cp, psc, lvl, aq, maq);
+    @Override
+    public Object usePower(Object ...args) {
+        System.out.println("NO USEDDDDD>>>>>"+GetTNTMotionPower());
+        if(args != null && args.length == 2){
+            CorePlayer p = (CorePlayer) args[0];
+            int fuse = (int)args[1];
+            UsePower(p,fuse);
+        }
+        return null;
     }
 
     private double GetTNTMotionPower(){
