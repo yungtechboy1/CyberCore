@@ -29,7 +29,7 @@ public abstract class PowerToggle extends Power {
     }
 
     public void ToggleOn(){
-        OnCooldown = addCooldown()
+        addCooldown();
     }
 
     @Override

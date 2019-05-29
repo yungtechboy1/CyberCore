@@ -10,7 +10,6 @@ import net.yungtechboy1.CyberCore.Classes.Power.VanisherPower;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.List;
 
 public class Raider extends BaseClass {
 
@@ -44,8 +43,8 @@ public class Raider extends BaseClass {
     }
 
     @Override
-    public int getMainID() {
-        return BaseClass.ClassType.Offensive_Raider.ordinal();
+    public ClassType getMainID() {
+        return BaseClass.ClassType.Offensive_Raider;
     }
 
     @Override

@@ -121,7 +121,6 @@ public abstract class Power {
         Cooldown = c;
     }
 
-    @Deprecated
     public void addCooldown() {
         addCooldown(getCooldown());
     }
@@ -137,9 +136,10 @@ public abstract class Power {
     }
 
     public enum PowerType {
+        PassivePower,
         Unknown,
         FactionDamager,
-        Vanisher, RaidRage, MineLife, TNTSpecialistPower,
+        Vanisher, RaidRage, MineLife, TNTSpecialistPower, OreKnowledge, PowerStackable,
 
     }
 

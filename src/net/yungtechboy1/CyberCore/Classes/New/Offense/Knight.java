@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Classes.New.Offense;
 import cn.nukkit.Player;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
@@ -15,7 +16,7 @@ public class Knight extends BaseClass {
 //    }
 
     public Knight(CyberCoreMain main, CorePlayer player, ConfigSection cs) {
-        super(main, player, ClassType.Class_Miner_TNT_Specialist);
+        super(main, player, ClassType.Miner_TNT);
     }
 
     @Override
@@ -38,12 +39,12 @@ public class Knight extends BaseClass {
     }
 
     @Override
-    public int getMainID() {
-        return BaseClass.ClassType.Offensive_Raider.ordinal();
+    public ClassType getMainID() {
+        return BaseClass.ClassType.Offensive_Raider;
     }
 
     @Override
-    public Object RunPower(int powerid, Object... args) {
+    public Object RunPower(Power.PowerType powerid, Object... args) {
         return null;
     }
 }

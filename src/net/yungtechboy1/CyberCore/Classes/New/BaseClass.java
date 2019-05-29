@@ -43,7 +43,7 @@ public abstract class BaseClass {
         Crafter_Smith,
         Crafter_Forger,
         Crafter_Builder,
-        ;
+        Offensive_Assassin;
 
         public static ClassType getFromInt(int k) {
             if(k == -1)return Unknown;
@@ -57,7 +57,7 @@ public abstract class BaseClass {
     public int PrimeKey = 0;
     public int SwingTime = 20;
     public ArrayList<Power> Powers = new ArrayList<>();
-    protected int MainID = 0;
+    protected ClassType MainID = null;
     public boolean ListenToEvents = false;
     protected CyberCoreMain CCM;
     HashMap<Integer, Integer> Herbal = new HashMap<Integer, Integer>() {{
@@ -125,7 +125,7 @@ public abstract class BaseClass {
 
     public abstract void SetPowers();
 
-    public int getMainID() {
+    public ClassType getMainID() {
         return MainID;
     }
 

@@ -49,8 +49,8 @@ public abstract class PowerStackable extends Power {
     }
 
     @Override
-    public int getType() {
-        return -3;
+    public PowerType getType() {
+        return PowerType.PowerStackable;
     }
 
     @Override

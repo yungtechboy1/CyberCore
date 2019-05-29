@@ -5,13 +5,14 @@ import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class Thief extends BaseClass {
 
     public Thief(CyberCoreMain main, CorePlayer player, ConfigSection cs) {
-        super(main, player, ClassType.Class_Miner_TNT_Specialist);
+        super(main, player, ClassType.Offensive_Theif);
     }
 
     @Override
@@ -35,12 +36,13 @@ public class Thief extends BaseClass {
     }
 
     @Override
-    public int getMainID() {
-        return BaseClass.TYPE_Offensive_Thief;
+    public ClassType getMainID() {
+        return ClassType.Offensive_Theif;
     }
 
     @Override
-    public Object RunPower(int powerid, Object... args) {
+    public Object RunPower(Power.PowerType powerid, Object... args) {
         return null;
     }
+
 }

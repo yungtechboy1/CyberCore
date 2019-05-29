@@ -3,11 +3,12 @@ package net.yungtechboy1.CyberCore.Classes.Power;
 import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
 import cn.nukkit.potion.Effect;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class MineLifePower extends Power {
-    public MineLifePower(int level) {
-        super(((int) Math.floor(.65d * level) + 1), level);
+    public MineLifePower(CorePlayer cp, int level) {
+        super(((int) Math.floor(.65d * level) + 1), level,cp);
         int psc = ((int) Math.floor(.65d * level) + 1);
 
 //        PotionEffect = new

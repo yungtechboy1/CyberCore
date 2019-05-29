@@ -70,7 +70,7 @@ public class OverClaim extends Commands {
             Sender.sendMessage(FactionsMain.NAME + TextFormat.YELLOW + "That Chunk at X:" + x + " Z:" + z + " is not Claimed by a faction and is being skipped!");
             return;
         }
-        Faction fac2 = Main.FFactory.getFaction(Main.FFactory.PlotsList.get(x + "|" + z));
+        Faction fac2 = Main.FFactory.GetPlotStatus(x , z);
         if (fac.GetName().equalsIgnoreCase("peace")){
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Error! You can not overclaim peace!");
             return;
@@ -78,11 +78,9 @@ public class OverClaim extends Commands {
         if (fac2.GetPower() < fac2.GetPlots().toArray().length) {
             Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Plot Overclaim Successful! $5000 and 3 Power to over ClaimChunk at X:" + x + " Z:" + z + "!");
             fac.TakeMoney(money);
-            fac.AddPlots(x + "|" + z);
-            fac2.DelPlots(x + "|" + z);
+            fac2.unregisterPlot(x + "|" + z);
+            fac.registerPlot(x + "|" + z);
             fac.TakePower(power);
-            Main.FFactory.PlotsList.remove(x + "|" + z);
-            Main.FFactory.PlotsList.put(x + "|" + z, fac.GetName());
         }else{
 
         }

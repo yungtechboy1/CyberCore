@@ -1027,9 +1027,11 @@ public class CorePlayer extends Player {
                                 //Done by lmlstarqaq
                                 double breakTime = Math.ceil(target.getBreakTime(this.inventory.getItemInHand(), this) * 20);
                                 if (PlayerClass != null) {
+                                    BaseClass.ClassType pct = PlayerClass.getTYPE();
                                     double obreaktime = breakTime;
-                                    if (PlayerClass instanceof MineLifeClass && PlayerClass.TryRunPower(Power.MineLife)) {
-                                        Object nbt = ((MineLifeClass) PlayerClass).RunPower(Power.MineLife, this.inventory.getItemInHand(), target, breakTime);
+                                    if (pct == BaseClass.ClassType.Miner_MineLife && PlayerClass.TryRunPower(Power.PowerType.MineLife)) {
+                                        Object nbt = PlayerClass.RunPower(Power.PowerType.MineLife, this.inventory.getItemInHand(), target, breakTime);
+                                        //Todo Implelemt
                                         if (nbt != null) {
                                             double nd = (double) nbt;
                                             if (nd > 0) {

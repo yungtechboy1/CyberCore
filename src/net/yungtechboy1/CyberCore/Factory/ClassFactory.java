@@ -40,6 +40,11 @@ public class ClassFactory implements Listener {
 //        CCM.getServer().getScheduler().scheduleDelayedRepeatingTask(new LumberJackTreeCheckerTask(main), 20 * 60, 20 * 60);//Every Min
     }
 
+    public void clearClass(CorePlayer p){
+        p.SetPlayerClass(null);
+        MMOSave.remove(p.getName().toLowerCase());
+    }
+
     public BaseClass GetClass(CorePlayer p) {
         ConfigSection o = (ConfigSection) MMOSave.get(p.getName().toLowerCase());
         int k = o.getInt("TYPE", -1);

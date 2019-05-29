@@ -459,13 +459,20 @@ public class FactionFactory {
     }
 
     public ArrayList<String> GetPlots(String faction) {
+        return GetPlots(faction,false);
+    }
+    public ArrayList<String> GetPlots(String faction, boolean safe) {
         try {
+            Faction f =  null;
+            if(!safe)f = getFaction(faction);
+//            if(f == null)return null;
             ArrayList<String> results = new ArrayList<>();
             ResultSet r = this.ExecuteQuerySQL(String.format("select * from `plots` where `faction` LIKE '%s'", faction));
             if (r == null) return null;
             while (r.next()) {
                 results.add(r.getInt("x") + "|" + r.getInt("z"));
-                PlotsList.put(r.getInt("x") + "|" + r.getInt("z"), faction.toLowerCase());
+//                f.AddPlots(r.getInt("x") + "|" + r.getInt("z"));
+                if(f != null)PlotsList.put(r.getInt("x") + "|" + r.getInt("z"), f);
             }
             return results;
         } catch (Exception e) {
@@ -709,18 +716,21 @@ public class FactionFactory {
     }
 
     public Faction getFaction(String name) {
+        return getFaction(name,true);
+    }
+    public Faction getFaction(String name, boolean create) {
         if (name == null) return null;
         if (List.containsKey(name.toLowerCase())) {
             //getServer().getLogger().debug("In Cache");
             return List.get(name.toLowerCase());
-        } else if (factionExistsInDB(name)) {
+        } else if (factionExistsInDB(name) && create) {
             //getServer().getLogger().debug("In DB");
             //if (List.containsKey(name.toLowerCase())) return List.get(name.toLowerCase());
             //No leader == No Faction!
             if (GetLeader(name) == null && !name.equalsIgnoreCase("peace") && !name.equalsIgnoreCase("wilderness"))
                 return null;
             Faction fac = new Faction(Main, name, (String) GetFromSettings("displayname", name), GetLeader(name), GetMemebrs(name), GetOfficers(name), GetGenerals(name), GetRecruits(name));
-            fac.SetPlots(GetPlots(name));
+            fac.SetPlots(GetPlots(name,true));
             fac.SetMaxPlayers((Integer) GetFromSettings("max", name));
             fac.SetPowerBonus((Integer) GetFromSettings("powerbonus", name));
             fac.SetMOTD((String) GetFromSettings("MOTD", name));

@@ -22,8 +22,8 @@ public class MineLifeClass extends MinnerBaseClass {
 
     @Override
     public void SetPowers() {
-        Powers.add(Power.MineLife, new MineLifePower(getLVL()));
-        Powers.add(Power.OreKnowledge, new OreKnowledge(getLVL()));
+        Powers.add(Power.MineLife, new MineLifePower(getPlayer(),getLVL()));
+        Powers.add(Power.OreKnowledge, new OreKnowledge(getLVL(),getPlayer()));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class MineLifeClass extends MinnerBaseClass {
     @Override
     public BlockBreakEvent BlockBreakEvent(BlockBreakEvent event) {
         event = super.BlockBreakEvent(event);
-        if (TryRunPower(Power.OreKnowledge)) {
+        if (TryRunPower(Power.PowerType.OreKnowledge)) {
             //Run
 
         }
