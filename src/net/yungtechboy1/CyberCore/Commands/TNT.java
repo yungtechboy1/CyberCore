@@ -45,14 +45,14 @@ public class TNT extends CheckPermCommand {
             System.out.println("CCCCCCCC");
 
             TNTSpecialist ts = (TNTSpecialist) c;
-            TNTSpecialistPower tsp = (TNTSpecialistPower) ts.GetPower(Power.TNT_Specialist);
+            TNTSpecialistPower tsp = (TNTSpecialistPower) ts.GetPower(Power.PowerType.TNTSpecialistPower);
             if (tsp == null) {
                 commandSender.sendMessage(CyberCoreMain.NAME + TextFormat.RED + "Error! GETTING POWER");
                 return true;
             }
-            if (ts.TryRunPower(Power.TNT_Specialist)) {
+            if (ts.TryRunPower(Power.PowerType.TNTSpecialistPower)) {
                 System.out.println("CCCCCCCC");
-                ts.RunPower(Power.TNT_Specialist, p);
+                ts.RunPower(Power.PowerType.TNTSpecialistPower, p);
                 System.out.println("CCCCCCCC------");
             }else{
                 commandSender.sendMessage("Error! Could not run power!");

@@ -7,8 +7,8 @@ import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class MineLifePower extends Power {
-    public MineLifePower(int level) {
-        super(((int) Math.floor(.65d * level) + 1), level);
+    public MineLifePower(CorePlayer cp, int level) {
+        super(((int) Math.floor(.65d * level) + 1), level,cp);
         int psc = ((int) Math.floor(.65d * level) + 1);
 
 //        PotionEffect = new
@@ -35,8 +35,8 @@ public class MineLifePower extends Power {
     }
 
     @Override
-    public int getType() {
-        return Power.MineLife;
+    public PowerType getType() {
+        return PowerType.MineLife;
     }
 
     @Override
@@ -96,14 +96,5 @@ public class MineLifePower extends Power {
         return super.getCooldownTime();
     }
 
-    @Override
-    public Object usePower(CorePlayer cp, Object... args) {
-        if(cp == null)return null;
-        if (Cooldown == null || Cooldown.isValid()) {
-            cp.addEffect(getEffect());
-            addCooldown();
 
-        }
-        return null;
-    }
 }

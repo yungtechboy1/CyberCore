@@ -286,12 +286,24 @@ public class Faction {
         return Plots;
     }
 
-    public void AddPlots(String plot) {
-        Plots.add(plot);
+    public void registerPlot(String plot){
+        addPlots(plot);
     }
 
-    public void DelPlots(String plot) {
+    public void unregisterPlot(String plot){
+        delPlot(plot);
+    }
+
+    @Deprecated
+    private void addPlots(String plot) {
+        Plots.add(plot);
+        Main.FFactory.PlotsList.put(plot,this);
+    }
+
+    @Deprecated
+    private void delPlot(String plot) {
         Plots.remove(plot);
+        Main.FFactory.PlotsList.remove(plot);
     }
 
     public void SetMaxPlayers(Integer value) {

@@ -76,9 +76,8 @@ public class Claim extends Commands {
             }
             Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"Purchase Successful! $5000 and 1 Power Withdrawn To Purchase This Chunk!");
             fac.TakeMoney(money);
-            fac.AddPlots(x+"|"+z);
+            fac.registerPlot(x+"|"+z);
             fac.TakePower(power);
-            Main.FFactory.PlotsList.put(x+"|"+z,fac.GetName());
         }
 
     }
@@ -100,8 +99,7 @@ public class Claim extends Commands {
         }
         Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"Purchase Successful! $5000 and 1 Power Withdrawn To Purchase Chunk at X:"+x+" Z:"+z+"!");
         fac.TakeMoney(money);
-        fac.AddPlots(x+"|"+z);
+        fac.registerPlot(x+"|"+z);
         fac.TakePower(power);
-        Main.FFactory.PlotsList.put(x+"|"+z,fac.GetName());
     }
 }

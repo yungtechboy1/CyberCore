@@ -207,7 +207,21 @@ public class FactionsMain {
         return false;
     }
 
+    @Deprecated
+    /**
+     *
+     *
+     * @param x
+     * @param z
+     * @return
+     */
     public String GetChunkOwner(int x, int z) {
+        Faction f = GetChunkOwnerFac(x,z);
+        if (f!=null) return f.GetName();
+        return null;
+    }
+
+    public Faction GetChunkOwnerFac(int x, int z) {
         if (FFactory.PlotsList.containsKey(x + "|" + z)) {
             return FFactory.PlotsList.get(x + "|" + z);
         }

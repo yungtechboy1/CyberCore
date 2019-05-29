@@ -13,6 +13,7 @@ import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.Raider;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Tasks.LumberJackTreeCheckerTask;
@@ -39,38 +40,49 @@ public class ClassFactory implements Listener {
 //        CCM.getServer().getScheduler().scheduleDelayedRepeatingTask(new LumberJackTreeCheckerTask(main), 20 * 60, 20 * 60);//Every Min
     }
 
+    public void clearClass(CorePlayer p){
+        p.SetPlayerClass(null);
+        MMOSave.remove(p.getName().toLowerCase());
+    }
+
     public BaseClass GetClass(CorePlayer p) {
-            ConfigSection o = (ConfigSection) MMOSave.get(p.getName().toLowerCase());
-            if (o != null) {
-                BaseClass data = null;//new BaseClass(CCM, p, (ConfigSection) o);
-                if (o.getInt("TYPE", -1) == BaseClass.ClassType.Class_Miner_MineLife.getKey()) {
-                    data = new MineLifeClass(CCM, p, o);
-                }
-                if (o.getInt("TYPE", -1) == BaseClass.ClassType.Class_Miner_TNT_Specialist.getKey()) {
-                    data = new TNTSpecialist(CCM, p, o);
-                }
-//                if (data != null) ClassList.put(p.getName().toLowerCase(), data);
-                p.SetPlayerClass(data);
-                return data;
-            }
-            return null;
+        ConfigSection o = (ConfigSection) MMOSave.get(p.getName().toLowerCase());
+        int k = o.getInt("TYPE", -1);
+        BaseClass.ClassType ct = BaseClass.ClassType.getFromInt(k);
+        BaseClass data = null;
+        switch (ct) {
+            case Miner_MineLife:
+                data = new MineLifeClass(CCM, p, o);
+                break;
+            case Miner_TNT:
+                data = new TNTSpecialist(CCM, p, o);
+                break;
+            case Offensive_Raider:
+                data = new Raider(CCM, p, o);
+                break;
+        }
+
+        if (data != null) {
+            p.SetPlayerClass(data);
+            return data;
+        }
+        return null;
     }
 
     public void SaveClassToFile(CorePlayer p) {
         BaseClass bc = p.GetPlayerClass();
-        if(bc!= null){
+        if (bc != null) {
             MMOSave.set(p.getName().toLowerCase(), p.GetPlayerClass().export());
             System.out.println("SAVEEE");
-        }else {
-            System.out.println(p.getName()+" HASS NUNN CLASS???");
+        } else {
+            System.out.println(p.getName() + " HASS NUNN CLASS???");
         }
     }
 
 
-
     @EventHandler
     public void OnEvent(BlockBreakEvent event) {
-        HandelEvent(event,(CorePlayer)  event.getPlayer());
+        HandelEvent(event, (CorePlayer) event.getPlayer());
     }
 
     @EventHandler
@@ -80,7 +92,7 @@ public class ClassFactory implements Listener {
 
     @EventHandler
     public void OnEvent(PlayerInteractEvent event) {
-        HandelEvent(event,(CorePlayer)  event.getPlayer());
+        HandelEvent(event, (CorePlayer) event.getPlayer());
     }
 
     @EventHandler
@@ -113,8 +125,8 @@ public class ClassFactory implements Listener {
         CCM.getLogger().info("SAving All Classes!");
         for (Player p : CCM.getServer().getOnlinePlayers().values()) {
             if (!(p instanceof CorePlayer)) continue;
-            CorePlayer cp = (CorePlayer)p;
-            if(cp.GetPlayerClass() == null)continue;
+            CorePlayer cp = (CorePlayer) p;
+            if (cp.GetPlayerClass() == null) continue;
             MMOSave.set(cp.getName().toLowerCase(), cp.GetPlayerClass().export());
         }
         CCM.getLogger().info("SAving File!");
