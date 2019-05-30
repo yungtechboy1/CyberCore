@@ -2,7 +2,7 @@ package net.yungtechboy1.CyberCore.Classes.Power;
 
 import cn.nukkit.math.NukkitRandom;
 
-public class PowerStackable extends Power {
+public abstract class PowerStackable extends Power {
     int AvailbleQuantity = 0;
     int MaxAvailbleQuantity = 0;
 
@@ -63,5 +63,6 @@ public class PowerStackable extends Power {
         }
         return false;
     }
+
 
 }

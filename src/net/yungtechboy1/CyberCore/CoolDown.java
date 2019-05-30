@@ -18,12 +18,35 @@ public class CoolDown extends ConfigSection {
         Time = t;
     }
 
+    /***
+     *
+     * @param name
+     * @param secs
+     */
+    public CoolDown(String name,int secs, int mins, int hrs) {
+//        t = tick;
+        Key = name;
+        setTimeSecs(secs, mins, hrs);
+    }
+
+    public CoolDown(String name,int secs, int mins) {
+//        t = tick;
+        Key = name;
+        setTimeSecs(secs, mins);
+    }
+
+    public CoolDown(String name,int secs) {
+//        t = tick;
+        Key = name;
+        setTimeSecs(secs);
+    }
+
     public CoolDown(String name) {
 //        t = tick;
         Key = name;
     }
 
-    public CoolDown(String key, int tick) {
+    public CoolDown( int tick, String key) {
         Time = tick;
         Key = key;
     }
@@ -41,30 +64,32 @@ public class CoolDown extends ConfigSection {
         Time = time;
     }
 
-    public void setTimeSecs(int hrs, int mins, int secs) {
-        setTimeSecs(secs + (60 * mins) + (60 * 60 * hrs));
+    public CoolDown setTimeSecs(int hrs, int mins, int secs) {
+        return setTimeSecs(secs + (60 * mins) + (60 * 60 * hrs));
     }
 
-    public void setTimeSecs(int mins, int secs) {
-        setTimeSecs(secs + (60 * mins));
+    public CoolDown setTimeSecs(int mins, int secs) {
+        return setTimeSecs(secs + (60 * mins));
     }
 
-    public void setTimeSecs(int secs) {
+    public CoolDown setTimeSecs(int secs) {
         Type = 1;
         setTime(CyberCoreMain.getInstance().GetIntTime() + secs);
+        return this;
     }
 
-    public void setTimeTick(int hrs, int mins, int secs) {
-        setTimeTick(secs + (60 * mins) + (60 * 60 * hrs));
+    public CoolDown setTimeTick(int hrs, int mins, int secs) {
+        return setTimeTick(secs + (60 * mins) + (60 * 60 * hrs));
     }
 
-    public void setTimeTick(int mins, int secs) {
-        setTimeTick(secs + (60 * mins));
+    public CoolDown setTimeTick(int mins, int secs) {
+        return setTimeTick(secs + (60 * mins));
     }
 
-    public void setTimeTick(int secs) {
+    public CoolDown setTimeTick(int secs) {
         Type = 2;
         setTime(CyberCoreMain.getInstance().getServer().getTick() + secs);
+        return this;
     }
 
     public String getKey() {
