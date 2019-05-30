@@ -53,6 +53,16 @@ public class OreKnowledge extends PassivePower {
         return Power.OreKnowledge;
     }
 
+    @Override
+    public String getName() {
+        return "Ore Knowledge";
+    }
+
+    @Override
+    public String getDispalyName() {
+        return getName();
+    }
+
     public void dispalyPreciousOres(CorePlayer p) {
         int size = BlockRange;
         ArrayList<Vector3> bl = new ArrayList<>();

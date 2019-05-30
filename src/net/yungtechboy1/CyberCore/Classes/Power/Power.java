@@ -89,6 +89,9 @@ public abstract class Power {
         return c;
     }
 
+    public abstract String getName();
+    public abstract String getDispalyName();
+
     public enum Stage {
         STAGE_1,
         STAGE_2,

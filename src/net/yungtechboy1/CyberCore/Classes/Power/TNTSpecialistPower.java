@@ -31,6 +31,16 @@ public class TNTSpecialistPower extends PowerStackable {
         return null;
     }
 
+    @Override
+    public String getName() {
+        return "TNT Specialist";
+    }
+
+    @Override
+    public String getDispalyName() {
+        return getName();
+    }
+
     private double GetTNTMotionPower(){
         int x = Level+1;
         double t = Math.sqrt(x)*x;

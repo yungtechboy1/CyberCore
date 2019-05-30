@@ -148,6 +148,9 @@ public abstract class BaseClass {
         return p.CanRun();
     }
 
+    public void CmdRunPower(int powerid) {
+        RunPower(powerid);
+    }
     public void RunPower(int powerid) {
         Power p = Powers.get(powerid);
         if (p == null) return;
@@ -155,8 +158,8 @@ public abstract class BaseClass {
 
     }
 
-    public ArrayList<Ability> PossibleAbillity() {
-        ArrayList<Ability> a = new ArrayList<Ability>();
+    public ArrayList<Power> PossiblePowers() {
+        ArrayList<Power> a = new ArrayList<Power>();
         return a;
     }
 
@@ -210,8 +213,8 @@ public abstract class BaseClass {
     public void setPrime(int key) {
         setPrime(true);
         PrimeKey = key;
-        Ability a = PossibleAbillity().get(key);
-        a.PrimeEvent();
+//        Ability a = PossibleAbillity().get(key);
+//        a.PrimeEvent();
     }
 
     public void AddCooldown(String perk, int value) {

@@ -47,6 +47,7 @@ import net.yungtechboy1.CyberCore.Custom.CustomInventoryTransactionPacket;
 import net.yungtechboy1.CyberCore.Custom.CustomNetworkInventoryAction;
 import net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse;
 import net.yungtechboy1.CyberCore.Data.HomeData;
+import net.yungtechboy1.CyberCore.Factory.Shop.ShopInv;
 import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
 import net.yungtechboy1.CyberCore.Manager.Econ.PlayerEconData;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
@@ -89,6 +90,7 @@ public class CorePlayer extends Player {
     public int TPRTimeout;
     public Integer FactionInviteTimeout = -1;
     public AuctionHouse AH = null;
+    public ShopInv Shop = null;
     long uct = 0;
     boolean uw = false;
     private FormWindow nw;

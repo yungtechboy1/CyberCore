@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Factory;
+package net.yungtechboy1.CyberCore.Factory.Shop;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
@@ -21,6 +21,7 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.BlockEntityDataPacket;
 import cn.nukkit.network.protocol.UpdateBlockPacket;
 import cn.nukkit.utils.Config;
+import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -40,85 +41,74 @@ import java.util.Set;
 import static net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money;
 
 public class ShopFactory implements Listener {
-        private final ShopSQL SQL;
-        CyberCoreMain CCM;
-        /**
-         * Settings:
-         * Key: {
-         * id:
-         * meta:
-         * count:
-         * namedtag:
-         * cost:
-         * soldby:
-         * }
-         */
-        Config Settings;
+    private final ShopSQL SQL;
+    CyberCoreMain CCM;
+    /**
+     * Settings:
+     * Key: {
+     * id:
+     * meta:
+     * count:
+     * namedtag:
+     * cost:
+     * soldby:
+     * }
+     */
+//        Config Settings;
 
 
-        ArrayList<AuctionItemData> items = new ArrayList<>();
+    ArrayList<AuctionItemData> items = new ArrayList<>();
+    private ArrayList<ShopMysqlData> ShopCache = null;
+    private CoolDown ShopCacheReset = null;
+    public ShopFactory(CyberCoreMain CCM) {
+        this.CCM = CCM;
+//            Settings = new Config(new File(CCM.getDataFolder(), "Auctions.yml"), Config.YAML);
+        SQL = new ShopSQL(CCM);
+    }
 
-        public ShopFactory(CyberCoreMain CCM) {
-            this.CCM = CCM;
-            Settings = new Config(new File(CCM.getDataFolder(), "Auctions.yml"), Config.YAML);
-            SQL = new ShopSQL(CCM);
-        }
-
-
-        public ArrayList<AuctionItemData> GetAllItems() {
-            ArrayList<AuctionItemData> is = new ArrayList<>();
-            try {
-                ResultSet rs = SQL.ExecuteQuerySQLite("SELECT * FROM `AuctionHouse` WHERE `purchased` != 1");
-                if (rs != null) {
-                    try {
-                        while (rs.next()) {
-                            AuctionItemData aid = new AuctionItemData(rs);
-                            is.add(aid);
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        CCM.getLogger().info("Error loading Items3!");
-                        return null;
-                    }
-                    CCM.getLogger().info("Loaded " + is.size() + " Items for AH1");
-                    return is;
+    //                new CoolDown().setTimeSecs(30,0);//30 Mins
+    public ArrayList<ShopMysqlData> GetAllItems() {
+        if (ShopCache != null) {
+            if (ShopCacheReset != null) {
+                if (ShopCacheReset.isValid()) {
+                    return ShopCache;
+                } else {
+                    ShopCache = null;
+                    ShopCacheReset = null;
                 }
-            } catch (Exception e) {
-                CCM.getLogger().error("ERRRORRROOROORORR", e);
             }
-            return is;
         }
-
-
-        public ArrayList<AuctionItemData> GetAllItemsLimit(int start, int stop, String seller) {
-            ArrayList<AuctionItemData> is = new ArrayList<>();
-            try {
-                ResultSet rs;
-                if (seller != null)
-                    rs = SQL.ExecuteQuerySQLite("SELECT * FROM `AuctionHouse` WHERE `soldbyn` = '" + seller + "' AND `purchased` != true LIMIT " + start + "," + stop);
-                else
-                    rs = SQL.ExecuteQuerySQLite("SELECT * FROM `AuctionHouse` WHERE `purchased` != true LIMIT " + start + "," + stop);
-                if (rs != null) {
-                    try {
-                        while (rs.next()) {
-                            AuctionItemData aid = new AuctionItemData(rs);
-                            is.add(aid);
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        CCM.getLogger().info("Error loading Items33!");
-                        return null;
+        ArrayList<ShopMysqlData> is = new ArrayList<>();
+        try {
+            ResultSet rs = SQL.ExecuteQuerySQLite("SELECT * FROM `Shop` WHERE `enabled` = 1");
+            if (rs != null) {
+                try {
+                    while (rs.next()) {
+                        ShopMysqlData aid = new ShopMysqlData(rs);
+                        is.add(aid);
                     }
-                    CCM.getLogger().info("Loaded " + is.size() + " Items for AH2");
-                    return is;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    CCM.getLogger().info("Error loading Shop Items3!");
+                    return null;
                 }
-            } catch (Exception e) {
-                CCM.getLogger().error("ERRRORRROOROORORR", e);
+                CCM.getLogger().info("Loaded " + is.size() + " Items for AH1");
+                ArrayList<ShopMysqlData> t = (ArrayList<ShopMysqlData>) is.clone();
+                if (t != null) {
+                    ShopCache = t;
+                    ShopCacheReset = new CoolDown("Shop", 0, 15);
+                    //Set Cache
+                }
+                return is;
             }
-            return is;
+        } catch (Exception e) {
+            CCM.getLogger().error("SSSSHHHHH ERRRORRROOROORORR", e);
         }
+        return is;
+    }
 
-        //@Todo
+
+    //@Todo
 //    public ArrayList<Item> getSoldItems() {
 //        ArrayList<Item> is = new ArrayList<>();
 //        ResultSet rs = null;//ExecuteQuerySQLite("SELECT * FROM `auctions` WHERE `purchased` != 1");
@@ -177,39 +167,14 @@ public class ShopFactory implements Listener {
 //        return null;
 //    }
 
-        public ArrayList<Item> getListOfItems() {
-            ArrayList<Item> il = new ArrayList<>();
-            for (AuctionItemData ahd : GetAllItems()) {
-                il.add(ahd.MakePretty());
-            }
-            return il;
+    public ArrayList<Item> getListOfItems() {
+        ArrayList<Item> il = new ArrayList<>();
+        for (ShopMysqlData ahd : GetAllItems()) {
+            il.add(ahd.getItem());
         }
+        return il;
+    }
 
-        public ArrayList<Item> getListOfItemsBetween(int start, int stop) {
-            return getListOfItemsBetween(start, stop, null);
-        }
-
-        public ArrayList<AuctionItemData> getListOfAIDBetween(int start, int stop) {
-            return getListOfAIDBetween(start, stop, null);
-        }
-
-        public ArrayList<AuctionItemData> getListOfAIDBetween(int start, int stop, String seller) {
-            ArrayList<AuctionItemData> il = new ArrayList<>();
-//        if(GetAllItemsLimit(start, stop) == null)System.out.println("YEAAAAAAAAAA THISSSSS SSSHSHHHHIIIITTT NUUUULLLLLLIINNNNN~!!!!!!!!");
-            for (AuctionItemData ahd : GetAllItemsLimit(start, stop, seller)) {
-                il.add(ahd);
-            }
-            return il;
-        }
-
-        public ArrayList<Item> getListOfItemsBetween(int start, int stop, String seller) {
-            ArrayList<Item> il = new ArrayList<>();
-//        if(GetAllItemsLimit(start, stop) == null)System.out.println("YEAAAAAAAAAA THISSSSS SSSHSHHHHIIIITTT NUUUULLLLLLIINNNNN~!!!!!!!!");
-            for (AuctionItemData ahd : GetAllItemsLimit(start, stop, seller)) {
-                il.add(ahd.MakePretty());
-            }
-            return il;
-        }
 
 //    public Item getItem(int page, int slot) {
 //        int stop = page * 45;
@@ -218,190 +183,157 @@ public class ShopFactory implements Listener {
 //        return items.get(key);
 //    }
 
-        public HashMap<Integer, Item> getPageHash(int page) {
-            return getPageHash(page, null);
-        }
 
-        public HashMap<Integer, Item> getPageHash(int page, String seller) {
-            HashMap<Integer, Item> list = new HashMap<Integer, Item>();
-            int k = 0;
-            if (seller == null) {
-                for (Item i : getPage(page)) {
-                    list.put(k, i);
-                    k++;
-                }
-            } else {
-                for (Item i : SetPagePlayerSelling(seller, page)) {
-                    list.put(k, i);
-                    k++;
-                }
+    public HashMap<Integer, Item> getPageHash(int page) {
+        HashMap<Integer, Item> list = new HashMap<Integer, Item>();
+        int k = 0;
+            for (Item i : getPage(page)) {
+                list.put(k, i);
+                k++;
             }
-            return list;
 
-        }
+        return list;
 
-        public Item[] SetPagePlayerSelling(String seller, int page) {
-            int stop = page * 45;
-            int start = stop - 45;
-//        System.out.println("START = " + start + ", STOP = " + stop + " Seller" + seller);
-            ArrayList<Item> list2 = getListOfItemsBetween(start, stop, seller);
-            if (45 > list2.size()) {
-                ArrayList<Item> a = new ArrayList<Item>();
-                for (int i = 0; i < 45; i++) {
-//                list2.iterator().n
-                    if (list2.size() > i && list2.get(i) != null) {
-//                    System.out.println("ADDING ACTUAL ITEM " + list2.get(i).getId());
-                        a.add(list2.get(i));
-                    } else {
-                        a.add(new ItemBlock(new BlockAir(), 0, 0));
-//                    System.out.println("ADDING AIR");
-                    }
-                }
+    }
 
-                return a.toArray(new Item[45]);
-            } else {
-                return list2.toArray(new Item[45]);
-            }
-        }
 
-        public Item getItemFromPage(int page, int slot) {
-            if (slot > 45) {
-                CCM.getLogger().error("ERROR! Slot out of range! E443 Slot:" + slot);
-                return null;
-            }
-            Item[] list = getPage(page);
-            if (slot > list.length) {
-                CCM.getLogger().error("ERROR! Selected Slot out of List Range! E33342 SLOT:" + slot + " OF " + list.length);
-                return null;
-            }
-            Item s = list[slot];
-            if (s.getId() == Item.AIR) return null;
-            return s;
-        }
+    public ArrayList<ShopMysqlData> GetAllItemsDataLimit(int start, int stop) {
+        ArrayList<ShopMysqlData> il = new ArrayList<>();
+        ArrayList<ShopMysqlData> a = GetAllItems();
+       for(int i = start;i < stop;i++ ){
+           if(i >= a.size())break;
+           ShopMysqlData smd = a.get(i);
+           if(smd != null)il.add(smd);
+       }
+        return il;
+    }
 
-        public AuctionItemData getAIDFromPage(int page, int slot) {
-            if (slot > 45) {
-                CCM.getLogger().error("ERROR! Slot out of range! E443 Slot:" + slot);
-                return null;
-            }
-            AuctionItemData[] list = getPageAID(page);
-            if (slot > list.length) {
-                CCM.getLogger().error("ERROR! Selected Slot out of List Range! E33342 SLOT:" + slot + " OF " + list.length);
-                return null;
-            }
-            return list[slot];
-        }
-
-        public AuctionItemData[] getPageAID(int page) {
-            int stop = page * 45;
-            int start = stop - 45;
-//        System.out.println("START = " + start + ", STOP = " + stop);
-            ArrayList<AuctionItemData> list2 = getListOfAIDBetween(start, stop);
-            if (45 > list2.size()) {
-                ArrayList<AuctionItemData> a = new ArrayList<AuctionItemData>();
-                for (int i = 0; i < 45; i++) {
-//                list2.iterator().n
-                    if (list2.size() > i && list2.get(i) != null) {
-//                    System.out.println("ADDING ACTUAL ITEM " + list2.get(i).toString());
-                        a.add(list2.get(i));
-                    } else {
-                        a.add(null);
-//                    System.out.println("ADDING AIR");
-                    }
-                }
-
-                return a.toArray(new AuctionItemData[45]);
-            } else {
-                return list2.toArray(new AuctionItemData[45]);
-            }
-        }
-
-        public Item[] getPage(int page) {
-            int stop = page * 45;
-            int start = stop - 45;
-//        System.out.println("START = " + start + ", STOP = " + stop);
-            ArrayList<Item> list2 = getListOfItemsBetween(start, stop);
-            if (45 > list2.size()) {
-                ArrayList<Item> a = new ArrayList<Item>();
-                for (int i = 0; i < 45; i++) {
-//                list2.iterator().n
-                    if (list2.size() > i && list2.get(i) != null) {
-//                    System.out.println("ADDING ACTUAL ITEM || " + list2.get(i).getId());
-                        a.add(list2.get(i));
-                    } else {
-                        a.add(new ItemBlock(new BlockAir(), 0, 0));
-//                    System.out.println("ADDING AIR ||");
-                    }
-                }
-
-                return a.toArray(new Item[45]);
-            } else {
-                return list2.toArray(new Item[45]);
-            }
+    public ArrayList<Item> GetAllItemsLimit(int start, int stop) {
+        ArrayList<Item> il = new ArrayList<>();
+        ArrayList<ShopMysqlData> a = GetAllItems();
+       for(int i = start;i < stop;i++ ){
+           if(i >= a.size())break;
+           ShopMysqlData smd = a.get(i);
+           if(smd != null){
+               il.add(smd.getItem());
+           }
+       }
+        return il;
+    }
 //
-//        ArrayList<Item> list = new ArrayList<>();
-//
-//        for (int a = start; a < list2.size(); a++) {
-//            if (a >= stop) break;
-//            Item newitem = list2.get(a).clone();
-//            System.out.println(newitem.toString());
-//            if (newitem == null) list.add(new ItemBlock(new BlockAir(), (Integer) null, 0));
-//            else list.add(newitem);
+//    public ArrayList<ShopMysqlData> GetAllItemsLimitData(int start, int stop) {
+//        ArrayList<ShopMysqlData> il = new ArrayList<>();
+//        for (ShopMysqlData ahd : GetAllItemsDataLimit(start, stop)) {
+//            il.add(ahd);
 //        }
-//
-//        return (Item[]) list.toArray();
+//        return il;
+//    }
 
-        /*
-        1 => 0 | 44
-        2 => 45 | 89
-         */
+    public Item getItemFromPage(int page, int slot) {
+        if (slot > 45) {
+            CCM.getLogger().error("ERROR! Slot out of range! E443 Slot:" + slot);
+            return null;
         }
-
-        public void OpenAH(CorePlayer p, Integer pg) {
-            SpawnFakeBlockAndEntity(p, new CompoundTag().putString("CustomName", "Auction House!"));
-            AuctionHouse b = new AuctionHouse(p, CCM, p, pg);
-            CyberCoreMain.getInstance().getLogger().info(b.getContents().values().size() + " < SIZZEEE" + b.getSize());
-            CyberCoreMain.getInstance().getServer().getScheduler().scheduleDelayedTask(new OpenAH(p, b), 5);
-//        b.open()
+        Item[] list = getPage(page);
+        if (slot > list.length) {
+            CCM.getLogger().error("ERROR! Selected Slot out of List Range! E33342 SLOT:" + slot + " OF " + list.length);
+            return null;
         }
+        Item s = list[slot];
+        if (s.getId() == Item.AIR) return null;
+        return s;
+    }
 
-        public void SpawnFakeBlockAndEntity(Player to, CompoundTag data) {
 
-            SpawnBlock(to, new BlockChest());
-            SpawnBlockEntity(to, data);
-
-        }
-
-        public void SpawnBlock(Player to, Block b) {
-            UpdateBlockPacket a = new UpdateBlockPacket();
-            UpdateBlockPacket aa = new UpdateBlockPacket();
-            a.x = aa.x = to.getFloorX();
-            a.y = aa.y = to.getFloorY() - 2;
-            a.z = aa.z = to.getFloorZ();
-            aa.z += 1;
-            a.flags = aa.flags = UpdateBlockPacket.FLAG_ALL;
-            a.blockRuntimeId = aa.blockRuntimeId = GlobalBlockPalette.getOrCreateRuntimeId(b.getFullId());
-            to.dataPacket(a);
-            to.dataPacket(aa);
-        }
-
-        public void SpawnBlockEntity(Player to, CompoundTag data) {
-            BlockEntityDataPacket bedp = new BlockEntityDataPacket();
-            BlockEntityDataPacket bedp2 = new BlockEntityDataPacket();
-            bedp2.x = bedp.x = to.getFloorX();
-            bedp2.y = bedp.y = to.getFloorY() - 2;
-            bedp2.z = bedp.z = to.getFloorZ();
-            bedp2.z += 1;
-            try {
-                bedp.namedTag = NBTIO.write(data, ByteOrder.LITTLE_ENDIAN, true);
-                bedp2.namedTag = NBTIO.write(new CompoundTag().putInt("pairx", bedp.x).putInt("pairz", bedp.z), ByteOrder.LITTLE_ENDIAN, true);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+    public Item[] getPage(int page) {
+        int stop = page * 45;
+        int start = stop - 45;
+        ArrayList<Item> list2 = GetAllItemsLimit(start, stop);
+        if (45 > list2.size()) {
+            ArrayList<Item> a = new ArrayList<Item>();
+            for (int i = 0; i < 45; i++) {
+//                list2.iterator().n
+                if (list2.size() > i && list2.get(i) != null) {
+//                    System.out.println("ADDING ACTUAL ITEM || " + list2.get(i).getId());
+                    a.add(list2.get(i));
+                } else {
+                    a.add(new ItemBlock(new BlockAir(), 0, 0));
+//                    System.out.println("ADDING AIR ||");
+                }
             }
 
-            to.dataPacket(bedp);
-            to.dataPacket(bedp2);
+            return a.toArray(new Item[45]);
+        } else {
+            return list2.toArray(new Item[45]);
         }
+    }
+    public ArrayList<ShopMysqlData> getPageData(int page) {
+        int stop = page * 45;
+        int start = stop - 45;
+        ArrayList<ShopMysqlData> list2 = GetAllItemsDataLimit(start, stop);
+        if (45 > list2.size()) {
+            ArrayList<ShopMysqlData> a = new ArrayList<ShopMysqlData>();
+            for (int i = 0; i < 45; i++) {
+//                list2.iterator().n
+                if (list2.size() > i && list2.get(i) != null) {
+                    a.add(list2.get(i));
+                } else {
+                    a.add(null);
+//                    System.out.println("ADDING AIR ||");
+                }
+            }
+
+            return a;
+        } else {
+            return list2;
+        }
+    }
+
+    public void OpenShop(CorePlayer p, Integer pg) {
+        SpawnFakeBlockAndEntity(p, new CompoundTag().putString("CustomName", "SHOP!"));
+        ShopInv b = new ShopInv(p, CCM, p, pg);
+        CyberCoreMain.getInstance().getLogger().info(b.getContents().values().size() + " < SIZZEEE" + b.getSize());
+        CyberCoreMain.getInstance().getServer().getScheduler().scheduleDelayedTask(new OpenShop(p, b), 5);
+//        b.open()
+    }
+
+    public void SpawnFakeBlockAndEntity(Player to, CompoundTag data) {
+
+        SpawnBlock(to, new BlockChest());
+        SpawnBlockEntity(to, data);
+
+    }
+
+    public void SpawnBlock(Player to, Block b) {
+        UpdateBlockPacket a = new UpdateBlockPacket();
+        UpdateBlockPacket aa = new UpdateBlockPacket();
+        a.x = aa.x = to.getFloorX();
+        a.y = aa.y = to.getFloorY() - 2;
+        a.z = aa.z = to.getFloorZ();
+        aa.z += 1;
+        a.flags = aa.flags = UpdateBlockPacket.FLAG_ALL;
+        a.blockRuntimeId = aa.blockRuntimeId = GlobalBlockPalette.getOrCreateRuntimeId(b.getFullId());
+        to.dataPacket(a);
+        to.dataPacket(aa);
+    }
+
+    public void SpawnBlockEntity(Player to, CompoundTag data) {
+        BlockEntityDataPacket bedp = new BlockEntityDataPacket();
+        BlockEntityDataPacket bedp2 = new BlockEntityDataPacket();
+        bedp2.x = bedp.x = to.getFloorX();
+        bedp2.y = bedp.y = to.getFloorY() - 2;
+        bedp2.z = bedp.z = to.getFloorZ();
+        bedp2.z += 1;
+        try {
+            bedp.namedTag = NBTIO.write(data, ByteOrder.LITTLE_ENDIAN, true);
+            bedp2.namedTag = NBTIO.write(new CompoundTag().putInt("pairx", bedp.x).putInt("pairz", bedp.z), ByteOrder.LITTLE_ENDIAN, true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        to.dataPacket(bedp);
+        to.dataPacket(bedp2);
+    }
 
 //    @EventHandler(ignoreCancelled = true)
 //    public void TTE(InventoryClickEvent event) {
@@ -494,135 +426,140 @@ public class ShopFactory implements Listener {
 //                }
 //            }
 
-        //TODO MAke Pages with new API
-        @EventHandler(ignoreCancelled = true)
-        public void TE(InventoryTransactionEvent event) {
-            System.out.println("CALLLL");
-            InventoryTransaction transaction = event.getTransaction();
-            Set<InventoryAction> traa = transaction.getActions();
-            for (InventoryAction t : traa) {
-                System.out.println("CALLLL TTTTTTTTTTTTTTTTTTT" + t.getClass().getName());
-                if (t instanceof SlotChangeAction) {
-                    System.out.println("CALLLL SLOTCCCCCCCC");
-                    SlotChangeAction sca = (SlotChangeAction) t;
+    //TODO MAke Pages with new API
+    @EventHandler(ignoreCancelled = true)
+    public void TE(InventoryTransactionEvent event) {
+        System.out.println("CALLLL");
+        InventoryTransaction transaction = event.getTransaction();
+        Set<InventoryAction> traa = transaction.getActions();
+        for (InventoryAction t : traa) {
+            System.out.println("CALLLL TTTTTTTTTTTTTTTTTTT" + t.getClass().getName());
+            if (t instanceof SlotChangeAction) {
+                System.out.println("CALLLL SLOTCCCCCCCC");
+                SlotChangeAction sca = (SlotChangeAction) t;
 
 //                sca.getInventory()
 
-                    Inventory inv = sca.getInventory();
-                    System.out.println("CHECK INNNNNVVVVVVV " + inv.getClass().getName());
+                Inventory inv = sca.getInventory();
+                System.out.println("CHECK INNNNNVVVVVVV " + inv.getClass().getName());
 //                if (inv.isEmpty()) return;
 
-                    System.out.println("NEEEEEEE" + inv.getClass().getTypeName());
-                    if (inv instanceof PlayerInventory) {
+                System.out.println("NEEEEEEE" + inv.getClass().getTypeName());
+                if (inv instanceof PlayerInventory) {
 
-                    }
-                    if (inv instanceof AuctionHouse) {
+                }
+                if (inv instanceof ShopInv) {
 
-                        AuctionHouse ah = (AuctionHouse) inv;
+                    ShopInv ah = (ShopInv) inv;
 //                    if(!ah.Init)return;
-                        System.out.println(sca.getSlot() + " || " + ah.getHolder().getName() + " || " + ah.getHolder().getClass().getName());
-                        CorePlayer ccpp = (CorePlayer) ah.getHolder();
-                        int slot = sca.getSlot();
+                    System.out.println(sca.getSlot() + " || " + ah.getHolder().getName() + " || " + ah.getHolder().getClass().getName());
+                    CorePlayer ccpp = (CorePlayer) ah.getHolder();
+                    int slot = sca.getSlot();
 //                    event.setCancelled();
-                        event.setCancelled();
-                        if (slot < 5 * 9) {
-                            System.out.println("TOP INV");
-                            //TODO CONFIRM AND SHOW ITEM
-                            if (!ah.ConfirmPurchase) {
-                                ah.ConfirmItemPurchase(slot);
-                                System.out.println("SSSSSSSSSSSSCPPPPPPPP");
+                    event.setCancelled();
+                    if (slot < 5 * 9) {
+                        System.out.println("TOP INV");
+                        //TODO CONFIRM AND SHOW ITEM
+                        if (!ah.ConfirmPurchase) {
+                            ah.ConfirmItemPurchase(slot);
+                            System.out.println("SSSSSSSSSSSSCPPPPPPPP");
 //                        ccpp.AH.ConfirmItemPurchase(slot);
-                            } else {
-                                Item si = ah.getContents().get(slot);
-                                if (si != null) {
-                                    if (ah.getCurrentPage() == Confirm_Purchase_Not_Enough_Money) {
+                        } else {
+                            Item si = ah.getContents().get(slot);
+                            if (si != null) {
+                                if (ah.getCurrentPage() == Confirm_Purchase_Not_Enough_Money) {
+                                    ah.setPage(1);
+                                    ah.ClearConfirmPurchase();
+                                    //Back Home
+                                    break;
+                                } else {
+                                    System.out.println("CPPPPPPPP");
+
+                                    if (si.getId() == BlockID.EMERALD_BLOCK) {
+                                        System.out.println("CONFIRM PURCHASE!!!!!!!");
+                                        ah.AF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot);
+                                        break;
+                                    } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
+                                        System.out.println("DENCLINE PURCHASE!!!!!!!!");
                                         ah.setPage(1);
                                         ah.ClearConfirmPurchase();
-                                        //Back Home
                                         break;
                                     } else {
-                                        System.out.println("CPPPPPPPP");
-
-                                        if (si.getId() == BlockID.EMERALD_BLOCK) {
-                                            System.out.println("CONFIRM PURCHASE!!!!!!!");
-                                            ah.AF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot);
-                                            break;
-                                        } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
-                                            System.out.println("DENCLINE PURCHASE!!!!!!!!");
-                                            ah.setPage(1);
-                                            ah.ClearConfirmPurchase();
-                                            break;
-                                        } else {
-                                            ah.setPage(1);
-                                            System.out.println("UNKNOWNMNNN!!!!!!!!");
-                                            ah.ClearConfirmPurchase();
-                                            break;
-                                        }
+                                        ah.setPage(1);
+                                        System.out.println("UNKNOWNMNNN!!!!!!!!");
+                                        ah.ClearConfirmPurchase();
+                                        break;
                                     }
                                 }
                             }
-                        } else {
-                            switch (slot) {
-                                case AuctionHouse.MainPageItemRef.LastPage:
-                                    ah.GoToPrevPage();
-                                    break;
-                                case AuctionHouse.MainPageItemRef.NextPage:
-                                    ah.GoToNextPage();
-                                    break;
-                                case AuctionHouse.MainPageItemRef.Search:
-                                    break;
-                                case AuctionHouse.MainPageItemRef.Reload:
-                                    ah.ReloadCurrentPage();
-                                    break;
-                                case AuctionHouse.MainPageItemRef.Catagories:
-                                    ah.DisplayCatagories();
-                                    break;
-                                case AuctionHouse.MainPageItemRef.PlayerSelling:
-                                    ah.GoToSellerPage();
-                                    event.setCancelled(false);
-                                    break;
+                        }
+                    } else {
+                        switch (slot) {
+                            case AuctionHouse.MainPageItemRef.LastPage:
+                                ah.GoToPrevPage();
+                                break;
+                            case AuctionHouse.MainPageItemRef.NextPage:
+                                ah.GoToNextPage();
+                                break;
+                            case AuctionHouse.MainPageItemRef.Search:
+                                break;
+                            case AuctionHouse.MainPageItemRef.Reload:
+                                ah.ReloadCurrentPage();
+                                break;
+                            case AuctionHouse.MainPageItemRef.Catagories:
+                                ah.DisplayCatagories();
+                                break;
+                            case AuctionHouse.MainPageItemRef.PlayerSelling:
+                                ah.GoToSellerPage();
+                                event.setCancelled(false);
+                                break;
 
-                            }
                         }
                     }
                 }
             }
         }
+    }
 
-        private void PurchaseItem(CorePlayer holder, int page, int slot) {
-            AuctionItemData aid = getAIDFromPage(page, slot);
-            if (aid == null) {
-                System.out.println("ERROR IN SELECTION!!!!");
-            } else if (aid.getCost() > holder.GetMoney()) {
-                holder.AH.SetupPageNotEnoughMoney(aid);
-                return;
-            }
+    private void PurchaseItem(CorePlayer holder, int page, int slot) {
+        ShopMysqlData aid = getItemFrom(page, slot);
+        if (aid == null) {
+            System.out.println("ERROR IN SELECTION!!!!");
+        } else if (aid.getPrice() > holder.GetMoney()) {
+            holder.Shop.SetupPageNotEnoughMoney(aid);
+            return;
+        }
 //        SetBought(aid.getMasterid());
-            holder.TakeMoney(aid.getCost());
-            holder.getInventory().addItem(aid.getKeepItem());
-            holder.AH.ClearConfirmPurchase();
-            holder.AH.setPage(1);
-        }
+        holder.TakeMoney(aid.getPrice());
+        holder.getInventory().addItem(aid.getItem(true));
+        holder.AH.ClearConfirmPurchase();
+        holder.AH.setPage(1);
+    }
 
-        public void SetBought(int id) {
-            String sql = "UPDATE `AuctionHouse` SET `purchased` = '1' WHERE `auctions`.`id` = " + id + ";";
-            try {
-                SQL.executeUpdate(sql);
-            } catch (Exception e) {
-                CCM.getLogger().error("ERRORRR 555 ", e);
-            }
-        }
+    public ShopMysqlData getItemFrom(int page, int slot) {
+        ArrayList<ShopMysqlData> smd = getPageData(page);
+        if(smd.size() > slot)return null;
+        return smd.get(slot);
+    }
 
-        public void ClaimMoney(int id) {
-            String sql = "UPDATE `AuctionHouse` SET `moneysent` = '1' WHERE `auctions`.`id` = " + id + ";";
-            //ExecuteUpdateSQLite(sql);
+    public void SetBought(int id) {
+        String sql = "UPDATE `AuctionHouse` SET `purchased` = '1' WHERE `auctions`.`id` = " + id + ";";
+        try {
+            SQL.executeUpdate(sql);
+        } catch (Exception e) {
+            CCM.getLogger().error("ERRORRR 555 ", e);
         }
+    }
 
-        public void additem(Item i, CorePlayer p, int cost) {
-            AuctionItemData aid = new AuctionItemData(i, cost, p);
-            SQL.AddItemForSale(aid);
-        }
+    public void ClaimMoney(int id) {
+        String sql = "UPDATE `AuctionHouse` SET `moneysent` = '1' WHERE `auctions`.`id` = " + id + ";";
+        //ExecuteUpdateSQLite(sql);
+    }
 
+    public void additem(Item i, CorePlayer p, int cost) {
+        AuctionItemData aid = new AuctionItemData(i, cost, p);
+        SQL.AddItemForSale(aid);
     }
 
 }
+

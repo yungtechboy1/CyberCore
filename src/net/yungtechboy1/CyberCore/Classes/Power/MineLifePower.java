@@ -54,6 +54,16 @@ public class MineLifePower extends Power {
     }
 
     @Override
+    public String getName() {
+        return "MineLife";
+    }
+
+    @Override
+    public String getDispalyName() {
+        return getName();
+    }
+
+    @Override
     public Effect getEffect() {
         Effect h = Effect.getEffect(Effect.HASTE);
         h.setDuration(getEffectDuration());

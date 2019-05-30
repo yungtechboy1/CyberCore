@@ -38,6 +38,7 @@ import net.yungtechboy1.CyberCore.Custom.Item.*;
 import net.yungtechboy1.CyberCore.Data.ServerSqlite;
 import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
 import net.yungtechboy1.CyberCore.Factory.ClassFactory;
+import net.yungtechboy1.CyberCore.Factory.Shop.ShopFactory;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
 import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
@@ -116,6 +117,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public HomeManager HomeFactory;
     public net.yungtechboy1.CyberCore.Rank.RankFactory RF;
     public net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory AF;
+    public ShopFactory Shop;
     public net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager PM;
     public List<String> Final = new ArrayList<>();
     public List<String> TPING = new ArrayList<>();
@@ -237,7 +239,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Item.list[Item.GUNPOWDER] = CustomItemGunpowder.class;
         Item.list[Item.PURPLE_GLAZED_TERRACOTTA] = CustomItemPurpleGlazedTerraCotta.class;
         Item.list[Item.STRING] = CustomItemString.class;
-        Item.list[Item.Element_1] = CustomItemElement.class;
+//        Item.list[Item.Element_1] = CustomItemElement.class;
 //        Item.init();
 
 //        System.out.println(">>>>>>>>>>0x" + Binary.bytesToHexString(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_1).getCompoundTag()));
@@ -303,6 +305,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         HomeFactory = new HomeManager(this);
         RF = new RankFactory(this);
+        Shop = new ShopFactory(this);
         //TODO
         AF = new AuctionFactory(this);
 
@@ -329,6 +332,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         getServer().getPluginManager().registerEvents(new MasterListener(this), this);
         getServer().getPluginManager().registerEvents(ClassFactory, this);
         getServer().getPluginManager().registerEvents(AF, this);
+        getServer().getPluginManager().registerEvents(Shop, this);
         getServer().getPluginManager().registerEvents(this, this);
 //        getServer().getPluginManager().registerEvents(new FactionListener(this, FM), this);
 
@@ -347,6 +351,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Reply(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Spawn(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TNT(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Shop(this));
         //All Commands Up to this point are Updated
         ///TODO FIX REST OF COMMANDS!
         //getServer().getCommandMap().register("CyberCore", new Tban(this));
