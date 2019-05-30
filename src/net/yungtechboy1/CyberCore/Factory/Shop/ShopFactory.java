@@ -20,17 +20,12 @@ import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.BlockEntityDataPacket;
 import cn.nukkit.network.protocol.UpdateBlockPacket;
-import cn.nukkit.utils.Config;
 import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Data.AHSqlite;
 import net.yungtechboy1.CyberCore.Data.AuctionItemData;
 import net.yungtechboy1.CyberCore.Data.ShopSQL;
-import net.yungtechboy1.CyberCore.Factory.AuctionHouse.OpenAH;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteOrder;
 import java.sql.ResultSet;
@@ -60,6 +55,7 @@ public class ShopFactory implements Listener {
     ArrayList<AuctionItemData> items = new ArrayList<>();
     private ArrayList<ShopMysqlData> ShopCache = null;
     private CoolDown ShopCacheReset = null;
+
     public ShopFactory(CyberCoreMain CCM) {
         this.CCM = CCM;
 //            Settings = new Config(new File(CCM.getDataFolder(), "Auctions.yml"), Config.YAML);
@@ -71,6 +67,7 @@ public class ShopFactory implements Listener {
         if (ShopCache != null) {
             if (ShopCacheReset != null) {
                 if (ShopCacheReset.isValid()) {
+                    System.out.println("Using Cache!!!");
                     return ShopCache;
                 } else {
                     ShopCache = null;
@@ -85,6 +82,7 @@ public class ShopFactory implements Listener {
                 try {
                     while (rs.next()) {
                         ShopMysqlData aid = new ShopMysqlData(rs);
+                        System.out.println(">>>!!!+" + aid);
                         is.add(aid);
                     }
                 } catch (Exception ex) {
@@ -187,10 +185,10 @@ public class ShopFactory implements Listener {
     public HashMap<Integer, Item> getPageHash(int page) {
         HashMap<Integer, Item> list = new HashMap<Integer, Item>();
         int k = 0;
-            for (Item i : getPage(page)) {
-                list.put(k, i);
-                k++;
-            }
+        for (Item i : getPage(page)) {
+            list.put(k, i);
+            k++;
+        }
 
         return list;
 
@@ -200,24 +198,24 @@ public class ShopFactory implements Listener {
     public ArrayList<ShopMysqlData> GetAllItemsDataLimit(int start, int stop) {
         ArrayList<ShopMysqlData> il = new ArrayList<>();
         ArrayList<ShopMysqlData> a = GetAllItems();
-       for(int i = start;i < stop;i++ ){
-           if(i >= a.size())break;
-           ShopMysqlData smd = a.get(i);
-           if(smd != null)il.add(smd);
-       }
+        for (int i = start; i < stop; i++) {
+            if (i >= a.size()) break;
+            ShopMysqlData smd = a.get(i);
+            if (smd != null) il.add(smd);
+        }
         return il;
     }
 
     public ArrayList<Item> GetAllItemsLimit(int start, int stop) {
         ArrayList<Item> il = new ArrayList<>();
         ArrayList<ShopMysqlData> a = GetAllItems();
-       for(int i = start;i < stop;i++ ){
-           if(i >= a.size())break;
-           ShopMysqlData smd = a.get(i);
-           if(smd != null){
-               il.add(smd.getItem());
-           }
-       }
+        for (int i = start; i < stop; i++) {
+            if (i >= a.size()) break;
+            ShopMysqlData smd = a.get(i);
+            if (smd != null) {
+                il.add(smd.getItem());
+            }
+        }
         return il;
     }
 //
@@ -267,6 +265,7 @@ public class ShopFactory implements Listener {
             return list2.toArray(new Item[45]);
         }
     }
+
     public ArrayList<ShopMysqlData> getPageData(int page) {
         int stop = page * 45;
         int start = stop - 45;
@@ -288,6 +287,7 @@ public class ShopFactory implements Listener {
             return list2;
         }
     }
+
 
     public void OpenShop(CorePlayer p, Integer pg) {
         SpawnFakeBlockAndEntity(p, new CompoundTag().putString("CustomName", "SHOP!"));
@@ -426,6 +426,7 @@ public class ShopFactory implements Listener {
 //                }
 //            }
 
+
     //TODO MAke Pages with new API
     @EventHandler(ignoreCancelled = true)
     public void TE(InventoryTransactionEvent event) {
@@ -462,12 +463,33 @@ public class ShopFactory implements Listener {
                         //TODO CONFIRM AND SHOW ITEM
                         if (!ah.ConfirmPurchase) {
                             ah.ConfirmItemPurchase(slot);
-                            System.out.println("SSSSSSSSSSSSCPPPPPPPP");
 //                        ccpp.AH.ConfirmItemPurchase(slot);
                         } else {
+                            if (ah.CurrentPage == ShopInv.CurrentPageEnum.PlayerSellingPage) {
+                                int sx = slot % 9;
+                                int sy = (int) Math.floor(slot / 9);
+                                Item is = ah.getItem(slot);
+                                boolean isi = false;
+                                int isc = is.getCount();
+                                if (is != null && is.getId() != 0) {
+                                    if(is.getId() == Item.IRON_BLOCK)isi = true;
+                                    System.out.println("Selected Slot SX:" + sx + " | SY:" + sy);
+                                    if (sy != 0 && sy != 5 && sx != 4 && !isi) {
+                                        if (sx < 4) {
+                                            //Sell
+                                                ah.SetupPageToFinalConfirmItem(ah.MultiConfirmData, isc,true);
+
+                                        } else {
+                                            //Buy
+                                        }
+                                    }
+                                }
+                                event.setCancelled();
+                                return;
+                            }
                             Item si = ah.getContents().get(slot);
                             if (si != null) {
-                                if (ah.getCurrentPage() == Confirm_Purchase_Not_Enough_Money) {
+                                if (ah.getCurrentPage() == ShopInv.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money) {
                                     ah.setPage(1);
                                     ah.ClearConfirmPurchase();
                                     //Back Home
@@ -495,23 +517,24 @@ public class ShopFactory implements Listener {
                         }
                     } else {
                         switch (slot) {
-                            case AuctionHouse.MainPageItemRef.LastPage:
+                            case ShopInv.MainPageItemRef.LastPage:
                                 ah.GoToPrevPage();
                                 break;
-                            case AuctionHouse.MainPageItemRef.NextPage:
+                            case ShopInv.MainPageItemRef.NextPage:
                                 ah.GoToNextPage();
                                 break;
-                            case AuctionHouse.MainPageItemRef.Search:
+                            case ShopInv.MainPageItemRef.Search:
                                 break;
-                            case AuctionHouse.MainPageItemRef.Reload:
+                            case ShopInv.MainPageItemRef.Reload:
                                 ah.ReloadCurrentPage();
                                 break;
-                            case AuctionHouse.MainPageItemRef.Catagories:
+                            case ShopInv.MainPageItemRef.Catagories:
                                 ah.DisplayCatagories();
                                 break;
-                            case AuctionHouse.MainPageItemRef.PlayerSelling:
-                                ah.GoToSellerPage();
+                            case ShopInv.MainPageItemRef.ToggleAdmin:
+                                ah.AdminMode = !ah.AdminMode;
                                 event.setCancelled(false);
+                                ah.ReloadCurrentPage();
                                 break;
 
                         }
@@ -538,22 +561,8 @@ public class ShopFactory implements Listener {
 
     public ShopMysqlData getItemFrom(int page, int slot) {
         ArrayList<ShopMysqlData> smd = getPageData(page);
-        if(smd.size() > slot)return null;
+        if (smd.size() < slot) return null;
         return smd.get(slot);
-    }
-
-    public void SetBought(int id) {
-        String sql = "UPDATE `AuctionHouse` SET `purchased` = '1' WHERE `auctions`.`id` = " + id + ";";
-        try {
-            SQL.executeUpdate(sql);
-        } catch (Exception e) {
-            CCM.getLogger().error("ERRORRR 555 ", e);
-        }
-    }
-
-    public void ClaimMoney(int id) {
-        String sql = "UPDATE `AuctionHouse` SET `moneysent` = '1' WHERE `auctions`.`id` = " + id + ";";
-        //ExecuteUpdateSQLite(sql);
     }
 
     public void additem(Item i, CorePlayer p, int cost) {

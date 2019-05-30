@@ -33,13 +33,14 @@ public class ShopMysqlData {
             ItemID = rs.getInt("itemid");
             ItemDamage = rs.getInt("itemdamage");
             Quantity = rs.getInt("quantity");
-            byte[] namedtag = rs.getString("nametag").getBytes();
-            Namedtag = namedtag;
-
             Price = rs.getInt("cost");
+            String ns = rs.getString("nametag");
+            if(ns != null)Namedtag = ns.getBytes();
             DisplayName = rs.getString("DisplayName");
+            System.out.println("Loading Shop Item >"+ShopID+"|"+ItemID+"|"+Price+DisplayName);
         }catch (Exception e){
             e.printStackTrace();
+            System.out.println("ERRRRRRRRRR Loading Shop Item !!!!");
             isValid = false;
         }
     }
@@ -52,7 +53,12 @@ public class ShopMysqlData {
         Item i = Item.get(ItemID, ItemDamage, Quantity);
         if (Namedtag != null) i.setCompoundTag(Namedtag);
         if(!pretty){
-            i.getNamedTag().putInt("ShopID",ShopID);
+            CompoundTag c = new CompoundTag();
+            if(i.getNamedTag() != null){
+                c = i.getNamedTag();
+            }
+            c.putInt("ShopID",ShopID);
+            i.setNamedTag(c);
             i.setLore("Cost: "+Price,
                     "Click to Buy!");
         }
