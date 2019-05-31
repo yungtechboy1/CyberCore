@@ -10,6 +10,9 @@ Your curre
 
 - Level 1:
     - Sheep
+        - 25% Chance - Pig Head
+        - Up yo 2 Wool
+        - 25% Chance 1-2 raw Mutton
 - Level 2:
     - Pig
 - Level 3:

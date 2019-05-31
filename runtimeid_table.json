@@ -1750,6 +1750,86 @@
     "data": 0
   },
   {
+    "name": "minecraft:mob_spawner",
+    "id": 52,
+    "data": 1
+  },
+  {
+    "name": "minecraft:mob_spawner",
+    "id": 52,
+    "data": 2
+  },
+  {
+    "name": "minecraft:mob_spawner",
+    "id": 52,
+    "data": 3
+  },
+  {
+    "name": "minecraft:mob_spawner",
+    "id": 52,
+    "data": 4
+  },
+  {
+    "name": "minecraft:mob_spawner",
+    "id": 52,
+    "data": 5
+  },
+  {
+    "name": "minecraft:mob_spawner",
+    "id": 52,
+    "data": 6
+  },
+  {
+    "name": "minecraft:mob_spawner",
+    "id": 52,
+    "data": 7
+  },
+  {
+    "name": "minecraft:mob_spawner",
+    "id": 52,
+    "data": 8
+  },
+  {
+    "name": "minecraft:mob_spawner",
+    "id": 52,
+    "data": 9
+  },
+  {
+    "name": "minecraft:mob_spawner",
+    "id": 52,
+    "data": 10
+  },
+  {
+    "name": "minecraft:mob_spawner",
+    "id": 52,
+    "data": 11
+  },
+  {
+    "name": "minecraft:mob_spawner",
+    "id": 52,
+    "data": 12
+  },
+  {
+    "name": "minecraft:mob_spawner",
+    "id": 52,
+    "data": 13
+  },
+  {
+    "name": "minecraft:mob_spawner",
+    "id": 52,
+    "data": 14
+  },
+  {
+    "name": "minecraft:mob_spawner",
+    "id": 52,
+    "data": 15
+  },
+  {
+    "name": "minecraft:mob_spawner",
+    "id": 52,
+    "data": 16
+  },
+  {
     "name": "minecraft:oak_stairs",
     "id": 53,
     "data": 0

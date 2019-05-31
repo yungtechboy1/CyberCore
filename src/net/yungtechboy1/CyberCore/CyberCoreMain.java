@@ -39,6 +39,8 @@ import net.yungtechboy1.CyberCore.Data.ServerSqlite;
 import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
 import net.yungtechboy1.CyberCore.Factory.ClassFactory;
 import net.yungtechboy1.CyberCore.Factory.Shop.ShopFactory;
+import net.yungtechboy1.CyberCore.Factory.Shop.Spawner.SpawnShopFactory;
+import net.yungtechboy1.CyberCore.Factory.Shop.Spawner.SpawnerShop;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
 import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
@@ -118,6 +120,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public net.yungtechboy1.CyberCore.Rank.RankFactory RF;
     public net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory AF;
     public ShopFactory Shop;
+    public SpawnShopFactory SpawnShop;
     public net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager PM;
     public List<String> Final = new ArrayList<>();
     public List<String> TPING = new ArrayList<>();
@@ -306,6 +309,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         HomeFactory = new HomeManager(this);
         RF = new RankFactory(this);
         Shop = new ShopFactory(this);
+        SpawnShop = new SpawnShopFactory(this);
         //TODO
         AF = new AuctionFactory(this);
 

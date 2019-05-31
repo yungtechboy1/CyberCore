@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Custom.Inventory;
+package net.yungtechboy1.CyberCore.Factory.AuctionHouse;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
@@ -24,12 +24,11 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Data.AuctionItemData;
-import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
 
 import java.util.*;
 
-import static net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse.CurrentPageEnum.Confirm_Purchase;
-import static net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money;
+import static net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse.CurrentPageEnum.Confirm_Purchase;
+import static net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money;
 
 /**
  * Created by carlt_000 on 2/22/2017.

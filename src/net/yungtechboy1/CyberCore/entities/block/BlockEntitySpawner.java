@@ -97,7 +97,7 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
     public String GetEntityNameFromID() {
         switch (GetSEntityID()) {
             case 4:
-            case 12:
+            case Pig.NETWORK_ID:
                 return "Pig";
             default:
                 return getName();

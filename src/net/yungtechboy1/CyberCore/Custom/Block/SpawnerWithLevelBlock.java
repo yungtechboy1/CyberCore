@@ -48,12 +48,11 @@ public class SpawnerWithLevelBlock extends BlockSolidMeta {
 
 
     public SpawnerWithLevelBlock(int meta) {
-        super(0);
-
+        super(meta);
     }
 
     public String getName() {
-        int type = getSpawnerType();
+        SpawnerType type = getSpawnerType();
         String t = "Unknown";
 
         return TextFormat.GOLD + "Spawner " + TextFormat.AQUA + "Level " + getSpawnerLevel();
@@ -86,7 +85,10 @@ public class SpawnerWithLevelBlock extends BlockSolidMeta {
         return bse.GetSpawnerLevel();
     }
 
-    public Integer getSpawnerType() {
+    public SpawnerType getSpawnerType() {
+       return SpawnerType.getFromInt(getDamage());
+    }
+    public Integer getSpawnerType2() {
         if (getLevel() == null) return -1;
         BlockEntitySpawner bse = (BlockEntitySpawner) getLevel().getBlockEntity(this);
         if (bse == null) return -1;
@@ -170,37 +172,46 @@ public class SpawnerWithLevelBlock extends BlockSolidMeta {
     }
 
     public enum SpawnerType {
-        Sheep(0, net.yungtechboy1.CyberCore.entities.animal.walking.Sheep.NETWORK_ID),
-        Pig(1, net.yungtechboy1.CyberCore.entities.animal.walking.Pig.NETWORK_ID),
-        Cow(2, net.yungtechboy1.CyberCore.entities.animal.walking.Cow.NETWORK_ID),
-        Squid(3, net.yungtechboy1.CyberCore.entities.animal.swimming.Squid.NETWORK_ID),
-        Chicken(4, net.yungtechboy1.CyberCore.entities.animal.walking.Chicken.NETWORK_ID),
-        Rabbit(5, net.yungtechboy1.CyberCore.entities.animal.walking.Rabbit.NETWORK_ID),
-        Zombie(6, net.yungtechboy1.CyberCore.entities.monster.walking.Zombie.NETWORK_ID),
-        ZombieVillagers(7, ZombieVillager.NETWORK_ID),
-        SilverFishh(8, Silverfish.NETWORK_ID),
-        Creeper(9, net.yungtechboy1.CyberCore.entities.monster.walking.Creeper.NETWORK_ID),
-        ZombiePigMan(10, net.yungtechboy1.CyberCore.entities.monster.walking.Zombie.NETWORK_ID),
+        Sheep(net.yungtechboy1.CyberCore.entities.animal.walking.Sheep.NETWORK_ID),
+        Pig(net.yungtechboy1.CyberCore.entities.animal.walking.Pig.NETWORK_ID),
+        Cow( net.yungtechboy1.CyberCore.entities.animal.walking.Cow.NETWORK_ID),
+        Squid( net.yungtechboy1.CyberCore.entities.animal.swimming.Squid.NETWORK_ID),
+        Chicken( net.yungtechboy1.CyberCore.entities.animal.walking.Chicken.NETWORK_ID),
+        Rabbit(net.yungtechboy1.CyberCore.entities.animal.walking.Rabbit.NETWORK_ID),
+        Zombie(net.yungtechboy1.CyberCore.entities.monster.walking.Zombie.NETWORK_ID),
+        ZombieVillagers( ZombieVillager.NETWORK_ID),
+        SilverFishh( Silverfish.NETWORK_ID),
+        Creeper( net.yungtechboy1.CyberCore.entities.monster.walking.Creeper.NETWORK_ID),
+        ZombiePigMan( net.yungtechboy1.CyberCore.entities.monster.walking.Zombie.NETWORK_ID),
         //        ZombiePigMan(3, net.yungtechboy1.CyberCore.entities.monster.walking.Zombie.),//TODO
-        Mooshroom(11, net.yungtechboy1.CyberCore.entities.animal.walking.Mooshroom.NETWORK_ID),
-        Skeleton(12, net.yungtechboy1.CyberCore.entities.monster.walking.Skeleton.NETWORK_ID),
-        Spider(13, net.yungtechboy1.CyberCore.entities.monster.walking.Spider.NETWORK_ID),
-        Blaze(14, net.yungtechboy1.CyberCore.entities.monster.flying.Blaze.NETWORK_ID),
-        Slime(15, net.yungtechboy1.CyberCore.entities.monster.walking.Zombie.NETWORK_ID),
+        Mooshroom( net.yungtechboy1.CyberCore.entities.animal.walking.Mooshroom.NETWORK_ID),
+        Skeleton( net.yungtechboy1.CyberCore.entities.monster.walking.Skeleton.NETWORK_ID),
+        Spider( net.yungtechboy1.CyberCore.entities.monster.walking.Spider.NETWORK_ID),
+        Blaze( net.yungtechboy1.CyberCore.entities.monster.flying.Blaze.NETWORK_ID),
+        Slime( net.yungtechboy1.CyberCore.entities.monster.walking.Zombie.NETWORK_ID),
         //        Slime(3,),
-        CaveSpider(16, net.yungtechboy1.CyberCore.entities.monster.walking.CaveSpider.NETWORK_ID),
-        IronGolem(17, net.yungtechboy1.CyberCore.entities.monster.walking.IronGolem.NETWORK_ID),
-        Witch(18, net.yungtechboy1.CyberCore.entities.monster.walking.Witch.NETWORK_ID),
-        Horse(19, net.yungtechboy1.CyberCore.entities.animal.walking.Horse.NETWORK_ID);
+        CaveSpider( net.yungtechboy1.CyberCore.entities.monster.walking.CaveSpider.NETWORK_ID),
+        IronGolem( net.yungtechboy1.CyberCore.entities.monster.walking.IronGolem.NETWORK_ID),
+        Witch( net.yungtechboy1.CyberCore.entities.monster.walking.Witch.NETWORK_ID),
+        Horse( net.yungtechboy1.CyberCore.entities.animal.walking.Horse.NETWORK_ID);
 
         private int Key = -1;
         private int ID = -1;
 
-        SpawnerType(int k, int id) {
-            Key = k;
+        SpawnerType( int id) {
             ID = id;
         }
 
+        public static SpawnerType getFromInt(int damage) {
+            for(SpawnerType st: SpawnerType.values()){
+                if(damage == st.getID())return st;
+            }
+            return null;
+        }
+
+        public int getID() {
+            return ID;
+        }
     }
 
     //TODO

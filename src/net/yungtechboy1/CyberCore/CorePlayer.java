@@ -45,9 +45,10 @@ import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Spring;
 import net.yungtechboy1.CyberCore.Custom.CustomInventoryTransactionPacket;
 import net.yungtechboy1.CyberCore.Custom.CustomNetworkInventoryAction;
-import net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse;
+import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse;
 import net.yungtechboy1.CyberCore.Data.HomeData;
 import net.yungtechboy1.CyberCore.Factory.Shop.ShopInv;
+import net.yungtechboy1.CyberCore.Factory.Shop.Spawner.SpawnerShop;
 import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
 import net.yungtechboy1.CyberCore.Manager.Econ.PlayerEconData;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
@@ -91,6 +92,7 @@ public class CorePlayer extends Player {
     public Integer FactionInviteTimeout = -1;
     public AuctionHouse AH = null;
     public ShopInv Shop = null;
+    public SpawnerShop SpawnerShop = null;
     long uct = 0;
     boolean uw = false;
     private FormWindow nw;
@@ -1661,7 +1663,7 @@ public class CorePlayer extends Player {
         startGamePacket.spawnZ = (int) this.z;
         startGamePacket.hasAchievementsDisabled = true;
         startGamePacket.dayCycleStopTime = -1;
-        startGamePacket.eduMode = true;
+        startGamePacket.eduMode = false;
         startGamePacket.hasEduFeaturesEnabled = true;
         startGamePacket.rainLevel = 0;
         startGamePacket.lightningLevel = 0;
