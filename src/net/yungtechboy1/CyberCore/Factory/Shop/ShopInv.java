@@ -256,8 +256,6 @@ public class ShopInv extends BaseInventory implements Inventory {
         for(Item iii: ai){
             ic += iii.getCount();
         }
-        Item confrim = si.Confirm;
-        Item deny = si.Deny;
         for (int i = 0; i < 5; i++) {
             for (int ii = 0; ii < 9; ii++) {
                 int key = (i * 9) + ii;
@@ -265,6 +263,7 @@ public class ShopInv extends BaseInventory implements Inventory {
                 if (i == 0) {
                     if (ii <= 3) {
                         add = si.ChestSell.clone();
+                        add.setLore("You have "+ic+" available for sale!","and can sell for a total of $"+(ic*aid.getSellPrice()));
                         setItem(key, add, true);
                     } else if(ii == 4){
                         Item g = si.Gold.clone();
@@ -272,10 +271,13 @@ public class ShopInv extends BaseInventory implements Inventory {
                         setItem(key, g, true);
                     } else {
                         add = si.ChestBuy.clone();
+                        int mb = (int)Math.floor(cp.GetMoney()/aid.getPrice());
+                        add.setLore("You can buy "+mb+" "+item.getName()+"(s)");
                         setItem(key, add, true);
                     }
                     continue;
                 }
+                add = null;
                 switch (ii) {
                     case 0:
 //                    case 1:
@@ -287,17 +289,17 @@ public class ShopInv extends BaseInventory implements Inventory {
                         break;
                     case 1:
                         if(ic >= 32)add = si.RmvX32.clone();
-                        else  add = si.RmvX64N.clone();
+                        else  add = si.RmvX32N.clone();
                         setItem(key, add, true);
                         break;
                     case 2:
                         if(ic >= 10)add = si.RmvX10.clone();
-                        else  add = si.RmvX64N.clone();
+                        else  add = si.RmvX10N.clone();
                         setItem(key, add, true);
                         break;
                     case 3:
                         if(ic >= 1)add = si.RmvX1.clone();
-                        else  add = si.RmvX64N.clone();
+                        else  add = si.RmvX1N.clone();
                         setItem(key, add, true);
                         break;
                     case 4:
@@ -309,20 +311,23 @@ public class ShopInv extends BaseInventory implements Inventory {
                         setItem(key, add, true);
                         break;
                     case 5:
-                        add = si.AddX1.clone();
+                        if(cp.GetMoney() > aid.getPrice())add = si.AddX1.clone();
+                        else add = si.AddX1N.clone();
                         setItem(key, add, true);
                         break;
                     case 6:
-                        add = si.AddX10.clone();
+                        if(cp.GetMoney() > aid.getPrice()*10)add = si.AddX10.clone();
+                        else add = si.AddX10N.clone();
                         setItem(key, add, true);
                         break;
                     case 7:
-                        add = si.AddX32.clone();
+                        if(cp.GetMoney() > aid.getPrice()*32)add = si.AddX32.clone();
+                        else add = si.AddX32N.clone();
                         setItem(key, add, true);
                         break;
                     case 8:
-                        add = si.AddX64.clone();
-
+                        if(cp.GetMoney() > aid.getPrice()*64)add = si.AddX64.clone();
+                        else add = si.AddX64N.clone();
                         setItem(key, add, true);
                         break;
                 }
@@ -469,7 +474,7 @@ public class ShopInv extends BaseInventory implements Inventory {
         Item item = aid.getItem(true);
         Item deny = si.Deny.clone();
         Item deny2 = si.Deny.clone();
-        CurrentPage = Confirm_Purchase_Not_Enough_Money;
+        CurrentPage = CurrentPageEnum.Confirm_Purchase_Not_Enough_Money;
         deny.setCustomName(TextFormat.RED + "Not Enough Money!");
         for (int i = 0; i < 5; i++) {
             for (int ii = 0; ii < 9; ii++) {
@@ -499,12 +504,26 @@ public class ShopInv extends BaseInventory implements Inventory {
     public void SetupPageToFinalConfirmItem(ShopMysqlData aid) {
         SetupPageToFinalConfirmItem(aid,1,false);
     }
+    boolean SetupPageToFinalConfirmItemSell = false;
+//    int SetupPageToFinalConfirmItemCount = 0;
     public void SetupPageToFinalConfirmItem(ShopMysqlData aid, int count, boolean sell) {
         CurrentPage = CurrentPageEnum.Confirm_Purchase_Final;
+        SetupPageToFinalConfirmItemSell = sell;
+//        SetupPageToFinalConfirmItemCount = count;
         CorePlayer cp = (CorePlayer) getHolder();
         StaticItems si = new StaticItems(Page);
-        Item item = aid.getItem();
+        Item item = aid.getItem().clone();
+        item.setCount(count);
         Item confrim = si.Confirm.clone();
+        if(sell)confrim = si.ConfirmSell.clone();
+        confrim.setCount(count);
+if(sell) {
+    confrim.setCustomName("Sell " + aid.getPrettyString(count, !sell));
+    confrim.setLore(TextFormat.AQUA + "Sell Price Per Item: " + TextFormat.GREEN + aid.getSellPrice(), TextFormat.AQUA + "Purchase Quantity: " + TextFormat.GREEN + count, TextFormat.GRAY + "------------------------", TextFormat.AQUA + "Purchase price: " + TextFormat.GREEN + aid.getPrice(count));
+}else {
+    confrim.setCustomName("Buy " + aid.getPrettyString(count, !sell));
+    confrim.setLore(TextFormat.AQUA + "Buy Price Per Item: " + TextFormat.GREEN + aid.getPrice(), TextFormat.AQUA + "Purchase Quantity: " + TextFormat.GREEN + count, TextFormat.GRAY + "------------------------", TextFormat.AQUA + "Purchase price: " + TextFormat.GREEN + aid.getPrice(count));
+}
         Item deny = si.Deny.clone();
         for (int i = 0; i < 5; i++) {
             for (int ii = 0; ii < 9; ii++) {
@@ -790,6 +809,7 @@ public class ShopInv extends BaseInventory implements Inventory {
         public final Item Paper;
         public final Item Map;
         public final Item Confirm;
+        public final Item ConfirmSell;
         public final Item AddX1;
         public final Item AddX10;
         public final Item AddX32;
@@ -850,7 +870,7 @@ public class ShopInv extends BaseInventory implements Inventory {
             AddX1N.setCompoundTag(T);
             AddX1N.getNamedTag().putInt("ADD", 1);
             AddX1N.setCount(1);
-            AddX1.setCustomName(TextFormat.GREEN + "Cannot Buy 1");
+            AddX1N.setCustomName(TextFormat.GREEN + "Cannot Buy 1");
 
             AddX10N = Item.get(Item.IRON_BLOCK);
             AddX10N.setCompoundTag(T);
@@ -920,6 +940,9 @@ public class ShopInv extends BaseInventory implements Inventory {
             Confirm = Item.get(Item.EMERALD_BLOCK);
             Confirm.setCompoundTag(T);
             Confirm.setCustomName(TextFormat.GREEN + "Confirm Cart Purchase");
+            ConfirmSell = Item.get(Item.EMERALD_BLOCK);
+            ConfirmSell.setCompoundTag(T);
+            ConfirmSell.setCustomName(TextFormat.GREEN + "Confirm Cart Sale");
             Deny = Item.get(Item.REDSTONE_BLOCK);
             Deny.setCompoundTag(T);
             Deny.setCustomName(TextFormat.RED + "Cancel Cart Purchase");

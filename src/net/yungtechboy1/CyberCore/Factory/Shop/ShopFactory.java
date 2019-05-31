@@ -33,8 +33,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-import static net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money;
-
 public class ShopFactory implements Listener {
     private final ShopSQL SQL;
     CyberCoreMain CCM;
@@ -472,45 +470,47 @@ public class ShopFactory implements Listener {
                                 boolean isi = false;
                                 int isc = is.getCount();
                                 if (is != null && is.getId() != 0) {
-                                    if(is.getId() == Item.IRON_BLOCK)isi = true;
+                                    if (is.getId() == Item.IRON_BLOCK) isi = true;
                                     System.out.println("Selected Slot SX:" + sx + " | SY:" + sy);
                                     if (sy != 0 && sy != 5 && sx != 4 && !isi) {
                                         if (sx < 4) {
                                             //Sell
-                                                ah.SetupPageToFinalConfirmItem(ah.MultiConfirmData, isc,true);
+                                            ah.SetupPageToFinalConfirmItem(ah.MultiConfirmData, isc, true);
 
                                         } else {
                                             //Buy
+                                            ah.SetupPageToFinalConfirmItem(ah.MultiConfirmData, isc, false);
                                         }
                                     }
                                 }
                                 event.setCancelled();
                                 return;
-                            }
-                            Item si = ah.getContents().get(slot);
-                            if (si != null) {
-                                if (ah.getCurrentPage() == ShopInv.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money) {
-                                    ah.setPage(1);
-                                    ah.ClearConfirmPurchase();
-                                    //Back Home
-                                    break;
-                                } else {
-                                    System.out.println("CPPPPPPPP");
-
-                                    if (si.getId() == BlockID.EMERALD_BLOCK) {
-                                        System.out.println("CONFIRM PURCHASE!!!!!!!");
-                                        ah.AF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot);
-                                        break;
-                                    } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
-                                        System.out.println("DENCLINE PURCHASE!!!!!!!!");
+                            } else {
+                                Item si = ah.getContents().get(slot);
+                                if (si != null) {
+                                    if (ah.getCurrentPage() == ShopInv.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money) {
                                         ah.setPage(1);
                                         ah.ClearConfirmPurchase();
+                                        //Back Home
                                         break;
                                     } else {
-                                        ah.setPage(1);
-                                        System.out.println("UNKNOWNMNNN!!!!!!!!");
-                                        ah.ClearConfirmPurchase();
-                                        break;
+                                        System.out.println("CPPPPPPPP");
+
+                                        if (si.getId() == BlockID.EMERALD_BLOCK) {
+                                            System.out.println("CONFIRM PURCHASE!!!!!!!");
+                                            ah.AF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot, si.getCount());
+                                            break;
+                                        } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
+                                            System.out.println("DENCLINE PURCHASE!!!!!!!!");
+                                            ah.setPage(1);
+                                            ah.ClearConfirmPurchase();
+                                            break;
+                                        } else {
+                                            ah.setPage(1);
+                                            System.out.println("UNKNOWNMNNN!!!!!!!!");
+                                            ah.ClearConfirmPurchase();
+                                            break;
+                                        }
                                     }
                                 }
                             }
@@ -544,19 +544,33 @@ public class ShopFactory implements Listener {
         }
     }
 
-    private void PurchaseItem(CorePlayer holder, int page, int slot) {
+    //SetupPageToFinalConfirmItemSell
+    private void PurchaseItem(CorePlayer holder, int page, int slot, int count) {
         ShopMysqlData aid = getItemFrom(page, slot);
         if (aid == null) {
             System.out.println("ERROR IN SELECTION!!!!");
-        } else if (aid.getPrice() > holder.GetMoney()) {
+        } else if (aid.getPrice(count) > holder.GetMoney()) {
             holder.Shop.SetupPageNotEnoughMoney(aid);
             return;
         }
+//        int c = holder.Shop.SetupPageToFinalConfirmItemCount;
+        if (holder.Shop.SetupPageToFinalConfirmItemSell) {
+            holder.AddMoney(aid.getSellPrice(count));
+            Item i = aid.getItem(true);
+            i.setCount(count);
+            holder.getInventory().removeItem(i);
+            holder.Shop.ClearConfirmPurchase();
+            holder.Shop.setPage(1);
+        } else {
+
 //        SetBought(aid.getMasterid());
-        holder.TakeMoney(aid.getPrice());
-        holder.getInventory().addItem(aid.getItem(true));
-        holder.AH.ClearConfirmPurchase();
-        holder.AH.setPage(1);
+            holder.TakeMoney(aid.getPrice(count));
+            Item i = aid.getItem(true);
+            i.setCount(count);
+            holder.getInventory().addItem(i);
+            holder.Shop.ClearConfirmPurchase();
+            holder.Shop.setPage(1);
+        }
     }
 
     public ShopMysqlData getItemFrom(int page, int slot) {
