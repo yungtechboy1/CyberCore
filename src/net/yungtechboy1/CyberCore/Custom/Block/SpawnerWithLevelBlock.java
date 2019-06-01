@@ -8,6 +8,7 @@ import cn.nukkit.entity.EntityHuman;
 import cn.nukkit.entity.passive.EntityAnimal;
 import cn.nukkit.item.ItemBookEnchanted;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
+import net.yungtechboy1.CyberCore.Custom.Item.CustomItemBlockSpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.entities.animal.swimming.Squid;
 import net.yungtechboy1.CyberCore.entities.animal.walking.*;
 import net.yungtechboy1.CyberCore.entities.block.BlockEntitySpawner;
@@ -48,7 +49,7 @@ public class SpawnerWithLevelBlock extends BlockSolidMeta {
 
 
     public SpawnerWithLevelBlock(int meta) {
-        super(meta);
+        super(0);
     }
 
     public String getName() {
@@ -58,12 +59,9 @@ public class SpawnerWithLevelBlock extends BlockSolidMeta {
         return TextFormat.GOLD + "Spawner " + TextFormat.AQUA + "Level " + getSpawnerLevel();
     }
 
-    public int GetTypeFromItem(Item i) {
+    public int GetTypeFromItem(CustomItemBlockSpawnerWithLevelBlock i) {
         if (!i.hasCompoundTag()) return -1;
-        CompoundTag ct = i.getNamedTag();
-        int v = ct.getInt("Type");
-        if (v == 0) return -1;
-        return v;
+        return i.getSpawnerType().getID();
     }
 
     public int GetLevelFromItem(Item i) {
@@ -110,14 +108,15 @@ public class SpawnerWithLevelBlock extends BlockSolidMeta {
     public boolean place(Item item, Block block, Block target, BlockFace face, double fx, double fy, double fz, Player player) {
 
         BlockEntity blockEntity = this.getLevel().getBlockEntity(this);
+        CustomItemBlockSpawnerWithLevelBlock iitem = (CustomItemBlockSpawnerWithLevelBlock)item;
         if (blockEntity != null && blockEntity instanceof BlockEntitySpawner) {
             Server.getInstance().broadcastMessage("ENTITY ALREADY CREATED!!!!");
             ((BlockEntitySpawner) blockEntity).setSpawnEntityType(item.getDamage());
         } else {
             Server.getInstance().broadcastMessage("ENTITY NOT ALREADY CREATED!!!!");
             if (blockEntity != null) blockEntity.close();
-            int sl = getSpawnerLevel(item);
-            int t = GetTypeFromItem(item);
+            int sl = 0;//getSpawnerLevel(item);
+            int t = GetTypeFromItem(iitem);
             if (sl == -1 || t == -1) {
                 //Invalid Block
                 player.sendMessage("Error! Spawner is invalid! T:" + t + " SL:" + sl);

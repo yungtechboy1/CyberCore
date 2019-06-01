@@ -5,6 +5,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
+import net.yungtechboy1.CyberCore.Custom.Item.CustomItemBlockSpawnerWithLevelBlock;
 import sun.plugin.dom.core.Text;
 
 public class SpawnerShopData {
@@ -22,7 +23,7 @@ public class SpawnerShopData {
 
     public Item getItem(boolean pretty){
         Block b =new SpawnerWithLevelBlock(SpawnerType.getID());
-        Item i =new ItemBlock(b);
+        Item i =new CustomItemBlockSpawnerWithLevelBlock(SpawnerType.getID());
         if(pretty)return i;
         i.setLore(TextFormat.AQUA+"Spawner Type: "+TextFormat.GREEN+b.getName(),
                 TextFormat.AQUA+"Spawner Price: "+TextFormat.GREEN+Price,
@@ -32,7 +33,7 @@ public class SpawnerShopData {
         return i;
     }
     public Item getItem(){
-        return getItem(true);
+        return getItem(false);
     }
 
     public SpawnerWithLevelBlock.SpawnerType getSpawnerType() {

@@ -56,7 +56,7 @@ public class SpawnShopFactory implements Listener {
         this.CCM = CCM;
 //            Settings = new Config(new File(CCM.getDataFolder(), "Auctions.yml"), Config.YAML);
 //        SQL = new ShopSQL(CCM);
-        SpawnerShopData pigdata = new SpawnerShopData(SpawnerWithLevelBlock.SpawnerType.Pig, 3500, 3, 0);
+        SpawnerShopData pigdata = new SpawnerShopData(SpawnerWithLevelBlock.SpawnerType.Pig, 100, 3, 0);
         ShopCache = new ArrayList<>();
         ShopCache.add(pigdata);
     }

@@ -549,7 +549,7 @@ public class ShopFactory implements Listener {
         ShopMysqlData aid = getItemFrom(page, slot);
         if (aid == null) {
             System.out.println("ERROR IN SELECTION!!!!");
-        } else if (aid.getPrice(count) > holder.GetMoney()) {
+        } else if (aid.getPrice(count) > holder.GetMoney() && !holder.Shop.SetupPageToFinalConfirmItemSell) {
             holder.Shop.SetupPageNotEnoughMoney(aid);
             return;
         }

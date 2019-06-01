@@ -234,6 +234,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         addCreativeItem(new CustomItemElement());
         ReloadBlockList(Block.ENCHANTING_TABLE, BlockEnchantingTable.class);
 
+        Item.customblocklist[Item.MONSTER_SPAWNER] = CustomItemBlockSpawnerWithLevelBlock.class;
+
+
         Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
         ReloadBlockList(Block.MONSTER_SPAWNER, SpawnerWithLevelBlock.class);
         Item.list[Item.BOOK] = CItemBook.class;
@@ -337,6 +340,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         getServer().getPluginManager().registerEvents(ClassFactory, this);
         getServer().getPluginManager().registerEvents(AF, this);
         getServer().getPluginManager().registerEvents(Shop, this);
+        getServer().getPluginManager().registerEvents(SpawnShop, this);
         getServer().getPluginManager().registerEvents(this, this);
 //        getServer().getPluginManager().registerEvents(new FactionListener(this, FM), this);
 
