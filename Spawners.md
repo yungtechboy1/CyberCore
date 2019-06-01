@@ -11,8 +11,20 @@ Your curre
 - Level 1:
     - Sheep
         - 25% Chance - Pig Head
-        - Up yo 2 Wool
+        - Up to 2 Wool
+            - 40/40/20 Chance
+                - Regular Wool
+                - SilkWool
+                - Full Fail
+                - only with EetityGrinder
         - 25% Chance 1-2 raw Mutton
+        
+        ###Levelup
+        - 500 Sheep Heads
+        
+        ###Classes
+            - Sheeps Blood - PotionBottle
+                - Useless potion
 - Level 2:
     - Pig
 - Level 3:

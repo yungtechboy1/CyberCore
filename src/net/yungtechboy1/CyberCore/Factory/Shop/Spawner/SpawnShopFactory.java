@@ -56,9 +56,16 @@ public class SpawnShopFactory implements Listener {
         this.CCM = CCM;
 //            Settings = new Config(new File(CCM.getDataFolder(), "Auctions.yml"), Config.YAML);
 //        SQL = new ShopSQL(CCM);
-        SpawnerShopData pigdata = new SpawnerShopData(SpawnerWithLevelBlock.SpawnerType.Pig, 100, 3, 0);
         ShopCache = new ArrayList<>();
-        ShopCache.add(pigdata);
+        ShopCache.add(new SpawnerShopData(SpawnerWithLevelBlock.SpawnerType.Pig, 100, 2, 0));
+        ShopCache.add(new SpawnerShopData(SpawnerWithLevelBlock.SpawnerType.Sheep, 100, 1, 0));
+        ShopCache.add(new SpawnerShopData(SpawnerWithLevelBlock.SpawnerType.Cow, 100, 3, 0));
+        ShopCache.add(new SpawnerShopData(SpawnerWithLevelBlock.SpawnerType.Squid, 100, 4, 0));
+        ShopCache.add(new SpawnerShopData(SpawnerWithLevelBlock.SpawnerType.Chicken, 100, 5, 0));
+        ShopCache.add(new SpawnerShopData(SpawnerWithLevelBlock.SpawnerType.Rabbit, 100, 6, 0));
+        ShopCache.add(new SpawnerShopData(SpawnerWithLevelBlock.SpawnerType.Zombie, 100, 7, 0));
+//        new SpawnerShopData(SpawnerWithLevelBlock.SpawnerType.Pig, 100, 3, 0);
+//        ShopCache.add(pigdata);
     }
 
     //                new CoolDown().setTimeSecs(30,0);//30 Mins
