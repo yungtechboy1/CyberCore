@@ -10,6 +10,7 @@ Your curre
 
 - Level 1:
     - Sheep
+        ###Drop
         - 25% Chance - Pig Head
         - Up to 2 Wool
             - 40/40/20 Chance
@@ -27,8 +28,28 @@ Your curre
                 - Useless potion
 - Level 2:
     - Pig
+    
+    ###Drop
+        - Porkcop - 1-2
+        -
+    ###Levelup
+    
+    ###Classes
+        - Sheeps Blood - PotionBottle
+            - Nametag: SheepsBlood
+            - Useless potion
+        - Pig Skin - Leather Hide:1
+            - Meta:1
+            - Useless Item
 - Level 3:
     - Cow
+    ###Drops
+    - Leather 1-3
+    - Raw Beef / Steak
+        - depends if on fire
+    ###Levelup
+    
+    ###Classes
 - Level 4
     - Squid
 - Level 5
