@@ -24,6 +24,11 @@ public class MinnerBaseClass extends BaseClass {
     }
 
     @Override
+    public void initBuffs() {
+
+    }
+
+    @Override
     public Object RunPower(int powerid, Object... args) {
         return null;
     }

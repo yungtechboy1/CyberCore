@@ -21,8 +21,6 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
-import net.yungtechboy1.CyberCore.Manager.Form.CyberFormCustom;
-import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassHowToUse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,6 +77,8 @@ public abstract class BaseClass {
     private int LVL = 0;
     private int XP = 0;
     private Ability ActiveAbility;
+    private ArrayList<Buff> Buffs = new ArrayList<>();
+    private ArrayList<DeBuff> DeBuffs = new ArrayList<>();
 
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank, ConfigSection data) {
         this(main, player, rank);
@@ -107,6 +107,11 @@ public abstract class BaseClass {
         LVL = XPToLevel(XP);
     }
 
+    public ClassTeir getTeir() {
+        int d = (int) Math.floor(getLVL() / 10);
+        return ClassTeir.values()[d];
+    }
+
     public ClassType getTYPE() {
         return TYPE;
     }
@@ -115,6 +120,70 @@ public abstract class BaseClass {
 
     public int getMainID() {
         return MainID;
+    }
+
+    public abstract void initBuffs();
+
+    public ArrayList<Buff> addBuff(Buff o) {
+        Buffs.add(o.getBt().ordinal(),o);
+        return (ArrayList<Buff>)Buffs.clone();
+    }
+
+    public ArrayList<Buff> removeBuffs(Buff o) {
+        Buffs.remove(o.getBt().ordinal());
+        return (ArrayList<Buff>)Buffs.clone();
+    }
+
+    public ArrayList<Buff> getBuffs() {
+        return (ArrayList<Buff>)Buffs.clone();
+    }
+
+    public Buff getBuff(int o) {
+        return Buffs.get(o);
+    }
+
+    @Deprecated
+    public void setBuffs(ArrayList<Buff> buffs) {
+        Buffs = buffs;
+    }
+
+    public ArrayList<DeBuff> removeDeBuff(DeBuff o) {
+        DeBuffs.remove(o.getBt().ordinal());
+        return (ArrayList<DeBuff>)DeBuffs.clone();
+    }
+
+    public ArrayList<DeBuff> addDeBuff(DeBuff o) {
+        DeBuffs.add(o.getBt().ordinal(),o);
+        return (ArrayList<DeBuff>)DeBuffs.clone();
+    }
+
+    public ArrayList<DeBuff> getDeBuffs() {
+        return (ArrayList<DeBuff>)DeBuffs.clone();
+    }
+
+    public DeBuff getDeBuff(int o) {
+        return DeBuffs.get(o);
+    }
+
+    @Deprecated
+    public void setDeBuffs(ArrayList<DeBuff> deBuffs) {
+        DeBuffs = deBuffs;
+    }
+
+    public float getDamageBuff() {
+        return 1f;
+    }
+
+    public float getArmorBuff() {
+        return 1f;
+    }
+
+    public int getExtraHealth() {
+        return 0;
+    }
+
+    public float getMovementBuff() {
+        return 0;
     }
 
     public ArrayList<Power> getPowers() {
@@ -126,6 +195,10 @@ public abstract class BaseClass {
     }
 
     public abstract Object RunPower(int powerid, Object... args);
+
+    public void AddPower(Power power) {
+        Powers.add(power);
+    }
 //        Power p = Powers.get(powerid);
 //        if(p == null || args.length != 3 ){
 //            CCM.getLogger().error("No Power found or Incorrect Args For MineLife E334221");
@@ -138,10 +211,6 @@ public abstract class BaseClass {
 //        return (double)args[2];
 //    }
 
-    public void AddPower(Power power) {
-        Powers.add(power);
-    }
-
     public boolean TryRunPower(int powerid) {
         Power p = Powers.get(powerid);
         if (p == null) return false;
@@ -151,6 +220,7 @@ public abstract class BaseClass {
     public void CmdRunPower(int powerid) {
         RunPower(powerid);
     }
+
     public void RunPower(int powerid) {
         Power p = Powers.get(powerid);
         if (p == null) return;
@@ -218,7 +288,7 @@ public abstract class BaseClass {
     }
 
     public void AddCooldown(String perk, int value) {
-        COOLDOWNS.add(new CoolDown(perk, CCM.GetIntTime()+value));
+        COOLDOWNS.add(new CoolDown(perk, CCM.GetIntTime() + value));
     }
 
     public void RemoveCooldown(String perk) {
@@ -266,9 +336,9 @@ public abstract class BaseClass {
     }
 
     public boolean HasCooldown(String perk) {
-        for (CoolDown c : (ArrayList<CoolDown>)COOLDOWNS.clone()) {
+        for (CoolDown c : (ArrayList<CoolDown>) COOLDOWNS.clone()) {
             if (c.getKey().equalsIgnoreCase(perk)) {
-                if(!c.isValid()){
+                if (!c.isValid()) {
                     COOLDOWNS.remove(c);
                     return false;
                 }
@@ -280,7 +350,11 @@ public abstract class BaseClass {
 
     //TODO
     public Event HandelEvent(Event event) {
-        if (event instanceof BlockBreakEvent) {
+        if (event instanceof CustomEntityDamageByEntityEvent) {
+            event = CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
+//            if (ActiveAbility != null) event = ActiveAbility.CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
+            return event;
+        }else if (event instanceof BlockBreakEvent) {
             event = BlockBreakEvent((BlockBreakEvent) event);
             if (ActiveAbility != null) event = ActiveAbility.BlockBreakEvent((BlockBreakEvent) event);
             return event;
@@ -312,7 +386,7 @@ public abstract class BaseClass {
         return event;
     }
 
-    public CyberForm GetSettingsWindow(){
+    public CyberForm GetSettingsWindow() {
         return null;
     }
 
@@ -426,6 +500,19 @@ public abstract class BaseClass {
 
     public CyberForm getHowToUseClassWindow() {
         return null;
+    }
+
+    public enum ClassTeir {
+        Class1,
+        Class2,
+        Class3,
+        Class4,
+        Class5,
+        Class6,
+        Class7,
+        Class8,
+        Class9,
+        Class10
     }
 
 

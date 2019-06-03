@@ -3,6 +3,8 @@ package net.yungtechboy1.CyberCore.Custom.Events;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
+import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.event.entity.EntityEvent;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.utils.EventException;
 
@@ -12,7 +14,7 @@ import java.util.Map;
 /**
  * Created by carlt on 3/11/2019.
  */
-public class CustomEntityDamageEvent implements Cancellable {
+public class CustomEntityDamageEvent extends EntityEvent implements Cancellable {
 
     private boolean isCancelled = false;
     private static final HandlerList handlers = new HandlerList();
@@ -38,7 +40,7 @@ public class CustomEntityDamageEvent implements Cancellable {
     private int CoolDownTicks = 20;
 
     public CustomEntityDamageEvent(Entity entity, CustomDamageCause cause, float damage) {
-        this(entity, cause, new EnumMap<CustomDamageModifier, Float>(CustomDamageModifier.class) {
+        this(entity, cause, new EnumMap<>(CustomDamageModifier.class) {
             {
                 put(CustomDamageModifier.BASE, damage);
             }
@@ -60,6 +62,7 @@ public class CustomEntityDamageEvent implements Cancellable {
             this.setDamage((float) -(this.getDamage(CustomDamageModifier.BASE) * 0.20 * (entity.getEffect(Effect.DAMAGE_RESISTANCE).getAmplifier() + 1)), CustomDamageModifier.RESISTANCE);
         }
     }
+
 
     public CustomDamageCause getCause() {
         return cause;

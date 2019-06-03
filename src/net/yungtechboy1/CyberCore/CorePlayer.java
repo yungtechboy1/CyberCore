@@ -45,6 +45,8 @@ import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Spring;
 import net.yungtechboy1.CyberCore.Custom.CustomInventoryTransactionPacket;
 import net.yungtechboy1.CyberCore.Custom.CustomNetworkInventoryAction;
+import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
+import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse;
 import net.yungtechboy1.CyberCore.Data.HomeData;
 import net.yungtechboy1.CyberCore.Factory.Shop.ShopInv;
@@ -791,6 +793,17 @@ public class CorePlayer extends Player {
                                             }
                                         }
 
+                                        //TODO maybe custom???
+                                        //Call Custom 1st then Default
+
+                                        CustomEntityDamageByEntityEvent centityDamageByEntityEvent =
+                                                new CustomEntityDamageByEntityEvent(this, target, CustomEntityDamageEvent.CustomDamageCause.ENTITY_ATTACK, itemDamage);
+                                        BaseClass bc = GetPlayerClass();
+                                        if(bc != null){
+                                            bc.HandelEvent(centityDamageByEntityEvent);
+                                        }
+                                        getServer().getPluginManager().callEvent(centityDamageByEntityEvent);
+                                        if(centityDamageByEntityEvent.isCancelled())break;
                                         EntityDamageByEntityEvent entityDamageByEntityEvent = new EntityDamageByEntityEvent(this, target, EntityDamageEvent.DamageCause.ENTITY_ATTACK, damage);
                                         if (this.isSpectator()) entityDamageByEntityEvent.setCancelled();
                                         if ((target instanceof Player) && !this.level.getGameRules().getBoolean(GameRule.PVP)) {

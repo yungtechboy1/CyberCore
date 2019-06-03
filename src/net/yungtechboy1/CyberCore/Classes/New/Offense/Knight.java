@@ -3,6 +3,8 @@ package net.yungtechboy1.CyberCore.Classes.New.Offense;
 import cn.nukkit.Player;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.New.Buff;
+import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
@@ -27,6 +29,26 @@ public class Knight extends BaseClass {
         return event;
     }
 
+    //TODO
+    @Override
+    public float getDamageBuff() {
+        return 1f+(.5f*(getTeir().ordinal()/10));
+    }
+    //TODO
+    @Override
+    public float getArmorBuff() {
+        return 1f+(.3f*(getTeir().ordinal()/10));
+    }
+
+    @Override
+    public int getExtraHealth(){
+        return 4;
+    }
+
+
+
+
+
     @Override
     public String getName() {
         return "Raider";
@@ -38,8 +60,27 @@ public class Knight extends BaseClass {
     }
 
     @Override
+    public CustomEntityDamageEvent CustomEntiyDamageEvent(CustomEntityDamageEvent event) {
+        float bd = event.getOriginalDamage();
+        Buff b = getBuff(Buff.BuffType.Damage.ordinal());
+        if(b != null)bd *= b.getAmount();
+        event.setDamage(bd);
+        return super.CustomEntiyDamageEvent(event);
+    }
+
+    @Override
     public int getMainID() {
         return BaseClass.TYPE_Offensive_Raider;
+    }
+
+    @Override
+    public void initBuffs() {
+        addBuff(new Buff(Buff.BuffType.Damage,1.5f));
+        addBuff(new Buff(Buff.BuffType.Armor,1.3f));
+        addBuff(new Buff(Buff.BuffType.Health,4f));
+        addDeBuff(new DeBuff(Buff.BuffType.Movement,.65f));
+        addBuff(new Buff(Buff.BuffType.SwingSpeed,1.5f));
+        addBuff(new Buff(Buff.BuffType.SuperFoodHeartRegin,1f));
     }
 
     @Override
