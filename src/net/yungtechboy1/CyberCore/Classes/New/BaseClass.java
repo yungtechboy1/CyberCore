@@ -10,11 +10,13 @@ import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.event.inventory.CraftItemEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerToggleSprintEvent;
+import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Classes.Power.Power;
+import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
@@ -23,6 +25,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 public abstract class BaseClass {
@@ -43,7 +46,7 @@ public abstract class BaseClass {
     public boolean Prime = false;
     public int PrimeKey = 0;
     public int SwingTime = 20;
-    public ArrayList<Power> Powers = new ArrayList<>();
+    public HashMap<Integer, Power> Powers = new HashMap<>();
     protected int MainID = 0;
     protected CyberCoreMain CCM;
     HashMap<Integer, Integer> Herbal = new HashMap<Integer, Integer>() {{
@@ -112,9 +115,7 @@ public abstract class BaseClass {
         return ClassTeir.values()[d];
     }
 
-    public ClassType getTYPE() {
-        return TYPE;
-    }
+    public abstract ClassType getTYPE();
 
     public abstract void SetPowers();
 
@@ -186,18 +187,18 @@ public abstract class BaseClass {
         return 0;
     }
 
-    public ArrayList<Power> getPowers() {
-        return Powers;
+    public Collection<Power> getPowers() {
+        return Powers.values();
     }
 
-    public Power GetPower(int key) {
-        return Powers.get(key);
+    public Power getPower(PowerEnum key) {
+        return Powers.get(key.ordinal());
     }
 
-    public abstract Object RunPower(int powerid, Object... args);
+    public abstract Object RunPower(PowerEnum powerid, Object... args);
 
     public void AddPower(Power power) {
-        Powers.add(power);
+        Powers.put(power.getType().ordinal(), power);
     }
 //        Power p = Powers.get(powerid);
 //        if(p == null || args.length != 3 ){
@@ -211,18 +212,18 @@ public abstract class BaseClass {
 //        return (double)args[2];
 //    }
 
-    public boolean TryRunPower(int powerid) {
-        Power p = Powers.get(powerid);
+    public boolean TryRunPower(PowerEnum powerid) {
+        Power p = getPower(powerid);
         if (p == null) return false;
         return p.CanRun();
     }
 
-    public void CmdRunPower(int powerid) {
+    public void CmdRunPower(PowerEnum powerid) {
         RunPower(powerid);
     }
 
-    public void RunPower(int powerid) {
-        Power p = Powers.get(powerid);
+    public void RunPower(PowerEnum powerid) {
+        Power p = getPower(powerid);
         if (p == null) return;
         p.usePower(P);
 
@@ -233,9 +234,7 @@ public abstract class BaseClass {
         return a;
     }
 
-    public String getName() {
-        return "---N/A---";
-    }
+    public abstract String getName();
 
     public ConfigSection export() {
         return new ConfigSection() {{
@@ -521,6 +520,10 @@ public abstract class BaseClass {
         return null;
     }
 
+    public FormWindow getClassMerchantWindow() {
+        return null;
+    }
+
     public enum ClassTeir {
         Class1,
         Class2,
@@ -536,7 +539,7 @@ public abstract class BaseClass {
 
 
     public enum ClassType {
-        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary;
+        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary, DarkKnight, DragonSlayer;
 
 
         public int getKey() {

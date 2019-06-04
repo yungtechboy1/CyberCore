@@ -13,7 +13,7 @@ import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClassSettingsTNTWindow extends CyberFormSimple {
+public class ClassSettingsTNTWindow extends ClassSettingsWindow {
 TNTSpecialist _C;
     public ClassSettingsTNTWindow (TNTSpecialist c){
         super(FormType.MainForm.Class_Settings_TNT, "CyberFactions | TNT-Specialist Settings", TextFormat.AQUA+"Current XP: "+TextFormat.GREEN+c.XPRemainder(c.getXP())+"\n"+TextFormat.AQUA+"Current Level: "+TextFormat.GREEN+c.getLVL());

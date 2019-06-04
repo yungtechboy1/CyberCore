@@ -39,6 +39,6 @@ public class Buff {
         Movement,
         SwingSpeed,
         Reach,
-        Healing, SuperFoodHeartRegin,
+        Healing, SuperFoodHeartRegin, Magic, Jump,
     }
 }

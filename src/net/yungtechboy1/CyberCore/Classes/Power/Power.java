@@ -131,7 +131,9 @@ public abstract class Power {
     }
 
     public abstract String getName();
-    public abstract String getDispalyName();
+    public String getDispalyName(){
+        return getName();
+    }
 
     public enum Stage {
         NA,
