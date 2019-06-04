@@ -5,8 +5,11 @@ import cn.nukkit.event.Event;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
+import cn.nukkit.event.block.BlockEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
+import cn.nukkit.event.entity.EntityEvent;
 import cn.nukkit.event.entity.EntityRegainHealthEvent;
+import cn.nukkit.event.player.PlayerEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
@@ -39,53 +42,74 @@ public class ClassFactory implements Listener {
 //        CCM.getServer().getScheduler().scheduleDelayedRepeatingTask(new LumberJackTreeCheckerTask(main), 20 * 60, 20 * 60);//Every Min
     }
 
+//    HandelEvent(event, cp);
+
     public BaseClass GetClass(CorePlayer p) {
-            ConfigSection o = (ConfigSection) MMOSave.get(p.getName().toLowerCase());
-            if (o != null) {
-                BaseClass data = null;//new BaseClass(CCM, p, (ConfigSection) o);
-                if (o.getInt("TYPE", -1) == BaseClass.ClassType.Class_Miner_MineLife.getKey()) {
-                    data = new MineLifeClass(CCM, p, o);
-                }
-                if (o.getInt("TYPE", -1) == BaseClass.ClassType.Class_Miner_TNT_Specialist.getKey()) {
-                    data = new TNTSpecialist(CCM, p, o);
-                }
-//                if (data != null) ClassList.put(p.getName().toLowerCase(), data);
-                p.SetPlayerClass(data);
-                return data;
+        ConfigSection o = (ConfigSection) MMOSave.get(p.getName().toLowerCase());
+        if (o != null) {
+            BaseClass data = null;//new BaseClass(CCM, p, (ConfigSection) o);
+            if (o.getInt("TYPE", -1) == BaseClass.ClassType.Class_Miner_MineLife.getKey()) {
+                data = new MineLifeClass(CCM, p, o);
             }
-            return null;
+            if (o.getInt("TYPE", -1) == BaseClass.ClassType.Class_Miner_TNT_Specialist.getKey()) {
+                data = new TNTSpecialist(CCM, p, o);
+            }
+//                if (data != null) ClassList.put(p.getName().toLowerCase(), data);
+            p.SetPlayerClass(data);
+            return data;
+        }
+        return null;
     }
 
     public void SaveClassToFile(CorePlayer p) {
         BaseClass bc = p.GetPlayerClass();
-        if(bc!= null){
+        if (bc != null) {
             MMOSave.set(p.getName().toLowerCase(), p.GetPlayerClass().export());
             System.out.println("SAVEEE");
-        }else {
-            System.out.println(p.getName()+" HASS NUNN CLASS???");
+        } else {
+            System.out.println(p.getName() + " HASS NUNN CLASS???");
         }
     }
 
-
-
-    @EventHandler
-    public void OnEvent(BlockBreakEvent event) {
-        HandelEvent(event,(CorePlayer)  event.getPlayer());
-    }
-
-    @EventHandler
-    public void OnEvent(BlockPlaceEvent event) {
-        HandelEvent(event, (CorePlayer) event.getPlayer());
-    }
-
-    @EventHandler
-    public void OnEvent(PlayerInteractEvent event) {
-        HandelEvent(event,(CorePlayer)  event.getPlayer());
-    }
+//    @EventHandler
+//    public void OnEvent(BlockBreakEvent event) {
+//        HandelEvent(event, (CorePlayer) event.getPlayer());
+//    }
+//
+//    @EventHandler
+//    public void OnEvent(BlockPlaceEvent event) {
+//        HandelEvent(event, (CorePlayer) event.getPlayer());
+//    }
+//
+//    @EventHandler
+//    public void OnEvent(PlayerInteractEvent event) {
+//        HandelEvent(event, (CorePlayer) event.getPlayer());
+//    }
 
     @EventHandler
-    public void OnEvent(EntityRegainHealthEvent event) {
-        if (event.getEntity() instanceof CorePlayer) HandelEvent(event, (CorePlayer) event.getEntity());
+    public void OnEvent(Event event) {
+        CorePlayer cp = null;
+        if (event instanceof BlockEvent) {
+            if (event instanceof BlockPlaceEvent) {
+                cp = (CorePlayer) ((BlockPlaceEvent) event).getPlayer();
+            } else if (event instanceof BlockBreakEvent) {
+                cp = (CorePlayer) ((BlockBreakEvent) event).getPlayer();
+            }
+        }else if(event instanceof PlayerEvent){
+            cp = (CorePlayer)((PlayerEvent) event).getPlayer();
+        }else if(event instanceof EntityEvent){
+            cp = (CorePlayer)((EntityEvent) event).getEntity();
+        }
+
+        if(cp == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if(cp == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if(cp == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if(cp == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if(cp == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if(cp == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if(cp == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        HandelEvent(event,cp);
+
     }
 
 /*
@@ -113,8 +137,8 @@ public class ClassFactory implements Listener {
         CCM.getLogger().info("SAving All Classes!");
         for (Player p : CCM.getServer().getOnlinePlayers().values()) {
             if (!(p instanceof CorePlayer)) continue;
-            CorePlayer cp = (CorePlayer)p;
-            if(cp.GetPlayerClass() == null)continue;
+            CorePlayer cp = (CorePlayer) p;
+            if (cp.GetPlayerClass() == null) continue;
             MMOSave.set(cp.getName().toLowerCase(), cp.GetPlayerClass().export());
         }
         CCM.getLogger().info("SAving File!");

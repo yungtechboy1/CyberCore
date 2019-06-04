@@ -1,37 +1,57 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
+import cn.nukkit.event.Event;
+import cn.nukkit.event.block.BlockBreakEvent;
+import cn.nukkit.event.block.BlockPlaceEvent;
+import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.event.entity.EntityRegainHealthEvent;
+import cn.nukkit.event.inventory.CraftItemEvent;
+import cn.nukkit.event.player.PlayerInteractEvent;
+import cn.nukkit.event.player.PlayerToggleSprintEvent;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.potion.Effect;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 /**
  * Created by carlt on 5/16/2019.
  */
 public abstract class Power {
-    public final static int TNT_Specialist = 0;
-    public final static int MineLife = 1;
-    public final static int OreKnowledge = 2;
+    public BaseClass PlayerClass = null;
     public Effect PotionEffect = null;
+    public int TickUpdate = -1;
     public CoolDown Cooldown = null;
     int PowerSuccessChance = 100;
+    public boolean PlayerToggleable = true;
     int Level = 0;
     int DurationTicks = 0;
-    public Power(int psc, int lvl) {
+    public Power(BaseClass b,int psc, int lvl) {
         PowerSuccessChance = psc;
+        PlayerClass = b;
         Level = lvl;
         initStages();
+    }
+
+    public Event HandelEvent(Event event) {
+        if (event instanceof CustomEntityDamageByEntityEvent) return CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
+        return event;
+    }
+
+    public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e){
+        return e;
     }
 
     public void setPowerSuccessChance(int powerSuccessChance) {
         PowerSuccessChance = powerSuccessChance;
     }
 
-    public int getCooldownTime() {
+    protected int getCooldownTime() {
         return 60 * 15;//15 Mins
     }
 
-    public int getCooldownTimeTick() {
+    public final int getCooldownTimeTick() {
         return getCooldownTime() * 20;
     }
 
@@ -39,12 +59,28 @@ public abstract class Power {
 
     }
 
-    public abstract int getType();
-
-    public boolean CanRun() {
-        return CanRun(false);
+    private int _lasttick = -1;
+    public final void handleTick(int tick){
+        if(TickUpdate == -1)return;
+        if(_lasttick + TickUpdate < tick){
+            onTick(tick);
+            _lasttick = tick;
+        }
     }
 
+    public abstract PowerEnum getType();
+
+    public void InitPowerRun(Object... args){
+        if(CanRun()){
+            usePower(PlayerClass.getPlayer(),args);
+        }
+    }
+
+    public boolean CanRun(Object... args) {
+        return CanRun(false,args);
+    }
+
+    @Deprecated
     public Object usePower(Object... args) {
         return usePower(null, args);
     }
@@ -53,14 +89,19 @@ public abstract class Power {
         return null;
     }
 
-    public boolean CanRun(boolean force) {
+    public boolean CanRun(boolean force, Object... args) {
+        if(force)return true;
         NukkitRandom nr = new NukkitRandom();
-        if (nr.nextRange(0, 100) <= PowerSuccessChance || force) {
+        if (nr.nextRange(0, 100) <= PowerSuccessChance) {
             //Success
-            if(Cooldown != null && !force)return !Cooldown.isValid();
+            if(Cooldown != null)return !Cooldown.isValid();
             return true;
         }
         return false;
+    }
+
+    public void onTick(int tick){
+
     }
 
     public Effect getEffect() {
@@ -93,6 +134,7 @@ public abstract class Power {
     public abstract String getDispalyName();
 
     public enum Stage {
+        NA,
         STAGE_1,
         STAGE_2,
         STAGE_3,
@@ -100,13 +142,14 @@ public abstract class Power {
         STAGE_5;
 
         public static Stage getStageFromInt(int i) {
-            if (i == 0) return STAGE_1;
-            if (i == 1) return STAGE_2;
-            if (i == 2) return STAGE_3;
-            if (i == 3) return STAGE_4;
-            if (i == 4) return STAGE_5;
-            if (i == 5) return STAGE_1;
-            return STAGE_1;
+            if(i < values().length){
+                return values()[i];
+            }
+            return null;
+        }
+
+        public int getValue(){
+            return ordinal()+1;
         }
     }
 }

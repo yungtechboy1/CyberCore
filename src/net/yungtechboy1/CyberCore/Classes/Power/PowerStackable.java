@@ -1,6 +1,7 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
 import cn.nukkit.math.NukkitRandom;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 
 public abstract class PowerStackable extends Power {
     int AvailbleQuantity = 0;
@@ -11,8 +12,8 @@ public abstract class PowerStackable extends Power {
      * @param aq
      * @param maq
      */
-    public PowerStackable(int psc, int lvl, int aq, int maq) {
-        super(psc, lvl);
+    public PowerStackable(BaseClass c, int psc, int lvl, int aq, int maq) {
+        super(c, psc, lvl);
         AvailbleQuantity = aq;
         MaxAvailbleQuantity = maq;
     }
@@ -22,12 +23,12 @@ public abstract class PowerStackable extends Power {
     }
 
     public void AddAvailbleQuantity(int i) {
-        if(AvailbleQuantity >= MaxAvailbleQuantity)return;
+        if (AvailbleQuantity >= MaxAvailbleQuantity) return;
         AvailbleQuantity = AvailbleQuantity + i;
     }
 
     public void AddAvailbleQuantity() {
-        if(AvailbleQuantity >= MaxAvailbleQuantity)return;
+        if (AvailbleQuantity >= MaxAvailbleQuantity) return;
         AvailbleQuantity++;
     }
 
@@ -44,17 +45,7 @@ public abstract class PowerStackable extends Power {
     }
 
     @Override
-    public int getType() {
-        return -3;
-    }
-
-    @Override
-    public boolean CanRun() {
-        return CanRun(false);
-    }
-
-    @Override
-    public boolean CanRun(boolean force) {
+    public boolean CanRun(boolean force, Object... o) {
         NukkitRandom nr = new NukkitRandom();
         if (nr.nextRange(0, 100) <= PowerSuccessChance || force) {
             //Success

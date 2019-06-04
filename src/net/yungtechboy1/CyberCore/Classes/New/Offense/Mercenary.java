@@ -5,27 +5,29 @@ import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
+import net.yungtechboy1.CyberCore.Classes.Power.Mercenary.MercenaryDoubleTake;
+import net.yungtechboy1.CyberCore.Classes.Power.Mercenary.MercenaryReneration;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
-public class Knight extends BaseClass {
+public class Mercenary  extends BaseClass {
 //    public Knight(CyberCoreMain main, Player player, int rank, int xp, ConfigSection cooldowns) {
 //        super(main, player, rank,BaseClass.TYPE_Offensive_Knight, xp, cooldowns);
 //        SwingTime = 27;
 //    }
 
-    public Knight(CyberCoreMain main, CorePlayer player, ConfigSection cs) {
-        super(main, player, ClassType.Class_Miner_TNT_Specialist);
+    public Mercenary(CyberCoreMain main, CorePlayer player, ConfigSection cs) {
+        super(main, player, ClassType.Class_Offense_Mercenary);
     }
 
     @Override
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
         Player p = (Player)event.entity;
-            float ad = event.getDamage(CustomEntityDamageEvent.CustomDamageModifier.BASE) * -.1f;
-            event.setDamage(ad, CustomEntityDamageEvent.CustomDamageModifier.MODIFIER_ARMOR_ABILLITY);
-            event.setCoolDownTicks(SwingTime);
+        float ad = event.getDamage(CustomEntityDamageEvent.CustomDamageModifier.BASE) * -.1f;
+        event.setDamage(ad, CustomEntityDamageEvent.CustomDamageModifier.MODIFIER_ARMOR_ABILLITY);
+        event.setCoolDownTicks(SwingTime);
         return event;
     }
 
@@ -51,12 +53,18 @@ public class Knight extends BaseClass {
 
     @Override
     public String getName() {
-        return "Raider";
+        return "Mercenary";
     }
 
     @Override
     public void SetPowers() {
+        AddPower(new MercenaryDoubleTake(this,getLVL()));
+        AddPower(new MercenaryReneration(this,getLVL()));
+    }
 
+    @Override
+    public void onUpdate(int tick) {
+        super.onUpdate(tick);
     }
 
     @Override
@@ -66,12 +74,12 @@ public class Knight extends BaseClass {
 
     @Override
     public void initBuffs() {
-        addBuff(new Buff(Buff.BuffType.Damage,1.5f));
-        addBuff(new Buff(Buff.BuffType.Armor,1.3f));
-        addBuff(new Buff(Buff.BuffType.Health,4f));
-        addDeBuff(new DeBuff(Buff.BuffType.Movement,.65f));
-        addBuff(new Buff(Buff.BuffType.SwingSpeed,1.5f));
-        addBuff(new Buff(Buff.BuffType.SuperFoodHeartRegin,1f));
+        addBuff(new Buff(Buff.BuffType.Damage,1.35f));
+//        addBuff(new Buff(Buff.BuffType.Armor,1.3f));
+//        addBuff(new Buff(Buff.BuffType.Health,4f));
+        addDeBuff(new DeBuff(Buff.BuffType.Armor,.85f));
+//        addBuff(new Buff(Buff.BuffType.SwingSpeed,1.5f));
+//        addBuff(new Buff(Buff.BuffType.SuperFoodHeartRegin,1f));
     }
 
     @Override

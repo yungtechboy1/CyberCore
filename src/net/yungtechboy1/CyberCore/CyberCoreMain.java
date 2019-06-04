@@ -234,7 +234,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         addCreativeItem(new CustomItemElement());
         ReloadBlockList(Block.ENCHANTING_TABLE, BlockEnchantingTable.class);
 
-        Item.customblocklist[Item.MONSTER_SPAWNER] = CustomItemBlockSpawnerWithLevelBlock.class;
+//        Item.customblocklist[Item.MONSTER_SPAWNER] = CustomItemBlockSpawnerWithLevelBlock.class;
 
 
         Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;

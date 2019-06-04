@@ -4,12 +4,12 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.item.EntityPrimedTNT;
 import cn.nukkit.level.Sound;
 import cn.nukkit.math.NukkitRandom;
-import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.DoubleTag;
 import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Power;
 
 /**
  * Created by carlt on 5/16/2019.
@@ -18,6 +18,11 @@ public class TNTSpecialistPower extends PowerStackable {
 
     public TNTSpecialistPower(int lvl, int aq, int maq) {
         super(100, lvl, aq, maq);
+    }
+
+    @Override
+    public PowerEnum getType() {
+        return PowerEnum.TNTSpecalist;
     }
 
     @Override

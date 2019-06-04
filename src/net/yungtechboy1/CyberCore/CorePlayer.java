@@ -114,6 +114,21 @@ public class CorePlayer extends Player {
     private int FactionCheck = -1;
     private HashMap<String, CoolDown> CDL = new HashMap<>();
     private CustomCraftingTransaction cct;
+    public CombatData Combat = null;
+
+    public class CombatData{
+        public int Tick = -1;
+        public CombatData(int tick){
+            Tick = tick;
+        }
+
+        public int getTick(int a) {
+            return Tick + a;
+        }
+        public int getTick() {
+            return getTick(0);
+        }
+    }
 
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
         super(interfaz, clientID, ip, port);
@@ -307,6 +322,24 @@ public class CorePlayer extends Player {
         if (!uw) super.fall(fallDistance);
     }
 
+    public void enterCombat(){
+        Combat = new CombatData(getServer().getTick());
+        sendMessage(TextFormat.YELLOW+"You are now in combat!");
+    }
+
+    public final boolean isinCombat(){
+        return checkCombat();
+    }
+
+    public boolean checkCombat(){
+        if(Combat == null)return false;
+        if(Combat.getTick(20*5) < getServer().getTick() ) {
+            leaveCombat();
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public boolean attack(EntityDamageEvent source) {
         ArrayList<EntityDamageEvent.DamageCause> da = new ArrayList<>();
@@ -333,7 +366,11 @@ public class CorePlayer extends Player {
                     if (bsl >= 3) return false;
             }
         }
-        return super.attack(source);
+        if(super.attack(source)){
+            enterCombat();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -1144,11 +1181,23 @@ public class CorePlayer extends Player {
 //        return null;
     }
 
+    public void leaveCombat(){
+        Combat = null;
+        sendMessage(TextFormat.GREEN+"You are now out of Combat!");
+    }
+
     @Override
     public boolean onUpdate(int currentTick) {
         //Check for Faction!
         if (currentTick % 5 == 0) {
             if (!CooldownLock && isAlive() && spawned) {
+                if(Combat != null){
+                    if(Combat.getTick(5*20) < currentTick){
+                        //No Long in combat
+                        leaveCombat();
+                    }
+                }
+
                 CooldownLock = true;
 //            CyberCoreMain.getInstance().getLogger().info("RUNNNING "+CDL.size());
                 CoolDown fc = GetCooldown(Cooldown_Faction, true);

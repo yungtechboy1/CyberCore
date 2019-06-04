@@ -119,27 +119,23 @@ public abstract class BaseClass {
     public abstract void SetPowers();
 
     public int getMainID() {
-        return MainID;
+        return getTYPE().getKey();
     }
 
     public abstract void initBuffs();
 
     public ArrayList<Buff> addBuff(Buff o) {
-        Buffs.add(o.getBt().ordinal(),o);
-        return (ArrayList<Buff>)Buffs.clone();
+        Buffs.add(o.getBt().ordinal(), o);
+        return (ArrayList<Buff>) Buffs.clone();
     }
 
     public ArrayList<Buff> removeBuffs(Buff o) {
         Buffs.remove(o.getBt().ordinal());
-        return (ArrayList<Buff>)Buffs.clone();
+        return (ArrayList<Buff>) Buffs.clone();
     }
 
     public ArrayList<Buff> getBuffs() {
-        return (ArrayList<Buff>)Buffs.clone();
-    }
-
-    public Buff getBuff(int o) {
-        return Buffs.get(o);
+        return (ArrayList<Buff>) Buffs.clone();
     }
 
     @Deprecated
@@ -147,27 +143,31 @@ public abstract class BaseClass {
         Buffs = buffs;
     }
 
+    public Buff getBuff(int o) {
+        return Buffs.get(o);
+    }
+
     public ArrayList<DeBuff> removeDeBuff(DeBuff o) {
         DeBuffs.remove(o.getBt().ordinal());
-        return (ArrayList<DeBuff>)DeBuffs.clone();
+        return (ArrayList<DeBuff>) DeBuffs.clone();
     }
 
     public ArrayList<DeBuff> addDeBuff(DeBuff o) {
-        DeBuffs.add(o.getBt().ordinal(),o);
-        return (ArrayList<DeBuff>)DeBuffs.clone();
+        DeBuffs.add(o.getBt().ordinal(), o);
+        return (ArrayList<DeBuff>) DeBuffs.clone();
     }
 
     public ArrayList<DeBuff> getDeBuffs() {
-        return (ArrayList<DeBuff>)DeBuffs.clone();
-    }
-
-    public DeBuff getDeBuff(int o) {
-        return DeBuffs.get(o);
+        return (ArrayList<DeBuff>) DeBuffs.clone();
     }
 
     @Deprecated
     public void setDeBuffs(ArrayList<DeBuff> deBuffs) {
         DeBuffs = deBuffs;
+    }
+
+    public DeBuff getDeBuff(int o) {
+        return DeBuffs.get(o);
     }
 
     public float getDamageBuff() {
@@ -245,7 +245,7 @@ public abstract class BaseClass {
         }};
     }
 
-    public Player getPlayer() {
+    public CorePlayer getPlayer() {
         return P;
     }
 
@@ -354,7 +354,7 @@ public abstract class BaseClass {
             event = CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
 //            if (ActiveAbility != null) event = ActiveAbility.CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
             return event;
-        }else if (event instanceof BlockBreakEvent) {
+        } else if (event instanceof BlockBreakEvent) {
             event = BlockBreakEvent((BlockBreakEvent) event);
             if (ActiveAbility != null) event = ActiveAbility.BlockBreakEvent((BlockBreakEvent) event);
             return event;
@@ -448,10 +448,23 @@ public abstract class BaseClass {
     }
 
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
+        float bd = event.getOriginalDamage();
+        Buff b = getBuff(Buff.BuffType.Damage.ordinal());
+        if (event.getEntity() instanceof Player && getBuff(Buff.BuffType.DamageToPlayer.ordinal()) != null) {
+            b = getBuff(Buff.BuffType.DamageToPlayer.ordinal());
+        } else if (getBuff(Buff.BuffType.DamageToEntity.ordinal()) != null) {
+            b = getBuff(Buff.BuffType.DamageToEntity.ordinal());
+        }
+        if (b != null) bd *= b.getAmount();
+        event.setDamage(bd);
         return event;
     }
 
-    public CustomEntityDamageEvent CustomEntiyDamageEvent(CustomEntityDamageEvent event) {
+    public CustomEntityDamageEvent CustomEntityDamageEvent(CustomEntityDamageEvent event) {
+        float bd = event.getOriginalDamage();
+        Buff b = getBuff(Buff.BuffType.Damage.ordinal());
+        if (b != null) bd *= b.getAmount();
+        event.setDamage(bd);
         return event;
     }
 
@@ -483,8 +496,14 @@ public abstract class BaseClass {
         }
     }
 
-    public void onUpdate(int tick) {
+    public void tickPowers(int tick) {
+        for (Power p : getPowers()) {
+            p.handleTick(tick);
+        }
+    }
 
+    public void onUpdate(int tick) {
+        tickPowers(tick);
     }
 
     public String FormatHudText() {
@@ -517,16 +536,11 @@ public abstract class BaseClass {
 
 
     public enum ClassType {
-        Class_Miner_TNT_Specialist(1), Class_Miner_MineLife(0);
+        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary;
 
-        int k = -1;
-
-        ClassType(int i) {
-            k = i;
-        }
 
         public int getKey() {
-            return k;
+            return ordinal();
         }
     }
 

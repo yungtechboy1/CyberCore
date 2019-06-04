@@ -30,6 +30,11 @@ public class Buff {
     public enum BuffType {
         Health,
         Armor,
+        DamageFromPlayer,
+        DamageToPlayer,
+        DamageToEntity,
+        DamageFromEntity,
+        //All damage
         Damage,
         Movement,
         SwingSpeed,
