@@ -17,9 +17,6 @@ public class CyberForm extends FormWindow {
     public  CyberCoreMain _plugin = CyberCoreMain.getInstance();
     public Faction _Fac = null;
 
-    public CyberForm() {
-
-    }
     public CyberForm(FormType.MainForm type) {
         _FT = type;
     }
