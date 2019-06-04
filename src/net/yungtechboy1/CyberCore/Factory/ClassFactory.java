@@ -8,22 +8,17 @@ import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.entity.EntityEvent;
-import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.event.player.PlayerEvent;
-import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
+import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Tasks.LumberJackTreeCheckerTask;
-import org.apache.logging.log4j.core.Core;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by carlt_000 on 1/24/2017.
@@ -43,6 +38,12 @@ public class ClassFactory implements Listener {
     }
 
 //    HandelEvent(event, cp);
+
+    public void leaveClass(CorePlayer p) {
+        MMOSave.remove(p.getName().toLowerCase());
+        p.SetPlayerClass(null);
+        p.sendMessage(TextFormat.GREEN + "You left your class!");
+    }
 
     public BaseClass GetClass(CorePlayer p) {
         ConfigSection o = (ConfigSection) MMOSave.get(p.getName().toLowerCase());
@@ -95,20 +96,20 @@ public class ClassFactory implements Listener {
             } else if (event instanceof BlockBreakEvent) {
                 cp = (CorePlayer) ((BlockBreakEvent) event).getPlayer();
             }
-        }else if(event instanceof PlayerEvent){
-            cp = (CorePlayer)((PlayerEvent) event).getPlayer();
-        }else if(event instanceof EntityEvent){
-            cp = (CorePlayer)((EntityEvent) event).getEntity();
+        } else if (event instanceof PlayerEvent) {
+            cp = (CorePlayer) ((PlayerEvent) event).getPlayer();
+        } else if (event instanceof EntityEvent) {
+            cp = (CorePlayer) ((EntityEvent) event).getEntity();
         }
 
-        if(cp == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        if(cp == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        if(cp == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        if(cp == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        if(cp == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        if(cp == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        if(cp == null)System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        HandelEvent(event,cp);
+        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        HandelEvent(event, cp);
 
     }
 
