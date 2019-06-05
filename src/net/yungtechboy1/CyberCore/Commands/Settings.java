@@ -7,6 +7,7 @@ import cn.nukkit.command.data.CommandParameter;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.FactionAdminPage1;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.SettingsPage0;
 
 public class Settings  extends Command {
     CyberCoreMain Owner;
@@ -22,7 +23,7 @@ public class Settings  extends Command {
     @Override
     public boolean execute(CommandSender s, String label, String[] args) {
         try {
-            ((CorePlayer)s).showFormWindow(new FactionAdminPage1());
+            ((CorePlayer)s).showFormWindow(new SettingsPage0());
         }catch (Exception e){
             CyberCoreMain.getInstance().getLogger().error("EEE!213111 >>",e);
         }

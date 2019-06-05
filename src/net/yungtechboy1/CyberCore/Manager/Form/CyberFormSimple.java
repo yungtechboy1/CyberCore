@@ -18,26 +18,15 @@ public class CyberFormSimple extends CyberForm {
     private List<ElementButton> buttons;
     private FormResponseSimple response;
 
+    public CyberFormSimple(FormType.MainForm ttype, String title) {
+        this(ttype,title,"");
+    }
     public CyberFormSimple(FormType.MainForm ttype, String title, String content) {
         this(ttype, title, content, new ArrayList());
     }
 
     public CyberFormSimple(FormType.MainForm ttype, String title, String content, List<ElementButton> buttons) {
         super(ttype);
-        this.type = "form";
-        this.title = "";
-        this.content = "";
-        this.response = null;
-        this.title = title;
-        this.content = content;
-        this.buttons = buttons;
-    }
-    public CyberFormSimple( String title, String content) {
-        this( title, content, new ArrayList());
-    }
-
-    public CyberFormSimple(String title, String content, List<ElementButton> buttons) {
-        super();
         this.type = "form";
         this.title = "";
         this.content = "";
