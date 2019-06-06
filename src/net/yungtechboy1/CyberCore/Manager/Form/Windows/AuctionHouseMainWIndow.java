@@ -34,7 +34,7 @@ public class AuctionHouseMainWIndow  extends CyberFormSimple {
 
 
     @Override
-    public void onRun(CorePlayer cp) {
+    public boolean onRun(CorePlayer cp) {
         super.onRun(cp);
         FormResponseSimple fap = getResponse();
         int id = fap.getClickedButtonId();
@@ -76,5 +76,6 @@ public class AuctionHouseMainWIndow  extends CyberFormSimple {
                 cp.getInventory().sendContents(cp);
                 break;
         }
+        return false;
     }
 }

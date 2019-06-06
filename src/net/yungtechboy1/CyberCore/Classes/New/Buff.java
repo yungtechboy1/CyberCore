@@ -28,6 +28,7 @@ public class Buff {
     }
 
     public enum BuffType {
+        NULL,
         Health,
         Armor,
         DamageFromPlayer,

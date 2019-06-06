@@ -9,6 +9,7 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
 import net.yungtechboy1.CyberCore.Classes.Power.Power;
+import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.TNTSpecialistPower;
 import net.yungtechboy1.CyberCore.Commands.Constructors.CheckPermCommand;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -45,14 +46,14 @@ public class TNT extends CheckPermCommand {
             System.out.println("CCCCCCCC");
 
             TNTSpecialist ts = (TNTSpecialist) c;
-            TNTSpecialistPower tsp = (TNTSpecialistPower) ts.GetPower(Power.TNT_Specialist);
+            TNTSpecialistPower tsp = (TNTSpecialistPower) ts.getPower(PowerEnum.TNTSpecalist);
             if (tsp == null) {
                 commandSender.sendMessage(CyberCoreMain.NAME + TextFormat.RED + "Error! GETTING POWER");
                 return true;
             }
-            if (ts.TryRunPower(Power.TNT_Specialist)) {
+            if (ts.TryRunPower(PowerEnum.TNTSpecalist)) {
                 System.out.println("CCCCCCCC");
-                ts.RunPower(Power.TNT_Specialist, p);
+                ts.RunPower(PowerEnum.TNTSpecalist, p);
                 System.out.println("CCCCCCCC------");
             }else{
                 commandSender.sendMessage("Error! Could not run power!");

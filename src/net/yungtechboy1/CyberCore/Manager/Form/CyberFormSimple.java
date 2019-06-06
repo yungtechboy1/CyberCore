@@ -2,11 +2,8 @@ package net.yungtechboy1.CyberCore.Manager.Form;
 
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
-import com.google.gson.Gson;
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
-import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,8 +83,8 @@ public class CyberFormSimple extends CyberForm {
     }
 
     @Override
-    public void onRun(CorePlayer p) {
-       super.onRun(p);
+    public boolean onRun(CorePlayer p) {
+       return super.onRun(p);
     }
 
     ;

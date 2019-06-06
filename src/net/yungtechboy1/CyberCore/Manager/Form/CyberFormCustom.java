@@ -3,11 +3,7 @@ package net.yungtechboy1.CyberCore.Manager.Form;
 import cn.nukkit.form.element.*;
 import cn.nukkit.form.response.FormResponseCustom;
 import cn.nukkit.form.response.FormResponseData;
-import cn.nukkit.form.window.FormWindowCustom;
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
@@ -55,8 +51,9 @@ public class CyberFormCustom extends CyberForm {
         this(title, contents, icon.isEmpty() ? null : new ElementButtonImageData("url", icon));
     }
 
+    @Deprecated
     public CyberFormCustom( String title, List<Element> contents, ElementButtonImageData icon) {
-        super();
+        super(FormType.MainForm.NULL);
         this.type = "custom_form";
         this.title = "";
         this.title = title;
@@ -186,7 +183,8 @@ public class CyberFormCustom extends CyberForm {
     }
 
     @Override
-    public void onRun(CorePlayer p){
+    public boolean onRun(CorePlayer p){
         super.onRun(p);
+        return false;
     };
 }

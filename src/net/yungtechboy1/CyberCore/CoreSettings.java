@@ -16,8 +16,8 @@ public class CoreSettings {
     private boolean HudPosOff = false;
     private boolean HudFactionOff = false;
     private boolean AllowFactionRequestPopUps = false;
-    @Deprecated
-    private CoreSettings(HashMap<String, Object> v) {
+
+    public CoreSettings(HashMap<String, Object> v) {
         super();
         HudOff = (boolean) v.getOrDefault("HUD_OFF", false);
         HudClassOff = (boolean) v.getOrDefault("HUD_CLASS_OFF", false);

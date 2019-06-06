@@ -29,6 +29,7 @@ public class Kick extends Commands {
     public Kick(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f Kick <player>", m);
         senderMustBeInFaction = true;
+        //ignore
         senderMustBeMember = true;
         senderMustBePlayer = true;
         sendFailReason = true;

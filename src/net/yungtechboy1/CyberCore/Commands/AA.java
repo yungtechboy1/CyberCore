@@ -8,6 +8,7 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.Power;
+import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
@@ -52,8 +53,8 @@ public class AA extends Command {
                 s.sendMessage(send);
             } else if (args.length == 1) {
                 int key = Integer.parseInt(args[0]);
-                if (bc.getPowers().size() >= key && key != 0) {
-                    bc.CmdRunPower(key);
+                if (bc.getPowers().size() > key && key != 0) {
+                    bc.CmdRunPower(PowerEnum.fromint(key));
                     bc.setPrime(--key);
 //                    ((Player) s).getLevel().addSound(new ExperienceOrbSound((Player) s));
                     s.sendMessage(TextFormat.GRAY+"You ready your self for an ability!");

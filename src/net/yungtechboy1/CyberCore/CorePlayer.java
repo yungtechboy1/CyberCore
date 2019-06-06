@@ -36,8 +36,11 @@ import cn.nukkit.utils.TextFormat;
 import co.aikar.timings.Timing;
 import co.aikar.timings.Timings;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.New.Buff;
+import net.yungtechboy1.CyberCore.Classes.New.BuffOrigin;
+import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
-import net.yungtechboy1.CyberCore.Classes.Power.Power;
+import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.CustomCraftingTransaction;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
@@ -47,8 +50,8 @@ import net.yungtechboy1.CyberCore.Custom.CustomInventoryTransactionPacket;
 import net.yungtechboy1.CyberCore.Custom.CustomNetworkInventoryAction;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
-import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse;
 import net.yungtechboy1.CyberCore.Data.HomeData;
+import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse;
 import net.yungtechboy1.CyberCore.Factory.Shop.ShopInv;
 import net.yungtechboy1.CyberCore.Factory.Shop.Spawner.SpawnerShop;
 import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
@@ -95,6 +98,7 @@ public class CorePlayer extends Player {
     public AuctionHouse AH = null;
     public ShopInv Shop = null;
     public SpawnerShop SpawnerShop = null;
+    public CombatData Combat = null;
     long uct = 0;
     boolean uw = false;
     private FormWindow nw;
@@ -114,24 +118,84 @@ public class CorePlayer extends Player {
     private int FactionCheck = -1;
     private HashMap<String, CoolDown> CDL = new HashMap<>();
     private CustomCraftingTransaction cct;
-    public CombatData Combat = null;
-
-    public class CombatData{
-        public int Tick = -1;
-        public CombatData(int tick){
-            Tick = tick;
-        }
-
-        public int getTick(int a) {
-            return Tick + a;
-        }
-        public int getTick() {
-            return getTick(0);
-        }
-    }
+    private HashMap<BuffOrigin, HashMap<Buff.BuffType, Buff>> Bufflist = new HashMap<BuffOrigin, HashMap<Buff.BuffType, Buff>>() {{
+        put(BuffOrigin.Class, new HashMap<>());
+    }};
+    private HashMap<BuffOrigin, HashMap<Buff.BuffType, DeBuff>> DeBufflist = new HashMap<BuffOrigin, HashMap<Buff.BuffType, DeBuff>>() {{
+        put(BuffOrigin.Class, new HashMap<>());
+    }};
+    private int BaseSwingSpeed = 10;
+    private CoolDownTick SwingCooldown = new CoolDownTick();
 
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
         super(interfaz, clientID, ip, port);
+    }
+
+    public HashMap<BuffOrigin, HashMap<Buff.BuffType, Buff>> getBufflist() {
+        return (HashMap<BuffOrigin, HashMap<Buff.BuffType, Buff>>) Bufflist.clone();
+    }
+
+    public HashMap<BuffOrigin, HashMap<Buff.BuffType, DeBuff>> getDeBufflist() {
+        return (HashMap<BuffOrigin, HashMap<Buff.BuffType, DeBuff>>) DeBufflist.clone();
+    }
+
+    public HashMap<Buff.BuffType, DeBuff> getClassDeBuffList() {
+        return (HashMap<Buff.BuffType, DeBuff>) getDeBufflist().get(BuffOrigin.Class).clone();
+    }
+
+    public HashMap<Buff.BuffType, Buff> getClassBuffList() {
+        return (HashMap<Buff.BuffType, Buff>) getBufflist().get(BuffOrigin.Class).clone();
+    }
+
+    @Deprecated
+    public void clearBuffs() {
+
+    }
+
+    public void initDeBuffs() {
+        //Class
+        for (Buff b : getClassDeBuffList().values()) {
+            switch (b.getBt()) {
+                case Movement:
+                    setMovementSpeed(.1f * b.getAmount(), true);
+                    break;
+            }
+        }
+    }
+
+    public void initBuffs() {
+        //Class
+        for (Buff b : getClassBuffList().values()) {
+            switch (b.getBt()) {
+//                case :
+            }
+        }
+    }
+
+    public void addBuffFromClass(Buff b) {
+        if (b == null) return;
+        if (!Bufflist.containsKey(BuffOrigin.Class) || Bufflist.get(BuffOrigin.Class) == null) {
+            HashMap<Buff.BuffType, Buff> hash = new HashMap<Buff.BuffType, Buff>();
+            hash.put(b.getBt(), b);
+            Bufflist.put(BuffOrigin.Class, hash);
+        } else {
+            HashMap<Buff.BuffType, Buff> bm = Bufflist.get(BuffOrigin.Class);
+            bm.put(b.getBt(), b);
+            Bufflist.put(BuffOrigin.Class, bm);
+        }
+    }
+
+    public void addDeBuffFromClass(DeBuff b) {
+        if (b == null) return;
+        if (!DeBufflist.containsKey(BuffOrigin.Class) || DeBufflist.get(BuffOrigin.Class) == null) {
+            HashMap<Buff.BuffType, DeBuff> hash = new HashMap<Buff.BuffType, DeBuff>();
+            hash.put(b.getBt(), b);
+            DeBufflist.put(BuffOrigin.Class, hash);
+        } else {
+            HashMap<Buff.BuffType, DeBuff> bm = DeBufflist.get(BuffOrigin.Class);
+            bm.put(b.getBt(), b);
+            DeBufflist.put(BuffOrigin.Class, bm);
+        }
     }
 
     public void SetPlayerClass(BaseClass bc) {
@@ -322,22 +386,34 @@ public class CorePlayer extends Player {
         if (!uw) super.fall(fallDistance);
     }
 
-    public void enterCombat(){
+    public void enterCombat() {
+        if (Combat == null) sendMessage(TextFormat.YELLOW + "You are now in combat!");
         Combat = new CombatData(getServer().getTick());
-        sendMessage(TextFormat.YELLOW+"You are now in combat!");
     }
 
-    public final boolean isinCombat(){
+    public final boolean isinCombat() {
         return checkCombat();
     }
 
-    public boolean checkCombat(){
-        if(Combat == null)return false;
-        if(Combat.getTick(20*5) < getServer().getTick() ) {
+    public boolean checkCombat() {
+        if (Combat == null) return false;
+        if (Combat.getTick() < getServer().getTick()) {
             leaveCombat();
             return false;
         }
         return true;
+    }
+
+    public int getBaseSwingSpeed() {
+        return BaseSwingSpeed;
+    }
+
+    public int getAttackTime() {
+        Buff b = getClassBuffList().get(Buff.BuffType.SwingSpeed);
+        DeBuff db = getClassDeBuffList().get(Buff.BuffType.SwingSpeed);
+        if (b == null) b = new Buff(Buff.BuffType.NULL, 1);
+        if (db == null) db = new DeBuff(Buff.BuffType.NULL, 1);
+        return (int) Math.floor(getBaseSwingSpeed() * b.getAmount() * db.getAmount());
     }
 
     @Override
@@ -366,8 +442,13 @@ public class CorePlayer extends Player {
                     if (bsl >= 3) return false;
             }
         }
-        if(super.attack(source)){
+        if (attackTime > 0) {
+            sendMessage(TextFormat.YELLOW + "YOU STILL HAVE SWING COOLDONW!!!!!!");
+        }
+
+        if (super.attack(source)) {
             enterCombat();
+//            attackTime = getAttackTime();
             return true;
         }
         return false;
@@ -490,7 +571,6 @@ public class CorePlayer extends Player {
         }
         return id;
     }
-
 
     @Override
     public void handleDataPacket(DataPacket packet) {
@@ -811,6 +891,11 @@ public class CorePlayer extends Player {
                                         }
                                         break;
                                     case InventoryTransactionPacket.USE_ITEM_ON_ENTITY_ACTION_ATTACK:
+                                        if (SwingCooldown.isValid()) {
+                                            sendTip(TextFormat.GRAY + "Class: Swing Cooldown");
+//                                            sendTitle(TextFormat.GRAY + "Class: Swing Cooldown");
+                                            break;
+                                        }
                                         float itemDamage = item.getAttackDamage();
 
                                         for (Enchantment enchantment : item.getEnchantments()) {
@@ -836,11 +921,11 @@ public class CorePlayer extends Player {
                                         CustomEntityDamageByEntityEvent centityDamageByEntityEvent =
                                                 new CustomEntityDamageByEntityEvent(this, target, CustomEntityDamageEvent.CustomDamageCause.ENTITY_ATTACK, itemDamage);
                                         BaseClass bc = GetPlayerClass();
-                                        if(bc != null){
+                                        if (bc != null) {
                                             bc.HandelEvent(centityDamageByEntityEvent);
                                         }
                                         getServer().getPluginManager().callEvent(centityDamageByEntityEvent);
-                                        if(centityDamageByEntityEvent.isCancelled())break;
+                                        if (centityDamageByEntityEvent.isCancelled()) break;
                                         EntityDamageByEntityEvent entityDamageByEntityEvent = new EntityDamageByEntityEvent(this, target, EntityDamageEvent.DamageCause.ENTITY_ATTACK, damage);
                                         if (this.isSpectator()) entityDamageByEntityEvent.setCancelled();
                                         if ((target instanceof Player) && !this.level.getGameRules().getBoolean(GameRule.PVP)) {
@@ -853,6 +938,10 @@ public class CorePlayer extends Player {
                                             }
                                             break;
                                         }
+
+                                        //When you Successfully Attack Someone
+                                        enterCombat();
+                                        SwingCooldown = new CoolDownTick().setTimeTick(getAttackTime());
 
                                         for (Enchantment enchantment : item.getEnchantments()) {
                                             enchantment.doPostAttack(this, target);
@@ -1082,8 +1171,8 @@ public class CorePlayer extends Player {
                                 double breakTime = Math.ceil(target.getBreakTime(this.inventory.getItemInHand(), this) * 20);
                                 if (PlayerClass != null) {
                                     double obreaktime = breakTime;
-                                    if (PlayerClass instanceof MineLifeClass && PlayerClass.TryRunPower(Power.MineLife)) {
-                                        Object nbt = ((MineLifeClass) PlayerClass).RunPower(Power.MineLife, this.inventory.getItemInHand(), target, breakTime);
+                                    if (PlayerClass instanceof MineLifeClass && PlayerClass.TryRunPower(PowerEnum.MineLife)) {
+                                        Object nbt = ((MineLifeClass) PlayerClass).RunPower(PowerEnum.MineLife, this.inventory.getItemInHand(), target, breakTime);
                                         if (nbt != null) {
                                             double nd = (double) nbt;
                                             if (nd > 0) {
@@ -1181,9 +1270,9 @@ public class CorePlayer extends Player {
 //        return null;
     }
 
-    public void leaveCombat(){
+    public void leaveCombat() {
         Combat = null;
-        sendMessage(TextFormat.GREEN+"You are now out of Combat!");
+        sendMessage(TextFormat.GREEN + "You are now out of Combat!");
     }
 
     @Override
@@ -1191,8 +1280,8 @@ public class CorePlayer extends Player {
         //Check for Faction!
         if (currentTick % 5 == 0) {
             if (!CooldownLock && isAlive() && spawned) {
-                if(Combat != null){
-                    if(Combat.getTick(5*20) < currentTick){
+                if (Combat != null) {
+                    if (Combat.getTick() < currentTick) {
                         //No Long in combat
                         leaveCombat();
                     }
@@ -1377,7 +1466,6 @@ public class CorePlayer extends Player {
         HD.add(new HomeData(name, this));
     }
 
-
     public void AddHome(HomeData homeData) {
         HD.add(homeData);
     }
@@ -1451,6 +1539,75 @@ public class CorePlayer extends Player {
         }
         FactionInvite = null;
         FactionInviteTimeout = -1;
+    }
+
+    @Override
+    public void completeLoginSequence() {
+        PlayerLoginEvent ev;
+        this.server.getPluginManager().callEvent(ev = new PlayerLoginEvent(this, "Plugin reason"));
+        if (ev.isCancelled()) {
+            this.close(this.getLeaveMessage(), ev.getKickMessage());
+            return;
+        }
+
+        StartGamePacket startGamePacket = new StartGamePacket();
+        startGamePacket.entityUniqueId = this.id;
+        startGamePacket.entityRuntimeId = this.id;
+        startGamePacket.playerGamemode = (this.gamemode);
+        startGamePacket.x = (float) this.x;
+        startGamePacket.y = (float) this.y;
+        startGamePacket.z = (float) this.z;
+        startGamePacket.yaw = (float) this.yaw;
+        startGamePacket.pitch = (float) this.pitch;
+        startGamePacket.seed = -1;
+        startGamePacket.dimension = (byte) (this.level.getDimension() & 0xff);
+        startGamePacket.worldGamemode = (this.gamemode);
+        startGamePacket.difficulty = this.server.getDifficulty();
+        startGamePacket.spawnX = (int) this.x;
+        startGamePacket.spawnY = (int) this.y;
+        startGamePacket.spawnZ = (int) this.z;
+        startGamePacket.hasAchievementsDisabled = true;
+        startGamePacket.dayCycleStopTime = -1;
+        startGamePacket.eduMode = false;
+        startGamePacket.hasEduFeaturesEnabled = true;
+        startGamePacket.rainLevel = 0;
+        startGamePacket.lightningLevel = 0;
+        startGamePacket.commandsEnabled = this.isEnableClientCommand();
+        startGamePacket.gameRules = getLevel().getGameRules();
+        startGamePacket.levelId = "";
+        startGamePacket.worldName = this.getServer().getNetwork().getName();
+        startGamePacket.generator = 1; //0 old, 1 infinite, 2 flat
+        this.dataPacket(startGamePacket);
+
+        this.dataPacket(new AvailableEntityIdentifiersPacket());
+
+        this.loggedIn = true;
+
+        this.level.sendTime(this);
+
+        //todo cHANGE
+        this.setMovementSpeed(DEFAULT_SPEED);
+        this.sendAttributes();
+        this.setNameTagVisible(true);
+        this.setNameTagAlwaysVisible(true);
+        this.setCanClimb(true);
+
+        this.server.getLogger().info(this.getServer().getLanguage().translateString("nukkit.player.logIn",
+                TextFormat.AQUA + this.username + TextFormat.WHITE,
+                this.ip,
+                String.valueOf(this.port),
+                String.valueOf(this.id),
+                this.level.getName(),
+                String.valueOf(NukkitMath.round(this.x, 4)),
+                String.valueOf(NukkitMath.round(this.y, 4)),
+                String.valueOf(NukkitMath.round(this.z, 4))));
+
+        if (this.isOp() || this.hasPermission("nukkit.textcolor")) {
+            this.setRemoveFormat(false);
+        }
+
+        this.server.addOnlinePlayer(this);
+        this.server.onPlayerCompleteLoginSequence(this);
     }
 
 
@@ -1698,72 +1855,20 @@ public class CorePlayer extends Player {
 //        this.dataPacket(infoPacket);
 //    }
 
-    @Override
-    public void completeLoginSequence() {
-        PlayerLoginEvent ev;
-        this.server.getPluginManager().callEvent(ev = new PlayerLoginEvent(this, "Plugin reason"));
-        if (ev.isCancelled()) {
-            this.close(this.getLeaveMessage(), ev.getKickMessage());
-            return;
+    public class CombatData {
+        public final int CombatTime = 20 * 7; // 7 Secs
+        public int Tick = -1;
+
+        public CombatData(int tick) {
+            Tick = tick;
         }
 
-        StartGamePacket startGamePacket = new StartGamePacket();
-        startGamePacket.entityUniqueId = this.id;
-        startGamePacket.entityRuntimeId = this.id;
-        startGamePacket.playerGamemode = (this.gamemode);
-        startGamePacket.x = (float) this.x;
-        startGamePacket.y = (float) this.y;
-        startGamePacket.z = (float) this.z;
-        startGamePacket.yaw = (float) this.yaw;
-        startGamePacket.pitch = (float) this.pitch;
-        startGamePacket.seed = -1;
-        startGamePacket.dimension = (byte) (this.level.getDimension() & 0xff);
-        startGamePacket.worldGamemode = (this.gamemode);
-        startGamePacket.difficulty = this.server.getDifficulty();
-        startGamePacket.spawnX = (int) this.x;
-        startGamePacket.spawnY = (int) this.y;
-        startGamePacket.spawnZ = (int) this.z;
-        startGamePacket.hasAchievementsDisabled = true;
-        startGamePacket.dayCycleStopTime = -1;
-        startGamePacket.eduMode = false;
-        startGamePacket.hasEduFeaturesEnabled = true;
-        startGamePacket.rainLevel = 0;
-        startGamePacket.lightningLevel = 0;
-        startGamePacket.commandsEnabled = this.isEnableClientCommand();
-        startGamePacket.gameRules = getLevel().getGameRules();
-        startGamePacket.levelId = "";
-        startGamePacket.worldName = this.getServer().getNetwork().getName();
-        startGamePacket.generator = 1; //0 old, 1 infinite, 2 flat
-        this.dataPacket(startGamePacket);
-
-        this.dataPacket(new AvailableEntityIdentifiersPacket());
-
-        this.loggedIn = true;
-
-        this.level.sendTime(this);
-
-        //todo cHANGE
-        this.setMovementSpeed(DEFAULT_SPEED);
-        this.sendAttributes();
-        this.setNameTagVisible(true);
-        this.setNameTagAlwaysVisible(true);
-        this.setCanClimb(true);
-
-        this.server.getLogger().info(this.getServer().getLanguage().translateString("nukkit.player.logIn",
-                TextFormat.AQUA + this.username + TextFormat.WHITE,
-                this.ip,
-                String.valueOf(this.port),
-                String.valueOf(this.id),
-                this.level.getName(),
-                String.valueOf(NukkitMath.round(this.x, 4)),
-                String.valueOf(NukkitMath.round(this.y, 4)),
-                String.valueOf(NukkitMath.round(this.z, 4))));
-
-        if (this.isOp() || this.hasPermission("nukkit.textcolor")) {
-            this.setRemoveFormat(false);
+        public int getTick(int a) {
+            return Tick + a;
         }
 
-        this.server.addOnlinePlayer(this);
-        this.server.onPlayerCompleteLoginSequence(this);
+        public int getTick() {
+            return getTick(CombatTime);
+        }
     }
 }

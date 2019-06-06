@@ -2,17 +2,13 @@ package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
-import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.item.Item;
 import cn.nukkit.nbt.tag.CompoundTag;
-import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
 
 import java.util.ArrayList;
-
-import static net.yungtechboy1.CyberCore.FormType.MainForm.Class_1;
 
 public class Class1Window extends CyberFormSimple {
     public Class1Window(FormType.MainForm ttype, String title, String content) {
@@ -31,7 +27,7 @@ public class Class1Window extends CyberFormSimple {
     }
 
     @Override
-    public void onRun(CorePlayer cp) {
+    public boolean onRun(CorePlayer cp) {
         super.onRun(cp);
         FormResponseSimple frs = getResponse();
         int k = frs.getClickedButtonId();
@@ -85,5 +81,6 @@ public class Class1Window extends CyberFormSimple {
 //                    break;//Theif
 //            }
 //        }
+        return false;
     }
 }

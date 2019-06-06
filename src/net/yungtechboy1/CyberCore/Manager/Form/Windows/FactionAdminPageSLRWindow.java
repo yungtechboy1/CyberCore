@@ -27,7 +27,7 @@ public class FactionAdminPageSLRWindow extends CyberFormSimple {
 
 
     @Override
-    public void onRun(CorePlayer cp) {
+    public boolean onRun(CorePlayer cp) {
         super.onRun(cp);
         FormResponseSimple fapp = getResponse();
         int idd = fapp.getClickedButtonId();
@@ -45,5 +45,6 @@ public class FactionAdminPageSLRWindow extends CyberFormSimple {
                 _plugin.FM = new FactionsMain(_plugin, new FactionSQL(_plugin));
                 break;
         }
+        return false;
     }
 }

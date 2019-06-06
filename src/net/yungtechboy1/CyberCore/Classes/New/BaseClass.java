@@ -15,6 +15,7 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
+import net.yungtechboy1.CyberCore.Classes.New.Buff.BuffType;
 import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.CoolDown;
@@ -80,8 +81,8 @@ public abstract class BaseClass {
     private int LVL = 0;
     private int XP = 0;
     private Ability ActiveAbility;
-    private ArrayList<Buff> Buffs = new ArrayList<>();
-    private ArrayList<DeBuff> DeBuffs = new ArrayList<>();
+    private HashMap<BuffType, Buff> Buffs = new HashMap<>();
+    private HashMap<BuffType, DeBuff> DeBuffs = new HashMap<>();
 
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank, ConfigSection data) {
         this(main, player, rank);
@@ -100,6 +101,7 @@ public abstract class BaseClass {
                 addXP(xpi);
             }
         }
+        startbuffs();
     }
 
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank) {
@@ -108,6 +110,12 @@ public abstract class BaseClass {
         P = player;
         TYPE = rank;
         LVL = XPToLevel(XP);
+        startbuffs();
+    }
+
+    private void startbuffs() {
+        initBuffs();
+        if (P != null) registerAllBuffsToCorePlayer(P);
     }
 
     public ClassTeir getTeir() {
@@ -125,46 +133,45 @@ public abstract class BaseClass {
 
     public abstract void initBuffs();
 
-    public ArrayList<Buff> addBuff(Buff o) {
-        Buffs.add(o.getBt().ordinal(), o);
-        return (ArrayList<Buff>) Buffs.clone();
+    private void registerAllBuffsToCorePlayer(CorePlayer cp) {
+        for (Buff b : getBuffs().values()) {
+            cp.addBuffFromClass(b);
+        }
+        for (DeBuff b : getDeBuffs().values()) {
+            cp.addDeBuffFromClass(b);
+        }
     }
 
-    public ArrayList<Buff> removeBuffs(Buff o) {
+    public HashMap<BuffType, Buff> addBuff(Buff o) {
+        Buffs.put(o.getBt(), o);
+        return (HashMap<BuffType, Buff>) Buffs.clone();
+    }
+
+    public HashMap<BuffType, Buff> removeBuffs(Buff o) {
         Buffs.remove(o.getBt().ordinal());
-        return (ArrayList<Buff>) Buffs.clone();
+        return (HashMap<BuffType, Buff>) Buffs.clone();
     }
 
-    public ArrayList<Buff> getBuffs() {
-        return (ArrayList<Buff>) Buffs.clone();
-    }
-
-    @Deprecated
-    public void setBuffs(ArrayList<Buff> buffs) {
-        Buffs = buffs;
+    public HashMap<BuffType, Buff> getBuffs() {
+        return (HashMap<BuffType, Buff>) Buffs.clone();
     }
 
     public Buff getBuff(int o) {
         return Buffs.get(o);
     }
 
-    public ArrayList<DeBuff> removeDeBuff(DeBuff o) {
+    public HashMap<BuffType, DeBuff> removeDeBuff(DeBuff o) {
         DeBuffs.remove(o.getBt().ordinal());
-        return (ArrayList<DeBuff>) DeBuffs.clone();
+        return (HashMap<BuffType, DeBuff>) DeBuffs.clone();
     }
 
-    public ArrayList<DeBuff> addDeBuff(DeBuff o) {
-        DeBuffs.add(o.getBt().ordinal(), o);
-        return (ArrayList<DeBuff>) DeBuffs.clone();
+    public HashMap<BuffType, DeBuff> addDeBuff(DeBuff o) {
+        DeBuffs.put(o.getBt(), o);
+        return (HashMap<BuffType, DeBuff>) DeBuffs.clone();
     }
 
-    public ArrayList<DeBuff> getDeBuffs() {
-        return (ArrayList<DeBuff>) DeBuffs.clone();
-    }
-
-    @Deprecated
-    public void setDeBuffs(ArrayList<DeBuff> deBuffs) {
-        DeBuffs = deBuffs;
+    public HashMap<BuffType, DeBuff> getDeBuffs() {
+        return (HashMap<BuffType, DeBuff>) DeBuffs.clone();
     }
 
     public DeBuff getDeBuff(int o) {
@@ -448,11 +455,11 @@ public abstract class BaseClass {
 
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
         float bd = event.getOriginalDamage();
-        Buff b = getBuff(Buff.BuffType.Damage.ordinal());
-        if (event.getEntity() instanceof Player && getBuff(Buff.BuffType.DamageToPlayer.ordinal()) != null) {
-            b = getBuff(Buff.BuffType.DamageToPlayer.ordinal());
-        } else if (getBuff(Buff.BuffType.DamageToEntity.ordinal()) != null) {
-            b = getBuff(Buff.BuffType.DamageToEntity.ordinal());
+        Buff b = getBuff(BuffType.Damage.ordinal());
+        if (event.getEntity() instanceof Player && getBuff(BuffType.DamageToPlayer.ordinal()) != null) {
+            b = getBuff(BuffType.DamageToPlayer.ordinal());
+        } else if (getBuff(BuffType.DamageToEntity.ordinal()) != null) {
+            b = getBuff(BuffType.DamageToEntity.ordinal());
         }
         if (b != null) bd *= b.getAmount();
         event.setDamage(bd);
@@ -461,7 +468,7 @@ public abstract class BaseClass {
 
     public CustomEntityDamageEvent CustomEntityDamageEvent(CustomEntityDamageEvent event) {
         float bd = event.getOriginalDamage();
-        Buff b = getBuff(Buff.BuffType.Damage.ordinal());
+        Buff b = getBuff(BuffType.Damage.ordinal());
         if (b != null) bd *= b.getAmount();
         event.setDamage(bd);
         return event;
@@ -539,7 +546,7 @@ public abstract class BaseClass {
 
 
     public enum ClassType {
-        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary, DarkKnight, DragonSlayer;
+        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary, DarkKnight, DragonSlayer, Class_Magic_Enchanter, Class_Rouge_Thief, Class_Offense_Knight;
 
 
         public int getKey() {

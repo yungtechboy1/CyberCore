@@ -22,54 +22,48 @@ public class MineLifeClass extends MinnerBaseClass {
 
     @Override
     public void SetPowers() {
-        Powers.add(Power.MineLife, new MineLifePower(getLVL()));
-        Powers.add(Power.OreKnowledge, new OreKnowledge(getLVL()));
-    }
-
-    @Override
-    public boolean TryRunPower(int powerid) {
-        Power p = Powers.get(powerid);
-        if (p == null) return false;
-        return p.CanRun();
+        AddPower(new MineLifePower(this,getLVL()));
+        AddPower(new OreKnowledge(this,getLVL()));
     }
 
 
-    public Object RunPower(int powerid, Item itemInHand, Block target, double breakTime) {
-        Power p = Powers.get(powerid);
-        if (p == null) {
-            CCM.getLogger().error("No Power found or Incorrect Args For MineLife E334221");
-            return null;
-        }
-        if (powerid == Power.MineLife && p instanceof MineLifePower) {
-            MineLifePower mlp = (MineLifePower) p;
-            return mlp.usePower(itemInHand, target, breakTime);
-        }
-        return breakTime;
-    }
 
-    @Override
-    public Object RunPower(int powerid, Object... args) {
-        Power p = Powers.get(powerid);
-        if (p == null || args.length != 3) {
-            CCM.getLogger().error("No Power found or Incorrect Args For MineLife E334221");
-            return -1;
-        }
-        if (powerid == 1 && p instanceof MineLifePower) {
-            MineLifePower mlp = (MineLifePower) p;
-            return mlp.usePower((Item) args[0], (Block) args[1], (double) args[2]);
-        }
-        return (double) args[2];
-    }
+//    public Object RunPower(int powerid, Item itemInHand, Block target, double breakTime) {
+//        Power p = Powers.get(powerid);
+//        if (p == null) {
+//            CCM.getLogger().error("No Power found or Incorrect Args For MineLife E334221");
+//            return null;
+//        }
+//        if (powerid == Power.MineLife && p instanceof MineLifePower) {
+//            MineLifePower mlp = (MineLifePower) p;
+//            return mlp.usePower(itemInHand, target, breakTime);
+//        }
+//        return breakTime;
+//    }
 
-    @Override
-    public BlockBreakEvent BlockBreakEvent(BlockBreakEvent event) {
-        event = super.BlockBreakEvent(event);
-        if (TryRunPower(Power.OreKnowledge)) {
-            //Run
+//    @Override
+//    public Object RunPower(int powerid, Object... args) {
+//        Power p = Powers.get(powerid);
+//        if (p == null || args.length != 3) {
+//            CCM.getLogger().error("No Power found or Incorrect Args For MineLife E334221");
+//            return -1;
+//        }
+//        if (powerid == 1 && p instanceof MineLifePower) {
+//            MineLifePower mlp = (MineLifePower) p;
+//            return mlp.usePower((Item) args[0], (Block) args[1], (double) args[2]);
+//        }
+//        return (double) args[2];
+//    }
 
-        }
-
-        return event;
-    }
+//    @Override
+//    public BlockBreakEvent BlockBreakEvent(BlockBreakEvent event) {
+//        event = super.BlockBreakEvent(event);
+//        if (TryRunPower(Power.OreKnowledge)) {
+//            //Run
+//
+//        }
+//
+//        return event;
+//    }
 
 }

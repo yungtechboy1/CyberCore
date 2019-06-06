@@ -1,9 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.Form;
 
-import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseModal;
-import cn.nukkit.form.response.FormResponseSimple;
-import com.google.gson.Gson;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 
@@ -22,8 +19,9 @@ public class CyberFormModal extends CyberForm {
         this.button1 = trueButtonText;
         this.button2 = falseButtonText;
     }
-    public CyberFormModal(String title, String content, String trueButtonText, String falseButtonText) {
-        super();
+    @Deprecated
+    private CyberFormModal(String title, String content, String trueButtonText, String falseButtonText) {
+        super(null);
         this.title = title;
         this.content = content;
         this.button1 = trueButtonText;
@@ -82,7 +80,8 @@ public class CyberFormModal extends CyberForm {
 
 
     @Override
-    public void onRun(CorePlayer p){
+    public boolean onRun(CorePlayer p){
         super.onRun(p);
+        return false;
     };
 }
