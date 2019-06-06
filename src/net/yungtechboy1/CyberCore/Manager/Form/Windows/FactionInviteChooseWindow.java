@@ -35,25 +35,25 @@ public class FactionInviteChooseWindow extends CyberFormSimple {
 
 
     @Override
-    public void onRun(CorePlayer cp) {
+    public boolean onRun(CorePlayer cp) {
         super.onRun(cp);
         FormResponseSimple fic = getResponse();
         String pn = fic.getClickedButton().getText();
         CorePlayer cpp = (CorePlayer) CyberCoreMain.getInstance().getServer().getPlayerExact(pn);
         if (cpp == null) {
             cp.sendMessage("Error! The name '" + pn + "' could not be found on server!");
-            return;
+            return false;
         } else {
             if (null != CyberCoreMain.getInstance().FM.FFactory.getPlayerFaction(cpp)) {
                 //TODO Allow Setting to ignore Faction messages
                 //Sounds like a lot of work lol >:(
                 cp.sendMessage(Error_PlayerInFaction.getMsg());
-                return;
+                return false;
             }
             Integer time = (int) (Calendar.getInstance().getTime().getTime() / 1000) + 60 * 5;
             if (_Fac == null) {
                 cp.sendMessage(Error_SA224.getMsg());
-                return;
+                return false;
             }
             _Fac.AddInvite(cpp.getName().toLowerCase(), time);
             CyberCoreMain.getInstance().FM.FFactory.InvList.put(cpp.getName().toLowerCase(), _Fac.GetName());
@@ -61,5 +61,6 @@ public class FactionInviteChooseWindow extends CyberFormSimple {
             cp.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Successfully invited " + cpp.getName() + "!");
             cpp.sendMessage(FactionsMain.NAME + TextFormat.YELLOW + "You have been invited to faction.\n" + TextFormat.GREEN + "Type '/f accept' or '/f deny' into chat to accept or deny!");
         }
+        return false;
     }
 }

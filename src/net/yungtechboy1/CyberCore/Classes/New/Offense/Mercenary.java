@@ -7,6 +7,7 @@ import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.Classes.Power.Mercenary.MercenaryDoubleTake;
 import net.yungtechboy1.CyberCore.Classes.Power.Mercenary.MercenaryReneration;
+import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
@@ -47,13 +48,20 @@ public class Mercenary  extends BaseClass {
         return 4;
     }
 
-
-
+    @Override
+    public Object RunPower(PowerEnum powerid, Object... args) {
+        return null;
+    }
 
 
     @Override
     public String getName() {
         return "Mercenary";
+    }
+
+    @Override
+    public ClassType getTYPE() {
+        return null;
     }
 
     @Override
@@ -82,8 +90,4 @@ public class Mercenary  extends BaseClass {
 //        addBuff(new Buff(Buff.BuffType.SuperFoodHeartRegin,1f));
     }
 
-    @Override
-    public Object RunPower(int powerid, Object... args) {
-        return null;
-    }
 }

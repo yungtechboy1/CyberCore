@@ -57,8 +57,9 @@ public class CyberForm extends FormWindow {
 
     }
 
-    public void onRun(CorePlayer p) {
+    public boolean onRun(CorePlayer p) {
         if (p.Faction != null) _Fac = CyberCoreMain.getInstance().FM.FFactory.getFaction(p.Faction);
+        return false;
     }
 
     ;

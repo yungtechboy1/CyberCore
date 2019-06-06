@@ -10,20 +10,16 @@ import net.yungtechboy1.CyberCore.Manager.Form.CyberFormCustom;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerSettingsPage0 extends CyberFormCustom {
-    public PlayerSettingsPage0() {
+@Deprecated
+public class PlayerClassSettingsBase extends CyberFormCustom {
+    public PlayerClassSettingsBase() {
         this(new ArrayList());
     }
 
-    public PlayerSettingsPage0(List<ElementButton> buttons) {
-        super(FormType.MainForm.PlayerSettingsPage0, "CyberFactions | Player Settings Page (1/1)");
+    public PlayerClassSettingsBase(List<ElementButton> buttons) {
+        super(FormType.MainForm.PlayerFactionSettingsPage0, "CyberFactions | Player Faction Settings Page (1/1)");
 
-        addElement(new ElementToggle("Show Damage Tags"));
-        addElement(new ElementToggle("Show Advanced Damage Tags"));
-        addElement(new ElementToggle("Show Hud"));
-        addElement(new ElementToggle("Show Class Hud"));
-        addElement(new ElementToggle("Show Faction Hud"));
-        addElement(new ElementToggle("Show Position Hud"));
+        addElement(new ElementToggle("Allow Faction Invite Pop-Ups"));
 //        addButton(new ElementButton("Show Advanced Damage Tags"));
     }
 

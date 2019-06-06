@@ -40,7 +40,7 @@ public class CustomEntityDamageEvent extends EntityEvent implements Cancellable 
     private int CoolDownTicks = 20;
 
     public CustomEntityDamageEvent(Entity entity, CustomDamageCause cause, float damage) {
-        this(entity, cause, new EnumMap<>(CustomDamageModifier.class) {
+        this(entity, cause, new EnumMap<CustomDamageModifier, Float>(CustomDamageModifier.class) {
             {
                 put(CustomDamageModifier.BASE, damage);
             }

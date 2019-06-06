@@ -5,7 +5,9 @@ import cn.nukkit.block.BlockID;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.Power;
+import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
@@ -15,8 +17,8 @@ import java.util.ArrayList;
 public class OreKnowledge extends PassivePower {
     int BlockRange = 10;
 
-    public OreKnowledge(int lvl) {
-        super(1, lvl);
+    public OreKnowledge(BaseClass b,int lvl) {
+        super(b,1, lvl);
     }
 
     @Override
@@ -49,8 +51,8 @@ public class OreKnowledge extends PassivePower {
     }
 
     @Override
-    public int getType() {
-        return Power.OreKnowledge;
+    public PowerEnum getType() {
+        return PowerEnum.MinerOreKnowledge;
     }
 
     @Override

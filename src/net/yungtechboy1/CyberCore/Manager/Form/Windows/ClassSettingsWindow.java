@@ -11,56 +11,66 @@ import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
 import java.util.List;
 
 public class ClassSettingsWindow extends CyberFormSimple {
-    BaseClass BC;
+    BaseClass _BC;
 
     public ClassSettingsWindow(BaseClass bd, FormType.MainForm ttype, String title, String content) {
         super(ttype, title, content);
+        _BC = bd;
         inti();
-        BC = bd;
     }
 
     public ClassSettingsWindow(BaseClass bd, FormType.MainForm ttype, String title, String content, List<ElementButton> buttons) {
         super(ttype, title, content, buttons);
+        _BC = bd;
         inti();
-        BC = bd;
 
     }
 
+    @Deprecated
     public ClassSettingsWindow(BaseClass bd, String title, String content) {
-        super(title, content);
+        super(FormType.MainForm.Class_Settings_Window, title, content);
+        _BC = bd;
         inti();
-        BC = bd;
 
     }
 
+    @Deprecated
     public ClassSettingsWindow(BaseClass bd, String title, String content, List<ElementButton> buttons) {
-        super(title, content, buttons);
+        super(FormType.MainForm.Class_Settings_Window, title, content, buttons);
+        _BC = bd;
         inti();
-        BC = bd;
 
     }
 
     private void inti() {
-        addButton(new ElementButton("How to use " + TextFormat.AQUA + BC.getName()));
+        addButton(new ElementButton("How to use " + TextFormat.AQUA + _BC.getName()));
         addButton(new ElementButton("Class Merchant"));
         addButton(new ElementButton(TextFormat.RED + "Leave Class"));
         addButton(new ElementButton(TextFormat.RED + "--------------"));
     }
 
-
+    /**
+     * Return True only if a Response has been executed
+     * @param p CorePlayer
+     * @return boolean
+     */
     @Override
-    public void onRun(CorePlayer p) {
-        super.onRun(p);
+    public boolean onRun(CorePlayer p) {
+        if (super.onRun(p)) return true;
         int k = getResponse().getClickedButtonId();
-        if (k == 0) {
-            //TODO
-            p.showFormWindow(p.GetPlayerClass().getHowToUseClassWindow());
-        } else if (k == 1) {
-            p.showFormWindow(p.GetPlayerClass().getClassMerchantWindow());
-        } else if (k == 2) {
-            CyberCoreMain.getInstance().ClassFactory.leaveClass(p);
-        } else if (k == 3) {
-            //Null
+        if (k <= 3) {
+            if (k == 0) {
+                //TODO
+                p.showFormWindow(p.GetPlayerClass().getHowToUseClassWindow());
+            } else if (k == 1) {
+                p.showFormWindow(p.GetPlayerClass().getClassMerchantWindow());
+            } else if (k == 2) {
+                CyberCoreMain.getInstance().ClassFactory.leaveClass(p);
+            } else if (k == 3) {
+                //Null
+            }
+            return true;
         }
+        return false;
     }
 }

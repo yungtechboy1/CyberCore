@@ -2,7 +2,6 @@ package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.element.ElementLabel;
-import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormCustom;
@@ -20,7 +19,7 @@ public class ClassHowToUseTNT extends CyberFormSimple {
     }
 
     @Override
-    public void onRun(CorePlayer p) {
+    public boolean onRun(CorePlayer p) {
         super.onRun(p);
         int k = getResponse().getClickedButtonId();
         if(k == 0){
@@ -35,6 +34,7 @@ public class ClassHowToUseTNT extends CyberFormSimple {
             p.showFormWindow(new ClassHowToUseTNTEXP(_tt));
 
         }
+        return false;
     }
 }
 
@@ -50,8 +50,9 @@ class ClassHowToUseTNTCommands extends CyberFormCustom{
     }
 
     @Override
-    public void onRun(CorePlayer p) {
+    public boolean onRun(CorePlayer p) {
         p.showFormWindow(new ClassHowToUseTNT(_tt));
+        return false;
     }
 }
 
@@ -70,8 +71,9 @@ class ClassHowToUseTNTPA extends CyberFormCustom{
     }
 
     @Override
-    public void onRun(CorePlayer p) {
+    public boolean onRun(CorePlayer p) {
         p.showFormWindow(new ClassHowToUseTNT(_tt));
+        return false;
     }
 }
 class ClassHowToUseTNTUnlocks extends CyberFormCustom{
@@ -109,8 +111,9 @@ class ClassHowToUseTNTUnlocks extends CyberFormCustom{
     }
 
     @Override
-    public void onRun(CorePlayer p) {
+    public boolean onRun(CorePlayer p) {
         p.showFormWindow(new ClassHowToUseTNT(_tt));
+        return false;
     }
 }
 
@@ -135,7 +138,8 @@ class ClassHowToUseTNTEXP extends CyberFormCustom{
     }
 
     @Override
-    public void onRun(CorePlayer p) {
+    public boolean onRun(CorePlayer p) {
         p.showFormWindow(new ClassHowToUseTNT(_tt));
+        return false;
     }
 }
