@@ -475,6 +475,12 @@ public class CorePlayer extends Player {
         return (int) Math.floor((getBaseSwingSpeed() * b.getAmount()) / db.getAmount());
     }
 
+    public boolean attack(CustomEntityDamageEvent source) {
+        getServer().getPluginManager().callEvent(source);
+        if(source.isCancelled())return false;
+        setHealth(getHealth()-source.getFinalDamage());
+        return true;
+    }
     @Override
     public boolean attack(EntityDamageEvent source) {
         ArrayList<EntityDamageEvent.DamageCause> da = new ArrayList<>();

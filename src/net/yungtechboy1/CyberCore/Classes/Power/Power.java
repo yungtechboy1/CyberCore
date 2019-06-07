@@ -48,14 +48,13 @@ public abstract class Power {
         return PlayerClass.getPlayer();
     }
 
+    //TODO IMPLEMENT
     public Event HandelEvent(Event event) {
         if (event instanceof CustomEntityDamageByEntityEvent) return CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
         return event;
     }
 
-    public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e){
-        return e;
-    }
+    public abstract CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e);
 
     public void setPowerSuccessChance(int powerSuccessChance) {
         PowerSuccessChance = powerSuccessChance;
@@ -84,6 +83,7 @@ public abstract class Power {
 
     public abstract PowerEnum getType();
 
+    //USE TO RUN
     public void InitPowerRun(Object... args){
         if(CanRun()){
             usePower(PlayerClass.getPlayer(),args);

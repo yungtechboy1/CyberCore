@@ -17,6 +17,7 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Classes.New.Buff.BuffType;
 import net.yungtechboy1.CyberCore.Classes.Power.Power;
+import net.yungtechboy1.CyberCore.Classes.Power.PowerAbility;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -461,6 +462,7 @@ public abstract class BaseClass {
     }
 
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
+        for(Power p : Powers.values())p.CustomEntityDamageByEntityEvent(event);
         float bd = event.getOriginalDamage();
         Buff b = getBuff(BuffType.Damage.ordinal());
         if (event.getEntity() instanceof Player && getBuff(BuffType.DamageToPlayer.ordinal()) != null) {

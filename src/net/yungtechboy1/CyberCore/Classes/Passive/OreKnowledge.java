@@ -9,6 +9,7 @@ import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
 
@@ -19,6 +20,11 @@ public class OreKnowledge extends PassivePower {
 
     public OreKnowledge(BaseClass b,int lvl) {
         super(b,1, lvl);
+    }
+
+    @Override
+    public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e) {
+        return e;
     }
 
     @Override
@@ -53,6 +59,11 @@ public class OreKnowledge extends PassivePower {
     @Override
     public PowerEnum getType() {
         return PowerEnum.MinerOreKnowledge;
+    }
+
+    @Override
+    public Object usePower(CorePlayer cp, Object... args) {
+        return null;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 public class HolyKnightHealPower extends Power {
     public HolyKnightHealPower(BaseClass b, int lvl) {
@@ -10,6 +12,11 @@ public class HolyKnightHealPower extends Power {
     @Override
     public PowerEnum getType() {
         return PowerEnum.HolyKnightHeal;
+    }
+
+    @Override
+    public Object usePower(CorePlayer cp, Object... args) {
+        return null;
     }
 
     @Override
@@ -50,6 +57,11 @@ public class HolyKnightHealPower extends Power {
                 default:
                     return 7;
         }
+    }
+
+    @Override
+    public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e) {
+        return e;
     }
 
     @Override

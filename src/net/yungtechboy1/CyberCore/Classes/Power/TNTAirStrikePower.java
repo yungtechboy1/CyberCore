@@ -1,16 +1,28 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
-public class TNTAirStrikePower extends Power {
+public  class TNTAirStrikePower extends Power {
     public TNTAirStrikePower(BaseClass b, int lvl) {
         super(b, 100, lvl);
         TickUpdate = 20*5;//5 Secs
     }
 
     @Override
+    public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e) {
+        return e;
+    }
+
+    @Override
     public PowerEnum getType() {
         return PowerEnum.TNTAirStrike;
+    }
+
+    @Override
+    public Object usePower(CorePlayer cp, Object... args) {
+        return null;
     }
 
     @Override

@@ -47,7 +47,7 @@ public abstract class PowerStackable extends Power {
     @Override
     public boolean CanRun(boolean force, Object... o) {
         NukkitRandom nr = new NukkitRandom();
-        if (nr.nextRange(0, 100) <= PowerSuccessChance || force) {
+        if (nr.nextRange(0, 100) <= getPowerSuccessChance() || force) {
             //Success
             if (getAvailbleQuantity() <= 0) return false;
             return true;

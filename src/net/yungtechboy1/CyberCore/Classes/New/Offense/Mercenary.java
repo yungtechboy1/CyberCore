@@ -25,9 +25,9 @@ public class Mercenary  extends BaseClass {
 
     @Override
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
-        Player p = (Player)event.entity;
-        float ad = event.getDamage(CustomEntityDamageEvent.CustomDamageModifier.BASE) * -.1f;
-        event.setDamage(ad, CustomEntityDamageEvent.CustomDamageModifier.MODIFIER_ARMOR_ABILLITY);
+//        CorePlayer p = event.getDamager();
+//        float ad = event.getDamage(CustomEntityDamageEvent.CustomDamageModifier.BASE) * -.1f;
+//        event.setDamage(ad, CustomEntityDamageEvent.CustomDamageModifier.MODIFIER_ARMOR_ABILLITY);
         event.setCoolDownTicks(SwingTime);
         return event;
     }
