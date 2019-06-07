@@ -29,9 +29,9 @@ public class CustomPlayerFood extends PlayerFood {
         if (!this.getPlayer().isFoodEnabled()) return;
         if (this.getPlayer().isAlive()) {
             int diff = Server.getInstance().getDifficulty();
-            System.out.println("MAY NOT BE UNEDER 20"+getPlayer().getHealth());
+//            System.out.println("MAY NOT BE UNEDER 20"+getPlayer().getHealth());
             if(getPlayer().getHealth() >= 20)return;//No More Natural Healing!
-            System.out.println("IM SCARED! THIS IS CALLED "+tickDiff);
+//            System.out.println("IM SCARED! THIS IS CALLED "+tickDiff);
             if (this.getLevel() > 17) {
                 this.foodTickTimer += tickDiff;
                 if (this.foodTickTimer >= 80) {

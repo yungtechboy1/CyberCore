@@ -1,26 +1,57 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
+import cn.nukkit.Server;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.CorePlayer;
 
 public abstract class PowerAbility extends Power {
-    boolean Active = false;
+    private boolean Active = false;
+    private int DeActivatedTick = -1;
     public PowerAbility(BaseClass bc, int psc, int lvl) {
-        super(bc,psc, lvl);
+
+        super(bc, psc, lvl);
+        TickUpdate = 10;//Every 10 Ticks
     }
 
-    public int getRunTime(){
-        return getStage().getValue() * 20;
+    public int getRunTimeTick() {
+        return getStage().getValue()*20;//1-5 Secs
     }
 
-    public boolean isActive(){
+    public boolean isActive() {
         return Active;
     }
 
-    public void activate(){
-
+    public void setActive(boolean active) {
+        Active = active;
     }
 
+    private void activate() {
+        if (isActive()) return;
+        Active = true;
+        DeActivatedTick = Server.getInstance().getTick() + getRunTimeTick();
+    }
 
+    @Override
+    public void onTick(int tick) {
+        if (isActive()) {
+            if (tick >= DeActivatedTick) {
+                Active = false;
+                DeActivatedTick = -1;
+                onAbilityDeActivate();
+            }
+        }
+    }
+
+    @Override
+    public final Object usePower(CorePlayer cp, Object... args) {
+        activate();
+        onAbilityActivate();
+        return null;
+    }
+
+    public abstract void onAbilityActivate();
+
+    public abstract void onAbilityDeActivate();
 
 
 }

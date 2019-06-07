@@ -127,7 +127,9 @@ public abstract class BaseClass {
         return ClassTeir.values()[d];
     }
 
-    public abstract ClassType getTYPE();
+    public ClassType getTYPE(){
+        return TYPE;
+    }
 
     public abstract void SetPowers();
 

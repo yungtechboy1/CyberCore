@@ -1,13 +1,11 @@
-package net.yungtechboy1.CyberCore.Classes.New.Offense;
+package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.item.Item;
 import cn.nukkit.math.NukkitRandom;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
-import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
-import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
-import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassSettingsWindow;
 
 public class ClassSettingsKnightWindow extends ClassSettingsWindow {
     public ClassSettingsKnightWindow(Knight knight) {

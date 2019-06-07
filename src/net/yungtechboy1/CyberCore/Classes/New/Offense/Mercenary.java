@@ -60,11 +60,6 @@ public class Mercenary  extends BaseClass {
     }
 
     @Override
-    public ClassType getTYPE() {
-        return null;
-    }
-
-    @Override
     public void SetPowers() {
         AddPower(new MercenaryDoubleTake(this,getLVL()));
         AddPower(new MercenaryReneration(this,getLVL()));
@@ -82,11 +77,12 @@ public class Mercenary  extends BaseClass {
 
     @Override
     public void initBuffs() {
-        addBuff(new Buff(Buff.BuffType.Damage,1.35f));
+        addBuff(new Buff(Buff.BuffType.Damage,1.1f));
 //        addBuff(new Buff(Buff.BuffType.Armor,1.3f));
 //        addBuff(new Buff(Buff.BuffType.Health,4f));
         addDeBuff(new DeBuff(Buff.BuffType.Armor,.85f));
-//        addBuff(new Buff(Buff.BuffType.SwingSpeed,1.5f));
+        addBuff(new Buff(Buff.BuffType.Movement,.85f));
+        addBuff(new Buff(Buff.BuffType.SwingSpeed,1.2f));
 //        addBuff(new Buff(Buff.BuffType.SuperFoodHeartRegin,1f));
     }
 

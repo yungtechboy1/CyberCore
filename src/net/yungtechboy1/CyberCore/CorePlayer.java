@@ -1893,9 +1893,9 @@ public class CorePlayer extends Player {
         //TODO: Remove it in future! This a hack to solve the client-side absorption bug! WFT Mojang (Half a yellow heart cannot be shown, we can test it in local gaming)
         Attribute attr = Attribute.getAttribute(Attribute.MAX_HEALTH).setMaxValue(this.getAbsorption() % 2 != 0 ? this.getMaxHealth() + 1 : this.getMaxHealth()).setValue(health > 0 ? (health < getMaxHealth() ? health : getMaxHealth()) : 0);
 
-        System.out.println("PRINGING A LINE HEEERRRRRRRRRR");
+//        System.out.println("PRINGING A LINE HEEERRRRRRRRRR");
     if (this.spawned) {
-        System.out.println("PRINGING A LINE SEEEEEEEEEEEEEEEEEEEEE");
+//        System.out.println("PRINGING A LINE SEEEEEEEEEEEEEEEEEEEEE");
             UpdateAttributesPacket pk = new UpdateAttributesPacket();
             pk.entries = new Attribute[]{attr};
             pk.entityId = this.id;
