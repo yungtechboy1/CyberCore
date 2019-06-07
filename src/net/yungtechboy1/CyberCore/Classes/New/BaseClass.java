@@ -43,6 +43,11 @@ public abstract class BaseClass {
     protected final static int TYPE_Farming_LumberJack = 11;
     protected final static int TYPE_Farming_Miner = 12;
     public static int NONE = 0;
+
+    public ArrayList<CoolDown> getCOOLDOWNS() {
+        return COOLDOWNS;
+    }
+
     public ArrayList<CoolDown> COOLDOWNS = new ArrayList<>();
     public boolean Prime = false;
     public int PrimeKey = 0;
@@ -77,7 +82,7 @@ public abstract class BaseClass {
         put(Block.CLAY_BLOCK, 40);
     }};
     private CorePlayer P;
-    private ClassType TYPE = ClassType.Class_Miner_TNT_Specialist;
+    private ClassType TYPE;
     private int LVL = 0;
     private int XP = 0;
     private Ability ActiveAbility;
@@ -101,7 +106,6 @@ public abstract class BaseClass {
                 addXP(xpi);
             }
         }
-        startbuffs();
     }
 
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank) {
@@ -140,6 +144,7 @@ public abstract class BaseClass {
         for (DeBuff b : getDeBuffs().values()) {
             cp.addDeBuffFromClass(b);
         }
+        cp.initAllClassBuffs();
     }
 
     public HashMap<BuffType, Buff> addBuff(Buff o) {
@@ -245,9 +250,9 @@ public abstract class BaseClass {
 
     public ConfigSection export() {
         return new ConfigSection() {{
-            put("COOLDOWNS", COOLDOWNS);
-            put("XP", XP);
-            put("TYPE", TYPE.getKey());
+            put("COOLDOWNS", getCOOLDOWNS());
+            put("XP", getXP());
+            put("TYPE", getTYPE().ordinal());
         }};
     }
 

@@ -37,7 +37,7 @@ public class Class1OffenseWindow extends CyberFormSimple {
         int k = fapp.getClickedButtonId();
         switch (k) {
             case 0:
-                Knight ts = new Knight(_plugin, cp);
+                Knight ts = new Knight(_plugin, cp, null);
                 cp.SetPlayerClass(ts);
                 _plugin.ClassFactory.SaveClassToFile(cp);
                 cp.sendMessage("Class Set!");

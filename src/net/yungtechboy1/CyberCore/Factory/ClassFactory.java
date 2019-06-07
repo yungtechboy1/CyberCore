@@ -13,6 +13,7 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
@@ -48,6 +49,11 @@ public class ClassFactory implements Listener {
             CyberCoreMain.getInstance().getLogger().info("Error! Getting class from " + p.getClass());
             return null;
         }
+
+        if(p.GetPlayerClass() != null){
+            return p.GetPlayerClass();
+        }
+
         ConfigSection o = (ConfigSection) MMOSave.get(p.getName().toLowerCase());
         if (o != null) {
             BaseClass data = null;//new BaseClass(CCM, p, (ConfigSection) o);
@@ -58,7 +64,7 @@ public class ClassFactory implements Listener {
                 data = new TNTSpecialist(CCM, p, o);
             }
             if (o.getInt("TYPE", -1) == BaseClass.ClassType.Class_Offense_Knight.getKey()) {
-                data = new TNTSpecialist(CCM, p, o);
+                data = new Knight(CCM, p, o);
             }
 //            if (o.getInt("TYPE", -1) == BaseClass.ClassType.Class_Miner_TNT_Specialist.getKey()) {
 //                data = new TNTSpecialist(CCM, p, o);

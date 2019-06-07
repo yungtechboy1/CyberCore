@@ -10,6 +10,8 @@ import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassSettingsTNTWindow;
 
 public class Knight extends BaseClass {
 //    public Knight(CyberCoreMain main, Player player, int rank, int xp, ConfigSection cooldowns) {
@@ -17,8 +19,8 @@ public class Knight extends BaseClass {
 //        SwingTime = 27;
 //    }
 
-    public Knight(CyberCoreMain main, CorePlayer player) {
-        super(main, player, ClassType.Class_Miner_TNT_Specialist);
+    public Knight(CyberCoreMain main, CorePlayer player, ConfigSection data) {
+        super(main, player, ClassType.Class_Miner_TNT_Specialist, data);
     }
 
     @Override
@@ -68,6 +70,17 @@ public class Knight extends BaseClass {
     }
 
     @Override
+    public ConfigSection export() {
+        return super.export();
+    }
+
+
+    @Override
+    public CyberForm GetSettingsWindow() {
+        return new ClassSettingsKnightWindow( this);
+    }
+
+    @Override
     public int getMainID() {
         return BaseClass.TYPE_Offensive_Raider;
     }
@@ -77,7 +90,7 @@ public class Knight extends BaseClass {
         addBuff(new Buff(Buff.BuffType.Damage,1.5f));
         addBuff(new Buff(Buff.BuffType.Armor,1.3f));
         addBuff(new Buff(Buff.BuffType.Health,4f));
-        addDeBuff(new DeBuff(Buff.BuffType.Movement,.65f));
+        addDeBuff(new DeBuff(Buff.BuffType.Movement,1.65f));
         addDeBuff(new DeBuff(Buff.BuffType.SwingSpeed,1.5f));
         addBuff(new Buff(Buff.BuffType.SuperFoodHeartRegin,1f));
     }
