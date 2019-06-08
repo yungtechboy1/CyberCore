@@ -5,16 +5,15 @@ import cn.nukkit.event.Event;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
-import cn.nukkit.event.block.BlockEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
-import cn.nukkit.event.entity.EntityEvent;
-import cn.nukkit.event.player.PlayerEvent;
+import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
@@ -46,6 +45,15 @@ public class ClassFactory implements Listener {
     }
 
     public BaseClass GetClass(CorePlayer p) {
+        if (p == null) {
+            CyberCoreMain.getInstance().getLogger().info("Error! Getting class from " + p.getClass());
+            return null;
+        }
+
+        if(p.GetPlayerClass() != null){
+            return p.GetPlayerClass();
+        }
+
         ConfigSection o = (ConfigSection) MMOSave.get(p.getName().toLowerCase());
         if (o != null) {
             BaseClass data = null;//new BaseClass(CCM, p, (ConfigSection) o);
@@ -55,6 +63,15 @@ public class ClassFactory implements Listener {
             if (o.getInt("TYPE", -1) == BaseClass.ClassType.Class_Miner_TNT_Specialist.getKey()) {
                 data = new TNTSpecialist(CCM, p, o);
             }
+            if (o.getInt("TYPE", -1) == BaseClass.ClassType.Class_Offense_Knight.getKey()) {
+                data = new Knight(CCM, p, o);
+            }
+//            if (o.getInt("TYPE", -1) == BaseClass.ClassType.Class_Miner_TNT_Specialist.getKey()) {
+//                data = new TNTSpecialist(CCM, p, o);
+//            }
+//            if (o.getInt("TYPE", -1) == BaseClass.ClassType.Class_Miner_TNT_Specialist.getKey()) {
+//                data = new TNTSpecialist(CCM, p, o);
+//            }
 //                if (data != null) ClassList.put(p.getName().toLowerCase(), data);
             p.SetPlayerClass(data);
             return data;
@@ -88,30 +105,56 @@ public class ClassFactory implements Listener {
 //    }
 
     @EventHandler
-    public void OnEvent(Event event) {
-        CorePlayer cp = null;
-        if (event instanceof BlockEvent) {
-            if (event instanceof BlockPlaceEvent) {
-                cp = (CorePlayer) ((BlockPlaceEvent) event).getPlayer();
-            } else if (event instanceof BlockBreakEvent) {
-                cp = (CorePlayer) ((BlockBreakEvent) event).getPlayer();
-            }
-        } else if (event instanceof PlayerEvent) {
-            cp = (CorePlayer) ((PlayerEvent) event).getPlayer();
-        } else if (event instanceof EntityEvent) {
-            cp = (CorePlayer) ((EntityEvent) event).getEntity();
-        }
-
-        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    public void OnEvent(BlockPlaceEvent event) {
+        CorePlayer cp = (CorePlayer) ((BlockPlaceEvent) event).getPlayer();
         HandelEvent(event, cp);
-
     }
+
+    @EventHandler
+    public void OnEvent(BlockBreakEvent event) {
+        CorePlayer cp = (CorePlayer) ((BlockBreakEvent) event).getPlayer();
+        HandelEvent(event, cp);
+    }
+
+    @EventHandler
+    public void OnEvent(EntityDamageEvent event) {
+        if(event.getEntity() instanceof Player) {
+            CorePlayer cp = (CorePlayer) (event).getEntity();
+            HandelEvent(event, cp);
+//        } else {
+//            HandelEvent(event, null);
+        }
+    }
+
+//    @EventHandler
+//    public void OnEvent(EntityDamageByEntityEvent event) {
+//        CorePlayer cp = (CorePlayer) ((BlockPlaceEvent) event).getPlayer();
+//        HandelEvent(event, cp);
+//    }
+
+
+//    public void OnEvent(Event event) {
+//        CorePlayer cp = null;
+//        if (event instanceof 1) {
+//            if (event instanceof BlockPlaceEvent) {
+//            } else if (event instanceof BlockBreakEvent) {
+//                cp = (CorePlayer) ((BlockBreakEvent) event).getPlayer();
+//            }
+//        } else if (event instanceof PlayerEvent) {
+//            cp = (CorePlayer) ((PlayerEvent) event).getPlayer();
+//        } else if (event instanceof EntityEvent) {
+//            cp = (CorePlayer) ((EntityEvent) event).getEntity();
+//        }
+//
+//        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//        if (cp == null) System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//
+//    }
 
 /*
     public void OnEvent(Event event) {

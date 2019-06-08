@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
+import cn.nukkit.PlayerFood;
 import cn.nukkit.event.Event;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
@@ -23,7 +24,12 @@ public abstract class Power {
     public Effect PotionEffect = null;
     public int TickUpdate = -1;
     public CoolDown Cooldown = null;
-    int PowerSuccessChance = 100;
+
+    public int getPowerSuccessChance() {
+        return PowerSuccessChance;
+    }
+
+    private int PowerSuccessChance = 100;
     public boolean PlayerToggleable = true;
     int Level = 0;
     int DurationTicks = 0;
@@ -32,16 +38,23 @@ public abstract class Power {
         PlayerClass = b;
         Level = lvl;
         initStages();
+        initAfterCreation();
+    }
+    public void initAfterCreation(){
+
     }
 
+    public CorePlayer getPlayer(){
+        return PlayerClass.getPlayer();
+    }
+
+    //TODO IMPLEMENT
     public Event HandelEvent(Event event) {
         if (event instanceof CustomEntityDamageByEntityEvent) return CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
         return event;
     }
 
-    public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e){
-        return e;
-    }
+    public abstract CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e);
 
     public void setPowerSuccessChance(int powerSuccessChance) {
         PowerSuccessChance = powerSuccessChance;
@@ -70,6 +83,7 @@ public abstract class Power {
 
     public abstract PowerEnum getType();
 
+    //USE TO RUN
     public void InitPowerRun(Object... args){
         if(CanRun()){
             usePower(PlayerClass.getPlayer(),args);
@@ -85,9 +99,7 @@ public abstract class Power {
         return usePower(null, args);
     }
 
-    public Object usePower(CorePlayer cp, Object... args) {
-        return null;
-    }
+    public abstract Object usePower(CorePlayer cp, Object... args);
 
     public boolean CanRun(boolean force, Object... args) {
         if(force)return true;

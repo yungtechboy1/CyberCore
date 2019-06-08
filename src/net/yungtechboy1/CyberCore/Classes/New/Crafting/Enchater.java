@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Classes.New.Crafting;
 import cn.nukkit.Player;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -48,12 +49,29 @@ public class Enchater extends BaseClass {
     }
 
     @Override
+    public ClassType getTYPE() {
+        return ClassType.Class_Magic_Enchanter;
+    }
+
+    @Override
     public void SetPowers() {
 
     }
 
     @Override
-    public Object RunPower(int powerid, Object... args) {
+    public void initBuffs() {
+
+    }
+
+    @Override
+    public Object RunPower(PowerEnum powerid, Object... args) {
         return null;
     }
+
+
+    @Override
+    public String getName() {
+        return "Enchanter";
+    }
+
 }

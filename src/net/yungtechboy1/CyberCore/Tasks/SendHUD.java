@@ -76,6 +76,7 @@ public class SendHUD extends Thread implements InterruptibleThread {
         }
 
         String f = "";
+        f += TextFormat.GRAY + " ----------- " + TextFormat.GREEN + "Hunger " + p.getFoodData().getLevel() + " HP: " + p.getHealth() + " MX/HP:" + p.getMaxHealth() + TextFormat.GRAY + " ----------- " + TextFormat.RESET + "\n";
         if (!p.Settings.isHudPosOff())
             f += TextFormat.GRAY + " ----------- " + TextFormat.GREEN + "X: " + px + " Y: " + py + " Z:" + pz + TextFormat.GRAY + " ----------- " + TextFormat.RESET + "\n";
         if (!p.Settings.isHudFactionOff())
@@ -90,5 +91,7 @@ public class SendHUD extends Thread implements InterruptibleThread {
             }
         }
         p.sendTip(f);
+        //HACK TO SEND CORRECT HEALTH TO CLIENT
+        p.sendHealth();
     }
 }

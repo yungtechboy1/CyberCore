@@ -3,7 +3,6 @@ package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.element.ElementToggle;
 import cn.nukkit.form.response.FormResponseCustom;
-import cn.nukkit.form.window.FormWindow;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormCustom;
@@ -25,11 +24,12 @@ public class PlayerFactionSettingsPage0  extends CyberFormCustom {
 
 
     @Override
-    public void onRun(CorePlayer cp) {
+    public boolean onRun(CorePlayer cp) {
         super.onRun(cp);
         FormResponseCustom fap = getResponse();
         cp.Settings.updateFromWindow(fap);
         cp.sendMessage("Settings Updated!");
         cp.showFormWindow(new SettingsPage0());
+        return false;
     }
 }

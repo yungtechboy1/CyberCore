@@ -16,7 +16,7 @@ public class FactionInvited extends CyberFormModal {
 
 
     @Override
-    public void onRun(CorePlayer cp) {
+    public boolean onRun(CorePlayer cp) {
         super.onRun(cp);
         FormResponseModal frsi =  getResponse();
         if (cp.FactionInvite != null) {
@@ -35,5 +35,6 @@ public class FactionInvited extends CyberFormModal {
             }
         }
         cp.ClearFactionInvite();
+        return false;
     }
 }

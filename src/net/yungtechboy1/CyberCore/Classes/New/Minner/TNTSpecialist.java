@@ -2,14 +2,12 @@ package net.yungtechboy1.CyberCore.Classes.New.Minner;
 
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.TNTSpecialistPower;
 import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
-import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassHowToUse;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassHowToUseTNT;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassSettingsTNTWindow;
 
@@ -50,7 +48,7 @@ public class TNTSpecialist extends MinnerBaseClass {
 
     @Override
     public void SetPowers() {
-        AddPower(new TNTSpecialistPower(getLVL(), 3, GetMaxTNTPower()));
+        AddPower(new TNTSpecialistPower(this, getLVL(), 3, GetMaxTNTPower()));
     }
 
     @Override
@@ -58,7 +56,7 @@ public class TNTSpecialist extends MinnerBaseClass {
         if (powerid == PowerEnum.TNTSpecalist && args.length == 1) {
             System.out.println("GGGGGG");
             CorePlayer p = (CorePlayer) args[0];
-            TNTSpecialistPower tsp = (TNTSpecialistPower) GetPower(PowerEnum.TNTSpecalist);
+            TNTSpecialistPower tsp = (TNTSpecialistPower) getPower(PowerEnum.TNTSpecalist);
             tsp.UsePower(p, getFuse());
             System.out.println("aaaaaa" + p.getClass().getName());
         } else {
@@ -117,9 +115,9 @@ public class TNTSpecialist extends MinnerBaseClass {
 //        }
 
     public int GetTNTAddWaitTime() {
-        double t = Math.sqrt(40*getLVL())*13*getLVL();
-        double b = 8*getLVL();
-            return (int)(240 - (t/b));
+        double t = Math.sqrt(40 * getLVL()) * 13 * getLVL();
+        double b = 8 * getLVL();
+        return (int) (240 - (t / b));
 //        return 10;
     }
 
@@ -137,7 +135,7 @@ public class TNTSpecialist extends MinnerBaseClass {
         if (tntaddcd == null) {
             AddCooldown(TNT_Specialist_Add_Tick, GetTNTAddWaitTime());
             //Add Tnt
-            ((TNTSpecialistPower) Powers.get(Power_TNT_Specialist)).AddAvailbleQuantity();
+            ((TNTSpecialistPower) getPower(PowerEnum.TNTSpecalist)).AddAvailbleQuantity();
         }
     }
 
@@ -158,7 +156,7 @@ public class TNTSpecialist extends MinnerBaseClass {
     public String FormatHudText() {
         String f = super.FormatHudText();
         //Show TNT Power
-        TNTSpecialistPower p = (TNTSpecialistPower) GetPower(PowerEnum.TNTSpecalist);
+        TNTSpecialistPower p = (TNTSpecialistPower) getPower(PowerEnum.TNTSpecalist);
         if (p == null) return f;
         int q = p.getAvailbleQuantity();
         int m = p.getMaxAvailbleQuantity();
@@ -168,7 +166,7 @@ public class TNTSpecialist extends MinnerBaseClass {
 
     @Override
     public CyberForm GetSettingsWindow() {
-        return new ClassSettingsTNTWindow(this);
+        return new ClassSettingsTNTWindow( this);
     }
 
     @Override

@@ -4,6 +4,7 @@ import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
+import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.TNTAirStrikePower;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -40,7 +41,7 @@ public class DarkKnight  extends BaseClass {
     }
 
     @Override
-    public Object RunPower(int powerid, Object... args) {
+    public Object RunPower(PowerEnum powerid, Object... args) {
         return null;
     }
 

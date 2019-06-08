@@ -3,12 +3,14 @@ package net.yungtechboy1.CyberCore.Classes.Power;
 import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
 import cn.nukkit.potion.Effect;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class MineLifePower extends Power {
-    public MineLifePower(int level) {
-        super(((int) Math.floor(.65d * level) + 1), level);
+    public MineLifePower(BaseClass b,int level) {
+        super(b,((int) Math.floor(.65d * level) + 1), level);
         int psc = ((int) Math.floor(.65d * level) + 1);
 
 //        PotionEffect = new
@@ -35,8 +37,8 @@ public class MineLifePower extends Power {
     }
 
     @Override
-    public int getType() {
-        return Power.MineLife;
+    public PowerEnum getType() {
+        return PowerEnum.MineLife;
     }
 
     @Override
@@ -88,6 +90,11 @@ public class MineLifePower extends Power {
     public Object usePower(Item itemInHand, Block target, double cbreakTime) {
         return GetBreakTime(itemInHand, target, cbreakTime);
 
+    }
+
+    @Override
+    public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e) {
+        return e;
     }
 
     @Override

@@ -8,7 +8,9 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.DoubleTag;
 import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Power;
 
 /**
@@ -16,8 +18,13 @@ import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Power;
  */
 public class TNTSpecialistPower extends PowerStackable {
 
-    public TNTSpecialistPower(int lvl, int aq, int maq) {
-        super(100, lvl, aq, maq);
+    public TNTSpecialistPower(BaseClass b, int lvl, int aq, int maq) {
+        super(b,100, lvl, aq, maq);
+    }
+
+    @Override
+    public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e) {
+        return e;
     }
 
     @Override
@@ -26,12 +33,11 @@ public class TNTSpecialistPower extends PowerStackable {
     }
 
     @Override
-    public Object usePower(Object ...args) {
+    public Object usePower(CorePlayer cp, Object... args) {
         System.out.println("NO USEDDDDD>>>>>"+GetTNTMotionPower());
-        if(args != null && args.length == 2){
-            CorePlayer p = (CorePlayer) args[0];
-            int fuse = (int)args[1];
-            UsePower(p,fuse);
+        if(args != null && args.length == 1){
+            int fuse = (int)args[0];
+            UsePower(cp,fuse);
         }
         return null;
     }

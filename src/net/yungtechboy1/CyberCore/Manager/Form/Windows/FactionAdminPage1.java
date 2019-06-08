@@ -40,7 +40,7 @@ public class FactionAdminPage1 extends CyberFormSimple {
 
 
     @Override
-    public void onRun(CorePlayer cp) {
+    public boolean onRun(CorePlayer cp) {
         super.onRun(cp);
         FormResponseSimple fap = getResponse();
         int id = fap.getClickedButtonId();
@@ -95,5 +95,6 @@ public class FactionAdminPage1 extends CyberFormSimple {
             case 10:
                 CyberCoreMain.getInstance().SpawnShop.OpenShop(cp,1);
         }
+        return false;
     }
 }

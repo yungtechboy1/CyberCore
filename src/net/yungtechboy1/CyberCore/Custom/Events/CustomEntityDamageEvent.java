@@ -16,31 +16,16 @@ import java.util.Map;
  */
 public class CustomEntityDamageEvent extends EntityEvent implements Cancellable {
 
-    private boolean isCancelled = false;
     private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
-
-    private final CustomDamageCause cause;
-
     public final Map<CustomDamageModifier, Float> modifiers;
     public final Map<CustomDamageModifier, Float> originals;
+    private final CustomDamageCause cause;
     public Entity entity;
-
-    public int getCoolDownTicks() {
-        return CoolDownTicks;
-    }
-
-    public void setCoolDownTicks(int coolDownTicks) {
-        CoolDownTicks = coolDownTicks;
-    }
-
+    private boolean isCancelled = false;
     private int CoolDownTicks = 20;
 
     public CustomEntityDamageEvent(Entity entity, CustomDamageCause cause, float damage) {
-        this(entity, cause, new EnumMap<>(CustomDamageModifier.class) {
+        this(entity, cause, new EnumMap<CustomDamageModifier, Float>(CustomDamageModifier.class) {
             {
                 put(CustomDamageModifier.BASE, damage);
             }
@@ -63,6 +48,17 @@ public class CustomEntityDamageEvent extends EntityEvent implements Cancellable 
         }
     }
 
+    public static HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public int getCoolDownTicks() {
+        return CoolDownTicks;
+    }
+
+    public void setCoolDownTicks(int coolDownTicks) {
+        CoolDownTicks = coolDownTicks;
+    }
 
     public CustomDamageCause getCause() {
         return cause;
@@ -117,14 +113,14 @@ public class CustomEntityDamageEvent extends EntityEvent implements Cancellable 
     }
 
     @Override
-    public void setCancelled() {
-        setCancelled(true);
-    }
-
-    @Override
     public void setCancelled(boolean forceCancel) {
 
         isCancelled = forceCancel;
+    }
+
+    @Override
+    public void setCancelled() {
+        setCancelled(true);
     }
 
     public enum CustomDamageModifier {
@@ -226,6 +222,23 @@ public class CustomEntityDamageEvent extends EntityEvent implements Cancellable 
         /**
          * Damage caused by hunger
          */
-        HUNGER
+        HUNGER, DoubleTakeMagic(EntityDamageEvent.DamageCause.MAGIC);
+
+        EntityDamageEvent.DamageCause CDC = null;
+
+        CustomDamageCause(EntityDamageEvent.DamageCause dc) {
+            CDC = dc;
+        }
+
+        CustomDamageCause() {
+        }
+
+
+        public EntityDamageEvent.DamageCause getEntityDamageEventCause() {
+            if (ordinal() > HUNGER.ordinal()) {
+                return CDC;
+            }
+            return EntityDamageEvent.DamageCause.values()[this.ordinal()];
+        }
     }
 }

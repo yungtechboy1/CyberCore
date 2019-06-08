@@ -15,7 +15,7 @@ public class FactionConfirmDelete extends CyberFormModal {
 
 
     @Override
-    public void onRun(CorePlayer cp) {
+    public boolean onRun(CorePlayer cp) {
         super.onRun(cp);
         FormResponseModal fi = getResponse();
         if(fi.getClickedButtonId() == 0 && _Fac != null) {
@@ -23,5 +23,6 @@ public class FactionConfirmDelete extends CyberFormModal {
             _Fac.BroadcastMessage(FactionsMain.NAME + TextFormat.YELLOW + "!!~~!!Faction has been Deleted by " + cp.getName());
             CyberCoreMain.getInstance().FM.FFactory.RemoveFaction(_Fac);
         }
+        return false;
     }
 }

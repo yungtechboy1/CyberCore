@@ -28,19 +28,19 @@ public class FactionCreate0Error extends CyberFormCustom {
 
 
     @Override
-    public void onRun(CorePlayer cp) {
+    public boolean onRun(CorePlayer cp) {
         super.onRun(cp);
         new FormWindowModal("CyberFactions | Create Faction (2/2)!", "Faction Created!", "OK", "OK");
         FormResponseCustom frc = (FormResponseCustom) getResponse();
         String fn = frc.getInputResponse(1);
 
-        if (fn == null || fn.length() == 0) return;
+        if (fn == null || fn.length() == 0) return false;
         System.out.println("PRINGING THE NAME " + fn);
         int r = _plugin.FM.FFactory.CheckFactionName(fn);
         if (r != 0) {
             FactionString fs = FactionsMain.getInstance().TextList.getOrDefault(r, null);
             cp.showFormWindow(new FactionCreate0Error(fs));
-            return;
+            return false;
         }
         String motd = frc.getInputResponse(2);
         boolean privacy = frc.getToggleResponse(4);
@@ -49,5 +49,6 @@ public class FactionCreate0Error extends CyberFormCustom {
         if (f == null) {
             cp.sendMessage(Error_SA223.getMsg());
         }
+        return privacy;
     }
 }

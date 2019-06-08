@@ -7,6 +7,7 @@ import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.Classes.Power.Mercenary.MercenaryDoubleTake;
 import net.yungtechboy1.CyberCore.Classes.Power.Mercenary.MercenaryReneration;
+import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
@@ -24,9 +25,9 @@ public class Mercenary  extends BaseClass {
 
     @Override
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
-        Player p = (Player)event.entity;
-        float ad = event.getDamage(CustomEntityDamageEvent.CustomDamageModifier.BASE) * -.1f;
-        event.setDamage(ad, CustomEntityDamageEvent.CustomDamageModifier.MODIFIER_ARMOR_ABILLITY);
+//        CorePlayer p = event.getDamager();
+//        float ad = event.getDamage(CustomEntityDamageEvent.CustomDamageModifier.BASE) * -.1f;
+//        event.setDamage(ad, CustomEntityDamageEvent.CustomDamageModifier.MODIFIER_ARMOR_ABILLITY);
         event.setCoolDownTicks(SwingTime);
         return event;
     }
@@ -47,8 +48,10 @@ public class Mercenary  extends BaseClass {
         return 4;
     }
 
-
-
+    @Override
+    public Object RunPower(PowerEnum powerid, Object... args) {
+        return null;
+    }
 
 
     @Override
@@ -74,16 +77,13 @@ public class Mercenary  extends BaseClass {
 
     @Override
     public void initBuffs() {
-        addBuff(new Buff(Buff.BuffType.Damage,1.35f));
+        addBuff(new Buff(Buff.BuffType.Damage,1.1f));
 //        addBuff(new Buff(Buff.BuffType.Armor,1.3f));
 //        addBuff(new Buff(Buff.BuffType.Health,4f));
         addDeBuff(new DeBuff(Buff.BuffType.Armor,.85f));
-//        addBuff(new Buff(Buff.BuffType.SwingSpeed,1.5f));
+        addBuff(new Buff(Buff.BuffType.Movement,.85f));
+        addBuff(new Buff(Buff.BuffType.SwingSpeed,1.2f));
 //        addBuff(new Buff(Buff.BuffType.SuperFoodHeartRegin,1f));
     }
 
-    @Override
-    public Object RunPower(int powerid, Object... args) {
-        return null;
-    }
 }

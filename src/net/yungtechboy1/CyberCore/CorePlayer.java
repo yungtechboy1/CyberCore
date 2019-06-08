@@ -1,14 +1,17 @@
 package net.yungtechboy1.CyberCore;
 
+import cn.nukkit.AdventureSettings;
 import cn.nukkit.Player;
 import cn.nukkit.PlayerFood;
 import cn.nukkit.Server;
 import cn.nukkit.block.*;
 import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.blockentity.BlockEntitySpawnable;
+import cn.nukkit.entity.Attribute;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.event.player.*;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.form.window.FormWindow;
@@ -32,12 +35,16 @@ import cn.nukkit.network.SourceInterface;
 import cn.nukkit.network.protocol.*;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.potion.Potion;
+import cn.nukkit.utils.DummyBossBar;
 import cn.nukkit.utils.TextFormat;
 import co.aikar.timings.Timing;
 import co.aikar.timings.Timings;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.New.Buff;
+import net.yungtechboy1.CyberCore.Classes.New.BuffOrigin;
+import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
-import net.yungtechboy1.CyberCore.Classes.Power.Power;
+import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.CustomCraftingTransaction;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
@@ -47,8 +54,8 @@ import net.yungtechboy1.CyberCore.Custom.CustomInventoryTransactionPacket;
 import net.yungtechboy1.CyberCore.Custom.CustomNetworkInventoryAction;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
-import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse;
 import net.yungtechboy1.CyberCore.Data.HomeData;
+import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse;
 import net.yungtechboy1.CyberCore.Factory.Shop.ShopInv;
 import net.yungtechboy1.CyberCore.Factory.Shop.Spawner.SpawnerShop;
 import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
@@ -95,6 +102,9 @@ public class CorePlayer extends Player {
     public AuctionHouse AH = null;
     public ShopInv Shop = null;
     public SpawnerShop SpawnerShop = null;
+    public CombatData Combat = null;
+    public float CustomMovementSpeed = 0.1f;
+    public int CustomExtraHP = 0;
     long uct = 0;
     boolean uw = false;
     private FormWindow nw;
@@ -114,32 +124,140 @@ public class CorePlayer extends Player {
     private int FactionCheck = -1;
     private HashMap<String, CoolDown> CDL = new HashMap<>();
     private CustomCraftingTransaction cct;
-    public CombatData Combat = null;
-
-    public class CombatData{
-        public int Tick = -1;
-        public CombatData(int tick){
-            Tick = tick;
-        }
-
-        public int getTick(int a) {
-            return Tick + a;
-        }
-        public int getTick() {
-            return getTick(0);
-        }
-    }
+    private HashMap<BuffOrigin, HashMap<Buff.BuffType, Buff>> Bufflist = new HashMap<BuffOrigin, HashMap<Buff.BuffType, Buff>>() {{
+        put(BuffOrigin.Class, new HashMap<>());
+    }};
+    private HashMap<BuffOrigin, HashMap<Buff.BuffType, DeBuff>> DeBufflist = new HashMap<BuffOrigin, HashMap<Buff.BuffType, DeBuff>>() {{
+        put(BuffOrigin.Class, new HashMap<>());
+    }};
+    private int BaseSwingSpeed = 7;//Was 10 but felt too slow for good PVP
+    private CoolDownTick SwingCooldown = new CoolDownTick();
 
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
         super(interfaz, clientID, ip, port);
     }
 
+    public HashMap<BuffOrigin, HashMap<Buff.BuffType, Buff>> getBufflist() {
+        return (HashMap<BuffOrigin, HashMap<Buff.BuffType, Buff>>) Bufflist.clone();
+    }
+
+    public HashMap<BuffOrigin, HashMap<Buff.BuffType, DeBuff>> getDeBufflist() {
+        return (HashMap<BuffOrigin, HashMap<Buff.BuffType, DeBuff>>) DeBufflist.clone();
+    }
+
+    public HashMap<Buff.BuffType, DeBuff> getClassDeBuffList() {
+        return (HashMap<Buff.BuffType, DeBuff>) getDeBufflist().get(BuffOrigin.Class).clone();
+    }
+
+    public HashMap<Buff.BuffType, Buff> getClassBuffList() {
+        return (HashMap<Buff.BuffType, Buff>) getBufflist().get(BuffOrigin.Class).clone();
+    }
+
+    @Deprecated
+    //TODO
+    public void clearClassBuffs() {
+
+    }
+
+    //Used by BaseClass to update players effects and buffs, Debuffs
+    public void initAllClassBuffs() {
+        initClassDeBuffs();
+        initClassBuffs();
+    }
+
+    public void initClassDeBuffs() {
+        //Class
+        for (DeBuff b : getClassDeBuffList().values()) {
+            switch (b.getBt()) {
+                case Movement:
+                    CustomMovementSpeed = (DEFAULT_SPEED / b.getAmount());
+                    setMovementSpeed(CustomMovementSpeed, true);
+                    break;
+//                case SwingSpeed: NO NEED
+                //COPY
+//                case SwingSpeed:
+//                    CustomMovementSpeed= (DEFAULT_SPEED / b.getAmount());
+//                    setMovementSpeed(CustomMovementSpeed,true);
+//                    break;
+            }
+        }
+    }
+
+    public void initClassBuffs() {
+        //Class
+        for (Buff b : getClassBuffList().values()) {
+            switch (b.getBt()) {
+                case Movement:
+                    CustomMovementSpeed = (DEFAULT_SPEED * b.getAmount());
+                    setMovementSpeed(CustomMovementSpeed, true);
+                    break;
+                case Health:
+                    CustomExtraHP = (int) b.getAmount();
+                    setMaxHealth(20 + CustomExtraHP);
+                    sendAttributes();
+                    ;
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public float getHealth() {
+        return super.getHealth();
+    }
+
+    @Override
+    public int getMaxHealth() {
+        return (20 + (this.hasEffect(Effect.HEALTH_BOOST) ? 4 * (this.getEffect(Effect.HEALTH_BOOST).getAmplifier() + 1) : 0)) + CustomExtraHP;
+    }
+
+    public void addBuffFromClass(Buff b) {
+        if (b == null) return;
+        if (!Bufflist.containsKey(BuffOrigin.Class) || Bufflist.get(BuffOrigin.Class) == null) {
+            HashMap<Buff.BuffType, Buff> hash = new HashMap<Buff.BuffType, Buff>();
+            hash.put(b.getBt(), b);
+            Bufflist.put(BuffOrigin.Class, hash);
+        } else {
+            HashMap<Buff.BuffType, Buff> bm = Bufflist.get(BuffOrigin.Class);
+            bm.put(b.getBt(), b);
+            Bufflist.put(BuffOrigin.Class, bm);
+        }
+    }
+
+    public void addDeBuffFromClass(DeBuff b) {
+        if (b == null) return;
+        if (!DeBufflist.containsKey(BuffOrigin.Class) || DeBufflist.get(BuffOrigin.Class) == null) {
+            HashMap<Buff.BuffType, DeBuff> hash = new HashMap<Buff.BuffType, DeBuff>();
+            hash.put(b.getBt(), b);
+            DeBufflist.put(BuffOrigin.Class, hash);
+        } else {
+            HashMap<Buff.BuffType, DeBuff> bm = DeBufflist.get(BuffOrigin.Class);
+            bm.put(b.getBt(), b);
+            DeBufflist.put(BuffOrigin.Class, bm);
+        }
+    }
+
     public void SetPlayerClass(BaseClass bc) {
         PlayerClass = bc;
+        if (PlayerClass != null) PlayerClass.initBuffs();
     }
 
     public BaseClass GetPlayerClass() {
         return PlayerClass;
+    }
+
+    @Override
+    public void sendAttributes() {
+        UpdateAttributesPacket pk = new UpdateAttributesPacket();
+        pk.entityId = this.getId();
+        pk.entries = new Attribute[]{
+                Attribute.getAttribute(Attribute.MAX_HEALTH).setMaxValue(this.getMaxHealth()).setValue(health > 0 ? (health < getMaxHealth() ? health : getMaxHealth()) : 0),
+                Attribute.getAttribute(Attribute.MAX_HUNGER).setValue(this.getFoodData().getLevel()),
+                Attribute.getAttribute(Attribute.MOVEMENT_SPEED).setValue(this.getMovementSpeed()),
+                Attribute.getAttribute(Attribute.EXPERIENCE_LEVEL).setValue(this.getExperienceLevel()),
+                Attribute.getAttribute(Attribute.EXPERIENCE).setValue(((float) this.getExperience()) / calculateRequireExperience(this.getExperienceLevel()))
+        };
+        this.dataPacket(pk);
     }
 
     public boolean isInTeleportingProcess() {
@@ -252,6 +370,11 @@ public class CorePlayer extends Player {
         return true;
     }
 
+    @Override
+    public float getMovementSpeed() {
+        return super.getMovementSpeed();
+    }
+
     public void TakeMoney(double price) {
         if (price <= 0) return;
         PlayerEconData ped = GetData();
@@ -322,24 +445,42 @@ public class CorePlayer extends Player {
         if (!uw) super.fall(fallDistance);
     }
 
-    public void enterCombat(){
+    public void enterCombat() {
+        if (Combat == null) sendMessage(TextFormat.YELLOW + "You are now in combat!");
         Combat = new CombatData(getServer().getTick());
-        sendMessage(TextFormat.YELLOW+"You are now in combat!");
     }
 
-    public final boolean isinCombat(){
+    public final boolean isinCombat() {
         return checkCombat();
     }
 
-    public boolean checkCombat(){
-        if(Combat == null)return false;
-        if(Combat.getTick(20*5) < getServer().getTick() ) {
+    public boolean checkCombat() {
+        if (Combat == null) return false;
+        if (Combat.getTick() < getServer().getTick()) {
             leaveCombat();
             return false;
         }
         return true;
     }
 
+    public int getBaseSwingSpeed() {
+        return BaseSwingSpeed;
+    }
+
+    public int getAttackTime() {
+        Buff b = getClassBuffList().get(Buff.BuffType.SwingSpeed);
+        DeBuff db = getClassDeBuffList().get(Buff.BuffType.SwingSpeed);
+        if (b == null) b = new Buff(Buff.BuffType.NULL, 1);
+        if (db == null) db = new DeBuff(Buff.BuffType.NULL, 1);
+        return (int) Math.floor((getBaseSwingSpeed() * b.getAmount()) / db.getAmount());
+    }
+
+    public boolean attack(CustomEntityDamageEvent source) {
+        getServer().getPluginManager().callEvent(source);
+        if(source.isCancelled())return false;
+        setHealth(getHealth()-source.getFinalDamage());
+        return true;
+    }
     @Override
     public boolean attack(EntityDamageEvent source) {
         ArrayList<EntityDamageEvent.DamageCause> da = new ArrayList<>();
@@ -366,8 +507,13 @@ public class CorePlayer extends Player {
                     if (bsl >= 3) return false;
             }
         }
-        if(super.attack(source)){
+        if (attackTime > 0) {
+            sendMessage(TextFormat.YELLOW + "YOU STILL HAVE SWING COOLDONW!!!!!!");
+        }
+
+        if (super.attack(source)) {
             enterCombat();
+//            attackTime = getAttackTime();
             return true;
         }
         return false;
@@ -491,7 +637,6 @@ public class CorePlayer extends Player {
         return id;
     }
 
-
     @Override
     public void handleDataPacket(DataPacket packet) {
         if (!connected) {
@@ -512,6 +657,7 @@ public class CorePlayer extends Player {
 
             packetswitch:
             switch (packet.pid()) {
+
                 case ProtocolInfo.MODAL_FORM_RESPONSE_PACKET:
                     if (!this.spawned || !this.isAlive()) {
                         break;
@@ -811,6 +957,11 @@ public class CorePlayer extends Player {
                                         }
                                         break;
                                     case InventoryTransactionPacket.USE_ITEM_ON_ENTITY_ACTION_ATTACK:
+                                        if (SwingCooldown.isValid()) {
+                                            sendTip(TextFormat.GRAY + "Class: Swing Cooldown");
+//                                            sendTitle(TextFormat.GRAY + "Class: Swing Cooldown");
+                                            break;
+                                        }
                                         float itemDamage = item.getAttackDamage();
 
                                         for (Enchantment enchantment : item.getEnchantments()) {
@@ -836,11 +987,11 @@ public class CorePlayer extends Player {
                                         CustomEntityDamageByEntityEvent centityDamageByEntityEvent =
                                                 new CustomEntityDamageByEntityEvent(this, target, CustomEntityDamageEvent.CustomDamageCause.ENTITY_ATTACK, itemDamage);
                                         BaseClass bc = GetPlayerClass();
-                                        if(bc != null){
+                                        if (bc != null) {
                                             bc.HandelEvent(centityDamageByEntityEvent);
                                         }
                                         getServer().getPluginManager().callEvent(centityDamageByEntityEvent);
-                                        if(centityDamageByEntityEvent.isCancelled())break;
+                                        if (centityDamageByEntityEvent.isCancelled()) break;
                                         EntityDamageByEntityEvent entityDamageByEntityEvent = new EntityDamageByEntityEvent(this, target, EntityDamageEvent.DamageCause.ENTITY_ATTACK, damage);
                                         if (this.isSpectator()) entityDamageByEntityEvent.setCancelled();
                                         if ((target instanceof Player) && !this.level.getGameRules().getBoolean(GameRule.PVP)) {
@@ -853,6 +1004,10 @@ public class CorePlayer extends Player {
                                             }
                                             break;
                                         }
+
+                                        //When you Successfully Attack Someone
+                                        enterCombat();
+                                        SwingCooldown = new CoolDownTick().setTimeTick(getAttackTime());
 
                                         for (Enchantment enchantment : item.getEnchantments()) {
                                             enchantment.doPostAttack(this, target);
@@ -1082,8 +1237,8 @@ public class CorePlayer extends Player {
                                 double breakTime = Math.ceil(target.getBreakTime(this.inventory.getItemInHand(), this) * 20);
                                 if (PlayerClass != null) {
                                     double obreaktime = breakTime;
-                                    if (PlayerClass instanceof MineLifeClass && PlayerClass.TryRunPower(Power.MineLife)) {
-                                        Object nbt = ((MineLifeClass) PlayerClass).RunPower(Power.MineLife, this.inventory.getItemInHand(), target, breakTime);
+                                    if (PlayerClass instanceof MineLifeClass && PlayerClass.TryRunPower(PowerEnum.MineLife)) {
+                                        Object nbt = ((MineLifeClass) PlayerClass).RunPower(PowerEnum.MineLife, this.inventory.getItemInHand(), target, breakTime);
                                         if (nbt != null) {
                                             double nd = (double) nbt;
                                             if (nd > 0) {
@@ -1181,130 +1336,237 @@ public class CorePlayer extends Player {
 //        return null;
     }
 
-    public void leaveCombat(){
+    public void leaveCombat() {
         Combat = null;
-        sendMessage(TextFormat.GREEN+"You are now out of Combat!");
+        sendMessage(TextFormat.GREEN + "You are now out of Combat!");
     }
 
     @Override
     public boolean onUpdate(int currentTick) {
         //Check for Faction!
-        if (currentTick % 5 == 0) {
-            if (!CooldownLock && isAlive() && spawned) {
-                if(Combat != null){
-                    if(Combat.getTick(5*20) < currentTick){
-                        //No Long in combat
-                        leaveCombat();
+        if (this.spawned) {
+            if (currentTick % 5 == 0) {
+                if (!CooldownLock && isAlive() && spawned) {
+                    if (Combat != null) {
+                        if (Combat.getTick() < currentTick) {
+                            //No Long in combat
+                            leaveCombat();
+                        }
                     }
-                }
 
-                CooldownLock = true;
+                    CooldownLock = true;
 //            CyberCoreMain.getInstance().getLogger().info("RUNNNING "+CDL.size());
-                CoolDown fc = GetCooldown(Cooldown_Faction, true);
-                if (fc == null) {
+                    CoolDown fc = GetCooldown(Cooldown_Faction, true);
+                    if (fc == null) {
 //                    CyberCoreMain.getInstance().getLogger().info("RUNNNING FACTION CHECK IN CP" + CDL.size());
-                    AddCoolDown(Cooldown_Faction, 60);//3 mins
-                    if (Faction == null) {
-                        Faction f = CyberCoreMain.getInstance().FM.FFactory.IsPlayerInFaction(this);
-                        if (f == null) {
-                            Faction = null;
-                        } else {
-                            Faction = f.GetName();
+                        AddCoolDown(Cooldown_Faction, 60);//3 mins
+                        if (Faction == null) {
+                            Faction f = CyberCoreMain.getInstance().FM.FFactory.IsPlayerInFaction(this);
+                            if (f == null) {
+                                Faction = null;
+                            } else {
+                                Faction = f.GetName();
+                            }
+                        }
+                        //Check to See if Faction Invite Expired
+                        if (FactionInvite != null && FactionInviteTimeout > 0) {
+                            int t = CyberCoreMain.getInstance().GetIntTime();
+                            if (t < FactionInviteTimeout) {
+                                Faction fac = CyberCoreMain.getInstance().FM.FFactory.getFaction(FactionInvite);
+                                fac.BroadcastMessage(TextFormat.YELLOW + getName() + " has declined your faction invite");
+                                ClearFactionInvite(true);
+                            }
                         }
                     }
-                    //Check to See if Faction Invite Expired
-                    if (FactionInvite != null && FactionInviteTimeout > 0) {
-                        int t = CyberCoreMain.getInstance().GetIntTime();
-                        if (t < FactionInviteTimeout) {
-                            Faction fac = CyberCoreMain.getInstance().FM.FFactory.getFaction(FactionInvite);
-                            fac.BroadcastMessage(TextFormat.YELLOW + getName() + " has declined your faction invite");
-                            ClearFactionInvite(true);
-                        }
-                    }
-                }
-                //Class Check
+                    //Class Check
 
-                //FIX HERE
-                //TODO FIX HERE
-                CoolDown cc = GetCooldown(Cooldown_Class, true);
-                if (cc == null) {
+                    //FIX HERE
+                    //TODO FIX HERE
+                    CoolDown cc = GetCooldown(Cooldown_Class, true);
+                    if (cc == null) {
 //                    CyberCoreMain.getInstance().getLogger().info("RUNNNING CLASS CHECK IN CP" + CDL.size());
-                    AddCoolDown(Cooldown_Class, 5);
-                    BaseClass bc = GetPlayerClass();
-                    if (bc != null) bc.onUpdate(currentTick);
-                }
-                CooldownLock = false;
-            }
-        }
-
-
-        //Check to see if Player as medic or Restoration
-        PlayerFood pf = getFoodData();
-        if (TPR != null && TPRTimeout != 0 && TPRTimeout < currentTick && !isInTeleportingProcess) {
-            TPRTimeout = 0;
-            CorePlayer cp = CyberCoreMain.getInstance().getCorePlayer(TPR);
-            if (cp != null) cp.sendPopup(TextFormat.YELLOW + "Teleport request expired");
-            sendPopup(TextFormat.YELLOW + "Teleport request expired");
-            TPR = null;
-        }
-
-        if (isInTeleportingProcess) {
-            sendPopup(TeleportTick + "|" + isTeleporting);
-            if (TeleportTick != 0 && isTeleporting) {
-                if (CTLastPos == null) CTLastPos = getPosition();
-                else {
-                    sendMessage(CTLastPos.distance(getPosition()) + "");
-                    if (CTLastPos.distance(getPosition()) > 3) {
-                        isTeleporting = false;
+                        AddCoolDown(Cooldown_Class, 5);
+                        BaseClass bc = GetPlayerClass();
+                        if (bc != null) bc.onUpdate(currentTick);
                     }
-//            CTLastPos = getPosition();
+                    CooldownLock = false;
                 }
-                if (TeleportTick <= currentTick && isTeleporting) {
-                    System.out.println("AAAAAA");
-                    if (isTeleporting) {
-                        removeAllEffects();
-                        if ((TargetTeleporting != null && !TargetTeleporting.isAlive())) {
-                            sendMessage("Error! Player Not found!!");
-                            isInTeleportingProcess = false;
-                            TeleportTick = 0;
-                            CTLastPos = null;
-                            return super.onUpdate(currentTick);
-                        } else if (TargetTeleporting == null && TargetTeleportingLoc == null) {
-                            sendMessage("Error! No Teleport data found!!!");
-                            isInTeleportingProcess = false;
-                            TeleportTick = 0;
-                            CTLastPos = null;
-                            return super.onUpdate(currentTick);
-                        } else if (TargetTeleportingLoc != null) {
-                            getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
-                            teleport(TargetTeleportingLoc);
-                            TargetTeleportingLoc = null;
-                            TargetTeleporting = null;
-                        } else {
-                            getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
-                            teleport(TargetTeleporting);
-                            TargetTeleportingLoc = null;
-                            TargetTeleporting = null;
+            }
+
+
+            //Check to see if Player as medic or Restoration
+            PlayerFood pf = getFoodData();
+            if (TPR != null && TPRTimeout != 0 && TPRTimeout < currentTick && !isInTeleportingProcess) {
+                TPRTimeout = 0;
+                CorePlayer cp = CyberCoreMain.getInstance().getCorePlayer(TPR);
+                if (cp != null) cp.sendPopup(TextFormat.YELLOW + "Teleport request expired");
+                sendPopup(TextFormat.YELLOW + "Teleport request expired");
+                TPR = null;
+            }
+
+            if (isInTeleportingProcess) {
+                sendPopup(TeleportTick + "|" + isTeleporting);
+                if (TeleportTick != 0 && isTeleporting) {
+                    if (CTLastPos == null) CTLastPos = getPosition();
+                    else {
+                        sendMessage(CTLastPos.distance(getPosition()) + "");
+                        if (CTLastPos.distance(getPosition()) > 3) {
+                            isTeleporting = false;
                         }
+//            CTLastPos = getPosition();
+                    }
+                    if (TeleportTick <= currentTick && isTeleporting) {
+                        System.out.println("AAAAAA");
+                        if (isTeleporting) {
+                            removeAllEffects();
+                            if ((TargetTeleporting != null && !TargetTeleporting.isAlive())) {
+                                sendMessage("Error! Player Not found!!");
+                                isInTeleportingProcess = false;
+                                TeleportTick = 0;
+                                CTLastPos = null;
+                                return super.onUpdate(currentTick);
+                            } else if (TargetTeleporting == null && TargetTeleportingLoc == null) {
+                                sendMessage("Error! No Teleport data found!!!");
+                                isInTeleportingProcess = false;
+                                TeleportTick = 0;
+                                CTLastPos = null;
+                                return super.onUpdate(currentTick);
+                            } else if (TargetTeleportingLoc != null) {
+                                getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
+                                teleport(TargetTeleportingLoc);
+                                TargetTeleportingLoc = null;
+                                TargetTeleporting = null;
+                            } else {
+                                getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
+                                teleport(TargetTeleporting);
+                                TargetTeleportingLoc = null;
+                                TargetTeleporting = null;
+                            }
+                            isInTeleportingProcess = false;
+                            TeleportTick = 0;
+                            CTLastPos = null;
+                        }
+                    } else if (isInTeleportingProcess && !isTeleporting) {
+                        removeAllEffects();
+                        sendMessage("Error! you moved too much!");
                         isInTeleportingProcess = false;
                         TeleportTick = 0;
                         CTLastPos = null;
+                        TargetTeleportingLoc = null;
+                        TargetTeleporting = null;
                     }
-                } else if (isInTeleportingProcess && !isTeleporting) {
-                    removeAllEffects();
-                    sendMessage("Error! you moved too much!");
-                    isInTeleportingProcess = false;
-                    TeleportTick = 0;
-                    CTLastPos = null;
-                    TargetTeleportingLoc = null;
-                    TargetTeleporting = null;
-                }
 
+                }
             }
         }
 
+        if (!this.loggedIn) {
+            return false;
+        }
 
-        return super.onUpdate(currentTick);
+        int tickDiff = currentTick - this.lastUpdate;
+
+        if (tickDiff <= 0) {
+            return true;
+        }
+
+        this.messageCounter = 2;
+
+        this.lastUpdate = currentTick;
+
+        if (this.fishing != null) {
+            if (this.distance(fishing) > 80) {
+                this.stopFishing(false);
+            }
+        }
+
+        if (!this.isAlive() && this.spawned) {
+            ++this.deadTicks;
+            if (this.deadTicks >= 10) {
+                this.despawnFromAll();
+            }
+            return true;
+        }
+
+        if (this.spawned) {
+            this.processMovement(tickDiff);
+
+            this.entityBaseTick(tickDiff);
+
+//            if (this.getServer().getDifficulty() == 0 && this.level.getGameRules().getBoolean(GameRule.NATURAL_REGENERATION)) {
+//                if (this.getHealth() < this.getMaxHealth() && this.ticksLived % 20 == 0) {
+//                    this.heal(1);
+//                }
+//
+//                PlayerFood foodData = this.getFoodData();
+//
+//                if (foodData.getLevel() < 20 && this.ticksLived % 10 == 0) {
+//                    foodData.addFoodLevel(1, 0);
+//                }
+//            }
+
+            if (this.isOnFire() && this.lastUpdate % 10 == 0) {
+                if (this.isCreative() && !this.isInsideOfFire()) {
+                    this.extinguish();
+                } else if (this.getLevel().isRaining()) {
+                    if (this.getLevel().canBlockSeeSky(this)) {
+                        this.extinguish();
+                    }
+                }
+            }
+
+            if (!this.isSpectator() && this.speed != null) {
+                if (this.onGround) {
+                    if (this.inAirTicks != 0) {
+                        this.startAirTicks = 5;
+                    }
+                    this.inAirTicks = 0;
+                    this.highestPosition = this.y;
+                } else {
+                    if (this.checkMovement && !this.isGliding() && !server.getAllowFlight() && !this.getAdventureSettings().get(AdventureSettings.Type.ALLOW_FLIGHT) && this.inAirTicks > 20 && !this.isSleeping() && !this.isImmobile() && !this.isSwimming() && this.riding == null) {
+                        double expectedVelocity = (-this.getGravity()) / ((double) this.getDrag()) - ((-this.getGravity()) / ((double) this.getDrag())) * Math.exp(-((double) this.getDrag()) * ((double) (this.inAirTicks - this.startAirTicks)));
+                        double diff = (this.speed.y - expectedVelocity) * (this.speed.y - expectedVelocity);
+
+                        int block = level.getBlock(this).getId();
+                        boolean ignore = block == Block.LADDER || block == Block.VINES || block == Block.COBWEB;
+
+                        if (!this.hasEffect(Effect.JUMP) && diff > 0.6 && expectedVelocity < this.speed.y && !ignore) {
+                            if (this.inAirTicks < 100) {
+                                this.setMotion(new Vector3(0, expectedVelocity, 0));
+                            } else if (this.kick(PlayerKickEvent.Reason.FLYING_DISABLED, "Flying is not enabled on this server")) {
+                                return false;
+                            }
+                        }
+                        if (ignore) {
+                            this.resetFallDistance();
+                        }
+                    }
+
+                    if (this.y > highestPosition) {
+                        this.highestPosition = this.y;
+                    }
+
+                    if (this.isGliding()) this.resetFallDistance();
+
+                    ++this.inAirTicks;
+
+                }
+
+                if (this.isSurvival() || this.isAdventure()) {
+                    if (this.getFoodData() != null) this.getFoodData().update(tickDiff);
+                }
+            }
+        }
+
+        this.checkTeleportPosition();
+        this.checkInteractNearby();
+
+        if (this.spawned && this.dummyBossBars.size() > 0 && currentTick % 100 == 0) {
+            this.dummyBossBars.values().forEach(DummyBossBar::updateBossEntityPosition);
+        }
+
+
+        return true;
     }
 
     public void ReloadMasterEnchatingList() {
@@ -1376,7 +1638,6 @@ public class CorePlayer extends Player {
         Vector3 v = getPosition();
         HD.add(new HomeData(name, this));
     }
-
 
     public void AddHome(HomeData homeData) {
         HD.add(homeData);
@@ -1451,6 +1712,75 @@ public class CorePlayer extends Player {
         }
         FactionInvite = null;
         FactionInviteTimeout = -1;
+    }
+
+    @Override
+    public void completeLoginSequence() {
+        PlayerLoginEvent ev;
+        this.server.getPluginManager().callEvent(ev = new PlayerLoginEvent(this, "Plugin reason"));
+        if (ev.isCancelled()) {
+            this.close(this.getLeaveMessage(), ev.getKickMessage());
+            return;
+        }
+
+        StartGamePacket startGamePacket = new StartGamePacket();
+        startGamePacket.entityUniqueId = this.id;
+        startGamePacket.entityRuntimeId = this.id;
+        startGamePacket.playerGamemode = (this.gamemode);
+        startGamePacket.x = (float) this.x;
+        startGamePacket.y = (float) this.y;
+        startGamePacket.z = (float) this.z;
+        startGamePacket.yaw = (float) this.yaw;
+        startGamePacket.pitch = (float) this.pitch;
+        startGamePacket.seed = -1;
+        startGamePacket.dimension = (byte) (this.level.getDimension() & 0xff);
+        startGamePacket.worldGamemode = (this.gamemode);
+        startGamePacket.difficulty = this.server.getDifficulty();
+        startGamePacket.spawnX = (int) this.x;
+        startGamePacket.spawnY = (int) this.y;
+        startGamePacket.spawnZ = (int) this.z;
+        startGamePacket.hasAchievementsDisabled = true;
+        startGamePacket.dayCycleStopTime = -1;
+        startGamePacket.eduMode = false;
+        startGamePacket.hasEduFeaturesEnabled = true;
+        startGamePacket.rainLevel = 0;
+        startGamePacket.lightningLevel = 0;
+        startGamePacket.commandsEnabled = this.isEnableClientCommand();
+        startGamePacket.gameRules = getLevel().getGameRules();
+        startGamePacket.levelId = "";
+        startGamePacket.worldName = this.getServer().getNetwork().getName();
+        startGamePacket.generator = 1; //0 old, 1 infinite, 2 flat
+        this.dataPacket(startGamePacket);
+
+        this.dataPacket(new AvailableEntityIdentifiersPacket());
+
+        this.loggedIn = true;
+
+        this.level.sendTime(this);
+
+        //todo cHANGE
+        this.setMovementSpeed(DEFAULT_SPEED);
+        this.sendAttributes();
+        this.setNameTagVisible(true);
+        this.setNameTagAlwaysVisible(true);
+        this.setCanClimb(true);
+
+        this.server.getLogger().info(this.getServer().getLanguage().translateString("nukkit.player.logIn",
+                TextFormat.AQUA + this.username + TextFormat.WHITE,
+                this.ip,
+                String.valueOf(this.port),
+                String.valueOf(this.id),
+                this.level.getName(),
+                String.valueOf(NukkitMath.round(this.x, 4)),
+                String.valueOf(NukkitMath.round(this.y, 4)),
+                String.valueOf(NukkitMath.round(this.z, 4))));
+
+        if (this.isOp() || this.hasPermission("nukkit.textcolor")) {
+            this.setRemoveFormat(false);
+        }
+
+        this.server.addOnlinePlayer(this);
+        this.server.onPlayerCompleteLoginSequence(this);
     }
 
 
@@ -1555,8 +1885,42 @@ public class CorePlayer extends Player {
 //    }
 
 
-//    @Override
-//    protected void processLogin() {
+    @Override
+    public void heal(EntityRegainHealthEvent source) {
+        this.server.getPluginManager().callEvent(source);
+        if (source.isCancelled()) {
+            return;
+        }
+        if(getHealth() >= 20)return;
+        this.setHealth(this.getHealth() + source.getAmount());
+    }
+
+    public void sendHealth() {
+        //TODO: Remove it in future! This a hack to solve the client-side absorption bug! WFT Mojang (Half a yellow heart cannot be shown, we can test it in local gaming)
+        Attribute attr = Attribute.getAttribute(Attribute.MAX_HEALTH).setMaxValue(this.getAbsorption() % 2 != 0 ? this.getMaxHealth() + 1 : this.getMaxHealth()).setValue(health > 0 ? (health < getMaxHealth() ? health : getMaxHealth()) : 0);
+
+//        System.out.println("PRINGING A LINE HEEERRRRRRRRRR");
+    if (this.spawned) {
+//        System.out.println("PRINGING A LINE SEEEEEEEEEEEEEEEEEEEEE");
+            UpdateAttributesPacket pk = new UpdateAttributesPacket();
+            pk.entries = new Attribute[]{attr};
+            pk.entityId = this.id;
+            this.dataPacket(pk);
+        }
+    }
+
+    @Override
+    public PlayerFood getFoodData() {
+        return foodData;
+    }
+
+    @Override
+    protected void processLogin() {
+        super.processLogin();
+        PlayerFood pf = getFoodData();
+        foodData = new CustomPlayerFood(this,pf.getLevel(),pf.getFoodSaturationLevel());
+
+    }
 //        if (!this.server.isWhitelisted((this.getName()).toLowerCase())) {
 //            this.kick(PlayerKickEvent.Reason.NOT_WHITELISTED, "Server is white-listed");
 //
@@ -1698,72 +2062,20 @@ public class CorePlayer extends Player {
 //        this.dataPacket(infoPacket);
 //    }
 
-    @Override
-    public void completeLoginSequence() {
-        PlayerLoginEvent ev;
-        this.server.getPluginManager().callEvent(ev = new PlayerLoginEvent(this, "Plugin reason"));
-        if (ev.isCancelled()) {
-            this.close(this.getLeaveMessage(), ev.getKickMessage());
-            return;
+    public class CombatData {
+        public final int CombatTime = 20 * 7; // 7 Secs
+        public int Tick = -1;
+
+        public CombatData(int tick) {
+            Tick = tick;
         }
 
-        StartGamePacket startGamePacket = new StartGamePacket();
-        startGamePacket.entityUniqueId = this.id;
-        startGamePacket.entityRuntimeId = this.id;
-        startGamePacket.playerGamemode = (this.gamemode);
-        startGamePacket.x = (float) this.x;
-        startGamePacket.y = (float) this.y;
-        startGamePacket.z = (float) this.z;
-        startGamePacket.yaw = (float) this.yaw;
-        startGamePacket.pitch = (float) this.pitch;
-        startGamePacket.seed = -1;
-        startGamePacket.dimension = (byte) (this.level.getDimension() & 0xff);
-        startGamePacket.worldGamemode = (this.gamemode);
-        startGamePacket.difficulty = this.server.getDifficulty();
-        startGamePacket.spawnX = (int) this.x;
-        startGamePacket.spawnY = (int) this.y;
-        startGamePacket.spawnZ = (int) this.z;
-        startGamePacket.hasAchievementsDisabled = true;
-        startGamePacket.dayCycleStopTime = -1;
-        startGamePacket.eduMode = false;
-        startGamePacket.hasEduFeaturesEnabled = true;
-        startGamePacket.rainLevel = 0;
-        startGamePacket.lightningLevel = 0;
-        startGamePacket.commandsEnabled = this.isEnableClientCommand();
-        startGamePacket.gameRules = getLevel().getGameRules();
-        startGamePacket.levelId = "";
-        startGamePacket.worldName = this.getServer().getNetwork().getName();
-        startGamePacket.generator = 1; //0 old, 1 infinite, 2 flat
-        this.dataPacket(startGamePacket);
-
-        this.dataPacket(new AvailableEntityIdentifiersPacket());
-
-        this.loggedIn = true;
-
-        this.level.sendTime(this);
-
-        //todo cHANGE
-        this.setMovementSpeed(DEFAULT_SPEED);
-        this.sendAttributes();
-        this.setNameTagVisible(true);
-        this.setNameTagAlwaysVisible(true);
-        this.setCanClimb(true);
-
-        this.server.getLogger().info(this.getServer().getLanguage().translateString("nukkit.player.logIn",
-                TextFormat.AQUA + this.username + TextFormat.WHITE,
-                this.ip,
-                String.valueOf(this.port),
-                String.valueOf(this.id),
-                this.level.getName(),
-                String.valueOf(NukkitMath.round(this.x, 4)),
-                String.valueOf(NukkitMath.round(this.y, 4)),
-                String.valueOf(NukkitMath.round(this.z, 4))));
-
-        if (this.isOp() || this.hasPermission("nukkit.textcolor")) {
-            this.setRemoveFormat(false);
+        public int getTick(int a) {
+            return Tick + a;
         }
 
-        this.server.addOnlinePlayer(this);
-        this.server.onPlayerCompleteLoginSequence(this);
+        public int getTick() {
+            return getTick(CombatTime);
+        }
     }
 }

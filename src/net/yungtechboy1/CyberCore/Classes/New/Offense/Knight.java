@@ -1,14 +1,16 @@
 package net.yungtechboy1.CyberCore.Classes.New.Offense;
 
-import cn.nukkit.Player;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
+import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassSettingsKnightWindow;
 
 public class Knight extends BaseClass {
 //    public Knight(CyberCoreMain main, Player player, int rank, int xp, ConfigSection cooldowns) {
@@ -16,13 +18,13 @@ public class Knight extends BaseClass {
 //        SwingTime = 27;
 //    }
 
-    public Knight(CyberCoreMain main, CorePlayer player, ConfigSection cs) {
-        super(main, player, ClassType.Class_Miner_TNT_Specialist);
+    public Knight(CyberCoreMain main, CorePlayer player, ConfigSection data) {
+        super(main, player, ClassType.Class_Miner_TNT_Specialist, data);
     }
 
     @Override
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
-        Player p = (Player)event.entity;
+//        Player p = (Player)event.entity;
             float ad = event.getDamage(CustomEntityDamageEvent.CustomDamageModifier.BASE) * -.1f;
             event.setDamage(ad, CustomEntityDamageEvent.CustomDamageModifier.MODIFIER_ARMOR_ABILLITY);
             event.setCoolDownTicks(SwingTime);
@@ -45,18 +47,36 @@ public class Knight extends BaseClass {
         return 4;
     }
 
-
-
+    @Override
+    public Object RunPower(PowerEnum powerid, Object... args) {
+        return null;
+    }
 
 
     @Override
     public String getName() {
-        return "Raider";
+        return "Knight";
+    }
+
+    @Override
+    public ClassType getTYPE() {
+        return ClassType.Class_Offense_Knight;
     }
 
     @Override
     public void SetPowers() {
 
+    }
+
+    @Override
+    public ConfigSection export() {
+        return super.export();
+    }
+
+
+    @Override
+    public CyberForm GetSettingsWindow() {
+        return new ClassSettingsKnightWindow( this);
     }
 
     @Override
@@ -69,13 +89,9 @@ public class Knight extends BaseClass {
         addBuff(new Buff(Buff.BuffType.Damage,1.5f));
         addBuff(new Buff(Buff.BuffType.Armor,1.3f));
         addBuff(new Buff(Buff.BuffType.Health,4f));
-        addDeBuff(new DeBuff(Buff.BuffType.Movement,.65f));
-        addBuff(new Buff(Buff.BuffType.SwingSpeed,1.5f));
+        addDeBuff(new DeBuff(Buff.BuffType.Movement,1.65f));
+        addDeBuff(new DeBuff(Buff.BuffType.SwingSpeed,1.5f));
         addBuff(new Buff(Buff.BuffType.SuperFoodHeartRegin,1f));
     }
 
-    @Override
-    public Object RunPower(int powerid, Object... args) {
-        return null;
-    }
 }
