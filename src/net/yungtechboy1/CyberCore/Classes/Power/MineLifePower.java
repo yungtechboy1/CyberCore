@@ -8,7 +8,7 @@ import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
-public class MineLifePower extends Power {
+public class MineLifePower extends PowerCustomEffect {
     public MineLifePower(BaseClass b,int level) {
         super(b,((int) Math.floor(.65d * level) + 1), level);
         int psc = ((int) Math.floor(.65d * level) + 1);
@@ -111,16 +111,5 @@ public class MineLifePower extends Power {
             return 60 * 5;
         }
         return super.getCooldownTime();
-    }
-
-    @Override
-    public Object usePower(CorePlayer cp, Object... args) {
-        if(cp == null)return null;
-        if (Cooldown == null || Cooldown.isValid()) {
-            cp.addEffect(getEffect());
-            addCooldown();
-
-        }
-        return null;
     }
 }

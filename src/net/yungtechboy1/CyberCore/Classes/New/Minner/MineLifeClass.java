@@ -1,13 +1,8 @@
 package net.yungtechboy1.CyberCore.Classes.New.Minner;
 
-import cn.nukkit.block.Block;
-import cn.nukkit.event.block.BlockBreakEvent;
-import cn.nukkit.item.Item;
 import cn.nukkit.utils.ConfigSection;
-import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Classes.Passive.OreKnowledge;
 import net.yungtechboy1.CyberCore.Classes.Power.MineLifePower;
-import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
@@ -22,8 +17,8 @@ public class MineLifeClass extends MinnerBaseClass {
 
     @Override
     public void SetPowers() {
-        AddPower(new MineLifePower(this,getLVL()));
-        AddPower(new OreKnowledge(this,getLVL()));
+        addPower(new MineLifePower(this,getLVL()));
+        addPower(new OreKnowledge(this,getLVL()));
     }
 
 

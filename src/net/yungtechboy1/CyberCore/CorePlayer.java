@@ -1267,6 +1267,8 @@ public class CorePlayer extends Player {
                             break;
                         case PlayerActionPacket.ACTION_JUMP:
                             sendMessage("JUMMMPPPPP!!!" + getDirection());
+                            if(PlayerClass != null)PlayerClass.HandelEvent(new PlayerJumpEvent(this));
+                            getServer().getPluginManager().callEvent(new PlayerJumpEvent(this));
 //                            addMovement(0,2.5,0,0,0,0);
 //                            switch (getDirection()) {
 //                                case NORTH:

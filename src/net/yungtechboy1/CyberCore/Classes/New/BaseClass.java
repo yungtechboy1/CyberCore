@@ -14,17 +14,16 @@ import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.*;
 import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Classes.New.Buff.BuffType;
 import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerAbility;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
-import net.yungtechboy1.CyberCore.CoolDown;
-import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassSettingsWindow;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -150,6 +149,10 @@ public abstract class BaseClass {
         cp.initAllClassBuffs();
     }
 
+    public String getDisplayName(){
+        return getName();
+    }
+
     public HashMap<BuffType, Buff> addBuff(Buff o) {
         Buffs.put(o.getBt(), o);
         return (HashMap<BuffType, Buff>) Buffs.clone();
@@ -212,7 +215,7 @@ public abstract class BaseClass {
 
     public abstract Object RunPower(PowerEnum powerid, Object... args);
 
-    public void AddPower(Power power) {
+    public void addPower(Power power) {
         Powers.put(power.getType().ordinal(), power);
     }
 //        Power p = Powers.get(powerid);
@@ -362,8 +365,15 @@ public abstract class BaseClass {
         return false;
     }
 
+    public void PowerHandelEvent(Event e){
+        for(Power p: getPowers()){
+            p.HandelEvent(e);
+        }
+    }
+
     //TODO
     public Event HandelEvent(Event event) {
+        PowerHandelEvent(event);
         if (event instanceof CustomEntityDamageByEntityEvent) {
             event = CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
 //            if (ActiveAbility != null) event = ActiveAbility.CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
@@ -396,12 +406,20 @@ public abstract class BaseClass {
             event = CraftItemEvent((CraftItemEvent) event);
             if (ActiveAbility != null) event = ActiveAbility.CraftItemEvent((CraftItemEvent) event);
             return event;
+        } else if (event instanceof PlayerJumpEvent) {
+            event = PlayerJumpEvent((PlayerJumpEvent) event);
+            if (ActiveAbility != null) event = ActiveAbility.PlayerJumpEvent((PlayerJumpEvent) event);
+            return event;
         }
         return event;
     }
 
+    public PlayerJumpEvent PlayerJumpEvent(PlayerJumpEvent event) {
+        return event;
+    }
+
     public CyberForm GetSettingsWindow() {
-        return null;
+        return new ClassSettingsWindow(this, FormType.MainForm.NULL,"Settings Window","");
     }
 
     @Deprecated
@@ -513,11 +531,12 @@ public abstract class BaseClass {
 
     public void tickPowers(int tick) {
         for (Power p : getPowers()) {
-            p.handleTick(tick);
+            if(p.getCooldownTimeTick() != -1 && tick % p.getCooldownTimeTick() == 0)p.handleTick(tick);
         }
     }
 
     public void onUpdate(int tick) {
+
         tickPowers(tick);
     }
 
@@ -555,7 +574,7 @@ public abstract class BaseClass {
 
 
     public enum ClassType {
-        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary, DarkKnight, DragonSlayer, Class_Magic_Enchanter, Class_Rouge_Thief, Class_Offense_Knight;
+        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary, DragonSlayer, Class_Magic_Enchanter, Class_Rouge_Thief, Class_Offense_Knight, Class_Offense_Holy_Knight, Class_Offense_Dark_Knight;
 
 
         public int getKey() {

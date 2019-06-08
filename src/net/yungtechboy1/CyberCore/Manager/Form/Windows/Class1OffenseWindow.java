@@ -3,7 +3,10 @@ package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.DarkKnight;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.HolyKnight;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.Mercenary;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
@@ -43,11 +46,23 @@ public class Class1OffenseWindow extends CyberFormSimple {
                 cp.sendMessage("Class Set!");
                 break;//Kngiht
             case 1:
-                break;//Knight
+                Mercenary ms = new Mercenary(_plugin, cp, null);
+                cp.SetPlayerClass(ms);
+                _plugin.ClassFactory.SaveClassToFile(cp);
+                cp.sendMessage("Class Set!");
+                break;//Mercenary
             case 2:
-                break;//Raider
+                HolyKnight hk = new HolyKnight(_plugin, cp, null);
+                cp.SetPlayerClass(hk);
+                _plugin.ClassFactory.SaveClassToFile(cp);
+                cp.sendMessage("Class Set!");
+                break;//Holy Knight
             case 3:
-                break;//Theif
+                DarkKnight dk = new DarkKnight(_plugin, cp, null);
+                cp.SetPlayerClass(dk);
+                _plugin.ClassFactory.SaveClassToFile(cp);
+                cp.sendMessage("Class Set!");
+                break;//Dark Knight
         }
         return false;
     }
