@@ -54,28 +54,28 @@ public class DragonSlayer extends BaseClass {
         return "Dragon Slayer";
     }
 
-    @Override
-    public String FormatHudText() {
-        String f = "";
-        int lvl = XPToLevel(getXP());
-        String pclass = getDisplayName();
-        int pxp = XPRemainder(getXP());
-        int pxpof = calculateRequireExperience(lvl + 1);
-        int plvl = lvl;
-        f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl + " | " + loadingBarCooldownForPower(20, "|", PowerEnum.DragonJumper);
-        return f;
-    }
-
-    private Object loadingBarCooldownForPower(int loadingBarLength, String BarChar, PowerEnum powertype) {
-        String finaltext = "";
-        Power p = getPower(powertype);
-        if(p instanceof DragonJumper){
-
-            for (int i = 0; i < loadingBarLength ;i++){
-                String c = new String(BarChar);
-                c +=
-                finaltext += c;
-            }
-        }
-    }
+//    @Override
+//    public String FormatHudText() {
+//        String f = "";
+//        int lvl = XPToLevel(getXP());
+//        String pclass = getDisplayName();
+//        int pxp = XPRemainder(getXP());
+//        int pxpof = calculateRequireExperience(lvl + 1);
+//        int plvl = lvl;
+//        f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl + " | " + loadingBarCooldownForPower(20, "|", PowerEnum.DragonJumper);
+//        return f;
+//    }
+//
+//    private Object loadingBarCooldownForPower(int loadingBarLength, String BarChar, PowerEnum powertype) {
+//        String finaltext = "";
+//        Power p = getPower(powertype);
+//        if(p instanceof DragonJumper){
+//
+//            for (int i = 0; i < loadingBarLength ;i++){
+//                String c = new String(BarChar);
+//                c +=
+//                finaltext += c;
+//            }
+//        }
+//    }
 }

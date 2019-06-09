@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Classes.Power.Mercenary;
+package net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary;
 
 import cn.nukkit.potion.Effect;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.Mercenary;

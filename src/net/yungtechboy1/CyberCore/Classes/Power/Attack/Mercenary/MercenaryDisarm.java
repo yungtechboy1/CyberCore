@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Classes.Power.Mercenary;
+package net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary;
 
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.TextFormat;

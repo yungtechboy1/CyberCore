@@ -1925,6 +1925,8 @@ public class CorePlayer extends Player {
     }
 
     public void tickPowerSource(int tick) {
+        if(PlayerClass != null)PlayerClass.tickPowerSource(tick);
+        //TODO
     }
 //        if (!this.server.isWhitelisted((this.getName()).toLowerCase())) {
 //            this.kick(PlayerKickEvent.Reason.NOT_WHITELISTED, "Server is white-listed");

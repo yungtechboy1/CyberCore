@@ -3,25 +3,14 @@ package net.yungtechboy1.CyberCore.Classes.PowerSource;
 import cn.nukkit.InterruptibleThread;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
-import cn.nukkit.level.Position;
-import cn.nukkit.network.protocol.RemoveEntityPacket;
-import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
-import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
-public class PowerSourceTaskAsync  extends Thread implements InterruptibleThread {
+public class PowerSourceTaskAsync extends Thread implements InterruptibleThread {
 
 
+    private final static int Cooldown = 20 * 20;
     public static CyberCoreMain CCM;
-
-    private final static int Cooldown = 20*20;
 
     public PowerSourceTaskAsync(CyberCoreMain c) {
         CCM = c;
@@ -45,19 +34,20 @@ public class PowerSourceTaskAsync  extends Thread implements InterruptibleThread
             if (tick != lasttick) {
 //                System.out.println("||||||||======");
                 lasttick = tick;
-                if(tick % Cooldown == 0){
-                    for(Player p: CCM.getServer().getOnlinePlayers().values()){
-                        if(p instanceof CorePlayer){
-                            CorePlayer cp = (CorePlayer)p;
-                            cp.tickPowerSource(tick);
-                        }
+//                if(tick % Cooldown == 0){
+                for (Player p : CCM.getServer().getOnlinePlayers().values()) {
+                    if (p instanceof CorePlayer) {
+                        CorePlayer cp = (CorePlayer) p;
+                        //TODO
+                        cp.tickPowerSource(tick);
+//                        }
                     }
                 }
             }
             //A little faster than .1 of a sec (.06 to be exact...or 1 tick = 50millis and this is 60 millisecs)
             //Low key Every other 4 thics is fine
             try {
-                Thread.sleep(Cooldown*50);//4 Ticks
+                Thread.sleep(Cooldown * 50);//4 Ticks
             } catch (InterruptedException e) {
                 //ignore
             }
