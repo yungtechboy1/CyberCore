@@ -1923,6 +1923,9 @@ public class CorePlayer extends Player {
         foodData = new CustomPlayerFood(this,pf.getLevel(),pf.getFoodSaturationLevel());
 
     }
+
+    public void tickPowerSource(int tick) {
+    }
 //        if (!this.server.isWhitelisted((this.getName()).toLowerCase())) {
 //            this.kick(PlayerKickEvent.Reason.NOT_WHITELISTED, "Server is white-listed");
 //
