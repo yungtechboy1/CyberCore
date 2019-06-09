@@ -10,8 +10,8 @@ import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
-public class KnightSandShield extends Power {
-    public KnightSandShield(BaseClass b, int lvl) {
+public class KnightSandShieldPower extends Power {
+    public KnightSandShieldPower(BaseClass b, int lvl) {
         super(b, 80, lvl);
     }
 
@@ -37,7 +37,7 @@ public class KnightSandShield extends Power {
             BlockFace nd = BlockFace.fromIndex(d1);
             Location al = sp.add(nd.getUnitVector().multiply(width));
             for (int height = 0; height < 3; height++) {
-                l.setBlock(al.add(), new BlockSand());
+//                l.setBlock(al.add(), new BlockSand());
             }
         }
 //        }

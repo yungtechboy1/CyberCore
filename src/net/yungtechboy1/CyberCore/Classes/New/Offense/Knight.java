@@ -13,6 +13,8 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassSettingsKnightWindow;
 
+import static net.yungtechboy1.CyberCore.Classes.Power.PowerEnum.KnightSandShield;
+
 public class Knight extends BaseClass {
 //    public Knight(CyberCoreMain main, Player player, int rank, int xp, ConfigSection cooldowns) {
 //        super(main, player, rank,BaseClass.TYPE_Offensive_Knight, xp, cooldowns);
@@ -71,7 +73,7 @@ public class Knight extends BaseClass {
 
     @Override
     public void SetPowers() {
-
+        addPower(new KnightSandShieldPower());
     }
 
     @Override
