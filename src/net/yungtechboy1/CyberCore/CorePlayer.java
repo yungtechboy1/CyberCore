@@ -1267,6 +1267,8 @@ public class CorePlayer extends Player {
                             break;
                         case PlayerActionPacket.ACTION_JUMP:
                             sendMessage("JUMMMPPPPP!!!" + getDirection());
+                            if(PlayerClass != null)PlayerClass.HandelEvent(new PlayerJumpEvent(this));
+                            getServer().getPluginManager().callEvent(new PlayerJumpEvent(this));
 //                            addMovement(0,2.5,0,0,0,0);
 //                            switch (getDirection()) {
 //                                case NORTH:
@@ -1920,6 +1922,11 @@ public class CorePlayer extends Player {
         PlayerFood pf = getFoodData();
         foodData = new CustomPlayerFood(this,pf.getLevel(),pf.getFoodSaturationLevel());
 
+    }
+
+    public void tickPowerSource(int tick) {
+        if(PlayerClass != null)PlayerClass.tickPowerSource(tick);
+        //TODO
     }
 //        if (!this.server.isWhitelisted((this.getName()).toLowerCase())) {
 //            this.kick(PlayerKickEvent.Reason.NOT_WHITELISTED, "Server is white-listed");

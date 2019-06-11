@@ -17,37 +17,19 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Classes.New.Buff.BuffType;
 import net.yungtechboy1.CyberCore.Classes.Power.Power;
-import net.yungtechboy1.CyberCore.Classes.Power.PowerAbility;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
-import net.yungtechboy1.CyberCore.CoolDown;
-import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
+import net.yungtechboy1.CyberCore.*;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassSettingsWindow;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
 public abstract class BaseClass {
-    protected final static int TYPE_Offensive_Raider = 1;
-    protected final static int TYPE_Offensive_Thief = 2;
-    protected final static int TYPE_Offensive_Assassin = 3;
-    protected final static int TYPE_Offensive_Knight = 4;
-    protected final static int TYPE_Offensive_Tank = 5;
-    protected final static int TYPE_Crafting_MadScientist = 6;
-    protected final static int TYPE_Crafting_Enchater = 7;
-    protected final static int TYPE_Crafting_Smith = 8;
-    protected final static int TYPE_Crafting_Crafter = 9;
-    protected final static int TYPE_Farming_Farmer = 10;
-    protected final static int TYPE_Farming_LumberJack = 11;
-    protected final static int TYPE_Farming_Miner = 12;
-    public static int NONE = 0;
-
-    public ArrayList<CoolDown> getCOOLDOWNS() {
-        return COOLDOWNS;
-    }
 
     public ArrayList<CoolDown> COOLDOWNS = new ArrayList<>();
     public boolean Prime = false;
@@ -89,6 +71,7 @@ public abstract class BaseClass {
     private Ability ActiveAbility;
     private HashMap<BuffType, Buff> Buffs = new HashMap<>();
     private HashMap<BuffType, DeBuff> DeBuffs = new HashMap<>();
+    private double PowerSourceCount = 0;
 
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank, ConfigSection data) {
         this(main, player, rank);
@@ -106,6 +89,10 @@ public abstract class BaseClass {
                 int xpi = data.getInt("xp", 0);
                 addXP(xpi);
             }
+            if (data.containsKey("PowerSourceCount")) {
+                int psc = data.getInt("PowerSourceCount", 0);
+                addPowerSourceCount(psc);
+            }
         }
     }
 
@@ -118,6 +105,54 @@ public abstract class BaseClass {
         startbuffs();
     }
 
+    public abstract PrimalPowerType getPowerSourceType();
+
+    public double getPowerSourceCount() {
+        return PowerSourceCount;
+    }
+
+    public void addPowerSourceCount() {
+        addPowerSourceCount(1);
+    }
+
+    public void addPowerSourceCount(double a) {
+        if (PowerSourceCount + a > getMaxPowerSourceCount()) {
+            double d = getMaxPowerSourceCount() - a;
+            if(d < 0)PowerSourceCount += d;
+        } else {
+            PowerSourceCount += Math.abs(a);
+        }
+    }
+
+    public TextFormat getColor(){
+        return TextFormat.GRAY;
+    }
+
+    public boolean takePowerSourceCount(double a) {
+        if (a > PowerSourceCount) return false;
+        PowerSourceCount -= a;
+        return true;
+    }
+
+    public double getMaxPowerSourceCount() {
+        return Math.round((Math.abs(Math.pow(57 * getLVL(), 2)) / Math.sqrt(Math.pow(20 * getLVL(), 3))) + getLVL() * 10);
+    }
+
+    public void tickPowerSource(int tick) {
+        addPowerSourceCount();//From Server Every 20 Secs
+        double t = Math.abs(Math.pow(27 * getLVL(), 2));
+        double b = Math.sqrt(Math.pow(18 * getLVL(), 3));
+        int f = (int) Math.round((t / b) * .2);
+        addPowerSourceCount(f);
+        //TODO
+        //ISSUE
+        //Maybe TIck player power here too??
+    }
+
+    public ArrayList<CoolDown> getCOOLDOWNS() {
+        return COOLDOWNS;
+    }
+
     private void startbuffs() {
         initBuffs();
         if (P != null) registerAllBuffsToCorePlayer(P);
@@ -128,7 +163,7 @@ public abstract class BaseClass {
         return ClassTeir.values()[d];
     }
 
-    public ClassType getTYPE(){
+    public ClassType getTYPE() {
         return TYPE;
     }
 
@@ -148,6 +183,10 @@ public abstract class BaseClass {
             cp.addDeBuffFromClass(b);
         }
         cp.initAllClassBuffs();
+    }
+
+    public String getDisplayName() {
+        return getColor()+getName();
     }
 
     public HashMap<BuffType, Buff> addBuff(Buff o) {
@@ -212,7 +251,7 @@ public abstract class BaseClass {
 
     public abstract Object RunPower(PowerEnum powerid, Object... args);
 
-    public void AddPower(Power power) {
+    public void addPower(Power power) {
         Powers.put(power.getType().ordinal(), power);
     }
 //        Power p = Powers.get(powerid);
@@ -254,6 +293,7 @@ public abstract class BaseClass {
     public ConfigSection export() {
         return new ConfigSection() {{
             put("COOLDOWNS", getCOOLDOWNS());
+            put("PowerSourceCount", PowerSourceCount);
             put("XP", getXP());
             put("TYPE", getTYPE().ordinal());
         }};
@@ -362,8 +402,15 @@ public abstract class BaseClass {
         return false;
     }
 
+    public void PowerHandelEvent(Event e) {
+        for (Power p : getPowers()) {
+            p.HandelEvent(e);
+        }
+    }
+
     //TODO
     public Event HandelEvent(Event event) {
+        PowerHandelEvent(event);
         if (event instanceof CustomEntityDamageByEntityEvent) {
             event = CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
 //            if (ActiveAbility != null) event = ActiveAbility.CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
@@ -396,12 +443,20 @@ public abstract class BaseClass {
             event = CraftItemEvent((CraftItemEvent) event);
             if (ActiveAbility != null) event = ActiveAbility.CraftItemEvent((CraftItemEvent) event);
             return event;
+        } else if (event instanceof PlayerJumpEvent) {
+            event = PlayerJumpEvent((PlayerJumpEvent) event);
+            if (ActiveAbility != null) event = ActiveAbility.PlayerJumpEvent((PlayerJumpEvent) event);
+            return event;
         }
         return event;
     }
 
+    public PlayerJumpEvent PlayerJumpEvent(PlayerJumpEvent event) {
+        return event;
+    }
+
     public CyberForm GetSettingsWindow() {
-        return null;
+        return new ClassSettingsWindow(this, FormType.MainForm.NULL, "Settings Window", "");
     }
 
     @Deprecated
@@ -462,7 +517,7 @@ public abstract class BaseClass {
     }
 
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
-        for(Power p : Powers.values())p.CustomEntityDamageByEntityEvent(event);
+        for (Power p : Powers.values()) p.CustomEntityDamageByEntityEvent(event);
         float bd = event.getOriginalDamage();
         Buff b = getBuff(BuffType.Damage.ordinal());
         if (event.getEntity() instanceof Player && getBuff(BuffType.DamageToPlayer.ordinal()) != null) {
@@ -513,11 +568,12 @@ public abstract class BaseClass {
 
     public void tickPowers(int tick) {
         for (Power p : getPowers()) {
-            p.handleTick(tick);
+            if (p.getCooldownTimeTick() != -1 && tick % p.getCooldownTimeTick() == 0) p.handleTick(tick);
         }
     }
 
     public void onUpdate(int tick) {
+
         tickPowers(tick);
     }
 
@@ -555,7 +611,7 @@ public abstract class BaseClass {
 
 
     public enum ClassType {
-        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary, DarkKnight, DragonSlayer, Class_Magic_Enchanter, Class_Rouge_Thief, Class_Offense_Knight;
+        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary, DragonSlayer, Class_Magic_Enchanter, Class_Rouge_Thief, Class_Offense_Knight, Class_Offense_Holy_Knight, Class_Offense_Dark_Knight;
 
 
         public int getKey() {

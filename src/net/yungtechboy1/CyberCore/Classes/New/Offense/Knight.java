@@ -5,12 +5,15 @@ import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassSettingsKnightWindow;
+
+import static net.yungtechboy1.CyberCore.Classes.Power.PowerEnum.KnightSandShield;
 
 public class Knight extends BaseClass {
 //    public Knight(CyberCoreMain main, Player player, int rank, int xp, ConfigSection cooldowns) {
@@ -59,13 +62,18 @@ public class Knight extends BaseClass {
     }
 
     @Override
+    public PrimalPowerType getPowerSourceType() {
+        return PrimalPowerType.Earth;
+    }
+
+    @Override
     public ClassType getTYPE() {
         return ClassType.Class_Offense_Knight;
     }
 
     @Override
     public void SetPowers() {
-
+        addPower(new KnightSandShieldPower());
     }
 
     @Override
@@ -77,11 +85,6 @@ public class Knight extends BaseClass {
     @Override
     public CyberForm GetSettingsWindow() {
         return new ClassSettingsKnightWindow( this);
-    }
-
-    @Override
-    public int getMainID() {
-        return BaseClass.TYPE_Offensive_Raider;
     }
 
     @Override

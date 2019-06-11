@@ -1,16 +1,16 @@
 package net.yungtechboy1.CyberCore.Classes.New.Offense;
 
-import cn.nukkit.Player;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
-import net.yungtechboy1.CyberCore.Classes.Power.Mercenary.MercenaryDoubleTake;
-import net.yungtechboy1.CyberCore.Classes.Power.Mercenary.MercenaryReneration;
+import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.MercenaryBlindingStrike;
+import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.MercenaryDisarm;
+import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.MercenaryDoubleTake;
+import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.MercenaryReneration;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
-import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class Mercenary  extends BaseClass {
@@ -61,8 +61,10 @@ public class Mercenary  extends BaseClass {
 
     @Override
     public void SetPowers() {
-        AddPower(new MercenaryDoubleTake(this,getLVL()));
-        AddPower(new MercenaryReneration(this,getLVL()));
+        addPower(new MercenaryDisarm(this,getLVL()));
+        addPower(new MercenaryBlindingStrike(this,getLVL()));
+        addPower(new MercenaryDoubleTake(this,getLVL()));
+        addPower(new MercenaryReneration(this,getLVL()));
     }
 
     @Override

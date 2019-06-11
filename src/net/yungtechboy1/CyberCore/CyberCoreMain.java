@@ -23,6 +23,7 @@ import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Bans.Ban;
+import net.yungtechboy1.CyberCore.Classes.PowerSource.PowerSourceTaskAsync;
 import net.yungtechboy1.CyberCore.Commands.*;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMS;
@@ -146,6 +147,16 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     CustomRecipeCraftingManager CRM;
     private EconManager ECON;
 
+    public PowerSourceTaskAsync getPowerSourceTask() {
+        return PowerSourceTask;
+    }
+
+    public void setPowerSourceTask(PowerSourceTaskAsync powerSourceTask) {
+        PowerSourceTask = powerSourceTask;
+    }
+
+    private PowerSourceTaskAsync PowerSourceTask;
+
     public static CyberCoreMain getInstance() {
         return CyberCoreMain.instance;
     }
@@ -250,6 +261,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        System.out.println(">>>>>>>>>>0x" + Binary.bytesToHexString(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_1).getCompoundTag()));
 
+        PowerSourceTask = new PowerSourceTaskAsync(this);
         CraftingManager = new CustomCraftingManager();
         CRM = new CustomRecipeCraftingManager(this);
 
@@ -520,6 +532,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        PasswordFactoy.onDisable();
 
         //Classes
+        PowerSourceTask.CTstop();
         ClassFactory.Saveall();
         FM.FFactory.SaveAllFactions();
     }

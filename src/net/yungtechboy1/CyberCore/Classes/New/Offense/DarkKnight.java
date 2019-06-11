@@ -1,6 +1,7 @@
 package net.yungtechboy1.CyberCore.Classes.New.Offense;
 
 import cn.nukkit.utils.ConfigSection;
+import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
@@ -20,12 +21,12 @@ public class DarkKnight  extends BaseClass {
 
     @Override
     public ClassType getTYPE() {
-        return ClassType.DarkKnight;
+        return ClassType.Class_Offense_Dark_Knight;
     }
 
     @Override
     public void SetPowers() {
-        AddPower(new TNTAirStrikePower(this,getLVL()));
+        addPower(new TNTAirStrikePower(this,getLVL()));
     }
 
     @Override
@@ -41,6 +42,11 @@ public class DarkKnight  extends BaseClass {
     }
 
     @Override
+    public String getDisplayName() {
+        return TextFormat.BLACK+"||"+getName()+"||";
+    }
+
+    @Override
     public Object RunPower(PowerEnum powerid, Object... args) {
         return null;
     }
@@ -49,4 +55,18 @@ public class DarkKnight  extends BaseClass {
     public String getName() {
         return "Dark Knight";
     }
+
+//    @Override
+//    public String FormatHudText() {
+//        String f = "";
+//        int lvl = XPToLevel(getXP());
+//        String pclass = getDisplayName();
+//        int pxp = XPRemainder(getXP());
+//        int pxpof = calculateRequireExperience(lvl + 1);
+//        int plvl = lvl;
+//        f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl+" | "+loadingBarForPower(20,"|",PowerEnum.);
+//        return f;
+//    }
+
+
 }
