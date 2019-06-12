@@ -318,7 +318,6 @@ public class CorePlayer extends Player {
 
     public PlayerSettingsData GetData() {
         if (getSettingsData() == null) CreateDefaultSettingsData();
-        if (getSettingsData() == null) return null;
         return getSettingsData();
     }
 
