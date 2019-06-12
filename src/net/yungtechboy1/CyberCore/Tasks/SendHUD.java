@@ -16,6 +16,7 @@ public class SendHUD extends Thread implements InterruptibleThread {
 
 
     public SendHUD() {
+        start();
     }
 
     public void run() {
@@ -83,9 +84,9 @@ public class SendHUD extends Thread implements InterruptibleThread {
             f += TextFormat.GRAY + " -- " + TextFormat.GRAY + "Faction : " + TextFormat.AQUA + fn + TextFormat.GRAY + " | " + TextFormat.GREEN + fxp + TextFormat.AQUA + " / " + TextFormat.GOLD + fxpm + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + flvl + TextFormat.GRAY + " -- " + TextFormat.RESET + "\n";
         if (!p.Settings.isHudClassOff()) {
 //            TODO
-            if (p.GetPlayerClass() != null) {
+            if (p.getPlayerClass() != null) {
                 String pclass = "NONE";
-                BaseClass bc = p.GetPlayerClass();
+                BaseClass bc = p.getPlayerClass();
                 String t = bc.FormatHudText();
                 if (t != null && t.length() != 0) f += t;
             }

@@ -101,7 +101,7 @@ public class ServerSqlite extends MySQL {
     }
 
     private void LoadClass(CorePlayer p) {
-        plugin.ClassFactory.GetClass(p);
+        plugin.ClassFactory.GetClass(p,true);
     }
 
     private void LoadRank(CorePlayer p) {

@@ -6,6 +6,7 @@ import cn.nukkit.event.Event;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.event.inventory.CraftItemEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
@@ -94,6 +95,7 @@ public abstract class BaseClass {
                 addPowerSourceCount(psc);
             }
         }
+        SetPowers();
     }
 
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank) {
@@ -103,6 +105,7 @@ public abstract class BaseClass {
         TYPE = rank;
         LVL = XPToLevel(XP);
         startbuffs();
+        SetPowers();
     }
 
     public abstract PrimalPowerType getPowerSourceType();
@@ -402,15 +405,17 @@ public abstract class BaseClass {
         return false;
     }
 
-    public void PowerHandelEvent(Event e) {
+    public Event PowerHandelEvent(Event e) {
+//        Event ee = e;
         for (Power p : getPowers()) {
-            p.HandelEvent(e);
+             p.HandelEvent(e);
         }
+        return e;
     }
 
     //TODO
     public Event HandelEvent(Event event) {
-        PowerHandelEvent(event);
+        event = PowerHandelEvent(event);
         if (event instanceof CustomEntityDamageByEntityEvent) {
             event = CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
 //            if (ActiveAbility != null) event = ActiveAbility.CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
@@ -447,11 +452,18 @@ public abstract class BaseClass {
             event = PlayerJumpEvent((PlayerJumpEvent) event);
             if (ActiveAbility != null) event = ActiveAbility.PlayerJumpEvent((PlayerJumpEvent) event);
             return event;
+        }else if (event instanceof EntityInventoryChangeEvent) {
+            event = EntityInventoryChangeEvent((EntityInventoryChangeEvent) event);
+//            if (ActiveAbility != null) event = ActiveAbility.PlayerJumpEvent((PlayerJumpEvent) event);
+            return event;
         }
         return event;
     }
 
     public PlayerJumpEvent PlayerJumpEvent(PlayerJumpEvent event) {
+        return event;
+    }
+    public EntityInventoryChangeEvent EntityInventoryChangeEvent(EntityInventoryChangeEvent event) {
         return event;
     }
 
@@ -567,13 +579,16 @@ public abstract class BaseClass {
     }
 
     public void tickPowers(int tick) {
+//        System.out.println("Tring to TICKING POWER "+getPowers().size());
+//        System.out.println("Tring to TICKING POWER "+getPowers());
         for (Power p : getPowers()) {
+//            System.out.println("TICKING POWER "+p.getName());
             if (p.getCooldownTimeTick() != -1) p.handleTick(tick);
         }
     }
 
     public void onUpdate(int tick) {
-//        System.out.println("TICKING BASECLASS");
+        System.out.println("TICKING BASECLASS");
         tickPowers(tick);
     }
 
