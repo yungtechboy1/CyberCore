@@ -17,8 +17,8 @@ public class MineLifeClass extends MinnerBaseClass {
 
     @Override
     public void SetPowers() {
-        addPower(new MineLifePower(this,getLVL()));
-        addPower(new OreKnowledge(this,getLVL()));
+        addPower(new MineLifePower(this));
+        addPower(new OreKnowledge(this));
     }
 
 

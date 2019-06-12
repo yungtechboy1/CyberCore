@@ -9,9 +9,9 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class MineLifePower extends PowerCustomEffect {
-    public MineLifePower(BaseClass b,int level) {
-        super(b,((int) Math.floor(.65d * level) + 1), level);
-        int psc = ((int) Math.floor(.65d * level) + 1);
+    public MineLifePower(BaseClass b) {
+        super(b,((int) Math.floor(.65d * b.getLVL()) + 1));
+        int psc = ((int) Math.floor(.65d * b.getLVL()) + 1);
 
 //        PotionEffect = new
     }

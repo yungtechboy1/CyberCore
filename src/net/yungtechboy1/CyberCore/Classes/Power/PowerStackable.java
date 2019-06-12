@@ -12,8 +12,8 @@ public abstract class PowerStackable extends Power {
      * @param aq
      * @param maq
      */
-    public PowerStackable(BaseClass c, int psc, int lvl, int aq, int maq) {
-        super(c, psc, lvl);
+    public PowerStackable(BaseClass c, int psc, int aq, int maq) {
+        super(c, psc);
         AvailbleQuantity = aq;
         MaxAvailbleQuantity = maq;
     }

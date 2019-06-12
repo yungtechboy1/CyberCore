@@ -1,9 +1,11 @@
 package net.yungtechboy1.CyberCore;
 
-import net.yungtechboy1.CyberCore.Manager.Econ.PlayerEconData;
-import net.yungtechboy1.CyberCore.Rank.Rank;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 /**
@@ -22,25 +24,62 @@ public class PlayerSettingsData {
     public ArrayList<PlayerKickEvent> PlayerKicks = new ArrayList<>();
     public ArrayList<PlayerBanEvent> PlayerBans = new ArrayList<>();
     public int Rank = 0;
+    Type uuidType = new TypeToken<ArrayList<UUID>>() {
+    }.getType();
+    Type pweType = new TypeToken<ArrayList<PlayerWarningEvent>>() {
+    }.getType();
+    Type ptbType = new TypeToken<ArrayList<PlayerTempBanEvent>>() {
+    }.getType();
+    Type pkbType = new TypeToken<ArrayList<PlayerKickEvent>>() {
+    }.getType();
+    Type pbbType = new TypeToken<ArrayList<PlayerBanEvent>>() {
+    }.getType();
 
+    public PlayerSettingsData(CorePlayer p) {
+        Cash = 1000;
+        CreditLimit = 1000;
+        CreditScore = 350;//Out of 1000
+        UUIDS.add(p.getUniqueId());
+    }
+
+    public PlayerSettingsData(HashMap<String, Object> a) {
+        Name = (String) a.get("Name");
+        //https://stackoverflow.com/questions/27893342/how-to-convert-list-to-a-json-object-using-gson
+        UUIDS = new Gson().fromJson((String) a.get("UUIDS"), uuidType);
+        Cash = (int) a.get("Cash");
+        CreditScore = (int) a.get("CreditScore");
+        CreditLimit = (int) a.get("CreditLimit");
+        UsedCredit = (int) a.get("UsedCredit");
+        PlayerWarnings = new Gson().fromJson((String) a.get("PlayerWarnings"), pweType);
+        PlayerTempBans = new Gson().fromJson((String) a.get("PlayerTempBans"), uuidType);
+        PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), uuidType);
+        PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), uuidType);
+        Rank = (int) a.get("Rank");
+    }
+
+    public String UUIDSToJSON() {
+        return new Gson().toJson(UUIDS, uuidType);
+    }
+
+    public String PlayerWarningToJSON() {
+        return new Gson().toJson(PlayerWarnings, pweType);
+    }
+
+    public String PlayerTempBansToJSON() {
+        return new Gson().toJson(PlayerTempBans, ptbType);
+    }
+
+    public String PlayerKicksToJSON() {
+        return new Gson().toJson(PlayerKicks, pkbType);
+    }
+
+    public String PlayerBansToJSON() {
+        return new Gson().toJson(PlayerBans, pbbType);
+    }
 }
 
-class PlayerSettingsEvent{
+class PlayerSettingsEvent {
     public int intTime;
-}
-
-enum ReasonType{
-    NULL,
-    Type_Hacking,
-    Type_Hacking_Speed,
-    Type_Hacking_Fly,
-    Type_Hacking_Inv,
-    Type_Chat_Spam,
-    Type_Chat_Abuse,
-    Type_Chat_Racism,
-    Type_Chat_Other,
-    Type_Other,
-    Type_Other_Misc,
 }
 
 class PlayerWarningEvent extends PlayerSettingsEvent {
@@ -50,16 +89,19 @@ class PlayerWarningEvent extends PlayerSettingsEvent {
     public int intTime;
 }
 
-class PlayerKickEvent extends PlayerSettingsData{
+class PlayerKickEvent extends PlayerSettingsEvent {
     public String AdminName;
     public String Reason;
+    public ReasonType ReasonType = net.yungtechboy1.CyberCore.ReasonType.NULL;
 }
-class PlayerTempBanEvent extends PlayerSettingsData{
+
+class PlayerTempBanEvent extends PlayerSettingsEvent {
     public String AdminName;
     public String Reason;
     public int intTimeLength;
 }
-class PlayerBanEvent extends PlayerSettingsData{
+
+class PlayerBanEvent extends PlayerSettingsEvent {
     public String AdminName;
     public String Reason;
     public PlayerWarningEvent LinkedWarning;

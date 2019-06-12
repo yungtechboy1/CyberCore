@@ -7,6 +7,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -17,6 +18,11 @@ public class MinnerBaseClass extends BaseClass {
 
     public MinnerBaseClass(CyberCoreMain main, CorePlayer player,ClassType t, ConfigSection data) {
         super(main, player, t, data);
+    }
+
+    @Override
+    public PrimalPowerType getPowerSourceType() {
+        return null;
     }
 
     @Override

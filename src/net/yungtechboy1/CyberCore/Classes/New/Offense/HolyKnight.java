@@ -8,6 +8,7 @@ import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.Classes.Power.HolyKnightHealPower;
 import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -22,13 +23,18 @@ public class HolyKnight extends BaseClass {
     }
 
     @Override
+    public PrimalPowerType getPowerSourceType() {
+        return null;
+    }
+
+    @Override
     public ClassType getTYPE() {
         return ClassType.Class_Offense_Holy_Knight;
     }
 
     @Override
     public void SetPowers() {
-        addPower(new HolyKnightHealPower(this, getLVL()));
+        addPower(new HolyKnightHealPower(this));
     }
 
     @Override

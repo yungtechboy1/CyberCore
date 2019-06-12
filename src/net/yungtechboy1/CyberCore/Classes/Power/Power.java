@@ -20,10 +20,11 @@ public abstract class Power {
     private int PowerSuccessChance = 100;
     private int _lasttick = -1;
 
-    public Power(BaseClass b, int psc, int lvl) {
+    public Power(BaseClass b, int psc) {
         PowerSuccessChance = psc;
         PlayerClass = b;
-        Level = lvl;
+//        Level = lvl;
+        Level = b.getLVL();
         initStages();
         initAfterCreation();
     }
@@ -79,8 +80,11 @@ public abstract class Power {
     }
 
     public final void handleTick(int tick) {
+        System.out.println("Power Call TICK");
         if (TickUpdate == -1) return;
+        System.out.println("Power Call TICK 1");
         if (_lasttick + TickUpdate < tick) {
+            System.out.println("Power Called THE ACTUAL TICK");
             onTick(tick);
             _lasttick = tick;
         }

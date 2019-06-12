@@ -9,12 +9,11 @@ import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 public class DragonJumper extends PowerStackable {
     /**
      * @param c
-     * @param lvl
      * @param aq
      * @param maq
      */
-    public DragonJumper(DragonSlayer c,  int lvl, int aq, int maq) {
-        super(c, 35, lvl, aq, maq);
+    public DragonJumper(DragonSlayer c, int aq, int maq) {
+        super(c, 35, aq, maq);
     }
 
     @Override

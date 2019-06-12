@@ -92,6 +92,6 @@ public class SendHUD extends Thread implements InterruptibleThread {
         }
         p.sendTip(f);
         //HACK TO SEND CORRECT HEALTH TO CLIENT
-        p.sendHealth();
+        if(p.getHealth() >= 20)p.sendHealth();
     }
 }

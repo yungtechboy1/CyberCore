@@ -9,7 +9,7 @@ import net.yungtechboy1.CyberCore.Classes.Power.*;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
-public class DragonSlayer extends BaseClass {
+public abstract class DragonSlayer extends BaseClass {
     public DragonSlayer(CyberCoreMain main, CorePlayer player, ClassType rank, ConfigSection data) {
         super(main, player, rank, data);
     }
@@ -25,7 +25,7 @@ public class DragonSlayer extends BaseClass {
 
     @Override
     public void SetPowers() {
-        addPower(new TNTAirStrikePower(this,getLVL()));
+        addPower(new TNTAirStrikePower(this));
     }
 
     @Override

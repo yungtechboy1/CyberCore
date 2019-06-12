@@ -9,7 +9,7 @@ import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
-public class Thief extends BaseClass {
+public abstract class Thief extends BaseClass {
 
     public Thief(CyberCoreMain main, CorePlayer player, ConfigSection cs) {
         super(main, player, ClassType.Class_Miner_TNT_Specialist);

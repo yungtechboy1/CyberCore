@@ -18,8 +18,8 @@ import java.util.ArrayList;
 public class OreKnowledge extends PassivePower {
     int BlockRange = 10;
 
-    public OreKnowledge(BaseClass b,int lvl) {
-        super(b,1, lvl);
+    public OreKnowledge(BaseClass b) {
+        super(b,1);
     }
 
     @Override

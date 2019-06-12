@@ -9,8 +9,8 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 public class MercenaryBlindingStrike extends PowerCustomEffect {
 
-    public MercenaryBlindingStrike(Mercenary bc, int lvl) {
-        super(bc, 2, lvl);
+    public MercenaryBlindingStrike(Mercenary bc) {
+        super(bc, 2);
     }
 
     @Override

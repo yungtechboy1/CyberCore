@@ -13,6 +13,7 @@ import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.event.player.*;
+import cn.nukkit.event.player.PlayerKickEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.inventory.Inventory;
@@ -312,12 +313,13 @@ public class CorePlayer extends Player {
         }
     }
 
+    @Deprecated
     public PlayerEconData GetEconData() {
-        return GetData();
+        return new PlayerEconData(GetData());
     }
 
     public PlayerSettingsData GetData() {
-        if (getSettingsData() == null) CreateDefaultSettingsData();
+        if (getSettingsData() == null) CreateDefaultSettingsData(this);
         return getSettingsData();
     }
 
@@ -327,13 +329,8 @@ public class CorePlayer extends Player {
         super.close(message, reason, notify);
     }
 
-    public void CreateDefaultSettingsData() {
-        PlayerSettingsData a = new PlayerSettingsData();
-        a.Cash = 1000;
-        a.CreditLimit = 1000;
-        a.CreditScore = 350;//Out of 1000
-        a.Name = getName();
-        a.UsedCredit = 0;
+    public void CreateDefaultSettingsData(CorePlayer p) {
+        PlayerSettingsData a = new PlayerSettingsData(p);
         setSettingsData(a);
     }
 
@@ -376,19 +373,18 @@ public class CorePlayer extends Player {
 
     public void TakeMoney(double price) {
         if (price <= 0) return;
-        PlayerEconData ped = GetData();
+        PlayerSettingsData ped = GetData();
         ped.Cash -= price;
     }
 
     public void AddMoney(double price) {
         if (price <= 0) return;
-        PlayerEconData ped = GetData();
+        PlayerSettingsData ped = GetData();
         ped.Cash += price;
     }
 
     public double GetMoney() {
-        PlayerEconData ped = GetData();
-        return ped.Cash;
+        return GetData().Cash;
     }
 
     public void SetRank(RankList r) {
@@ -1782,6 +1778,7 @@ public class CorePlayer extends Player {
 
         this.server.addOnlinePlayer(this);
         this.server.onPlayerCompleteLoginSequence(this);
+        setSettingsData(CyberCoreMain.getInstance().UserSQL.getPlayerSettingsData(this));
     }
 
 

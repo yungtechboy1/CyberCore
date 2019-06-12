@@ -5,6 +5,7 @@ import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
@@ -25,18 +26,18 @@ public class Assassin extends BaseClass {
     }
 
     @Override
-    public ClassType getTYPE() {
+    public PrimalPowerType getPowerSourceType() {
         return null;
+    }
+
+    @Override
+    public ClassType getTYPE() {
+        return ClassType.Class_Offense_Assassin;
     }
 
     @Override
     public void SetPowers() {
 
-    }
-
-    @Override
-    public int getMainID() {
-        return BaseClass.TYPE_Offensive_Assassin;
     }
 
     @Override

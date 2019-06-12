@@ -9,6 +9,7 @@ import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.MercenaryDisarm
 import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.MercenaryDoubleTake;
 import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.MercenaryReneration;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -53,6 +54,10 @@ public class Mercenary  extends BaseClass {
         return null;
     }
 
+    @Override
+    public ClassType getTYPE() {
+        return ClassType.Class_Offense_Mercenary;
+    }
 
     @Override
     public String getName() {
@@ -60,11 +65,16 @@ public class Mercenary  extends BaseClass {
     }
 
     @Override
+    public PrimalPowerType getPowerSourceType() {
+        return null;
+    }
+
+    @Override
     public void SetPowers() {
-        addPower(new MercenaryDisarm(this,getLVL()));
-        addPower(new MercenaryBlindingStrike(this,getLVL()));
-        addPower(new MercenaryDoubleTake(this,getLVL()));
-        addPower(new MercenaryReneration(this,getLVL()));
+        addPower(new MercenaryDisarm(this));
+        addPower(new MercenaryBlindingStrike(this));
+        addPower(new MercenaryDoubleTake(this));
+        addPower(new MercenaryReneration(this));
     }
 
     @Override
@@ -72,10 +82,6 @@ public class Mercenary  extends BaseClass {
         super.onUpdate(tick);
     }
 
-    @Override
-    public int getMainID() {
-        return BaseClass.TYPE_Offensive_Raider;
-    }
 
     @Override
     public void initBuffs() {
