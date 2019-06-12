@@ -49,7 +49,7 @@ public class TNTSpecialist extends MinnerBaseClass {
 
     @Override
     public void SetPowers() {
-        addPower(new TNTSpecialistPower(this, getLVL(), 3, GetMaxTNTPower()));
+        addPower(new TNTSpecialistPower(this,  3, GetMaxTNTPower()));
     }
 
     @Override

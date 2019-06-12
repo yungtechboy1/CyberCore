@@ -5,8 +5,8 @@ import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 public  class TNTAirStrikePower extends Power {
-    public TNTAirStrikePower(BaseClass b, int lvl) {
-        super(b, 100, lvl);
+    public TNTAirStrikePower(BaseClass b) {
+        super(b, 100);
         TickUpdate = 20*5;//5 Secs
     }
 

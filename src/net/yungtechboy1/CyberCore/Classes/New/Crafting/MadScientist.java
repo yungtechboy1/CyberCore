@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
@@ -45,6 +46,11 @@ public class MadScientist extends BaseClass {
         else if(lvl >= 11 && mi == -1)mi = 15;
         else if(lvl >= 1 && mi == -1)mi = 10;
         return mi;
+    }
+
+    @Override
+    public PrimalPowerType getPowerSourceType() {
+        return null;
     }
 
     @Override

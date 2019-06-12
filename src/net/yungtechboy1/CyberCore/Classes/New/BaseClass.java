@@ -568,12 +568,12 @@ public abstract class BaseClass {
 
     public void tickPowers(int tick) {
         for (Power p : getPowers()) {
-            if (p.getCooldownTimeTick() != -1 && tick % p.getCooldownTimeTick() == 0) p.handleTick(tick);
+            if (p.getCooldownTimeTick() != -1) p.handleTick(tick);
         }
     }
 
     public void onUpdate(int tick) {
-
+//        System.out.println("TICKING BASECLASS");
         tickPowers(tick);
     }
 
@@ -611,7 +611,7 @@ public abstract class BaseClass {
 
 
     public enum ClassType {
-        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary, DragonSlayer, Class_Magic_Enchanter, Class_Rouge_Thief, Class_Offense_Knight, Class_Offense_Holy_Knight, Class_Offense_Dark_Knight;
+        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary, DragonSlayer, Class_Magic_Enchanter, Class_Rouge_Thief, Class_Offense_Knight, Class_Offense_Holy_Knight, Class_Offense_Dark_Knight,Class_Offense_Assassin, Class_Offense_Raider;
 
 
         public int getKey() {

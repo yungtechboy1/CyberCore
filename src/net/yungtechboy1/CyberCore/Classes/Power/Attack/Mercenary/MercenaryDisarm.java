@@ -9,8 +9,8 @@ import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 public class MercenaryDisarm extends Power {
-    public MercenaryDisarm(BaseClass b, int lvl) {
-        super(b, 2, lvl);
+    public MercenaryDisarm(BaseClass b) {
+        super(b, 2);
     }
 
     @Override

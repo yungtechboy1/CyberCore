@@ -174,21 +174,10 @@ public class ServerSqlite extends MySQL {
     }
 
     private void LoadSettings(CorePlayer p) {
-        try {
-            List<HashMap<String, Object>> data = executeSelect("SELECT * FROM `Settings` WHERE `name` LIKE '" + p.getName().toLowerCase() + "'");
-            if (data == null || data.size() < 1) {
-                CyberCoreMain.getInstance().getLogger().error("Error Loading Settings from Sql!");
-                return;
-            } else {
-                plugin.getLogger().info(p.getDisplayName() + "'s Settings Loaded!");
-            }
 
-            p.Settings = new CoreSettings(data.get(0));
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        UserSQL u = plugin.UserSQL;
+        plugin.getLogger().info("Starting loading "+p.getName()+"'s Server Data...Maybe");
+        u.getPlayerSettingsData(p);
     }
 
     private void SaveHomes(CorePlayer p) {
@@ -205,13 +194,10 @@ public class ServerSqlite extends MySQL {
     }
 
     private void SaveSettings(CorePlayer p) {
-        try {
-            executeUpdate("DELETE FROM `Settings` WHERE `name` LIKE '" + p.getName().toLowerCase() + "'");
-            executeUpdate("INSERT INTO `Settings` VALUES ('" + p.getName().toLowerCase() + "'," + p.Settings.isHudOff() + "," + p.Settings.isHudClassOff() + "," + p.Settings.isHudPosOff() + "," + p.Settings.isHudFactionOff() + ")");
-            plugin.getLogger().info("Settings saved for " + p.getName());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+        UserSQL u = plugin.UserSQL;
+        plugin.getLogger().info("Starting SAVING FOR  "+p.getName()+"'s Server Data...Maybe");
+        u.savePlayerSettingData(p);
     }
 
 

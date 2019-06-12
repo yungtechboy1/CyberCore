@@ -13,8 +13,8 @@ import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import java.util.ArrayList;
 
 public class HolyKnightHealPower extends Power {
-    public HolyKnightHealPower(BaseClass b, int lvl) {
-        super(b, 75, lvl);
+    public HolyKnightHealPower(BaseClass b) {
+        super(b, 75);
     }
 
     @Override

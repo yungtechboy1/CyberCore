@@ -14,8 +14,8 @@ public class PowerCustomEffect extends Power {
     public Effect PotionEffect = null;
     public Boolean PotionOnSelf = false;
     int DurationTicks = 0;
-    public PowerCustomEffect(BaseClass b, int psc, int lvl) {
-        super(b, psc, lvl);
+    public PowerCustomEffect(BaseClass b, int psc) {
+        super(b, psc);
     }
 
     public Boolean getPotionOnSelf() {

@@ -7,9 +7,9 @@ import net.yungtechboy1.CyberCore.CorePlayer;
 public abstract class PowerAbility extends Power {
     private boolean Active = false;
     private int DeActivatedTick = -1;
-    public PowerAbility(BaseClass bc, int psc, int lvl) {
+    public PowerAbility(BaseClass bc, int psc) {
 
-        super(bc, psc, lvl);
+        super(bc, psc);
         TickUpdate = 10;//Every 10 Ticks
     }
 

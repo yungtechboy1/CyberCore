@@ -7,10 +7,11 @@ import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.TNTAirStrikePower;
+import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
-public class DarkKnight  extends BaseClass {
+public class DarkKnight extends BaseClass {
     public DarkKnight(CyberCoreMain main, CorePlayer player, ClassType rank, ConfigSection data) {
         super(main, player, rank, data);
     }
@@ -20,13 +21,18 @@ public class DarkKnight  extends BaseClass {
     }
 
     @Override
+    public PrimalPowerType getPowerSourceType() {
+        return null;
+    }
+
+    @Override
     public ClassType getTYPE() {
         return ClassType.Class_Offense_Dark_Knight;
     }
 
     @Override
     public void SetPowers() {
-        addPower(new TNTAirStrikePower(this,getLVL()));
+        addPower(new TNTAirStrikePower(this));
     }
 
     @Override

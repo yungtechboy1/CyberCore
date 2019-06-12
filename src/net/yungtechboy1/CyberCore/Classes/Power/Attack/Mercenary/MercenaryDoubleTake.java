@@ -10,8 +10,8 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 
 public class MercenaryDoubleTake extends PowerAbility {
-    public MercenaryDoubleTake(BaseClass bc, int lvl) {
-        super(bc,20, lvl);
+    public MercenaryDoubleTake(BaseClass bc) {
+        super(bc,20);
     }
 
     @Override

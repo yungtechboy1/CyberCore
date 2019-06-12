@@ -37,6 +37,7 @@ import net.yungtechboy1.CyberCore.Custom.Crafting.CustomRecipeCraftingManager;
 import net.yungtechboy1.CyberCore.Custom.CustomInventoryTransactionPacket;
 import net.yungtechboy1.CyberCore.Custom.Item.*;
 import net.yungtechboy1.CyberCore.Data.ServerSqlite;
+import net.yungtechboy1.CyberCore.Data.UserSQL;
 import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
 import net.yungtechboy1.CyberCore.Factory.ClassFactory;
 import net.yungtechboy1.CyberCore.Factory.Shop.ShopFactory;
@@ -138,14 +139,14 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     /**
      * DATA: ECON, K/D,
      */
-//    public net.yungtechboy1.CyberCore.Data.UserSQL UserSQL;
+    public net.yungtechboy1.CyberCore.Data.UserSQL UserSQL;
     public net.yungtechboy1.CyberCore.Manager.Warp.WarpManager WarpManager;
     public ServerSqlite ServerSQL;
     public CustomCraftingManager CraftingManager;
     Vector3 p1;
     Vector3 p2;
     CustomRecipeCraftingManager CRM;
-    private EconManager ECON;
+//    private EconManager ECON;
 
     public PowerSourceTaskAsync getPowerSourceTask() {
         return PowerSourceTask;
@@ -295,7 +296,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        CoreSQL = new CoreSQL(this,"Core");
         ServerSQL = new ServerSqlite(this);
         ServerSQL.LoadAllWarps();
-//        UserSQL = new UserSQL(this, "server-data");
+        UserSQL = new UserSQL(this);
 
 
         PM = new PurgeManager(this);
@@ -313,7 +314,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         MP = new MobPlugin(this);
 
 //        GOOD
-        ECON = new EconManager(this);
+//        ECON = new EconManager(this);
         FM = new FactionsMain(this, new FactionSQL(this));
 //        getServer().getScheduler().scheduleRepeatingTask(new UnMuteTask(this), 20 * 15);
 //        getServer().getScheduler().scheduleRepeatingTask(new ClearSpamTick(this), 20 * 5);
@@ -853,9 +854,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         return false;
     }
 
-    public EconManager GetEcon() {
-        return ECON;
-    }
 
 //    public void initiatePlayer(Player p) {
 //        try {

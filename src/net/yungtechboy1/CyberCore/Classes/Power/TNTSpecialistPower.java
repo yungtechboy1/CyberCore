@@ -18,8 +18,8 @@ import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Power;
  */
 public class TNTSpecialistPower extends PowerStackable {
 
-    public TNTSpecialistPower(BaseClass b, int lvl, int aq, int maq) {
-        super(b,100, lvl, aq, maq);
+    public TNTSpecialistPower(BaseClass b, int aq, int maq) {
+        super(b,100, aq, maq);
     }
 
     @Override
