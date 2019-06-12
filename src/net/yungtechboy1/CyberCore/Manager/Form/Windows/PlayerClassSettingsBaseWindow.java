@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Deprecated
-public class PlayerClassSettingsBase extends CyberFormCustom {
-    public PlayerClassSettingsBase() {
+public class PlayerClassSettingsBaseWindow extends CyberFormCustom {
+    public PlayerClassSettingsBaseWindow() {
         this(new ArrayList());
     }
 
-    public PlayerClassSettingsBase(List<ElementButton> buttons) {
+    public PlayerClassSettingsBaseWindow(List<ElementButton> buttons) {
         super(FormType.MainForm.PlayerFactionSettingsPage0, "CyberFactions | Player Faction Settings Page (1/1)");
 
         addElement(new ElementToggle("Allow Faction Invite Pop-Ups"));

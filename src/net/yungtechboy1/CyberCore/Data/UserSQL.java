@@ -19,24 +19,44 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public class UserSQL extends SQLite{
+public class UserSQL extends MySQL{
 
 
-    public UserSQL(CyberCoreMain plugin, String settings) {
-        super(plugin, settings);
-    }
 
     /**
      * Connects to the MYSQL database assigned in config.yml for GLOBAL data
      * @return Connection
      */
+
+    public String table = "mcpe";
+    public String file = "cyber_core_data.db";
+    public String createSQL = "create table if not exists " + table + " (";
+    public String insertQuery = "insert into " + table + " (";
+    public String addQuery = "insert into " + table + " (uuid) values (:uuid)";
+    public String loadQuery = "select * from " + table + " where uuid=':uuid'";
+    public String saveQuery = "update " + table + " set ";
+    public HashMap<String, String> columns;
+
+    public UserSQL(CyberCoreMain plugin) {
+        super(plugin);
+    }
+
+    @Override
     public Connection connectToDb() {
-        enabled = (plugin.getServer().getPluginManager().getPlugin("DbLib") != null);
+        String host = plugin.MainConfig.getSection("db2").getString("mysql-host");
+        String pass = plugin.MainConfig.getSection("db2").getString("mysql-pass");
+        int port = plugin.MainConfig.getSection("db2").getInt("mysql-port");
+        String user = plugin.MainConfig.getSection("db2").getString("mysql-user");
+        String db = plugin.MainConfig.getSection("db2").getString("mysql-db-Faction");
         if (!enabled) return null;
-        java.sql.Connection connection = DbLib.getSQLiteConnection(new File(plugin.getDataFolder() + File.separator +file));
+        Connection connection = DbLib.getMySqlConnection(host, port,
+                db, user, pass);
+
         if (connection == null) enabled = false;
         return connection;
     }
+
+
 
     public void createUser(String uuid) throws SQLException {
         executeUpdate(addQuery.replace(":uuid", "'"+uuid+"'"));
