@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary;
 
 import cn.nukkit.block.BlockSand;
-import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Location;
 import cn.nukkit.math.BlockFace;
@@ -15,6 +14,8 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 public class KnightSandShieldPower extends PowerHotBarInt {
     public KnightSandShieldPower(BaseClass b) {
         super(b, 80);
+        setPowerSourceCost(10);
+
     }
 
     @Override
@@ -39,21 +40,21 @@ public class KnightSandShieldPower extends PowerHotBarInt {
         for (int width = -3; width < 3; width++) {
             topoff = !topoff;
             BlockFace nd = getLeft(d);
-            Location al = sp.add(nd.getUnitVector().multiply(width)).add(0,15,0);
+            Location al = sp.add(nd.getUnitVector().multiply(width)).add(0, 20, 0);
             for (int height = 0; height < 3; height++) {
 
 //                l.setBlock(al.add(), new BlockSand());
-                l.setBlock(al.add(0,height,0),new BlockSand());
+                l.setBlock(al.add(0, height, 0), new BlockSand());
             }
 
-            if(topoff)l.setBlock(al.add(0,3,0),new BlockSand());
+            if (topoff) l.setBlock(al.add(0, 3, 0), new BlockSand());
         }
 //        }
         return null;
     }
 
-    public BlockFace getLeft(BlockFace bf){
-        switch (bf){
+    public BlockFace getLeft(BlockFace bf) {
+        switch (bf) {
             case NORTH:
                 return BlockFace.WEST;
             case SOUTH:
@@ -76,6 +77,6 @@ public class KnightSandShieldPower extends PowerHotBarInt {
 
     @Override
     public String getDispalyName() {
-        return TextFormat.YELLOW+getName();
+        return TextFormat.YELLOW + getName();
     }
 }

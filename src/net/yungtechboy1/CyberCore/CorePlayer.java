@@ -1802,7 +1802,6 @@ public class CorePlayer extends Player {
 
         this.server.addOnlinePlayer(this);
         this.server.onPlayerCompleteLoginSequence(this);
-        setSettingsData(CyberCoreMain.getInstance().UserSQL.getPlayerSettingsData(this));
     }
 
 

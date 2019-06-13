@@ -11,6 +11,7 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
+import net.yungtechboy1.CyberCore.PlayerSettingsData;
 
 public abstract class PowerHotBarInt extends PowerHotBar {
 
@@ -112,32 +113,32 @@ public abstract class PowerHotBarInt extends PowerHotBar {
             System.out.println("UNNNNNNNNACTIVE POWER");
             setPowerUnAvailable();
         }
-        antiSpamCheck();
+        if (tick % 2 == 0) antiSpamCheck();
     }
 
     public void antiSpamCheck() {
 //        int slot = 0;
         boolean k = false;
         for (int slot = 0; slot < getPlayer().getInventory().getSize(); slot++) {
-            if(slot == LS.getSlot())continue;
+            if (slot == LS.getSlot()) continue;
             Item i = getPlayer().getInventory().getItem(slot);
             if (i.getNamedTag() != null) {
                 if (i.getNamedTag().contains(getPowerHotBarItemNamedTagKey)) {
-                    getPlayer().getInventory().clear(slot,true);
+                    getPlayer().getInventory().clear(slot, true);
                     k = true;
                 }
             }
             slot++;
         }
-        if(k)getPlayer().kick("Please do not spam system!");
+        if (k) getPlayer().kick("Please do not spam system!");
     }
 
     public Item addNamedTag(Item i, String key, String val) {
         i.setCustomName("Use Power: " + getDispalyName());
         if (Cooldown == null) {
-            i.setLore(TextFormat.GREEN + "Ready to Use");
+            i.setLore(TextFormat.GREEN + "Ready to Use", TextFormat.GREEN+"Costs: "+getPowerSourceCost()+" "+ PlayerClass.getPowerSourceType().name()+" ");
         } else {
-            i.setLore(Cooldown.toString());
+            i.setLore(Cooldown.toString(), TextFormat.GREEN+"Costs: "+getPowerSourceCost()+" "+ PlayerClass.getPowerSourceType().name()+" ");
         }
         CompoundTag ct = i.getNamedTag();
         if (ct == null) ct = new CompoundTag();

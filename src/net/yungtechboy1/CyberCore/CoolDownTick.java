@@ -22,7 +22,7 @@ public class CoolDownTick {
             if(d <= 20) return "1 Sec";
             if(d < 20*60){
                 //Less Than a Min
-                return ((int)Math.floor(d/20))+"";
+                return ((int)Math.floor(d/20))+" Secs";
             }else if(d < 20*60*60){//72k
                 //Less than an hour
                 int dd = d/20;
@@ -45,6 +45,7 @@ public class CoolDownTick {
         }
     }
 
+    @Deprecated
     public CoolDownTick(int t) {
         Tick = t;
     }

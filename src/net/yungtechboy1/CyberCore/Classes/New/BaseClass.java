@@ -138,15 +138,15 @@ public abstract class BaseClass {
     }
 
     public double getMaxPowerSourceCount() {
-        return Math.round((Math.abs(Math.pow(57 * getLVL(), 2)) / Math.sqrt(Math.pow(20 * getLVL(), 3))) + getLVL() * 10);
+        return Math.round((Math.abs(Math.pow(57 * (getLVL()+1), 2)) / Math.sqrt(Math.pow(20 * (getLVL()+1), 3))) + ((getLVL()+1) * 10));
     }
 
     public void tickPowerSource(int tick) {
         addPowerSourceCount();//From Server Every 20 Secs
-        double t = Math.abs(Math.pow(27 * getLVL(), 2));
-        double b = Math.sqrt(Math.pow(18 * getLVL(), 3));
+        double t = Math.abs(Math.pow(27 * (getLVL()+1), 2));
+        double b = Math.sqrt(Math.pow(18 * (getLVL()+1), 3));
         int f = (int) Math.round((t / b) * .2);
-        addPowerSourceCount(f);
+        addPowerSourceCount(Math.abs(f));
         //TODO
         //ISSUE
         //Maybe TIck player power here too??
@@ -272,7 +272,7 @@ public abstract class BaseClass {
     public boolean TryRunPower(PowerEnum powerid) {
         Power p = getPower(powerid);
         if (p == null) return false;
-        return p.CanRun();
+        return p.CanRun(false);
     }
 
     public void CmdRunPower(PowerEnum powerid) {
@@ -604,7 +604,7 @@ public abstract class BaseClass {
         int pxp = XPRemainder(getXP());
         int pxpof = calculateRequireExperience(lvl + 1);
         int plvl = lvl;
-        f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl;
+        f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl + TextFormat.GRAY+ " | " + TextFormat.AQUA+getPowerSourceType().name()+" Power : "+getPowerSourceCount() + " / "+ getMaxPowerSourceCount();
         return f;
     }
 

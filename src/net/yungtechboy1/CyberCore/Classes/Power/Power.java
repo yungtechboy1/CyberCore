@@ -25,13 +25,27 @@ public abstract class Power {
     private int PowerSuccessChance = 100;
     private int _lasttick = -1;
 
+    public double getPowerSourceCost() {
+        return PowerSourceCost;
+    }
+
+    public void setPowerSourceCost(double powerSourceCost) {
+        PowerSourceCost = powerSourceCost;
+    }
+
+    private double PowerSourceCost = 0;
+
     public Power(BaseClass b, int psc) {
+        this(b,psc,0);
+    }
+    public Power(BaseClass b, int psc, double cost) {
         PowerSuccessChance = psc;
         PlayerClass = b;
 //        Level = lvl;
         Level = b.getLVL();
         initStages();
         initAfterCreation();
+        PowerSourceCost = cost;
     }
 
     public int getPowerSuccessChance() {
@@ -119,13 +133,14 @@ public abstract class Power {
     public abstract PowerEnum getType();
 
     //USE TO RUN
-    public void initPowerRun(Object... args) {
-        if (CanRun()) {
+    public final void initPowerRun(Object... args) {
+        if (CanRun(false)) {
+            PlayerClass.takePowerSourceCount(PowerSourceCost);
             usePower(args);
             afterPowerRun(args);
         }else{
             if(Cooldown != null && Cooldown.isValid()){
-                getPlayer().sendMessage(TextFormat.RED+"Error! Power "+getDispalyName()+TextFormat.RED+" still has a "+TextFormat.LIGHT_PURPLE+Cooldown.toString());
+                getPlayer().sendMessage(TextFormat.RED+"Error! Power "+getDispalyName()+TextFormat.RED+" still has a "+TextFormat.LIGHT_PURPLE+Cooldown.toString()+TextFormat.RED+" Cooldown.");
             }
         }
     }
@@ -139,16 +154,16 @@ public abstract class Power {
         return TextFormat.GREEN+ " > Power "+getDispalyName()+TextFormat.GREEN+" has been activated!";
     }
 
-    public boolean CanRun(Object... args) {
-        return CanRun(false, args);
-    }
-
     public Object usePower(Object... args) {
         return null;
     }
 
-    protected boolean CanRun(boolean force, Object... args) {
+    public boolean CanRun(boolean force, Object... args) {
         if (force) return true;
+        if(PlayerClass.getPowerSourceCount() < PowerSourceCost){
+            getPlayer().sendMessage(TextFormat.RED+"Not enough "+PlayerClass.getPowerSourceType().name()+" Energy!");
+            return false;
+        }
         NukkitRandom nr = new NukkitRandom();
         if (nr.nextRange(0, 100) <= PowerSuccessChance) {
             //Success
@@ -172,9 +187,8 @@ public abstract class Power {
     }
 
     public CoolDownTick addCooldown(int secs) {
-        CoolDownTick c = new CoolDownTick(secs*20);
-        Cooldown = c;
-        return c;
+        Cooldown = new CoolDownTick(getType().name(),secs*20);
+        return Cooldown;
     }
 
     public abstract String getName();

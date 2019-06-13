@@ -46,15 +46,12 @@ public class MercenaryDoubleTake extends PowerAbility {
         return null;
     }
 
-    @Override
-    public boolean CanRun(Object... args) {
-        return super.CanRun(args);
-    }
+
 
     @Override
     public boolean CanRun(boolean force, Object... args) {
         if(force)return true;
-        if(super.CanRun(args)) {
+        if(super.CanRun(force,args)) {
             CorePlayer cp = getPlayer();
             return !(cp.getHealth() > 8);
         }

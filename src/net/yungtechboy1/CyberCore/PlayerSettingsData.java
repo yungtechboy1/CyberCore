@@ -45,22 +45,26 @@ public class PlayerSettingsData {
     public PlayerSettingsData(HashMap<String, Object> a) {
         Name = (String) a.get("Name");
         //https://stackoverflow.com/questions/27893342/how-to-convert-list-to-a-json-object-using-gson
-        UUIDS = new Gson().fromJson((String) a.get("UUIDS"), uuidType);
+//        if (((String) a.get("PlayerWarnings")).equalsIgnoreCase("[]"))
+        UUIDS = new Gson().fromJson((String) a.get("UUIDs"), uuidType);
         Cash = (int) a.get("Cash");
         CreditScore = (int) a.get("CreditScore");
         CreditLimit = (int) a.get("CreditLimit");
         UsedCredit = (int) a.get("UsedCredit");
         if (((String) a.get("PlayerWarnings")).equalsIgnoreCase("[]")) PlayerWarnings = new ArrayList<>();
         else PlayerWarnings = new Gson().fromJson((String) a.get("PlayerWarnings"), pweType);
-        if (((String) a.get("PlayerTempBans")).equalsIgnoreCase("[]")) PlayerTempBans = new Gson().fromJson((String) a.get("PlayerTempBans"), ptbType);
+        if (((String) a.get("PlayerTempBans")).equalsIgnoreCase("[]"))
+            PlayerTempBans = new Gson().fromJson((String) a.get("PlayerTempBans"), ptbType);
         PlayerTempBans = new Gson().fromJson((String) a.get("PlayerTempBans"), uuidType);
-        if (((String) a.get("PlayerKicks")).equalsIgnoreCase("[]"))  PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), pkbType);
+        if (((String) a.get("PlayerKicks")).equalsIgnoreCase("[]"))
+            PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), pkbType);
         PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), uuidType);
-        if (((String) a.get("PlayerBans")).equalsIgnoreCase("[]")) PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), pbbType);
+        if (((String) a.get("PlayerBans")).equalsIgnoreCase("[]"))
+            PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), pbbType);
         PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), uuidType);
         try {
-            Rank = Integer.parseInt((String)a.get("Rank"));
-        }catch(Exception e){
+            Rank = Integer.parseInt((String) a.get("Rank"));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
