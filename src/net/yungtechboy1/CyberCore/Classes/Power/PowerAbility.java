@@ -43,7 +43,7 @@ public abstract class PowerAbility extends Power {
     }
 
     @Override
-    public final Object usePower(CorePlayer cp, Object... args) {
+    public final Object usePower(Object... args) {
         activate();
         onAbilityActivate();
         return null;

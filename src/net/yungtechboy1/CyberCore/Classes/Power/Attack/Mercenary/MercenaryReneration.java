@@ -69,7 +69,7 @@ public class MercenaryReneration extends PowerAbility {
 
         if(_incombat > 6){
             //Allow Heal, Run Power
-            InitPowerRun();
+            initPowerRun();
             _incombat = 0;
         }
     }

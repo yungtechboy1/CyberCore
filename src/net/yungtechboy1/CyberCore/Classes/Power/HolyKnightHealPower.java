@@ -23,7 +23,7 @@ public class HolyKnightHealPower extends Power {
     }
 
     @Override
-    public Object usePower(CorePlayer cp, Object... args) {
+    public Object usePower( Object... args) {
         return null;
     }
 

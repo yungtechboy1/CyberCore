@@ -19,7 +19,7 @@ public class MercenaryDoubleTake extends PowerAbility {
         if(e.getCause() == CustomEntityDamageEvent.CustomDamageCause.DoubleTakeMagic)return e;
         if(e.getEntity() instanceof CorePlayer) {
             float d = e.getOriginalDamage();
-            if(!isActive())InitPowerRun((CorePlayer)e.getEntity());
+            if(!isActive())initPowerRun((CorePlayer)e.getEntity());
             else {
                 NukkitRandom nr = new NukkitRandom();
                 if (nr.nextRange(0, 100) <= getPowerSuccessChance()) {
@@ -47,12 +47,16 @@ public class MercenaryDoubleTake extends PowerAbility {
     }
 
     @Override
+    public boolean CanRun(Object... args) {
+        return super.CanRun(args);
+    }
+
+    @Override
     public boolean CanRun(boolean force, Object... args) {
         if(force)return true;
-        if(super.CanRun(force,args)) {
+        if(super.CanRun(args)) {
             CorePlayer cp = getPlayer();
-            if (cp.getHealth() > 8) return false;
-            return true;
+            return !(cp.getHealth() > 8);
         }
         return false;
     }

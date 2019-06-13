@@ -37,10 +37,10 @@ public class PowerCustomEffect extends Power {
     }
 
     @Override
-    public final Object usePower(CorePlayer cp, Object... args) {
+    public final Object usePower( Object... args) {
         if (getPotionOnSelf()) {
-            cp.sendMessage(TextFormat.GREEN+"["+getDispalyName()+"] Effect Active");
-            cp.addEffect(getEffect());
+            getPlayer().sendMessage(TextFormat.GREEN+"["+getDispalyName()+"] Effect Active");
+            getPlayer().addEffect(getEffect());
         }else {
             ((Player)args[0]).sendMessage(TextFormat.GREEN+"["+getDispalyName()+"] Effect Active");
             ((Entity)args[0]).addEffect(getEffect());

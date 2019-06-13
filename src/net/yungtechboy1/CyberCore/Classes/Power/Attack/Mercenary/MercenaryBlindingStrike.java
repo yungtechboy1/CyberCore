@@ -15,7 +15,7 @@ public class MercenaryBlindingStrike extends PowerCustomEffect {
 
     @Override
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e) {
-        if(e.getEntity() instanceof CorePlayer)InitPowerRun(e.getEntity());
+        if(e.getEntity() instanceof CorePlayer)initPowerRun(e.getEntity());
         return e;
     }
 

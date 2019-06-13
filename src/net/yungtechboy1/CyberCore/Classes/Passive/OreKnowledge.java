@@ -62,7 +62,7 @@ public class OreKnowledge extends PassivePower {
     }
 
     @Override
-    public Object usePower(CorePlayer cp, Object... args) {
+    public Object usePower( Object... args) {
         return null;
     }
 

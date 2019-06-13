@@ -73,7 +73,7 @@ public class UserSQL extends MySQL {
             corePlayer.setSettingsData(psd);
             return psd;
         } catch (Exception e) {
-            plugin.getLogger().error("Error getting UserSQL PlayerSettingData");
+            plugin.getLogger().error("Error getting UserSQL PlayerSettingData1");
             e.printStackTrace();
             return null;
         }
@@ -81,6 +81,7 @@ public class UserSQL extends MySQL {
 
     public boolean savePlayerSettingData(CorePlayer corePlayer) {
         PlayerSettingsData psd = corePlayer.getSettingsData();
+        if(psd == null)return false;
         if (!psd.UUIDS.contains(corePlayer.getUniqueId())) psd.UUIDS.add(corePlayer.getUniqueId());
         try {
             try {

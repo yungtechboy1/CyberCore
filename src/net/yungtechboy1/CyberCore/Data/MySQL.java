@@ -81,7 +81,7 @@ public class MySQL {
 
 
     public ArrayList<HashMap<String, Object>> executeSelect(String query) throws SQLException {
-        return executeSelect(query, new String[0]);
+        return executeSelect(query, null);
 
     }
 
@@ -99,8 +99,12 @@ public class MySQL {
                     map.put(selector, resultSet.getObject(selector));
                 }
             } else {
-                for (int i = 0; i < resultSet.getMetaData().getColumnCount(); i++) {
-                    map.put(resultSet.getMetaData().getCatalogName(i), resultSet.getObject(i));
+                for (int i = 1; i < resultSet.getMetaData().getColumnCount()+1; i++) {
+                    System.out.println(i);
+                    System.out.println(resultSet.getMetaData().getColumnName(i));
+                    System.out.println(resultSet.getObject(i));
+                    System.out.println("=====================");
+                    map.put(resultSet.getMetaData().getColumnName(i), resultSet.getObject(i));
                 }
             }
 

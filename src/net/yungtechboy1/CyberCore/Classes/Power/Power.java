@@ -2,9 +2,13 @@ package net.yungtechboy1.CyberCore.Classes.Power;
 
 import cn.nukkit.event.Event;
 import cn.nukkit.event.entity.EntityInventoryChangeEvent;
+import cn.nukkit.event.inventory.InventoryClickEvent;
+import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.math.NukkitRandom;
+import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.CoolDown;
+import net.yungtechboy1.CyberCore.CoolDownTick;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
@@ -15,7 +19,7 @@ import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 public abstract class Power {
     public BaseClass PlayerClass = null;
     public int TickUpdate = -1;
-    public CoolDown Cooldown = null;
+    public CoolDownTick Cooldown = null;
     public boolean PlayerToggleable = true;
     int Level = 0;
     private int PowerSuccessChance = 100;
@@ -47,11 +51,15 @@ public abstract class Power {
     }
 
     //TODO IMPLEMENT
-    public Event HandelEvent(Event event) {
+    public Event handelEvent(Event event) {
         if (event instanceof CustomEntityDamageByEntityEvent)
             return CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
         if (event instanceof PlayerJumpEvent)
             return PlayerJumpEvent((PlayerJumpEvent) event);
+        if (event instanceof InventoryTransactionEvent)
+            return InventoryTransactionEvent((InventoryTransactionEvent) event);
+        if (event instanceof InventoryClickEvent)
+            return InventoryClickEvent((InventoryClickEvent) event);
         if (event instanceof EntityInventoryChangeEvent) {
             return EntityInventoryChangeEvent((EntityInventoryChangeEvent) event);
         }
@@ -59,6 +67,12 @@ public abstract class Power {
     }
 
 
+    public InventoryClickEvent InventoryClickEvent(InventoryClickEvent e) {
+        return e;
+    }
+    public InventoryTransactionEvent InventoryTransactionEvent(InventoryTransactionEvent e) {
+        return e;
+    }
     public EntityInventoryChangeEvent EntityInventoryChangeEvent(EntityInventoryChangeEvent e) {
         return e;
     }
@@ -76,11 +90,11 @@ public abstract class Power {
     public abstract CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e);
 
     protected int getCooldownTime() {
-        return 60 * 15;//15 Mins
+        return 60 * 3;//3 Mins
     }
 
-    public final String getSafeName(){
-        return getName().replaceAll(" ","_");
+    public final String getSafeName() {
+        return getName().replaceAll(" ", "_");
     }
 
     public final int getCooldownTimeTick() {
@@ -105,24 +119,35 @@ public abstract class Power {
     public abstract PowerEnum getType();
 
     //USE TO RUN
-    public void InitPowerRun(Object... args) {
+    public void initPowerRun(Object... args) {
         if (CanRun()) {
-            usePower(PlayerClass.getPlayer(), args);
+            usePower(args);
+            afterPowerRun(args);
+        }else{
+            if(Cooldown != null && Cooldown.isValid()){
+                getPlayer().sendMessage(TextFormat.RED+"Error! Power "+getDispalyName()+TextFormat.RED+" still has a "+TextFormat.LIGHT_PURPLE+Cooldown.toString());
+            }
         }
+    }
+
+    public void afterPowerRun(Object... args) {
+        addCooldown();
+        getPlayer().sendMessage(getSuccessUsageMessage());
+    }
+
+    public String getSuccessUsageMessage(){
+        return TextFormat.GREEN+ " > Power "+getDispalyName()+TextFormat.GREEN+" has been activated!";
     }
 
     public boolean CanRun(Object... args) {
         return CanRun(false, args);
     }
 
-    @Deprecated
     public Object usePower(Object... args) {
-        return usePower(null, args);
+        return null;
     }
 
-    public abstract Object usePower(CorePlayer cp, Object... args);
-
-    public boolean CanRun(boolean force, Object... args) {
+    protected boolean CanRun(boolean force, Object... args) {
         if (force) return true;
         NukkitRandom nr = new NukkitRandom();
         if (nr.nextRange(0, 100) <= PowerSuccessChance) {
@@ -142,13 +167,13 @@ public abstract class Power {
         return Stage.getStageFromInt((int) Math.floor(Level / 20));
     }
 
-    public CoolDown addCooldown() {
+    public CoolDownTick addCooldown() {
         return addCooldown(getCooldownTime());
     }
 
-    public CoolDown addCooldown(int secs) {
-        CoolDown c = new CoolDown();
-        c.setTimeSecs(secs);
+    public CoolDownTick addCooldown(int secs) {
+        CoolDownTick c = new CoolDownTick(secs*20);
+        Cooldown = c;
         return c;
     }
 

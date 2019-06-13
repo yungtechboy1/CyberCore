@@ -15,7 +15,7 @@ public class MercenaryDisarm extends Power {
 
     @Override
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e) {
-        if(e.getEntity() instanceof CorePlayer)InitPowerRun(e.getEntity());
+        if(e.getEntity() instanceof CorePlayer)initPowerRun(e.getEntity());
         return e;
     }
 
@@ -44,15 +44,15 @@ public class MercenaryDisarm extends Power {
     }
 
     @Override
-    public Object usePower(CorePlayer cp, Object... args) {
+    public Object usePower( Object... args) {
         CorePlayer tp = (CorePlayer) args[0];
         NukkitRandom nr = new NukkitRandom();
         if(tp.getInventory().isFull()){
             tp.getInventory().setHeldItemSlot(nr.nextRange(0,6));
-            tp.sendMessage(cp.getDisplayName()+ TextFormat.AQUA+" USED ON YOU [ EFFECT ] "+getDispalyName());
+            tp.sendMessage(getPlayer().getDisplayName()+ TextFormat.AQUA+" USED ON YOU [ EFFECT ] "+getDispalyName());
         }else{
             tp.getInventory().setHeldItemSlot(nr.nextRange(0,6));
-            tp.sendMessage(cp.getDisplayName()+ TextFormat.AQUA+" USED ON YOU [ EFFECT ] "+getDispalyName());
+            tp.sendMessage(getPlayer().getDisplayName()+ TextFormat.AQUA+" USED ON YOU [ EFFECT ] "+getDispalyName());
         }
         return null;
     }

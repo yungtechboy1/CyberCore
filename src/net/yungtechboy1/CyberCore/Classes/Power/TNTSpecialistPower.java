@@ -33,11 +33,11 @@ public class TNTSpecialistPower extends PowerStackable {
     }
 
     @Override
-    public Object usePower(CorePlayer cp, Object... args) {
+    public Object usePower( Object... args) {
         System.out.println("NO USEDDDDD>>>>>"+GetTNTMotionPower());
         if(args != null && args.length == 1){
             int fuse = (int)args[0];
-            UsePower(cp,fuse);
+            UsePower(getPlayer(),fuse);
         }
         return null;
     }

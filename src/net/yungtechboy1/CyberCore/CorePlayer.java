@@ -683,14 +683,13 @@ public class CorePlayer extends Player {
 
                     MobEquipmentPacket mobEquipmentPacket = (MobEquipmentPacket) packet;
 
-                    Item iitem = this.inventory.getItem(mobEquipmentPacket.hotbarSlot);
-
+                    //TODO Make into a Custom Event!
                     if(getPlayerClass() != null){
                         if(getPlayerClass() instanceof Knight){
                             Knight k = (Knight)getPlayerClass();
                             KnightSandShieldPower kssp = (KnightSandShieldPower) k.getPower(PowerEnum.KnightSandShield);
                             if(mobEquipmentPacket.hotbarSlot == kssp.getLockedSlot().getSlot()){
-                                kssp.InitPowerRun(this);
+                                kssp.initPowerRun();
                                 kssp.onTick(getServer().getTick());
                                 getInventory().setHeldItemIndex(getInventory().getHeldItemIndex(),true);
                                 return;
@@ -1406,7 +1405,7 @@ public class CorePlayer extends Player {
                     //TODO FIX HERE
                     CoolDownTick cc = GetCooldown(Cooldown_Class, true);
                     if (cc == null) {
-                    CyberCoreMain.getInstance().getLogger().info("RUNNNING CLASS CHECK IN CP" + CDL.size()+"||"+ getPlayerClass());
+//                    CyberCoreMain.getInstance().getLogger().info("RUNNNING CLASS CHECK IN CP" + CDL.size()+"||"+ getPlayerClass());
                         AddCoolDown(Cooldown_Class, 5);
                         BaseClass bc = getPlayerClass();
                         if (bc != null) bc.onUpdate(currentTick);

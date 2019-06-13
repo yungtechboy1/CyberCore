@@ -121,13 +121,13 @@ public abstract class BaseClass {
     public void addPowerSourceCount(double a) {
         if (PowerSourceCount + a > getMaxPowerSourceCount()) {
             double d = getMaxPowerSourceCount() - a;
-            if(d < 0)PowerSourceCount += d;
+            if (d < 0) PowerSourceCount += d;
         } else {
             PowerSourceCount += Math.abs(a);
         }
     }
 
-    public TextFormat getColor(){
+    public TextFormat getColor() {
         return TextFormat.GRAY;
     }
 
@@ -189,7 +189,7 @@ public abstract class BaseClass {
     }
 
     public String getDisplayName() {
-        return getColor()+getName();
+        return getColor() + getName();
     }
 
     public HashMap<BuffType, Buff> addBuff(Buff o) {
@@ -282,7 +282,7 @@ public abstract class BaseClass {
     public void RunPower(PowerEnum powerid) {
         Power p = getPower(powerid);
         if (p == null) return;
-        p.usePower(P);
+        p.usePower(getPlayer());
 
     }
 
@@ -408,7 +408,7 @@ public abstract class BaseClass {
     public Event PowerHandelEvent(Event e) {
 //        Event ee = e;
         for (Power p : getPowers()) {
-             p.HandelEvent(e);
+            p.handelEvent(e);
         }
         return e;
     }
@@ -452,7 +452,7 @@ public abstract class BaseClass {
             event = PlayerJumpEvent((PlayerJumpEvent) event);
             if (ActiveAbility != null) event = ActiveAbility.PlayerJumpEvent((PlayerJumpEvent) event);
             return event;
-        }else if (event instanceof EntityInventoryChangeEvent) {
+        } else if (event instanceof EntityInventoryChangeEvent) {
             event = EntityInventoryChangeEvent((EntityInventoryChangeEvent) event);
 //            if (ActiveAbility != null) event = ActiveAbility.PlayerJumpEvent((PlayerJumpEvent) event);
             return event;
@@ -463,6 +463,7 @@ public abstract class BaseClass {
     public PlayerJumpEvent PlayerJumpEvent(PlayerJumpEvent event) {
         return event;
     }
+
     public EntityInventoryChangeEvent EntityInventoryChangeEvent(EntityInventoryChangeEvent event) {
         return event;
     }
@@ -582,13 +583,17 @@ public abstract class BaseClass {
 //        System.out.println("Tring to TICKING POWER "+getPowers().size());
 //        System.out.println("Tring to TICKING POWER "+getPowers());
         for (Power p : getPowers()) {
-//            System.out.println("TICKING POWER "+p.getName());
-            if (p.getCooldownTimeTick() != -1) p.handleTick(tick);
+//            System.out.println("TICKING POWER " + p.getName());
+            try {
+                if (p.TickUpdate != -1) p.handleTick(tick);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void onUpdate(int tick) {
-        System.out.println("TICKING BASECLASS");
+//        System.out.println("TICKING BASECLASS");
         tickPowers(tick);
     }
 
@@ -626,7 +631,7 @@ public abstract class BaseClass {
 
 
     public enum ClassType {
-        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary, DragonSlayer, Class_Magic_Enchanter, Class_Rouge_Thief, Class_Offense_Knight, Class_Offense_Holy_Knight, Class_Offense_Dark_Knight,Class_Offense_Assassin, Class_Offense_Raider;
+        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary, DragonSlayer, Class_Magic_Enchanter, Class_Rouge_Thief, Class_Offense_Knight, Class_Offense_Holy_Knight, Class_Offense_Dark_Knight, Class_Offense_Assassin, Class_Offense_Raider;
 
 
         public int getKey() {

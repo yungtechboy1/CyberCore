@@ -6,11 +6,43 @@ import cn.nukkit.utils.ConfigSection;
 /**
  * Created by carlt on 5/16/2019.
  */
-public class CoolDownTick extends ConfigSection {
+public class CoolDownTick {
     protected int Tick = -1;
     public String Key = null;
 
     public CoolDownTick() {
+    }
+
+
+    @Override
+    public String toString() {
+        String s = "";
+        if(isValid()){
+            int d = getTick() - Server.getInstance().getTick();
+            if(d <= 20) return "1 Sec";
+            if(d < 20*60){
+                //Less Than a Min
+                return ((int)Math.floor(d/20))+"";
+            }else if(d < 20*60*60){//72k
+                //Less than an hour
+                int dd = d/20;
+                int dds = dd%60;
+                int ddm = Math.floorDiv(dd,60);
+                return ddm+" Mins and "+dds+" Secs";
+            }else if(d < 20*60*60*24){
+                //Less than a Day
+                int dd = d/20;
+                int dds = dd%60;
+                int ddm = Math.floorDiv(dd,60);
+                int ddh = Math.floorDiv(ddm,60);
+                ddm = dds%60;
+                return ddh+"Hours "+ddm+" Mins and "+dds+" Secs";
+            }else{
+        return (d/20*60*60*24)+" Days Left";
+            }
+        }else{
+            return "[COOLDOWN PAST]";
+        }
     }
 
     public CoolDownTick(int t) {

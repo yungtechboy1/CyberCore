@@ -23,7 +23,7 @@ public class DragonJumper extends PowerStackable {
 
     @Override
     public PlayerJumpEvent PlayerJumpEvent(PlayerJumpEvent e) {
-        InitPowerRun();
+        initPowerRun();
         return super.PlayerJumpEvent(e);
     }
 
@@ -33,7 +33,7 @@ public class DragonJumper extends PowerStackable {
     }
 
     @Override
-    public Object usePower(CorePlayer cp, Object... args) {
+    public Object usePower( Object... args) {
         return null;
     }
 

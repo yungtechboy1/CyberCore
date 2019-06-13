@@ -242,22 +242,22 @@ public class SpawnShopFactory implements Listener {
     //TODO MAke Pages with new API
     @EventHandler(ignoreCancelled = true)
     public void TE(InventoryTransactionEvent event) {
-        System.out.println("CALLLL");
+//        System.out.println("CALLLL");
         InventoryTransaction transaction = event.getTransaction();
         Set<InventoryAction> traa = transaction.getActions();
         for (InventoryAction t : traa) {
-            System.out.println("CALLLL TTTTTTTTTTTTTTTTTTT" + t.getClass().getName());
+//            System.out.println("CALLLL TTTTTTTTTTTTTTTTTTT" + t.getClass().getName());
             if (t instanceof SlotChangeAction) {
-                System.out.println("CALLLL SLOTCCCCCCCC");
+//                System.out.println("CALLLL SLOTCCCCCCCC");
                 SlotChangeAction sca = (SlotChangeAction) t;
 
 //                sca.getInventory()
 
                 Inventory inv = sca.getInventory();
-                System.out.println("CHECK INNNNNVVVVVVV " + inv.getClass().getName());
+//                System.out.println("CHECK INNNNNVVVVVVV " + inv.getClass().getName());
 //                if (inv.isEmpty()) return;
 
-                System.out.println("NEEEEEEE" + inv.getClass().getTypeName());
+//                System.out.println("NEEEEEEE" + inv.getClass().getTypeName());
                 if (inv instanceof PlayerInventory) {
 
                 }
