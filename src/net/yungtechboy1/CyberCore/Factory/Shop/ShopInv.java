@@ -2,10 +2,7 @@ package net.yungtechboy1.CyberCore.Factory.Shop;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
-import cn.nukkit.block.Block;
-import cn.nukkit.block.BlockAir;
-import cn.nukkit.block.BlockEnderChest;
-import cn.nukkit.block.BlockGlassPaneStained;
+import cn.nukkit.block.*;
 import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityHuman;
@@ -22,8 +19,8 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.ContainerOpenPacket;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse;
 
 import java.util.*;
 
@@ -38,6 +35,12 @@ public class ShopInv extends BaseInventory implements Inventory {
     public boolean ConfirmPurchase = false;
     public int ConfirmPurchaseSlot = 0;
     public ShopFactory AF = null;
+    /**
+     * Maybe use later... Probablly wont work well with /ah I think...
+     *
+     * @param aid
+     */
+    public ShopMysqlData MultiConfirmData = null;
     protected int maxStackSize = Inventory.MAX_STACK;
     EntityHuman holder;
     Vector3 BA;
@@ -45,6 +48,7 @@ public class ShopInv extends BaseInventory implements Inventory {
     BlockEntity blockEntity2 = null;
     BlockEntity blockEntity = null;
     CurrentPageEnum CurrentPage;
+    boolean SetupPageToFinalConfirmItemSell = false;
     private int Page = 1;
 
     public ShopInv(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba) {
@@ -112,11 +116,25 @@ public class ShopInv extends BaseInventory implements Inventory {
 
     public void DisplayCatagories() {
         clearAll();
-        for (int i = 0; i < 5 * 9; i++) {
-            Block itm = new BlockGlassPaneStained(7);
-            Item bi = new ItemBlock(itm);
-            bi.setCustomName(TextFormat.GRAY + "FEATURE CURRENTLY DISABLED!");
-            setItem(i, bi, true);
+        setCurrentPage(CurrentPageEnum.Catagories);
+        for (int i = 0; i < 5; i++) {
+            for (int ii = 0; ii < 9; ii++) {
+                Item bi;
+                int slot = (i * 9) + ii;
+                if(i == 0 || i ==  4|| ii == 8|| ii == 7 || ii == 0 || ii == 1){
+//                    bi = new ItemBlock(new BlockGlassPaneStained(0));
+                    bi = new ItemBlock(new BlockBedrock());
+                    bi.setCustomName(" ");
+                }else {
+                    if(i == 1 && ii == 2){
+                        bi =  new StaticItems(getPage()).Spawner.clone();
+                    }else{
+                    bi = new ItemBlock(new BlockGlassPaneStained(7));
+                    bi.setCustomName(TextFormat.GRAY + "FEATURE CURRENTLY DISABLED!");
+                }
+                }
+                setItem(slot, bi, true);
+            }
         }
         ReloadInv();
         SendAllSlots(getHolder());
@@ -217,7 +235,7 @@ public class ShopInv extends BaseInventory implements Inventory {
 //        setItem( k--, si.Grayglass);
         setItem(MainPageItemRef.ToggleAdmin, si.Diamond);
         setItem(MainPageItemRef.Reload, si.Netherstar);
-//        setItem( k--, si.Chest);
+        setItem(MainPageItemRef.Catagories, si.CatagoryChest);
 //        setItem( k--, si.Grayglass);
 //        setItem( k--, si.Map);
         setItem(MainPageItemRef.NextPage, si.Greenglass);
@@ -237,21 +255,15 @@ public class ShopInv extends BaseInventory implements Inventory {
 
     }
 
-    /**
-     * Maybe use later... Probablly wont work well with /ah I think...
-     *
-     * @param aid
-     */
-    public ShopMysqlData MultiConfirmData = null;
     public void SetupPageToConfirmMultiItem(ShopMysqlData aid) {
         CurrentPage = CurrentPageEnum.PlayerSellingPage;
         StaticItems si = new StaticItems(Page);
         CorePlayer cp = (CorePlayer) getHolder();
         Item item = aid.getItem();
         MultiConfirmData = aid;
-        Collection<Item> ai =  cp.getInventory().all(aid.getItem(true)).values();
+        Collection<Item> ai = cp.getInventory().all(aid.getItem(true)).values();
         int ic = 0;
-        for(Item iii: ai){
+        for (Item iii : ai) {
             ic += iii.getCount();
         }
         for (int i = 0; i < 5; i++) {
@@ -261,16 +273,16 @@ public class ShopInv extends BaseInventory implements Inventory {
                 if (i == 0) {
                     if (ii <= 3) {
                         add = si.ChestSell.clone();
-                        add.setLore("You have "+ic+" available for sale!","and can sell for a total of $"+(ic*aid.getSellPrice()),""+key);
+                        add.setLore("You have " + ic + " available for sale!", "and can sell for a total of $" + (ic * aid.getSellPrice()), "" + key);
                         setItem(key, add, true);
-                    } else if(ii == 4){
+                    } else if (ii == 4) {
                         Item g = si.Gold.clone();
                         g.setCustomName(TextFormat.GOLD + " Your money: " + cp.GetMoney());
                         setItem(key, g, true);
                     } else {
                         add = si.ChestBuy.clone();
-                        int mb = (int)Math.floor(cp.GetMoney()/aid.getPrice());
-                        add.setLore("You can buy "+mb+" "+item.getName()+"(s)",""+key);
+                        int mb = (int) Math.floor(cp.GetMoney() / aid.getPrice());
+                        add.setLore("You can buy " + mb + " " + item.getName() + "(s)", "" + key);
                         setItem(key, add, true);
                     }
                     continue;
@@ -281,23 +293,23 @@ public class ShopInv extends BaseInventory implements Inventory {
 //                    case 1:
 //                    case 2:
 //                    case 3:
-                        if(ic >= 64)add = si.RmvX64.clone();
-                        else  add = si.RmvX64N.clone();
+                        if (ic >= 64) add = si.RmvX64.clone();
+                        else add = si.RmvX64N.clone();
                         setItem(key, add, true);
                         break;
                     case 1:
-                        if(ic >= 32)add = si.RmvX32.clone();
-                        else  add = si.RmvX32N.clone();
+                        if (ic >= 32) add = si.RmvX32.clone();
+                        else add = si.RmvX32N.clone();
                         setItem(key, add, true);
                         break;
                     case 2:
-                        if(ic >= 10)add = si.RmvX10.clone();
-                        else  add = si.RmvX10N.clone();
+                        if (ic >= 10) add = si.RmvX10.clone();
+                        else add = si.RmvX10N.clone();
                         setItem(key, add, true);
                         break;
                     case 3:
-                        if(ic >= 1)add = si.RmvX1.clone();
-                        else  add = si.RmvX1N.clone();
+                        if (ic >= 1) add = si.RmvX1.clone();
+                        else add = si.RmvX1N.clone();
                         setItem(key, add, true);
                         break;
                     case 4:
@@ -309,22 +321,22 @@ public class ShopInv extends BaseInventory implements Inventory {
                         setItem(key, add, true);
                         break;
                     case 5:
-                        if(cp.GetMoney() >= aid.getPrice())add = si.AddX1.clone();
+                        if (cp.GetMoney() >= aid.getPrice()) add = si.AddX1.clone();
                         else add = si.AddX1N.clone();
                         setItem(key, add, true);
                         break;
                     case 6:
-                        if(cp.GetMoney() >= aid.getPrice()*10)add = si.AddX10.clone();
+                        if (cp.GetMoney() >= aid.getPrice() * 10) add = si.AddX10.clone();
                         else add = si.AddX10N.clone();
                         setItem(key, add, true);
                         break;
                     case 7:
-                        if(cp.GetMoney() >= aid.getPrice()*32)add = si.AddX32.clone();
+                        if (cp.GetMoney() >= aid.getPrice() * 32) add = si.AddX32.clone();
                         else add = si.AddX32N.clone();
                         setItem(key, add, true);
                         break;
                     case 8:
-                        if(cp.GetMoney() >= aid.getPrice()*64)add = si.AddX64.clone();
+                        if (cp.GetMoney() >= aid.getPrice() * 64) add = si.AddX64.clone();
                         else add = si.AddX64N.clone();
                         setItem(key, add, true);
                         break;
@@ -411,13 +423,6 @@ public class ShopInv extends BaseInventory implements Inventory {
         }
     }
 
-    @Override
-    public void sendContents(Player player) {
-        ArrayList<Player> al = new ArrayList<>();
-        al.add(player);
-        this.sendContents(al.toArray(new Player[1]));
-    }
-
 //    public boolean setItem(int index, Item item, boolean send) {
 //        item = item.clone();
 //        if (index >= 0 && index < this.size) {
@@ -457,6 +462,13 @@ public class ShopInv extends BaseInventory implements Inventory {
 //            return false;
 //        }
 //    }
+
+    @Override
+    public void sendContents(Player player) {
+        ArrayList<Player> al = new ArrayList<>();
+        al.add(player);
+        this.sendContents(al.toArray(new Player[1]));
+    }
 
     public void SendAllSlots(Player p) {
         ArrayList<Player> al = new ArrayList<>();
@@ -500,10 +512,10 @@ public class ShopInv extends BaseInventory implements Inventory {
     }
 
     public void SetupPageToFinalConfirmItem(ShopMysqlData aid) {
-        SetupPageToFinalConfirmItem(aid,1,false);
+        SetupPageToFinalConfirmItem(aid, 1, false);
     }
-    boolean SetupPageToFinalConfirmItemSell = false;
-//    int SetupPageToFinalConfirmItemCount = 0;
+
+    //    int SetupPageToFinalConfirmItemCount = 0;
     public void SetupPageToFinalConfirmItem(ShopMysqlData aid, int count, boolean sell) {
         CurrentPage = CurrentPageEnum.Confirm_Purchase_Final;
         SetupPageToFinalConfirmItemSell = sell;
@@ -513,15 +525,15 @@ public class ShopInv extends BaseInventory implements Inventory {
         Item item = aid.getItem().clone();
         item.setCount(count);
         Item confrim = si.Confirm.clone();
-        if(sell)confrim = si.ConfirmSell.clone();
+        if (sell) confrim = si.ConfirmSell.clone();
         confrim.setCount(count);
-if(sell) {
-    confrim.setCustomName("Sell " + aid.getPrettyString(count, !sell));
-    confrim.setLore(TextFormat.AQUA + "Sell Price Per Item: " + TextFormat.GREEN + aid.getSellPrice(), TextFormat.AQUA + "Sell Quantity: " + TextFormat.GREEN + count, TextFormat.GRAY + "------------------------", TextFormat.AQUA + "Final Sale price: " + TextFormat.GREEN + aid.getPrice(count));
-}else {
-    confrim.setCustomName("Buy " + aid.getPrettyString(count, !sell));
-    confrim.setLore(TextFormat.AQUA + "Buy Price Per Item: " + TextFormat.GREEN + aid.getPrice(), TextFormat.AQUA + "Purchase Quantity: " + TextFormat.GREEN + count, TextFormat.GRAY + "------------------------", TextFormat.AQUA + "Final Purchase price: " + TextFormat.GREEN + aid.getPrice(count));
-}
+        if (sell) {
+            confrim.setCustomName("Sell " + aid.getPrettyString(count, !sell));
+            confrim.setLore(TextFormat.AQUA + "Sell Price Per Item: " + TextFormat.GREEN + aid.getSellPrice(), TextFormat.AQUA + "Sell Quantity: " + TextFormat.GREEN + count, TextFormat.GRAY + "------------------------", TextFormat.AQUA + "Final Sale price: " + TextFormat.GREEN + aid.getPrice(count));
+        } else {
+            confrim.setCustomName("Buy " + aid.getPrettyString(count, !sell));
+            confrim.setLore(TextFormat.AQUA + "Buy Price Per Item: " + TextFormat.GREEN + aid.getPrice(), TextFormat.AQUA + "Purchase Quantity: " + TextFormat.GREEN + count, TextFormat.GRAY + "------------------------", TextFormat.AQUA + "Final Purchase price: " + TextFormat.GREEN + aid.getPrice(count));
+        }
         Item deny = si.Deny.clone();
         for (int i = 0; i < 5; i++) {
             for (int ii = 0; ii < 9; ii++) {
@@ -776,7 +788,7 @@ if(sell) {
         PlayerSellingPage,
         Expired,
         Confirm_Purchase,
-        Confirm_Purchase_Not_Enough_Money, Confirm_Purchase_Final,
+        Confirm_Purchase_Not_Enough_Money, Confirm_Purchase_Final, Catagories,
 
     }
 //    public void sendSlot(int index, Player[] players) {
@@ -802,6 +814,8 @@ if(sell) {
         public final Item Redglass;
         public final Item Greenglass;
         public final Item Netherstar;
+        public final Item Spawner;
+        public final Item CatagoryChest;
         public final Item ChestSell;
         public final Item ChestBuy;
         public final Item Paper;
@@ -844,6 +858,16 @@ if(sell) {
             AddX1.getNamedTag().putInt("ADD", 1);
             AddX1.setCount(1);
             AddX1.setCustomName(TextFormat.GREEN + " Buy 1");
+
+            Spawner = Item.get(Item.MONSTER_SPAWNER);
+            Spawner.setCompoundTag(T);
+            Spawner.setCount(1);
+            Spawner.setCustomName(TextFormat.GREEN + " Spawner Shop");
+
+            CatagoryChest = Item.get(Item.CHEST);
+            CatagoryChest.setCompoundTag(T);
+            CatagoryChest.setCount(1);
+            CatagoryChest.setCustomName(TextFormat.YELLOW + " Categories");
 
             AddX10 = Item.get(Item.EMERALD_BLOCK);
             AddX10.setCompoundTag(T);
