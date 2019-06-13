@@ -45,6 +45,8 @@ import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.BuffOrigin;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
+import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.KnightSandShieldPower;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.CustomCraftingTransaction;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
@@ -123,7 +125,7 @@ public class CorePlayer extends Player {
     private BaseClass PlayerClass = null;
     private int ClassCheck = -1;
     private int FactionCheck = -1;
-    private HashMap<String, CoolDown> CDL = new HashMap<>();
+    private HashMap<String, CoolDownTick> CDL = new HashMap<>();
     private CustomCraftingTransaction cct;
     private HashMap<BuffOrigin, HashMap<Buff.BuffType, Buff>> Bufflist = new HashMap<BuffOrigin, HashMap<Buff.BuffType, Buff>>() {{
         put(BuffOrigin.Class, new HashMap<>());
@@ -243,7 +245,7 @@ public class CorePlayer extends Player {
         if (PlayerClass != null) PlayerClass.initBuffs();
     }
 
-    public BaseClass GetPlayerClass() {
+    public BaseClass getPlayerClass() {
         return PlayerClass;
     }
 
@@ -674,6 +676,29 @@ public class CorePlayer extends Player {
 
 //                    return;
                     break;
+                case ProtocolInfo.MOB_EQUIPMENT_PACKET:
+                    if (!this.spawned || !this.isAlive()) {
+                        break;
+                    }
+
+                    MobEquipmentPacket mobEquipmentPacket = (MobEquipmentPacket) packet;
+
+                    Item iitem = this.inventory.getItem(mobEquipmentPacket.hotbarSlot);
+
+                    if(getPlayerClass() != null){
+                        if(getPlayerClass() instanceof Knight){
+                            Knight k = (Knight)getPlayerClass();
+                            KnightSandShieldPower kssp = (KnightSandShieldPower) k.getPower(PowerEnum.KnightSandShield);
+                            if(mobEquipmentPacket.hotbarSlot == kssp.getLockedSlot().getSlot()){
+                                kssp.InitPowerRun(this);
+                                kssp.onTick(getServer().getTick());
+                                getInventory().setHeldItemIndex(getInventory().getHeldItemIndex(),true);
+                                return;
+                            }
+                        }
+                    }
+
+                    break;
                 case INVENTORY_TRANSACTION_PACKET:
                     if (this.isSpectator()) {
                         this.sendAllInventories();
@@ -981,7 +1006,7 @@ public class CorePlayer extends Player {
 
                                         CustomEntityDamageByEntityEvent centityDamageByEntityEvent =
                                                 new CustomEntityDamageByEntityEvent(this, target, CustomEntityDamageEvent.CustomDamageCause.ENTITY_ATTACK, itemDamage);
-                                        BaseClass bc = GetPlayerClass();
+                                        BaseClass bc = getPlayerClass();
                                         if (bc != null) {
                                             bc.HandelEvent(centityDamageByEntityEvent);
                                         }
@@ -1296,17 +1321,17 @@ public class CorePlayer extends Player {
 
     private void AddCoolDown(String key, int secs) {
 
-        CDL.put(key, new CoolDown(key, Server.getInstance().getTick() + (secs * 20)));
+        CDL.put(key, new CoolDownTick(key, (secs * 20)));
     }
 
-    private CoolDown GetCooldown(String key) {
+    private CoolDownTick GetCooldown(String key) {
         return GetCooldown(key, false);
     }
 
-    private CoolDown GetCooldown(String key, boolean checkvalid) {
+    private CoolDownTick GetCooldown(String key, boolean checkvalid) {
         if (!CDL.containsKey(key)) return null;
 //        CyberCoreMain.getInstance().getLogger().info(" VALID"+key);
-        CoolDown cd = CDL.get(key);
+        CoolDownTick cd = CDL.get(key);
         if (cd == null) return null;
 //        CyberCoreMain.getInstance().getLogger().info("CVALID"+!cd.isValidTick()+" | "+cd.Time+"|"+Server.getInstance().getTick());
         if (checkvalid && !cd.isValid()) {
@@ -1353,7 +1378,7 @@ public class CorePlayer extends Player {
 
                     CooldownLock = true;
 //            CyberCoreMain.getInstance().getLogger().info("RUNNNING "+CDL.size());
-                    CoolDown fc = GetCooldown(Cooldown_Faction, true);
+                    CoolDownTick fc = GetCooldown(Cooldown_Faction, true);
                     if (fc == null) {
 //                    CyberCoreMain.getInstance().getLogger().info("RUNNNING FACTION CHECK IN CP" + CDL.size());
                         AddCoolDown(Cooldown_Faction, 60);//3 mins
@@ -1379,11 +1404,11 @@ public class CorePlayer extends Player {
 
                     //FIX HERE
                     //TODO FIX HERE
-                    CoolDown cc = GetCooldown(Cooldown_Class, true);
+                    CoolDownTick cc = GetCooldown(Cooldown_Class, true);
                     if (cc == null) {
-//                    CyberCoreMain.getInstance().getLogger().info("RUNNNING CLASS CHECK IN CP" + CDL.size());
+                    CyberCoreMain.getInstance().getLogger().info("RUNNNING CLASS CHECK IN CP" + CDL.size()+"||"+ getPlayerClass());
                         AddCoolDown(Cooldown_Class, 5);
-                        BaseClass bc = GetPlayerClass();
+                        BaseClass bc = getPlayerClass();
                         if (bc != null) bc.onUpdate(currentTick);
                     }
                     CooldownLock = false;

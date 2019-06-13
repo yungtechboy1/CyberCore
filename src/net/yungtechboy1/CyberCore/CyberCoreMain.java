@@ -236,9 +236,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         Block.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         Block.list[Block.TNT] = CustomBlockTNT.class;
-        Block.list[267] = CustomElementBlock.class;
+//        Block.list[267] = CustomElemebntBlock.class;
         Block.list[Block.PURPLE_GLAZED_TERRACOTTA] = CustomBlockPurpleGlazedTerraCotta.class;
-        ReloadBlockList(267, CustomElementBlock.class);
+//        ReloadBlockList(267, CustomElementBlock.class);
         ReloadBlockList(Block.TNT, CustomBlockTNT.class);
         ReloadBlockList(Block.PURPLE_GLAZED_TERRACOTTA, CustomBlockPurpleGlazedTerraCotta.class);
 //        Item.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
@@ -360,7 +360,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
 //        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec
         SH = new SendHUD();
-        SH.start();
 
         //COMMANDS
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ChooseClass(this));

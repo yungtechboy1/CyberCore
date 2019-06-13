@@ -81,14 +81,15 @@ public class UserSQL extends MySQL {
 
     public boolean savePlayerSettingData(CorePlayer corePlayer) {
         PlayerSettingsData psd = corePlayer.getSettingsData();
+        if (!psd.UUIDS.contains(corePlayer.getUniqueId())) psd.UUIDS.add(corePlayer.getUniqueId());
         try {
-        try {
-            executeUpdate("DELETE * FROM `PlayerSettings` WHERE `Name` LIKE '" + corePlayer.getName() + "'");
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+            try {
+                executeUpdate("DELETE FROM `PlayerSettings` WHERE `Name` LIKE '" + corePlayer.getName() + "'");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             String q = "INSERT INTO `PlayerSettings` VALUES (";
-            q = addToQuery(q, psd.Name) + ",";
+            q = addToQuery(q, corePlayer.getName()) + ",";
             q = addToQuery(q, psd.UUIDSToJSON()) + ",";
             q = addToQuery(q, psd.Cash) + ",";
             q = addToQuery(q, psd.CreditScore) + ",";
@@ -112,7 +113,7 @@ public class UserSQL extends MySQL {
     }
 
     private String addToQuery(String q, String v) {
-        return q += "`" + v + "`";
+        return q += "'" + v + "'";
     }
 
     private String addToQuery(String q, int v) {
@@ -120,7 +121,7 @@ public class UserSQL extends MySQL {
     }
 
     private String addToQuery(String q, double v) {
-        return q += "`" + (int) v + "`";
+        return q += "'" + v + "'";
     }
 
 //    public void loadUser(String uuid) {

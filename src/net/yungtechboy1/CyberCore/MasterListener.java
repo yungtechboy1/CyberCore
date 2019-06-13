@@ -2,9 +2,11 @@ package net.yungtechboy1.CyberCore;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
+import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
+import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.event.player.*;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
@@ -44,6 +46,16 @@ public class MasterListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void spawnEvent(PlayerRespawnEvent event) {
 
+    }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void EntityInventoryChangeEvent(EntityInventoryChangeEvent event) {
+        Entity e = event.getEntity();
+        if(e instanceof CorePlayer){
+            CorePlayer cp = (CorePlayer)e;
+            if(cp.getPlayerClass() != null){
+                cp.getPlayerClass().HandelEvent(event);
+            }
+        }
     }
 
 

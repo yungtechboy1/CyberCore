@@ -50,9 +50,13 @@ public class PlayerSettingsData {
         CreditScore = (int) a.get("CreditScore");
         CreditLimit = (int) a.get("CreditLimit");
         UsedCredit = (int) a.get("UsedCredit");
-        PlayerWarnings = new Gson().fromJson((String) a.get("PlayerWarnings"), pweType);
+        if (((String) a.get("PlayerWarnings")).equalsIgnoreCase("{}")) PlayerWarnings = new ArrayList<>();
+        else PlayerWarnings = new Gson().fromJson((String) a.get("PlayerWarnings"), pweType);
+        if (((String) a.get("PlayerTempBans")).equalsIgnoreCase("{}")) PlayerTempBans = new Gson().fromJson((String) a.get("PlayerTempBans"), ptbType);
         PlayerTempBans = new Gson().fromJson((String) a.get("PlayerTempBans"), uuidType);
+        if (((String) a.get("PlayerKicks")).equalsIgnoreCase("{}"))  PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), pkbType);
         PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), uuidType);
+        if (((String) a.get("PlayerBans")).equalsIgnoreCase("{}")) PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), pbbType);
         PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), uuidType);
         Rank = (int) a.get("Rank");
     }
@@ -62,37 +66,55 @@ public class PlayerSettingsData {
     }
 
     public String PlayerWarningToJSON() {
+        if (PlayerWarnings.size() == 0) return "{}";
         return new Gson().toJson(PlayerWarnings, pweType);
     }
 
     public String PlayerTempBansToJSON() {
+        if (PlayerTempBans.size() == 0) return "{}";
         return new Gson().toJson(PlayerTempBans, ptbType);
     }
 
     public String PlayerKicksToJSON() {
+        if (PlayerKicks.size() == 0) return "{}";
         return new Gson().toJson(PlayerKicks, pkbType);
     }
 
     public String PlayerBansToJSON() {
+        if (PlayerBans.size() == 0) return "{}";
         return new Gson().toJson(PlayerBans, pbbType);
     }
 }
 
 class PlayerSettingsEvent {
     public int intTime;
+
+    public enum PReasonType {
+        NULL,
+        Type_Hacking,
+        Type_Hacking_Speed,
+        Type_Hacking_Fly,
+        Type_Hacking_Inv,
+        Type_Chat_Spam,
+        Type_Chat_Abuse,
+        Type_Chat_Racism,
+        Type_Chat_Other,
+        Type_Other,
+        Type_Other_Misc,
+    }
 }
 
 class PlayerWarningEvent extends PlayerSettingsEvent {
     public String AdminName;
     public String Reason;
-    public ReasonType ReasonType = net.yungtechboy1.CyberCore.ReasonType.NULL;
-    public int intTime;
+    public PReasonType ReasonType = PReasonType.NULL;
+
 }
 
 class PlayerKickEvent extends PlayerSettingsEvent {
     public String AdminName;
     public String Reason;
-    public ReasonType ReasonType = net.yungtechboy1.CyberCore.ReasonType.NULL;
+    public PReasonType ReasonType = PReasonType.NULL;
 }
 
 class PlayerTempBanEvent extends PlayerSettingsEvent {

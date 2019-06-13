@@ -61,9 +61,9 @@ public class ClassSettingsWindow extends CyberFormSimple {
         if (k <= 3) {
             if (k == 0) {
                 //TODO
-                p.showFormWindow(p.GetPlayerClass().getHowToUseClassWindow());
+                p.showFormWindow(p.getPlayerClass().getHowToUseClassWindow());
             } else if (k == 1) {
-                p.showFormWindow(p.GetPlayerClass().getClassMerchantWindow());
+                p.showFormWindow(p.getPlayerClass().getClassMerchantWindow());
             } else if (k == 2) {
                 CyberCoreMain.getInstance().ClassFactory.leaveClass(p);
             } else if (k == 3) {

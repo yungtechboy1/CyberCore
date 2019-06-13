@@ -2,11 +2,7 @@ package net.yungtechboy1.CyberCore.Factory;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.Event;
-import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.block.BlockBreakEvent;
-import cn.nukkit.event.block.BlockPlaceEvent;
-import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
@@ -23,7 +19,7 @@ import java.io.File;
 /**
  * Created by carlt_000 on 1/24/2017.
  */
-public class ClassFactory implements Listener {
+public class ClassFactory implements Listener{
 
     public Config MMOSave;
     public Config LumberJackTreePlants;
@@ -46,13 +42,16 @@ public class ClassFactory implements Listener {
     }
 
     public BaseClass GetClass(CorePlayer p) {
+        return GetClass(p,false);
+    }
+    public BaseClass GetClass(CorePlayer p, boolean force) {
         if (p == null) {
-            CyberCoreMain.getInstance().getLogger().info("Error! Getting class from " + p.getClass());
+            CyberCoreMain.getInstance().getLogger().info("Error! Tring to get class from NULL");
             return null;
         }
 
-        if(p.GetPlayerClass() != null){
-            return p.GetPlayerClass();
+        if(p.getPlayerClass() != null && !force){
+            return p.getPlayerClass();
         }
 
         ConfigSection o = (ConfigSection) MMOSave.get(p.getName().toLowerCase());
@@ -86,9 +85,9 @@ public class ClassFactory implements Listener {
     }
 
     public void SaveClassToFile(CorePlayer p) {
-        BaseClass bc = p.GetPlayerClass();
+        BaseClass bc = p.getPlayerClass();
         if (bc != null) {
-            MMOSave.set(p.getName().toLowerCase(), p.GetPlayerClass().export());
+            MMOSave.set(p.getName().toLowerCase(), p.getPlayerClass().export());
             System.out.println("SAVEEE");
         } else {
             System.out.println(p.getName() + " HASS NUNN CLASS???");
@@ -110,27 +109,27 @@ public class ClassFactory implements Listener {
 //        HandelEvent(event, (CorePlayer) event.getPlayer());
 //    }
 
-    @EventHandler
-    public void OnEvent(BlockPlaceEvent event) {
-        CorePlayer cp = (CorePlayer) ((BlockPlaceEvent) event).getPlayer();
-        HandelEvent(event, cp);
-    }
-
-    @EventHandler
-    public void OnEvent(BlockBreakEvent event) {
-        CorePlayer cp = (CorePlayer) ((BlockBreakEvent) event).getPlayer();
-        HandelEvent(event, cp);
-    }
-
-    @EventHandler
-    public void OnEvent(EntityDamageEvent event) {
-        if(event.getEntity() instanceof Player) {
-            CorePlayer cp = (CorePlayer) (event).getEntity();
-            HandelEvent(event, cp);
-//        } else {
-//            HandelEvent(event, null);
-        }
-    }
+//    @EventHandler
+//    public void OnEvent(BlockPlaceEvent event) {
+//        CorePlayer cp = (CorePlayer) ((BlockPlaceEvent) event).getPlayer();
+//        HandelEvent(event, cp);
+//    }
+//
+//    @EventHandler
+//    public void OnEvent(BlockBreakEvent event) {
+//        CorePlayer cp = (CorePlayer) ((BlockBreakEvent) event).getPlayer();
+//        HandelEvent(event, cp);
+//    }
+//
+//    @EventHandler
+//    public void OnEvent(EntityDamageEvent event) {
+//        if(event.getEntity() instanceof Player) {
+//            CorePlayer cp = (CorePlayer) (event).getEntity();
+//            HandelEvent(event, cp);
+////        } else {
+////            HandelEvent(event, null);
+//        }
+//    }
 
 //    @EventHandler
 //    public void OnEvent(EntityDamageByEntityEvent event) {
@@ -188,8 +187,8 @@ public class ClassFactory implements Listener {
         for (Player p : CCM.getServer().getOnlinePlayers().values()) {
             if (!(p instanceof CorePlayer)) continue;
             CorePlayer cp = (CorePlayer) p;
-            if (cp.GetPlayerClass() == null) continue;
-            MMOSave.set(cp.getName().toLowerCase(), cp.GetPlayerClass().export());
+            if (cp.getPlayerClass() == null) continue;
+            MMOSave.set(cp.getName().toLowerCase(), cp.getPlayerClass().export());
         }
         CCM.getLogger().info("SAving File!");
         MMOSave.save();

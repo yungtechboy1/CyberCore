@@ -20,7 +20,6 @@ public class TNTSpecialist extends MinnerBaseClass {
 
     public TNTSpecialist(CyberCoreMain main, CorePlayer player, ConfigSection data) {
         super(main, player, ClassType.Class_Miner_TNT_Specialist, data);
-        SetPowers();
 
     }
 

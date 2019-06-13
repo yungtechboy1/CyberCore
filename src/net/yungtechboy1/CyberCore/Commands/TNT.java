@@ -3,12 +3,10 @@ package net.yungtechboy1.CyberCore.Commands;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
-import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
-import net.yungtechboy1.CyberCore.Classes.Power.Power;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.TNTSpecialistPower;
 import net.yungtechboy1.CyberCore.Commands.Constructors.CheckPermCommand;
@@ -38,7 +36,7 @@ public class TNT extends CheckPermCommand {
         if (commandSender instanceof CorePlayer) {
             System.out.println("CCCCCCCC");
             CorePlayer p = (CorePlayer) commandSender;
-            BaseClass c = p.GetPlayerClass();
+            BaseClass c = p.getPlayerClass();
             if (!(c instanceof TNTSpecialist)) {
                 commandSender.sendMessage(CyberCoreMain.NAME + TextFormat.RED + "Error! You don't have access to this command!");
                 return true;

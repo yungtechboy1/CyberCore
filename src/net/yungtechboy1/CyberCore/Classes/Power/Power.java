@@ -1,6 +1,7 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
 import cn.nukkit.event.Event;
+import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.math.NukkitRandom;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.CoolDown;
@@ -51,9 +52,16 @@ public abstract class Power {
             return CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
         if (event instanceof PlayerJumpEvent)
             return PlayerJumpEvent((PlayerJumpEvent) event);
+        if (event instanceof EntityInventoryChangeEvent) {
+            return EntityInventoryChangeEvent((EntityInventoryChangeEvent) event);
+        }
         return event;
     }
 
+
+    public EntityInventoryChangeEvent EntityInventoryChangeEvent(EntityInventoryChangeEvent e) {
+        return e;
+    }
 
     public PlayerJumpEvent PlayerJumpEvent(PlayerJumpEvent e) {
         return e;
@@ -71,6 +79,10 @@ public abstract class Power {
         return 60 * 15;//15 Mins
     }
 
+    public final String getSafeName(){
+        return getName().replaceAll(" ","_");
+    }
+
     public final int getCooldownTimeTick() {
         return getCooldownTime() * 20;
     }
@@ -80,11 +92,11 @@ public abstract class Power {
     }
 
     public final void handleTick(int tick) {
-        System.out.println("Power Call TICK");
+//        System.out.println("Power Call TICK");
         if (TickUpdate == -1) return;
-        System.out.println("Power Call TICK 1");
+//        System.out.println("Power Call TICK 1");
         if (_lasttick + TickUpdate < tick) {
-            System.out.println("Power Called THE ACTUAL TICK");
+//            System.out.println("Power Called THE ACTUAL TICK");
             onTick(tick);
             _lasttick = tick;
         }
