@@ -1,7 +1,8 @@
-package net.yungtechboy1.CyberCore.Classes.Power;
+package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses;
 
 import cn.nukkit.math.NukkitRandom;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Power;
 
 public abstract class PowerStackable extends Power {
     int AvailbleQuantity = 0;

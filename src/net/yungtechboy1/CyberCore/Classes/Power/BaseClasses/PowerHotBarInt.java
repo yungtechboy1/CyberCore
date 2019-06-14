@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Classes.Power;
+package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses;
 
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.inventory.PlayerInventory;
@@ -11,7 +11,6 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
-import net.yungtechboy1.CyberCore.PlayerSettingsData;
 
 public abstract class PowerHotBarInt extends PowerHotBar {
 

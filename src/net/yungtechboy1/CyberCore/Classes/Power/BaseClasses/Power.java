@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Classes.Power;
+package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses;
 
 import cn.nukkit.event.Event;
 import cn.nukkit.event.entity.EntityInventoryChangeEvent;
@@ -7,7 +7,6 @@ import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CoolDownTick;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;

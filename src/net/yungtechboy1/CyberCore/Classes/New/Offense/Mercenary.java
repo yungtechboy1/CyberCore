@@ -8,7 +8,7 @@ import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.MercenaryBlindi
 import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.MercenaryDisarm;
 import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.MercenaryDoubleTake;
 import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.MercenaryReneration;
-import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;

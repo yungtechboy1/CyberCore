@@ -11,8 +11,8 @@ import cn.nukkit.event.inventory.InventoryClickEvent;
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.event.player.*;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Classes.Power.Power;
-import net.yungtechboy1.CyberCore.Classes.Power.PowerHotBarInt;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Power;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerHotBarInt;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 
 import java.util.HashMap;
