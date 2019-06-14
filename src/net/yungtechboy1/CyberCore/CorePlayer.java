@@ -1762,7 +1762,7 @@ public class CorePlayer extends Player {
         startGamePacket.spawnZ = (int) this.z;
         startGamePacket.hasAchievementsDisabled = true;
         startGamePacket.dayCycleStopTime = -1;
-        startGamePacket.eduMode = true;
+        startGamePacket.eduMode = false;
         startGamePacket.hasEduFeaturesEnabled = true;
         startGamePacket.rainLevel = 0;
         startGamePacket.lightningLevel = 0;

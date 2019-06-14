@@ -4,6 +4,7 @@ import cn.nukkit.block.BlockSand;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Location;
 import cn.nukkit.math.BlockFace;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
@@ -44,10 +45,11 @@ public class KnightSandShieldPower extends PowerHotBarInt {
             for (int height = 0; height < 3; height++) {
 
 //                l.setBlock(al.add(), new BlockSand());
-                l.setBlock(al.add(0, height, 0), new BlockSand());
+                Vector3 p = al.add(0, height, 0);
+                if(l.getBlock(p).getId() == 0)l.setBlock(p, new BlockSand());
             }
 
-            if (topoff) l.setBlock(al.add(0, 3, 0), new BlockSand());
+            if (topoff && l.getBlock(al.add(0, 3, 0)).getId() == 0) l.setBlock(al.add(0, 3, 0), new BlockSand());
         }
 //        }
         return null;
