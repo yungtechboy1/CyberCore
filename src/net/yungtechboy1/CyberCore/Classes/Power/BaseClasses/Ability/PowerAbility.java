@@ -42,8 +42,18 @@ public abstract class PowerAbility extends PowerPublicInterface implements Power
         Active = active;
     }
 
+    private void activate() {
+        if (isActive()) return;
+        Active = true;
+        DeActivatedTick = Server.getInstance().getTick() + getRunTimeTick();
+        onActivate();
+    }
+
+    public abstract void onActivate();
+
     @Override
     public void onTick(int tick) {
+        //Only For Deactivation
         if (isActive()) {
             whileAbilityActive();
             if (tick >= DeActivatedTick) {

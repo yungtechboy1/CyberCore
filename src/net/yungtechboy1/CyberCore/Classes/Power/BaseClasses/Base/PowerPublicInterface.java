@@ -224,7 +224,7 @@ public abstract class PowerPublicInterface {
         }
 
         public int getValue() {
-            return ordinal() + 1;
+            return ordinal();
         }
     }
 }
