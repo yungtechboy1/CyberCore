@@ -47,7 +47,7 @@ import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
 import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.KnightSandShieldPower;
-import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.CustomCraftingTransaction;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
@@ -683,14 +683,13 @@ public class CorePlayer extends Player {
 
                     MobEquipmentPacket mobEquipmentPacket = (MobEquipmentPacket) packet;
 
-                    Item iitem = this.inventory.getItem(mobEquipmentPacket.hotbarSlot);
-
+                    //TODO Make into a Custom Event!
                     if(getPlayerClass() != null){
                         if(getPlayerClass() instanceof Knight){
                             Knight k = (Knight)getPlayerClass();
                             KnightSandShieldPower kssp = (KnightSandShieldPower) k.getPower(PowerEnum.KnightSandShield);
                             if(mobEquipmentPacket.hotbarSlot == kssp.getLockedSlot().getSlot()){
-                                kssp.InitPowerRun(this);
+                                kssp.initPowerRun();
                                 kssp.onTick(getServer().getTick());
                                 getInventory().setHeldItemIndex(getInventory().getHeldItemIndex(),true);
                                 return;
@@ -1406,7 +1405,7 @@ public class CorePlayer extends Player {
                     //TODO FIX HERE
                     CoolDownTick cc = GetCooldown(Cooldown_Class, true);
                     if (cc == null) {
-                    CyberCoreMain.getInstance().getLogger().info("RUNNNING CLASS CHECK IN CP" + CDL.size()+"||"+ getPlayerClass());
+//                    CyberCoreMain.getInstance().getLogger().info("RUNNNING CLASS CHECK IN CP" + CDL.size()+"||"+ getPlayerClass());
                         AddCoolDown(Cooldown_Class, 5);
                         BaseClass bc = getPlayerClass();
                         if (bc != null) bc.onUpdate(currentTick);
@@ -1803,7 +1802,6 @@ public class CorePlayer extends Player {
 
         this.server.addOnlinePlayer(this);
         this.server.onPlayerCompleteLoginSequence(this);
-        setSettingsData(CyberCoreMain.getInstance().UserSQL.getPlayerSettingsData(this));
     }
 
 

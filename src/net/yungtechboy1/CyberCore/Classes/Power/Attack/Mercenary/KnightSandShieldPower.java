@@ -1,19 +1,22 @@
 package net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary;
 
 import cn.nukkit.block.BlockSand;
-import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Location;
 import cn.nukkit.math.BlockFace;
+import cn.nukkit.math.Vector3;
+import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
-import net.yungtechboy1.CyberCore.Classes.Power.PowerHotBarInt;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerHotBarInt;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 public class KnightSandShieldPower extends PowerHotBarInt {
     public KnightSandShieldPower(BaseClass b) {
         super(b, 80);
+        setPowerSourceCost(10);
+
     }
 
     @Override
@@ -27,7 +30,8 @@ public class KnightSandShieldPower extends PowerHotBarInt {
     }
 
     @Override
-    public Object usePower(CorePlayer cp, Object... args) {
+    public Object usePower(Object... args) {
+        CorePlayer cp = getPlayer();
         BlockFace d = cp.getDirection();
         Location sp = cp.add(cp.getDirection().getUnitVector().multiply(4));//2 Forward
         Level l = cp.getLevel();
@@ -37,21 +41,22 @@ public class KnightSandShieldPower extends PowerHotBarInt {
         for (int width = -3; width < 3; width++) {
             topoff = !topoff;
             BlockFace nd = getLeft(d);
-            Location al = sp.add(nd.getUnitVector().multiply(width)).add(0,15,0);
+            Location al = sp.add(nd.getUnitVector().multiply(width)).add(0, 20, 0);
             for (int height = 0; height < 3; height++) {
 
 //                l.setBlock(al.add(), new BlockSand());
-                l.setBlock(al.add(0,height,0),new BlockSand());
+                Vector3 p = al.add(0, height, 0);
+                if(l.getBlock(p).getId() == 0)l.setBlock(p, new BlockSand());
             }
 
-            l.setBlock(al.add(0,3,0),new BlockSand());
+            if (topoff && l.getBlock(al.add(0, 3, 0)).getId() == 0) l.setBlock(al.add(0, 3, 0), new BlockSand());
         }
 //        }
         return null;
     }
 
-    public BlockFace getLeft(BlockFace bf){
-        switch (bf){
+    public BlockFace getLeft(BlockFace bf) {
+        switch (bf) {
             case NORTH:
                 return BlockFace.WEST;
             case SOUTH:
@@ -71,4 +76,9 @@ public class KnightSandShieldPower extends PowerHotBarInt {
         return "Sand Shield";
     }
 
+
+    @Override
+    public String getDispalyName() {
+        return TextFormat.YELLOW + getName();
+    }
 }

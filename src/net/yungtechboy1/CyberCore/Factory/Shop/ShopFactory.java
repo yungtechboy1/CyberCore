@@ -75,12 +75,12 @@ public class ShopFactory implements Listener {
         }
         ArrayList<ShopMysqlData> is = new ArrayList<>();
         try {
-            ResultSet rs = SQL.ExecuteQuerySQLite("SELECT * FROM `Shop` WHERE `enabled` = 1");
+            ResultSet rs = SQL.ExecuteQuerySQLite("SELECT * FROM `Shop` WHERE `enabled` = 1 ORDER BY `Shop`.`Itemid` ASC");
             if (rs != null) {
                 try {
                     while (rs.next()) {
                         ShopMysqlData aid = new ShopMysqlData(rs);
-                        System.out.println(">>>!!!+" + aid);
+//                        System.out.println(">>>!!!+" + aid);
                         is.add(aid);
                     }
                 } catch (Exception ex) {
@@ -428,22 +428,22 @@ public class ShopFactory implements Listener {
     //TODO MAke Pages with new API
     @EventHandler(ignoreCancelled = true)
     public void TE(InventoryTransactionEvent event) {
-        System.out.println("CALLLL");
+//        System.out.println("CALLLL");
         InventoryTransaction transaction = event.getTransaction();
         Set<InventoryAction> traa = transaction.getActions();
         for (InventoryAction t : traa) {
-            System.out.println("CALLLL TTTTTTTTTTTTTTTTTTT" + t.getClass().getName());
+//            System.out.println("CALLLL TTTTTTTTTTTTTTTTTTT" + t.getClass().getName());
             if (t instanceof SlotChangeAction) {
-                System.out.println("CALLLL SLOTCCCCCCCC");
+//                System.out.println("CALLLL SLOTCCCCCCCC");
                 SlotChangeAction sca = (SlotChangeAction) t;
 
 //                sca.getInventory()
 
                 Inventory inv = sca.getInventory();
-                System.out.println("CHECK INNNNNVVVVVVV " + inv.getClass().getName());
+//                System.out.println("CHECK INNNNNVVVVVVV " + inv.getClass().getName());
 //                if (inv.isEmpty()) return;
 
-                System.out.println("NEEEEEEE" + inv.getClass().getTypeName());
+//                System.out.println("NEEEEEEE" + inv.getClass().getTypeName());
                 if (inv instanceof PlayerInventory) {
 
                 }
@@ -454,19 +454,34 @@ public class ShopFactory implements Listener {
                     System.out.println(sca.getSlot() + " || " + ah.getHolder().getName() + " || " + ah.getHolder().getClass().getName());
                     CorePlayer ccpp = (CorePlayer) ah.getHolder();
                     int slot = sca.getSlot();
+                    int sx = slot % 9;
+                    int sy = (int) Math.floor(slot / 9);
 //                    event.setCancelled();
                     event.setCancelled();
                     if (slot < 5 * 9) {
                         System.out.println("TOP INV");
                         //TODO CONFIRM AND SHOW ITEM
                         if (!ah.ConfirmPurchase) {
-                            ah.ConfirmItemPurchase(slot);
+                            Item is = ah.getItem(slot);
+                            if (ah.CurrentPage == ShopInv.CurrentPageEnum.Catagories) {
+                                if (slot == 11) {
+                                    ah.CCM.SpawnShop.OpenShop((CorePlayer) ah.getHolder(), 1);
+                                } else {
+                                    ah.setPage(1);
+                                }
+                            } else {
+                                ah.ConfirmItemPurchase(slot);
+                            }
 //                        ccpp.AH.ConfirmItemPurchase(slot);
                         } else {
-                            if (ah.CurrentPage == ShopInv.CurrentPageEnum.PlayerSellingPage) {
-                                int sx = slot % 9;
-                                int sy = (int) Math.floor(slot / 9);
-                                Item is = ah.getItem(slot);
+                            Item is = ah.getItem(slot);
+                            if (ah.CurrentPage == ShopInv.CurrentPageEnum.Catagories) {
+                                if (slot == 11) {
+                                    ah.CCM.SpawnShop.OpenShop((CorePlayer) ah.getHolder(), 1);
+                                } else {
+                                    ah.setPage(1);
+                                }
+                            } else if (ah.CurrentPage == ShopInv.CurrentPageEnum.PlayerSellingPage) {
                                 boolean isi = false;
                                 int isc = is.getCount();
                                 if (is != null && is.getId() != 0) {

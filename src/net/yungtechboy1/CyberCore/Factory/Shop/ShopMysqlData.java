@@ -63,7 +63,10 @@ public class ShopMysqlData {
             i.setNamedTag(c);
             i.setLore(TextFormat.AQUA + "Purchase Price: " + TextFormat.GREEN + Price,
                     TextFormat.YELLOW + "Sell Price: " + TextFormat.GREEN + SellPrice,
-                    "Click to Buy/Sell!");
+                    "Click to Buy/Sell!",
+                    TextFormat.DARK_GRAY+ "SID: "+ ShopID,
+                    TextFormat.DARK_GRAY+ "IID: "+ ItemID+":"+ItemDamage
+                    );
         }
         return i;
     }

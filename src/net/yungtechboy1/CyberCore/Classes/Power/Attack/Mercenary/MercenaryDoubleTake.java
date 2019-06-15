@@ -3,8 +3,8 @@ package net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.PowerAbility;
-import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability.PowerAbility;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
@@ -19,7 +19,7 @@ public class MercenaryDoubleTake extends PowerAbility {
         if(e.getCause() == CustomEntityDamageEvent.CustomDamageCause.DoubleTakeMagic)return e;
         if(e.getEntity() instanceof CorePlayer) {
             float d = e.getOriginalDamage();
-            if(!isActive())InitPowerRun((CorePlayer)e.getEntity());
+            if(!isActive())initPowerRun((CorePlayer)e.getEntity());
             else {
                 NukkitRandom nr = new NukkitRandom();
                 if (nr.nextRange(0, 100) <= getPowerSuccessChance()) {
@@ -46,13 +46,14 @@ public class MercenaryDoubleTake extends PowerAbility {
         return null;
     }
 
+
+
     @Override
     public boolean CanRun(boolean force, Object... args) {
         if(force)return true;
         if(super.CanRun(force,args)) {
             CorePlayer cp = getPlayer();
-            if (cp.getHealth() > 8) return false;
-            return true;
+            return !(cp.getHealth() > 8);
         }
         return false;
     }

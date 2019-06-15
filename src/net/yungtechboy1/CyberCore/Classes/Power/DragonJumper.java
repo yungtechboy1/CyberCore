@@ -1,8 +1,8 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
-import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.DragonSlayer;
-import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerStackable;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
@@ -23,7 +23,7 @@ public class DragonJumper extends PowerStackable {
 
     @Override
     public PlayerJumpEvent PlayerJumpEvent(PlayerJumpEvent e) {
-        InitPowerRun();
+        initPowerRun();
         return super.PlayerJumpEvent(e);
     }
 
@@ -33,7 +33,7 @@ public class DragonJumper extends PowerStackable {
     }
 
     @Override
-    public Object usePower(CorePlayer cp, Object... args) {
+    public Object usePower( Object... args) {
         return null;
     }
 

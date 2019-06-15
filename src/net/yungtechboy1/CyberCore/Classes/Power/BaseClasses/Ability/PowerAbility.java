@@ -1,8 +1,8 @@
-package net.yungtechboy1.CyberCore.Classes.Power;
+package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability;
 
 import cn.nukkit.Server;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Power;
 
 public abstract class PowerAbility extends Power {
     private boolean Active = false;
@@ -10,6 +10,11 @@ public abstract class PowerAbility extends Power {
     public PowerAbility(BaseClass bc, int psc) {
 
         super(bc, psc);
+        TickUpdate = 10;//Every 10 Ticks
+    }
+
+    public PowerAbility(BaseClass b, int psc, double cost) {
+        super(b, psc, cost);
         TickUpdate = 10;//Every 10 Ticks
     }
 
@@ -43,7 +48,7 @@ public abstract class PowerAbility extends Power {
     }
 
     @Override
-    public final Object usePower(CorePlayer cp, Object... args) {
+    public final Object usePower(Object... args) {
         activate();
         onAbilityActivate();
         return null;

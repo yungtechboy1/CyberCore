@@ -45,20 +45,28 @@ public class PlayerSettingsData {
     public PlayerSettingsData(HashMap<String, Object> a) {
         Name = (String) a.get("Name");
         //https://stackoverflow.com/questions/27893342/how-to-convert-list-to-a-json-object-using-gson
-        UUIDS = new Gson().fromJson((String) a.get("UUIDS"), uuidType);
+//        if (((String) a.get("PlayerWarnings")).equalsIgnoreCase("[]"))
+        UUIDS = new Gson().fromJson((String) a.get("UUIDs"), uuidType);
         Cash = (int) a.get("Cash");
         CreditScore = (int) a.get("CreditScore");
         CreditLimit = (int) a.get("CreditLimit");
         UsedCredit = (int) a.get("UsedCredit");
-        if (((String) a.get("PlayerWarnings")).equalsIgnoreCase("{}")) PlayerWarnings = new ArrayList<>();
+        if (((String) a.get("PlayerWarnings")).equalsIgnoreCase("[]")) PlayerWarnings = new ArrayList<>();
         else PlayerWarnings = new Gson().fromJson((String) a.get("PlayerWarnings"), pweType);
-        if (((String) a.get("PlayerTempBans")).equalsIgnoreCase("{}")) PlayerTempBans = new Gson().fromJson((String) a.get("PlayerTempBans"), ptbType);
+        if (((String) a.get("PlayerTempBans")).equalsIgnoreCase("[]"))
+            PlayerTempBans = new Gson().fromJson((String) a.get("PlayerTempBans"), ptbType);
         PlayerTempBans = new Gson().fromJson((String) a.get("PlayerTempBans"), uuidType);
-        if (((String) a.get("PlayerKicks")).equalsIgnoreCase("{}"))  PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), pkbType);
+        if (((String) a.get("PlayerKicks")).equalsIgnoreCase("[]"))
+            PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), pkbType);
         PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), uuidType);
-        if (((String) a.get("PlayerBans")).equalsIgnoreCase("{}")) PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), pbbType);
+        if (((String) a.get("PlayerBans")).equalsIgnoreCase("[]"))
+            PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), pbbType);
         PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), uuidType);
-        Rank = (int) a.get("Rank");
+        try {
+            Rank = Integer.parseInt((String) a.get("Rank"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String UUIDSToJSON() {
@@ -66,22 +74,22 @@ public class PlayerSettingsData {
     }
 
     public String PlayerWarningToJSON() {
-        if (PlayerWarnings.size() == 0) return "{}";
+//        if (PlayerWarnings.size() == 0) return "[]";
         return new Gson().toJson(PlayerWarnings, pweType);
     }
 
     public String PlayerTempBansToJSON() {
-        if (PlayerTempBans.size() == 0) return "{}";
+//        if (PlayerTempBans.size() == 0) return "[]";
         return new Gson().toJson(PlayerTempBans, ptbType);
     }
 
     public String PlayerKicksToJSON() {
-        if (PlayerKicks.size() == 0) return "{}";
+//        if (PlayerKicks.size() == 0) return "[]";
         return new Gson().toJson(PlayerKicks, pkbType);
     }
 
     public String PlayerBansToJSON() {
-        if (PlayerBans.size() == 0) return "{}";
+//        if (PlayerBans.size() == 0) return "[]";
         return new Gson().toJson(PlayerBans, pbbType);
     }
 }

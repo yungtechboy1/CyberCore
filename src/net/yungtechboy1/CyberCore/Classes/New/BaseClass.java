@@ -17,8 +17,8 @@ import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Classes.New.Buff.BuffType;
-import net.yungtechboy1.CyberCore.Classes.Power.Power;
-import net.yungtechboy1.CyberCore.Classes.Power.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Power;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.*;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
@@ -121,13 +121,13 @@ public abstract class BaseClass {
     public void addPowerSourceCount(double a) {
         if (PowerSourceCount + a > getMaxPowerSourceCount()) {
             double d = getMaxPowerSourceCount() - a;
-            if(d < 0)PowerSourceCount += d;
+            if (d < 0) PowerSourceCount += d;
         } else {
             PowerSourceCount += Math.abs(a);
         }
     }
 
-    public TextFormat getColor(){
+    public TextFormat getColor() {
         return TextFormat.GRAY;
     }
 
@@ -138,15 +138,15 @@ public abstract class BaseClass {
     }
 
     public double getMaxPowerSourceCount() {
-        return Math.round((Math.abs(Math.pow(57 * getLVL(), 2)) / Math.sqrt(Math.pow(20 * getLVL(), 3))) + getLVL() * 10);
+        return Math.round((Math.abs(Math.pow(57 * (getLVL()+1), 2)) / Math.sqrt(Math.pow(20 * (getLVL()+1), 3))) + ((getLVL()+1) * 10));
     }
 
     public void tickPowerSource(int tick) {
         addPowerSourceCount();//From Server Every 20 Secs
-        double t = Math.abs(Math.pow(27 * getLVL(), 2));
-        double b = Math.sqrt(Math.pow(18 * getLVL(), 3));
+        double t = Math.abs(Math.pow(27 * (getLVL()+1), 2));
+        double b = Math.sqrt(Math.pow(18 * (getLVL()+1), 3));
         int f = (int) Math.round((t / b) * .2);
-        addPowerSourceCount(f);
+        addPowerSourceCount(Math.abs(f));
         //TODO
         //ISSUE
         //Maybe TIck player power here too??
@@ -189,7 +189,7 @@ public abstract class BaseClass {
     }
 
     public String getDisplayName() {
-        return getColor()+getName();
+        return getColor() + getName();
     }
 
     public HashMap<BuffType, Buff> addBuff(Buff o) {
@@ -272,7 +272,7 @@ public abstract class BaseClass {
     public boolean TryRunPower(PowerEnum powerid) {
         Power p = getPower(powerid);
         if (p == null) return false;
-        return p.CanRun();
+        return p.CanRun(false);
     }
 
     public void CmdRunPower(PowerEnum powerid) {
@@ -282,7 +282,7 @@ public abstract class BaseClass {
     public void RunPower(PowerEnum powerid) {
         Power p = getPower(powerid);
         if (p == null) return;
-        p.usePower(P);
+        p.usePower(getPlayer());
 
     }
 
@@ -408,7 +408,7 @@ public abstract class BaseClass {
     public Event PowerHandelEvent(Event e) {
 //        Event ee = e;
         for (Power p : getPowers()) {
-             p.HandelEvent(e);
+            p.handelEvent(e);
         }
         return e;
     }
@@ -452,7 +452,7 @@ public abstract class BaseClass {
             event = PlayerJumpEvent((PlayerJumpEvent) event);
             if (ActiveAbility != null) event = ActiveAbility.PlayerJumpEvent((PlayerJumpEvent) event);
             return event;
-        }else if (event instanceof EntityInventoryChangeEvent) {
+        } else if (event instanceof EntityInventoryChangeEvent) {
             event = EntityInventoryChangeEvent((EntityInventoryChangeEvent) event);
 //            if (ActiveAbility != null) event = ActiveAbility.PlayerJumpEvent((PlayerJumpEvent) event);
             return event;
@@ -463,6 +463,7 @@ public abstract class BaseClass {
     public PlayerJumpEvent PlayerJumpEvent(PlayerJumpEvent event) {
         return event;
     }
+
     public EntityInventoryChangeEvent EntityInventoryChangeEvent(EntityInventoryChangeEvent event) {
         return event;
     }
@@ -582,13 +583,17 @@ public abstract class BaseClass {
 //        System.out.println("Tring to TICKING POWER "+getPowers().size());
 //        System.out.println("Tring to TICKING POWER "+getPowers());
         for (Power p : getPowers()) {
-//            System.out.println("TICKING POWER "+p.getName());
-            if (p.getCooldownTimeTick() != -1) p.handleTick(tick);
+//            System.out.println("TICKING POWER " + p.getName());
+            try {
+                if (p.TickUpdate != -1) p.handleTick(tick);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void onUpdate(int tick) {
-        System.out.println("TICKING BASECLASS");
+//        System.out.println("TICKING BASECLASS");
         tickPowers(tick);
     }
 
@@ -599,7 +604,7 @@ public abstract class BaseClass {
         int pxp = XPRemainder(getXP());
         int pxpof = calculateRequireExperience(lvl + 1);
         int plvl = lvl;
-        f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl;
+        f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl + TextFormat.GRAY+ " | " + TextFormat.AQUA+getPowerSourceType().name()+" Power : "+getPowerSourceCount() + " / "+ getMaxPowerSourceCount();
         return f;
     }
 
@@ -626,7 +631,7 @@ public abstract class BaseClass {
 
 
     public enum ClassType {
-        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary, DragonSlayer, Class_Magic_Enchanter, Class_Rouge_Thief, Class_Offense_Knight, Class_Offense_Holy_Knight, Class_Offense_Dark_Knight,Class_Offense_Assassin, Class_Offense_Raider;
+        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary, DragonSlayer, Class_Magic_Enchanter, Class_Rouge_Thief, Class_Offense_Knight, Class_Offense_Holy_Knight, Class_Offense_Dark_Knight, Class_Offense_Assassin, Class_Offense_Raider;
 
 
         public int getKey() {

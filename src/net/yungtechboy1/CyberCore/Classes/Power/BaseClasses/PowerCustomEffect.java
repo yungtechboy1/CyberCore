@@ -1,14 +1,11 @@
-package net.yungtechboy1.CyberCore.Classes.Power;
+package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
-
-import javax.xml.soap.Text;
 
 public class PowerCustomEffect extends Power {
     public Effect PotionEffect = null;
@@ -37,10 +34,10 @@ public class PowerCustomEffect extends Power {
     }
 
     @Override
-    public final Object usePower(CorePlayer cp, Object... args) {
+    public final Object usePower( Object... args) {
         if (getPotionOnSelf()) {
-            cp.sendMessage(TextFormat.GREEN+"["+getDispalyName()+"] Effect Active");
-            cp.addEffect(getEffect());
+            getPlayer().sendMessage(TextFormat.GREEN+"["+getDispalyName()+"] Effect Active");
+            getPlayer().addEffect(getEffect());
         }else {
             ((Player)args[0]).sendMessage(TextFormat.GREEN+"["+getDispalyName()+"] Effect Active");
             ((Entity)args[0]).addEffect(getEffect());

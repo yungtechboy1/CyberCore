@@ -9,7 +9,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 public class PowerSourceTaskAsync extends Thread implements InterruptibleThread {
 
 
-    private final static int Cooldown = 20 * 20;
+    private final static int Cooldown = 20 * 20;//20 Secs
     public static CyberCoreMain CCM;
 
     public PowerSourceTaskAsync(CyberCoreMain c) {
@@ -34,22 +34,24 @@ public class PowerSourceTaskAsync extends Thread implements InterruptibleThread 
             if (tick != lasttick) {
 //                System.out.println("||||||||======");
                 lasttick = tick;
-//                if(tick % Cooldown == 0){
+//                if (tick % Cooldown == 0) {
+                System.out.println("GIVEING POWER TO PLAYERS");
                 for (Player p : CCM.getServer().getOnlinePlayers().values()) {
                     if (p instanceof CorePlayer) {
                         CorePlayer cp = (CorePlayer) p;
                         //TODO
                         cp.tickPowerSource(tick);
 //                        }
+//                        }
                     }
                 }
-            }
-            //A little faster than .1 of a sec (.06 to be exact...or 1 tick = 50millis and this is 60 millisecs)
-            //Low key Every other 4 thics is fine
-            try {
-                Thread.sleep(Cooldown * 50);//4 Ticks
-            } catch (InterruptedException e) {
-                //ignore
+                //A little faster than .1 of a sec (.06 to be exact...or 1 tick = 50millis and this is 60 millisecs)
+                //Low key Every other 4 thics is fine
+                try {
+                    Thread.sleep(Cooldown * 50);//20 Secs, 400 Ticks Correct
+                } catch (InterruptedException e) {
+                    //ignore
+                }
             }
         }
     }

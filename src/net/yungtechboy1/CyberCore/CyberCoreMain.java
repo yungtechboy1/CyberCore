@@ -237,10 +237,10 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Block.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         Block.list[Block.TNT] = CustomBlockTNT.class;
 //        Block.list[267] = CustomElemebntBlock.class;
-        Block.list[Block.PURPLE_GLAZED_TERRACOTTA] = CustomBlockPurpleGlazedTerraCotta.class;
+//        Block.list[Block.PURPLE_GLAZED_TERRACOTTA] = CustomBlockPurpleGlazedTerraCotta.class;
 //        ReloadBlockList(267, CustomElementBlock.class);
         ReloadBlockList(Block.TNT, CustomBlockTNT.class);
-        ReloadBlockList(Block.PURPLE_GLAZED_TERRACOTTA, CustomBlockPurpleGlazedTerraCotta.class);
+//        ReloadBlockList(Block.PURPLE_GLAZED_TERRACOTTA, CustomBlockPurpleGlazedTerraCotta.class);
 //        Item.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         addCreativeItem(Item.get(Block.ENCHANT_TABLE, 5, 1).setCustomName("TTTTTTTTTTTTTT"));
         addCreativeItem(new CustomItemElement());

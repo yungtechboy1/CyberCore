@@ -33,7 +33,7 @@ public class ClassFactory implements Listener{
 //        CCM.getServer().getScheduler().scheduleDelayedRepeatingTask(new LumberJackTreeCheckerTask(main), 20 * 60, 20 * 60);//Every Min
     }
 
-//    HandelEvent(event, cp);
+//    handelEvent(event, cp);
 
     public void leaveClass(CorePlayer p) {
         MMOSave.remove(p.getName().toLowerCase());
@@ -96,45 +96,45 @@ public class ClassFactory implements Listener{
 
 //    @EventHandler
 //    public void OnEvent(BlockBreakEvent event) {
-//        HandelEvent(event, (CorePlayer) event.getPlayer());
+//        handelEvent(event, (CorePlayer) event.getPlayer());
 //    }
 //
 //    @EventHandler
 //    public void OnEvent(BlockPlaceEvent event) {
-//        HandelEvent(event, (CorePlayer) event.getPlayer());
+//        handelEvent(event, (CorePlayer) event.getPlayer());
 //    }
 //
 //    @EventHandler
 //    public void OnEvent(PlayerInteractEvent event) {
-//        HandelEvent(event, (CorePlayer) event.getPlayer());
+//        handelEvent(event, (CorePlayer) event.getPlayer());
 //    }
 
 //    @EventHandler
 //    public void OnEvent(BlockPlaceEvent event) {
 //        CorePlayer cp = (CorePlayer) ((BlockPlaceEvent) event).getPlayer();
-//        HandelEvent(event, cp);
+//        handelEvent(event, cp);
 //    }
 //
 //    @EventHandler
 //    public void OnEvent(BlockBreakEvent event) {
 //        CorePlayer cp = (CorePlayer) ((BlockBreakEvent) event).getPlayer();
-//        HandelEvent(event, cp);
+//        handelEvent(event, cp);
 //    }
 //
 //    @EventHandler
 //    public void OnEvent(EntityDamageEvent event) {
 //        if(event.getEntity() instanceof Player) {
 //            CorePlayer cp = (CorePlayer) (event).getEntity();
-//            HandelEvent(event, cp);
+//            handelEvent(event, cp);
 ////        } else {
-////            HandelEvent(event, null);
+////            handelEvent(event, null);
 //        }
 //    }
 
 //    @EventHandler
 //    public void OnEvent(EntityDamageByEntityEvent event) {
 //        CorePlayer cp = (CorePlayer) ((BlockPlaceEvent) event).getPlayer();
-//        HandelEvent(event, cp);
+//        handelEvent(event, cp);
 //    }
 
 
@@ -165,13 +165,13 @@ public class ClassFactory implements Listener{
     public void OnEvent(Event event) {
         if (event instanceof BlockBreakEvent || event instanceof BlockPlaceEvent || event instanceof PlayerInteractEvent || event instanceof EntityRegainHealthEvent) {
             if (event instanceof BlockBreakEvent) {
-                HandelEvent(event, ((BlockBreakEvent) event).getPlayer());
+                handelEvent(event, ((BlockBreakEvent) event).getPlayer());
             } else if (event instanceof BlockPlaceEvent) {
-                HandelEvent(event, ((BlockPlaceEvent) event).getPlayer());
+                handelEvent(event, ((BlockPlaceEvent) event).getPlayer());
             } else if (event instanceof PlayerInteractEvent) {
-                HandelEvent(event, ((PlayerInteractEvent) event).getPlayer());
+                handelEvent(event, ((PlayerInteractEvent) event).getPlayer());
             } else if (event instanceof EntityRegainHealthEvent && ((EntityRegainHealthEvent) event).getEntity() instanceof Player) {
-                HandelEvent(event, (Player) ((EntityRegainHealthEvent) event).getEntity());
+                handelEvent(event, (Player) ((EntityRegainHealthEvent) event).getEntity());
             }
         }
     }*/
