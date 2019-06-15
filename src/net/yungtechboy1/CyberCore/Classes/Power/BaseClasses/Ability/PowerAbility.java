@@ -34,10 +34,14 @@ public abstract class PowerAbility extends Power {
         if (isActive()) return;
         Active = true;
         DeActivatedTick = Server.getInstance().getTick() + getRunTimeTick();
+        onActivate();
     }
+
+    public abstract void onActivate();
 
     @Override
     public void onTick(int tick) {
+        //Only For Deactivation
         if (isActive()) {
             if (tick >= DeActivatedTick) {
                 Active = false;

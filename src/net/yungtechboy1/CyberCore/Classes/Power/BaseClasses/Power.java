@@ -212,7 +212,7 @@ public abstract class Power {
         }
 
         public int getValue() {
-            return ordinal() + 1;
+            return ordinal();
         }
     }
 }
