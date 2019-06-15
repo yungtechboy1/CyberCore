@@ -63,7 +63,7 @@ public class OverClaim extends Commands {
             return;
         }
         if (fac.GetPower() < power) {
-            Sender.sendMessage(FactionsMain.NAME + TextFormat.RED + "Your Faction does not have " + power + " Power to claim Chunk at X:" + x + " Z:" + z + "!");
+            Sender.sendMessage(FactionsMain.NAME + TextFormat.RED + "Your Faction does not have " + power + " PowerPublicInterface to claim Chunk at X:" + x + " Z:" + z + "!");
             return;
         }
         if (!Main.FFactory.PlotsList.containsKey(x + "|" + z)) {
@@ -76,7 +76,7 @@ public class OverClaim extends Commands {
             return;
         }
         if (fac2.GetPower() < fac2.GetPlots().toArray().length) {
-            Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Plot Overclaim Successful! $5000 and 3 Power to over ClaimChunk at X:" + x + " Z:" + z + "!");
+            Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Plot Overclaim Successful! $5000 and 3 PowerPublicInterface to over ClaimChunk at X:" + x + " Z:" + z + "!");
             fac.TakeMoney(money);
             fac.AddPlots(x + "|" + z);
             fac2.DelPlots(x + "|" + z);

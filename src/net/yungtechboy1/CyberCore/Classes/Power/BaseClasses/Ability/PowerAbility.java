@@ -1,12 +1,13 @@
 package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability;
 
-import cn.nukkit.Server;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Power;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerPublicInterface;
 
-public abstract class PowerAbility extends Power {
+public abstract class PowerAbility extends PowerPublicInterface implements PowerAbilityInterface {
+
     private boolean Active = false;
     private int DeActivatedTick = -1;
+
     public PowerAbility(BaseClass bc, int psc) {
 
         super(bc, psc);
@@ -18,27 +19,33 @@ public abstract class PowerAbility extends Power {
         TickUpdate = 10;//Every 10 Ticks
     }
 
-    public int getRunTimeTick() {
-        return getStage().getValue()*20;//1-5 Secs
+    public int getDeActivatedTick() {
+        return DeActivatedTick;
     }
 
+    public void setDeActivatedTick(int deActivatedTick) {
+        DeActivatedTick = deActivatedTick;
+    }
+
+    @Override
+    public int getRunTimeTick() {
+        return getStage().getValue() * 20;//1-5 Secs
+    }
+
+    @Override
     public boolean isActive() {
         return Active;
     }
 
+    @Override
     public void setActive(boolean active) {
         Active = active;
-    }
-
-    private void activate() {
-        if (isActive()) return;
-        Active = true;
-        DeActivatedTick = Server.getInstance().getTick() + getRunTimeTick();
     }
 
     @Override
     public void onTick(int tick) {
         if (isActive()) {
+            whileAbilityActive();
             if (tick >= DeActivatedTick) {
                 Active = false;
                 DeActivatedTick = -1;
@@ -53,10 +60,5 @@ public abstract class PowerAbility extends Power {
         onAbilityActivate();
         return null;
     }
-
-    public abstract void onAbilityActivate();
-
-    public abstract void onAbilityDeActivate();
-
 
 }

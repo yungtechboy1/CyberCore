@@ -1,11 +1,11 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Power;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerPublicInterface;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
-public  class TNTAirStrikePower extends Power {
+public  class TNTAirStrikePower extends PowerPublicInterface {
     public TNTAirStrikePower(BaseClass b) {
         super(b, 100);
         TickUpdate = 20*5;//5 Secs

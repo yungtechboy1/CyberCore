@@ -62,7 +62,7 @@ public class Info extends Commands {
             sb.append(formatString("Max # of Players",ffaction.GetMaxPlayers())).append("\n");
             sb.append(formatString("MOTD",ffaction.GetMOTD())).append("\n");
             sb.append(formatString("Desc",ffaction.GetDesc())).append("\n");
-            sb.append(formatString("Power",ffaction.GetPower())).append("\n");
+            sb.append(formatString("PowerPublicInterface",ffaction.GetPower())).append("\n");
             sb.append(formatString("Land Owned",ffaction.GetPlots().size())).append("\n");
             sb.append(formatString("Money",ffaction.GetMoney())).append("\n");
             sb.append(formatString("XP",ffaction.GetXP())).append("\n");
@@ -95,7 +95,7 @@ public class Info extends Commands {
             sb.append(formatString("Max # of Players",fac.GetMaxPlayers())).append("\n");
             sb.append(formatString("MOTD",fac.GetMOTD())).append("\n");
             sb.append(formatString("Desc",fac.GetDesc())).append("\n");
-            sb.append(formatString("Power",fac.GetPower())).append("\n");
+            sb.append(formatString("PowerPublicInterface",fac.GetPower())).append("\n");
             sb.append(formatString("Land Owned",fac.GetPlots().size())).append("\n");
             sb.append(formatString("Money",fac.GetMoney())).append("\n");
             sb.append(formatString("XP",fac.GetXP())).append("\n");

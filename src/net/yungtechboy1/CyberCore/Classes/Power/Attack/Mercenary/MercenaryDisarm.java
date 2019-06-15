@@ -3,12 +3,12 @@ package net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Power;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerPublicInterface;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
-public class MercenaryDisarm extends Power {
+public class MercenaryDisarm extends PowerPublicInterface {
     public MercenaryDisarm(BaseClass b) {
         super(b, 2);
     }

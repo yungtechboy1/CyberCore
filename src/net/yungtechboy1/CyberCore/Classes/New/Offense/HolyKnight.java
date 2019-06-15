@@ -82,7 +82,7 @@ public class HolyKnight extends BaseClass {
 //
 //    private Object loadingBarCooldownForPower(int loadingBarLength, String BarChar, PowerEnum powertype) {
 //        String finaltext = "";
-//        Power p = getPower(powertype);
+//        PowerPublicInterface p = getPower(powertype);
 //        if(p instanceof HolyKnightHealPower){
 //
 //        for (int i = 0; i < loadingBarLength ;i++){

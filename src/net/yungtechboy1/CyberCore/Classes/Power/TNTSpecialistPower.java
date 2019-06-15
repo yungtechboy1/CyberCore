@@ -54,7 +54,7 @@ public class TNTSpecialistPower extends PowerStackable {
     }
 
     private double GetTNTMotionPower(){
-        int x = Level+1;
+        int x = PlayerClass.getLVL()+1;
         double t = Math.sqrt(x)*x;
         double b = 5d*x;
         double z =t/b;
@@ -78,7 +78,7 @@ public class TNTSpecialistPower extends PowerStackable {
             tnt.spawnToAll();
             p.level.addSound(p, Sound.RANDOM_FUSE);
         } else {
-            p.sendMessage("Error! You don't have any TNT Power");
+            p.sendMessage("Error! You don't have any TNT PowerPublicInterface");
         }
         return null;
     }

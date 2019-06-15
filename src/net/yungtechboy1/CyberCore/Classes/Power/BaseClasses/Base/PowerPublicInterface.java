@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses;
+package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base;
 
 import cn.nukkit.event.Event;
 import cn.nukkit.event.entity.EntityInventoryChangeEvent;
@@ -7,6 +7,8 @@ import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 import net.yungtechboy1.CyberCore.CoolDownTick;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
@@ -15,29 +17,21 @@ import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 /**
  * Created by carlt on 5/16/2019.
  */
-public abstract class Power {
+public abstract class PowerPublicInterface {
     public BaseClass PlayerClass = null;
     public int TickUpdate = -1;
     public CoolDownTick Cooldown = null;
     public boolean PlayerToggleable = true;
+    LockedSlot LS = LockedSlot.NA;
     int Level = 0;
     private int PowerSuccessChance = 100;
     private int _lasttick = -1;
-
-    public double getPowerSourceCost() {
-        return PowerSourceCost;
-    }
-
-    public void setPowerSourceCost(double powerSourceCost) {
-        PowerSourceCost = powerSourceCost;
-    }
-
     private double PowerSourceCost = 0;
-
-    public Power(BaseClass b, int psc) {
-        this(b,psc,0);
+    public PowerPublicInterface(BaseClass b, int psc) {
+        this(b, psc, 0);
     }
-    public Power(BaseClass b, int psc, double cost) {
+
+    public PowerPublicInterface(BaseClass b, int psc, double cost) {
         PowerSuccessChance = psc;
         PlayerClass = b;
 //        Level = lvl;
@@ -45,6 +39,22 @@ public abstract class Power {
         initStages();
         initAfterCreation();
         PowerSourceCost = cost;
+    }
+
+    public LockedSlot getLS() {
+        return LS;
+    }
+
+    public void setLS(LockedSlot LS) {
+        this.LS = LS;
+    }
+
+    public double getPowerSourceCost() {
+        return PowerSourceCost;
+    }
+
+    public void setPowerSourceCost(double powerSourceCost) {
+        PowerSourceCost = powerSourceCost;
     }
 
     public int getPowerSuccessChance() {
@@ -83,9 +93,11 @@ public abstract class Power {
     public InventoryClickEvent InventoryClickEvent(InventoryClickEvent e) {
         return e;
     }
+
     public InventoryTransactionEvent InventoryTransactionEvent(InventoryTransactionEvent e) {
         return e;
     }
+
     public EntityInventoryChangeEvent EntityInventoryChangeEvent(EntityInventoryChangeEvent e) {
         return e;
     }
@@ -119,11 +131,11 @@ public abstract class Power {
     }
 
     public final void handleTick(int tick) {
-//        System.out.println("Power Call TICK");
+//        System.out.println("PowerPublicInterface Call TICK");
         if (TickUpdate == -1) return;
-//        System.out.println("Power Call TICK 1");
+//        System.out.println("PowerPublicInterface Call TICK 1");
         if (_lasttick + TickUpdate < tick) {
-//            System.out.println("Power Called THE ACTUAL TICK");
+//            System.out.println("PowerPublicInterface Called THE ACTUAL TICK");
             onTick(tick);
             _lasttick = tick;
         }
@@ -137,9 +149,9 @@ public abstract class Power {
             PlayerClass.takePowerSourceCount(PowerSourceCost);
             usePower(args);
             afterPowerRun(args);
-        }else{
-            if(Cooldown != null && Cooldown.isValid()){
-                getPlayer().sendMessage(TextFormat.RED+"Error! Power "+getDispalyName()+TextFormat.RED+" still has a "+TextFormat.LIGHT_PURPLE+Cooldown.toString()+TextFormat.RED+" Cooldown.");
+        } else {
+            if (Cooldown != null && Cooldown.isValid()) {
+                getPlayer().sendMessage(TextFormat.RED + "Error! PowerPublicInterface " + getDispalyName() + TextFormat.RED + " still has a " + TextFormat.LIGHT_PURPLE + Cooldown.toString() + TextFormat.RED + " Cooldown.");
             }
         }
     }
@@ -149,8 +161,8 @@ public abstract class Power {
         getPlayer().sendMessage(getSuccessUsageMessage());
     }
 
-    public String getSuccessUsageMessage(){
-        return TextFormat.GREEN+ " > Power "+getDispalyName()+TextFormat.GREEN+" has been activated!";
+    public String getSuccessUsageMessage() {
+        return TextFormat.GREEN + " > PowerPublicInterface " + getDispalyName() + TextFormat.GREEN + " has been activated!";
     }
 
     public Object usePower(Object... args) {
@@ -159,8 +171,8 @@ public abstract class Power {
 
     public boolean CanRun(boolean force, Object... args) {
         if (force) return true;
-        if(PlayerClass.getPowerSourceCount() < PowerSourceCost){
-            getPlayer().sendMessage(TextFormat.RED+"Not enough "+PlayerClass.getPowerSourceType().name()+" Energy!");
+        if (PlayerClass.getPowerSourceCount() < PowerSourceCost) {
+            getPlayer().sendMessage(TextFormat.RED + "Not enough " + PlayerClass.getPowerSourceType().name() + " Energy!");
             return false;
         }
         NukkitRandom nr = new NukkitRandom();
@@ -178,7 +190,7 @@ public abstract class Power {
 
 
     public Stage getStage() {
-        return Stage.getStageFromInt((int) Math.floor(Level / 20));
+        return Stage.getStageFromInt(1+((int) Math.floor(Level / 20)));
     }
 
     public CoolDownTick addCooldown() {
@@ -186,7 +198,7 @@ public abstract class Power {
     }
 
     public CoolDownTick addCooldown(int secs) {
-        Cooldown = new CoolDownTick(getType().name(),secs*20);
+        Cooldown = new CoolDownTick(getType().name(), secs * 20);
         return Cooldown;
     }
 
@@ -208,7 +220,7 @@ public abstract class Power {
             if (i < values().length) {
                 return values()[i];
             }
-            return null;
+            return NA;
         }
 
         public int getValue() {

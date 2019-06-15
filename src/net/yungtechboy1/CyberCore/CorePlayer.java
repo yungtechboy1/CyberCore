@@ -688,7 +688,7 @@ public class CorePlayer extends Player {
                         if(getPlayerClass() instanceof Knight){
                             Knight k = (Knight)getPlayerClass();
                             KnightSandShieldPower kssp = (KnightSandShieldPower) k.getPower(PowerEnum.KnightSandShield);
-                            if(mobEquipmentPacket.hotbarSlot == kssp.getLockedSlot().getSlot()){
+                            if(mobEquipmentPacket.hotbarSlot == kssp.getLS().getSlot()){
                                 kssp.initPowerRun();
                                 kssp.onTick(getServer().getTick());
                                 getInventory().setHeldItemIndex(getInventory().getHeldItemIndex(),true);

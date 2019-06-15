@@ -24,12 +24,12 @@ public class MineLifeClass extends MinnerBaseClass {
 
 
 //    public Object RunPower(int powerid, Item itemInHand, Block target, double breakTime) {
-//        Power p = Powers.get(powerid);
+//        PowerPublicInterface p = Powers.get(powerid);
 //        if (p == null) {
-//            CCM.getLogger().error("No Power found or Incorrect Args For MineLife E334221");
+//            CCM.getLogger().error("No PowerPublicInterface found or Incorrect Args For MineLife E334221");
 //            return null;
 //        }
-//        if (powerid == Power.MineLife && p instanceof MineLifePower) {
+//        if (powerid == PowerPublicInterface.MineLife && p instanceof MineLifePower) {
 //            MineLifePower mlp = (MineLifePower) p;
 //            return mlp.usePower(itemInHand, target, breakTime);
 //        }
@@ -38,9 +38,9 @@ public class MineLifeClass extends MinnerBaseClass {
 
 //    @Override
 //    public Object RunPower(int powerid, Object... args) {
-//        Power p = Powers.get(powerid);
+//        PowerPublicInterface p = Powers.get(powerid);
 //        if (p == null || args.length != 3) {
-//            CCM.getLogger().error("No Power found or Incorrect Args For MineLife E334221");
+//            CCM.getLogger().error("No PowerPublicInterface found or Incorrect Args For MineLife E334221");
 //            return -1;
 //        }
 //        if (powerid == 1 && p instanceof MineLifePower) {
@@ -53,7 +53,7 @@ public class MineLifeClass extends MinnerBaseClass {
 //    @Override
 //    public BlockBreakEvent BlockBreakEvent(BlockBreakEvent event) {
 //        event = super.BlockBreakEvent(event);
-//        if (TryRunPower(Power.OreKnowledge)) {
+//        if (TryRunPower(PowerPublicInterface.OreKnowledge)) {
 //            //Run
 //
 //        }

@@ -53,16 +53,16 @@ public class War extends Commands {
             Float fp = (float) fac.GetMaxPower();
             Float ratio = tp / fp;//40/50 = 4/5th = .8
             if(.5f > ratio){
-                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Error, That target faction is not powerful enough for your faction to attack. The Power Ration is "+ratio+" and it must be above .5 for you to attack!");
+                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Error, That target faction is not powerful enough for your faction to attack. The PowerPublicInterface Ration is "+ratio+" and it must be above .5 for you to attack!");
                 return;
             }else if(ratio > 2f){
-                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Error, That target faction is too powerful for your faction to attack. The Power Ration is "+ratio+" and must be below 2 for you to attack!");
+                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Error, That target faction is too powerful for your faction to attack. The PowerPublicInterface Ration is "+ratio+" and must be below 2 for you to attack!");
                 return;
             }
 
             //ENEMY 40/100 FRIENDLY 50/70
             //      .40             .714
-            //MIN 16 Power for Attack
+            //MIN 16 PowerPublicInterface for Attack
             // ROUND(50*(((40/100)+1)/2))
             // ROUND(50*(((.4)+1)/2))
             // ROUND(50*((1.4)/2))
@@ -75,7 +75,7 @@ public class War extends Commands {
             if (takepower < Math.floor(target.GetPower()*.4))takepower = (int) Math.floor(target.GetPower()*.2);
 
             if (fac.GetPower() < takepower){
-                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Error, Your faction does not have "+takepower+" Power needed for this attack!");
+                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Error, Your faction does not have "+takepower+" PowerPublicInterface needed for this attack!");
                 return;
             }
 

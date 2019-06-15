@@ -1,0 +1,123 @@
+package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot;
+
+import cn.nukkit.event.inventory.InventoryTransactionEvent;
+import cn.nukkit.inventory.PlayerInventory;
+import cn.nukkit.inventory.transaction.action.InventoryAction;
+import cn.nukkit.inventory.transaction.action.SlotChangeAction;
+import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemRedstone;
+import cn.nukkit.item.ItemSlimeball;
+import cn.nukkit.nbt.tag.CompoundTag;
+import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerPublicInterface;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
+import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
+import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Power;
+
+import java.util.concurrent.locks.Lock;
+
+public interface PowerHotBarInt {
+
+    public static String getPowerHotBarItemNamedTagKey = "PowerHotBarItem";
+
+    public static void RemoveAnyItemsInSlot(CorePlayer cp , LockedSlot ls){
+        Item i = cp.getInventory().getItem(ls.getSlot());
+        if (!i.isNull()) {//i.getNamedTag() != null
+            if (i.getNamedTag() == null || !i.getNamedTag().contains(getPowerHotBarItemNamedTagKey)) {
+                if (cp.getInventory().isFull()) {
+                    cp.getLevel().dropItem(cp, i);
+                } else {
+                    for (int ii = 0; ii < cp.getInventory().getSize(); ii++) {
+                        if (ii == ls.getSlot()) continue;
+                        Item iii = cp.getInventory().getItem(ii);
+                        if (iii.isNull()) {
+                            cp.getInventory().setItem(ii, i);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        cp.getInventory().clear(ls.getSlot(), true);
+    }
+
+
+
+//    @Override
+//    public InventoryClickEvent InventoryClickEvent(InventoryClickEvent e) {
+//        getPlayer().sendMessage(TextFormat.RED + "Error! You can not change your Class Slot");
+//        if (e.getSlot() == LS.getSlot()) {
+//            if (e.getSourceItem().getNamedTag() != null && !e.getSourceItem().getNamedTag().contains(getPowerHotBarItemNamedTagKey)) {
+//                e.setCancelled();
+//                getPlayer().sendMessage(TextFormat.RED + "Error! You can not change your Class Slot");
+//            }else{
+//                getPlayer().sendMessage(TextFormat.YELLOW + "SAME SLOT THO!");
+//            }
+//        }
+//        return e;
+//
+//    }
+
+
+    default void antiSpamCheck(PowerPublicInterface p) {
+//        int slot = 0;
+        boolean k = false;
+        for (int slot = 0; slot < p.getPlayer().getInventory().getSize(); slot++) {
+            if (slot == p.getLS().getSlot()) continue;
+            Item i = p.getPlayer().getInventory().getItem(slot);
+            if (i.getNamedTag() != null) {
+                if (i.getNamedTag().contains(getPowerHotBarItemNamedTagKey)) {
+                    p.getPlayer().getInventory().clear(slot, true);
+                    k = true;
+                }
+            }
+            slot++;
+        }
+        if (k) p.getPlayer().kick("Please do not spam system!");
+    }
+    default void setPowerAvailable(PowerPublicInterface p) {
+
+        p.getPlayer().getInventory().setItem(p.getLS().getSlot(), addNamedTag(p,getActiveItem(), p.getSafeName(), "Active"));
+//        getPlayer().getInventory().setHeldItemIndex(LS.getSlot());
+    }
+
+    default void setPowerUnAvailable(PowerPublicInterface p) {
+        p.getPlayer().getInventory().setItem(p.getLS().getSlot(), addNamedTag(p,getUnAvailableItem(), p.getSafeName(), "Idle"));
+    }
+
+
+    default Item addNamedTag(PowerPublicInterface p , Item i, String key, String val) {
+        if (p.Cooldown == null) {
+            i.setLore(TextFormat.GREEN + "Ready to Use", TextFormat.GREEN+"Costs: "+p.getPowerSourceCost()+" "+ p.PlayerClass.getPowerSourceType().name()+" ");
+        } else {
+            i.setLore(p.Cooldown.toString(), TextFormat.GREEN+"Costs: "+p.getPowerSourceCost()+" "+ p.PlayerClass.getPowerSourceType().name()+" ");
+        }
+        CompoundTag ct = i.getNamedTag();
+        if (ct == null) ct = new CompoundTag();
+        ct.putBoolean(getPowerHotBarItemNamedTagKey, true);
+        i.setNamedTag(ct);
+        if (key == null) return i;
+        ct.putString(key, val);
+        i.setNamedTag(ct);
+        return i;
+    }
+
+
+    default Item getAvailableItem() {
+        return new ItemSlimeball();
+    }
+
+    default Item getActiveItem() {
+        return new ItemSlimeball(0, 5);
+    }
+
+    default Item getUnActiveItem() {
+        return new ItemRedstone();
+    }
+
+    default Item getUnAvailableItem() {
+        return new ItemRedstone();
+    }
+}
