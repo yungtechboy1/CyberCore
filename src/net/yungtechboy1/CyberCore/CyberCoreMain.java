@@ -239,7 +239,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
         BlockEntity.registerBlockEntity(BlockEntity.MOB_SPAWNER,SpawnerWithLevelBlockEntity.class);
         //Must be registered after custom block
-        Item.registerCustomItemBlock(Item.MONSTER_SPAWNER,CustomItemBlockSpawnerWithLevelBlock.class);
+//        Item.registerCustomItemBlock(Item.MONSTER_SPAWNER,CustomItemBlockSpawnerWithLevelBlock.class);
 
         ReloadBlockList(Block.MONSTER_SPAWNER, SpawnerWithLevelBlock.class);
         Item.list[Item.BOOK] = CItemBook.class;
