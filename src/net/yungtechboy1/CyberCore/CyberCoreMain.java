@@ -208,28 +208,13 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
                 Block.lightFilter[id] = 1;
             }
         }
-
-//        if (Block.fullList[id << 4] == null) {
-////            System.out.println("----------------------------");
-////            System.out.println("IS NULLL");
-////            System.out.println("----------------------------");
-//        } else {
-////            System.out.println("----------------------------");
-////            System.out.println("IS " + Block.fullList[id << 4]);
-////            System.out.println("----------------------------");
-////            System.out.println("IS " + Block.fullList[(id << 4) | 5]);
-////            System.out.println("IS " + Block.fullList[(id << 4) | 5].getDamage());
-////            System.out.println("----------------------------");
-//
-//        }
     }
 
     @Override
     public void onEnable() {
         new File(getDataFolder().toString()).mkdirs();
-
-        saveResource("ranks.yml");
         saveResource("config.yml");
+        saveResource("ranks.yml");
 //        CustomGlobalBlockPalette.registerMapping((entry.id << 4) | entry.data);
 
 
@@ -294,7 +279,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         WarpManager = new WarpManager(this);
 
 
-        MainConfig = new Config(new File(getDataFolder(), "config.yml"));
+//        MainConfig = new Config(new File(getDataFolder(), "config.yml"));
         //Save = new SaveMain(this);
         SQLSaveManager = new SQLManager(this);
 
@@ -434,35 +419,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        MobPlugin.registerItems();
         getServer().getScheduler().scheduleRepeatingTask(new AutoSpawnTask(this), 5, true);
 
-
-        //BossBar Manager
-        //GOOD - Test Refine
         BBM = new BossBarManager(this);
     }
 
-
-//    Deprecated for public database --------------------------------------------
-//    public Connection getMySqlConnection() {
-//        try {
-//            if (Connect != null && Connect.isClosed()) Connect = null;
-//            if (Connect != null) return Connect;
-//            Class.forName("com.mysql.jdbc.Driver");
-//            getLogger().info(TextFormat.GREEN+"Connecting to database...");
-//            Connect = DriverManager.getConnection("jdbc:mysql://209.126.102.26/terratide_db?user=terratide_db&password=terratide_db&autoreconnect=true");
-//            return Connect;
-//            //} catch (Exception ignore) {
-//        } catch (SQLException ex) {
-//            // handle any errors
-//            getServer().getLogger().info("SQLException: " + ex.getMessage());
-//            getServer().getLogger().info("SQLState: " + ex.getSQLState());
-//            getServer().getLogger().info("VendorError: " + ex.getErrorCode());
-//            Connect = null;
-//        } catch (Exception ignore) {
-//            getServer().getLogger().info(ignore.getClass().getName() + ": " + ignore.getMessage());
-//            Connect = null;
-//        }
-//        return null;
-//    }
 
     public void log(String string) {
         getLogger().info(colorize(string));
