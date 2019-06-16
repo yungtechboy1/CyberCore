@@ -10,41 +10,19 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 
-@Deprecated
+//@Deprecated
 public class CustomItemBlockSpawnerWithLevelBlock extends ItemBlock {
 
-    public static Item getSpawnerItem(int meta){
-        ItemBlock ib = new ItemBlock(new SpawnerWithLevelBlock(meta),meta);
-//        ib.setCustomName("TEST");
-        return ib;
-    }
 
     Block _Block = null;
     SpawnerWithLevelBlock.SpawnerType ST = null;
-//    public CustomItemBlockSpawnerWithLevelBlock(Block bblock) {
-//        this(bblock, 0);
-//    }
-//
-//    public CustomItemBlockSpawnerWithLevelBlock(Block bblock, Integer meta) {
-//        this(bblock, meta, 1);
-//    }
-//
-//    public CustomItemBlockSpawnerWithLevelBlock(Block bblock, Integer meta, int count) {
-//        super(bblock.getId(), meta, count);
-//        _Block = bblock;
-//        setCustomName(((SpawnerWithLevelBlock) block).getName());
-//    }
-
-    public CustomItemBlockSpawnerWithLevelBlock() {
-        this(0);
-    }
 
     public CustomItemBlockSpawnerWithLevelBlock(Integer meta) {
-        this(meta, 1);
+        this(new SpawnerWithLevelBlock(meta),meta, 1);
     }
 
-    public CustomItemBlockSpawnerWithLevelBlock(Integer meta, int count) {
-        super(new SpawnerWithLevelBlock(meta), 0, count);
+    public CustomItemBlockSpawnerWithLevelBlock(Block b, Integer meta, int count) {
+        super(b, 0, count);
         ST = SpawnerWithLevelBlock.SpawnerType.getFromInt(meta);
         if (ST != null) setCustomName(TextFormat.AQUA + ST.name() + " Spawner");
         else setCustomName(TextFormat.AQUA + "DAMAGE: " + getDamage() + " Spawner");

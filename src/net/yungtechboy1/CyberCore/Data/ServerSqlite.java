@@ -94,7 +94,7 @@ public class ServerSqlite extends MySQL {
             LoadRank(p);
             LoadClass(p);
             Faction f = plugin.FM.FFactory.IsPlayerInFaction(p);
-            p.Faction = f.GetName();
+            if(f != null)p.Faction = f.GetName();
         } catch (Exception e) {
             CyberCoreMain.getInstance().getLogger().error("EEEEE11122223333", e);
         }

@@ -10,6 +10,11 @@ import cn.nukkit.nbt.tag.CompoundTag;
 public class SpawnerWithLevelBlockEntity extends BlockEntitySpawner {
 
     public Integer Lvl = 0;
+
+    public SpawnerWithLevelBlockEntity(FullChunk chunk, CompoundTag nbt) {
+        this(chunk, nbt,1);
+    }
+
     public SpawnerWithLevelBlockEntity(FullChunk chunk, CompoundTag nbt, Integer ll){
         super(chunk,nbt);
         Lvl = ll;

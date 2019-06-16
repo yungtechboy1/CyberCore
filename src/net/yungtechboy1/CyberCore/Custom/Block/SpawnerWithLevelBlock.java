@@ -61,7 +61,7 @@ public class SpawnerWithLevelBlock extends BlockSolid {
         SpawnerType type = getSpawnerType();
         String t = "Unknown";
 
-        return TextFormat.GOLD +type.name()+ " Spawner " + TextFormat.AQUA + "Level " + getSpawnerLevel();
+        return TextFormat.GOLD +type.name()+ " Spawner ";// + TextFormat.AQUA + "Level " + getSpawnerLevel();
     }
 //
 //    public int GetTypeFromItem(CustomItemBlockSpawnerWithLevelBlock i) {
@@ -165,6 +165,7 @@ public class SpawnerWithLevelBlock extends BlockSolid {
     }
 
     public enum SpawnerType {
+        Unknown(-1),
         Sheep(net.yungtechboy1.CyberCore.entities.animal.walking.Sheep.NETWORK_ID),
         Pig(net.yungtechboy1.CyberCore.entities.animal.walking.Pig.NETWORK_ID),
         Cow( net.yungtechboy1.CyberCore.entities.animal.walking.Cow.NETWORK_ID),
@@ -199,7 +200,7 @@ public class SpawnerWithLevelBlock extends BlockSolid {
             for(SpawnerType st: SpawnerType.values()){
                 if(damage == st.getID())return st;
             }
-            return null;
+            return Unknown;
         }
 
         public int getID() {

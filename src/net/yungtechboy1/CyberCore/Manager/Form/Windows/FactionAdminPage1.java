@@ -89,6 +89,7 @@ public class FactionAdminPage1 extends CyberFormSimple {
                 cp.getInventory().sendContents(cp);
             case 8:
                 cp.sendMessage(cp.getInventory().getItemInHand().getClass().getName() + "||||" + cp.getInventory().getItemInHand().getDamage()+ "|||||||"+ Item.list[cp.getInventory().getItemInHand().getId()]+ "|||||||"+ Block.list[cp.getInventory().getItemInHand().getId()]);
+                cp.sendMessage(">> "+Item.get(cp.getInventory().getItemInHand().getId(),cp.getInventory().getItemInHand().getDamage(),1));
                 System.out.println(cp.getInventory().getItemInHand().getClass().getName() + "||||" + cp.getInventory().getItemInHand().getDamage());
                 break;
             case 9:
