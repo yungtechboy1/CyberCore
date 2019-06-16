@@ -37,7 +37,7 @@ public class MasterListener implements Listener {
         event.setJoinMessage(Msg.replace("{player}", p.getName()));
         p.sendTitle(plugin.colorize("&l&bCyberTech"), plugin.colorize("&l&2Welcome!"), 30, 30, 10);
 
-//        _plugin.initiatePlayer(p);
+//        plugin.initiatePlayer(p);
         plugin.ServerSQL.LoadPlayer(plugin.getCorePlayer(p));
         String rank = plugin.RF.getPlayerRank(p).getDisplayName();
         p.sendMessage(plugin.colorize("&2You Have Joined with the Rank: " + rank));

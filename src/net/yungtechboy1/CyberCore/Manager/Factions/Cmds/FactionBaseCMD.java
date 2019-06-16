@@ -12,10 +12,11 @@ import java.util.ArrayList;
  * Created by carlt on 5/11/2019.
  */
 public class FactionBaseCMD extends Command {
+
     CyberCoreMain Owner;
 
     public FactionBaseCMD(CyberCoreMain main) {
-        super("faction", "Base Faction command", "/faction /f", new String[]{"f"});
+        super("faction", "Base Faction command", main.colorize("&cUsage:&7 /f <subcommand> - Do /f help for a list of subcommands."), new String[]{"f", "faction"});
         Owner = main;
         commandParameters.clear();
         this.commandParameters.put("create", new CommandParameter[]{
@@ -33,7 +34,6 @@ public class FactionBaseCMD extends Command {
 
     @Override
     public boolean execute(CommandSender vs, String command, String[] strings) {
-        System.out.println("CALLL BBBBB333");
         CorePlayer commandSender = Owner.getCorePlayer(vs.getName());
         if (commandSender == null) return false;
         System.out.println("CALLL FFFF" + command);
@@ -61,7 +61,11 @@ public class FactionBaseCMD extends Command {
 //            }
 
         String key = null;
-        if (strings.length == 0) key = null;
+        if (strings.length == 0) {
+            key = null;
+            commandSender.sendMessage(getUsage());
+            return true;
+        }
         else key = strings[0];
         String[] args = PushOne(strings);
         Owner.FM.FC.onCommand(Owner.FM, commandSender, key, args);

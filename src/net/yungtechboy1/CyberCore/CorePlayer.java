@@ -95,7 +95,6 @@ public class CorePlayer extends Player {
     public Integer deaths = 0;
     public Integer fixcoins = 0;
     public Integer banned = 0;
-    public String faction_id = null;
     public HashMap<String, Object> extraData = new HashMap<>();
     public ArrayList<Enchantment> MasterEnchantigList = null;
     public ArrayList<HomeData> HD = new ArrayList<>();
