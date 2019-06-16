@@ -6,7 +6,7 @@ import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerPublicInterface;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -42,7 +42,7 @@ public class AA extends Command {
                 }
                 //Send all possible Abillities!
                 int i = 1;
-                for (PowerPublicInterface c : bc.getPowers()) {
+                for (PowerAbstract c : bc.getPowers()) {
                     String a = TextFormat.GREEN + "";
                     if(c.Cooldown != null && c.Cooldown.isValid())a = TextFormat.RED + "";
 

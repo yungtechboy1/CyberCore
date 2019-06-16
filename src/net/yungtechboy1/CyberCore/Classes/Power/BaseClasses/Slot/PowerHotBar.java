@@ -6,9 +6,9 @@ import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.inventory.transaction.action.SlotChangeAction;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerPublicInterface;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 
-public abstract class PowerHotBar extends PowerPublicInterface implements PowerHotBarInt {
+public abstract class PowerHotBar extends PowerAbstract implements PowerHotBarInt {
 
     public PowerHotBar(BaseClass b, int psc, double cost, LockedSlot ls) {
         super(b, psc, cost);

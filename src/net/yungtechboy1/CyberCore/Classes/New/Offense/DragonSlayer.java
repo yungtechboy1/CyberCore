@@ -69,7 +69,7 @@ public abstract class DragonSlayer extends BaseClass {
 //
 //    private Object loadingBarCooldownForPower(int loadingBarLength, String BarChar, PowerEnum powertype) {
 //        String finaltext = "";
-//        PowerPublicInterface p = getPower(powertype);
+//        PowerAbstract p = getPower(powertype);
 //        if(p instanceof DragonJumper){
 //
 //            for (int i = 0; i < loadingBarLength ;i++){

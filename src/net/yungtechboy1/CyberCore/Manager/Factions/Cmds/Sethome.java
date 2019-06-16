@@ -34,7 +34,7 @@ public class Sethome extends Commands {
         }
         Integer fp = fac.GetPower();
         if (fp < 1) {
-            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "You Must Have 1 Faction PowerPublicInterface!");
+            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "You Must Have 1 Faction PowerAbstract!");
             return;
         }
         double x = ((Player) Sender).getX();

@@ -13,7 +13,7 @@ public class Power extends Commands {
 
 
     public Power(CorePlayer s, String[] a, FactionsMain m) {
-        super(s, a, "/f PowerPublicInterface", m);
+        super(s, a, "/f PowerAbstract", m);
         senderMustBeInFaction = true;
         senderMustBePlayer = true;
         sendFailReason = true;

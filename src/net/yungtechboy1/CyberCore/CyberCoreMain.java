@@ -31,7 +31,8 @@ import net.yungtechboy1.CyberCore.Commands.Homes.DelHome;
 import net.yungtechboy1.CyberCore.Commands.Homes.HomeManager;
 import net.yungtechboy1.CyberCore.Commands.Homes.SetHome;
 import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
-import net.yungtechboy1.CyberCore.Custom.Block.*;
+import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
+import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
 import net.yungtechboy1.CyberCore.Custom.Crafting.CustomRecipeCraftingManager;
 import net.yungtechboy1.CyberCore.Custom.CustomInventoryTransactionPacket;
@@ -42,11 +43,9 @@ import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
 import net.yungtechboy1.CyberCore.Factory.ClassFactory;
 import net.yungtechboy1.CyberCore.Factory.Shop.ShopFactory;
 import net.yungtechboy1.CyberCore.Factory.Shop.Spawner.SpawnShopFactory;
-import net.yungtechboy1.CyberCore.Factory.Shop.Spawner.SpawnerShop;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
 import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
-import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
@@ -147,6 +146,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     Vector3 p2;
     CustomRecipeCraftingManager CRM;
 //    private EconManager ECON;
+    private PowerSourceTaskAsync PowerSourceTask;
+
+    public static CyberCoreMain getInstance() {
+        return CyberCoreMain.instance;
+    }
 
     public PowerSourceTaskAsync getPowerSourceTask() {
         return PowerSourceTask;
@@ -156,10 +160,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         PowerSourceTask = powerSourceTask;
     }
 
-    private PowerSourceTaskAsync PowerSourceTask;
+    public void HandleCustomAttack() {
 
-    public static CyberCoreMain getInstance() {
-        return CyberCoreMain.instance;
     }
 
     public void ReloadBlockList(int id, Class c) {
@@ -248,8 +250,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        Item.customblocklist[Item.MONSTER_SPAWNER] = CustomItemBlockSpawnerWithLevelBlock.class;
 
-
         Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
+        BlockEntity.registerBlockEntity(BlockEntity.MOB_SPAWNER,SpawnerWithLevelBlockEntity.class);
+
         ReloadBlockList(Block.MONSTER_SPAWNER, SpawnerWithLevelBlock.class);
         Item.list[Item.BOOK] = CItemBook.class;
         Item.list[Item.ENCHANT_BOOK] = CItemBookEnchanted.class;
@@ -278,6 +281,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        CraftingManager.registerShapedRecipe(nsr);
 
         System.out.println("EEEE >>>>> " + CraftingManager.shapedRecipes.size());
+
 
 //        getServer().getCraftingManager().registerShapelessRecipe();=null;
 
@@ -421,7 +425,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         Entity.registerEntity(EntityPig.NETWORK_ID + "", Pig.class);
 
-        BlockEntity.registerBlockEntity("MonsterSpawner", SpawnerWithLevelBlockEntity.class);
+//        BlockEntity.registerBlockEntity("MonsterSpawner", SpawnerWithLevelBlockEntity.class);
 
         CyberCoreMain.instance = this;
 

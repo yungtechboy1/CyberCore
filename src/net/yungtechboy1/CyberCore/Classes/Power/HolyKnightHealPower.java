@@ -5,7 +5,7 @@ import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.level.Location;
 import cn.nukkit.level.particle.BubbleParticle;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerPublicInterface;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
@@ -14,7 +14,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 
 import java.util.ArrayList;
 
-public class HolyKnightHealPower extends PowerPublicInterface {
+public class HolyKnightHealPower extends PowerAbstract {
     public HolyKnightHealPower(BaseClass b) {
         super(b, 75);
     }

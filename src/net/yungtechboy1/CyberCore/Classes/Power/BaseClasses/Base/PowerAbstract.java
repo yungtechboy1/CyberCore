@@ -12,12 +12,13 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 import net.yungtechboy1.CyberCore.CoolDownTick;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
 /**
  * Created by carlt on 5/16/2019.
  */
-public abstract class PowerPublicInterface {
+public abstract class PowerAbstract {
     public BaseClass PlayerClass = null;
     public int TickUpdate = -1;
     public CoolDownTick Cooldown = null;
@@ -27,11 +28,11 @@ public abstract class PowerPublicInterface {
     private int PowerSuccessChance = 100;
     private int _lasttick = -1;
     private double PowerSourceCost = 0;
-    public PowerPublicInterface(BaseClass b, int psc) {
+    public PowerAbstract(BaseClass b, int psc) {
         this(b, psc, 0);
     }
 
-    public PowerPublicInterface(BaseClass b, int psc, double cost) {
+    public PowerAbstract(BaseClass b, int psc, double cost) {
         PowerSuccessChance = psc;
         PlayerClass = b;
 //        Level = lvl;
@@ -131,17 +132,20 @@ public abstract class PowerPublicInterface {
     }
 
     public final void handleTick(int tick) {
-//        System.out.println("PowerPublicInterface Call TICK");
+//        System.out.println("PowerAbstract Call TICK");
         if (TickUpdate == -1) return;
-//        System.out.println("PowerPublicInterface Call TICK 1");
+//        System.out.println("PowerAbstract Call TICK 1");
         if (_lasttick + TickUpdate < tick) {
-//            System.out.println("PowerPublicInterface Called THE ACTUAL TICK");
+//            System.out.println("PowerAbstract Called THE ACTUAL TICK");
             onTick(tick);
             _lasttick = tick;
         }
     }
 
-    public abstract PowerEnum getType();
+    public PowerEnum getType(){
+        CyberCoreMain.getInstance().getLogger().error("ERROR GETTING TYPE FROM POWER!!!!!");
+        return PowerEnum.Unknown;
+    };
 
     //USE TO RUN
     public final void initPowerRun(Object... args) {
@@ -151,7 +155,7 @@ public abstract class PowerPublicInterface {
             afterPowerRun(args);
         } else {
             if (Cooldown != null && Cooldown.isValid()) {
-                getPlayer().sendMessage(TextFormat.RED + "Error! PowerPublicInterface " + getDispalyName() + TextFormat.RED + " still has a " + TextFormat.LIGHT_PURPLE + Cooldown.toString() + TextFormat.RED + " Cooldown.");
+                getPlayer().sendMessage(TextFormat.RED + "Error! PowerAbstract " + getDispalyName() + TextFormat.RED + " still has a " + TextFormat.LIGHT_PURPLE + Cooldown.toString() + TextFormat.RED + " Cooldown.");
             }
         }
     }
@@ -162,7 +166,7 @@ public abstract class PowerPublicInterface {
     }
 
     public String getSuccessUsageMessage() {
-        return TextFormat.GREEN + " > PowerPublicInterface " + getDispalyName() + TextFormat.GREEN + " has been activated!";
+        return TextFormat.GREEN + " > PowerAbstract " + getDispalyName() + TextFormat.GREEN + " has been activated!";
     }
 
     public Object usePower(Object... args) {

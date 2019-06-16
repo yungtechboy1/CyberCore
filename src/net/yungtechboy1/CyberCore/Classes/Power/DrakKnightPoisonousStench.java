@@ -1,42 +1,68 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
-import cn.nukkit.command.defaults.ParticleCommand;
+import cn.nukkit.entity.Entity;
+import cn.nukkit.event.entity.EntityDamageByEntityEvent;
+import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.level.Sound;
+import cn.nukkit.level.particle.InkParticle;
 import cn.nukkit.level.particle.RedstoneParticle;
+import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.math.Vector3;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerAbilityHotBar;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.DarkKnight;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability.PowerAbilityAreaEffect;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
-import net.yungtechboy1.CyberCore.Manager.Econ.PlayerEconData;
 
-public class DrakKnightPoisonousStench extends PowerAbilityHotBar {
+import java.util.ArrayList;
+
+public class DrakKnightPoisonousStench extends PowerAbilityAreaEffect {
 
 
-    public DrakKnightPoisonousStench(BaseClass bc) {
-        super(bc, 100, 150, LockedSlot.SLOT_9);
+    public DrakKnightPoisonousStench(DarkKnight bc) {
+        super(bc, 100,30);
         TickUpdate = 20;//1 Secs
     }
 
-    public int getGridSize() {
-        return 5 + getStage().ordinal();
+    private Entity[] getEntitiesAround(){
+        return getPlayer().getLevel().getNearbyEntities(new SimpleAxisAlignedBB(getPlayer().add(-getMaxSize(),-5,-getMaxSize()), getPlayer().add(getMaxSize(),5,getMaxSize())));
     }
 
-    @Override
-    public void onAbilityActivate() {
-        //Only Add Particles! Damage happens only On Tick or WhileAbilityActive
-        for (int x = -getGridSize(); x < getGridSize(); x++) {
-            for (int z = -getGridSize(); z < getGridSize(); z++) {
-                int y = 2;
-                Vector3 v = PlayerClass.getPlayer().getLevel().getSafeSpawn(PlayerClass.getPlayer().add(x,y,z));
-                PlayerClass.getPlayer().getLevel().addParticle(new RedstoneParticle(v,10));
-            }
+    private void spawnParticles(){
+        ArrayList<Vector3> vv = getAffectedVectors();
+        for (Vector3 v : vv) {
+            getPlayer().getLevel().addParticle(new InkParticle(v));
         }
     }
 
     @Override
-    public void whileAbilityActive() {
+    public void onAbilityActivate() {
+        spawnParticles();
+        getPlayer().getLevel().addSound(getPlayer(), Sound.MOB_WITCH_THROW);
+//        Entity[] es = getPlayer().getLevel().getNearbyEntities(new SimpleAxisAlignedBB(getPlayer().add(-getMaxSize(),-5,-getMaxSize()), getPlayer().add(getMaxSize(),5,getMaxSize()));
+    }
 
+    @Override
+    public void whileAbilityActive() {
+        for(Entity e: getEntitiesAround()){
+            e.attack(new EntityDamageByEntityEvent(getPlayer(),e, EntityDamageEvent.DamageCause.MAGIC,1f));
+        }
+    }
+
+    private ArrayList<Vector3> getAffectedVectors() {
+        ArrayList<Vector3> v = new ArrayList<>();
+        for (int x = -getMaxSize(); x < getMaxSize(); x++) {
+            for (int z = -getMaxSize(); z < getMaxSize(); z++) {
+                v.add(getPlayer().getLevel().getSafeSpawn(getActivatedLocation().add(x, 0, z)));
+//                getPlayer().getLevel().addParticle(new InkParticle(v));
+            }
+        }
+        return v;
+    }
+
+    private int getMaxSize() {
+        return getStage().getValue() + 2;
     }
 
     @Override
@@ -51,11 +77,12 @@ public class DrakKnightPoisonousStench extends PowerAbilityHotBar {
 
     @Override
     public PowerEnum getType() {
-        return null;
+        return PowerEnum.DarkKnightPosionousStench;
     }
 
     @Override
     public String getName() {
-        return null;
+        return "Dark Knight Posionous Stench";
     }
+
 }

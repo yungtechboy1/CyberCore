@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 
+import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockID;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
@@ -87,13 +88,14 @@ public class FactionAdminPage1 extends CyberFormSimple {
                 cp.getInventory().addItem(Item.get(BlockID.PURPLE_GLAZED_TERRACOTTA, 2, 1));
                 cp.getInventory().sendContents(cp);
             case 8:
-                cp.sendMessage(cp.getInventory().getItemInHand().getClass().getName() + "||||" + cp.getInventory().getItemInHand().getDamage());
+                cp.sendMessage(cp.getInventory().getItemInHand().getClass().getName() + "||||" + cp.getInventory().getItemInHand().getDamage()+ "|||||||"+ Item.list[cp.getInventory().getItemInHand().getId()]+ "|||||||"+ Block.list[cp.getInventory().getItemInHand().getId()]);
                 System.out.println(cp.getInventory().getItemInHand().getClass().getName() + "||||" + cp.getInventory().getItemInHand().getDamage());
+                break;
             case 9:
                 cp.getInventory().addItem(new ItemBlock(new CustomElementBlock()));
                 cp.getInventory().sendContents(cp);
             case 10:
-                CyberCoreMain.getInstance().SpawnShop.OpenShop(cp,1);
+                CyberCoreMain.getInstance().SpawnShop.OpenShop(cp, 1);
         }
         return false;
     }

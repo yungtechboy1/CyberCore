@@ -1,9 +1,10 @@
 package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability;
 
+import cn.nukkit.Server;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerPublicInterface;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 
-public abstract class PowerAbility extends PowerPublicInterface implements PowerAbilityInterface {
+public abstract class PowerAbility extends PowerAbstract implements PowerAbilityInterface {
 
     private boolean Active = false;
     private int DeActivatedTick = -1;
@@ -42,7 +43,7 @@ public abstract class PowerAbility extends PowerPublicInterface implements Power
         Active = active;
     }
 
-    private void activate() {
+    public void activate() {
         if (isActive()) return;
         Active = true;
         DeActivatedTick = Server.getInstance().getTick() + getRunTimeTick();

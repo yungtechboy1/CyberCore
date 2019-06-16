@@ -178,7 +178,7 @@ public class Admin extends Commands {
 //                }
 //                Integer pwr = GetIntegerAtArgs(3, 2);
 //                tf.SetPower(pwr);
-//                Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN + "PowerPublicInterface Set!");
+//                Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN + "PowerAbstract Set!");
 //            } else if (Args[1].equalsIgnoreCase("setdisplayname")) {
 //                Faction tf = Main.FFactory.getFaction(Args[2]);
 //                if (tf == null) {

@@ -13,12 +13,8 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class HolyKnight extends BaseClass {
-    public HolyKnight(CyberCoreMain main, CorePlayer player, ClassType rank, ConfigSection data) {
-        super(main, player, rank, data);
-    }
-
-    public HolyKnight(CyberCoreMain main, CorePlayer player, ClassType rank) {
-        super(main, player, rank);
+    public HolyKnight(CyberCoreMain main, CorePlayer player,ConfigSection data) {
+        super(main, player, ClassType.Class_Offense_Holy_Knight, data);
     }
 
     @Override
@@ -82,7 +78,7 @@ public class HolyKnight extends BaseClass {
 //
 //    private Object loadingBarCooldownForPower(int loadingBarLength, String BarChar, PowerEnum powertype) {
 //        String finaltext = "";
-//        PowerPublicInterface p = getPower(powertype);
+//        PowerAbstract p = getPower(powertype);
 //        if(p instanceof HolyKnightHealPower){
 //
 //        for (int i = 0; i < loadingBarLength ;i++){

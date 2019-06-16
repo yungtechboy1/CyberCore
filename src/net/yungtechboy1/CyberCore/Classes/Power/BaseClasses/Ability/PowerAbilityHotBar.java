@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses;
+package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability;
 
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.inventory.PlayerInventory;

@@ -2,14 +2,14 @@ package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses;
 
 import cn.nukkit.math.NukkitRandom;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerPublicInterface;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 
-public abstract class PowerStackable extends PowerPublicInterface {
+public abstract class PowerStackable extends PowerAbstract {
     int AvailbleQuantity = 0;
     int MaxAvailbleQuantity = 0;
 
     /**
-     * @param psc int PowerPublicInterface Success Chance
+     * @param psc int PowerAbstract Success Chance
      * @param aq
      * @param maq
      */

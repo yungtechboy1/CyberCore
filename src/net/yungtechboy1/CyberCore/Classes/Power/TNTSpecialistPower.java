@@ -78,7 +78,7 @@ public class TNTSpecialistPower extends PowerStackable {
             tnt.spawnToAll();
             p.level.addSound(p, Sound.RANDOM_FUSE);
         } else {
-            p.sendMessage("Error! You don't have any TNT PowerPublicInterface");
+            p.sendMessage("Error! You don't have any TNT PowerAbstract");
         }
         return null;
     }
