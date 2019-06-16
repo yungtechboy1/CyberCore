@@ -236,9 +236,10 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         ReloadBlockList(Block.ENCHANTING_TABLE, BlockEnchantingTable.class);
 
 //        Item.customblocklist[Item.MONSTER_SPAWNER] = CustomItemBlockSpawnerWithLevelBlock.class;
-
         Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
         BlockEntity.registerBlockEntity(BlockEntity.MOB_SPAWNER,SpawnerWithLevelBlockEntity.class);
+        //Must be registered after custom block
+        Item.registerCustomItemBlock(Item.MONSTER_SPAWNER,CustomItemBlockSpawnerWithLevelBlock.class);
 
         ReloadBlockList(Block.MONSTER_SPAWNER, SpawnerWithLevelBlock.class);
         Item.list[Item.BOOK] = CItemBook.class;
@@ -280,7 +281,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         WarpManager = new WarpManager(this);
 
 
-//        MainConfig = new Config(new File(getDataFolder(), "config.yml"));
+        MainConfig = new Config(new File(getDataFolder(), "config.yml"));
         //Save = new SaveMain(this);
         SQLSaveManager = new SQLManager(this);
 

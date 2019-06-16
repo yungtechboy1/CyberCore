@@ -19,7 +19,7 @@ public class DarkKnight extends BaseClass {
 
     @Override
     public PrimalPowerType getPowerSourceType() {
-        return null;
+        return PrimalPowerType.Earth;
     }
 
     @Override

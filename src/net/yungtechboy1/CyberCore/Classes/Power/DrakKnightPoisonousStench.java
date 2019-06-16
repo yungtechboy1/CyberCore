@@ -12,16 +12,18 @@ import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.DarkKnight;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability.PowerAbilityAreaEffect;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability.PowerAbilityHotBarAreaEffect;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 import java.util.ArrayList;
 
-public class DrakKnightPoisonousStench extends PowerAbilityAreaEffect {
+public class DrakKnightPoisonousStench extends PowerAbilityHotBarAreaEffect {
 
 
     public DrakKnightPoisonousStench(DarkKnight bc) {
-        super(bc, 100,30);
+        super(bc, 100, LockedSlot.SLOT_9,30);
         TickUpdate = 20;//1 Secs
     }
 
