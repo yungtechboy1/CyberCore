@@ -215,6 +215,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         new File(getDataFolder().toString()).mkdirs();
         saveResource("config.yml");
         saveResource("ranks.yml");
+
+        MainConfig = getConfig();
 //        CustomGlobalBlockPalette.registerMapping((entry.id << 4) | entry.data);
 
 

@@ -656,20 +656,9 @@ public class FactionFactory {
         }
     }
 
-    public Faction getPlayerFaction(Player name) {
-        if (name instanceof CorePlayer) {
-            String ff = ((CorePlayer) name).Faction;
-            if (ff != null) return getFaction(ff);
-        }
-        Faction f = getPlayerFaction(name.getName().toLowerCase());
-        if (name instanceof CorePlayer) {
-            if (f != null) {
-                ((CorePlayer) name).Faction = f.GetName();
-            } else {
-                ((CorePlayer) name).Faction = null;
-            }
-        }
-        return f;
+    public Faction getPlayerFaction(CorePlayer p) {
+        String ff = p.Faction;
+        return getFaction(ff);
     }
 
     public Faction getPlayerFaction(CommandSender name) {
@@ -677,7 +666,7 @@ public class FactionFactory {
     }
 
     public Faction IsPlayerInFaction(CorePlayer p) {
-        return getFaction(p.Faction);
+        return p.Faction == null ? null : getPlayerFaction(p);
     }
 
     public String GetFactionFromMember(String faction) {

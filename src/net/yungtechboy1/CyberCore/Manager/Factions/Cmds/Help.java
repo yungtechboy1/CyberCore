@@ -4,8 +4,11 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
+import java.security.acl.Owner;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -63,14 +66,19 @@ public class Help extends Commands {
         a.add("/f wartp - Teleport to the war zone");
         a.add("/f withdraw - Take money from faction's balance");
 
-        Integer p = GetIntegerAtArgs(1,1);
+        Integer p = GetIntegerAtArgs(2,1);
+        if(p > a.size() / 5)return;
         Integer to = p * 5;
         Integer from = to - 5;
         // 5 -> 0 ||| 10 -> 5
         Integer x = 0;
         String t = "";
 
+        DecimalFormat format = new DecimalFormat("0.#");
+
+        t += TextFormat.GRAY+"Page " + p + " of "  + format.format(Math.ceil(Double.parseDouble(Integer.toString(a.size() / 5)))) ;
         t += TextFormat.GRAY+"-----"+TextFormat.GOLD+".<[Faction Command List]>."+TextFormat.GRAY+"-----\n";
+
         for(String value : a){
             // 0 < 5 && 0 >= 0
             //   YES     YES
