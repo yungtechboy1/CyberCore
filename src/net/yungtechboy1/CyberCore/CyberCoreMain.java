@@ -279,7 +279,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         WarpManager = new WarpManager(this);
 
 
-//        MainConfig = new Config(new File(getDataFolder(), "config.yml"));
+        MainConfig = new Config(new File(getDataFolder(), "config.yml"));
         //Save = new SaveMain(this);
         SQLSaveManager = new SQLManager(this);
 
