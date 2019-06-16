@@ -1,7 +1,9 @@
 package net.yungtechboy1.CyberCore.Custom.Events;
 
 import cn.nukkit.entity.Entity;
+import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.potion.Effect;
+import net.yungtechboy1.CyberCore.CorePlayer;
 
 import java.util.Map;
 
@@ -10,33 +12,33 @@ import java.util.Map;
  */
 public class CustomEntityDamageByEntityEvent extends CustomEntityDamageEvent {
 
-    private final Entity damager;
+    private final CorePlayer damager;
 
     private float knockBack;
 
-    public CustomEntityDamageByEntityEvent(Entity damager, Entity entity, CustomDamageCause cause, float damage) {
+    public CustomEntityDamageByEntityEvent(CorePlayer damager, Entity entity, CustomEntityDamageEvent.CustomDamageCause cause, float damage) {
         this(damager, entity, cause, damage, 0.3f);
     }
 
-    public CustomEntityDamageByEntityEvent(Entity damager, Entity entity, CustomDamageCause cause, Map<CustomDamageModifier, Float> modifiers) {
+    public CustomEntityDamageByEntityEvent(CorePlayer damager, Entity entity, CustomEntityDamageEvent.CustomDamageCause cause, Map<CustomDamageModifier, Float> modifiers) {
         this(damager, entity, cause, modifiers, 0.3f);
     }
 
-    public CustomEntityDamageByEntityEvent(Entity damager, Entity entity, CustomDamageCause cause, float damage, float knockBack) {
+    public CustomEntityDamageByEntityEvent(CorePlayer damager, Entity entity, CustomEntityDamageEvent.CustomDamageCause cause, float damage, float knockBack) {
         super(entity, cause, damage);
         this.damager = damager;
         this.knockBack = knockBack;
         this.addAttackerModifiers(damager);
     }
 
-    public CustomEntityDamageByEntityEvent(Entity damager, Entity entity, CustomDamageCause cause, Map<CustomDamageModifier, Float> modifiers, float knockBack) {
+    public CustomEntityDamageByEntityEvent(CorePlayer damager, Entity entity, CustomEntityDamageEvent.CustomDamageCause cause, Map<CustomDamageModifier, Float> modifiers, float knockBack) {
         super(entity, cause, modifiers);
         this.damager = damager;
         this.knockBack = knockBack;
         this.addAttackerModifiers(damager);
     }
 
-    protected void addAttackerModifiers(Entity damager) {
+    protected void addAttackerModifiers(CorePlayer damager) {
         if (damager.hasEffect(Effect.STRENGTH)) {
             this.setDamage((float) (this.getDamage(CustomDamageModifier.BASE) * 0.3 * (damager.getEffect(Effect.STRENGTH).getAmplifier() + 1)), CustomDamageModifier.STRENGTH);
         }
@@ -46,7 +48,11 @@ public class CustomEntityDamageByEntityEvent extends CustomEntityDamageEvent {
         }
     }
 
-    public Entity getDamager() {
+    public CorePlayer getDamager() {
+        return damager;
+    }
+
+    public CorePlayer getCorePlayer() {
         return damager;
     }
 

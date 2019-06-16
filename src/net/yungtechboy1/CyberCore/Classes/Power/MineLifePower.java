@@ -2,30 +2,115 @@ package net.yungtechboy1.CyberCore.Classes.Power;
 
 import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
+import cn.nukkit.potion.Effect;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerCustomEffect;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
-public class MineLifePower extends Power {
-    public MineLifePower(int level) {
-        super(((int) Math.floor(.65d*level)+1),level);
-        int psc = ((int) Math.floor(.65d*level)+1);
+public class MineLifePower extends PowerCustomEffect {
+    public MineLifePower(BaseClass b) {
+        super(b, ((int) Math.floor(.65d * b.getLVL()) + 1));
+        int psc = ((int) Math.floor(.65d * b.getLVL()) + 1);
+
+//        PotionEffect = new
     }
 
-    private double GetBreakTime(Item itemInHand, Block target, double cbreakTime){
-        CyberCoreMain.getInstance().getLogger().info("BREAKTIMMMMM >> "+cbreakTime);
-        if(itemInHand == null || target == null || cbreakTime < .5d)return cbreakTime;
+    @Override
+    public void initStages() {
+        switch (getStage()) {
+            case STAGE_2:
+                setDurationTicks(20 * 25);
+                break;
+            case STAGE_3:
+                setDurationTicks(20 * 35);
+                break;
+            case STAGE_4:
+                setDurationTicks(20 * 50);
+                break;
+            case STAGE_5:
+            case STAGE_1:
+                setDurationTicks(20 * 15);
+                break;
+            default:
+        }
+    }
+
+    @Override
+    public PowerEnum getType() {
+        return PowerEnum.MineLife;
+    }
+
+    @Override
+    public Stage getStage() {
+        if (PlayerClass.getLVL() <= 19) {
+            return Stage.STAGE_1;
+        } else if (PlayerClass.getLVL() <= 39) {
+            return Stage.STAGE_2;
+        } else if (PlayerClass.getLVL() <= 89) {
+            return Stage.STAGE_3;
+        } else if (PlayerClass.getLVL() <= 100) {
+            return Stage.STAGE_4;
+        }
+        return Stage.STAGE_1;
+    }
+
+    @Override
+    public String getName() {
+        return "MineLife";
+    }
+
+    @Override
+    public String getDispalyName() {
+        return getName();
+    }
+
+    @Override
+    public Effect getEffect() {
+        Effect h = Effect.getEffect(Effect.HASTE);
+        h.setDuration(getEffectDuration());
+        return h;
+    }
+
+    @Override
+    public int getEffectDuration() {
+        return super.getEffectDuration();
+    }
+
+    private double GetBreakTime(Item itemInHand, Block target, double cbreakTime) {
+        CyberCoreMain.getInstance().getLogger().info("BREAKTIMMMMM >> " + cbreakTime);
+        if (itemInHand == null || target == null || cbreakTime < .5d) return cbreakTime;
         double fbreaktime = cbreakTime;
-        int l = (int)Math.floor(Level/10);
-        fbreaktime *= (1-((Level/100d)/2));
-        CyberCoreMain.getInstance().getLogger().info("NEWE BREAKTIMMMMM >> "+fbreaktime);
+        int l = (int) Math.floor(PlayerClass.getLVL() / 10);
+        fbreaktime *= (1 - ((PlayerClass.getLVL() / 100d) / 2));
+        CyberCoreMain.getInstance().getLogger().info("NEWE BREAKTIMMMMM >> " + fbreaktime);
         return fbreaktime;
     }
 
-    public Object UsePower(Item itemInHand, Block target, double cbreakTime) {
-       return GetBreakTime(itemInHand,target,cbreakTime);
+    public Object usePower(Item itemInHand, Block target, double cbreakTime) {
+        return GetBreakTime(itemInHand, target, cbreakTime);
 
     }
+
     @Override
-    public Object UsePower(Object... args) {
-        return super.UsePower(args);
+    public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e) {
+        return e;
+    }
+
+    @Override
+    public int getCooldownTime() {
+        if (PlayerClass.getLVL() <= 19) {
+            return 60 * 15;
+        } else if (PlayerClass.getLVL() <= 39) {
+            return 60 * 13;
+        } else if (PlayerClass.getLVL() <= 59) {
+            return 60 * 11;
+        } else if (PlayerClass.getLVL() <= 79) {
+            return 60 * 8;
+        } else if (PlayerClass.getLVL() <= 100) {
+            return 60 * 5;
+        }
+        return super.getCooldownTime();
     }
 }

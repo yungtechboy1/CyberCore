@@ -24,11 +24,12 @@ public class FactionChatFactionWindow extends CyberFormCustom {
 
 
     @Override
-    public void onRun(CorePlayer cp) {
+    public boolean onRun(CorePlayer cp) {
         super.onRun(cp);
         Faction fac = null;
         if (cp.Faction != null) fac = CyberCoreMain.getInstance().FM.FFactory.getFaction(cp.Faction);
-        if (fac == null) return;
+        if (fac == null) return false;
         fac.HandleFactionChatWindow((FormResponseCustom) getResponse(), cp);
+        return false;
     }
 }

@@ -71,7 +71,7 @@ public class CustomCraftingTransaction extends InventoryTransaction {
 //            if (action instanceof CraftingTakeResultAction || action instanceof CraftingTransferMaterialAction) {
 //                setPrimaryOutput((action).getSourceItem());
 //            } else {
-            System.out.println("ADDING ACTION LIKE 333333");
+//            System.out.println("ADDING ACTION LIKE 333333");
             this.addAction(action);
 //            }
         }
@@ -82,41 +82,41 @@ public class CustomCraftingTransaction extends InventoryTransaction {
     public void addAction(InventoryAction action) {
         if (!this.actions.contains(action)) {
             this.actions.add(action);
-            System.out.println("Adding Action : " + action);
-            System.out.println("Adding Action : " + action.getClass().getName());
+//            System.out.println("Adding Action : " + action);
+//            System.out.println("Adding Action : " + action.getClass().getName());
             if (action instanceof CustomCraftingTakeResultAction) {
-                System.out.println("|||||||0 > OUTPUT : " + action.getSourceItem());
-                System.out.println("|||||||0 > OUTPUT META : " + action.getSourceItem().getDamage());
-                System.out.println("|||||||0 > OUTPUT TARGGG : " + action.getTargetItem());
-                if (action.getSourceItem() instanceof ItemBlock) {
-                    ItemBlock sb = (ItemBlock) action.getSourceItem();
-                    if (sb == null) {
-                        System.out.println("|||||||||SB ====== NULL ");
-                    } else {
-                        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!SB >> " + sb.getBlock().getName());
-                        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!SB >> " + sb.getBlock().getDamage());
-                    }
-                }
+//                System.out.println("|||||||0 > OUTPUT : " + action.getSourceItem());
+//                System.out.println("|||||||0 > OUTPUT META : " + action.getSourceItem().getDamage());
+//                System.out.println("|||||||0 > OUTPUT TARGGG : " + action.getTargetItem());
+//                if (action.getSourceItem() instanceof ItemBlock) {
+//                    ItemBlock sb = (ItemBlock) action.getSourceItem();
+//                    if (sb == null) {
+//                        System.out.println("|||||||||SB ====== NULL ");
+//                    } else {
+//                        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!SB >> " + sb.getBlock().getName());
+//                        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!SB >> " + sb.getBlock().getDamage());
+//                    }
+//                }
                 setPrimaryOutput(action.getSourceItem());
             } else if (action instanceof CustomCraftingTransferMaterialAction) {
                 CustomCraftingTransferMaterialAction a = (CustomCraftingTransferMaterialAction) action;
                 if (a.getSourceItem().isNull()) {
-                    System.out.println("|||||||1");
+//                    System.out.println("|||||||1");
                     setInput(a.slot, a.getTargetItem());
                 } else if (a.getTargetItem().isNull()) {
                     setExtraOutput(a.slot, a.getSourceItem());
-                    System.out.println("|||||||2");
+//                    System.out.println("|||||||2");
                 } else {
                     throw new RuntimeException("Invalid " + getClass().getName() + ", either source or target item must be air, got source: " + a.getSourceItem() + ", target: " + a.getTargetItem());
                 }
             } else {
-                System.out.println("|||||||3");
+//                System.out.println("|||||||3");
                 action.onAddToTransaction(this);
             }
         } else {
             throw new RuntimeException("Tried to add the same action to a transaction twice");
         }
-        System.out.println("------BBBBBBBBBB");
+//        System.out.println("------BBBBBBBBBB");
     }
 
     public void setInput(int index, Item item) {

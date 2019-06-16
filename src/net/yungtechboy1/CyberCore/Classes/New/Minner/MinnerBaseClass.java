@@ -6,6 +6,8 @@ import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -19,12 +21,27 @@ public class MinnerBaseClass extends BaseClass {
     }
 
     @Override
+    public PrimalPowerType getPowerSourceType() {
+        return null;
+    }
+
+    @Override
+    public ClassType getTYPE() {
+        return null;
+    }
+
+    @Override
     public void SetPowers() {
 
     }
 
     @Override
-    public Object RunPower(int powerid, Object... args) {
+    public void initBuffs() {
+
+    }
+
+    @Override
+    public Object RunPower(PowerEnum powerid, Object... args) {
         return null;
     }
 

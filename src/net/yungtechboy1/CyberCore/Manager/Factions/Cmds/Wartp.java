@@ -31,10 +31,11 @@ public class Wartp extends Commands {
             Sender.sendMessage(FactionsMain.NAME+ TextFormat.RED + " You must be at war to use this command!!!");
             return;
         }
-        if(true){ //TODO SETUP FACTIONS ECON
+        if(Sender.GetMoney() < 500){
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+" Error! You must have $500 inorder to teleport!");
             return;
         }
+       Sender.TakeMoney(500);
         Vector3 pos = GetRandomTPArea(7);
         if (pos != null) {
             ((Player) Sender).teleport(((Player)Sender).getLevel().getSafeSpawn(pos));

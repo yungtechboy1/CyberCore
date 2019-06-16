@@ -6,46 +6,37 @@ import cn.nukkit.event.Event;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.event.inventory.CraftItemEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerToggleSprintEvent;
+import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
-import net.yungtechboy1.CyberCore.Classes.Power.Power;
-import net.yungtechboy1.CyberCore.CoolDown;
-import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Classes.New.Buff.BuffType;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
+import net.yungtechboy1.CyberCore.*;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
-import net.yungtechboy1.CyberCore.Manager.Form.CyberFormCustom;
-import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassHowToUse;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassSettingsWindow;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 public abstract class BaseClass {
-    protected final static int TYPE_Offensive_Raider = 1;
-    protected final static int TYPE_Offensive_Thief = 2;
-    protected final static int TYPE_Offensive_Assassin = 3;
-    protected final static int TYPE_Offensive_Knight = 4;
-    protected final static int TYPE_Offensive_Tank = 5;
-    protected final static int TYPE_Crafting_MadScientist = 6;
-    protected final static int TYPE_Crafting_Enchater = 7;
-    protected final static int TYPE_Crafting_Smith = 8;
-    protected final static int TYPE_Crafting_Crafter = 9;
-    protected final static int TYPE_Farming_Farmer = 10;
-    protected final static int TYPE_Farming_LumberJack = 11;
-    protected final static int TYPE_Farming_Miner = 12;
-    public static int NONE = 0;
+
     public ArrayList<CoolDown> COOLDOWNS = new ArrayList<>();
     public boolean Prime = false;
     public int PrimeKey = 0;
     public int SwingTime = 20;
-    public ArrayList<Power> Powers = new ArrayList<>();
+    public HashMap<Integer, PowerAbstract> Powers = new HashMap<>();
     protected int MainID = 0;
     protected CyberCoreMain CCM;
     HashMap<Integer, Integer> Herbal = new HashMap<Integer, Integer>() {{
@@ -75,10 +66,13 @@ public abstract class BaseClass {
         put(Block.CLAY_BLOCK, 40);
     }};
     private CorePlayer P;
-    private ClassType TYPE = ClassType.Class_Miner_TNT_Specialist;
+    private ClassType TYPE;
     private int LVL = 0;
     private int XP = 0;
     private Ability ActiveAbility;
+    private HashMap<BuffType, Buff> Buffs = new HashMap<>();
+    private HashMap<BuffType, DeBuff> DeBuffs = new HashMap<>();
+    private double PowerSourceCount = 0;
 
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank, ConfigSection data) {
         this(main, player, rank);
@@ -96,7 +90,12 @@ public abstract class BaseClass {
                 int xpi = data.getInt("xp", 0);
                 addXP(xpi);
             }
+            if (data.containsKey("PowerSourceCount")) {
+                int psc = data.getInt("PowerSourceCount", 0);
+                addPowerSourceCount(psc);
+            }
         }
+        SetPowers();
     }
 
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank) {
@@ -105,6 +104,66 @@ public abstract class BaseClass {
         P = player;
         TYPE = rank;
         LVL = XPToLevel(XP);
+        startbuffs();
+        SetPowers();
+    }
+
+    public abstract PrimalPowerType getPowerSourceType();
+
+    public double getPowerSourceCount() {
+        return PowerSourceCount;
+    }
+
+    public void addPowerSourceCount() {
+        addPowerSourceCount(1);
+    }
+
+    public void addPowerSourceCount(double a) {
+        if (PowerSourceCount + a > getMaxPowerSourceCount()) {
+            double d = getMaxPowerSourceCount() - a;
+            if (d < 0) PowerSourceCount += d;
+        } else {
+            PowerSourceCount += Math.abs(a);
+        }
+    }
+
+    public TextFormat getColor() {
+        return TextFormat.GRAY;
+    }
+
+    public boolean takePowerSourceCount(double a) {
+        if (a > PowerSourceCount) return false;
+        PowerSourceCount -= a;
+        return true;
+    }
+
+    public double getMaxPowerSourceCount() {
+        return Math.round((Math.abs(Math.pow(57 * (getLVL()+1), 2)) / Math.sqrt(Math.pow(20 * (getLVL()+1), 3))) + ((getLVL()+1) * 10));
+    }
+
+    public void tickPowerSource(int tick) {
+        addPowerSourceCount();//From Server Every 20 Secs
+        double t = Math.abs(Math.pow(27 * (getLVL()+1), 2));
+        double b = Math.sqrt(Math.pow(18 * (getLVL()+1), 3));
+        int f = (int) Math.round((t / b) * .2);
+        addPowerSourceCount(Math.abs(f));
+        //TODO
+        //ISSUE
+        //Maybe TIck player power here too??
+    }
+
+    public ArrayList<CoolDown> getCOOLDOWNS() {
+        return COOLDOWNS;
+    }
+
+    private void startbuffs() {
+        initBuffs();
+        if (P != null) registerAllBuffsToCorePlayer(P);
+    }
+
+    public ClassTeir getTeir() {
+        int d = (int) Math.floor(getLVL() / 10);
+        return ClassTeir.values()[d];
     }
 
     public ClassType getTYPE() {
@@ -114,21 +173,93 @@ public abstract class BaseClass {
     public abstract void SetPowers();
 
     public int getMainID() {
-        return MainID;
+        return getTYPE().getKey();
     }
 
-    public ArrayList<Power> getPowers() {
-        return Powers;
+    public abstract void initBuffs();
+
+    private void registerAllBuffsToCorePlayer(CorePlayer cp) {
+        for (Buff b : getBuffs().values()) {
+            cp.addBuffFromClass(b);
+        }
+        for (DeBuff b : getDeBuffs().values()) {
+            cp.addDeBuffFromClass(b);
+        }
+        cp.initAllClassBuffs();
     }
 
-    public Power GetPower(int key) {
-        return Powers.get(key);
+    public String getDisplayName() {
+        return getColor() + getName();
     }
 
-    public abstract Object RunPower(int powerid, Object... args);
-//        Power p = Powers.get(powerid);
+    public HashMap<BuffType, Buff> addBuff(Buff o) {
+        Buffs.put(o.getBt(), o);
+        return (HashMap<BuffType, Buff>) Buffs.clone();
+    }
+
+    public HashMap<BuffType, Buff> removeBuffs(Buff o) {
+        Buffs.remove(o.getBt().ordinal());
+        return (HashMap<BuffType, Buff>) Buffs.clone();
+    }
+
+    public HashMap<BuffType, Buff> getBuffs() {
+        return (HashMap<BuffType, Buff>) Buffs.clone();
+    }
+
+    public Buff getBuff(int o) {
+        return Buffs.get(o);
+    }
+
+    public HashMap<BuffType, DeBuff> removeDeBuff(DeBuff o) {
+        DeBuffs.remove(o.getBt().ordinal());
+        return (HashMap<BuffType, DeBuff>) DeBuffs.clone();
+    }
+
+    public HashMap<BuffType, DeBuff> addDeBuff(DeBuff o) {
+        DeBuffs.put(o.getBt(), o);
+        return (HashMap<BuffType, DeBuff>) DeBuffs.clone();
+    }
+
+    public HashMap<BuffType, DeBuff> getDeBuffs() {
+        return (HashMap<BuffType, DeBuff>) DeBuffs.clone();
+    }
+
+    public DeBuff getDeBuff(int o) {
+        return DeBuffs.get(o);
+    }
+
+    public float getDamageBuff() {
+        return 1f;
+    }
+
+    public float getArmorBuff() {
+        return 1f;
+    }
+
+    public int getExtraHealth() {
+        return 0;
+    }
+
+    public float getMovementBuff() {
+        return 0;
+    }
+
+    public Collection<PowerAbstract> getPowers() {
+        return Powers.values();
+    }
+
+    public PowerAbstract getPower(PowerEnum key) {
+        return Powers.get(key.ordinal());
+    }
+
+    public abstract Object RunPower(PowerEnum powerid, Object... args);
+
+    public void addPower(PowerAbstract power) {
+        Powers.put(power.getType().ordinal(), power);
+    }
+//        PowerAbstract p = Powers.get(powerid);
 //        if(p == null || args.length != 3 ){
-//            CCM.getLogger().error("No Power found or Incorrect Args For MineLife E334221");
+//            CCM.getLogger().error("No PowerAbstract found or Incorrect Args For MineLife E334221");
 //            return -1;
 //        }
 //        if(powerid == 1 && p instanceof MineLifePower){
@@ -138,41 +269,40 @@ public abstract class BaseClass {
 //        return (double)args[2];
 //    }
 
-    public void AddPower(Power power) {
-        Powers.add(power);
-    }
-
-    public boolean TryRunPower(int powerid) {
-        Power p = Powers.get(powerid);
+    public boolean TryRunPower(PowerEnum powerid) {
+        PowerAbstract p = getPower(powerid);
         if (p == null) return false;
-        return p.CanRun();
+        return p.CanRun(false);
     }
 
-    public void RunPower(int powerid) {
+    public void CmdRunPower(PowerEnum powerid) {
+        RunPower(powerid);
+    }
 
-        Power p = Powers.get(powerid);
+    public void RunPower(PowerEnum powerid) {
+        PowerAbstract p = getPower(powerid);
         if (p == null) return;
+        p.usePower(getPlayer());
 
     }
 
-    public ArrayList<Ability> PossibleAbillity() {
-        ArrayList<Ability> a = new ArrayList<Ability>();
+    public ArrayList<PowerAbstract> PossiblePowers() {
+        ArrayList<PowerAbstract> a = new ArrayList<PowerAbstract>();
         return a;
     }
 
-    public String getName() {
-        return "---N/A---";
-    }
+    public abstract String getName();
 
     public ConfigSection export() {
         return new ConfigSection() {{
-            put("COOLDOWNS", COOLDOWNS);
-            put("XP", XP);
-            put("TYPE", TYPE.getKey());
+            put("COOLDOWNS", getCOOLDOWNS());
+            put("PowerSourceCount", PowerSourceCount);
+            put("XP", getXP());
+            put("TYPE", getTYPE().ordinal());
         }};
     }
 
-    public Player getPlayer() {
+    public CorePlayer getPlayer() {
         return P;
     }
 
@@ -210,12 +340,12 @@ public abstract class BaseClass {
     public void setPrime(int key) {
         setPrime(true);
         PrimeKey = key;
-        Ability a = PossibleAbillity().get(key);
-        a.PrimeEvent();
+//        Ability a = PossibleAbillity().get(key);
+//        a.PrimeEvent();
     }
 
     public void AddCooldown(String perk, int value) {
-        COOLDOWNS.add(new CoolDown(perk, CCM.GetIntTime()+value));
+        COOLDOWNS.add(new CoolDown(perk, CCM.GetIntTime() + value));
     }
 
     public void RemoveCooldown(String perk) {
@@ -263,9 +393,9 @@ public abstract class BaseClass {
     }
 
     public boolean HasCooldown(String perk) {
-        for (CoolDown c : (ArrayList<CoolDown>)COOLDOWNS.clone()) {
+        for (CoolDown c : (ArrayList<CoolDown>) COOLDOWNS.clone()) {
             if (c.getKey().equalsIgnoreCase(perk)) {
-                if(!c.isValid()){
+                if (!c.isValid()) {
                     COOLDOWNS.remove(c);
                     return false;
                 }
@@ -275,9 +405,22 @@ public abstract class BaseClass {
         return false;
     }
 
+    public Event PowerHandelEvent(Event e) {
+//        Event ee = e;
+        for (PowerAbstract p : getPowers()) {
+            p.handelEvent(e);
+        }
+        return e;
+    }
+
     //TODO
     public Event HandelEvent(Event event) {
-        if (event instanceof BlockBreakEvent) {
+        event = PowerHandelEvent(event);
+        if (event instanceof CustomEntityDamageByEntityEvent) {
+            event = CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
+//            if (ActiveAbility != null) event = ActiveAbility.CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
+            return event;
+        } else if (event instanceof BlockBreakEvent) {
             event = BlockBreakEvent((BlockBreakEvent) event);
             if (ActiveAbility != null) event = ActiveAbility.BlockBreakEvent((BlockBreakEvent) event);
             return event;
@@ -305,12 +448,28 @@ public abstract class BaseClass {
             event = CraftItemEvent((CraftItemEvent) event);
             if (ActiveAbility != null) event = ActiveAbility.CraftItemEvent((CraftItemEvent) event);
             return event;
+        } else if (event instanceof PlayerJumpEvent) {
+            event = PlayerJumpEvent((PlayerJumpEvent) event);
+            if (ActiveAbility != null) event = ActiveAbility.PlayerJumpEvent((PlayerJumpEvent) event);
+            return event;
+        } else if (event instanceof EntityInventoryChangeEvent) {
+            event = EntityInventoryChangeEvent((EntityInventoryChangeEvent) event);
+//            if (ActiveAbility != null) event = ActiveAbility.PlayerJumpEvent((PlayerJumpEvent) event);
+            return event;
         }
         return event;
     }
 
-    public CyberForm GetSettingsWindow(){
-        return null;
+    public PlayerJumpEvent PlayerJumpEvent(PlayerJumpEvent event) {
+        return event;
+    }
+
+    public EntityInventoryChangeEvent EntityInventoryChangeEvent(EntityInventoryChangeEvent event) {
+        return event;
+    }
+
+    public CyberForm GetSettingsWindow() {
+        return new ClassSettingsWindow(this, FormType.MainForm.NULL, "Settings Window", "");
     }
 
     @Deprecated
@@ -371,10 +530,24 @@ public abstract class BaseClass {
     }
 
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
+        for (PowerAbstract p : Powers.values()) p.CustomEntityDamageByEntityEvent(event);
+        float bd = event.getOriginalDamage();
+        Buff b = getBuff(BuffType.Damage.ordinal());
+        if (event.getEntity() instanceof Player && getBuff(BuffType.DamageToPlayer.ordinal()) != null) {
+            b = getBuff(BuffType.DamageToPlayer.ordinal());
+        } else if (getBuff(BuffType.DamageToEntity.ordinal()) != null) {
+            b = getBuff(BuffType.DamageToEntity.ordinal());
+        }
+        if (b != null) bd *= b.getAmount();
+        event.setDamage(bd);
         return event;
     }
 
-    public CustomEntityDamageEvent CustomEntiyDamageEvent(CustomEntityDamageEvent event) {
+    public CustomEntityDamageEvent CustomEntityDamageEvent(CustomEntityDamageEvent event) {
+        float bd = event.getOriginalDamage();
+        Buff b = getBuff(BuffType.Damage.ordinal());
+        if (b != null) bd *= b.getAmount();
+        event.setDamage(bd);
         return event;
     }
 
@@ -406,8 +579,22 @@ public abstract class BaseClass {
         }
     }
 
-    public void onUpdate(int tick) {
+    public void tickPowers(int tick) {
+//        System.out.println("Tring to TICKING POWER "+getPowers().size());
+//        System.out.println("Tring to TICKING POWER "+getPowers());
+        for (PowerAbstract p : getPowers()) {
+//            System.out.println("TICKING POWER " + p.getName());
+            try {
+                if (p.TickUpdate != -1) p.handleTick(tick);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    public void onUpdate(int tick) {
+//        System.out.println("TICKING BASECLASS");
+        tickPowers(tick);
     }
 
     public String FormatHudText() {
@@ -417,7 +604,7 @@ public abstract class BaseClass {
         int pxp = XPRemainder(getXP());
         int pxpof = calculateRequireExperience(lvl + 1);
         int plvl = lvl;
-        f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl;
+        f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl + TextFormat.GRAY+ " | " + TextFormat.AQUA+getPowerSourceType().name()+" PowerAbstract : "+getPowerSourceCount() + " / "+ getMaxPowerSourceCount();
         return f;
     }
 
@@ -425,18 +612,30 @@ public abstract class BaseClass {
         return null;
     }
 
+    public FormWindow getClassMerchantWindow() {
+        return null;
+    }
+
+    public enum ClassTeir {
+        Class1,
+        Class2,
+        Class3,
+        Class4,
+        Class5,
+        Class6,
+        Class7,
+        Class8,
+        Class9,
+        Class10
+    }
+
 
     public enum ClassType {
-        Class_Miner_TNT_Specialist(1), Class_Miner_MineLife(0);
+        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary, DragonSlayer, Class_Magic_Enchanter, Class_Rouge_Thief, Class_Offense_Knight, Class_Offense_Holy_Knight, Class_Offense_Dark_Knight, Class_Offense_Assassin, Class_Offense_Raider;
 
-        int k = -1;
-
-        ClassType(int i) {
-            k = i;
-        }
 
         public int getKey() {
-            return k;
+            return ordinal();
         }
     }
 

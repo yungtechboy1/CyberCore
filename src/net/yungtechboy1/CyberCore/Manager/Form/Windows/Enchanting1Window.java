@@ -1,24 +1,17 @@
 package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 
-import cn.nukkit.block.Block;
 import cn.nukkit.form.element.Element;
 import cn.nukkit.form.element.ElementStepSlider;
 import cn.nukkit.form.response.FormResponseCustom;
 import cn.nukkit.form.response.FormResponseData;
-import cn.nukkit.form.response.FormResponseModal;
-import cn.nukkit.form.window.FormWindowCustom;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormCustom;
-import net.yungtechboy1.CyberCore.Manager.Form.CyberFormModal;
 
 import java.util.ArrayList;
-
-import static net.yungtechboy1.CyberCore.FormType.MainForm.Enchanting_1;
-import static net.yungtechboy1.CyberCore.FormType.MainForm.NULL;
 
 public class Enchanting1Window extends CyberFormCustom {
     public Enchanting1Window(CorePlayer cp,CustomEnchantment.Tier tt,Item item) {
@@ -35,7 +28,7 @@ public class Enchanting1Window extends CyberFormCustom {
 
 
     @Override
-    public void onRun(CorePlayer cp) {
+    public boolean onRun(CorePlayer cp) {
         super.onRun(cp);
         FormResponseCustom frc1 = (FormResponseCustom) getResponse();
         FormResponseData frd = frc1.getStepSliderResponse(3);
@@ -45,5 +38,6 @@ public class Enchanting1Window extends CyberFormCustom {
         if (e == null) {
             cp.sendMessage("Error!");
         }
+        return false;
     }
 }

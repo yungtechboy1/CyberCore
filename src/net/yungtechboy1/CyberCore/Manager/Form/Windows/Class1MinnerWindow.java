@@ -26,7 +26,7 @@ public class Class1MinnerWindow extends CyberFormSimple
 
 
         @Override
-        public void onRun(CorePlayer cp) {
+        public boolean onRun(CorePlayer cp) {
         super.onRun(cp);
         FormResponseSimple fapp = getResponse();
         int k = fapp.getClickedButtonId();
@@ -45,5 +45,6 @@ public class Class1MinnerWindow extends CyberFormSimple
                 case 3:
                     break;//Theif
             }
-    }
+            return false;
+        }
     }

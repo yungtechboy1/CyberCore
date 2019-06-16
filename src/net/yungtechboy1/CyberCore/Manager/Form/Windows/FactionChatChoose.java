@@ -22,7 +22,7 @@ public class FactionChatChoose extends CyberFormSimple {
 
 
     @Override
-    public void onRun(CorePlayer cp) {
+    public boolean onRun(CorePlayer cp) {
         super.onRun(cp);
         FormResponseSimple fr =  getResponse();
         switch (fr.getClickedButtonId()){
@@ -36,5 +36,6 @@ public class FactionChatChoose extends CyberFormSimple {
             default:
                 cp.LastSentFormType = null;
         }
+        return false;
     }
 }

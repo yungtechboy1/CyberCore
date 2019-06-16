@@ -5,8 +5,9 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
@@ -35,22 +36,24 @@ public class AA extends Command {
         if (bc != null) {
             //@TODO Finish!
             if (args.length == 0) {
-                if(bc.PossibleAbillity().size() == 0){
+                if(bc.getPowers().size() == 0){
                     s.sendMessage(TextFormat.YELLOW+"Error! This Class doesn't provide you with a perk!");
                     return true;
                 }
                 //Send all possible Abillities!
                 int i = 1;
-                for (Ability c : bc.PossibleAbillity()) {
+                for (PowerAbstract c : bc.getPowers()) {
                     String a = TextFormat.GREEN + "";
-                    if (bc.HasCooldown(c.ID+"")) a = TextFormat.RED + "";
-                    a += "[" + i++ + "] > " + c.getName() + TextFormat.RESET + "\n";
+                    if(c.Cooldown != null && c.Cooldown.isValid())a = TextFormat.RED + "";
+
+                    a += "[" + i++ + "] > " + c.getDispalyName() + TextFormat.RESET + "\n";
                     send += a;
                 }
                 s.sendMessage(send);
             } else if (args.length == 1) {
                 int key = Integer.parseInt(args[0]);
-                if (bc.PossibleAbillity().size() >= key && key != 0) {
+                if (bc.getPowers().size() > key && key != 0) {
+                    bc.CmdRunPower(PowerEnum.fromint(key));
                     bc.setPrime(--key);
 //                    ((Player) s).getLevel().addSound(new ExperienceOrbSound((Player) s));
                     s.sendMessage(TextFormat.GRAY+"You ready your self for an ability!");

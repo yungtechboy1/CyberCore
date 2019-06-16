@@ -14,20 +14,16 @@ import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
-import cn.nukkit.inventory.ShapedRecipe;
 import cn.nukkit.item.Item;
-import cn.nukkit.item.ItemBlock;
 import cn.nukkit.level.Level;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.plugin.PluginBase;
-import cn.nukkit.raknet.protocol.Packet;
-import cn.nukkit.utils.Binary;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
-import io.netty.util.collection.CharObjectHashMap;
 import net.yungtechboy1.CyberCore.Bans.Ban;
+import net.yungtechboy1.CyberCore.Classes.PowerSource.PowerSourceTaskAsync;
 import net.yungtechboy1.CyberCore.Commands.*;
 import net.yungtechboy1.CyberCore.Commands.Econ.Balance;
 import net.yungtechboy1.CyberCore.Commands.Econ.Pay;
@@ -38,22 +34,20 @@ import net.yungtechboy1.CyberCore.Commands.Homes.HomeManager;
 import net.yungtechboy1.CyberCore.Commands.Homes.SetHome;
 import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
-import net.yungtechboy1.CyberCore.Custom.Block.CustomElementBlock;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
 import net.yungtechboy1.CyberCore.Custom.Crafting.CustomRecipeCraftingManager;
 import net.yungtechboy1.CyberCore.Custom.CustomInventoryTransactionPacket;
-import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
-import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
-import net.yungtechboy1.CyberCore.Custom.Item.CustomItemGunpowder;
-import net.yungtechboy1.CyberCore.Custom.Item.CustomItemTNT;
+import net.yungtechboy1.CyberCore.Custom.Item.*;
 import net.yungtechboy1.CyberCore.Data.ServerSqlite;
+import net.yungtechboy1.CyberCore.Data.UserSQL;
 import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
 import net.yungtechboy1.CyberCore.Factory.ClassFactory;
+import net.yungtechboy1.CyberCore.Factory.Shop.ShopFactory;
+import net.yungtechboy1.CyberCore.Factory.Shop.Spawner.SpawnShopFactory;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
 import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
-import net.yungtechboy1.CyberCore.Manager.Econ.EconManager;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
@@ -127,6 +121,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public HomeManager HomeFactory;
     public net.yungtechboy1.CyberCore.Rank.RankFactory RF;
     public net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory AF;
+    public ShopFactory Shop;
+    public SpawnShopFactory SpawnShop;
     public net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager PM;
     public List<String> Final = new ArrayList<>();
     public List<String> TPING = new ArrayList<>();
@@ -143,16 +139,30 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     /**
      * DATA: ECON, K/D,
      */
-//    public net.yungtechboy1.CyberCore.Data.UserSQL UserSQL;
+    public net.yungtechboy1.CyberCore.Data.UserSQL UserSQL;
     public net.yungtechboy1.CyberCore.Manager.Warp.WarpManager WarpManager;
     public ServerSqlite ServerSQL;
     public CustomCraftingManager CraftingManager;
     Vector3 p1;
     Vector3 p2;
-    private EconManager ECON;
+    CustomRecipeCraftingManager CRM;
+//    private EconManager ECON;
+    private PowerSourceTaskAsync PowerSourceTask;
 
     public static CyberCoreMain getInstance() {
         return CyberCoreMain.instance;
+    }
+
+    public PowerSourceTaskAsync getPowerSourceTask() {
+        return PowerSourceTask;
+    }
+
+    public void setPowerSourceTask(PowerSourceTaskAsync powerSourceTask) {
+        PowerSourceTask = powerSourceTask;
+    }
+
+    public void HandleCustomAttack() {
+
     }
 
     public void ReloadBlockList(int id, Class c) {
@@ -199,29 +209,14 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
                 Block.lightFilter[id] = 1;
             }
         }
-
-//        if (Block.fullList[id << 4] == null) {
-////            System.out.println("----------------------------");
-////            System.out.println("IS NULLL");
-////            System.out.println("----------------------------");
-//        } else {
-////            System.out.println("----------------------------");
-////            System.out.println("IS " + Block.fullList[id << 4]);
-////            System.out.println("----------------------------");
-////            System.out.println("IS " + Block.fullList[(id << 4) | 5]);
-////            System.out.println("IS " + Block.fullList[(id << 4) | 5].getDamage());
-////            System.out.println("----------------------------");
-//
-//        }
     }
 
-    CustomRecipeCraftingManager CRM;
     @Override
     public void onEnable() {
         new File(getDataFolder().toString()).mkdirs();
-
-        saveResource("ranks.yml");
         saveResource("config.yml");
+        saveResource("ranks.yml");
+//        CustomGlobalBlockPalette.registerMapping((entry.id << 4) | entry.data);
 
 
 //        CustomGlobalBlockPalette.getOrCreateRuntimeId(0,0);
@@ -229,23 +224,35 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         Block.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         Block.list[Block.TNT] = CustomBlockTNT.class;
-        Block.list[267] = CustomElementBlock.class;
-        ReloadBlockList(267, CustomElementBlock.class);
+//        Block.list[267] = CustomElemebntBlock.class;
+//        Block.list[Block.PURPLE_GLAZED_TERRACOTTA] = CustomBlockPurpleGlazedTerraCotta.class;
+//        ReloadBlockList(267, CustomElementBlock.class);
         ReloadBlockList(Block.TNT, CustomBlockTNT.class);
+//        ReloadBlockList(Block.PURPLE_GLAZED_TERRACOTTA, CustomBlockPurpleGlazedTerraCotta.class);
 //        Item.list[Block.ENCHANTING_TABLE] = BlockEnchantingTable.class;
         addCreativeItem(Item.get(Block.ENCHANT_TABLE, 5, 1).setCustomName("TTTTTTTTTTTTTT"));
+        addCreativeItem(new CustomItemElement());
         ReloadBlockList(Block.ENCHANTING_TABLE, BlockEnchantingTable.class);
 
+//        Item.customblocklist[Item.MONSTER_SPAWNER] = CustomItemBlockSpawnerWithLevelBlock.class;
         Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
+        BlockEntity.registerBlockEntity(BlockEntity.MOB_SPAWNER,SpawnerWithLevelBlockEntity.class);
+        //Must be registered after custom block
+        Item.registerCustomItemBlock(Item.MONSTER_SPAWNER,CustomItemBlockSpawnerWithLevelBlock.class);
+
         ReloadBlockList(Block.MONSTER_SPAWNER, SpawnerWithLevelBlock.class);
         Item.list[Item.BOOK] = CItemBook.class;
         Item.list[Item.ENCHANT_BOOK] = CItemBookEnchanted.class;
         Item.list[BlockID.TNT] = CustomItemTNT.class;
         Item.list[Item.GUNPOWDER] = CustomItemGunpowder.class;
-        Item.init();
+        Item.list[Item.PURPLE_GLAZED_TERRACOTTA] = CustomItemPurpleGlazedTerraCotta.class;
+        Item.list[Item.STRING] = CustomItemString.class;
+//        Item.list[Item.Element_1] = CustomItemElement.class;
+//        Item.init();
 
 //        System.out.println(">>>>>>>>>>0x" + Binary.bytesToHexString(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_1).getCompoundTag()));
 
+        PowerSourceTask = new PowerSourceTaskAsync(this);
         CraftingManager = new CustomCraftingManager();
         CRM = new CustomRecipeCraftingManager(this);
 
@@ -260,7 +267,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        CraftingManager.registerShapedRecipe(nsr);
 
-        System.out.println("EEEE >>>>> "+CraftingManager.shapedRecipes.size());
+        System.out.println("EEEE >>>>> " + CraftingManager.shapedRecipes.size());
+
 
 //        getServer().getCraftingManager().registerShapelessRecipe();=null;
 
@@ -279,7 +287,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        CoreSQL = new CoreSQL(this,"Core");
         ServerSQL = new ServerSqlite(this);
         ServerSQL.LoadAllWarps();
-//        UserSQL = new UserSQL(this, "server-data");
+        UserSQL = new UserSQL(this);
 
 
         PM = new PurgeManager(this);
@@ -297,7 +305,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         MP = new MobPlugin(this);
 
 //        GOOD
-        ECON = new EconManager(this);
+//        ECON = new EconManager(this);
         FM = new FactionsMain(this, new FactionSQL(this));
 //        getServer().getScheduler().scheduleRepeatingTask(new UnMuteTask(this), 20 * 15);
 //        getServer().getScheduler().scheduleRepeatingTask(new ClearSpamTick(this), 20 * 5);
@@ -308,6 +316,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         getServer().getPluginManager().registerEvents(BBM, this);
         HomeFactory = new HomeManager(this);
         RF = new RankFactory(this);
+        Shop = new ShopFactory(this);
+        SpawnShop = new SpawnShopFactory(this);
         //TODO
         AF = new AuctionFactory(this);
 
@@ -334,13 +344,14 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         getServer().getPluginManager().registerEvents(new MasterListener(this), this);
         getServer().getPluginManager().registerEvents(ClassFactory, this);
         getServer().getPluginManager().registerEvents(AF, this);
+        getServer().getPluginManager().registerEvents(Shop, this);
+        getServer().getPluginManager().registerEvents(SpawnShop, this);
         getServer().getPluginManager().registerEvents(this, this);
 //        getServer().getPluginManager().registerEvents(new FactionListener(this, FM), this);
 
 //        getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
 //        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec
         SH = new SendHUD();
-        SH.start();
 
         //COMMANDS
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ChooseClass(this));
@@ -352,6 +363,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Reply(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Spawn(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new TNT(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new Shop(this));
         //All Commands Up to this point are Updated
         ///TODO FIX REST OF COMMANDS!
         //getServer().getCommandMap().register("CyberCore", new Tban(this));
@@ -399,42 +411,21 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     public void onLoad() {
 
-        getServer().getNetwork().registerPacket(ProtocolInfo.INVENTORY_TRANSACTION_PACKET,CustomInventoryTransactionPacket.class);
+        getServer().getNetwork().registerPacket(ProtocolInfo.INVENTORY_TRANSACTION_PACKET, CustomInventoryTransactionPacket.class);
 
         Entity.registerEntity(EntityPig.NETWORK_ID + "", Pig.class);
 
-        BlockEntity.registerBlockEntity("MonsterSpawner", SpawnerWithLevelBlockEntity.class);
+//        BlockEntity.registerBlockEntity("MonsterSpawner", SpawnerWithLevelBlockEntity.class);
 
         CyberCoreMain.instance = this;
 
 //        MobPlugin.registerEntities();
 //        MobPlugin.registerItems();
         getServer().getScheduler().scheduleRepeatingTask(new AutoSpawnTask(this), 5, true);
+
+        BBM = new BossBarManager(this);
     }
 
-
-//    Deprecated for public database --------------------------------------------
-//    public Connection getMySqlConnection() {
-//        try {
-//            if (Connect != null && Connect.isClosed()) Connect = null;
-//            if (Connect != null) return Connect;
-//            Class.forName("com.mysql.jdbc.Driver");
-//            getLogger().info(TextFormat.GREEN+"Connecting to database...");
-//            Connect = DriverManager.getConnection("jdbc:mysql://209.126.102.26/terratide_db?user=terratide_db&password=terratide_db&autoreconnect=true");
-//            return Connect;
-//            //} catch (Exception ignore) {
-//        } catch (SQLException ex) {
-//            // handle any errors
-//            getServer().getLogger().info("SQLException: " + ex.getMessage());
-//            getServer().getLogger().info("SQLState: " + ex.getSQLState());
-//            getServer().getLogger().info("VendorError: " + ex.getErrorCode());
-//            Connect = null;
-//        } catch (Exception ignore) {
-//            getServer().getLogger().info(ignore.getClass().getName() + ": " + ignore.getMessage());
-//            Connect = null;
-//        }
-//        return null;
-//    }
 
     public void log(String string) {
         getLogger().info(colorize(string));
@@ -530,6 +521,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 
         //Classes
+        PowerSourceTask.CTstop();
         ClassFactory.Saveall();
         FM.FFactory.SaveAllFactions();
     }
@@ -699,7 +691,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         long diffDays = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24);
         long diffWeeks = timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 7);
         long diffMonths = (long) (timeDifferenceMilliseconds / (60 * 60 * 1000 * 24 * 30.41666666));
-        long diffYears = (long) (timeDifferenceMilliseconds / (1000 * 60 * 60 * 24 * 365));
+        long diffYears = timeDifferenceMilliseconds / (1000 * 60 * 60 * 24 * 365);
 
         if (diffSeconds < 1) {
             return "one sec";
@@ -779,9 +771,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
                 }
                 return false;
             case "rank":
-                if (RF.RankCache.containsKey(s.getName())) {
-                    RF.RankCache.remove(s.getName());
-                }
+                RF.RankCache.remove(s.getName());
                 if (RF.GARC.containsKey(s.getName())) {
                     RF.GARC.remove(s.getName());
                 }
@@ -864,9 +854,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         return false;
     }
 
-    public EconManager GetEcon() {
-        return ECON;
-    }
 
 //    public void initiatePlayer(Player p) {
 //        try {
@@ -875,6 +862,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //            e.printStackTrace();
 //        }
 //    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void PMJ(PlayerJoinEvent me) {
+        BossBarManager.AddBossBar(me.getPlayer(), new BossBarNotification(me.getPlayer(), "TEST TITLE", "TEST MESSAGE", 20 * 60, this));
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PM(PlayerMoveEvent me) {

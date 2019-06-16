@@ -677,12 +677,7 @@ public class FactionFactory {
     }
 
     public Faction IsPlayerInFaction(CorePlayer p) {
-        String f = GetFactionFromMember(p.getName());
-        System.out.println("FACCCCC >>>>>>> " + f);
-        if (f == null && FacList.containsKey(p.getName().toLowerCase())) f = FacList.get(p.getName().toLowerCase());
-        System.out.println("FACCCCC >>>>>>> " + f);
-        if (f == null || f.length() == 0) return null;
-        return getFaction(f);
+        return getFaction(p.Faction);
     }
 
     public String GetFactionFromMember(String faction) {

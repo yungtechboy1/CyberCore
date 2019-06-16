@@ -13,6 +13,7 @@ import cn.nukkit.event.player.*;
 import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.scheduler.PluginTask;
+import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
 import java.util.Calendar;
 
@@ -124,6 +125,9 @@ public class Ability extends PluginTask<CyberCoreMain> {
         return event;
     }
 
+    public PlayerJumpEvent PlayerJumpEvent(PlayerJumpEvent event) {
+        return event;
+    }
     public EntityRegainHealthEvent EntityRegainHealthEvent(EntityRegainHealthEvent event) {
         return event;
     }

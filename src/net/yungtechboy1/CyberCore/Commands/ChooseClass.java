@@ -1,10 +1,7 @@
 package net.yungtechboy1.CyberCore.Commands;
 
-import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
-import cn.nukkit.item.Item;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.Class0Window;
@@ -25,10 +22,10 @@ public class ChooseClass extends Command {
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
 
         CorePlayer p = (CorePlayer) sender;
-if(p.GetPlayerClass() == null) {
+if(p.getPlayerClass() == null) {
     p.showFormWindow(new Class0Window());
 }else{
-    p.showFormWindow(p.GetPlayerClass().GetSettingsWindow());
+    p.showFormWindow(p.getPlayerClass().GetSettingsWindow());
 }
         return true;
     }

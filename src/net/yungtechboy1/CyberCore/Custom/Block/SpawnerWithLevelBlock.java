@@ -8,6 +8,7 @@ import cn.nukkit.entity.EntityHuman;
 import cn.nukkit.entity.passive.EntityAnimal;
 import cn.nukkit.item.ItemBookEnchanted;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
+import net.yungtechboy1.CyberCore.Custom.Item.CustomItemBlockSpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.entities.animal.swimming.Squid;
 import net.yungtechboy1.CyberCore.entities.animal.walking.*;
 import net.yungtechboy1.CyberCore.entities.block.BlockEntitySpawner;
@@ -31,7 +32,9 @@ import javax.swing.plaf.nimbus.State;
  * 0&1 => Used for spawner level
  */
 //TODO
-public class SpawnerWithLevelBlock extends BlockSolidMeta {
+public class SpawnerWithLevelBlock extends BlockSolid {
+    int Type = -1;
+//    BlockMobSpawner
 
 //    public static Item CreateTest() {
 //        Item i = Item.get(Item.MONSTER_SPAWNER, 0, 1);
@@ -43,41 +46,29 @@ public class SpawnerWithLevelBlock extends BlockSolidMeta {
 //    }
 
     public SpawnerWithLevelBlock() {
-        this(0);
+        this(-1);
     }
 
 
-    public SpawnerWithLevelBlock(int meta) {
-        super(0);
+    public SpawnerWithLevelBlock(int type) {
+        super();
+        Type = type;
 
     }
 
+    @Override
     public String getName() {
-        int type = getSpawnerType();
+        SpawnerType type = getSpawnerType();
         String t = "Unknown";
 
-        return TextFormat.GOLD + "Spawner " + TextFormat.AQUA + "Level " + getSpawnerLevel();
+        return TextFormat.GOLD +type.name()+ " Spawner ";// + TextFormat.AQUA + "Level " + getSpawnerLevel();
     }
+//
+//    public int GetTypeFromItem(CustomItemBlockSpawnerWithLevelBlock i) {
+//        if (!i.hasCompoundTag()) return -1;
+//        return i.getSpawnerType().getID();
+//    }
 
-    public int GetTypeFromItem(Item i) {
-        if (!i.hasCompoundTag()) return -1;
-        CompoundTag ct = i.getNamedTag();
-        int v = ct.getInt("Type");
-        if (v == 0) return -1;
-        return v;
-    }
-
-    public int GetLevelFromItem(Item i) {
-        if (!i.hasCompoundTag()) return -1;
-        CompoundTag ct = i.getNamedTag();
-        int v = ct.getInt("Level");
-        if (v == 0) return -1;
-        return v;
-    }
-
-    public Integer getSpawnerLevel(Item i) {
-        return GetLevelFromItem(i);
-    }
 
     public Integer getSpawnerLevel() {
         if (getLevel() == null) return -1;
@@ -86,12 +77,15 @@ public class SpawnerWithLevelBlock extends BlockSolidMeta {
         return bse.GetSpawnerLevel();
     }
 
-    public Integer getSpawnerType() {
-        if (getLevel() == null) return -1;
-        BlockEntitySpawner bse = (BlockEntitySpawner) getLevel().getBlockEntity(this);
-        if (bse == null) return -1;
-        return bse.GetSEntityID();
+    public SpawnerType getSpawnerType() {
+       return SpawnerType.getFromInt(Type);
     }
+//    public Integer getSpawnerType2() {
+//        if (getLevel() == null) return -1;
+//        BlockEntitySpawner bse = (BlockEntitySpawner) getLevel().getBlockEntity(this);
+//        if (bse == null) return -1;
+//        return bse.GetSEntityID();
+//    }
 
     @Deprecated
     /**
@@ -108,15 +102,16 @@ public class SpawnerWithLevelBlock extends BlockSolidMeta {
     public boolean place(Item item, Block block, Block target, BlockFace face, double fx, double fy, double fz, Player player) {
 
         BlockEntity blockEntity = this.getLevel().getBlockEntity(this);
+//        CustomItemBlockSpawnerWithLevelBlock iitem = (CustomItemBlockSpawnerWithLevelBlock)item;
         if (blockEntity != null && blockEntity instanceof BlockEntitySpawner) {
             Server.getInstance().broadcastMessage("ENTITY ALREADY CREATED!!!!");
             ((BlockEntitySpawner) blockEntity).setSpawnEntityType(item.getDamage());
         } else {
             Server.getInstance().broadcastMessage("ENTITY NOT ALREADY CREATED!!!!");
             if (blockEntity != null) blockEntity.close();
-            int sl = getSpawnerLevel(item);
-            int t = GetTypeFromItem(item);
-            if (sl == -1 || t == -1) {
+            int sl = 0;//getSpawnerLevel(item);
+            int t = item.getNamedTag().getInt("TYPE");
+            if (sl == -1 || t == 0) {
                 //Invalid Block
                 player.sendMessage("Error! Spawner is invalid! T:" + t + " SL:" + sl);
                 return false;
@@ -141,13 +136,13 @@ public class SpawnerWithLevelBlock extends BlockSolidMeta {
         return super.place(item, block, target, face, fx, fy, fz, player);
     }
 
-    @Override
-    public boolean onActivate(Item item, Player player) {
-        if (item.getId() == Item.SPAWN_EGG) {
-
-        }
-        return true;
-    }
+//    @Override
+//    public boolean onActivate(Item item, Player player) {
+//        if (item.getId() == Item.SPAWN_EGG) {
+//
+//        }
+//        return true;
+//    }
 
     @Override
     public int getId() {
@@ -170,37 +165,47 @@ public class SpawnerWithLevelBlock extends BlockSolidMeta {
     }
 
     public enum SpawnerType {
-        Sheep(0, net.yungtechboy1.CyberCore.entities.animal.walking.Sheep.NETWORK_ID),
-        Pig(1, net.yungtechboy1.CyberCore.entities.animal.walking.Pig.NETWORK_ID),
-        Cow(2, net.yungtechboy1.CyberCore.entities.animal.walking.Cow.NETWORK_ID),
-        Squid(3, net.yungtechboy1.CyberCore.entities.animal.swimming.Squid.NETWORK_ID),
-        Chicken(4, net.yungtechboy1.CyberCore.entities.animal.walking.Chicken.NETWORK_ID),
-        Rabbit(5, net.yungtechboy1.CyberCore.entities.animal.walking.Rabbit.NETWORK_ID),
-        Zombie(6, net.yungtechboy1.CyberCore.entities.monster.walking.Zombie.NETWORK_ID),
-        ZombieVillagers(7, ZombieVillager.NETWORK_ID),
-        SilverFishh(8, Silverfish.NETWORK_ID),
-        Creeper(9, net.yungtechboy1.CyberCore.entities.monster.walking.Creeper.NETWORK_ID),
-        ZombiePigMan(10, net.yungtechboy1.CyberCore.entities.monster.walking.Zombie.NETWORK_ID),
+        Unknown(-1),
+        Sheep(net.yungtechboy1.CyberCore.entities.animal.walking.Sheep.NETWORK_ID),
+        Pig(net.yungtechboy1.CyberCore.entities.animal.walking.Pig.NETWORK_ID),
+        Cow( net.yungtechboy1.CyberCore.entities.animal.walking.Cow.NETWORK_ID),
+        Squid( net.yungtechboy1.CyberCore.entities.animal.swimming.Squid.NETWORK_ID),
+        Chicken( net.yungtechboy1.CyberCore.entities.animal.walking.Chicken.NETWORK_ID),
+        Rabbit(net.yungtechboy1.CyberCore.entities.animal.walking.Rabbit.NETWORK_ID),
+        Zombie(net.yungtechboy1.CyberCore.entities.monster.walking.Zombie.NETWORK_ID),
+        ZombieVillagers( ZombieVillager.NETWORK_ID),
+        SilverFishh( Silverfish.NETWORK_ID),
+        Creeper( net.yungtechboy1.CyberCore.entities.monster.walking.Creeper.NETWORK_ID),
+        ZombiePigMan( net.yungtechboy1.CyberCore.entities.monster.walking.Zombie.NETWORK_ID),
         //        ZombiePigMan(3, net.yungtechboy1.CyberCore.entities.monster.walking.Zombie.),//TODO
-        Mooshroom(11, net.yungtechboy1.CyberCore.entities.animal.walking.Mooshroom.NETWORK_ID),
-        Skeleton(12, net.yungtechboy1.CyberCore.entities.monster.walking.Skeleton.NETWORK_ID),
-        Spider(13, net.yungtechboy1.CyberCore.entities.monster.walking.Spider.NETWORK_ID),
-        Blaze(14, net.yungtechboy1.CyberCore.entities.monster.flying.Blaze.NETWORK_ID),
-        Slime(15, net.yungtechboy1.CyberCore.entities.monster.walking.Zombie.NETWORK_ID),
+        Mooshroom( net.yungtechboy1.CyberCore.entities.animal.walking.Mooshroom.NETWORK_ID),
+        Skeleton( net.yungtechboy1.CyberCore.entities.monster.walking.Skeleton.NETWORK_ID),
+        Spider( net.yungtechboy1.CyberCore.entities.monster.walking.Spider.NETWORK_ID),
+        Blaze( net.yungtechboy1.CyberCore.entities.monster.flying.Blaze.NETWORK_ID),
+        Slime( net.yungtechboy1.CyberCore.entities.monster.walking.Zombie.NETWORK_ID),
         //        Slime(3,),
-        CaveSpider(16, net.yungtechboy1.CyberCore.entities.monster.walking.CaveSpider.NETWORK_ID),
-        IronGolem(17, net.yungtechboy1.CyberCore.entities.monster.walking.IronGolem.NETWORK_ID),
-        Witch(18, net.yungtechboy1.CyberCore.entities.monster.walking.Witch.NETWORK_ID),
-        Horse(19, net.yungtechboy1.CyberCore.entities.animal.walking.Horse.NETWORK_ID);
+        CaveSpider( net.yungtechboy1.CyberCore.entities.monster.walking.CaveSpider.NETWORK_ID),
+        IronGolem( net.yungtechboy1.CyberCore.entities.monster.walking.IronGolem.NETWORK_ID),
+        Witch( net.yungtechboy1.CyberCore.entities.monster.walking.Witch.NETWORK_ID),
+        Horse( net.yungtechboy1.CyberCore.entities.animal.walking.Horse.NETWORK_ID);
 
         private int Key = -1;
         private int ID = -1;
 
-        SpawnerType(int k, int id) {
-            Key = k;
+        SpawnerType( int id) {
             ID = id;
         }
 
+        public static SpawnerType getFromInt(int damage) {
+            for(SpawnerType st: SpawnerType.values()){
+                if(damage == st.getID())return st;
+            }
+            return Unknown;
+        }
+
+        public int getID() {
+            return ID;
+        }
     }
 
     //TODO

@@ -68,7 +68,7 @@ public class CustomNetworkInventoryAction {
         }
 
         this.inventorySlot = (int)packet.getUnsignedVarInt();
-        System.out.println("ABOUT TO READDDDDD ITEM!!!!!!!!222222");
+//        System.out.println("ABOUT TO READDDDDD ITEM!!!!!!!!222222");
         this.oldItem = packet.getSlot();
         this.newItem = packet.getSlot();
         return this;
@@ -76,9 +76,9 @@ public class CustomNetworkInventoryAction {
 
 
     public CustomNetworkInventoryAction read(CustomInventoryTransactionPacket packet) {
-        System.out.println("saaaaaaaaaaaaa READDDDDD ITEM!!!!!!!!");
+//        System.out.println("saaaaaaaaaaaaa READDDDDD ITEM!!!!!!!!");
         this.sourceType = (int)packet.getUnsignedVarInt();
-        System.out.println("saaaaaaaaaaaaa READDDDDD ITEM!!!!!!!!"+sourceType);
+//        System.out.println("saaaaaaaaaaaaa READDDDDD ITEM!!!!!!!!"+sourceType);
         switch(this.sourceType) {
             case 0:
                 this.windowId = packet.getVarInt();
@@ -99,7 +99,7 @@ public class CustomNetworkInventoryAction {
         }
 
         this.inventorySlot = (int)packet.getUnsignedVarInt();
-        System.out.println("ABOUT TO READDDDDD ITEM!!!!!!!!");
+//        System.out.println("ABOUT TO READDDDDD ITEM!!!!!!!!");
         this.oldItem = packet.getSlot();
         this.newItem = packet.getSlot();
         return this;
@@ -194,10 +194,10 @@ public class CustomNetworkInventoryAction {
                     case SOURCE_TYPE_CONTAINER_DROP_CONTENTS:
                         return new SlotChangeAction(player.getCraftingGrid(), this.inventorySlot, this.oldItem, this.newItem);
                     case SOURCE_TYPE_CRAFTING_RESULT:
-                        System.out.println("WINDOWID: >> SOURCE_TYPE_CRAFTING_RESULT");
+//                        System.out.println("WINDOWID: >> SOURCE_TYPE_CRAFTING_RESULT");
                         return new CustomCraftingTakeResultAction(this.oldItem, this.newItem);
                     case SOURCE_TYPE_CRAFTING_USE_INGREDIENT:
-                        System.out.println("WINDOWID: >> SOURCE_TYPE_CRAFTING_USE_INGREDIENT");
+//                        System.out.println("WINDOWID: >> SOURCE_TYPE_CRAFTING_USE_INGREDIENT");
                         return new CustomCraftingTransferMaterialAction(this.oldItem, this.newItem, this.inventorySlot);
                 }
 

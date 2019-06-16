@@ -1,79 +1,128 @@
 package net.yungtechboy1.CyberCore.Data;
 
-import cn.nukkit.Player;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-
-import java.lang.reflect.Type;
-import java.sql.Connection;
-
-import org.apache.logging.log4j.core.Core;
-import org.sql2o.Sql2o;
+import net.yungtechboy1.CyberCore.PlayerSettingsData;
 import ru.nukkit.dblib.DbLib;
 
-import java.io.File;
-import java.sql.ResultSet;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
-public class UserSQL extends SQLite{
+public class UserSQL extends MySQL {
 
-
-    public UserSQL(CyberCoreMain plugin, String settings) {
-        super(plugin, settings);
-    }
 
     /**
      * Connects to the MYSQL database assigned in config.yml for GLOBAL data
+     *
      * @return Connection
      */
+
+    public String table = "mcpe";
+    public String file = "cyber_core_data.db";
+    public String createSQL = "create table if not exists " + table + " (";
+    public String insertQuery = "insert into " + table + " (";
+    public String addQuery = "insert into " + table + " (uuid) values (:uuid)";
+    public String loadQuery = "select * from " + table + " where uuid=':uuid'";
+    public String saveQuery = "update " + table + " set ";
+    public HashMap<String, String> columns;
+
+    public UserSQL(CyberCoreMain plugin) {
+        super(plugin);
+    }
+
+    @Override
     public Connection connectToDb() {
-        enabled = (plugin.getServer().getPluginManager().getPlugin("DbLib") != null);
+        String host = plugin.MainConfig.getSection("db2").getString("mysql-host");
+        String pass = plugin.MainConfig.getSection("db2").getString("mysql-pass");
+        int port = plugin.MainConfig.getSection("db2").getInt("mysql-port");
+        String user = plugin.MainConfig.getSection("db2").getString("mysql-user");
+        String db = plugin.MainConfig.getSection("db2").getString("mysql-db-Server");
         if (!enabled) return null;
-        java.sql.Connection connection = DbLib.getSQLiteConnection(new File(plugin.getDataFolder() + File.separator +file));
+        Connection connection = DbLib.getMySqlConnection(host, port,
+                db, user, pass);
+
         if (connection == null) enabled = false;
         return connection;
     }
 
-    public boolean checkUser(String uuid) {
-        String query = "SELECT * FROM "+table+" WHERE uuid=':uuid'";
+    public boolean isinDB(CorePlayer p) {
         try {
-            ArrayList<HashMap<String, Object>> data = executeSelect(query,"uuid", uuid, null);
-            if(data != null && !data.isEmpty()) return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+            ArrayList<HashMap<String, Object>> a = executeSelect("SELECT * FROM `PlayerSettings` WHERE `Name` LIKE '" + p.getName() + "'");
+            if (a == null) return false;
+            if (a.size() == 0) return false;
+            return true;
+        } catch (Exception e) {
+            return false;
         }
-        return false;
     }
 
-    public void createUser(String uuid) throws SQLException {
-        executeUpdate(addQuery.replace(":uuid", "'"+uuid+"'"));
-    }
-
-    public void saveUser(CorePlayer player) {
+    public PlayerSettingsData getPlayerSettingsData(CorePlayer corePlayer) {
+        PlayerSettingsData psd = new PlayerSettingsData(corePlayer);
         try {
-            if(player != null) {
-                String query = saveQuery;
-                for(String data:columns.keySet()) {
-                    if(data.equalsIgnoreCase("uuid")) {
-                        query = query.replace(":uuid", "'"+player.getUniqueId().toString()+"'");
-                    }else {
-                        if(player.getClass().getField(data).getType() == String.class) {
-                            query = query.replace(":" + data, "'"+player.getClass().getField(data).get(player).toString()+"'");
-                        } else {
-                            query = query.replace(":" + data, player.getClass().getField(data).get(player).toString());
-                        }
-                    }
-                }
-                plugin.log(query);
-                executeUpdate(query);
+
+            ArrayList<HashMap<String, Object>> a = executeSelect("SELECT * FROM `PlayerSettings` WHERE `Name` LIKE '" + corePlayer.getName() + "'");
+            if (a == null || a.size() == 0) {
+                corePlayer.setSettingsData(psd);
+                return psd;
             }
-        } catch (SQLException | IllegalAccessException | NoSuchFieldException e) {
+            psd = new PlayerSettingsData(a.get(0));
+            if (!psd.UUIDS.contains(corePlayer.getUniqueId())) psd.UUIDS.add(corePlayer.getUniqueId());
+            corePlayer.setSettingsData(psd);
+            return psd;
+        } catch (Exception e) {
+            plugin.getLogger().error("Error getting UserSQL PlayerSettingData1");
             e.printStackTrace();
+            return null;
         }
+    }
+
+    public boolean savePlayerSettingData(CorePlayer corePlayer) {
+        PlayerSettingsData psd = corePlayer.getSettingsData();
+        if(psd == null)return false;
+        if (!psd.UUIDS.contains(corePlayer.getUniqueId())) psd.UUIDS.add(corePlayer.getUniqueId());
+        try {
+            try {
+                executeUpdate("DELETE FROM `PlayerSettings` WHERE `Name` LIKE '" + corePlayer.getName() + "'");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            String q = "INSERT INTO `PlayerSettings` VALUES (";
+            q = addToQuery(q, corePlayer.getName()) + ",";
+            q = addToQuery(q, psd.UUIDSToJSON()) + ",";
+            q = addToQuery(q, psd.Cash) + ",";
+            q = addToQuery(q, psd.CreditScore) + ",";
+            q = addToQuery(q, psd.CreditLimit) + ",";
+            q = addToQuery(q, psd.UsedCredit) + ",";
+            q = addToQuery(q, psd.PlayerWarningToJSON()) + ",";
+            q = addToQuery(q, psd.PlayerTempBansToJSON()) + ",";
+            q = addToQuery(q, psd.PlayerKicksToJSON()) + ",";
+            q = addToQuery(q, psd.PlayerBansToJSON()) + ",";
+            q = addToQuery(q, psd.Rank);
+            q += ")";
+            plugin.getLogger().info("Saved Player With SQL:" + q);
+            executeUpdate(q);
+            return true;
+
+        } catch (Exception e) {
+            plugin.getLogger().error("Error getting UserSQL PlayerSettingData");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private String addToQuery(String q, String v) {
+        return q += "'" + v + "'";
+    }
+
+    private String addToQuery(String q, int v) {
+        return q += v;
+    }
+
+    private String addToQuery(String q, double v) {
+        return q += "'" + v + "'";
     }
 
 //    public void loadUser(String uuid) {

@@ -282,7 +282,7 @@ public class VirturalEnchantInv {
             case "%enchantment.untouching":return "Silk Touch";
             case "%enchantment.durability":return "Durability";
             case "%enchantment.lootBonusDigger":return "Loot Digging";
-            case "%enchantment.arrowDamage":return "Bow Power";
+            case "%enchantment.arrowDamage":return "Bow PowerAbstract";
             case "%enchantment.arrowKnockback":return "Bow Knockback";
             case "%enchantment.arrowFire":return "Bow Flame";
             case "%enchantment.arrowInfinite":return "Arrow Infinity";

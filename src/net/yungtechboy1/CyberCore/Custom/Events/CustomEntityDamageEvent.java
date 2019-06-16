@@ -3,6 +3,8 @@ package net.yungtechboy1.CyberCore.Custom.Events;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
+import cn.nukkit.event.entity.EntityDamageEvent;
+import cn.nukkit.event.entity.EntityEvent;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.utils.EventException;
 
@@ -12,29 +14,14 @@ import java.util.Map;
 /**
  * Created by carlt on 3/11/2019.
  */
-public class CustomEntityDamageEvent implements Cancellable {
+public class CustomEntityDamageEvent extends EntityEvent implements Cancellable {
 
-    private boolean isCancelled = false;
     private static final HandlerList handlers = new HandlerList();
-
-    public static HandlerList getHandlers() {
-        return handlers;
-    }
-
-    private final CustomDamageCause cause;
-
     public final Map<CustomDamageModifier, Float> modifiers;
     public final Map<CustomDamageModifier, Float> originals;
+    private final CustomDamageCause cause;
     public Entity entity;
-
-    public int getCoolDownTicks() {
-        return CoolDownTicks;
-    }
-
-    public void setCoolDownTicks(int coolDownTicks) {
-        CoolDownTicks = coolDownTicks;
-    }
-
+    private boolean isCancelled = false;
     private int CoolDownTicks = 20;
 
     public CustomEntityDamageEvent(Entity entity, CustomDamageCause cause, float damage) {
@@ -59,6 +46,18 @@ public class CustomEntityDamageEvent implements Cancellable {
         if (entity.hasEffect(Effect.DAMAGE_RESISTANCE)) {
             this.setDamage((float) -(this.getDamage(CustomDamageModifier.BASE) * 0.20 * (entity.getEffect(Effect.DAMAGE_RESISTANCE).getAmplifier() + 1)), CustomDamageModifier.RESISTANCE);
         }
+    }
+
+    public static HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public int getCoolDownTicks() {
+        return CoolDownTicks;
+    }
+
+    public void setCoolDownTicks(int coolDownTicks) {
+        CoolDownTicks = coolDownTicks;
     }
 
     public CustomDamageCause getCause() {
@@ -114,14 +113,14 @@ public class CustomEntityDamageEvent implements Cancellable {
     }
 
     @Override
-    public void setCancelled() {
-        setCancelled(true);
-    }
-
-    @Override
     public void setCancelled(boolean forceCancel) {
 
         isCancelled = forceCancel;
+    }
+
+    @Override
+    public void setCancelled() {
+        setCancelled(true);
     }
 
     public enum CustomDamageModifier {
@@ -223,6 +222,23 @@ public class CustomEntityDamageEvent implements Cancellable {
         /**
          * Damage caused by hunger
          */
-        HUNGER
+        HUNGER, DoubleTakeMagic(EntityDamageEvent.DamageCause.MAGIC);
+
+        EntityDamageEvent.DamageCause CDC = null;
+
+        CustomDamageCause(EntityDamageEvent.DamageCause dc) {
+            CDC = dc;
+        }
+
+        CustomDamageCause() {
+        }
+
+
+        public EntityDamageEvent.DamageCause getEntityDamageEventCause() {
+            if (ordinal() > HUNGER.ordinal()) {
+                return CDC;
+            }
+            return EntityDamageEvent.DamageCause.values()[this.ordinal()];
+        }
     }
 }
