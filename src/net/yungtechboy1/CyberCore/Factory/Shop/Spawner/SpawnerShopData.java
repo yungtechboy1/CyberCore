@@ -25,7 +25,8 @@ public class SpawnerShopData {
     public Item getItem(boolean pretty){
         Block b =new SpawnerWithLevelBlock(SpawnerType.getID());
 //        b.
-        Item i =new ItemBlock(b,b.getDamage());
+//        Item i =new ItemBlock(b);
+        Item i = new CustomItemBlockSpawnerWithLevelBlock(SpawnerType.getID());
         i.setNamedTag(new CompoundTag().putInt("TYPE",getSpawnerType().getID()));
         i.setCustomName(b.getName());
         if(pretty)return i;

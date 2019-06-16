@@ -7,10 +7,11 @@ import cn.nukkit.item.ItemBlock;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 
 @Deprecated
-public class CustomItemBlockSpawnerWithLevelBlock extends Item {
+public class CustomItemBlockSpawnerWithLevelBlock extends ItemBlock {
 
     public static Item getSpawnerItem(int meta){
         ItemBlock ib = new ItemBlock(new SpawnerWithLevelBlock(meta),meta);
@@ -43,16 +44,12 @@ public class CustomItemBlockSpawnerWithLevelBlock extends Item {
     }
 
     public CustomItemBlockSpawnerWithLevelBlock(Integer meta, int count) {
-        this(meta, count, "UNKOWN SPAWNER TYYYPPP");
-    }
-
-    public CustomItemBlockSpawnerWithLevelBlock(Integer meta, int count, String name) {
-        super(Item.MONSTER_SPAWNER, 0, count, name);
+        super(new SpawnerWithLevelBlock(meta), 0, count);
         ST = SpawnerWithLevelBlock.SpawnerType.getFromInt(meta);
         if (ST != null) setCustomName(TextFormat.AQUA + ST.name() + " Spawner");
         else setCustomName(TextFormat.AQUA + "DAMAGE: " + getDamage() + " Spawner");
         if (ST != null) setSpawnerType(ST);
-        block = new SpawnerWithLevelBlock();
+        block = new SpawnerWithLevelBlock(meta);
     }
 
     public SpawnerWithLevelBlock.SpawnerType getSpawnerType() {
