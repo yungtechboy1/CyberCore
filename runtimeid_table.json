@@ -1825,11 +1825,6 @@
     "data": 15
   },
   {
-    "name": "minecraft:mob_spawner",
-    "id": 52,
-    "data": 16
-  },
-  {
     "name": "minecraft:oak_stairs",
     "id": 53,
     "data": 0

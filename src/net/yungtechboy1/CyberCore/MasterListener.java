@@ -11,8 +11,8 @@ import cn.nukkit.event.inventory.InventoryClickEvent;
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.event.player.*;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Power;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerHotBarInt;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBarInt;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 
 import java.util.HashMap;
@@ -54,7 +54,7 @@ public class MasterListener implements Listener {
         Player p = event.getPlayer();
         CorePlayer cp = (CorePlayer) p;
         if (cp.getPlayerClass() == null) return;
-        for (Power pp : cp.getPlayerClass().getPowers()) {
+        for (PowerAbstract pp : cp.getPlayerClass().getPowers()) {
             if (pp instanceof PowerHotBarInt) {
                 event = (InventoryClickEvent)pp.handelEvent(event);
             }
@@ -67,7 +67,7 @@ public class MasterListener implements Listener {
         Player p = event.getTransaction().getSource();
         CorePlayer cp = (CorePlayer)p;
         if(cp.getPlayerClass() == null)return;
-        for(Power pp : cp.getPlayerClass().getPowers()){
+        for(PowerAbstract pp : cp.getPlayerClass().getPowers()){
             if(pp instanceof PowerHotBarInt){
                 pp.handelEvent(event);
             }

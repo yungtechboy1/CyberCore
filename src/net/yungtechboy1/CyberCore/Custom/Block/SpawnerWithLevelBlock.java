@@ -32,7 +32,9 @@ import javax.swing.plaf.nimbus.State;
  * 0&1 => Used for spawner level
  */
 //TODO
-public class SpawnerWithLevelBlock extends BlockSolidMeta {
+public class SpawnerWithLevelBlock extends BlockSolid {
+    int Type = -1;
+//    BlockMobSpawner
 
 //    public static Item CreateTest() {
 //        Item i = Item.get(Item.MONSTER_SPAWNER, 0, 1);
@@ -44,37 +46,29 @@ public class SpawnerWithLevelBlock extends BlockSolidMeta {
 //    }
 
     public SpawnerWithLevelBlock() {
-        this(0);
+        this(-1);
     }
 
 
-    public SpawnerWithLevelBlock(int meta) {
-        super(0);
+    public SpawnerWithLevelBlock(int type) {
+        super();
+        Type = type;
+
     }
 
+    @Override
     public String getName() {
         SpawnerType type = getSpawnerType();
         String t = "Unknown";
 
-        return TextFormat.GOLD + "Spawner " + TextFormat.AQUA + "Level " + getSpawnerLevel();
+        return TextFormat.GOLD +type.name()+ " Spawner " + TextFormat.AQUA + "Level " + getSpawnerLevel();
     }
+//
+//    public int GetTypeFromItem(CustomItemBlockSpawnerWithLevelBlock i) {
+//        if (!i.hasCompoundTag()) return -1;
+//        return i.getSpawnerType().getID();
+//    }
 
-    public int GetTypeFromItem(CustomItemBlockSpawnerWithLevelBlock i) {
-        if (!i.hasCompoundTag()) return -1;
-        return i.getSpawnerType().getID();
-    }
-
-    public int GetLevelFromItem(Item i) {
-        if (!i.hasCompoundTag()) return -1;
-        CompoundTag ct = i.getNamedTag();
-        int v = ct.getInt("Level");
-        if (v == 0) return -1;
-        return v;
-    }
-
-    public Integer getSpawnerLevel(Item i) {
-        return GetLevelFromItem(i);
-    }
 
     public Integer getSpawnerLevel() {
         if (getLevel() == null) return -1;
@@ -84,14 +78,14 @@ public class SpawnerWithLevelBlock extends BlockSolidMeta {
     }
 
     public SpawnerType getSpawnerType() {
-       return SpawnerType.getFromInt(getDamage());
+       return SpawnerType.getFromInt(Type);
     }
-    public Integer getSpawnerType2() {
-        if (getLevel() == null) return -1;
-        BlockEntitySpawner bse = (BlockEntitySpawner) getLevel().getBlockEntity(this);
-        if (bse == null) return -1;
-        return bse.GetSEntityID();
-    }
+//    public Integer getSpawnerType2() {
+//        if (getLevel() == null) return -1;
+//        BlockEntitySpawner bse = (BlockEntitySpawner) getLevel().getBlockEntity(this);
+//        if (bse == null) return -1;
+//        return bse.GetSEntityID();
+//    }
 
     @Deprecated
     /**
@@ -108,7 +102,7 @@ public class SpawnerWithLevelBlock extends BlockSolidMeta {
     public boolean place(Item item, Block block, Block target, BlockFace face, double fx, double fy, double fz, Player player) {
 
         BlockEntity blockEntity = this.getLevel().getBlockEntity(this);
-        CustomItemBlockSpawnerWithLevelBlock iitem = (CustomItemBlockSpawnerWithLevelBlock)item;
+//        CustomItemBlockSpawnerWithLevelBlock iitem = (CustomItemBlockSpawnerWithLevelBlock)item;
         if (blockEntity != null && blockEntity instanceof BlockEntitySpawner) {
             Server.getInstance().broadcastMessage("ENTITY ALREADY CREATED!!!!");
             ((BlockEntitySpawner) blockEntity).setSpawnEntityType(item.getDamage());
@@ -116,8 +110,8 @@ public class SpawnerWithLevelBlock extends BlockSolidMeta {
             Server.getInstance().broadcastMessage("ENTITY NOT ALREADY CREATED!!!!");
             if (blockEntity != null) blockEntity.close();
             int sl = 0;//getSpawnerLevel(item);
-            int t = GetTypeFromItem(iitem);
-            if (sl == -1 || t == -1) {
+            int t = item.getNamedTag().getInt("TYPE");
+            if (sl == -1 || t == 0) {
                 //Invalid Block
                 player.sendMessage("Error! Spawner is invalid! T:" + t + " SL:" + sl);
                 return false;
@@ -142,13 +136,13 @@ public class SpawnerWithLevelBlock extends BlockSolidMeta {
         return super.place(item, block, target, face, fx, fy, fz, player);
     }
 
-    @Override
-    public boolean onActivate(Item item, Player player) {
-        if (item.getId() == Item.SPAWN_EGG) {
-
-        }
-        return true;
-    }
+//    @Override
+//    public boolean onActivate(Item item, Player player) {
+//        if (item.getId() == Item.SPAWN_EGG) {
+//
+//        }
+//        return true;
+//    }
 
     @Override
     public int getId() {

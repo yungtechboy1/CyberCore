@@ -155,7 +155,7 @@ public class TNTSpecialist extends MinnerBaseClass {
     @Override
     public String FormatHudText() {
         String f = super.FormatHudText();
-        //Show TNT Power
+        //Show TNT PowerAbstract
         TNTSpecialistPower p = (TNTSpecialistPower) getPower(PowerEnum.TNTSpecalist);
         if (p == null) return f;
         int q = p.getAvailbleQuantity();

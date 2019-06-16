@@ -59,6 +59,11 @@ public class MercenaryReneration extends PowerAbility {
     public int _incombat = 0;
 
     @Override
+    public void onActivate() {
+
+    }
+
+    @Override
     public void onTick(int tick) {
         super.onTick(tick);
         if(PlayerClass.getPlayer().checkCombat()){
@@ -68,7 +73,7 @@ public class MercenaryReneration extends PowerAbility {
         }
 
         if(_incombat > 6){
-            //Allow Heal, Run Power
+            //Allow Heal, Run PowerAbstract
             initPowerRun();
             _incombat = 0;
         }
@@ -84,6 +89,11 @@ public class MercenaryReneration extends PowerAbility {
         EntityRegainHealthEvent e = new EntityRegainHealthEvent(getPlayer(),1, EntityRegainHealthEvent.CAUSE_REGEN);
         getPlayer().heal(e);
         getPlayer().sendMessage(TextFormat.GOLD+"[ABILITY] > Mercenary Regeneration Activated!");
+    }
+
+    @Override
+    public void whileAbilityActive() {
+
     }
 
     @Override

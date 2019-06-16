@@ -196,7 +196,7 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
     public void saveNBT() {
         super.saveNBT();
 
-        this.namedTag.putString("id", "MobSpawner");
+//        this.namedTag.putString("id", "MobSpawner");
         this.namedTag.putInt("EntityId", this.entityId);
         this.namedTag.putInt("Type", this.entityId);
         this.namedTag.putInt("Level", this.lvl);
@@ -213,7 +213,7 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
 
                 .putInt("EntityId", this.entityId)
                 .putInt("Type", this.entityId)
-                .putString("id", "MobSpawner")
+                .putString("id", MOB_SPAWNER)
 //                .putString("SpawnData", this.entityId + "")//"minecraft:zombie"
 //                .putList(new ListTag<CompoundTag>("SpawnPotentials") {
 //                    {

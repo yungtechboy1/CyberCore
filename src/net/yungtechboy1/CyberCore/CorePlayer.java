@@ -688,7 +688,7 @@ public class CorePlayer extends Player {
                         if(getPlayerClass() instanceof Knight){
                             Knight k = (Knight)getPlayerClass();
                             KnightSandShieldPower kssp = (KnightSandShieldPower) k.getPower(PowerEnum.KnightSandShield);
-                            if(mobEquipmentPacket.hotbarSlot == kssp.getLockedSlot().getSlot()){
+                            if(mobEquipmentPacket.hotbarSlot == kssp.getLS().getSlot()){
                                 kssp.initPowerRun();
                                 kssp.onTick(getServer().getTick());
                                 getInventory().setHeldItemIndex(getInventory().getHeldItemIndex(),true);
@@ -822,8 +822,9 @@ public class CorePlayer extends Player {
                                                 }
                                             } else if (inventory.getItemInHand().equals(useItemData.itemInHand)) {
                                                 Item i = inventory.getItemInHand();
-                                                System.out.println("wwwwwwwwwwwwww > GOOD " + i);
+                                                System.out.println("wwwwwwwwwwwwww > GOOD " + i + "||"+i.getClass());
                                                 Item oldItem = i.clone();
+                                                if(i instanceof ItemBlock)System.out.println("YYYYYYYYYYYYYYYYEEEEEEE");
                                                 //TODO: Implement adventure mode checks
                                                 if ((i = this.level.useItemOn(blockVector.asVector3(), i, face, useItemData.clickPos.x, useItemData.clickPos.y, useItemData.clickPos.z, this)) != null) {
                                                     System.out.println("wwwwwwwwwwwwww > GOOD2");
@@ -833,6 +834,9 @@ public class CorePlayer extends Player {
                                                         inventory.sendHeldItem(this.getViewers().values());
                                                     }
                                                     break packetswitch;
+                                                }else{
+                                                    if(i instanceof ItemBlock)System.out.println("YYYYYYYYYYYYYYYYEEEEEE222222222222E");
+                                                    System.out.println("ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"+i);
                                                 }
                                             }
                                         }

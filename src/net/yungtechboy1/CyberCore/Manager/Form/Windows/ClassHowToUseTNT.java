@@ -124,7 +124,7 @@ class ClassHowToUseTNTEXP extends CyberFormCustom{
         super(FormType.MainForm.Class_HowToUse_TNT_EXP,title);
         _tt = title;
         addElement(new ElementLabel("=== How to Earn XP ==="));
-        addElement(new ElementLabel("- Using TNT Regen Power: 2 XP"));
+        addElement(new ElementLabel("- Using TNT Regen PowerAbstract: 2 XP"));
         addElement(new ElementLabel("- Using TNT :"));
         addElement(new ElementLabel("   - Basic: 5 XP"));
         addElement(new ElementLabel("   - Charged: 10 XP"));

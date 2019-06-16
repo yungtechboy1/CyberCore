@@ -3,12 +3,21 @@ package net.yungtechboy1.CyberCore.Custom.Item;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemBlock;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 
+@Deprecated
 public class CustomItemBlockSpawnerWithLevelBlock extends Item {
+
+    public static Item getSpawnerItem(int meta){
+        ItemBlock ib = new ItemBlock(new SpawnerWithLevelBlock(meta),meta);
+//        ib.setCustomName("TEST");
+        return ib;
+    }
+
     Block _Block = null;
     SpawnerWithLevelBlock.SpawnerType ST = null;
 //    public CustomItemBlockSpawnerWithLevelBlock(Block bblock) {

@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability;
+package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot;
 
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.inventory.PlayerInventory;
@@ -6,12 +6,11 @@ import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.inventory.transaction.action.SlotChangeAction;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability.PowerAbility;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBarInt;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 
-public abstract class PowerAbilityHotBar extends PowerAbility implements PowerHotBarInt {
-    public PowerAbilityHotBar(BaseClass b, int psc, double cost, LockedSlot ls) {
+public abstract class PowerHotBar extends PowerAbstract implements PowerHotBarInt {
+
+    public PowerHotBar(BaseClass b, int psc, double cost, LockedSlot ls) {
         super(b, psc, cost);
         TickUpdate = 20;
         setLS(ls);
@@ -19,12 +18,8 @@ public abstract class PowerAbilityHotBar extends PowerAbility implements PowerHo
     }
 
     @Override
-    public final void activate() {
-        super.activate();
-    }
-
-    @Override
     public InventoryTransactionEvent InventoryTransactionEvent(InventoryTransactionEvent e) {
+//        getPlayer().sendMessage(TextFormat.RED + "TRANS CALLEDDDDD! Slot");
         if(getLS() == LockedSlot.NA)return e;
         for (InventoryAction action : e.getTransaction().getActions()) {
             if (!(action instanceof SlotChangeAction)) {
@@ -42,7 +37,7 @@ public abstract class PowerAbilityHotBar extends PowerAbility implements PowerHo
             }
         }
 
-        return super.InventoryTransactionEvent(e);
+        return e;
     }
 
 
@@ -59,10 +54,6 @@ public abstract class PowerAbilityHotBar extends PowerAbility implements PowerHo
         }
         check = !check;
         if (check) antiSpamCheck(this);
-        super.onTick(tick);
     }
-
-
-
 
 }

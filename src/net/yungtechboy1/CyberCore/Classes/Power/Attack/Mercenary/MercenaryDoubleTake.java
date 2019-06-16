@@ -64,8 +64,18 @@ public class MercenaryDoubleTake extends PowerAbility {
     }
 
     @Override
+    public void onActivate() {
+
+    }
+
+    @Override
     public void onAbilityActivate() {
         getPlayer().sendMessage(TextFormat.GOLD+"[ABILITY] > Double Take Activated!");
+    }
+
+    @Override
+    public void whileAbilityActive() {
+
     }
 
     @Override

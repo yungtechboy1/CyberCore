@@ -67,14 +67,14 @@ public class Claim extends Commands {
                 return;
             }
             if(fac.GetPower() < power){
-                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Your Faction does not have "+power+" Power!");
+                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Your Faction does not have "+power+" PowerAbstract!");
                 return;
             }
             if(Main.FFactory.PlotsList.containsKey(x+"|"+z)){
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"That land is already Claimed by"+Main.FFactory.PlotsList.get(x+"|"+z)+"'s Faction!!");
                 return;
             }
-            Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"Purchase Successful! $5000 and 1 Power Withdrawn To Purchase This Chunk!");
+            Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"Purchase Successful! $5000 and 1 PowerAbstract Withdrawn To Purchase This Chunk!");
             fac.TakeMoney(money);
             fac.AddPlots(x+"|"+z);
             fac.TakePower(power);
@@ -91,14 +91,14 @@ public class Claim extends Commands {
             return;
         }
         if(fac.GetPower() < power){
-            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Your Faction does not have "+power+" Power to claim Chunk at X:"+x+" Z:"+z+"!");
+            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Your Faction does not have "+power+" PowerAbstract to claim Chunk at X:"+x+" Z:"+z+"!");
             return;
         }
         if(Main.FFactory.PlotsList.containsKey(x+"|"+z)){
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"That Chunk at X:"+x+" Z:"+z+" is already Claimed by"+Main.FFactory.PlotsList.get(x+"|"+z)+"'s Faction!!");
             return;
         }
-        Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"Purchase Successful! $5000 and 1 Power Withdrawn To Purchase Chunk at X:"+x+" Z:"+z+"!");
+        Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"Purchase Successful! $5000 and 1 PowerAbstract Withdrawn To Purchase Chunk at X:"+x+" Z:"+z+"!");
         fac.TakeMoney(money);
         fac.AddPlots(x+"|"+z);
         fac.TakePower(power);

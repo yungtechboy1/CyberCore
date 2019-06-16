@@ -17,7 +17,7 @@ import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Classes.New.Buff.BuffType;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Power;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.*;
@@ -36,7 +36,7 @@ public abstract class BaseClass {
     public boolean Prime = false;
     public int PrimeKey = 0;
     public int SwingTime = 20;
-    public HashMap<Integer, Power> Powers = new HashMap<>();
+    public HashMap<Integer, PowerAbstract> Powers = new HashMap<>();
     protected int MainID = 0;
     protected CyberCoreMain CCM;
     HashMap<Integer, Integer> Herbal = new HashMap<Integer, Integer>() {{
@@ -244,22 +244,22 @@ public abstract class BaseClass {
         return 0;
     }
 
-    public Collection<Power> getPowers() {
+    public Collection<PowerAbstract> getPowers() {
         return Powers.values();
     }
 
-    public Power getPower(PowerEnum key) {
+    public PowerAbstract getPower(PowerEnum key) {
         return Powers.get(key.ordinal());
     }
 
     public abstract Object RunPower(PowerEnum powerid, Object... args);
 
-    public void addPower(Power power) {
+    public void addPower(PowerAbstract power) {
         Powers.put(power.getType().ordinal(), power);
     }
-//        Power p = Powers.get(powerid);
+//        PowerAbstract p = Powers.get(powerid);
 //        if(p == null || args.length != 3 ){
-//            CCM.getLogger().error("No Power found or Incorrect Args For MineLife E334221");
+//            CCM.getLogger().error("No PowerAbstract found or Incorrect Args For MineLife E334221");
 //            return -1;
 //        }
 //        if(powerid == 1 && p instanceof MineLifePower){
@@ -270,7 +270,7 @@ public abstract class BaseClass {
 //    }
 
     public boolean TryRunPower(PowerEnum powerid) {
-        Power p = getPower(powerid);
+        PowerAbstract p = getPower(powerid);
         if (p == null) return false;
         return p.CanRun(false);
     }
@@ -280,14 +280,14 @@ public abstract class BaseClass {
     }
 
     public void RunPower(PowerEnum powerid) {
-        Power p = getPower(powerid);
+        PowerAbstract p = getPower(powerid);
         if (p == null) return;
         p.usePower(getPlayer());
 
     }
 
-    public ArrayList<Power> PossiblePowers() {
-        ArrayList<Power> a = new ArrayList<Power>();
+    public ArrayList<PowerAbstract> PossiblePowers() {
+        ArrayList<PowerAbstract> a = new ArrayList<PowerAbstract>();
         return a;
     }
 
@@ -407,7 +407,7 @@ public abstract class BaseClass {
 
     public Event PowerHandelEvent(Event e) {
 //        Event ee = e;
-        for (Power p : getPowers()) {
+        for (PowerAbstract p : getPowers()) {
             p.handelEvent(e);
         }
         return e;
@@ -530,7 +530,7 @@ public abstract class BaseClass {
     }
 
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
-        for (Power p : Powers.values()) p.CustomEntityDamageByEntityEvent(event);
+        for (PowerAbstract p : Powers.values()) p.CustomEntityDamageByEntityEvent(event);
         float bd = event.getOriginalDamage();
         Buff b = getBuff(BuffType.Damage.ordinal());
         if (event.getEntity() instanceof Player && getBuff(BuffType.DamageToPlayer.ordinal()) != null) {
@@ -582,7 +582,7 @@ public abstract class BaseClass {
     public void tickPowers(int tick) {
 //        System.out.println("Tring to TICKING POWER "+getPowers().size());
 //        System.out.println("Tring to TICKING POWER "+getPowers());
-        for (Power p : getPowers()) {
+        for (PowerAbstract p : getPowers()) {
 //            System.out.println("TICKING POWER " + p.getName());
             try {
                 if (p.TickUpdate != -1) p.handleTick(tick);
@@ -604,7 +604,7 @@ public abstract class BaseClass {
         int pxp = XPRemainder(getXP());
         int pxpof = calculateRequireExperience(lvl + 1);
         int plvl = lvl;
-        f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl + TextFormat.GRAY+ " | " + TextFormat.AQUA+getPowerSourceType().name()+" Power : "+getPowerSourceCount() + " / "+ getMaxPowerSourceCount();
+        f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl + TextFormat.GRAY+ " | " + TextFormat.AQUA+getPowerSourceType().name()+" PowerAbstract : "+getPowerSourceCount() + " / "+ getMaxPowerSourceCount();
         return f;
     }
 
