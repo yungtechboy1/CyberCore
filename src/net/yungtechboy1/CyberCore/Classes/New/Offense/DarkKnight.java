@@ -6,8 +6,7 @@ import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
-import net.yungtechboy1.CyberCore.Classes.Power.DrakKnightPoisonousStench;
-import net.yungtechboy1.CyberCore.Classes.Power.TNTAirStrikePower;
+import net.yungtechboy1.CyberCore.Classes.Power.DarkKnightPoisonousStench;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -30,7 +29,7 @@ public class DarkKnight extends BaseClass {
     @Override
     public void SetPowers() {
 //        addPower(new TNTAirStrikePower(this));
-        addPower(new DrakKnightPoisonousStench(this));
+        addPower(new DarkKnightPoisonousStench(this));
     }
 //    public void SetPowers() {
 //        addPower(new HolyKnightHealPower(this));

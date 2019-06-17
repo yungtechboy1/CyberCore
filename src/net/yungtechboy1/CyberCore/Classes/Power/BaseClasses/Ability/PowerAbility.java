@@ -6,7 +6,7 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 
 public abstract class PowerAbility extends PowerAbstract implements PowerAbilityInterface {
 
-    private boolean Active = false;
+//    private boolean Active = false;
     private int DeActivatedTick = -1;
 
     public PowerAbility(BaseClass bc, int psc) {
@@ -34,18 +34,19 @@ public abstract class PowerAbility extends PowerAbstract implements PowerAbility
     }
 
     @Override
-    public boolean isActive() {
-        return Active;
+    public boolean CanRun(boolean force, Object... args) {
+        if (isActive()) return false;
+        return super.CanRun(force, args);
     }
 
-    @Override
-    public void setActive(boolean active) {
-        Active = active;
-    }
+//    @Override
+//    public void setActive(boolean active) {
+//        Active = active;
+//    }
 
-    public void activate() {
+    public final void activate() {
         if (isActive()) return;
-        Active = true;
+        setActive(true);
         DeActivatedTick = Server.getInstance().getTick() + getRunTimeTick();
         onActivate();
     }
@@ -55,10 +56,13 @@ public abstract class PowerAbility extends PowerAbstract implements PowerAbility
     @Override
     public void onTick(int tick) {
         //Only For Deactivation
+        System.out.println("POWER TICKKKKKK2");
         if (isActive()) {
+            System.out.println("POWER TICKKKKKK3");
             whileAbilityActive();
             if (tick >= DeActivatedTick) {
-                Active = false;
+                System.out.println("POWER TICKKKKKK444444444444444444444444444444444444444444444444444444444444444444444");
+                setActive(false);
                 DeActivatedTick = -1;
                 onAbilityDeActivate();
             }

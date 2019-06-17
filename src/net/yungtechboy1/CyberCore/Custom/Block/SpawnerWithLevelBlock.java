@@ -110,8 +110,8 @@ public class SpawnerWithLevelBlock extends BlockSolid {
             Server.getInstance().broadcastMessage("ENTITY NOT ALREADY CREATED!!!!");
             if (blockEntity != null) blockEntity.close();
             int sl = 0;//getSpawnerLevel(item);
-            int t = item.getNamedTag().getInt("TYPE");
-            if (sl == -1 || t == 0) {
+            int t = item.getNamedTag().getInt("type");
+            if ( t == 0) {
                 //Invalid Block
                 player.sendMessage("Error! Spawner is invalid! T:" + t + " SL:" + sl);
                 return false;
