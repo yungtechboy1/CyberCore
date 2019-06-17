@@ -19,11 +19,6 @@ public abstract class PowerAbilityHotBar extends PowerAbility implements PowerHo
     }
 
     @Override
-    public final void activate() {
-        super.activate();
-    }
-
-    @Override
     public InventoryTransactionEvent InventoryTransactionEvent(InventoryTransactionEvent e) {
         if(getLS() == LockedSlot.NA)return e;
         for (InventoryAction action : e.getTransaction().getActions()) {

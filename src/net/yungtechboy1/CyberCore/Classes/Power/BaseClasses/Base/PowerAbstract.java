@@ -19,6 +19,11 @@ import net.yungtechboy1.CyberCore.PlayerJumpEvent;
  * Created by carlt on 5/16/2019.
  */
 public abstract class PowerAbstract {
+    public void setActive(boolean active) {
+        Active = active;
+    }
+
+    private boolean Active = false;
     public BaseClass PlayerClass = null;
     public int TickUpdate = -1;
     public CoolDownTick Cooldown = null;
@@ -40,6 +45,10 @@ public abstract class PowerAbstract {
         initStages();
         initAfterCreation();
         PowerSourceCost = cost;
+    }
+
+    public boolean isActive() {
+        return Active;
     }
 
     public LockedSlot getLS() {

@@ -5,7 +5,10 @@ import cn.nukkit.item.ItemRedstone;
 import cn.nukkit.item.ItemSlimeball;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
+import com.sun.org.apache.bcel.internal.generic.BASTORE;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.CoolDownTick;
 import net.yungtechboy1.CyberCore.CorePlayer;
 
 public interface PowerHotBarInt {
@@ -49,6 +52,16 @@ public interface PowerHotBarInt {
 //        return e;
 //
 //    }
+default void updateHotbar(LockedSlot ls, CoolDownTick c, PowerAbstract p){
+    if(ls == LockedSlot.NA)return;
+    if (c == null || !c.isValid()) {
+        setPowerAvailable(p);
+        System.out.println("ACTIVE POWER");
+    } else {
+        System.out.println("UNNNNNNNNACTIVE POWER");
+        setPowerUnAvailable(p);
+    }
+}
 
 
     default void antiSpamCheck(PowerAbstract p) {

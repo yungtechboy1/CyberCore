@@ -44,14 +44,9 @@ public abstract class PowerHotBar extends PowerAbstract implements PowerHotBarIn
     boolean check = false;
     @Override
     public void onTick(int tick) {
-        if(getLS() == LockedSlot.NA)return;
-        if (Cooldown == null || !Cooldown.isValid()) {
-            setPowerAvailable(this);
-            System.out.println("ACTIVE POWER");
-        } else {
-            System.out.println("UNNNNNNNNACTIVE POWER");
-            setPowerUnAvailable(this);
-        }
+        System.out.println("POWER TICKKKKKK1");
+        super.onTick(tick);
+        updateHotbar(getLS(),Cooldown,this);
         check = !check;
         if (check) antiSpamCheck(this);
     }

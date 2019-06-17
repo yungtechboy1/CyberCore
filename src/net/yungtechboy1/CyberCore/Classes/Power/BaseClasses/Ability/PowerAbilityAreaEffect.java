@@ -17,6 +17,6 @@ public abstract class PowerAbilityAreaEffect extends PowerAbility {
 
     @Override
     public void onActivate() {
-        ActivatedLocation = getPlayer();
+        ActivatedLocation = getPlayer().clone();
     }
 }
