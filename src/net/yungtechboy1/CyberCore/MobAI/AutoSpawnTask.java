@@ -21,6 +21,7 @@ import net.yungtechboy1.CyberCore.entities.animal.walking.*;
 import net.yungtechboy1.CyberCore.entities.autospawn.IEntitySpawner;
 import net.yungtechboy1.CyberCore.entities.animal.walking.*;
 
+import java.io.File;
 import java.util.*;
 
 
@@ -35,7 +36,40 @@ public class AutoSpawnTask implements Runnable {
     private CyberCoreMain plugin = null;
 
     public AutoSpawnTask(CyberCoreMain plugin) {
-        this.pluginConfig = plugin.getConfig();
+        if(!new File(plugin.getDataFolder(),"autospawn.yml").exists()) {
+            this.pluginConfig = new Config(new File(plugin.getDataFolder(),"autospawn.yml"), Config.YAML);
+            this.pluginConfig.set("entities.worlds-spawn-disabled", "dummyWorld,dummyWorld2");
+            this.pluginConfig.set("max-spawns.bat", 0);
+            this.pluginConfig.set("max-spawns.blaze", 0);
+            this.pluginConfig.set("max-spawns.cave-spider", 0);
+            this.pluginConfig.set("max-spawns.chicken", 0);
+            this.pluginConfig.set("max-spawns.cow", 0);
+            this.pluginConfig.set("max-spawns.creeper", 0);
+            this.pluginConfig.set("max-spawns.donkey", 0);
+            this.pluginConfig.set("max-spawns.enderman", 0);
+            this.pluginConfig.set("max-spawns.ghast", 0);
+            this.pluginConfig.set("max-spawns.horse", 0);
+            this.pluginConfig.set("max-spawns.iron-golem", 0);
+            this.pluginConfig.set("max-spawns.mooshroom", 0);
+            this.pluginConfig.set("max-spawns.mule", 0);
+            this.pluginConfig.set("max-spawns.ocelot", 0);
+            this.pluginConfig.set("max-spawns.pig", 0);
+            this.pluginConfig.set("max-spawns.pig-zombie", 0);
+            this.pluginConfig.set("max-spawns.rabbit", 0);
+            this.pluginConfig.set("max-spawns.silverfish", 0);
+            this.pluginConfig.set("max-spawns.sheep", 0);
+            this.pluginConfig.set("max-spawns.skeleton", 0);
+            this.pluginConfig.set("max-spawns.skeleton-horse", 0);
+            this.pluginConfig.set("max-spawns.snow-golem", 0);
+            this.pluginConfig.set("max-spawns.spider", 0);
+            this.pluginConfig.set("max-spawns.wolf", 0);
+            this.pluginConfig.set("max-spawns.zombie", 0);
+            this.pluginConfig.set("max-spawns.zombie-horse", 0);
+            this.pluginConfig.set("max-spawns.zombie-villager", 0);
+            this.pluginConfig.save();
+        } else {
+            this.pluginConfig = new Config(new File(plugin.getDataFolder() + "autospawn.yml"), Config.YAML);
+        }
         this.plugin = plugin;
 
         prepareMaxSpawns();

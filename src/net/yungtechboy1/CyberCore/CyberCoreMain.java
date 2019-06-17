@@ -218,6 +218,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
             saveResource("ranks.yml");
         }
         MainConfig = getConfig();
+
+        getServer().getScheduler().scheduleRepeatingTask(this, new AutoSpawnTask(this), 5);
 //        CustomGlobalBlockPalette.registerMapping((entry.id << 4) | entry.data);
 
 
@@ -419,7 +421,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        MobPlugin.registerEntities();
 //        MobPlugin.registerItems();
-        //getServer().getScheduler().scheduleRepeatingTask(new AutoSpawnTask(this), 5, true);
     }
 
 
