@@ -23,14 +23,14 @@ public class SpawnerShopData {
     }
 
     public Item getItem(boolean pretty){
-        Block b =new SpawnerWithLevelBlock(SpawnerType.getID());
+//        Block b =new SpawnerWithLevelBlock(SpawnerType.getID());
 //        b.
 //        Item i =new ItemBlock(b);
         Item i = new CustomItemBlockSpawnerWithLevelBlock(SpawnerType.getID());
-        i.setNamedTag(new CompoundTag().putInt("TYPE",getSpawnerType().getID()));
+//        i.setNamedTag(new CompoundTag().putInt("TYPE",getSpawnerType().getID()));
 //        i.setCustomName(b.getName());
         if(pretty)return i;
-        i.setLore(TextFormat.AQUA+"Spawner Type: "+TextFormat.GREEN+b.getName(),
+        i.setLore(TextFormat.AQUA+"Spawner Type: "+TextFormat.GREEN+i.getBlock().getName(),
                 TextFormat.AQUA+"Spawner Price: "+TextFormat.GREEN+Price,
                 TextFormat.AQUA+"Level Price: "+TextFormat.GREEN+LevelPrice,
                 TextFormat.AQUA+"XP Price: "+TextFormat.GREEN+XPPrice,
