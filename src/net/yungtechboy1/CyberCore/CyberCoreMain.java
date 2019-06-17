@@ -212,10 +212,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     @Override
     public void onEnable() {
-        new File(getDataFolder().toString()).mkdirs();
-        saveResource("config.yml");
-        saveResource("ranks.yml");
-
+        if(!getDataFolder().exists()) {
+            getDataFolder().mkdirs();
+            saveResource("config.yml");
+            saveResource("ranks.yml");
+        }
         MainConfig = getConfig();
 //        CustomGlobalBlockPalette.registerMapping((entry.id << 4) | entry.data);
 
@@ -279,9 +280,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         ClassFactory = new ClassFactory(this);
         WarpManager = new WarpManager(this);
-
-
-        MainConfig = new Config(new File(getDataFolder(), "config.yml"));
         //Save = new SaveMain(this);
         SQLSaveManager = new SQLManager(this);
 
@@ -335,6 +333,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         job = new Config(new File(this.getDataFolder(), "job.yml"), Config.YAML);
         cooldowns = new Config(new File(this.getDataFolder(), "cooldowns.yml"), Config.YAML);
         getLogger().info(TextFormat.GREEN + "Initializing Cyber Essentials");
+
+        BBM = new BossBarManager(this);
 
 //        PasswordFactoy = new PasswordFactoy(this);
 //
@@ -419,9 +419,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        MobPlugin.registerEntities();
 //        MobPlugin.registerItems();
-        getServer().getScheduler().scheduleRepeatingTask(new AutoSpawnTask(this), 5, true);
-
-        BBM = new BossBarManager(this);
+        //getServer().getScheduler().scheduleRepeatingTask(new AutoSpawnTask(this), 5, true);
     }
 
 
