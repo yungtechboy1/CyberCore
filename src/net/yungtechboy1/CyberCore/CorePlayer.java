@@ -12,8 +12,8 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityRegainHealthEvent;
-import cn.nukkit.event.player.*;
 import cn.nukkit.event.player.PlayerKickEvent;
+import cn.nukkit.event.player.*;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.inventory.Inventory;
@@ -48,6 +48,7 @@ import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.DarkKnight;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
 import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.KnightSandShieldPower;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.DarkKnightPoisonousStench;
 import net.yungtechboy1.CyberCore.Custom.CustomCraftingTransaction;
@@ -475,10 +476,11 @@ public class CorePlayer extends Player {
 
     public boolean attack(CustomEntityDamageEvent source) {
         getServer().getPluginManager().callEvent(source);
-        if(source.isCancelled())return false;
-        setHealth(getHealth()-source.getFinalDamage());
+        if (source.isCancelled()) return false;
+        setHealth(getHealth() - source.getFinalDamage());
         return true;
     }
+
     @Override
     public boolean attack(EntityDamageEvent source) {
         ArrayList<EntityDamageEvent.DamageCause> da = new ArrayList<>();
@@ -685,26 +687,33 @@ public class CorePlayer extends Player {
                     MobEquipmentPacket mobEquipmentPacket = (MobEquipmentPacket) packet;
 
                     //TODO Make into a Custom Event!
-                    if(getPlayerClass() != null){
-                        if(getPlayerClass() instanceof Knight){
-                            Knight k = (Knight)getPlayerClass();
+                    if (getPlayerClass() != null) {
+                        if (getPlayerClass() instanceof Knight) {
+                            Knight k = (Knight) getPlayerClass();
                             KnightSandShieldPower kssp = (KnightSandShieldPower) k.getPower(PowerEnum.KnightSandShield);
-                            if(mobEquipmentPacket.hotbarSlot == kssp.getLS().getSlot()){
+                            if (mobEquipmentPacket.hotbarSlot == kssp.getLS().getSlot()) {
                                 kssp.initPowerRun();
                                 kssp.onTick(getServer().getTick());
-                                getInventory().setHeldItemIndex(getInventory().getHeldItemIndex(),true);
+                                getInventory().setHeldItemIndex(getInventory().getHeldItemIndex(), true);
                                 return;
                             }
-                        }else if(getPlayerClass() instanceof DarkKnight){
-                            DarkKnight k = (DarkKnight)getPlayerClass();
+                        } else if (getPlayerClass() instanceof DarkKnight) {
+                            DarkKnight k = (DarkKnight) getPlayerClass();
                             DarkKnightPoisonousStench kssp = (DarkKnightPoisonousStench) k.getPower(PowerEnum.DarkKnightPosionousStench);
-                            if(mobEquipmentPacket.hotbarSlot == kssp.getLS().getSlot()){
+                            if (mobEquipmentPacket.hotbarSlot == kssp.getLS().getSlot()) {
 //                                System.out.println("SELLLLLLLLLLLLLLLLLLEEEEECCCTTTTTTTTTTTEEEEEEEEDDDDDDDDDD");
-                                kssp.skip = true;
+//                                kssp.skip = true;
                                 kssp.initPowerRun();
-                                kssp.onTick(getServer().getTick());
-                                getInventory().setHeldItemIndex(getInventory().getHeldItemIndex(),true);
+//                                kssp.onTick(getServer().getTick());
+                                getInventory().setHeldItemIndex(getInventory().getHeldItemIndex(), true);
                                 return;
+                            }
+                        } else {
+                            for (PowerAbstract p : getPlayerClass().getPowers()) {
+                                if (p.getLS().getSlot() == mobEquipmentPacket.hotbarSlot) {
+                                    p.initPowerRun();
+                                    getInventory().setHeldItemIndex(getInventory().getHeldItemIndex(), true);
+                                }
                             }
                         }
                     }
@@ -834,9 +843,10 @@ public class CorePlayer extends Player {
                                                 }
                                             } else if (inventory.getItemInHand().equals(useItemData.itemInHand)) {
                                                 Item i = inventory.getItemInHand();
-                                                System.out.println("wwwwwwwwwwwwww > GOOD " + i + "||"+i.getClass());
+                                                System.out.println("wwwwwwwwwwwwww > GOOD " + i + "||" + i.getClass());
                                                 Item oldItem = i.clone();
-                                                if(i instanceof ItemBlock)System.out.println("YYYYYYYYYYYYYYYYEEEEEEE");
+                                                if (i instanceof ItemBlock)
+                                                    System.out.println("YYYYYYYYYYYYYYYYEEEEEEE");
                                                 //TODO: Implement adventure mode checks
                                                 if ((i = this.level.useItemOn(blockVector.asVector3(), i, face, useItemData.clickPos.x, useItemData.clickPos.y, useItemData.clickPos.z, this)) != null) {
                                                     System.out.println("wwwwwwwwwwwwww > GOOD2");
@@ -846,9 +856,10 @@ public class CorePlayer extends Player {
                                                         inventory.sendHeldItem(this.getViewers().values());
                                                     }
                                                     break packetswitch;
-                                                }else{
-                                                    if(i instanceof ItemBlock)System.out.println("YYYYYYYYYYYYYYYYEEEEEE222222222222E");
-                                                    System.out.println("ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"+i);
+                                                } else {
+                                                    if (i instanceof ItemBlock)
+                                                        System.out.println("YYYYYYYYYYYYYYYYEEEEEE222222222222E");
+                                                    System.out.println("ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR" + i);
                                                 }
                                             }
                                         }
@@ -1302,7 +1313,7 @@ public class CorePlayer extends Player {
                             break;
                         case PlayerActionPacket.ACTION_JUMP:
                             sendMessage("JUMMMPPPPP!!!" + getDirection());
-                            if(PlayerClass != null)PlayerClass.HandelEvent(new PlayerJumpEvent(this));
+                            if (PlayerClass != null) PlayerClass.HandelEvent(new PlayerJumpEvent(this));
                             getServer().getPluginManager().callEvent(new PlayerJumpEvent(this));
 //                            addMovement(0,2.5,0,0,0,0);
 //                            switch (getDirection()) {
@@ -1928,7 +1939,7 @@ public class CorePlayer extends Player {
         if (source.isCancelled()) {
             return;
         }
-        if(getHealth() >= 20)return;
+        if (getHealth() >= 20) return;
         this.setHealth(this.getHealth() + source.getAmount());
     }
 
@@ -1937,7 +1948,7 @@ public class CorePlayer extends Player {
         Attribute attr = Attribute.getAttribute(Attribute.MAX_HEALTH).setMaxValue(this.getAbsorption() % 2 != 0 ? this.getMaxHealth() + 1 : this.getMaxHealth()).setValue(health > 0 ? (health < getMaxHealth() ? health : getMaxHealth()) : 0);
 
 //        System.out.println("PRINGING A LINE HEEERRRRRRRRRR");
-    if (this.spawned) {
+        if (this.spawned) {
 //        System.out.println("PRINGING A LINE SEEEEEEEEEEEEEEEEEEEEE");
             UpdateAttributesPacket pk = new UpdateAttributesPacket();
             pk.entries = new Attribute[]{attr};
@@ -1955,12 +1966,12 @@ public class CorePlayer extends Player {
     protected void processLogin() {
         super.processLogin();
         PlayerFood pf = getFoodData();
-        foodData = new CustomPlayerFood(this,pf.getLevel(),pf.getFoodSaturationLevel());
+        foodData = new CustomPlayerFood(this, pf.getLevel(), pf.getFoodSaturationLevel());
 
     }
 
     public void tickPowerSource(int tick) {
-        if(PlayerClass != null)PlayerClass.tickPowerSource(tick);
+        if (PlayerClass != null) PlayerClass.tickPowerSource(tick);
         //TODO
     }
 //        if (!this.server.isWhitelisted((this.getName()).toLowerCase())) {

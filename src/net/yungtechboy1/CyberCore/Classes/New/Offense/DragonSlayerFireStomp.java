@@ -1,29 +1,31 @@
-package net.yungtechboy1.CyberCore.Classes.Power;
+package net.yungtechboy1.CyberCore.Classes.New.Offense;
 
+import cn.nukkit.block.Block;
+import cn.nukkit.block.BlockFire;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.event.block.BlockIgniteEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.item.ItemBlock;
 import cn.nukkit.level.particle.ItemBreakParticle;
-import cn.nukkit.level.particle.SpellParticle;
 import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.math.Vector3;
-import cn.nukkit.utils.BlockColor;
-import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBar;
+import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockFire;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Events.Custom.PluginBlockSetEvent;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
 import java.util.ArrayList;
 
-public class DragonJumper extends PowerHotBar {
+public class DragonSlayerFireStomp extends PowerHotBar {
     private boolean WaitingOnFall = false;
 
-    public DragonJumper(BaseClass b) {
-        super(b, 100, 1, LockedSlot.SLOT_9);
-        //TODO make this so that this power Runs Automatically!
+    public DragonSlayerFireStomp(DragonSlayer b) {
+        super(b, 100, 1, LockedSlot.SLOT_8);
         TickUpdate = 10;
     }
 
@@ -40,9 +42,12 @@ public class DragonJumper extends PowerHotBar {
 
     @Override
     public EntityDamageEvent EntityDamageEvent(EntityDamageEvent e) {
+        System.out.println("BNOOOOOO");
         if (WaitingOnFall) {
+            System.out.println("BNOOOOOO"+e.getCause());
             if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
                 e.setCancelled();
+                spawnParticles();
                 WaitingOnFall = false;
             }
         }
@@ -56,17 +61,17 @@ public class DragonJumper extends PowerHotBar {
 
     @Override
     public PowerEnum getType() {
-        return PowerEnum.DragonJumper;
+        return PowerEnum.FireStomp;
     }
 
     public Object usePower(Object... args) {
         BlockFace bf = getPlayer().getDirection();
-//        Vector3 m = bf.getUnitVector();
-        Vector3 mm = getPlayer().getMotion().add(0, 1, 0).multiply(1.5);
+        Vector3 m = bf.getUnitVector();
+        Vector3 mm = new Vector3(0, 1, 0).multiply(3).add(m);
 //        getPlayer().addMovement(mm.x,mm.y,mm.z,0,0,0);
 //        getPlayer().addMotion(mm.x,mm.y,mm.z);
         getPlayer().setMotion(mm);
-        getPlayer().sendMessage("Drangon Jumper Activated!!!!!!!!!!!!!!!!!" + mm);
+        getPlayer().sendMessage("Fire Stomp Activated!!!!!!!!!!!!!!!!!" + mm);
         WaitingOnFall = true;
         return null;
     }
@@ -88,15 +93,19 @@ public class DragonJumper extends PowerHotBar {
 
     @Override
     public String getName() {
-        return "Dragon Jumper";
+        return "Fire Stomp";
     }
 
     @Override
     public void onTick(int tick) {
-        if (WaitingOnFall) {
-            if (getPlayer().isOnGround() || getPlayer().isSwimming()) {
-                WaitingOnFall = false;
+        if (WaitingOnFall && ((getPlayer().isOnGround()) || getPlayer().getLevel().getBlock(getPlayer().down()).getId() != 0)|| getPlayer().isSwimming()) {
+            System.out.println("CLEANNNNNNNNNNNNNINGNNNGGG");
+            if (getPlayer().isSwimming()) {
+//                WaitingOnFall =false;
+            } else if (getPlayer().isOnGround()) {
+//                spawnParticles();
             }
+            WaitingOnFall = false;
         }
         super.onTick(tick);
     }
@@ -105,10 +114,25 @@ public class DragonJumper extends PowerHotBar {
         return getPlayer().getLevel().getNearbyEntities(new SimpleAxisAlignedBB(getPlayer().add(-getMaxSize(), -5, -getMaxSize()), getPlayer().add(getMaxSize(), 5, getMaxSize())));
     }
 
+    private void onFall() {
+
+    }
+
     private void spawnParticles() {
         ArrayList<Vector3> vv = getAffectedVectors();
         for (Vector3 v : vv) {
-            getPlayer().getLevel().addParticle(new ItemBreakParticle(v.add(0, 1, 0), new ItemBlock(getPlayer().getLevel().getBlock(v.add(0,-1,0)))));
+            Block f = new BlockFire();
+            f.setComponents(v.x,v.y,v.z);
+            f.setLevel(getPlayer().getLevel());
+            getPlayer().getLevel().addParticle(new ItemBreakParticle(v.add(0, 1, 0), new ItemBlock(getPlayer().getLevel().getBlock(v.add(0, -1, 0)))));
+            BlockIgniteEvent e = new BlockIgniteEvent(f, null, getPlayer(), BlockIgniteEvent.BlockIgniteCause.FLINT_AND_STEEL);
+            if(v.distance(getPlayer()) > 10)continue;
+            getPlayer().getServer().getPluginManager().callEvent(e);
+//            CyberCoreMain.getInstance().HandleCyberEvent(e);
+            if (!e.isCancelled()) {
+                getPlayer().getLevel().setBlock(v,new CustomBlockFire(),true,true);
+//                getPlayer().getLevel().setBlockDataAt(v,new BlockFire(),true,true);
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
+import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.event.inventory.InventoryClickEvent;
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
@@ -109,6 +110,17 @@ public class MasterListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void EntityInventoryChangeEvent(EntityInventoryChangeEvent event) {
+        Entity e = event.getEntity();
+        if (e instanceof CorePlayer) {
+            CorePlayer cp = (CorePlayer) e;
+            if (cp.getPlayerClass() != null) {
+                cp.getPlayerClass().HandelEvent(event);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void EntityDamageEvent(EntityDamageEvent event) {
         Entity e = event.getEntity();
         if (e instanceof CorePlayer) {
             CorePlayer cp = (CorePlayer) e;

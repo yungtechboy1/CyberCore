@@ -5,18 +5,25 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
-import net.yungtechboy1.CyberCore.Classes.Power.*;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.DragonJumper;
+import net.yungtechboy1.CyberCore.Classes.Power.TNTAirStrikePower;
+import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
-public abstract class DragonSlayer extends BaseClass {
-    public DragonSlayer(CyberCoreMain main, CorePlayer player, ClassType rank, ConfigSection data) {
-        super(main, player, rank, data);
+public class DragonSlayer extends BaseClass {
+    public DragonSlayer(CyberCoreMain main, CorePlayer player, ConfigSection data) {
+        super(main, player, ClassType.DragonSlayer, data);
     }
 
-    public DragonSlayer(CyberCoreMain main, CorePlayer player, ClassType rank) {
-        super(main, player, rank);
+    public DragonSlayer(CyberCoreMain main, CorePlayer player) {
+        super(main, player, ClassType.DragonSlayer);
+    }
+
+    @Override
+    public PrimalPowerType getPowerSourceType() {
+        return PrimalPowerType.Earth;
     }
 
     @Override
@@ -26,13 +33,16 @@ public abstract class DragonSlayer extends BaseClass {
 
     @Override
     public void SetPowers() {
-        addPower(new TNTAirStrikePower(this));
+
+        addPower(new DragonSlayerFireStomp(this));
+        addPower(new DragonJumper(this));
+//        addPower(new TNTAirStrikePower(this));
     }
 
     @Override
     public void initBuffs() {
-        addBuff(new Buff(Buff.BuffType.Jump,3f));
-        addDeBuff(new DeBuff(Buff.BuffType.Movement,.9f));
+        addBuff(new Buff(Buff.BuffType.Jump, 3f));
+        addDeBuff(new DeBuff(Buff.BuffType.Movement, .9f));
 //        addBuff(new Buff(Buff.BuffType.Armor,1.3f));
 //        addBuff(new Buff(Buff.BuffType.Armor,1.3f));
 //        addBuff(new Buff(Buff.BuffType.Health,4f));
@@ -47,7 +57,7 @@ public abstract class DragonSlayer extends BaseClass {
 
     @Override
     public String getDisplayName() {
-        return TextFormat.RED+"\\\\"+getName()+"//";
+        return TextFormat.RED + "\\\\" + getName() + "//";
     }
 
     @Override

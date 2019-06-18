@@ -23,6 +23,7 @@ import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Bans.Ban;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PowerSourceTaskAsync;
 import net.yungtechboy1.CyberCore.Commands.*;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
@@ -31,6 +32,7 @@ import net.yungtechboy1.CyberCore.Commands.Homes.DelHome;
 import net.yungtechboy1.CyberCore.Commands.Homes.HomeManager;
 import net.yungtechboy1.CyberCore.Commands.Homes.SetHome;
 import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
+import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockFire;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
@@ -39,6 +41,8 @@ import net.yungtechboy1.CyberCore.Custom.CustomInventoryTransactionPacket;
 import net.yungtechboy1.CyberCore.Custom.Item.*;
 import net.yungtechboy1.CyberCore.Data.ServerSqlite;
 import net.yungtechboy1.CyberCore.Data.UserSQL;
+import net.yungtechboy1.CyberCore.Events.Custom.CyberEvent;
+import net.yungtechboy1.CyberCore.Events.Custom.CyberPlayerEvent;
 import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
 import net.yungtechboy1.CyberCore.Factory.ClassFactory;
 import net.yungtechboy1.CyberCore.Factory.Shop.ShopFactory;
@@ -145,7 +149,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     Vector3 p1;
     Vector3 p2;
     CustomRecipeCraftingManager CRM;
-//    private EconManager ECON;
+    //    private EconManager ECON;
     private PowerSourceTaskAsync PowerSourceTask;
 
     public static CyberCoreMain getInstance() {
@@ -164,7 +168,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     }
 
+    public void ReloadBlockList(int id) {
+        ReloadBlockList(id, null);
+    }
     public void ReloadBlockList(int id, Class c) {
+        if(c == null)c = Block.list[id];
         if (c != null) {
             Block block;
             try {
@@ -239,12 +247,14 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         ReloadBlockList(Block.ENCHANTING_TABLE, BlockEnchantingTable.class);
 
 //        Item.customblocklist[Item.MONSTER_SPAWNER] = CustomItemBlockSpawnerWithLevelBlock.class;
+        Block.list[Block.FIRE] = CustomBlockFire.class;
         Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
-        BlockEntity.registerBlockEntity(BlockEntity.MOB_SPAWNER,SpawnerWithLevelBlockEntity.class);
+        BlockEntity.registerBlockEntity(BlockEntity.MOB_SPAWNER, SpawnerWithLevelBlockEntity.class);
         //Must be registered after custom block
-//        Item.registerCustomItemBlock(Item.MONSTER_SPAWNER,CustomItemBlockSpawnerWithLevelBlock.class);
+        Item.registerCustomItemBlock(Item.MONSTER_SPAWNER, CustomItemBlockSpawnerWithLevelBlock.class);
 
         ReloadBlockList(Block.MONSTER_SPAWNER, SpawnerWithLevelBlock.class);
+        ReloadBlockList(Block.FIRE, CustomBlockFire.class);
         Item.list[Item.BOOK] = CItemBook.class;
         Item.list[Item.ENCHANT_BOOK] = CItemBookEnchanted.class;
         Item.list[BlockID.TNT] = CustomItemTNT.class;
@@ -446,6 +456,17 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
             result.put(unit, diff);
         }
         return result;
+    }
+
+    public void HandleCyberEvent(CyberEvent e) {
+        if (e instanceof CyberPlayerEvent) {
+            CorePlayer cp = ((CyberPlayerEvent) e).getCP();
+            BaseClass bc = cp.getPlayerClass();
+            if (bc != null) {
+                bc.HandelEvent(e);
+            }
+        }
+        getServer().getPluginManager().callEvent(e);
     }
 
     public ArrayList<Player> getAllPlayerNamesCloseTo(String name) {
