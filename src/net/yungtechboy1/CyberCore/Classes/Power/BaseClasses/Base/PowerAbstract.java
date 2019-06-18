@@ -1,6 +1,7 @@
 package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base;
 
 import cn.nukkit.event.Event;
+import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.event.inventory.InventoryClickEvent;
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
@@ -29,6 +30,7 @@ public abstract class PowerAbstract {
     private int PowerSuccessChance = 100;
     private int _lasttick = -1;
     private double PowerSourceCost = 0;
+
     public PowerAbstract(BaseClass b, int psc) {
         this(b, psc, 0);
     }
@@ -85,6 +87,8 @@ public abstract class PowerAbstract {
 
     //TODO IMPLEMENT
     public Event handelEvent(Event event) {
+        if (event instanceof EntityDamageEvent)
+            return EntityDamageEvent((EntityDamageEvent) event);
         if (event instanceof CustomEntityDamageByEntityEvent)
             return CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
         if (event instanceof PlayerJumpEvent)
@@ -99,6 +103,10 @@ public abstract class PowerAbstract {
         return event;
     }
 
+
+    public EntityDamageEvent EntityDamageEvent(EntityDamageEvent e) {
+        return e;
+    }
 
     public InventoryClickEvent InventoryClickEvent(InventoryClickEvent e) {
         return e;

@@ -34,7 +34,7 @@ public class DragonSlayer extends BaseClass {
     @Override
     public void SetPowers() {
 
-//        addPower(new DragonSlayerFireStomp(this));
+        addPower(new DragonSlayerFireStomp(this));
         addPower(new DragonJumper(this));
 //        addPower(new TNTAirStrikePower(this));
     }

@@ -19,6 +19,8 @@ import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Classes.New.Buff.BuffType;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBarInt;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.*;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
@@ -72,6 +74,12 @@ public abstract class BaseClass {
     private Ability ActiveAbility;
     private HashMap<BuffType, Buff> Buffs = new HashMap<>();
     private HashMap<BuffType, DeBuff> DeBuffs = new HashMap<>();
+
+    public ArrayList<LockedSlot> getLockedSlots() {
+        return LockedSlots;
+    }
+
+    private ArrayList<LockedSlot> LockedSlots = new ArrayList<>();
     private double PowerSourceCount = 0;
 
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank, ConfigSection data) {
@@ -255,6 +263,9 @@ public abstract class BaseClass {
     public abstract Object RunPower(PowerEnum powerid, Object... args);
 
     public void addPower(PowerAbstract power) {
+        if(power instanceof PowerHotBarInt){
+            LockedSlots.add(power.getLS());
+        }
         Powers.put(power.getType().ordinal(), power);
     }
 //        PowerAbstract p = Powers.get(powerid);

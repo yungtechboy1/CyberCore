@@ -70,6 +70,16 @@ default void updateHotbar(LockedSlot ls, CoolDownTick c, PowerAbstract p){
         boolean k = false;
         for (int slot = 0; slot < p.getPlayer().getInventory().getSize(); slot++) {
             if (slot == p.getLS().getSlot()) continue;
+            boolean g = false;
+            for(LockedSlot ls : p.PlayerClass.getLockedSlots()){
+                if(ls.getSlot() ==slot) {
+                    g = true;
+                    break;
+                }
+            }
+            if(g) continue;
+            //Checking other Powers
+//            if()
             Item i = p.getPlayer().getInventory().getItem(slot);
             if (i.getNamedTag() != null) {
                 if (i.getNamedTag().contains(getPowerHotBarItemNamedTagKey)) {
@@ -79,7 +89,7 @@ default void updateHotbar(LockedSlot ls, CoolDownTick c, PowerAbstract p){
             }
             slot++;
         }
-        if (k) p.getPlayer().kick("Please do not spam system!");
+//        if (k) p.getPlayer().kick("Please do not spam system!");
     }
     default void setPowerAvailable(PowerAbstract p) {
 
@@ -93,9 +103,11 @@ default void updateHotbar(LockedSlot ls, CoolDownTick c, PowerAbstract p){
 
 
     default Item addNamedTag(PowerAbstract p , Item i, String key, String val) {
-        if (p.Cooldown == null) {
+        if (p.Cooldown == null || !p.Cooldown.isValid()) {
+            i.setCustomName(TextFormat.GREEN+"Power: "+p.getDispalyName());
             i.setLore(TextFormat.GREEN + "Ready to Use", TextFormat.GREEN+"Costs: "+p.getPowerSourceCost()+" "+ p.PlayerClass.getPowerSourceType().name()+" ");
         } else {
+            i.setCustomName(TextFormat.RED+"Power: "+p.getDispalyName());
             i.setLore(p.Cooldown.toString(), TextFormat.GREEN+"Costs: "+p.getPowerSourceCost()+" "+ p.PlayerClass.getPowerSourceType().name()+" ");
         }
         CompoundTag ct = i.getNamedTag();
