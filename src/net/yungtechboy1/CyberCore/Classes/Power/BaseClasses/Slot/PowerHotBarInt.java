@@ -52,6 +52,7 @@ public interface PowerHotBarInt {
 //        return e;
 //
 //    }
+    boolean canUpdateHotBar(int tick);
 default void updateHotbar(LockedSlot ls, CoolDownTick c, PowerAbstract p){
     if(ls == LockedSlot.NA)return;
     if (c == null || !c.isValid()) {
