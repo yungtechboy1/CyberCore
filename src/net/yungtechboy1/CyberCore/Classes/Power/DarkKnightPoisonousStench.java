@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
+import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
@@ -15,14 +16,15 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability.PowerAbility
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability.PowerAbilityHotBarAreaEffect;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 import java.util.ArrayList;
 
-public class DrakKnightPoisonousStench extends PowerAbilityHotBarAreaEffect {
+public class DarkKnightPoisonousStench extends PowerAbilityHotBarAreaEffect {
 
 
-    public DrakKnightPoisonousStench(DarkKnight bc) {
+    public DarkKnightPoisonousStench(DarkKnight bc) {
         super(bc, 100, LockedSlot.SLOT_9,30);
         TickUpdate = 20;//1 Secs
     }
@@ -34,7 +36,7 @@ public class DrakKnightPoisonousStench extends PowerAbilityHotBarAreaEffect {
     private void spawnParticles(){
         ArrayList<Vector3> vv = getAffectedVectors();
         for (Vector3 v : vv) {
-            getPlayer().getLevel().addParticle(new InkParticle(v));
+            getPlayer().getLevel().addParticle(new InkParticle(v.add(0,1,0)));
         }
     }
 
@@ -47,7 +49,16 @@ public class DrakKnightPoisonousStench extends PowerAbilityHotBarAreaEffect {
 
     @Override
     public void whileAbilityActive() {
+        spawnParticles();
         for(Entity e: getEntitiesAround()){
+            if(e instanceof CorePlayer){
+                CorePlayer cp = ((CorePlayer)e);
+                if(cp.getPlayerClass() != null){
+                    if(cp.getPlayerClass() instanceof DarkKnight)continue;
+                }
+
+            }
+            if(e == getPlayer())continue;
             e.attack(new EntityDamageByEntityEvent(getPlayer(),e, EntityDamageEvent.DamageCause.MAGIC,1f));
         }
     }
@@ -61,6 +72,11 @@ public class DrakKnightPoisonousStench extends PowerAbilityHotBarAreaEffect {
             }
         }
         return v;
+    }
+
+    @Override
+    public int getRunTimeTick() {
+        return 30*20;
     }
 
     private int getMaxSize() {

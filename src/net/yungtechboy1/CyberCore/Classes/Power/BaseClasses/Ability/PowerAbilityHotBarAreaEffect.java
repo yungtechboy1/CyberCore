@@ -8,9 +8,19 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBarInt;
+import net.yungtechboy1.CyberCore.CoolDownTick;
+
+import java.util.concurrent.locks.Lock;
 
 //todo
 public abstract class PowerAbilityHotBarAreaEffect extends PowerAbilityAreaEffect implements PowerHotBarInt {
+    public int lastHotBarUpdate = -1;
+
+    public boolean canUpdateHotBar(int tick){
+        return (tick > lastHotBarUpdate+10);
+    }
+
+
     public PowerAbilityHotBarAreaEffect(BaseClass b, int psc, LockedSlot ls, double cost) {
         super(b, psc, cost);
         TickUpdate = 20;
@@ -43,17 +53,17 @@ public abstract class PowerAbilityHotBarAreaEffect extends PowerAbilityAreaEffec
     }
 
 
+
+   public boolean skip = false;
     boolean check = false;
     @Override
     public void onTick(int tick) {
-        if(getLS() == LockedSlot.NA)return;
-        if (Cooldown == null || !Cooldown.isValid()) {
-            setPowerAvailable(this);
-            System.out.println("ACTIVE POWER");
-        } else {
-            System.out.println("UNNNNNNNNACTIVE POWER");
-            setPowerUnAvailable(this);
+        System.out.println("POWER TICKKKKKK1");
+        if(skip){
+            super.onTick(tick);
+            skip = false;
         }
+        if(canUpdateHotBar(tick))updateHotbar(getLS(),Cooldown,this);
         check = !check;
         if (check) antiSpamCheck(this);
     }

@@ -45,9 +45,11 @@ import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.BuffOrigin;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.DarkKnight;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
 import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.KnightSandShieldPower;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.DarkKnightPoisonousStench;
 import net.yungtechboy1.CyberCore.Custom.CustomCraftingTransaction;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
@@ -688,6 +690,17 @@ public class CorePlayer extends Player {
                             Knight k = (Knight)getPlayerClass();
                             KnightSandShieldPower kssp = (KnightSandShieldPower) k.getPower(PowerEnum.KnightSandShield);
                             if(mobEquipmentPacket.hotbarSlot == kssp.getLS().getSlot()){
+                                kssp.initPowerRun();
+                                kssp.onTick(getServer().getTick());
+                                getInventory().setHeldItemIndex(getInventory().getHeldItemIndex(),true);
+                                return;
+                            }
+                        }else if(getPlayerClass() instanceof DarkKnight){
+                            DarkKnight k = (DarkKnight)getPlayerClass();
+                            DarkKnightPoisonousStench kssp = (DarkKnightPoisonousStench) k.getPower(PowerEnum.DarkKnightPosionousStench);
+                            if(mobEquipmentPacket.hotbarSlot == kssp.getLS().getSlot()){
+//                                System.out.println("SELLLLLLLLLLLLLLLLLLEEEEECCCTTTTTTTTTTTEEEEEEEEDDDDDDDDDD");
+                                kssp.skip = true;
                                 kssp.initPowerRun();
                                 kssp.onTick(getServer().getTick());
                                 getInventory().setHeldItemIndex(getInventory().getHeldItemIndex(),true);

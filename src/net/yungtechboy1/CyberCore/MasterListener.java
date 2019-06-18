@@ -11,8 +11,13 @@ import cn.nukkit.event.inventory.InventoryClickEvent;
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.event.player.*;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.DarkKnight;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
+import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.KnightSandShieldPower;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBarInt;
+import net.yungtechboy1.CyberCore.Classes.Power.DarkKnightPoisonousStench;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 
 import java.util.HashMap;
@@ -49,6 +54,29 @@ public class MasterListener implements Listener {
     }
 
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void PlayerDropItemEvent(PlayerDropItemEvent event) {
+        CorePlayer cp  = (CorePlayer)event.getPlayer();
+        if(cp.getPlayerClass() != null){
+        if(cp.getPlayerClass() instanceof Knight){
+            Knight k = (Knight)cp.getPlayerClass();
+            KnightSandShieldPower kssp = (KnightSandShieldPower) k.getPower(PowerEnum.KnightSandShield);
+            if(cp.getInventory().getHeldItemIndex() == kssp.getLS().getSlot()){
+                cp.sendMessage(TextFormat.RED+"Error! you can not drop Power Items");
+                event.setCancelled();
+                return;
+            }
+        }else if(cp.getPlayerClass() instanceof DarkKnight){
+            DarkKnight k = (DarkKnight)cp.getPlayerClass();
+            DarkKnightPoisonousStench kssp = (DarkKnightPoisonousStench) k.getPower(PowerEnum.DarkKnightPosionousStench);
+            if(cp.getInventory().getHeldItemIndex() == kssp.getLS().getSlot()){
+                cp.sendMessage(TextFormat.RED+"Error! you can not drop Power Items");
+                event.setCancelled();
+                return;
+            }
+        }
+    }
+    }
     @EventHandler(priority = EventPriority.HIGHEST)
     public void InventoryClickEvent(InventoryClickEvent event) {
         Player p = event.getPlayer();
