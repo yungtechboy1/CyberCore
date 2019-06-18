@@ -164,7 +164,7 @@ public abstract class Commands {
 
     public Integer GetIntegerAtArgs(Integer x, Integer def) {
         //1            1
-        if (Args.length == 1) return def;
+        if (Args.length == 0) return def;
         if (Args.length < (x + 1)) return def;
         if (!isIntParsable(Args[x])) return def;
         return Integer.parseInt(Args[x]);

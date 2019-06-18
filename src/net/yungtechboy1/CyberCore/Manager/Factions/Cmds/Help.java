@@ -66,8 +66,7 @@ public class Help extends Commands {
         a.add("/f wartp - Teleport to the war zone");
         a.add("/f withdraw - Take money from faction's balance");
 
-        Integer p = GetIntegerAtArgs(1,1);
-        Main.plugin.log(p.toString());
+        Integer p = GetIntegerAtArgs(0,1);
         if(p > a.size() / 5)return;
         Integer to = p * 5;
         Integer from = to - 5;

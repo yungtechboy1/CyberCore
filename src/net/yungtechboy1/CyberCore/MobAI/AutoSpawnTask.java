@@ -68,7 +68,7 @@ public class AutoSpawnTask implements Runnable {
             this.pluginConfig.set("max-spawns.zombie-villager", 0);
             this.pluginConfig.save();
         } else {
-            this.pluginConfig = new Config(new File(plugin.getDataFolder() + "autospawn.yml"), Config.YAML);
+            this.pluginConfig = new Config(new File(plugin.getDataFolder() , "autospawn.yml"), Config.YAML);
         }
         this.plugin = plugin;
 
