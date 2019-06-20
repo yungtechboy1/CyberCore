@@ -7,7 +7,7 @@ import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.DragonJumper;
-import net.yungtechboy1.CyberCore.Classes.Power.TNTAirStrikePower;
+import net.yungtechboy1.CyberCore.Classes.Power.DragonSlayerFireStomp;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;

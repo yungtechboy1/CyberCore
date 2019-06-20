@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Classes.New.Offense;
+package net.yungtechboy1.CyberCore.Classes.Power;
 
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockFire;
@@ -10,6 +10,7 @@ import cn.nukkit.level.particle.ItemBreakParticle;
 import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.math.Vector3;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.DragonSlayer;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBar;

@@ -666,7 +666,13 @@ public class FactionFactory {
     }
 
     public Faction IsPlayerInFaction(CorePlayer p) {
-        return p.Faction == null ? null : getPlayerFaction(p);
+        if (p.Faction != null) return getFaction(p.Faction);
+        String f = null;
+        if (FacList.containsKey(p.getName().toLowerCase())) f = FacList.get(p.getName().toLowerCase());
+        if (f == null)f = GetFactionFromMember(p.getName());
+        System.out.println("FACCCCC >>>>>>> " + f);
+        if (f == null || f.length() == 0) return null;
+        return getFaction(f);
     }
 
     public String GetFactionFromMember(String faction) {
@@ -741,25 +747,26 @@ public class FactionFactory {
             while (r.next()) {
 //                return r.getString("faction");
                 Faction f = Main.FFactory.getFaction(r.getString("faction"));
-                if(f != null)found.add(f);
+                if (f != null) found.add(f);
             }
         } catch (Exception e) {
-            Main.plugin.getLogger().error("ERROR GETTING ALL OPEN FACTIONS",e);
+            Main.plugin.getLogger().error("ERROR GETTING ALL OPEN FACTIONS", e);
         }
         return found;
     }
+
     public ArrayList<Faction> GetAllOpenFactions(String name) {
         ArrayList<Faction> found = new ArrayList<>();
         try {
-            ResultSet r = this.ExecuteQuerySQL("select * from `settings` where `privacy`= '1' and `faction` LIKE '"+name+"'");
+            ResultSet r = this.ExecuteQuerySQL("select * from `settings` where `privacy`= '1' and `faction` LIKE '" + name + "'");
             if (r == null) return null;
             while (r.next()) {
 //                return r.getString("faction");
                 Faction f = Main.FFactory.getFaction(r.getString("faction"));
-                if(f != null)found.add(f);
+                if (f != null) found.add(f);
             }
         } catch (Exception e) {
-            Main.plugin.getLogger().error("ERROR GETTING ALL OPEN FACTIONS",e);
+            Main.plugin.getLogger().error("ERROR GETTING ALL OPEN FACTIONS", e);
         }
         return found;
     }
