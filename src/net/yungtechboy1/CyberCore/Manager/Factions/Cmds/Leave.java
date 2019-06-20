@@ -32,16 +32,16 @@ public class Leave extends Commands {
             if(fac.IsGeneral( Sender.getName()))fac.DelGeneral(Sender.getName());
             if(fac.IsRecruit( Sender.getName()))fac.DelRecruit(Sender.getName());
 
-            Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN + "You successfully left faction");
+            Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN + "You successfully left" + TextFormat.GOLD + fac.GetName());
             fac.TakePower(1);
             String lm = "";
             if(Args.length >= 1){
-                lm = "And has left with the following Message:"+TextFormat.AQUA;
+                lm = "And has left with the following Message:\n"+TextFormat.AQUA;
                 for(String a:Args){
                     lm = lm + " " + a;
                 }
             }
-            fac.BroadcastMessage(FactionsMain.NAME+TextFormat.YELLOW+Sender.getName()+" has Left the Faction!"+lm);
+            fac.BroadcastMessage(FactionsMain.NAME+TextFormat.YELLOW+Sender.getName()+" has Left the faction!\n"+lm);
 //            if(Main.CC != null)Main.CC.Setnametag((Player)Sender);
 //            Main.CC.Setnametag((Player) Sender);
 //            Main.sendBossBar((Player) Sender);
