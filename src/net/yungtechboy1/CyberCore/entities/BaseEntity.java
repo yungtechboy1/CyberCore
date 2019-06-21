@@ -141,7 +141,7 @@ public abstract class BaseEntity extends EntityCreature implements EntityStackab
 
     @Override
     public String getName() {
-        return super.getName() + "11111111";
+        return super.getName() + "DEBUGGGGGG";
     }
 
 

@@ -10,6 +10,8 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 
 public abstract class PowerHotBar extends PowerAbstract implements PowerHotBarInt {
 
+    public int lastHotBarUpdate = -1;
+    
     public PowerHotBar(BaseClass b, int psc, double cost, LockedSlot ls) {
         super(b, psc, cost);
         TickUpdate = 20;
@@ -40,11 +42,24 @@ public abstract class PowerHotBar extends PowerAbstract implements PowerHotBarIn
         return e;
     }
 
+    @Override
+    public void sendCanNotRunMessage() {
+        super.sendCanNotRunMessage();
+        if(canUpdateHotBar(getPlayer().getServer().getTick()))updateHotbar(getLS(),Cooldown,this);
+    }
+
+    public boolean canUpdateHotBar(int tick) {
+        if (tick > lastHotBarUpdate + 10) {
+            lastHotBarUpdate = tick;
+            return true;
+        }
+        return false;
+    }
 
     boolean check = false;
     @Override
     public void onTick(int tick) {
-        System.out.println("POWER TICKKKKKK1");
+        System.out.println("POWER TICKKKKKK1111111");
         super.onTick(tick);
         updateHotbar(getLS(),Cooldown,this);
         check = !check;

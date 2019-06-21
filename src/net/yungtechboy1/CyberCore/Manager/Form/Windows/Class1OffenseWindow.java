@@ -3,10 +3,7 @@ package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
-import net.yungtechboy1.CyberCore.Classes.New.Offense.DarkKnight;
-import net.yungtechboy1.CyberCore.Classes.New.Offense.HolyKnight;
-import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
-import net.yungtechboy1.CyberCore.Classes.New.Offense.Mercenary;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.*;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
@@ -63,6 +60,12 @@ public class Class1OffenseWindow extends CyberFormSimple {
                 _plugin.ClassFactory.SaveClassToFile(cp);
                 cp.sendMessage("Class Set!");
                 break;//Dark Knight
+            case 4:
+                DragonSlayer ds = new DragonSlayer(_plugin, cp, null);
+                cp.SetPlayerClass(ds);
+                _plugin.ClassFactory.SaveClassToFile(cp);
+                cp.sendMessage("Class Set!");
+                break;//Dragon Slayer
         }
         return false;
     }

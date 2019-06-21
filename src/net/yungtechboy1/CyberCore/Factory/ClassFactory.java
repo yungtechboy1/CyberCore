@@ -9,10 +9,7 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
-import net.yungtechboy1.CyberCore.Classes.New.Offense.DarkKnight;
-import net.yungtechboy1.CyberCore.Classes.New.Offense.HolyKnight;
-import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
-import net.yungtechboy1.CyberCore.Classes.New.Offense.Mercenary;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.*;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
@@ -77,6 +74,9 @@ public class ClassFactory implements Listener{
                     break;
                 case Class_Offense_Dark_Knight:
                     data = new DarkKnight(CCM, p, o);
+                    break;
+                case DragonSlayer:
+                    data = new DragonSlayer(CCM, p, o);
                     break;
             }
 

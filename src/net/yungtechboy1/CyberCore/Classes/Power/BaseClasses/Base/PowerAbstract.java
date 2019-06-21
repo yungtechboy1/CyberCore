@@ -1,6 +1,7 @@
 package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base;
 
 import cn.nukkit.event.Event;
+import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.event.inventory.InventoryClickEvent;
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
@@ -19,20 +20,17 @@ import net.yungtechboy1.CyberCore.PlayerJumpEvent;
  * Created by carlt on 5/16/2019.
  */
 public abstract class PowerAbstract {
-    public void setActive(boolean active) {
-        Active = active;
-    }
-
-    private boolean Active = false;
     public BaseClass PlayerClass = null;
     public int TickUpdate = -1;
     public CoolDownTick Cooldown = null;
     public boolean PlayerToggleable = true;
     LockedSlot LS = LockedSlot.NA;
     int Level = 0;
+    private boolean Active = false;
     private int PowerSuccessChance = 100;
     private int _lasttick = -1;
     private double PowerSourceCost = 0;
+
     public PowerAbstract(BaseClass b, int psc) {
         this(b, psc, 0);
     }
@@ -49,6 +47,10 @@ public abstract class PowerAbstract {
 
     public boolean isActive() {
         return Active;
+    }
+
+    public void setActive(boolean active) {
+        Active = active;
     }
 
     public LockedSlot getLS() {
@@ -85,6 +87,8 @@ public abstract class PowerAbstract {
 
     //TODO IMPLEMENT
     public Event handelEvent(Event event) {
+        if (event instanceof EntityDamageEvent)
+            return EntityDamageEvent((EntityDamageEvent) event);
         if (event instanceof CustomEntityDamageByEntityEvent)
             return CustomEntityDamageByEntityEvent((CustomEntityDamageByEntityEvent) event);
         if (event instanceof PlayerJumpEvent)
@@ -99,6 +103,10 @@ public abstract class PowerAbstract {
         return event;
     }
 
+
+    public EntityDamageEvent EntityDamageEvent(EntityDamageEvent e) {
+        return e;
+    }
 
     public InventoryClickEvent InventoryClickEvent(InventoryClickEvent e) {
         return e;
@@ -151,10 +159,12 @@ public abstract class PowerAbstract {
         }
     }
 
-    public PowerEnum getType(){
+    public PowerEnum getType() {
         CyberCoreMain.getInstance().getLogger().error("ERROR GETTING TYPE FROM POWER!!!!!");
         return PowerEnum.Unknown;
-    };
+    }
+
+    ;
 
     //USE TO RUN
     public final void initPowerRun(Object... args) {
@@ -164,9 +174,13 @@ public abstract class PowerAbstract {
             afterPowerRun(args);
         } else {
             if (Cooldown != null && Cooldown.isValid()) {
-                getPlayer().sendMessage(TextFormat.RED + "Error! PowerAbstract " + getDispalyName() + TextFormat.RED + " still has a " + TextFormat.LIGHT_PURPLE + Cooldown.toString() + TextFormat.RED + " Cooldown.");
+                sendCanNotRunMessage();
             }
         }
+    }
+
+    public void sendCanNotRunMessage() {
+        getPlayer().sendMessage(TextFormat.RED + "Error! PowerAbstract " + getDispalyName() + TextFormat.RED + " still has a " + TextFormat.LIGHT_PURPLE + Cooldown.toString() + TextFormat.RED + " Cooldown.");
     }
 
     public void afterPowerRun(Object... args) {
@@ -178,9 +192,7 @@ public abstract class PowerAbstract {
         return TextFormat.GREEN + " > PowerAbstract " + getDispalyName() + TextFormat.GREEN + " has been activated!";
     }
 
-    public Object usePower(Object... args) {
-        return null;
-    }
+    public abstract Object usePower(Object... args);
 
     public boolean CanRun(boolean force, Object... args) {
         if (force) return true;
@@ -203,7 +215,7 @@ public abstract class PowerAbstract {
 
 
     public Stage getStage() {
-        return Stage.getStageFromInt(1+((int) Math.floor(Level / 20)));
+        return Stage.getStageFromInt(1 + ((int) Math.floor(Level / 20)));
     }
 
     public CoolDownTick addCooldown() {
