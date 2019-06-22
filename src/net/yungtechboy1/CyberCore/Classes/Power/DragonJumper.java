@@ -10,6 +10,7 @@ import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.BlockColor;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Passive.PassivePower;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBar;
@@ -18,14 +19,16 @@ import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
 import java.util.ArrayList;
 
-public class DragonJumper extends PowerHotBar {
+public class DragonJumper extends PassivePower {
     private boolean WaitingOnFall = false;
 
     public DragonJumper(BaseClass b) {
-        super(b, 100, 1, LockedSlot.SLOT_9);
+        super(b, 100);
         //TODO make this so that this power Runs Automatically!
         TickUpdate = 10;
     }
+
+
 
     @Override
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e) {
@@ -34,8 +37,9 @@ public class DragonJumper extends PowerHotBar {
 
     @Override
     public PlayerJumpEvent PlayerJumpEvent(PlayerJumpEvent e) {
-//        initPowerRun();
-        return super.PlayerJumpEvent(e);
+        initPowerRun();
+        return e;
+//        return super.PlayerJumpEvent(e);
     }
 
     @Override
@@ -50,8 +54,26 @@ public class DragonJumper extends PowerHotBar {
     }
 
     @Override
+    public int getPowerSuccessChance() {
+        return (90/5)*getStage().getValue();
+    }
+
+    @Override
     protected int getCooldownTime() {
-        return 15;
+        switch (getStage()){
+            default:
+            case NA:
+            case STAGE_1:
+                return 45;
+            case STAGE_2:
+                return 35;
+            case STAGE_3:
+                return 30;
+            case STAGE_4:
+                return 25;
+            case STAGE_5:
+                return 15;
+        }
     }
 
     @Override
