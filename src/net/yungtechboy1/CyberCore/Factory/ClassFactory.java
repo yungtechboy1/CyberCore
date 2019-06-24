@@ -35,6 +35,7 @@ public class ClassFactory implements Listener{
 //    handelEvent(event, cp);
 
     public void leaveClass(CorePlayer p) {
+        p.getPlayerClass().onLeaveClass();
         MMOSave.remove(p.getName().toLowerCase());
         p.SetPlayerClass(null);
         p.sendMessage(TextFormat.GREEN + "You left your class!");

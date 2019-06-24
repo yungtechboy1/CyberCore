@@ -12,6 +12,8 @@ import cn.nukkit.event.inventory.CraftItemEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerToggleSprintEvent;
 import cn.nukkit.form.window.FormWindow;
+import cn.nukkit.inventory.PlayerInventory;
+import cn.nukkit.item.Item;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
@@ -31,6 +33,7 @@ import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassSettingsWindow;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 public abstract class BaseClass {
 
@@ -74,11 +77,6 @@ public abstract class BaseClass {
     private Ability ActiveAbility;
     private HashMap<BuffType, Buff> Buffs = new HashMap<>();
     private HashMap<BuffType, DeBuff> DeBuffs = new HashMap<>();
-
-    public ArrayList<LockedSlot> getLockedSlots() {
-        return LockedSlots;
-    }
-
     private ArrayList<LockedSlot> LockedSlots = new ArrayList<>();
     private double PowerSourceCount = 0;
 
@@ -116,6 +114,27 @@ public abstract class BaseClass {
         SetPowers();
     }
 
+    public ArrayList<LockedSlot> getLockedSlots() {
+        return LockedSlots;
+    }
+
+    public void onLeaveClass() {
+        if (this instanceof PowerHotBarInt) {
+            if (getLockedSlots().size() > 0) {
+                for (LockedSlot ls : getLockedSlots()) getPlayer().getInventory().clear(ls.getSlot());
+                LockedSlots.clear();
+            }
+        }
+    }
+
+    public PlayerInventory getPlayerInventory() {
+        PlayerInventory pi = new PlayerInventory(getPlayer());
+        Map<Integer, Item> s = getPlayer().getInventory().slots;
+        if (getLockedSlots().size() > 0) for (LockedSlot ls : getLockedSlots()) s.put(ls.getSlot(), Item.get(0));
+        pi.setContents(s);
+        return pi;
+    }
+
     public abstract PrimalPowerType getPowerSourceType();
 
     public double getPowerSourceCount() {
@@ -146,13 +165,13 @@ public abstract class BaseClass {
     }
 
     public double getMaxPowerSourceCount() {
-        return Math.round((Math.abs(Math.pow(57 * (getLVL()+1), 2)) / Math.sqrt(Math.pow(20 * (getLVL()+1), 3))) + ((getLVL()+1) * 10));
+        return Math.round((Math.abs(Math.pow(57 * (getLVL() + 1), 2)) / Math.sqrt(Math.pow(20 * (getLVL() + 1), 3))) + ((getLVL() + 1) * 10));
     }
 
     public void tickPowerSource(int tick) {
         addPowerSourceCount();//From Server Every 20 Secs
-        double t = Math.abs(Math.pow(27 * (getLVL()+1), 2));
-        double b = Math.sqrt(Math.pow(18 * (getLVL()+1), 3));
+        double t = Math.abs(Math.pow(27 * (getLVL() + 1), 2));
+        double b = Math.sqrt(Math.pow(18 * (getLVL() + 1), 3));
         int f = (int) Math.round((t / b) * .2);
         addPowerSourceCount(Math.abs(f));
         //TODO
@@ -263,7 +282,7 @@ public abstract class BaseClass {
     public abstract Object RunPower(PowerEnum powerid, Object... args);
 
     public void addPower(PowerAbstract power) {
-        if(power instanceof PowerHotBarInt){
+        if (power instanceof PowerHotBarInt) {
             LockedSlots.add(power.getLS());
         }
         Powers.put(power.getType().ordinal(), power);
@@ -615,7 +634,7 @@ public abstract class BaseClass {
         int pxp = XPRemainder(getXP());
         int pxpof = calculateRequireExperience(lvl + 1);
         int plvl = lvl;
-        f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl + TextFormat.GRAY+ " | " + TextFormat.AQUA+getPowerSourceType().name()+" PowerAbstract : "+getPowerSourceCount() + " / "+ getMaxPowerSourceCount();
+        f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl + TextFormat.GRAY + " | " + TextFormat.AQUA + getPowerSourceType().name() + " PowerAbstract : " + getPowerSourceCount() + " / " + getMaxPowerSourceCount();
         return f;
     }
 
