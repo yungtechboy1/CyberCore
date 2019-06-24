@@ -4,6 +4,8 @@ import cn.nukkit.Player;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -31,17 +33,29 @@ public class Raider extends BaseClass {
     }
 
     @Override
+    public PrimalPowerType getPowerSourceType() {
+        return null;
+    }
+
+    @Override
+    public ClassType getTYPE() {
+        return ClassType.Class_Offense_Raider;
+    }
+
+    @Override
     public void SetPowers() {
 
     }
 
+
+
     @Override
-    public int getMainID() {
-        return BaseClass.TYPE_Offensive_Raider;
+    public void initBuffs() {
+
     }
 
     @Override
-    public Object RunPower(int powerid, Object... args) {
+    public Object RunPower(PowerEnum powerid, Object... args) {
         return null;
     }
 }

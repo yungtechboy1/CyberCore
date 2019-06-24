@@ -4,35 +4,57 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.item.EntityPrimedTNT;
 import cn.nukkit.level.Sound;
 import cn.nukkit.math.NukkitRandom;
-import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.DoubleTag;
 import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerStackable;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 /**
  * Created by carlt on 5/16/2019.
  */
 public class TNTSpecialistPower extends PowerStackable {
 
-    public TNTSpecialistPower(int lvl, int aq, int maq) {
-        super(100, lvl, aq, maq);
+    public TNTSpecialistPower(BaseClass b, int aq, int maq) {
+        super(b,100, aq, maq);
     }
 
     @Override
-    public Object usePower(Object ...args) {
+    public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e) {
+        return e;
+    }
+
+    @Override
+    public PowerEnum getType() {
+        return PowerEnum.TNTSpecalist;
+    }
+
+    @Override
+    public Object usePower( Object... args) {
         System.out.println("NO USEDDDDD>>>>>"+GetTNTMotionPower());
-        if(args != null && args.length == 2){
-            CorePlayer p = (CorePlayer) args[0];
-            int fuse = (int)args[1];
-            UsePower(p,fuse);
+        if(args != null && args.length == 1){
+            int fuse = (int)args[0];
+            UsePower(getPlayer(),fuse);
         }
         return null;
     }
 
+    @Override
+    public String getName() {
+        return "TNT Specialist";
+    }
+
+    @Override
+    public String getDispalyName() {
+        return getName();
+    }
+
     private double GetTNTMotionPower(){
-        int x = Level+1;
+        int x = PlayerClass.getLVL()+1;
         double t = Math.sqrt(x)*x;
         double b = 5d*x;
         double z =t/b;
@@ -56,7 +78,7 @@ public class TNTSpecialistPower extends PowerStackable {
             tnt.spawnToAll();
             p.level.addSound(p, Sound.RANDOM_FUSE);
         } else {
-            p.sendMessage("Error! You don't have any TNT Power");
+            p.sendMessage("Error! You don't have any TNT PowerAbstract");
         }
         return null;
     }

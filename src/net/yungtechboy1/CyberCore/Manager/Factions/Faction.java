@@ -656,7 +656,7 @@ public class Faction {
         } else {
             t = TextFormat.RED + "Lost -" + Math.abs(dif);
         }
-        BroadcastPopUp(TextFormat.GRAY + "Faction now has " + TextFormat.GREEN + value + TextFormat.GRAY + " Power!" + t);
+        BroadcastPopUp(TextFormat.GRAY + "Faction now has " + TextFormat.GREEN + value + TextFormat.GRAY + " PowerAbstract!" + t);
         Power = value;
     }
 

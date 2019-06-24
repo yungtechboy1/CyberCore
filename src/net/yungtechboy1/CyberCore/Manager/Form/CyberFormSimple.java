@@ -2,11 +2,8 @@ package net.yungtechboy1.CyberCore.Manager.Form;
 
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
-import com.google.gson.Gson;
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
-import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,26 +15,15 @@ public class CyberFormSimple extends CyberForm {
     private List<ElementButton> buttons;
     private FormResponseSimple response;
 
+    public CyberFormSimple(FormType.MainForm ttype, String title) {
+        this(ttype,title,"");
+    }
     public CyberFormSimple(FormType.MainForm ttype, String title, String content) {
         this(ttype, title, content, new ArrayList());
     }
 
     public CyberFormSimple(FormType.MainForm ttype, String title, String content, List<ElementButton> buttons) {
         super(ttype);
-        this.type = "form";
-        this.title = "";
-        this.content = "";
-        this.response = null;
-        this.title = title;
-        this.content = content;
-        this.buttons = buttons;
-    }
-    public CyberFormSimple( String title, String content) {
-        this( title, content, new ArrayList());
-    }
-
-    public CyberFormSimple(String title, String content, List<ElementButton> buttons) {
-        super();
         this.type = "form";
         this.title = "";
         this.content = "";
@@ -97,8 +83,8 @@ public class CyberFormSimple extends CyberForm {
     }
 
     @Override
-    public void onRun(CorePlayer p) {
-       super.onRun(p);
+    public boolean onRun(CorePlayer p) {
+       return super.onRun(p);
     }
 
     ;

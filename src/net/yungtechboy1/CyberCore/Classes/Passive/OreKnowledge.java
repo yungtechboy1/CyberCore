@@ -5,8 +5,11 @@ import cn.nukkit.block.BlockID;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Classes.Power.Power;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Passive.PassivePower;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
 
@@ -15,8 +18,13 @@ import java.util.ArrayList;
 public class OreKnowledge extends PassivePower {
     int BlockRange = 10;
 
-    public OreKnowledge(int lvl) {
-        super(1, lvl);
+    public OreKnowledge(BaseClass b) {
+        super(b,1);
+    }
+
+    @Override
+    public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e) {
+        return e;
     }
 
     @Override
@@ -49,8 +57,23 @@ public class OreKnowledge extends PassivePower {
     }
 
     @Override
-    public int getType() {
-        return Power.OreKnowledge;
+    public PowerEnum getType() {
+        return PowerEnum.MinerOreKnowledge;
+    }
+
+    @Override
+    public Object usePower( Object... args) {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return "Ore Knowledge";
+    }
+
+    @Override
+    public String getDispalyName() {
+        return getName();
     }
 
     public void dispalyPreciousOres(CorePlayer p) {

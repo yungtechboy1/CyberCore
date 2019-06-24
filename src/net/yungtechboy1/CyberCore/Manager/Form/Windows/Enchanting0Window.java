@@ -19,7 +19,7 @@ public class Enchanting0Window extends CyberFormModal {
 
 
     @Override
-    public void onRun(CorePlayer cp) {
+    public boolean onRun(CorePlayer cp) {
         super.onRun(cp);
         FormResponseModal frm = (FormResponseModal) getResponse();
         if (frm.getClickedButtonId() == 0) {
@@ -35,5 +35,6 @@ public class Enchanting0Window extends CyberFormModal {
             cp.showFormWindow(cp.getNewWindow());
             cp.clearNewWindow();
         }
+        return false;
     }
 }

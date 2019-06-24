@@ -3,12 +3,11 @@ package net.yungtechboy1.CyberCore.Commands;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
-import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
-import net.yungtechboy1.CyberCore.Classes.Power.Power;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.TNTSpecialistPower;
 import net.yungtechboy1.CyberCore.Commands.Constructors.CheckPermCommand;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -37,7 +36,7 @@ public class TNT extends CheckPermCommand {
         if (commandSender instanceof CorePlayer) {
             System.out.println("CCCCCCCC");
             CorePlayer p = (CorePlayer) commandSender;
-            BaseClass c = p.GetPlayerClass();
+            BaseClass c = p.getPlayerClass();
             if (!(c instanceof TNTSpecialist)) {
                 commandSender.sendMessage(CyberCoreMain.NAME + TextFormat.RED + "Error! You don't have access to this command!");
                 return true;
@@ -45,14 +44,14 @@ public class TNT extends CheckPermCommand {
             System.out.println("CCCCCCCC");
 
             TNTSpecialist ts = (TNTSpecialist) c;
-            TNTSpecialistPower tsp = (TNTSpecialistPower) ts.GetPower(Power.TNT_Specialist);
+            TNTSpecialistPower tsp = (TNTSpecialistPower) ts.getPower(PowerEnum.TNTSpecalist);
             if (tsp == null) {
                 commandSender.sendMessage(CyberCoreMain.NAME + TextFormat.RED + "Error! GETTING POWER");
                 return true;
             }
-            if (ts.TryRunPower(Power.TNT_Specialist)) {
+            if (ts.TryRunPower(PowerEnum.TNTSpecalist)) {
                 System.out.println("CCCCCCCC");
-                ts.RunPower(Power.TNT_Specialist, p);
+                ts.RunPower(PowerEnum.TNTSpecalist, p);
                 System.out.println("CCCCCCCC------");
             }else{
                 commandSender.sendMessage("Error! Could not run power!");

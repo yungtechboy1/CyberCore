@@ -26,7 +26,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
-
+@Deprecated
 public class AntiCheatManger {
     public CyberCoreMain Main;
 
@@ -81,57 +81,57 @@ public class AntiCheatManger {
 //                        }
                     }
 
-                    CustomEntityDamageByEntityEvent entityDamageByEntityEvent = new CustomEntityDamageByEntityEvent(p, target, CustomEntityDamageEvent.CustomDamageCause.ENTITY_ATTACK, damage);
-                    if (p.isSpectator()) entityDamageByEntityEvent.setCancelled();
-                    if ((target instanceof Player) && !p.level.getGameRules().getBoolean(GameRule.PVP)) {
-                        entityDamageByEntityEvent.setCancelled();
-                    }
-                    if (target.getAbsorption() > 0) {  //Damage Absorption
-                        float absorptionHealth = target.getAbsorption() - entityDamageByEntityEvent.getFinalDamage() > 0 ? entityDamageByEntityEvent.getFinalDamage() : target.getAbsorption();
-                        target.setAbsorption(target.getAbsorption() - absorptionHealth);
-                        entityDamageByEntityEvent.setDamage(-absorptionHealth, CustomEntityDamageEvent.CustomDamageModifier.ABSORPTION);
-                    }
-
-
-                    if (p.isCreative() && entityDamageByEntityEvent.getCause() != CustomEntityDamageEvent.CustomDamageCause.SUICIDE
-                            && entityDamageByEntityEvent.getCause() != CustomEntityDamageEvent.CustomDamageCause.VOID
-                            ) {
-                        //source.setCancelled();
-                        return null;
-                    } else if (p.getAdventureSettings().get(AdventureSettings.Type.ALLOW_FLIGHT) && entityDamageByEntityEvent.getCause() == CustomEntityDamageEvent.CustomDamageCause.FALL) {
-                        //source.setCancelled();
-                        return null;
-                    } else if (entityDamageByEntityEvent.getCause() == CustomEntityDamageEvent.CustomDamageCause.FALL) {
-                        if (p.getLevel().getBlock(p.getPosition().floor().add(0.5, -1, 0.5)).getId() == Block.SLIME_BLOCK) {
-                            if (!p.isSneaking()) {
-                                p.resetFallDistance();
-                                return null;
-                            }
-                        }
-                    }
-                    //TODO Tanks use more food
-                    p.getFoodData().updateFoodExpLevel(0.3);
-                    //TODO
-                    //Check
-                    //CALL ALL DAMAGE EVENTS HERE!!!!
-                    //TODO
-
-                    if (entityDamageByEntityEvent.isCancelled()) return null;
-
-                    p.setLastDamageCause(Convert(entityDamageByEntityEvent));
-                    AddCooldown(p,Server.getInstance().getTick() + entityDamageByEntityEvent.getCoolDownTicks());
-                    p.setHealth(p.getHealth() - entityDamageByEntityEvent.getFinalDamage());
-                    if (item.isTool() && p.isSurvival()) p.getInventory().sendContents(p);
-
-                    for (Enchantment enchantment : item.getEnchantments()) enchantment.doPostAttack(p, target);
-                    //TODO
-                    //CALL ALL DAMAGE EVENTS HERE!!!!
-                    //TODO
-
-                    if(entityDamageByEntityEvent.isCancelled())return null;
-
-                    p.setLastDamageCause(Convert(entityDamageByEntityEvent));
-                    p.setHealth(p.getHealth() - entityDamageByEntityEvent.getFinalDamage());
+//                    CustomEntityDamageByEntityEvent entityDamageByEntityEvent = new CustomEntityDamageByEntityEvent(p, target, CustomEntityDamageEvent.CustomDamageCause.ENTITY_ATTACK, damage);
+//                    if (p.isSpectator()) entityDamageByEntityEvent.setCancelled();
+//                    if ((target instanceof Player) && !p.level.getGameRules().getBoolean(GameRule.PVP)) {
+//                        entityDamageByEntityEvent.setCancelled();
+//                    }
+//                    if (target.getAbsorption() > 0) {  //Damage Absorption
+//                        float absorptionHealth = target.getAbsorption() - entityDamageByEntityEvent.getFinalDamage() > 0 ? entityDamageByEntityEvent.getFinalDamage() : target.getAbsorption();
+//                        target.setAbsorption(target.getAbsorption() - absorptionHealth);
+//                        entityDamageByEntityEvent.setDamage(-absorptionHealth, CustomEntityDamageEvent.CustomDamageModifier.ABSORPTION);
+//                    }
+//
+//
+//                    if (p.isCreative() && entityDamageByEntityEvent.getCause() != CustomEntityDamageEvent.CustomDamageCause.SUICIDE
+//                            && entityDamageByEntityEvent.getCause() != CustomEntityDamageEvent.CustomDamageCause.VOID
+//                            ) {
+//                        //source.setCancelled();
+//                        return null;
+//                    } else if (p.getAdventureSettings().get(AdventureSettings.Type.ALLOW_FLIGHT) && entityDamageByEntityEvent.getCause() == CustomEntityDamageEvent.CustomDamageCause.FALL) {
+//                        //source.setCancelled();
+//                        return null;
+//                    } else if (entityDamageByEntityEvent.getCause() == CustomEntityDamageEvent.CustomDamageCause.FALL) {
+//                        if (p.getLevel().getBlock(p.getPosition().floor().add(0.5, -1, 0.5)).getId() == Block.SLIME_BLOCK) {
+//                            if (!p.isSneaking()) {
+//                                p.resetFallDistance();
+//                                return null;
+//                            }
+//                        }
+//                    }
+//                    //TODO Tanks use more food
+//                    p.getFoodData().updateFoodExpLevel(0.3);
+//                    //TODO
+//                    //Check
+//                    //CALL ALL DAMAGE EVENTS HERE!!!!
+//                    //TODO
+//
+//                    if (entityDamageByEntityEvent.isCancelled()) return null;
+//
+//                    p.setLastDamageCause(Convert(entityDamageByEntityEvent));
+//                    AddCooldown(p,Server.getInstance().getTick() + entityDamageByEntityEvent.getCoolDownTicks());
+//                    p.setHealth(p.getHealth() - entityDamageByEntityEvent.getFinalDamage());
+//                    if (item.isTool() && p.isSurvival()) p.getInventory().sendContents(p);
+//
+//                    for (Enchantment enchantment : item.getEnchantments()) enchantment.doPostAttack(p, target);
+//                    //TODO
+//                    //CALL ALL DAMAGE EVENTS HERE!!!!
+//                    //TODO
+//
+//                    if(entityDamageByEntityEvent.isCancelled())return null;
+//
+//                    p.setLastDamageCause(Convert(entityDamageByEntityEvent));
+//                    p.setHealth(p.getHealth() - entityDamageByEntityEvent.getFinalDamage());
                     if (item.isTool() && p.isSurvival())p.getInventory().sendContents(p);
 
                     for (Enchantment enchantment : item.getEnchantments())enchantment.doPostAttack(p, target);

@@ -1,18 +1,20 @@
-package net.yungtechboy1.CyberCore.Classes.Power;
+package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses;
 
 import cn.nukkit.math.NukkitRandom;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 
-public class PowerStackable extends Power {
+public abstract class PowerStackable extends PowerAbstract {
     int AvailbleQuantity = 0;
     int MaxAvailbleQuantity = 0;
 
     /**
-     * @param psc int Power Success Chance
+     * @param psc int PowerAbstract Success Chance
      * @param aq
      * @param maq
      */
-    public PowerStackable(int psc, int lvl, int aq, int maq) {
-        super(psc, lvl);
+    public PowerStackable(BaseClass c, int psc, int aq, int maq) {
+        super(c, psc);
         AvailbleQuantity = aq;
         MaxAvailbleQuantity = maq;
     }
@@ -22,12 +24,12 @@ public class PowerStackable extends Power {
     }
 
     public void AddAvailbleQuantity(int i) {
-        if(AvailbleQuantity >= MaxAvailbleQuantity)return;
+        if (AvailbleQuantity >= MaxAvailbleQuantity) return;
         AvailbleQuantity = AvailbleQuantity + i;
     }
 
     public void AddAvailbleQuantity() {
-        if(AvailbleQuantity >= MaxAvailbleQuantity)return;
+        if (AvailbleQuantity >= MaxAvailbleQuantity) return;
         AvailbleQuantity++;
     }
 
@@ -44,24 +46,20 @@ public class PowerStackable extends Power {
     }
 
     @Override
-    public int getType() {
-        return -3;
-    }
-
-    @Override
-    public boolean CanRun() {
-        return CanRun(false);
-    }
-
-    @Override
-    public boolean CanRun(boolean force) {
+    public boolean CanRun(boolean force, Object... o) {
+        if(!hasAvailableQuantity())return false;
         NukkitRandom nr = new NukkitRandom();
-        if (nr.nextRange(0, 100) <= PowerSuccessChance || force) {
+        if (nr.nextRange(0, 100) <= getPowerSuccessChance() || force) {
             //Success
             if (getAvailbleQuantity() <= 0) return false;
             return true;
         }
         return false;
     }
+
+    private boolean hasAvailableQuantity() {
+        return getAvailbleQuantity() > 0;
+    }
+
 
 }

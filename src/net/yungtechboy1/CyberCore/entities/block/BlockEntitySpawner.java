@@ -97,7 +97,7 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
     public String GetEntityNameFromID() {
         switch (GetSEntityID()) {
             case 4:
-            case 12:
+            case Pig.NETWORK_ID:
                 return "Pig";
             default:
                 return getName();
@@ -196,7 +196,7 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
     public void saveNBT() {
         super.saveNBT();
 
-        this.namedTag.putString("id", "MobSpawner");
+//        this.namedTag.putString("id", "MobSpawner");
         this.namedTag.putInt("EntityId", this.entityId);
         this.namedTag.putInt("Type", this.entityId);
         this.namedTag.putInt("Level", this.lvl);
@@ -209,11 +209,18 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
 
     @Override
     public CompoundTag getSpawnCompound() {
+
+
+//        this.namedTag.putString("id", this.getSaveId());
+//        this.namedTag.putInt("x", (int) this.getX());
+//        this.namedTag.putInt("y", (int) this.getY());
+//        this.namedTag.putInt("z", (int) this.getZ());
+//        this.namedTag.putBoolean("isMovable", this.movable);
         return new CompoundTag()
 
                 .putInt("EntityId", this.entityId)
                 .putInt("Type", this.entityId)
-                .putString("id", "MobSpawner")
+        .putString("id", this.getSaveId())
 //                .putString("SpawnData", this.entityId + "")//"minecraft:zombie"
 //                .putList(new ListTag<CompoundTag>("SpawnPotentials") {
 //                    {

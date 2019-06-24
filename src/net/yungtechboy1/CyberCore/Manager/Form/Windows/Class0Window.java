@@ -1,8 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 
-import cn.nukkit.block.Block;
 import cn.nukkit.form.response.FormResponseModal;
-import cn.nukkit.item.Item;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormModal;
@@ -19,7 +17,7 @@ public class Class0Window extends CyberFormModal {
     }
 
     @Override
-    public void onRun(CorePlayer cp) {
+    public boolean onRun(CorePlayer cp) {
         super.onRun(cp);
         FormResponseModal frm = (FormResponseModal) getResponse();
         if (frm.getClickedButtonId() == 0) {
@@ -27,5 +25,6 @@ public class Class0Window extends CyberFormModal {
         } else {
             cp.showFormWindow(new Class1Window());
         }
+        return false;
     }
 }

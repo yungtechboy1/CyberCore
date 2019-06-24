@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Custom.Inventory;
+package net.yungtechboy1.CyberCore.Factory.Shop.Spawner;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
@@ -23,32 +23,56 @@ import cn.nukkit.network.protocol.ContainerOpenPacket;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Data.AuctionItemData;
-import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory;
+import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse;
+import net.yungtechboy1.CyberCore.Factory.Shop.ShopFactory;
+import net.yungtechboy1.CyberCore.Factory.Shop.ShopInv;
 
 import java.util.*;
 
-import static net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse.CurrentPageEnum.Confirm_Purchase;
-import static net.yungtechboy1.CyberCore.Custom.Inventory.AuctionHouse.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money;
-
-/**
- * Created by carlt_000 on 2/22/2017.
- */
-public class AuctionHouse extends BaseInventory implements Inventory {
+public class SpawnerShop extends BaseInventory implements Inventory {
 
     protected final String name;
     protected final String title;
     //    public static HashMap<Integer, Item> slots = new HashMap<>();
     protected final Set<Player> viewers = new HashSet<>();
+    public boolean AdminMode = false;
     public boolean ConfirmPurchase = false;
     public int ConfirmPurchaseSlot = 0;
-    public AuctionFactory AF = null;
+    public SpawnShopFactory AF = null;
     protected int maxStackSize = Inventory.MAX_STACK;
     EntityHuman holder;
     Vector3 BA;
     CyberCoreMain CCM;
     BlockEntity blockEntity2 = null;
     BlockEntity blockEntity = null;
+    CurrentPageEnum CurrentPage;
+    private int Page = 1;
+
+    public SpawnerShop(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba) {
+        this(Holder, ccm, ba, 1);
+    }
+
+    public SpawnerShop(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba, int page) {
+//        super(Holder, InventoryType.DOUBLE_CHEST, CyberCoreMain.getInstance().AF.getPageHash(page), 9 * 6);//54??
+        super(Holder, InventoryType.DOUBLE_CHEST, ccm.SpawnShop.getPageHash(page), 9 * 6);//54??
+        //TODO SHOULD SIZE BE 54!?!?
+        holder = Holder;
+//        this.size = 9 * 6;
+
+        CCM = ccm;
+        AF = CCM.SpawnShop;
+//        addItem(AF.getPage(Page));
+        Page = page;
+
+        BA = ba;
+
+        this.title = "Spawnnn Shop Page" + page;
+
+        this.name = title;
+        System.out.println("Creating SHopIn Class");
+//        if (CyberCoreMain.getInstance().AF.getPageHash(page) == null) System.out.println("NUUUUUUUUUUU");
+//        setContents(CyberCoreMain.getInstance().AF.getPageHash(page));
+    }
 
     public CurrentPageEnum getCurrentPage() {
         return CurrentPage;
@@ -58,39 +82,10 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         CurrentPage = currentPage;
     }
 
-    CurrentPageEnum CurrentPage;
-    private int Page = 1;
-
-    public AuctionHouse(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba) {
-        this(Holder, ccm, ba, 1);
-    }
-
-    public AuctionHouse(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba, int page) {
-//        super(Holder, InventoryType.DOUBLE_CHEST, CyberCoreMain.getInstance().AF.getPageHash(page), 9 * 6);//54??
-        super(Holder, InventoryType.DOUBLE_CHEST, ccm.AF.getPageHash(page), 9 * 6);//54??
-        //TODO SHOULD SIZE BE 54!?!?
-        holder = Holder;
-//        this.size = 9 * 6;
-
-        CCM = ccm;
-        AF = CCM.AF;
-//        addItem(AF.getPage(Page));
-        Page = page;
-
-        BA = ba;
-
-        this.title = "Auction House Page" + page;
-
-        this.name = title;
-        System.out.println("Creating AuctionHouse Class");
-//        if (CyberCoreMain.getInstance().AF.getPageHash(page) == null) System.out.println("NUUUUUUUUUUU");
-//        setContents(CyberCoreMain.getInstance().AF.getPageHash(page));
-    }
-
     public void GoToSellerPage() {
         clearAll();
         setPage(1);
-        setContents(AF.getPageHash(getPage(), getHolder().getName()), true);
+        setContents(AF.getPageHash(getPage()), true);
         ReloadInv();
         sendContents(getHolder());
         SendAllSlots(getHolder());
@@ -144,7 +139,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         Page = page;
         CurrentPage = CurrentPageEnum.PlayerSellingPage;
         clearAll();
-        setContents(AF.getPageHash(getPage(), getHolder().getName()));
+        setContents(AF.getPageHash(getPage()));
         ReloadInv();
         SendAllSlots(getHolder());
     }
@@ -218,22 +213,22 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     public void ReloadInv() {
         StaticItems si = new StaticItems(Page);
         int k = 9;
-        setItem(getSize() - k--, si.Redglass);
-        setItem(getSize() - k--, si.Paper);
-        setItem(getSize() - k--, si.Grayglass);
-        setItem(getSize() - k--, si.Diamond);
-        setItem(getSize() - k--, si.Netherstar);
-        setItem(getSize() - k--, si.Chest);
-        setItem(getSize() - k--, si.Grayglass);
-        setItem(getSize() - k--, si.Map);
-        setItem(getSize() - k, si.Greenglass);
+        setItem(MainPageItemRef.LastPage, si.Redglass);
+//        setItem( k--, si.Paper);
+//        setItem( k--, si.Grayglass);
+        setItem(MainPageItemRef.ToggleAdmin, si.Diamond);
+        setItem(MainPageItemRef.Reload, si.Netherstar);
+//        setItem( k--, si.Chest);
+//        setItem( k--, si.Grayglass);
+//        setItem( k--, si.Map);
+        setItem(MainPageItemRef.NextPage, si.Greenglass);
 //        sendContents((Player) holder);
     }
 
     public void ConfirmItemPurchase(int slot) {
         clearAll();
-        AuctionItemData aid = AF.getAIDFromPage(Page, slot);
-        SetupPageToConfirmSingleItem(aid);
+        SpawnerShopData aid = AF.getItemFrom(Page, slot);
+        SetupPageToConfirmMultiItem(aid);
         ReloadInv();
         ConfirmPurchase = true;
         ConfirmPurchaseSlot = slot;
@@ -247,68 +242,104 @@ public class AuctionHouse extends BaseInventory implements Inventory {
      * Maybe use later... Probablly wont work well with /ah I think...
      *
      * @param aid
-     * @deprecated
      */
-    public void SetupPageToConfirmMultiItem(AuctionItemData aid) {
+    public SpawnerShopData MultiConfirmData = null;
+    public void SetupPageToConfirmMultiItem(SpawnerShopData aid) {
+        CurrentPage = CurrentPageEnum.PlayerSellingPage;
         StaticItems si = new StaticItems(Page);
-        Item item = aid.MakePretty();
-        Item confrim = si.Confirm;
-        Item deny = si.Deny;
+        CorePlayer cp = (CorePlayer) getHolder();
+        Item item = aid.getItem();
+        MultiConfirmData = aid;
+        Collection<Item> ai =  cp.getInventory().all(aid.getItem(true)).values();
+        int ic = 0;
+        for(Item iii: ai){
+            ic += iii.getCount();
+        }
         for (int i = 0; i < 5; i++) {
             for (int ii = 0; ii < 9; ii++) {
                 int key = (i * 9) + ii;
                 Item add = null;
+                if (i == 0) {
+                    if (ii <= 3) {
+                        add = si.ChestCancel.clone();
+                        add.setLore("Cancel/Stop current transaction");
+                        setItem(key, add, true);
+                    } else if(ii == 4){
+                        Item g = si.Gold.clone();
+                        g.setCustomName(TextFormat.GOLD + " Your money: " + cp.GetMoney());
+                        setItem(key, g, true);
+                    } else {
+                        add = si.ChestBuy.clone();
+                        int mb = (int)Math.floor(cp.GetMoney()/aid.getPrice());
+                        add.setLore("You can buy "+mb+" "+item.getName()+"(s)");
+                        setItem(key, add, true);
+                    }
+                    continue;
+                }
+                add = null;
                 switch (ii) {
                     case 0:
+                        add = si.Deny.clone();
+                        setItem(key, add, true);
+                        break;
                     case 1:
+                        add = si.Deny.clone();
+                        setItem(key, add, true);
+                        break;
                     case 2:
+                         add = si.Deny.clone();
+                        setItem(key, add, true);
+                        break;
                     case 3:
                         add = si.Deny.clone();
                         setItem(key, add, true);
                         break;
-//                    case 1:
-//                        if (item.count >= 32) add = si.RmvX32.clone();
-//                        else add = si.Deny.clone();
-//                        setItem(key,add,true);
-//                        break;
-//                    case 2:
-//                        if (item.count >= 10) add = si.RmvX10.clone();
-//                        else add = si.Deny.clone();
-//                        setItem(key,add,true);
-//                        break;
-//                    case 3:
-//                        if (item.count >= 1) add = si.RmvX1.clone();
-//                        else add = si.Deny.clone();
-//                        setItem(key,add,true);
-//                        break;
                     case 4:
                         if (i == 2) add = item.clone();
-                        else add = Item.get(160).clone();
+                        else {
+                            add = Item.get(160).clone();
+                            add.setCustomName("--------");
+                        }
                         setItem(key, add, true);
                         break;
                     case 5:
-                        if (item.count >= 1) add = si.AddX1.clone();
-                        else add = si.Deny.clone();
+                        if(cp.GetMoney() > aid.getPrice())add = si.AddX1.clone();
+                        else add = si.AddX1N.clone();
+                        setItem(key, add, true);
+                        break;
+                    case 6:
+                        if(cp.GetMoney() > aid.getPrice(10))add = si.AddX10.clone();
+                        else add = si.AddX10N.clone();
+                        setItem(key, add, true);
+                        break;
+                    case 7:
+                        if(cp.GetMoney() > aid.getPrice(32))add = si.AddX32.clone();
+                        else add = si.AddX32N.clone();
+                        setItem(key, add, true);
+                        break;
+                    case 8:
+                        if(cp.GetMoney() > aid.getPrice(64))add = si.AddX64.clone();
+                        else add = si.AddX64N.clone();
                         setItem(key, add, true);
                         break;
                 }
 
 
-                if (ii < 4) {
-                    //RED
-                    setItem(key, deny.clone(), true);
-                } else if (ii == 4) {
-                    //White or Item
-                    if (i == 2) {
-                        //@TODO Get ITem
-                        setItem(key, item, true);
-                    } else {
-                        setItem(key, Item.get(160), true);
-                    }
-                } else {
-                    //GREEN
-                    setItem(key, confrim.clone(), true);
-                }
+//                if (ii < 4) {
+//                    //RED
+//                    setItem(key, deny.clone(), true);
+//                } else if (ii == 4) {
+//                    //White or Item
+//                    if (i == 2) {
+//                        //@TODO Get ITem
+//                        setItem(key, item, true);
+//                    } else {
+//                        setItem(key, Item.get(160), true);
+//                    }
+//                } else {
+//                    //GREEN
+//                    setItem(key, confrim.clone(), true);
+//                }
             }
         }
     }
@@ -429,13 +460,13 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         }
     }
 
-    public void SetupPageNotEnoughMoney(AuctionItemData aid) {
+    public void SetupPageNotEnoughMoney(SpawnerShopData aid) {
         CorePlayer cp = (CorePlayer) getHolder();
         StaticItems si = new StaticItems(Page);
-        Item item = aid.MakePretty();
+        Item item = aid.getItem();
         Item deny = si.Deny.clone();
         Item deny2 = si.Deny.clone();
-        CurrentPage = Confirm_Purchase_Not_Enough_Money;
+        CurrentPage = CurrentPageEnum.Confirm_Purchase_Not_Enough_Money;
         deny.setCustomName(TextFormat.RED + "Not Enough Money!");
         for (int i = 0; i < 5; i++) {
             for (int ii = 0; ii < 9; ii++) {
@@ -450,11 +481,11 @@ public class AuctionHouse extends BaseInventory implements Inventory {
                         setItem(key, item, true);
                     } else if (i == 0) {
                         Item g = si.Gold.clone();
-                        g.setCustomName(TextFormat.GOLD + " Your money: "+ cp.GetMoney());
+                        g.setCustomName(TextFormat.GOLD + " Your money: " + cp.GetMoney());
                         setItem(key, g, true);
                     } else {
                         Item r = Item.get(160, 14);
-                        r.setCustomName(TextFormat.RED + "Not Enough Money \n" + TextFormat.YELLOW + " Your Balance : " + cp.GetMoney() + "\n" + TextFormat.AQUA + "Item Cost : " + aid.getCost());
+                        r.setCustomName(TextFormat.RED + "Not Enough Money \n" + TextFormat.YELLOW + " Your Balance : " + cp.GetMoney() + "\n" + TextFormat.AQUA + "Item Cost : " + aid.getPrice());
                         setItem(key, r, true);
                     }
                 }
@@ -462,12 +493,26 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         }
     }
 
-    public void SetupPageToConfirmSingleItem(AuctionItemData aid) {
-        CurrentPage = Confirm_Purchase;
+    public void SetupPageToFinalConfirmItem(SpawnerShopData aid) {
+        SetupPageToFinalConfirmItem(aid,1,false);
+    }
+    boolean SetupPageToFinalConfirmItemSell = false;
+    //    int SetupPageToFinalConfirmItemCount = 0;
+    public void SetupPageToFinalConfirmItem(SpawnerShopData aid, int count, boolean sell) {
+        CurrentPage = CurrentPageEnum.Confirm_Purchase_Final;
+        SetupPageToFinalConfirmItemSell = sell;
+//        SetupPageToFinalConfirmItemCount = count;
         CorePlayer cp = (CorePlayer) getHolder();
         StaticItems si = new StaticItems(Page);
-        Item item = aid.MakePretty();
+        Item item = aid.getItem().clone();
+        item.setCount(count);
         Item confrim = si.Confirm.clone();
+//        if(sell)confrim = si.ConfirmSell.clone();
+        confrim.setCount(count);
+
+            confrim.setCustomName("Buy " + aid.getPrettyString(count));
+            confrim.setLore(TextFormat.AQUA + "Buy Price Per Item: " + TextFormat.GREEN + aid.getPrice(), TextFormat.AQUA + "Purchase Quantity: " + TextFormat.GREEN + count, TextFormat.GRAY + "------------------------", TextFormat.AQUA + "Purchase price: " + TextFormat.GREEN + aid.getPrice(count));
+
         Item deny = si.Deny.clone();
         for (int i = 0; i < 5; i++) {
             for (int ii = 0; ii < 9; ii++) {
@@ -672,7 +717,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     public void onSlotChange(int index, Item before) {
 
         switch (index) {
-            case MainPageItemRef.Reload:
+            case AuctionHouse.MainPageItemRef.Reload:
                 SendPage(Page);
                 break;
         }
@@ -722,7 +767,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         PlayerSellingPage,
         Expired,
         Confirm_Purchase,
-        Confirm_Purchase_Not_Enough_Money,
+        Confirm_Purchase_Not_Enough_Money, Confirm_Purchase_Final,
 
     }
 //    public void sendSlot(int index, Player[] players) {
@@ -748,18 +793,32 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         public final Item Redglass;
         public final Item Greenglass;
         public final Item Netherstar;
-        public final Item Chest;
+        public final Item ChestCancel;
+        public final Item ChestSell;
+        public final Item ChestBuy;
         public final Item Paper;
         public final Item Map;
         public final Item Confirm;
+        public final Item ConfirmSell;
         public final Item AddX1;
         public final Item AddX10;
         public final Item AddX32;
+        public final Item AddX64;
+        public final Item AddX1N;
+        public final Item AddX10N;
+        public final Item AddX32N;
+        public final Item AddX64N;
         public final Item RmvX1;
+        public final Item RmvX1N;
         public final Item RmvX10;
+        public final Item RmvX10N;
         public final Item RmvX32;
+        public final Item RmvX32N;
+        public final Item RmvX64;
+        public final Item RmvX64N;
         public final Item Deny;
         public final Item Gold;
+        public final String KeyName = "SHOPITEM";
 
         StaticItems() {
             this(-1);
@@ -767,8 +826,8 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
         StaticItems(int page) {
             CompoundTag T = new CompoundTag();
-            T.putBoolean("AHITEM", true);
-            Gold =Item.get(ItemID.GOLD_INGOT,0, 1);
+            T.putBoolean(KeyName, true);
+            Gold = Item.get(ItemID.GOLD_INGOT, 0, 1);
             Gold.setCompoundTag(T);
             Gold.setCustomName(TextFormat.GOLD + " Your money: ");
 
@@ -776,53 +835,110 @@ public class AuctionHouse extends BaseInventory implements Inventory {
             AddX1.setCompoundTag(T);
             AddX1.getNamedTag().putInt("ADD", 1);
             AddX1.setCount(1);
-            AddX1.setCustomName(TextFormat.GREEN + " Add 1 To Cart");
+            AddX1.setCustomName(TextFormat.GREEN + " Buy 1");
 
             AddX10 = Item.get(Item.EMERALD_BLOCK);
             AddX10.setCompoundTag(T);
             AddX10.getNamedTag().putInt("ADD", 10);
             AddX10.setCount(10);
-            AddX10.setCustomName(TextFormat.GREEN + " Add 10 To Cart");
+            AddX10.setCustomName(TextFormat.GREEN + " Buy 10");
 
 
             AddX32 = Item.get(Item.EMERALD_BLOCK);
             AddX32.setCompoundTag(T);
             AddX32.getNamedTag().putInt("ADD", 32);
             AddX32.setCount(32);
-            AddX32.setCustomName(TextFormat.GREEN + " Add 32 To Cart");
+            AddX32.setCustomName(TextFormat.GREEN + " Buy 32");
+
+            AddX64 = Item.get(Item.EMERALD_BLOCK);
+            AddX64.setCompoundTag(T);
+            AddX64.getNamedTag().putInt("ADD", 64);
+            AddX64.setCount(64);
+            AddX64.setCustomName(TextFormat.GREEN + " Buy 64");
+
+            AddX1N = Item.get(Item.IRON_BLOCK);
+            AddX1N.setCompoundTag(T);
+            AddX1N.getNamedTag().putInt("ADD", 1);
+            AddX1N.setCount(1);
+            AddX1N.setCustomName(TextFormat.GREEN + "Cannot Buy 1");
+
+            AddX10N = Item.get(Item.IRON_BLOCK);
+            AddX10N.setCompoundTag(T);
+            AddX10N.getNamedTag().putInt("ADD", 10);
+            AddX10N.setCount(10);
+            AddX10N.setCustomName(TextFormat.GREEN + "Cannot Buy 10");
+
+
+            AddX32N = Item.get(Item.IRON_BLOCK);
+            AddX32N.setCompoundTag(T);
+            AddX32N.getNamedTag().putInt("ADD", 32);
+            AddX32N.setCount(32);
+            AddX32N.setCustomName(TextFormat.GREEN + "Cannot Buy 32");
+
+            AddX64N = Item.get(Item.IRON_BLOCK);
+            AddX64N.setCompoundTag(T);
+            AddX64N.getNamedTag().putInt("ADD", 64);
+            AddX64N.setCount(64);
+            AddX64N.setCustomName(TextFormat.GREEN + "Cannot Buy 64");
 
 
             RmvX1 = Item.get(Item.REDSTONE_BLOCK);
+            RmvX1N = Item.get(Item.IRON_BLOCK);
             RmvX1.setCompoundTag(T);
             RmvX1.getNamedTag().putInt("RMV", 1);
-            RmvX1.setCustomName(TextFormat.GREEN + "Remove 1 From Cart");
+            RmvX1.setCustomName(TextFormat.GREEN + "Sell 1");
+            RmvX1N.setCompoundTag(T);
+            RmvX1N.getNamedTag().putInt("RMV", 1);
+            RmvX1N.setCustomName(TextFormat.RED + "Can Not Sell 1");
 
 
             RmvX10 = Item.get(Item.REDSTONE_BLOCK);
+            RmvX10N = Item.get(Item.IRON_BLOCK);
             RmvX10.setCompoundTag(T);
+            RmvX10.setCount(10);
             RmvX10.getNamedTag().putInt("RMV", 10);
-            RmvX10.setCustomName(TextFormat.GREEN + "Remove 10 From Cart");
+            RmvX10.setCustomName(TextFormat.GREEN + "Sell 10");
+            RmvX10N.setCompoundTag(T);
+            RmvX10N.getNamedTag().putInt("RMV", 1);
+            RmvX10N.setCustomName(TextFormat.RED + "Can Not Sell 1");
 
 
             RmvX32 = Item.get(Item.REDSTONE_BLOCK);
             RmvX32.setCompoundTag(T);
+            RmvX32.setCount(32);
             RmvX32.getNamedTag().putInt("RMV", 32);
-            RmvX32.setCustomName(TextFormat.GREEN + "Remove 32 From Cart");
+            RmvX32.setCustomName(TextFormat.GREEN + "Sell 32");
+            RmvX32N = Item.get(Item.IRON_BLOCK);
+            RmvX32N.setCompoundTag(T);
+            RmvX32N.setCount(32);
+            RmvX32N.getNamedTag().putInt("RMV", 32);
+            RmvX32N.setCustomName(TextFormat.GREEN + "Can Not Sell 32 From Cart");
+
+
+            RmvX64 = Item.get(Item.REDSTONE_BLOCK);
+            RmvX64.setCompoundTag(T);
+            RmvX64.setCount(64);
+            RmvX64.getNamedTag().putInt("RMV", 64);
+            RmvX64.setCustomName(TextFormat.GREEN + "Sell 64");
+            RmvX64N = Item.get(Item.IRON_BLOCK);
+            RmvX64N.setCompoundTag(T);
+            RmvX64N.setCount(64);
+            RmvX64N.getNamedTag().putInt("RMV", 64);
+            RmvX64N.setCustomName(TextFormat.GREEN + "Can Not Sell 64 From Cart");
 
 
             Confirm = Item.get(Item.EMERALD_BLOCK);
             Confirm.setCompoundTag(T);
             Confirm.setCustomName(TextFormat.GREEN + "Confirm Cart Purchase");
+            ConfirmSell = Item.get(Item.EMERALD_BLOCK);
+            ConfirmSell.setCompoundTag(T);
+            ConfirmSell.setCustomName(TextFormat.GREEN + "Confirm Cart Sale");
             Deny = Item.get(Item.REDSTONE_BLOCK);
             Deny.setCompoundTag(T);
             Deny.setCustomName(TextFormat.RED + "Cancel Cart Purchase");
             Diamond = Item.get(Item.DIAMOND);
             Diamond.setCompoundTag(T);
-            Diamond.setCustomName(
-                    TextFormat.GOLD + "" + TextFormat.BOLD + "Items you are Selling" + TextFormat.RESET + "\n" +
-                            TextFormat.GREEN + " Click here to view all the items" + TextFormat.RESET + "\n" + TextFormat.GREEN + "you are currently selling on the auction" + TextFormat.RESET + "\n\n" +
-                            TextFormat.GREEN + "Can also use " + TextFormat.DARK_GREEN + "/ah listed"
-            );
+            Diamond.setCustomName(TextFormat.GOLD + "" + TextFormat.BOLD + "Toggle Admin Mode" + TextFormat.RESET + "\n");
             Potato = Item.get(Item.POISONOUS_POTATO, 1);
             Potato.setCompoundTag(T);
             Potato.setCustomName(
@@ -853,10 +969,19 @@ public class AuctionHouse extends BaseInventory implements Inventory {
                             + TextFormat.GRAY + " Current Page " + page
             );
             if (page != -1) Netherstar.getNamedTag().putInt("page", page);
-            Chest = Item.get(Item.CHEST);
-            Chest.setCompoundTag(T);
-            Chest.setCustomName(
-                    TextFormat.GOLD + "" + TextFormat.BOLD + "Categories"
+            ChestSell = Item.get(Item.CHEST);
+            ChestSell.setCompoundTag(T);
+            ChestSell.setCustomName(
+                    TextFormat.GOLD + "" + TextFormat.BOLD + "Sell Selection"
+            );ChestCancel = Item.get(Item.CHEST);
+            ChestCancel.setCompoundTag(T);
+            ChestCancel.setCustomName(
+                    TextFormat.GOLD + "" + TextFormat.BOLD + "Cancel Selection"
+            );
+            ChestBuy = Item.get(Item.CHEST);
+            ChestBuy.setCompoundTag(T);
+            ChestBuy.setCustomName(
+                    TextFormat.GOLD + "" + TextFormat.BOLD + "Buy Section"
             );
 
             Map = Item.get(Item.MAP);
@@ -872,7 +997,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         public static final int LastPage = Size - 9;
         public static final int Search = Size - 8;
         //        public static final int NULL = Size - 7;
-        public static final int PlayerSelling = Size - 6;
+        public static final int ToggleAdmin = Size - 6;
         public static final int Reload = Size - 5;
         public static final int Catagories = Size - 4;
         //        public static final int MULL = Size - 3;
@@ -880,3 +1005,4 @@ public class AuctionHouse extends BaseInventory implements Inventory {
         public static final int NextPage = Size - 1;
     }
 }
+

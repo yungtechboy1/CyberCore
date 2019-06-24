@@ -17,9 +17,6 @@ public class CyberForm extends FormWindow {
     public  CyberCoreMain _plugin = CyberCoreMain.getInstance();
     public Faction _Fac = null;
 
-    public CyberForm() {
-
-    }
     public CyberForm(FormType.MainForm type) {
         _FT = type;
     }
@@ -60,8 +57,9 @@ public class CyberForm extends FormWindow {
 
     }
 
-    public void onRun(CorePlayer p) {
+    public boolean onRun(CorePlayer p) {
         if (p.Faction != null) _Fac = CyberCoreMain.getInstance().FM.FFactory.getFaction(p.Faction);
+        return false;
     }
 
     ;

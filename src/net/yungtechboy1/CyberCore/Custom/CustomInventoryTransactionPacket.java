@@ -54,7 +54,7 @@ public class CustomInventoryTransactionPacket extends DataPacket {
     public void decode() {
         this.transactionType = (int) this.getUnsignedVarInt();
 
-        System.out.println("QQQQQQQQQQ Starting to Decode Inv Packet, Type > "+transactionType);
+//        System.out.println("QQQQQQQQQQ Starting to Decode Inv Packet, Type > "+transactionType);
         this.actions = new CustomNetworkInventoryAction[(int) this.getUnsignedVarInt()];
         for (int i = 0; i < this.actions.length; i++) {
             this.actions[i] = new CustomNetworkInventoryAction().read(this);
@@ -72,7 +72,7 @@ public class CustomInventoryTransactionPacket extends DataPacket {
                 itemData.blockPos = this.getBlockVector3();
                 itemData.face = this.getBlockFace();
                 itemData.hotbarSlot = this.getVarInt();
-                System.out.println("ABOUT TO READDDDDD 44444444444");
+//                System.out.println("ABOUT TO READDDDDD 44444444444");
                 itemData.itemInHand = this.getSlot();
                 itemData.playerPos = this.getVector3f().asVector3();
                 itemData.clickPos = this.getVector3f();
@@ -85,7 +85,7 @@ public class CustomInventoryTransactionPacket extends DataPacket {
                 useItemOnEntityData.entityRuntimeId = this.getEntityRuntimeId();
                 useItemOnEntityData.actionType = (int) this.getUnsignedVarInt();
                 useItemOnEntityData.hotbarSlot = this.getVarInt();
-                System.out.println("ABOUT TO READDDDDD 555555555");
+//                System.out.println("ABOUT TO READDDDDD 555555555");
                 useItemOnEntityData.itemInHand = this.getSlot();
                 useItemOnEntityData.playerPos = this.getVector3f().asVector3();
                 useItemOnEntityData.clickPos = this.getVector3f().asVector3();
@@ -97,7 +97,7 @@ public class CustomInventoryTransactionPacket extends DataPacket {
 
                 releaseItemData.actionType = (int) getUnsignedVarInt();
                 releaseItemData.hotbarSlot = getVarInt();
-                System.out.println("ABOUT TO READDDDDD 66666666");
+//                System.out.println("ABOUT TO READDDDDD 66666666");
                 releaseItemData.itemInHand = getSlot();
                 releaseItemData.headRot = this.getVector3f().asVector3();
 
@@ -158,9 +158,9 @@ public class CustomInventoryTransactionPacket extends DataPacket {
 
     @Override
     public Item getSlot() {
-        System.out.println("+++++++++++++++++++++++++++");
+//        System.out.println("+++++++++++++++++++++++++++");
         int id = this.getVarInt();
-        System.out.println("ID !!!!!!>>> "+id);
+//        System.out.println("ID !!!!!!>>> "+id);
 //    if(id < 0){
 //            System.out.println("===============================b "+id);
 //            id = 255 +
@@ -173,10 +173,10 @@ public class CustomInventoryTransactionPacket extends DataPacket {
             if (data == 32767) {
                 data = -1;
             }
-            System.out.println("Data >>> "+data);
+//            System.out.println("Data >>> "+data);
 
             int cnt = auxValue & 255;
-            System.out.println("CNT >>> "+cnt);
+//            System.out.println("CNT >>> "+cnt);
             int nbtLen = this.getLShort();
             byte[] nbt = new byte[0];
             int canPlaceOn;
