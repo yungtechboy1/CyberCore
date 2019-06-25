@@ -201,7 +201,6 @@ public class CorePlayer extends Player {
                     CustomExtraHP = (int) b.getAmount();
                     setMaxHealth(20 + CustomExtraHP);
                     sendAttributes();
-                    ;
                     break;
             }
         }
@@ -1285,7 +1284,7 @@ public class CorePlayer extends Player {
                                 if (PlayerClass != null) {
                                     double obreaktime = breakTime;
                                     if (PlayerClass instanceof MineLifeClass && PlayerClass.TryRunPower(PowerEnum.MineLife)) {
-                                        Object nbt = ((MineLifeClass) PlayerClass).RunPower(PowerEnum.MineLife, this.inventory.getItemInHand(), target, breakTime);
+                                        Object nbt = PlayerClass.RunPower(PowerEnum.MineLife, this.inventory.getItemInHand(), target, breakTime);
                                         if (nbt != null) {
                                             double nd = (double) nbt;
                                             if (nd > 0) {
@@ -1974,6 +1973,11 @@ public class CorePlayer extends Player {
     public void tickPowerSource(int tick) {
         if (PlayerClass != null) PlayerClass.tickPowerSource(tick);
         //TODO
+    }
+
+    public Faction getFaction() {
+        if(Faction == null)return null;
+        return CyberCoreMain.getInstance().FM.FFactory.getFaction(Faction);
     }
 //        if (!this.server.isWhitelisted((this.getName()).toLowerCase())) {
 //            this.kick(PlayerKickEvent.Reason.NOT_WHITELISTED, "Server is white-listed");

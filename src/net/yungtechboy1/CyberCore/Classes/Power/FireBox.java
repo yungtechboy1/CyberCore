@@ -1,25 +1,28 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
+import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.EntityLiving;
 import cn.nukkit.event.entity.EntityDamageEvent;
-import cn.nukkit.math.BlockFace;
+import cn.nukkit.level.Sound;
+import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.math.Vector3;
-import cn.nukkit.utils.TextFormat;
+import cn.nukkit.network.protocol.LevelSoundEventPacket;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Passive.PassivePower;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBar;
+import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
-import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
-public class FireBox extends PassivePower {
-    private boolean WaitingOnFall = false;
-    private int JumpTick = -1;
+import java.util.ArrayList;
 
+public class FireBox extends PowerHotBar {
 
     public FireBox(BaseClass b) {
-        super(b, 100);
+        super(b, 100, 250, LockedSlot.SLOT_8);
         //TODO make this so that this power Runs Automatically!
-        TickUpdate = 10;
-        CanSendCanNotRunMessage = false;
+//        TickUpdate = 10;
+//        CanSendCanNotRunMessage = false;
     }
 
     @Override
@@ -28,15 +31,7 @@ public class FireBox extends PassivePower {
     }
 
     @Override
-    public PlayerJumpEvent PlayerJumpEvent(PlayerJumpEvent e) {
-        initPowerRun();
-        return e;
-//        return super.PlayerJumpEvent(e);
-    }
-
-    @Override
     public EntityDamageEvent EntityDamageEvent(EntityDamageEvent e) {
-
         return super.EntityDamageEvent(e);
     }
 
@@ -69,38 +64,73 @@ public class FireBox extends PassivePower {
     }
 
     public Object usePower(Object... args) {
-        BlockFace bf = getPlayer().getDirection();
-        getPlayer().sendMessage("ORIGINBAL M " + getPlayer().getMotion());
-        Vector3 mm = getPlayer().getMotion().add(0, .5, 0).multiply(1.25);
-        getPlayer().setMotion(mm);
-        getPlayer().sendMessage("Drangon Jumper Activated!!!!!!!!!!!!!!!!!" + mm);
-        WaitingOnFall = true;
-        JumpTick = getPlayer().getServer().getTick();
+        //Add Gast Fire Ball Sound
+        getPlayer().getLevel().addLevelSoundEvent(getPlayer(), LevelSoundEventPacket.SOUND_LAVA_POP);
+        getPlayer().getLevel().addSound(getPlayer(), Sound.MOB_GHAST_FIREBALL, 1.5f, 1);
+        //Add Fire Particles to floor
+        spawnParticles();
+        //Or Maybe use Breaking Particle
+        //Add knockback to Affected Entites
+        Entity[] el = getEntitiesAround();
+        for (Entity e : el) {
+            if (e instanceof EntityLiving) {
+                double deltaX = e.x - getPlayer().x;
+                double deltaZ = e.z - getPlayer().z;
+                ((EntityLiving) e).knockBack(getPlayer(), 1, deltaX, deltaZ, .8);
+            }
+        }
         return null;
     }
 
     @Override
     public String getName() {
-        return "Dragon Jumper";
+        return "Fire Box";
+    }
+
+
+    private void spawnParticles() {
+        ArrayList<Vector3> vv = getAffectedVectors(getPlayer());
+        for (Vector3 v : vv) {
+            getPlayer().getLevel().addParticle(new cn.nukkit.level.particle.FlameParticle(v.add(0, 1, 0)));
+//            if (v.distance(getPlayer()) > getMaxSize() * 1.5) continue;
+        }
+    }
+
+    private ArrayList<Vector3> getAffectedVectors(Vector3 v3) {
+        ArrayList<Vector3> v = new ArrayList<>();
+        for (int x = -getMaxSize(); x < getMaxSize(); x++) {
+            for (int z = -getMaxSize(); z < getMaxSize(); z++) {
+                v.add(getPlayer().getLevel().getSafeSpawn(v3.add(x, 0, z)));
+//                getPlayer().getLevel().addParticle(new InkParticle(v));
+            }
+        }
+        return v;
+    }
+
+    private Entity[] getEntitiesAround() {
+        ArrayList<Entity> fl = new ArrayList<>();
+        Entity[] e = getPlayer().getLevel().getNearbyEntities(new SimpleAxisAlignedBB(getPlayer().add(-getMaxSize(), -5, -getMaxSize()), getPlayer().add(getMaxSize(), 5, getMaxSize())));
+        if (e.length > 0 && getPlayer().Faction != null) {//Player in faction and Entities around
+            for (Entity ee : e) {
+                if (ee == getPlayer()) continue;
+                if (ee instanceof CorePlayer) {
+                    CorePlayer p = (CorePlayer) ee;
+                    if (p.Faction != null && p.getFaction().isAllied(p)) {//Target in faction and That faction is Allied
+                        continue;
+                    }
+                }
+                fl.add(ee);
+            }
+        }
+        return (Entity[]) fl.toArray();
+    }
+
+    private int getMaxSize() {
+        return getStage().getValue() + 3;
     }
 
     @Override
     public void onTick(int tick) {
-        if (WaitingOnFall) {
-            if (getPlayer().isOnGround() || getPlayer().isSwimming()) {
-                WaitingOnFall = false;
-                JumpTick = -1;
-            } else if (getPlayer().getLevel().getBlock(getPlayer().down()).getId() != 0) {
-                WaitingOnFall = false;
-                getPlayer().resetFallDistance();
-                JumpTick = -1;
-            } else if (((20 * 10) + JumpTick <  getPlayer().getServer().getTick())) {
-                WaitingOnFall = false;
-                JumpTick = -1;
-            }else{
-                getPlayer().resetFallDistance();
-            }
-        }
         super.onTick(tick);
     }
 
