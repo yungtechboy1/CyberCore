@@ -709,7 +709,7 @@ public class CorePlayer extends Player {
                                 return;
                             }
                         } else {
-                            for (PowerAbstract p : getPlayerClass().getPowers()) {
+                            for (PowerAbstract p : getPlayerClass().getActivePowers()) {
                                 if (p.getLS().getSlot() == mobEquipmentPacket.hotbarSlot) {
                                     p.initPowerRun();
                                     getInventory().setHeldItemIndex(getInventory().getHeldItemIndex(), true);

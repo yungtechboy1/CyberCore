@@ -24,7 +24,7 @@ public class MineLifeClass extends MinnerBaseClass {
 
 
 //    public Object RunPower(int powerid, Item itemInHand, Block target, double breakTime) {
-//        PowerAbstract p = Powers.get(powerid);
+//        PowerAbstract p = ActivePowers.get(powerid);
 //        if (p == null) {
 //            CCM.getLogger().error("No PowerAbstract found or Incorrect Args For MineLife E334221");
 //            return null;
@@ -38,7 +38,7 @@ public class MineLifeClass extends MinnerBaseClass {
 
 //    @Override
 //    public Object RunPower(int powerid, Object... args) {
-//        PowerAbstract p = Powers.get(powerid);
+//        PowerAbstract p = ActivePowers.get(powerid);
 //        if (p == null || args.length != 3) {
 //            CCM.getLogger().error("No PowerAbstract found or Incorrect Args For MineLife E334221");
 //            return -1;

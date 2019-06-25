@@ -5,7 +5,7 @@ import cn.nukkit.utils.ConfigSection;
 /**
  * Created by carlt on 5/16/2019.
  */
-public class CoolDown extends ConfigSection {
+public class CoolDown {//TODO Maybe extend ConfigSelection
     public String Key = null;
     protected int Time = -1;
 
