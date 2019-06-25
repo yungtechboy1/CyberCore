@@ -28,7 +28,7 @@ import net.yungtechboy1.CyberCore.*;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
-import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassSettingsWindow;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsWindow;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -101,6 +101,7 @@ public abstract class BaseClass {
                 addPowerSourceCount(psc);
             }
         }
+        startbuffs();
         SetPowers();
     }
 
@@ -284,7 +285,11 @@ public abstract class BaseClass {
     public void addPower(PowerAbstract power) {
         if (power instanceof PowerHotBarInt) {
             LockedSlots.add(power.getLS());
+            if( getClassSettings().PreferedPowerSlot8 == power.getType()){
+
+            }
         }
+        //Check Class Settings!
         Powers.put(power.getType().ordinal(), power);
     }
 //        PowerAbstract p = Powers.get(powerid);
@@ -499,7 +504,7 @@ public abstract class BaseClass {
     }
 
     public CyberForm GetSettingsWindow() {
-        return new ClassSettingsWindow(this, FormType.MainForm.NULL, "Settings Window", "");
+        return new MainClassSettingsWindow(this, FormType.MainForm.NULL, "Settings Window", "");
     }
 
     @Deprecated
@@ -644,6 +649,16 @@ public abstract class BaseClass {
 
     public FormWindow getClassMerchantWindow() {
         return null;
+    }
+
+    public void onCreate() {
+    }
+
+    public void addButtons(MainClassSettingsWindow mainClassSettingsWindow) {
+        add
+        for(PowerAbstract p : Powers.values()){
+            p.addButton(mainClassSettingsWindow);
+        }
     }
 
     public enum ClassTeir {

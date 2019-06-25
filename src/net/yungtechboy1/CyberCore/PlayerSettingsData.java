@@ -19,6 +19,7 @@ public class PlayerSettingsData {
     public int CreditScore = 0;
     public int CreditLimit = 500;
     public int UsedCredit = 0;
+    //TODO Intergrate
     public ArrayList<PlayerWarningEvent> PlayerWarnings = new ArrayList<>();
     public ArrayList<PlayerTempBanEvent> PlayerTempBans = new ArrayList<>();
     public ArrayList<PlayerKickEvent> PlayerKicks = new ArrayList<>();

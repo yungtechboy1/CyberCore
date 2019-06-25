@@ -10,29 +10,68 @@ import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.*;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by carlt_000 on 1/24/2017.
  */
 public class ClassFactory implements Listener{
 
+   public static final ArrayList<PowerEnum> DEFAULTPOWERS = new ArrayList<>(){
+       {
+           add(PowerEnum.MineLife);
+       }
+   };
+
+    public static final HashMap<PowerEnum, Integer> BUYPOWERS = new HashMap<>(){
+        {
+           put(PowerEnum.FireBox,10);//XP Cost
+        }
+    };
+
+
     public Config MMOSave;
-    public Config LumberJackTreePlants;
+    public Config PlayerLearnedPowers;
     CyberCoreMain CCM;
 //    private HashMap<String, BaseClass> ClassList = new HashMap<>();
 
     public ClassFactory(CyberCoreMain main) {
         CCM = main;
         MMOSave = new Config(new File(CCM.getDataFolder(), "MMOSave.yml"), Config.YAML);
-        LumberJackTreePlants = new Config(new File(CCM.getDataFolder(), "LumberJackTreePlants.yml"), Config.YAML);
+        PlayerLearnedPowers = new Config(new File(CCM.getDataFolder(), "PlayerLearnedPowers.yml"), Config.YAML);
 //        CCM.getServer().getScheduler().scheduleDelayedRepeatingTask(new LumberJackTreeCheckerTask(main), 20 * 60, 20 * 60);//Every Min
     }
 
 //    handelEvent(event, cp);
+public PowerEnum[] getRegisteredPowers(CorePlayer p){
+    ArrayList<PowerEnum> pe = new ArrayList<>();
+    if(!PlayerLearnedPowers.exists(p.getName().toLowerCase()))return new PowerEnum[0];
+        ConfigSection c = PlayerLearnedPowers.getSection(p.getName().toLowerCase());
+        for(Object v: c.getAllMap().values()){
+            if(v instanceof Integer){
+                    pe.add(PowerEnum.fromint((Integer)v));
+            }else{
+                System.out.println("EEEEEEEEQweqweqwe qwe qwe qweqwqe qweqweqqqqqqqqq!");
+            }
+        }
+
+        return (PowerEnum[]) pe.toArray();
+    }
+
+    public void registerPowerToPlayer(CorePlayer p, PowerEnum e){
+        ConfigSection c = new ConfigSection();
+        if(PlayerLearnedPowers.exists(p.getName().toLowerCase())){
+            c = PlayerLearnedPowers.getSection(p.getName().toLowerCase());
+        }
+        c.set(e.name(),e.ordinal());
+        PlayerLearnedPowers.set(p.getName().toLowerCase(),c);
+    }
 
     public void leaveClass(CorePlayer p) {
         p.getPlayerClass().onLeaveClass();
@@ -80,7 +119,7 @@ public class ClassFactory implements Listener{
                     data = new DragonSlayer(CCM, p, o);
                     break;
             }
-
+            data.onCreate();
             p.SetPlayerClass(data);
             return data;
         }

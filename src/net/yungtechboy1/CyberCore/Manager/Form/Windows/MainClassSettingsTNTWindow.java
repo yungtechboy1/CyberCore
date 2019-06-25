@@ -5,8 +5,8 @@ import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 
-public class ClassSettingsTNTWindow extends ClassSettingsWindow {
-    public ClassSettingsTNTWindow(BaseClass bc) {
+public class MainClassSettingsTNTWindow extends MainClassSettingsWindow {
+    public MainClassSettingsTNTWindow(BaseClass bc) {
         super(bc, FormType.MainForm.Class_Settings_TNT, "CyberFactions | TNT-Specialist Settings", TextFormat.AQUA + "Current XP: " + TextFormat.GREEN + bc.XPRemainder(bc.getXP()) + "\n" + TextFormat.AQUA + "Current Level: " + TextFormat.GREEN + bc.getLVL());
 //        _C = c;
     }

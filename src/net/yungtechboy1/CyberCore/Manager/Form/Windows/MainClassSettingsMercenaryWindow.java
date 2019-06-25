@@ -3,21 +3,12 @@ package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.item.Item;
 import cn.nukkit.math.NukkitRandom;
-import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.Mercenary;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 
-
-        import cn.nukkit.form.element.ElementButton;
-        import cn.nukkit.item.Item;
-        import cn.nukkit.math.NukkitRandom;
-        import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
-        import net.yungtechboy1.CyberCore.CorePlayer;
-        import net.yungtechboy1.CyberCore.FormType;
-
-public class ClassSettingsMercenaryWindow extends ClassSettingsWindow {
-    public ClassSettingsMercenaryWindow(Mercenary mercenary) {
+public class MainClassSettingsMercenaryWindow extends MainClassSettingsWindow {
+    public MainClassSettingsMercenaryWindow(Mercenary mercenary) {
         super(mercenary, FormType.MainForm.Class_Settings_Window_Mercenary,"Mercenary Settings","");
         addButton(new ElementButton("Damage Lvl1"));
         addButton(new ElementButton("Damage Lvl2"));

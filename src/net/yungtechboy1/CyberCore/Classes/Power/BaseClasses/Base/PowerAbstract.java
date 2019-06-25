@@ -14,6 +14,7 @@ import net.yungtechboy1.CyberCore.CoolDownTick;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsWindow;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
 /**
@@ -231,6 +232,10 @@ public abstract class PowerAbstract {
 
     public String getDispalyName() {
         return getName();
+    }
+
+    public void addButton(MainClassSettingsWindow mainClassSettingsWindow) {
+        if()
     }
 
     public enum Stage {
