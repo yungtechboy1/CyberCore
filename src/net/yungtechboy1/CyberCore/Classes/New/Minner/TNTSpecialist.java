@@ -9,7 +9,7 @@ import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassHowToUseTNT;
-import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassSettingsTNTWindow;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsTNTWindow;
 
 /**
  * Created by carlt on 5/16/2019.
@@ -20,7 +20,6 @@ public class TNTSpecialist extends MinnerBaseClass {
 
     public TNTSpecialist(CyberCoreMain main, CorePlayer player, ConfigSection data) {
         super(main, player, ClassType.Class_Miner_TNT_Specialist, data);
-
     }
 
 
@@ -166,7 +165,7 @@ public class TNTSpecialist extends MinnerBaseClass {
 
     @Override
     public CyberForm GetSettingsWindow() {
-        return new ClassSettingsTNTWindow( this);
+        return new MainClassSettingsTNTWindow( this);
     }
 
     @Override

@@ -14,6 +14,7 @@ import net.yungtechboy1.CyberCore.CoolDownTick;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsWindow;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
 /**
@@ -24,6 +25,7 @@ public abstract class PowerAbstract {
     public int TickUpdate = -1;
     public CoolDownTick Cooldown = null;
     public boolean PlayerToggleable = true;
+    public boolean CanSendCanNotRunMessage = true;
     LockedSlot LS = LockedSlot.NA;
     int Level = 0;
     private boolean Active = false;
@@ -103,7 +105,6 @@ public abstract class PowerAbstract {
         return event;
     }
 
-
     public EntityDamageEvent EntityDamageEvent(EntityDamageEvent e) {
         return e;
     }
@@ -159,12 +160,12 @@ public abstract class PowerAbstract {
         }
     }
 
+    ;
+
     public PowerEnum getType() {
         CyberCoreMain.getInstance().getLogger().error("ERROR GETTING TYPE FROM POWER!!!!!");
         return PowerEnum.Unknown;
     }
-
-    ;
 
     //USE TO RUN
     public final void initPowerRun(Object... args) {
@@ -174,7 +175,7 @@ public abstract class PowerAbstract {
             afterPowerRun(args);
         } else {
             if (Cooldown != null && Cooldown.isValid()) {
-                sendCanNotRunMessage();
+                if(CanSendCanNotRunMessage)sendCanNotRunMessage();
             }
         }
     }
@@ -231,6 +232,10 @@ public abstract class PowerAbstract {
 
     public String getDispalyName() {
         return getName();
+    }
+
+    public void addButton(MainClassSettingsWindow mainClassSettingsWindow) {
+        if()
     }
 
     public enum Stage {

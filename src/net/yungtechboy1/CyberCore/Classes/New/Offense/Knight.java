@@ -12,7 +12,7 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
-import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassSettingsKnightWindow;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsKnightWindow;
 
 public class Knight extends BaseClass {
 //    public Knight(CyberCoreMain main, Player player, int rank, int xp, ConfigSection cooldowns) {
@@ -72,6 +72,10 @@ public class Knight extends BaseClass {
 
     @Override
     public void SetPowers() {
+
+
+
+//        addPower();
         addPower(new KnightSandShieldPower(this));
     }
 
@@ -83,7 +87,7 @@ public class Knight extends BaseClass {
 
     @Override
     public CyberForm GetSettingsWindow() {
-        return new ClassSettingsKnightWindow( this);
+        return new MainClassSettingsKnightWindow( this);
     }
 
     @Override

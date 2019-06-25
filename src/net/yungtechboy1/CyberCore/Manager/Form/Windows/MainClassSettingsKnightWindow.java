@@ -7,8 +7,8 @@ import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 
-public class ClassSettingsKnightWindow extends ClassSettingsWindow {
-    public ClassSettingsKnightWindow(Knight knight) {
+public class MainClassSettingsKnightWindow extends MainClassSettingsWindow {
+    public MainClassSettingsKnightWindow(Knight knight) {
         super(knight,FormType.MainForm.Class_Settings_Window_Knight,"Knight Settings","");
         addButton(new ElementButton("Damage Lvl1"));
         addButton(new ElementButton("Damage Lvl2"));

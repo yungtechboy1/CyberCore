@@ -5,16 +5,11 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.player.PlayerDeathEvent;
-import cn.nukkit.form.element.ElementButton;
-import cn.nukkit.form.element.ElementInput;
-import cn.nukkit.form.element.ElementLabel;
 import cn.nukkit.form.response.FormResponseCustom;
-import cn.nukkit.form.window.FormWindowCustom;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.Mission.ActiveMission;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.FactionChatFactionWindow;
 
@@ -25,14 +20,18 @@ import java.util.*;
  */
 ////@TODO Make this so I can Call a Faction Class....
 public class Faction {
-    private FactionsMain Main;
-    private String Name;
-    private String DisplayName;
     public String Leader;
     public ArrayList<String> Recruits;
     public ArrayList<String> Members;
     public ArrayList<String> Officers;
     public ArrayList<String> Generals;
+    public ActiveMission AM = null;
+    public ArrayList<AllyRequest> AR = new ArrayList<>();
+    LinkedList<String> LastFactionChat = new LinkedList<>();
+    LinkedList<String> LastAllyChat = new LinkedList<>();
+    private FactionsMain Main;
+    private String Name;
+    private String DisplayName;
     private String MOTD;
     private String Desc;
     private ArrayList<String> FChat = new ArrayList<>();
@@ -48,25 +47,55 @@ public class Faction {
     private Integer Perms = 0;
     private Integer Power = 0;
     private Integer Rich = 0;
-
     private int Points = 0;
     private Integer XP = 0;
     private Integer Level = 0;
+    private FactionSettings Settings = new FactionSettings();
+    private ArrayList<Integer> CompletedMissionIDs = new ArrayList<>();
+    private Integer Money = 0;
+    private Vector3 Home = new Vector3(0, 0, 0);
+
+    public Faction(FactionsMain main, String name, String displayname, String leader, ArrayList<String> members, ArrayList<String> generals, ArrayList<String> officers, ArrayList<String> recruits) {
+        Main = main;
+        Name = name;
+        DisplayName = displayname;
+        Leader = leader;
+        Members = members;
+        Recruits = recruits;
+        Generals = generals;
+        Officers = officers;
+        for (String m : Members) {
+            Player p = Main.getServer().getPlayerExact(m);
+            if (p != null) {
+                Main.FFactory.FacList.put(p.getName().toLowerCase(), Name);
+            }
+        }
+        for (String m : Officers) {
+            Player p = Main.getServer().getPlayerExact(m);
+            if (p != null) {
+                Main.FFactory.FacList.put(p.getName().toLowerCase(), Name);
+            }
+        }
+        for (String m : Generals) {
+            Player p = Main.getServer().getPlayerExact(m);
+            if (p != null) {
+                Main.FFactory.FacList.put(p.getName().toLowerCase(), Name);
+            }
+        }
+
+        for (String m : Recruits) {
+            Player p = Main.getServer().getPlayerExact(m);
+            if (p != null) {
+                Main.FFactory.FacList.put(p.getName().toLowerCase(), Name);
+            }
+        }
+        Player p = Main.getServer().getPlayerExact(Leader);
+        if (p != null) Main.FFactory.FacList.put(p.getName().toLowerCase(), Name);
+    }
 
     public FactionSettings getSettings() {
         return Settings;
     }
-
-    private FactionSettings Settings = new FactionSettings();
-
-    private ArrayList<Integer> CompletedMissionIDs = new ArrayList<>();
-
-    public ActiveMission AM = null;
-
-    public ArrayList<AllyRequest> AR = new ArrayList<>();
-
-    LinkedList<String> LastFactionChat = new LinkedList<>();
-    LinkedList<String> LastAllyChat = new LinkedList<>();
 
     public void PromotePlayer(Player pp) {
         PromotePlayer(pp, false);
@@ -199,78 +228,22 @@ public class Faction {
     }
 
     public void SendFactionChatWindow(CorePlayer cp) {
-        cp.showFormWindow(new FactionChatFactionWindow((LinkedList<String>)LastFactionChat.clone()));
+        cp.showFormWindow(new FactionChatFactionWindow((LinkedList<String>) LastFactionChat.clone()));
     }
 
-
-    public void HandleFactionChatWindow(FormResponseCustom frc, CorePlayer cp){
-        if(frc == null){
+    public void HandleFactionChatWindow(FormResponseCustom frc, CorePlayer cp) {
+        if (frc == null) {
             System.out.println("Error @ 12255");
             return;
         }
         String msg = frc.getInputResponse(0);
-        if(msg == null){
+        if (msg == null) {
             //No Message Send?
             //CLose windows
             return;
         }
-        AddFactionChatMessage(msg,cp);
+        AddFactionChatMessage(msg, cp);
         SendFactionChatWindow(cp);
-    }
-
-    public class AllyRequest {
-        int Timeout = -1;
-        Faction F;
-
-        public AllyRequest(Faction f) {
-            this(f, -1);
-        }
-
-        public AllyRequest(Faction f, int timeout) {
-            F = f;
-            Timeout = timeout;
-        }
-    }
-
-    private Integer Money = 0;
-    private Vector3 Home = new Vector3(0, 0, 0);
-
-    public Faction(FactionsMain main, String name, String displayname, String leader, ArrayList<String> members, ArrayList<String> generals, ArrayList<String> officers, ArrayList<String> recruits) {
-        Main = main;
-        Name = name;
-        DisplayName = displayname;
-        Leader = leader;
-        Members = members;
-        Recruits = recruits;
-        Generals = generals;
-        Officers = officers;
-        for (String m : Members) {
-            Player p = Main.getServer().getPlayerExact(m);
-            if (p != null) {
-                Main.FFactory.FacList.put(p.getName().toLowerCase(), Name);
-            }
-        }
-        for (String m : Officers) {
-            Player p = Main.getServer().getPlayerExact(m);
-            if (p != null) {
-                Main.FFactory.FacList.put(p.getName().toLowerCase(), Name);
-            }
-        }
-        for (String m : Generals) {
-            Player p = Main.getServer().getPlayerExact(m);
-            if (p != null) {
-                Main.FFactory.FacList.put(p.getName().toLowerCase(), Name);
-            }
-        }
-
-        for (String m : Recruits) {
-            Player p = Main.getServer().getPlayerExact(m);
-            if (p != null) {
-                Main.FFactory.FacList.put(p.getName().toLowerCase(), Name);
-            }
-        }
-        Player p = Main.getServer().getPlayerExact(Leader);
-        if (p != null) Main.FFactory.FacList.put(p.getName().toLowerCase(), Name);
     }
 
     //@todo LMAO THIS IS NOT EVEN CLOSE TO being correcty XD
@@ -339,7 +312,6 @@ public class Faction {
     public String GetDesc() {
         return Desc;
     }
-
 
     public void SetMOTD(String value) {
         MOTD = value;
@@ -476,7 +448,6 @@ public class Faction {
         SetLevel(lvl);
         return true;
     }
-
 
     public void HandleKillEvent(PlayerDeathEvent event) {
         if (GetActiveMission() != null) {
@@ -710,17 +681,18 @@ public class Faction {
     }
 
     public Boolean AtWar() {
-        if (War != null) return true;
-        return false;
+        return War != null;
     }
 
     public Boolean AtWar(String fac) {
         if (War != null) {
-            if (((ConfigSection) Main.War.get(War)).getString("defenders").equalsIgnoreCase(fac)) {
-                return true;
-            }
+            return ((ConfigSection) Main.War.get(War)).getString("defenders").equalsIgnoreCase(fac);
         }
         return false;
+    }
+
+    public void SetEnemies(ArrayList<String> list) {
+        Enemies = list;
     }
 
 //    public void AddCooldown(Integer secs){
@@ -741,10 +713,6 @@ public class Faction {
 //        return false;
 //    }
 
-    public void SetEnemies(ArrayList<String> list) {
-        Enemies = list;
-    }
-
     public void AddEnemy(String fac) {
         Enemies.add(fac);
     }
@@ -758,8 +726,7 @@ public class Faction {
     }
 
     public Boolean isEnemy(String fac) {
-        if (Enemies.contains(fac.toLowerCase())) return true;
-        return false;
+        return Enemies.contains(fac.toLowerCase());
     }
 
     public void SetAllies(ArrayList<String> list) {
@@ -783,13 +750,31 @@ public class Faction {
         return Allies;
     }
 
+    //Can Attack Nuetral but can not Attack Allys!
+    public Boolean isNeutral(CorePlayer player) {
+        Faction f = player.getFaction();
+        if (f != null) return isNeutral(f);
+        return true;
+    }
+
+    public Boolean isNeutral(String name) {
+        return !isAllied(name) && !isEnemy(name);
+    }
+    public Boolean isNeutral(Faction fac) {
+        return isNeutral(fac.GetName());
+    }
+    public Boolean isAllied(CorePlayer player) {
+        Faction f = player.getFaction();
+        if (f != null) return isAllied(f);
+        return false;
+    }
+
     public Boolean isAllied(Faction fac) {
         return isAllied(fac.GetName());
     }
 
     public Boolean isAllied(String fac) {
-        if (Allies.contains(fac.toLowerCase())) return true;
-        return false;
+        return Allies.contains(fac.toLowerCase());
     }
 
     public void SetInvite(Map<String, Integer> Invs) {
@@ -940,7 +925,6 @@ public class Faction {
         Main.FFactory.FacList.remove(name.toLowerCase());
     }
 
-
     public boolean IsMember(Player p) {
         return IsMember(p.getName());
     }
@@ -1005,7 +989,6 @@ public class Faction {
         return n.equalsIgnoreCase(GetLeader());
     }
 
-
     public void SetDisplayName(String val) {
         DisplayName = val;
     }
@@ -1021,7 +1004,6 @@ public class Faction {
             if (af != null) af.BroadcastMessage(message);
         }
     }
-
 
     public String GetFactionNameTag(String p) {
         FactionRank fr = getPlayerRank(p);
@@ -1094,6 +1076,10 @@ public class Faction {
                 if (p != null) p.sendMessage(message);
         }
     }
+
+    public void BroadcastPopUp(String message) {
+        BroadcastPopUp(message, "");
+    }
 //
 //    public void ResetNameTag(){
 //        for(String m: Members){
@@ -1124,10 +1110,6 @@ public class Faction {
 //        Player p = Main.getServer().getPlayerExact(Leader);
 //        if(p != null && Main.CC != null)Main.CC.Setnametag(p);
 //    }
-
-    public void BroadcastPopUp(String message) {
-        BroadcastPopUp(message, "");
-    }
 
     public void BroadcastPopUp(String message, String subtitle) {
         for (String m : Members) {
@@ -1206,12 +1188,12 @@ public class Faction {
         return FAlly;
     }
 
-    public ArrayList<String> getFChat() {
-        return FChat;
-    }
-
     public void setFAlly(ArrayList<String> FAlly) {
         this.FAlly = FAlly;
+    }
+
+    public ArrayList<String> getFChat() {
+        return FChat;
     }
 
     public void setFChat(ArrayList<String> FChat) {
@@ -1263,7 +1245,6 @@ public class Faction {
         }
     }
 
-
     public void AddAllyChatMessage(String message, CorePlayer p) {
         FactionRank r = getPlayerRank(p);
         message = TextFormat.GRAY + "[" + r.GetChatPrefix() + TextFormat.GRAY + "] - " + r.GetChatColor() + p.getDisplayName() + TextFormat.GRAY + " > " + TextFormat.WHITE + message;
@@ -1271,6 +1252,20 @@ public class Faction {
         LastAllyChat.addFirst(message);
         if (LastAllyChat.size() > Settings.getMaxAllyChat()) {
             LastAllyChat.removeLast();
+        }
+    }
+
+    public class AllyRequest {
+        int Timeout = -1;
+        Faction F;
+
+        public AllyRequest(Faction f) {
+            this(f, -1);
+        }
+
+        public AllyRequest(Faction f, int timeout) {
+            F = f;
+            Timeout = timeout;
         }
     }
 }

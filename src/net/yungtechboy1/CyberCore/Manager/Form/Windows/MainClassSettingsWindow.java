@@ -6,19 +6,43 @@ import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
-import net.yungtechboy1.CyberCore.Manager.Form.CyberFormCustom;
+import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
 
-public class ClassSettingsWindow extends CyberFormCustom {
+import java.util.List;
+
+public class MainClassSettingsWindow extends CyberFormSimple {
     BaseClass _BC;
 
-    public ClassSettingsWindow(BaseClass bd, String title) {
-        super(FormType.MainForm.Class_Settings_Window, title);
-//        _BC = bd;
+    public MainClassSettingsWindow(BaseClass bd, FormType.MainForm ttype, String title, String content) {
+        super(ttype, title, content);
+        _BC = bd;
         inti();
     }
 
+    public MainClassSettingsWindow(BaseClass bd, FormType.MainForm ttype, String title, String content, List<ElementButton> buttons) {
+        super(ttype, title, content, buttons);
+        _BC = bd;
+        inti();
+
+    }
+
+    @Deprecated
+    public MainClassSettingsWindow(BaseClass bd, String title, String content) {
+        super(FormType.MainForm.Main_Class_Settings_Window, title, content);
+        _BC = bd;
+        inti();
+
+    }
+
+    @Deprecated
+    public MainClassSettingsWindow(BaseClass bd, String title, String content, List<ElementButton> buttons) {
+        super(FormType.MainForm.Main_Class_Settings_Window, title, content, buttons);
+        _BC = bd;
+        inti();
+
+    }
+
     private void inti() {
-        if(_BC.getPowers())
         addButton(new ElementButton("How to use " + TextFormat.AQUA + _BC.getName()));
         addButton(new ElementButton("Class Merchant"));
         addButton(new ElementButton(TextFormat.RED + "Leave Class"));
