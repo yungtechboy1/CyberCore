@@ -78,7 +78,7 @@ default void updateHotbar(LockedSlot ls, CoolDownTick c, PowerAbstract p){
                 }
             }
             if(g) continue;
-            //Checking other Powers
+            //Checking other ActivePowers
 //            if()
             Item i = p.getPlayer().getInventory().getItem(slot);
             if (i.getNamedTag() != null) {

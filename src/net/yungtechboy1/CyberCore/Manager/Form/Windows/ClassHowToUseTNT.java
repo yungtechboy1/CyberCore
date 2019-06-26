@@ -13,7 +13,7 @@ public class ClassHowToUseTNT extends CyberFormSimple {
         super(FormType.MainForm.Class_HowToUse_TNT, "CyberTech++ | How To Use "+title,"");
         _tt = title;
         addButton(new ElementButton("===Available Commands=="));
-        addButton(new ElementButton("===Powers / Abilities==="));
+        addButton(new ElementButton("===ActivePowers / Abilities==="));
         addButton(new ElementButton("===Upgrades / Unlocks==="));
         addButton(new ElementButton("===  How to Earn XP  ==="));
     }
@@ -62,7 +62,7 @@ class ClassHowToUseTNTPA extends CyberFormCustom{
     public ClassHowToUseTNTPA(String title) {
         super(FormType.MainForm.Class_HowToUse_TNT_PA,title);
         _tt = title;
-        addElement(new ElementLabel("===Powers / Abilities=="));
+        addElement(new ElementLabel("===ActivePowers / Abilities=="));
         addElement(new ElementLabel("- TNT Regen"));
         addElement(new ElementLabel("   - Default TNT Bag Size = 10"));
         addElement(new ElementLabel("   - Regenerate 1 TNT every 160 secs - Level"));

@@ -18,11 +18,11 @@ public class ClassSettingsWindow extends CyberFormCustom {
     }
 
     private void inti() {
-        if(_BC.getPowers())
+        if(_BC.getActivePowers())
         addButton(new ElementButton("How to use " + TextFormat.AQUA + _BC.getName()));
         addButton(new ElementButton("Class Merchant"));
         addButton(new ElementButton(TextFormat.RED + "Leave Class"));
-        addButton(new ElementButton(TextFormat.YELLOW + "----Powers---"));
+        addButton(new ElementButton(TextFormat.YELLOW + "----ActivePowers---"));
         //Plugin Callback
         _BC.addButtons(this);
         addButton(new ElementButton(TextFormat.BLACK + "-------------"));

@@ -36,13 +36,13 @@ public class AA extends Command {
         if (bc != null) {
             //@TODO Finish!
             if (args.length == 0) {
-                if(bc.getPowers().size() == 0){
+                if(bc.getActivePowers().size() == 0){
                     s.sendMessage(TextFormat.YELLOW+"Error! This Class doesn't provide you with a perk!");
                     return true;
                 }
                 //Send all possible Abillities!
                 int i = 1;
-                for (PowerAbstract c : bc.getPowers()) {
+                for (PowerAbstract c : bc.getActivePowers()) {
                     String a = TextFormat.GREEN + "";
                     if(c.Cooldown != null && c.Cooldown.isValid())a = TextFormat.RED + "";
 
@@ -52,7 +52,7 @@ public class AA extends Command {
                 s.sendMessage(send);
             } else if (args.length == 1) {
                 int key = Integer.parseInt(args[0]);
-                if (bc.getPowers().size() > key && key != 0) {
+                if (bc.getActivePowers().size() > key && key != 0) {
                     bc.CmdRunPower(PowerEnum.fromint(key));
                     bc.setPrime(--key);
 //                    ((Player) s).getLevel().addSound(new ExperienceOrbSound((Player) s));

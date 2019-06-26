@@ -116,7 +116,7 @@ public class MinnerBaseClass extends BaseClass {
 //        } else {
 //            if (!tntaddcd.isValid()) {
 //                //Add Tnt & reset
-//                Powers.get(Power_TNT_Specialist).AddAvailbleQuantity();
+//                ActivePowers.get(Power_TNT_Specialist).AddAvailbleQuantity();
 //                AddCooldown(TNT_Specialist_Add_Tick, GetTNTAddWaitTime());
 //            }
 //        }

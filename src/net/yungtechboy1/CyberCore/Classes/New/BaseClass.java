@@ -30,10 +30,7 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsWindow;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public abstract class BaseClass {
 
@@ -41,7 +38,8 @@ public abstract class BaseClass {
     public boolean Prime = false;
     public int PrimeKey = 0;
     public int SwingTime = 20;
-    public HashMap<Integer, PowerAbstract> Powers = new HashMap<>();
+    public HashMap<Integer, PowerAbstract> ActivePowers = new HashMap<>();
+    public ArrayList<PowerAbstract> AvailiblePowers = new ArrayList<>();
     protected int MainID = 0;
     protected CyberCoreMain CCM;
     HashMap<Integer, Integer> Herbal = new HashMap<Integer, Integer>() {{
@@ -80,6 +78,8 @@ public abstract class BaseClass {
     private ArrayList<LockedSlot> LockedSlots = new ArrayList<>();
     private double PowerSourceCount = 0;
 
+    private ClassSettingsObj ClassSettings = new ClassSettingsObj();
+
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank, ConfigSection data) {
         this(main, player, rank);
         if (data != null) {
@@ -100,10 +100,17 @@ public abstract class BaseClass {
                 int psc = data.getInt("PowerSourceCount", 0);
                 addPowerSourceCount(psc);
             }
+            if (data.containsKey("ClassSettings")) {
+//                int psc = data.getInt("PowerSourceCount", 0);
+                ClassSettings = (ClassSettingsObj) data.get("cs");
+            }
         }
         startbuffs();
-        SetPowers();
+        startSetPowers();
     }
+
+
+
 
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank) {
         CCM = main;
@@ -112,6 +119,10 @@ public abstract class BaseClass {
         TYPE = rank;
         LVL = XPToLevel(XP);
         startbuffs();
+        startSetPowers();
+    }
+
+    private void startSetPowers(){
         SetPowers();
     }
 
@@ -272,27 +283,38 @@ public abstract class BaseClass {
         return 0;
     }
 
-    public Collection<PowerAbstract> getPowers() {
-        return Powers.values();
+    public Collection<PowerAbstract> getActivePowers() {
+        return ActivePowers.values();
     }
 
     public PowerAbstract getPower(PowerEnum key) {
-        return Powers.get(key.ordinal());
+        return ActivePowers.get(key.ordinal());
     }
 
     public abstract Object RunPower(PowerEnum powerid, Object... args);
 
-    public void addPower(PowerAbstract power) {
-        if (power instanceof PowerHotBarInt) {
-            LockedSlots.add(power.getLS());
-            if( getClassSettings().PreferedPowerSlot8 == power.getType()){
-
-            }
-        }
-        //Check Class Settings!
-        Powers.put(power.getType().ordinal(), power);
+    public void addDefaultPower(PowerAbstract power) {
+        getClassSettings().getClassDefaultPowers().add(power.getType());
     }
-//        PowerAbstract p = Powers.get(powerid);
+    public void addPower(PowerAbstract power) {
+//        if (power instanceof PowerHotBarInt) {
+//            LockedSlots.add(power.getLS());
+//            if( getClassSettings().getPreferedSlot7() == power.getType()){
+//
+//            }
+//        }
+        //Check Class Settings!
+        AvailiblePowers.add(power);
+        if(ClassSettings.getActivatedPowers().size() > 0){
+
+        }
+//        ActivePowers.put(power.getType().ordinal(), power);
+    }
+
+    private ClassSettingsObj getClassSettings() {
+        return ClassSettings;
+    }
+//        PowerAbstract p = ActivePowers.get(powerid);
 //        if(p == null || args.length != 3 ){
 //            CCM.getLogger().error("No PowerAbstract found or Incorrect Args For MineLife E334221");
 //            return -1;
@@ -332,6 +354,7 @@ public abstract class BaseClass {
         return new ConfigSection() {{
             put("COOLDOWNS", getCOOLDOWNS());
             put("PowerSourceCount", PowerSourceCount);
+            put("CS", getClassSettings());
             put("XP", getXP());
             put("TYPE", getTYPE().ordinal());
         }};
@@ -442,7 +465,7 @@ public abstract class BaseClass {
 
     public Event PowerHandelEvent(Event e) {
 //        Event ee = e;
-        for (PowerAbstract p : getPowers()) {
+        for (PowerAbstract p : getActivePowers()) {
             p.handelEvent(e);
         }
         return e;
@@ -565,7 +588,7 @@ public abstract class BaseClass {
     }
 
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
-        for (PowerAbstract p : Powers.values()) p.CustomEntityDamageByEntityEvent(event);
+        for (PowerAbstract p : ActivePowers.values()) p.CustomEntityDamageByEntityEvent(event);
         float bd = event.getOriginalDamage();
         Buff b = getBuff(BuffType.Damage.ordinal());
         if (event.getEntity() instanceof Player && getBuff(BuffType.DamageToPlayer.ordinal()) != null) {
@@ -615,9 +638,9 @@ public abstract class BaseClass {
     }
 
     public void tickPowers(int tick) {
-//        System.out.println("Tring to TICKING POWER "+getPowers().size());
-//        System.out.println("Tring to TICKING POWER "+getPowers());
-        for (PowerAbstract p : getPowers()) {
+//        System.out.println("Tring to TICKING POWER "+getActivePowers().size());
+//        System.out.println("Tring to TICKING POWER "+getActivePowers());
+        for (PowerAbstract p : getActivePowers()) {
 //            System.out.println("TICKING POWER " + p.getName());
             try {
                 if (p.TickUpdate != -1) p.handleTick(tick);
@@ -656,7 +679,7 @@ public abstract class BaseClass {
 
     public void addButtons(MainClassSettingsWindow mainClassSettingsWindow) {
         add
-        for(PowerAbstract p : Powers.values()){
+        for(PowerAbstract p : ActivePowers.values()){
             p.addButton(mainClassSettingsWindow);
         }
     }

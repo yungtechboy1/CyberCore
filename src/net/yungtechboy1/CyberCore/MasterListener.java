@@ -83,7 +83,7 @@ public class MasterListener implements Listener {
         Player p = event.getPlayer();
         CorePlayer cp = (CorePlayer) p;
         if (cp.getPlayerClass() == null) return;
-        for (PowerAbstract pp : cp.getPlayerClass().getPowers()) {
+        for (PowerAbstract pp : cp.getPlayerClass().getActivePowers()) {
             if (pp instanceof PowerHotBarInt) {
                 event = (InventoryClickEvent)pp.handelEvent(event);
             }
@@ -96,7 +96,7 @@ public class MasterListener implements Listener {
         Player p = event.getTransaction().getSource();
         CorePlayer cp = (CorePlayer)p;
         if(cp.getPlayerClass() == null)return;
-        for(PowerAbstract pp : cp.getPlayerClass().getPowers()){
+        for(PowerAbstract pp : cp.getPlayerClass().getActivePowers()){
             if(pp instanceof PowerHotBarInt){
                 pp.handelEvent(event);
             }
