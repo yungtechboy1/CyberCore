@@ -160,8 +160,6 @@ public abstract class PowerAbstract {
         }
     }
 
-    ;
-
     public PowerEnum getType() {
         CyberCoreMain.getInstance().getLogger().error("ERROR GETTING TYPE FROM POWER!!!!!");
         return PowerEnum.Unknown;
@@ -235,7 +233,7 @@ public abstract class PowerAbstract {
     }
 
     public void addButton(MainClassSettingsWindow mainClassSettingsWindow) {
-        if()
+//        if()
     }
 
     public enum Stage {

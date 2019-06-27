@@ -23,13 +23,13 @@ import java.util.HashMap;
  */
 public class ClassFactory implements Listener{
 
-   public static final ArrayList<PowerEnum> DEFAULTPOWERS = new ArrayList<>(){
+   public static final ArrayList<PowerEnum> DEFAULTPOWERS = new ArrayList<PowerEnum>(){
        {
            add(PowerEnum.MineLife);
        }
    };
 
-    public static final HashMap<PowerEnum, Integer> BUYPOWERS = new HashMap<>(){
+    public static final HashMap<PowerEnum, Integer> BUYPOWERS = new HashMap<PowerEnum, Integer>(){
         {
            put(PowerEnum.FireBox,10);//XP Cost
         }

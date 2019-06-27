@@ -86,7 +86,7 @@ public class Knight extends BaseClass {
 
 
     @Override
-    public CyberForm GetSettingsWindow() {
+    public CyberForm getSettingsWindow() {
         return new MainClassSettingsKnightWindow( this);
     }
 
