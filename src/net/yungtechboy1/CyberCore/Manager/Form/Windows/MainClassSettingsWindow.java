@@ -83,6 +83,12 @@ public class MainClassSettingsWindow extends CyberFormSimple {
         }else if (k == 5) {
             //Choose active Powers
             p.showFormWindow(new MainClassSettingsWindowChooseLockedSlot(p.getPlayerClass(), LockedSlot.SLOT_9));
+        }else if (k == 6) {
+            //Choose active Powers
+            p.showFormWindow(new MainClassSettingsWindowChooseLockedSlot(p.getPlayerClass(), LockedSlot.SLOT_8));
+        }else if (k == 7) {
+            //Choose active Powers
+            p.showFormWindow(new MainClassSettingsWindowChooseLockedSlot(p.getPlayerClass(), LockedSlot.SLOT_7));
         }
         return true;
     }

@@ -28,17 +28,38 @@ public class ClassSettingsObj {
     }
 
     public ClassSettingsObj(BaseClass bc, ConfigSection c) {
-        LearnedPowers = (ArrayList<PowerEnum>) c.get("lp");
-        ClassDefaultPowers = (ArrayList<PowerEnum>) c.get("cdp");
-        ActivatedPowers = (ArrayList<PowerEnum>) c.get("ap");
-        PreferedSlot9 = (PowerEnum) c.get("ps9");
-        PreferedSlot8 = (PowerEnum) c.get("ps8");
-        PreferedSlot7 = (PowerEnum) c.get("ps7");
+        LearnedPowers = ArrayListStringtoPE((ArrayList<String>) c.get("lp"));
+        ClassDefaultPowers = ArrayListStringtoPE((ArrayList<String>) c.get("cdp"));
+        ActivatedPowers = ArrayListStringtoPE((ArrayList<String>) c.get("ap"));
+        PreferedSlot9 = PowerEnum.fromstr((String)c.get("ps9"));
+        PreferedSlot8 = PowerEnum.fromstr((String)c.get("ps8"));
+        PreferedSlot7 = PowerEnum.fromstr((String) c.get("ps7"));
         BC = bc;
     }
 
     public ArrayList<PowerEnum> getActivatedPowers() {
         return ActivatedPowers;
+    }
+    public ArrayList<String> getActivatedPowersJSON() {
+        ArrayList<String> i = new ArrayList<>();
+        for(PowerEnum e: getActivatedPowers()){
+            i.add(e.name());
+        }
+        return i;
+    }
+    public ArrayList<String> ArrayListPEtoString(ArrayList<PowerEnum> p) {
+        ArrayList<String> i = new ArrayList<>();
+        for(PowerEnum e: p){
+            i.add(e.name());
+        }
+        return i;
+    }
+    public ArrayList<PowerEnum> ArrayListStringtoPE(ArrayList<String> p) {
+        ArrayList<PowerEnum> i = new ArrayList<>();
+        for(String e: p){
+            i.add(PowerEnum.fromstr(e));
+        }
+        return i;
     }
 
     public ArrayList<PowerEnum> getLearnedPowers() {
@@ -75,12 +96,12 @@ public class ClassSettingsObj {
 
     public ConfigSection export() {
         return new ConfigSection() {{
-            put("lp", getLearnedPowers());
-            put("cdp", getClassDefaultPowers());
-            put("ap", getActivatedPowers());
-            put("ps9", getPreferedSlot9());
-            put("ps8", getPreferedSlot8());
-            put("ps7", getPreferedSlot7());
+            put("lp", ArrayListPEtoString(getLearnedPowers()));
+            put("cdp", ArrayListPEtoString(getClassDefaultPowers()));
+            put("ap", ArrayListPEtoString(getActivatedPowers()));
+            put("ps9", getPreferedSlot9().name());
+            put("ps8", getPreferedSlot8().name());
+            put("ps7", getPreferedSlot7().name());
         }};
     }
 

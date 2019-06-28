@@ -16,10 +16,13 @@ public class MainClassSettingsWindowActivePowers extends CyberFormCustom {
     public MainClassSettingsWindowActivePowers(String title, BaseClass _BC) {
         super(FormType.MainForm.Main_Class_Settings_Window_Active_Powers, title);
         this._BC = _BC;
+        inti();
     }
+
     public MainClassSettingsWindowActivePowers(BaseClass _BC) {
-        super(FormType.MainForm.Main_Class_Settings_Window_Active_Powers, _BC.getDisplayName()+" Power Settings");
+        super(FormType.MainForm.Main_Class_Settings_Window_Active_Powers, _BC.getDisplayName() + " Power Settings");
         this._BC = _BC;
+        inti();
     }
 
     private void inti() {
@@ -27,15 +30,17 @@ public class MainClassSettingsWindowActivePowers extends CyberFormCustom {
             if (check(pd)) continue;//Can not Enable LockedSlot Powers here
             boolean e = pd.getActive();
             PowerEnum pe = pd.getPowerID();
-            PowerAbstract p = _BC.getPower(pe);
-            String pn = p.getDispalyName();
+            PowerAbstract p = _BC.getPower(pe,false);
+            String pn ;
+            if(p == null) pn = "UNKNOWN?!?"+e;
+            else pn = p.getDispalyName();
             addElement(new ElementToggle(pn, e));
         }
 //        addButton(new ElementButton("<< Back"));
     }
 
-    private boolean check(PowerData pd){
-        return  (pd.getLS() != LockedSlot.NA || pd.getNeedsLockedSlot());//Can not Enable LockedSlot Powers here
+    private boolean check(PowerData pd) {
+        return (pd.getLS() != LockedSlot.NA || pd.getNeedsLockedSlot());//Can not Enable LockedSlot Powers here
     }
 
     /**

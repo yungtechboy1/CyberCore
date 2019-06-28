@@ -106,7 +106,7 @@ public abstract class BaseClass {
             }
             if (data.containsKey("ClassSettings")) {
 //                int psc = data.getInt("PowerSourceCount", 0);
-                ClassSettings = (ClassSettingsObj) data.get("cs");
+                ClassSettings = new ClassSettingsObj(this,((ConfigSection) data.get("cs")));
             }
         }
         startbuffs();
@@ -289,8 +289,13 @@ public abstract class BaseClass {
         return ActivePowers.values();
     }
 
+    public PowerAbstract getPower(PowerEnum key, boolean active) {
+        if(active)return ActivePowers.get(key.ordinal());
+        return PowerList.get(key.ordinal());
+    }
+
     public PowerAbstract getPower(PowerEnum key) {
-        return ActivePowers.get(key.ordinal());
+        return getPower(key,true);
     }
 
     public abstract Object RunPower(PowerEnum powerid, Object... args);
@@ -358,6 +363,7 @@ public abstract class BaseClass {
     }
 
 
+
 //        PowerAbstract p = ActivePowers.get(powerid);
 //        if(p == null || args.length != 3 ){
 //            CCM.getLogger().error("No PowerAbstract found or Incorrect Args For MineLife E334221");
@@ -398,7 +404,7 @@ public abstract class BaseClass {
         return new ConfigSection() {{
             put("COOLDOWNS", getCOOLDOWNS());
             put("PowerSourceCount", PowerSourceCount);
-            put("CS", getClassSettings());
+            put("CS", getClassSettings().export());
             put("XP", getXP());
             put("TYPE", getTYPE().ordinal());
         }};
