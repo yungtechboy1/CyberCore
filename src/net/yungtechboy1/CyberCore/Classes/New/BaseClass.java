@@ -42,7 +42,7 @@ public abstract class BaseClass {
     public boolean Prime = false;
     public int PrimeKey = 0;
     public int SwingTime = 20;
-    public HashMap<Integer, PowerAbstract> ActivePowers = new HashMap<>();
+    public HashMap<PowerEnum, PowerAbstract> ActivePowers = new HashMap<>();
     public HashMap<PowerEnum, PowerAbstract> PowerList = new HashMap<>();
     protected int MainID = 0;
     protected CyberCoreMain CCM;
@@ -290,8 +290,8 @@ public abstract class BaseClass {
     }
 
     public PowerAbstract getPower(PowerEnum key, boolean active) {
-        if(active)return ActivePowers.get(key.ordinal());
-        return PowerList.get(key.ordinal());
+        if(active)return ActivePowers.get(key);
+        return PowerList.get(key);
     }
 
     public PowerAbstract getPower(PowerEnum key) {
@@ -302,6 +302,10 @@ public abstract class BaseClass {
 
     public void addDefaultPower(PowerAbstract power) {
         getClassSettings().getClassDefaultPowers().add(power.getType());
+    }
+
+    public void activatePower(PowerEnum pe){
+
     }
 
     public void addPower(PowerAbstract power) {
@@ -355,7 +359,7 @@ public abstract class BaseClass {
 //        }
         //Check Class Settings!
 
-//        ActivePowers.put(power.getType().ordinal(), power);
+//        ActivePowers.put(power.getType(), power);
     }
 
     public ClassSettingsObj getClassSettings() {

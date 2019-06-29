@@ -51,8 +51,18 @@ public abstract class PowerAbstract {
         return Active;
     }
 
+    public void setActive() {
+        setActive(true);
+    }
     public void setActive(boolean active) {
         Active = active;
+        PowerEnum pe = getType();
+        if(PlayerClass.getClassSettings().getLearnedPowers().contains(pe)){
+            PowerAbstract p = this;
+            PlayerClass.getClassSettings().addActivePower(pe);
+        }else{
+            getPlayer().sendMessage(TextFormat.RED+"ERROR > POWER > Could not activate "+getDispalyName()+TextFormat.RED+" Please make sure you have learned this power!");
+        }
     }
 
     public LockedSlot getLS() {

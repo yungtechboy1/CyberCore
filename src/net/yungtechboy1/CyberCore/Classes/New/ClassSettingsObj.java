@@ -108,7 +108,7 @@ public class ClassSettingsObj {
     public PowerData[] getPowerDataList() {
         ArrayList<PowerData> pd = new ArrayList<>();
         for (PowerEnum pe : getLearnedPowers()) {
-            PowerAbstract pa = BC.getPower(pe);
+            PowerAbstract pa = BC.getPower(pe,false);
             PowerData p = new PowerData(pe, getActivatedPowers().contains(pe), pa instanceof PowerHotBarInt);
             if (getPreferedSlot7() == pe) p.setLS(LockedSlot.SLOT_7);
             if (getPreferedSlot8() == pe) p.setLS(LockedSlot.SLOT_8);
@@ -116,5 +116,9 @@ public class ClassSettingsObj {
             pd.add(p);
         }
         return pd.toArray(new PowerData[0]);
+    }
+
+    public void addActivePower(PowerEnum pe) {
+        ActivatedPowers.add(pe);
     }
 }
