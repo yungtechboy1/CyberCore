@@ -6,6 +6,9 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
@@ -15,23 +18,27 @@ import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.io.File;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Created by carlt_000 on 1/24/2017.
  */
-public class ClassFactory implements Listener{
+public class ClassFactory implements Listener {
 
-   public static final ArrayList<PowerEnum> DEFAULTPOWERS = new ArrayList<>(){
-       {
-           add(PowerEnum.MineLife);
-       }
-   };
-
-    public static final HashMap<PowerEnum, Integer> BUYPOWERS = new HashMap<>(){
+    public static final ArrayList<PowerEnum> DEFAULTPOWERS = new ArrayList<PowerEnum>() {
         {
-           put(PowerEnum.FireBox,10);//XP Cost
+            add(PowerEnum.MineLife);
+        }
+    };
+
+    public static final HashMap<PowerEnum, Integer> BUYPOWERS = new HashMap<PowerEnum, Integer>() {
+        {
+            put(PowerEnum.FireBox, 10);//XP Cost
         }
     };
 
@@ -48,15 +55,34 @@ public class ClassFactory implements Listener{
 //        CCM.getServer().getScheduler().scheduleDelayedRepeatingTask(new LumberJackTreeCheckerTask(main), 20 * 60, 20 * 60);//Every Min
     }
 
-//    handelEvent(event, cp);
-public PowerEnum[] getRegisteredPowers(CorePlayer p){
-    ArrayList<PowerEnum> pe = new ArrayList<>();
-    if(!PlayerLearnedPowers.exists(p.getName().toLowerCase()))return new PowerEnum[0];
+    public static String readFileAsString(String fileName) throws Exception {
+        String data = "";
+        data = new String(Files.readAllBytes(Paths.get(fileName)));
+        return data;
+    }
+
+    private void loadMMOSave() {
+        try {
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+//            Type listOfMyClassObject = new TypeToken<ArrayList<MyClass>>() {}.getType();
+            String content = readFileAsString(new File(CCM.getDataFolder().toString(), "MMOSave.yml").toString());
+//            this.config = new ConfigSection(gson.fromJson(content, new TypeToken<LinkedHashMap<String, Object>>() {
+//            }.getType()));
+        } catch (Exception e) {
+
+        }
+    }
+
+    //    handelEvent(event, cp);
+    public PowerEnum[] getRegisteredPowers(CorePlayer p) {
+        ArrayList<PowerEnum> pe = new ArrayList<>();
+        if (!PlayerLearnedPowers.exists(p.getName().toLowerCase())) return new PowerEnum[0];
         ConfigSection c = PlayerLearnedPowers.getSection(p.getName().toLowerCase());
-        for(Object v: c.getAllMap().values()){
-            if(v instanceof Integer){
-                    pe.add(PowerEnum.fromint((Integer)v));
-            }else{
+        for (Object v : c.getAllMap().values()) {
+            if (v instanceof Integer) {
+                pe.add(PowerEnum.fromint((Integer) v));
+            } else {
                 System.out.println("EEEEEEEEQweqweqwe qwe qwe qweqwqe qweqweqqqqqqqqq!");
             }
         }
@@ -64,13 +90,13 @@ public PowerEnum[] getRegisteredPowers(CorePlayer p){
         return (PowerEnum[]) pe.toArray();
     }
 
-    public void registerPowerToPlayer(CorePlayer p, PowerEnum e){
+    public void registerPowerToPlayer(CorePlayer p, PowerEnum e) {
         ConfigSection c = new ConfigSection();
-        if(PlayerLearnedPowers.exists(p.getName().toLowerCase())){
+        if (PlayerLearnedPowers.exists(p.getName().toLowerCase())) {
             c = PlayerLearnedPowers.getSection(p.getName().toLowerCase());
         }
-        c.set(e.name(),e.ordinal());
-        PlayerLearnedPowers.set(p.getName().toLowerCase(),c);
+        c.set(e.name(), e.ordinal());
+        PlayerLearnedPowers.set(p.getName().toLowerCase(), c);
     }
 
     public void leaveClass(CorePlayer p) {
@@ -81,22 +107,23 @@ public PowerEnum[] getRegisteredPowers(CorePlayer p){
     }
 
     public BaseClass GetClass(CorePlayer p) {
-        return GetClass(p,false);
+        return GetClass(p, false);
     }
+
     public BaseClass GetClass(CorePlayer p, boolean force) {
         if (p == null) {
             CyberCoreMain.getInstance().getLogger().info("Error! Tring to get class from NULL");
             return null;
         }
 
-        if(p.getPlayerClass() != null && !force){
+        if (p.getPlayerClass() != null && !force) {
             return p.getPlayerClass();
         }
 
         ConfigSection o = (ConfigSection) MMOSave.get(p.getName().toLowerCase());
         if (o != null) {
             BaseClass data = null;//new BaseClass(CCM, p, (ConfigSection) o);
-            switch (BaseClass.ClassType.values()[o.getInt("TYPE",0)]){
+            switch (BaseClass.ClassType.values()[o.getInt("TYPE", 0)]) {
                 case Class_Miner_TNT_Specialist:
                     data = new TNTSpecialist(CCM, p, o);
                     break;

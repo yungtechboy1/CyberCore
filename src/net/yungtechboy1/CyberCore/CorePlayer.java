@@ -45,12 +45,8 @@ import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.BuffOrigin;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
-import net.yungtechboy1.CyberCore.Classes.New.Offense.DarkKnight;
-import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
-import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.KnightSandShieldPower;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
-import net.yungtechboy1.CyberCore.Classes.Power.DarkKnightPoisonousStench;
 import net.yungtechboy1.CyberCore.Custom.CustomCraftingTransaction;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.BurnShield;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Climber;
@@ -688,32 +684,10 @@ public class CorePlayer extends Player {
 
                     //TODO Make into a Custom Event!
                     if (getPlayerClass() != null) {
-                        if (getPlayerClass() instanceof Knight) {
-                            Knight k = (Knight) getPlayerClass();
-                            KnightSandShieldPower kssp = (KnightSandShieldPower) k.getPower(PowerEnum.KnightSandShield);
-                            if (mobEquipmentPacket.hotbarSlot == kssp.getLS().getSlot()) {
-                                kssp.initPowerRun();
-                                kssp.onTick(getServer().getTick());
+                        for (PowerAbstract p : getPlayerClass().getActivePowers()) {
+                            if (p.getLS().getSlot() == mobEquipmentPacket.hotbarSlot) {
+                                p.initPowerRun();
                                 getInventory().setHeldItemIndex(getInventory().getHeldItemIndex(), true);
-                                return;
-                            }
-                        } else if (getPlayerClass() instanceof DarkKnight) {
-                            DarkKnight k = (DarkKnight) getPlayerClass();
-                            DarkKnightPoisonousStench kssp = (DarkKnightPoisonousStench) k.getPower(PowerEnum.DarkKnightPosionousStench);
-                            if (mobEquipmentPacket.hotbarSlot == kssp.getLS().getSlot()) {
-//                                System.out.println("SELLLLLLLLLLLLLLLLLLEEEEECCCTTTTTTTTTTTEEEEEEEEDDDDDDDDDD");
-//                                kssp.skip = true;
-                                kssp.initPowerRun();
-//                                kssp.onTick(getServer().getTick());
-                                getInventory().setHeldItemIndex(getInventory().getHeldItemIndex(), true);
-                                return;
-                            }
-                        } else {
-                            for (PowerAbstract p : getPlayerClass().getActivePowers()) {
-                                if (p.getLS().getSlot() == mobEquipmentPacket.hotbarSlot) {
-                                    p.initPowerRun();
-                                    getInventory().setHeldItemIndex(getInventory().getHeldItemIndex(), true);
-                                }
                             }
                         }
                     }
@@ -1312,7 +1286,7 @@ public class CorePlayer extends Player {
                             this.lastBreakPosition1 = currentBreakPosition;
                             break;
                         case PlayerActionPacket.ACTION_JUMP:
-                            sendMessage("JUMMMPPPPP!!!" + getDirection()+"|"+getMotion());
+                            sendMessage("JUMMMPPPPP!!!" + getDirection() + "|" + getMotion());
                             if (PlayerClass != null) PlayerClass.HandelEvent(new PlayerJumpEvent(this));
                             getServer().getPluginManager().callEvent(new PlayerJumpEvent(this));
 //                            addMovement(0,2.5,0,0,0,0);
@@ -1976,7 +1950,7 @@ public class CorePlayer extends Player {
     }
 
     public Faction getFaction() {
-        if(Faction == null)return null;
+        if (Faction == null) return null;
         return CyberCoreMain.getInstance().FM.FFactory.getFaction(Faction);
     }
 //        if (!this.server.isWhitelisted((this.getName()).toLowerCase())) {

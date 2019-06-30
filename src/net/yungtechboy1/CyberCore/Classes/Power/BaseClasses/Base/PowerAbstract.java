@@ -51,8 +51,23 @@ public abstract class PowerAbstract {
         return Active;
     }
 
+    public void setActive() {
+        setActive(true);
+    }
     public void setActive(boolean active) {
         Active = active;
+        PowerEnum pe = getType();
+        if(PlayerClass.getClassSettings().getLearnedPowers().contains(pe)){
+            PowerAbstract p = this;
+            PlayerClass.getClassSettings().addActivePower(pe);
+            onActivate();
+        }else{
+            getPlayer().sendMessage(TextFormat.RED+"ERROR > POWER > Could not activate "+getDispalyName()+TextFormat.RED+" Please make sure you have learned this power!");
+        }
+    }
+
+    public void onActivate(){
+
     }
 
     public LockedSlot getLS() {
@@ -160,8 +175,6 @@ public abstract class PowerAbstract {
         }
     }
 
-    ;
-
     public PowerEnum getType() {
         CyberCoreMain.getInstance().getLogger().error("ERROR GETTING TYPE FROM POWER!!!!!");
         return PowerEnum.Unknown;
@@ -235,7 +248,7 @@ public abstract class PowerAbstract {
     }
 
     public void addButton(MainClassSettingsWindow mainClassSettingsWindow) {
-        if()
+//        if()
     }
 
     public enum Stage {

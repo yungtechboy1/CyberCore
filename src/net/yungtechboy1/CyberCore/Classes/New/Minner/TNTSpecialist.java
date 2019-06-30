@@ -164,7 +164,7 @@ public class TNTSpecialist extends MinnerBaseClass {
     }
 
     @Override
-    public CyberForm GetSettingsWindow() {
+    public CyberForm getSettingsWindow() {
         return new MainClassSettingsTNTWindow( this);
     }
 

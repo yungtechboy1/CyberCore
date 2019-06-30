@@ -9,7 +9,7 @@ public final class FormType {
 //        String getDisplayableType();
 //    }
 
-    public static enum MainForm {
+    public enum MainForm {
 
         NULL,
         Enchanting_0,
@@ -31,14 +31,14 @@ public final class FormType {
         Faction_Info_Other,
         Faction_Join_List,
         Faction_Kick_List,
-        Faction_Chat_Faction, Class_Settings_TNT, Class_HowToUse_TNT, Class_HowToUse_TNT_Commands, Class_HowToUse_TNT_PA, Class_HowToUse_TNT_Unlocks, Class_HowToUse_TNT_EXP, PlayerSettings0, PlayerSettings1, PlayerSettingsPage0, SettingsPage0, PlayerFactionSettingsPage0, Main_Class_Settings_Window, Class_Settings_Window_Knight, Class_Settings_Window_Mercenary, Class_Settings_Window;
+        Faction_Chat_Faction, Class_Settings_TNT, Class_HowToUse_TNT, Class_HowToUse_TNT_Commands, Class_HowToUse_TNT_PA, Class_HowToUse_TNT_Unlocks, Class_HowToUse_TNT_EXP, PlayerSettings0, PlayerSettings1, PlayerSettingsPage0, SettingsPage0, PlayerFactionSettingsPage0, Main_Class_Settings_Window, Class_Settings_Window_Knight, Class_Settings_Window_Mercenary, Class_Settings_Window, Main_Class_Settings_Window_Active_Powers;
         public int getID(){
             return ordinal();
         }
 
     }
 
-    public static enum SubMenu {
+    public enum SubMenu {
         Enchanting_Confirm,
         MainMenu,
         Offense,

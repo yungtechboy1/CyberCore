@@ -36,7 +36,7 @@ public class DragonSlayer extends BaseClass {
 
         addPower(new DragonSlayerFireStomp(this));
         addPower(new DragonJumper(this));
-        addPower(new DragonJumper(this));
+//        addPower(new DragonJumper(this));
 //        addPower(new TNTAirStrikePower(this));
     }
 

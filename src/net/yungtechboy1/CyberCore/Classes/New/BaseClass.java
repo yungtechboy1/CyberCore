@@ -20,6 +20,7 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Classes.New.Buff.BuffType;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Passive.PassivePower;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBarInt;
@@ -30,7 +31,10 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsWindow;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class BaseClass {
 
@@ -38,8 +42,8 @@ public abstract class BaseClass {
     public boolean Prime = false;
     public int PrimeKey = 0;
     public int SwingTime = 20;
-    public HashMap<Integer, PowerAbstract> ActivePowers = new HashMap<>();
-    public ArrayList<PowerAbstract> AvailiblePowers = new ArrayList<>();
+    public HashMap<PowerEnum, PowerAbstract> ActivePowers = new HashMap<>();
+    public HashMap<PowerEnum, PowerAbstract> PowerList = new HashMap<>();
     protected int MainID = 0;
     protected CyberCoreMain CCM;
     HashMap<Integer, Integer> Herbal = new HashMap<Integer, Integer>() {{
@@ -78,7 +82,7 @@ public abstract class BaseClass {
     private ArrayList<LockedSlot> LockedSlots = new ArrayList<>();
     private double PowerSourceCount = 0;
 
-    private ClassSettingsObj ClassSettings = new ClassSettingsObj();
+    private ClassSettingsObj ClassSettings = new ClassSettingsObj(this);
 
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank, ConfigSection data) {
         this(main, player, rank);
@@ -102,14 +106,12 @@ public abstract class BaseClass {
             }
             if (data.containsKey("ClassSettings")) {
 //                int psc = data.getInt("PowerSourceCount", 0);
-                ClassSettings = (ClassSettingsObj) data.get("cs");
+                ClassSettings = new ClassSettingsObj(this,((ConfigSection) data.get("cs")));
             }
         }
         startbuffs();
         startSetPowers();
     }
-
-
 
 
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank) {
@@ -122,7 +124,7 @@ public abstract class BaseClass {
         startSetPowers();
     }
 
-    private void startSetPowers(){
+    private void startSetPowers() {
         SetPowers();
     }
 
@@ -287,8 +289,13 @@ public abstract class BaseClass {
         return ActivePowers.values();
     }
 
+    public PowerAbstract getPower(PowerEnum key, boolean active) {
+        if(active)return ActivePowers.get(key);
+        return PowerList.get(key);
+    }
+
     public PowerAbstract getPower(PowerEnum key) {
-        return ActivePowers.get(key.ordinal());
+        return getPower(key,true);
     }
 
     public abstract Object RunPower(PowerEnum powerid, Object... args);
@@ -296,24 +303,87 @@ public abstract class BaseClass {
     public void addDefaultPower(PowerAbstract power) {
         getClassSettings().getClassDefaultPowers().add(power.getType());
     }
-    public void addPower(PowerAbstract power) {
+
+    public void activatePower(PowerEnum pe){
+        PowerAbstract p = getPower(pe,false);
+        if(p == null){
+            getPlayer().sendMessage("Error Activating "+pe.name());
+        }
+        p.setActive();
+        getClassSettings().addActivePower(pe);
+        onPowerActivate(p);//callback
+        addActivePower(p);
+        getPlayer().sendMessage(TextFormat.GREEN+"POWER > "+p.getDispalyName()+" has been activated!");
+    }
+
+    protected void onPowerActivate(PowerAbstract p){
+
+    }
+
+    private void addActivePower(PowerAbstract p){
+        ActivePowers.put(p.getType(),p);
+    }
+
+    public final void addPower(PowerAbstract power) {
 //        if (power instanceof PowerHotBarInt) {
 //            LockedSlots.add(power.getLS());
 //            if( getClassSettings().getPreferedSlot7() == power.getType()){
 //
 //            }
 //        }
-        //Check Class Settings!
-        AvailiblePowers.add(power);
-        if(ClassSettings.getActivatedPowers().size() > 0){
+//        if(ClassSettings.getLearnedPowers().contains(power.getType())){
+        //Add to Power List to Pick From!
+        PowerList.put(power.getType(), power);
+        //Power is Learned
+        if (!ClassSettings.getActivatedPowers().isEmpty() && ClassSettings.getActivatedPowers().contains(power.getType())) {
+            //Power Active
+            if (power instanceof PowerHotBarInt) {
+                if (ClassSettings.getPreferedSlot7() == power.getType()) power.setLS(LockedSlot.SLOT_7);
+                if (ClassSettings.getPreferedSlot8() == power.getType()) power.setLS(LockedSlot.SLOT_8);
+                if (ClassSettings.getPreferedSlot9() == power.getType()) power.setLS(LockedSlot.SLOT_9);
+            }
+        } else if (!ClassSettings.getLearnedPowers().contains(power.getType())) {
+            //Power not Active and Need to Be Learned
+            ClassSettings.getLearnedPowers().add(power.getType());
+            if (power instanceof PowerHotBarInt) {
+                //Cant Activate!
+                if (ClassSettings.getPreferedSlot9() == PowerEnum.Unknown) {
+                    ClassSettings.setPreferedSlot9(power.getType());
+                    power.setLS(LockedSlot.SLOT_9);
+                    ClassSettings.getActivatedPowers().add(power.getType());
+                } else if (ClassSettings.getPreferedSlot8() == PowerEnum.Unknown) {
+                    ClassSettings.setPreferedSlot8(power.getType());
+                    power.setLS(LockedSlot.SLOT_8);
+                    ClassSettings.getActivatedPowers().add(power.getType());
+                } else if (ClassSettings.getPreferedSlot7() == PowerEnum.Unknown) {
+                    ClassSettings.setPreferedSlot7(power.getType());
+                    power.setLS(LockedSlot.SLOT_7);
+                    ClassSettings.getActivatedPowers().add(power.getType());
+                } else {
+                    getPlayer().sendMessage(TextFormat.GRAY + "Plugin > " + TextFormat.RED + " Error > Could not find a open Inventory slot to activate " + power.getDispalyName());
+                }
+            } else if (power instanceof PassivePower) {
+                //Activate Automatically!
+                ClassSettings.getActivatedPowers().add(power.getType());
+            } else {
+                //Low key nothing to do here!
+                //Register Possible Powers
+//                ClassSettings.
+            }
 
         }
-//        ActivePowers.put(power.getType().ordinal(), power);
+//        }
+        //Check Class Settings!
+
+//        ActivePowers.put(power.getType(), power);
     }
 
-    private ClassSettingsObj getClassSettings() {
+    public ClassSettingsObj getClassSettings() {
         return ClassSettings;
     }
+
+
+
 //        PowerAbstract p = ActivePowers.get(powerid);
 //        if(p == null || args.length != 3 ){
 //            CCM.getLogger().error("No PowerAbstract found or Incorrect Args For MineLife E334221");
@@ -354,7 +424,7 @@ public abstract class BaseClass {
         return new ConfigSection() {{
             put("COOLDOWNS", getCOOLDOWNS());
             put("PowerSourceCount", PowerSourceCount);
-            put("CS", getClassSettings());
+            put("CS", getClassSettings().export());
             put("XP", getXP());
             put("TYPE", getTYPE().ordinal());
         }};
@@ -526,7 +596,8 @@ public abstract class BaseClass {
         return event;
     }
 
-    public CyberForm GetSettingsWindow() {
+    //TODO Change to MainClassSettingsWindow return tyoe
+    public CyberForm getSettingsWindow() {
         return new MainClassSettingsWindow(this, FormType.MainForm.NULL, "Settings Window", "");
     }
 
@@ -678,8 +749,7 @@ public abstract class BaseClass {
     }
 
     public void addButtons(MainClassSettingsWindow mainClassSettingsWindow) {
-        add
-        for(PowerAbstract p : ActivePowers.values()){
+        for (PowerAbstract p : ActivePowers.values()) {
             p.addButton(mainClassSettingsWindow);
         }
     }

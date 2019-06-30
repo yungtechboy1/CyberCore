@@ -8,4 +8,11 @@ public enum PowerEnum {
         }
         return Unknown;
     }
+
+    public static PowerEnum fromstr(String i){
+       for(PowerEnum e : values()){
+           if(e.name().equalsIgnoreCase(i))return e;
+       }
+        return Unknown;
+    }
 }

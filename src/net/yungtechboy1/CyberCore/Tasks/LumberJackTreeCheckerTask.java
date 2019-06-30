@@ -20,27 +20,32 @@ public class LumberJackTreeCheckerTask extends PluginTask<CyberCoreMain> {
 
     @Override
     public void onRun(int currentTick) {
-        for(Map.Entry<String,Object> e: getOwner().ClassFactory.LumberJackTreePlants.getAll().entrySet()){
-            String pn = e.getKey();
-            Player p = getOwner().getServer().getPlayerExact(pn);
-            if(p == null)continue;
-            if(e.getValue() instanceof ConfigSection){
-                ConfigSection f = (ConfigSection) ((ConfigSection) e.getValue()).clone();
-                for(Map.Entry<String,Object> g: f.getAll().entrySet()){
-                    String[] pos = g.getKey().split("\\|");
-                    if(pos.length == 3) {
-                        Vector3 v3 = new Vector3(Integer.parseInt(pos[0]),Integer.parseInt(pos[1]),Integer.parseInt(pos[2]));
-                        Block at = getOwner().getServer().getDefaultLevel().getBlock(v3);
-                        if(at.getId() == Block.WOOD || at.getId() == Block.WOOD2){
-                            ((ConfigSection) e.getValue()).remove(g.getKey());
-//                            BaseClass bc = getOwner().ClassFactory.GetClass(p);
-//                            if(bc instanceof Class_LumberJack){
-//                                bc.addXP(50);
-//                            }
-                        }
-                    }
-                }
-            }
-        }
+
     }
+//
+//    @Override
+//    public void onRun(int currentTick) {
+//        for(Map.Entry<String,Object> e: getOwner().ClassFactory.LumberJackTreePlants.getAll().entrySet()){
+//            String pn = e.getKey();
+//            Player p = getOwner().getServer().getPlayerExact(pn);
+//            if(p == null)continue;
+//            if(e.getValue() instanceof ConfigSection){
+//                ConfigSection f = (ConfigSection) ((ConfigSection) e.getValue()).clone();
+//                for(Map.Entry<String,Object> g: f.getAll().entrySet()){
+//                    String[] pos = g.getKey().split("\\|");
+//                    if(pos.length == 3) {
+//                        Vector3 v3 = new Vector3(Integer.parseInt(pos[0]),Integer.parseInt(pos[1]),Integer.parseInt(pos[2]));
+//                        Block at = getOwner().getServer().getDefaultLevel().getBlock(v3);
+//                        if(at.getId() == Block.WOOD || at.getId() == Block.WOOD2){
+//                            ((ConfigSection) e.getValue()).remove(g.getKey());
+////                            BaseClass bc = getOwner().ClassFactory.GetClass(p);
+////                            if(bc instanceof Class_LumberJack){
+////                                bc.addXP(50);
+////                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
