@@ -5,6 +5,7 @@ import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.KnightSandShieldPower;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -52,6 +53,11 @@ public class Knight extends BaseClass {
     @Override
     public Object RunPower(PowerEnum powerid, Object... args) {
         return null;
+    }
+
+    @Override
+    protected void onPowerActivate(PowerAbstract p) {
+
     }
 
 

@@ -310,14 +310,21 @@ public abstract class BaseClass {
             getPlayer().sendMessage("Error Activating "+pe.name());
         }
         p.setActive();
+        getClassSettings().addActivePower(pe);
+        onPowerActivate(p);//callback
+        addActivePower(p);
+        getPlayer().sendMessage(TextFormat.GREEN+"POWER > "+p.getDispalyName()+" has been activated!");
+    }
+
+    protected void onPowerActivate(PowerAbstract p){
 
     }
 
-    public void addActivePower(PowerAbstract p){
+    private void addActivePower(PowerAbstract p){
         ActivePowers.put(p.getType(),p);
     }
 
-    public void addPower(PowerAbstract power) {
+    public final void addPower(PowerAbstract power) {
 //        if (power instanceof PowerHotBarInt) {
 //            LockedSlots.add(power.getLS());
 //            if( getClassSettings().getPreferedSlot7() == power.getType()){

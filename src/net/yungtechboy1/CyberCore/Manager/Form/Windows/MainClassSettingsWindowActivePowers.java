@@ -10,7 +10,6 @@ import net.yungtechboy1.CyberCore.Classes.Power.PowerData;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormCustom;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 public class MainClassSettingsWindowActivePowers extends CyberFormCustom {
     BaseClass _BC;
@@ -29,17 +28,23 @@ public class MainClassSettingsWindowActivePowers extends CyberFormCustom {
 
     private void inti() {
         for (PowerData pd : _BC.getClassSettings().getPowerDataList()) {
-            System.out.println("YEAHHHHH >>> "+pd+" || "+pd.getNeedsLockedSlot()+"||"+pd.getPowerID()+"||"+pd.getPowerID().name());
+            System.out.println("YEAHHHHH >>> " + pd + " || " + pd.getNeedsLockedSlot() + "||" + pd.getPowerID() + "||" + pd.getPowerID().name());
             if (check(pd)) continue;//Can not Enable LockedSlot Powers here
             System.out.println("\\/\\/\\/\\/ NExt!!");
             boolean e = pd.getActive();
             PowerEnum pe = pd.getPowerID();
-            PowerAbstract p = _BC.getPower(pe,false);
-            System.out.println("NOW PPPPPP >>> "+p+" || ");//+p.getDispalyName()+"||"+p.getName());
-            String pn ;
-            if(p == null) pn = "UNKNOWN?!?"+e;
+            PowerAbstract p = _BC.getPower(pe, false);
+            System.out.println("NOW PPPPPP >>> " + p + " || ");//+p.getDispalyName()+"||"+p.getName());
+            String pn;
+            String ppn = TextFormat.GREEN + "[Currently Active]";
+            String ppnn = TextFormat.RED + "";
+            if (p == null) pn = "UNKNOWN?!?" + e;
             else pn = p.getDispalyName();
-            addElement(new ElementToggle(pn+ TextFormat.GRAY, e));
+            if (e)
+                pn += ppn;
+            else
+                pn += ppnn;
+            addElement(new ElementToggle(pn + TextFormat.GRAY, e));
         }
 //        addButton(new ElementButton("<< Back"));
     }
@@ -63,8 +68,8 @@ public class MainClassSettingsWindowActivePowers extends CyberFormCustom {
             boolean on = getResponse().getToggleResponse(key);
             boolean b = _BC.getClassSettings().getActivatedPowers().contains(pd.getPowerID());
             if (on && !b) {
-                _BC.getClassSettings().getActivatedPowers().add(pd.getPowerID());
-                _BC.getPlayer().sendMessage(TextFormat.GREEN+"POWER > "+pd.getPowerID().name()+" has been activated!");
+                _BC.activatePower(pd.getPowerID());
+//                _BC.getPlayer().sendMessage(TextFormat.GREEN+"POWER > "+pd.getPowerID().name()+" has been activated!");
             } else if (!on && b) {
                 _BC.getClassSettings().getActivatedPowers().remove(pd.getPowerID());
             }
