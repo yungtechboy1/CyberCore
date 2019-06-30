@@ -60,9 +60,14 @@ public abstract class PowerAbstract {
         if(PlayerClass.getClassSettings().getLearnedPowers().contains(pe)){
             PowerAbstract p = this;
             PlayerClass.getClassSettings().addActivePower(pe);
+            onActivate();
         }else{
             getPlayer().sendMessage(TextFormat.RED+"ERROR > POWER > Could not activate "+getDispalyName()+TextFormat.RED+" Please make sure you have learned this power!");
         }
+    }
+
+    public void onActivate(){
+
     }
 
     public LockedSlot getLS() {

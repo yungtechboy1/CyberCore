@@ -64,7 +64,7 @@ public class MainClassSettingsWindowActivePowers extends CyberFormCustom {
             boolean b = _BC.getClassSettings().getActivatedPowers().contains(pd.getPowerID());
             if (on && !b) {
                 _BC.getClassSettings().getActivatedPowers().add(pd.getPowerID());
-                _BC.getPlayer().sendMessage(TextFormat.GREEN+"POWER > "+pd.get);
+                _BC.getPlayer().sendMessage(TextFormat.GREEN+"POWER > "+pd.getPowerID().name()+" has been activated!");
             } else if (!on && b) {
                 _BC.getClassSettings().getActivatedPowers().remove(pd.getPowerID());
             }

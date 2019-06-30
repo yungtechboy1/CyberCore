@@ -305,7 +305,16 @@ public abstract class BaseClass {
     }
 
     public void activatePower(PowerEnum pe){
+        PowerAbstract p = getPower(pe,false);
+        if(p == null){
+            getPlayer().sendMessage("Error Activating "+pe.name());
+        }
+        p.setActive();
 
+    }
+
+    public void addActivePower(PowerAbstract p){
+        ActivePowers.put(p.getType(),p);
     }
 
     public void addPower(PowerAbstract power) {
