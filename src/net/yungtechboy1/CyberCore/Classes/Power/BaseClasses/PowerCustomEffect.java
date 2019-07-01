@@ -18,7 +18,7 @@ public class PowerCustomEffect extends PowerAbstract {
 
     int DurationTicks = 0;
     public PowerCustomEffect(BaseClass b, int psc) {
-        super(b, psc);
+        super(b,LevelingType.None, psc);
     }
 
     public Boolean getPotionOnSelf() {

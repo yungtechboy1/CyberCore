@@ -43,17 +43,17 @@ public class MineLifePower extends PowerCustomEffect {
     }
 
     @Override
-    public Stage getStage() {
+    public StageEnum getStage() {
         if (PlayerClass.getLVL() <= 19) {
-            return Stage.STAGE_1;
+            return StageEnum.STAGE_1;
         } else if (PlayerClass.getLVL() <= 39) {
-            return Stage.STAGE_2;
+            return StageEnum.STAGE_2;
         } else if (PlayerClass.getLVL() <= 89) {
-            return Stage.STAGE_3;
+            return StageEnum.STAGE_3;
         } else if (PlayerClass.getLVL() <= 100) {
-            return Stage.STAGE_4;
+            return StageEnum.STAGE_4;
         }
-        return Stage.STAGE_1;
+        return StageEnum.STAGE_1;
     }
 
     @Override
