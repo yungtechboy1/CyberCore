@@ -28,6 +28,7 @@ import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.*;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
+import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Power;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsWindow;
 
@@ -42,7 +43,7 @@ public abstract class BaseClass {
     public boolean Prime = false;
     public int PrimeKey = 0;
     public int SwingTime = 20;
-    public HashMap<PowerEnum, PowerAbstract> ActivePowers = new HashMap<>();
+    public ArrayList<PowerEnum> ActivePowers = new ArrayList<>();
     public HashMap<PowerEnum, PowerAbstract> PowerList = new HashMap<>();
     protected int MainID = 0;
     protected CyberCoreMain CCM;
@@ -285,12 +286,20 @@ public abstract class BaseClass {
         return 0;
     }
 
-    public Collection<PowerAbstract> getActivePowers() {
-        return ActivePowers.values();
+    public ArrayList<PowerEnum> getActivePowersList() {
+        return ActivePowers;
+    }
+
+    public ArrayList<PowerAbstract> getActivePowers() {
+        ArrayList<PowerAbstract> pp = new ArrayList<>();
+        for(PowerEnum pe: getActivePowersList()){
+            pp.add(getPower(pe));
+        }
+        return pp;
     }
 
     public PowerAbstract getPower(PowerEnum key, boolean active) {
-        if(active)return ActivePowers.get(key);
+//        if(active)return ActivePowers.get(key);
         return PowerList.get(key);
     }
 
