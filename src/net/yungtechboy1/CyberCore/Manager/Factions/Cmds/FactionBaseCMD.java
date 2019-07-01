@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
@@ -19,10 +20,17 @@ public class FactionBaseCMD extends Command {
         super("faction", "Base Faction command", main.colorize("&cUsage:&7 /f <subcommand> - Do /f help for a list of subcommands."), new String[]{"f", "faction"});
         Owner = main;
         commandParameters.clear();
-        this.commandParameters.put("create", new CommandParameter[]{
-                new CommandParameter("create", false),
+        this.commandParameters.put("noTargets", new CommandParameter[]{
+                new CommandParameter("cmd", CommandParamType.STRING ,false)
         });
-
+        this.commandParameters.put("playerTargets", new CommandParameter[]{
+                new CommandParameter("cmd", CommandParamType.STRING ,true),
+                new CommandParameter("player", CommandParamType.TARGET ,false),
+        });
+        this.commandParameters.put("factionTargets", new CommandParameter[]{
+                new CommandParameter("cmd", CommandParamType.STRING ,true),
+                new CommandParameter("faction", CommandParamType.STRING ,false),
+        });
     }
 
     private String[] PushOne(String[] list) {

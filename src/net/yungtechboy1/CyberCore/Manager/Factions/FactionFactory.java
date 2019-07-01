@@ -692,7 +692,9 @@ public class FactionFactory {
     }
 
     public Faction getPlayerFaction(String name) {
+        Main.plugin.log("getPlayerFaction CALLED");
         if (name != null && FacList.containsKey(name.toLowerCase())) {
+            Main.plugin.log("getPlayerFaction CALLED");
             return getFaction(FacList.get(name.toLowerCase()));
         }
         return null;
@@ -723,6 +725,7 @@ public class FactionFactory {
             fac.SetInvite(GetInvites(name));
             fac.SetDisplayName(GetDisplayName(name));
             fac.SetPower((Integer) GetFromSettings("power", name));
+            Main.plugin.log(GetFromSettings("money", name).toString());
             fac.SetMoney((Integer) GetFromSettings("money", name));
             fac.SetPoints((Integer) GetFromSettings("points", name));
             fac.SetXP((Integer) GetFromSettings("xp", name));

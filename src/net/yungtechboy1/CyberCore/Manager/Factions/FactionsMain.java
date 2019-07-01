@@ -240,6 +240,7 @@ public class FactionsMain {
 
     public void LoadPlayer(Player player) {
 
+
     }
 
     public void PlayerInvitedToFaction(Player invited, Faction fac) {

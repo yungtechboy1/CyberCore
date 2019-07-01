@@ -43,7 +43,7 @@ public abstract class Commands {
     }
 
     public boolean run() {
-        fac = Main.FFactory.getPlayerFaction((Player) Sender);
+        fac = Main.FFactory.getFaction(Sender.Faction);
         if (!CheckPerms() && sendFailReason) {
             PermFail failcode = CheckPermsCodes();
             String message = "Unknown Error!";
@@ -118,6 +118,7 @@ public abstract class Commands {
     }
 
     public PermFail CheckPermsCodes() {
+        if(senderMustBeAdmin && !Sender.isOp()) return PermFail.IncorrectPerms;
         if (senderMustBePlayer && Sender == null) return PermFail.Not_Player;
         CorePlayer sp = Sender;
         if (fac == null && senderMustBeInFaction) return PermFail.Not_In_Faction;

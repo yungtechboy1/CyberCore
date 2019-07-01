@@ -17,7 +17,9 @@ public class FactionChatFactionWindow extends CyberFormCustom {
         addElement(new ElementInput("Send Message", "Type Message Here"));
         if (ls == null) System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
         String s;
-        while ((s = ls.removeFirst()) != null) {
+        assert ls != null;
+        while (ls.size() > 0) {
+            s = ls.removeFirst();
             addElement(new ElementLabel(s));
         }
     }

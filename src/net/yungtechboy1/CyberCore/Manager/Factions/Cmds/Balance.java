@@ -43,6 +43,8 @@ public class Balance extends Commands {
             Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + ff.GetDisplayName() + " Faction has " + TextFormat.AQUA + money);
             fac.UpdateTopResults();
         } else {
+            Main.plugin.log(fac.GetName());
+            Main.plugin.log(fac.GetMoney().toString());
             Integer money = fac.GetMoney();
             Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Your Faction has " + TextFormat.AQUA + money);
             fac.UpdateTopResults();

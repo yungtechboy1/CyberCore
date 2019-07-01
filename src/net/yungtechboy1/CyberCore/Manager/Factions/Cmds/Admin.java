@@ -28,7 +28,7 @@ public class Admin extends Commands {
         super(s, a, "/f Admin", m);
         senderMustBePlayer = true;
 //        senderMustBeInFaction = true;
-//        senderMustBeAdmin = true;
+        senderMustBeAdmin = true;
         sendUsageOnFail = true;
 
         if (run()) {
@@ -38,6 +38,7 @@ public class Admin extends Commands {
 
     @Override
     public void RunCommand() {
+        if(P)
         try {
             Sender.showFormWindow(new FactionAdminPage1());
         }catch (Exception e){

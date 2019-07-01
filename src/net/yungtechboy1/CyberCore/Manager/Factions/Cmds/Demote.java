@@ -34,25 +34,34 @@ public class Demote extends Commands {
 
     @Override
     public void RunCommand() {
-        if(Args.length < 2){
+        if(Args.length < 1){
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Usage /f demote <player>");
             return;
         }
-        Player pp = Main.getServer().getPlayer(Args[1]);
+        CorePlayer pp = Main.plugin.getCorePlayer(Args[0]);
+        if(pp.getName().equalsIgnoreCase(Sender.getName())) {
+            Sender.sendMessage(FactionsMain.NAME + TextFormat.RED + "You can not demote yourself!");
+            return;
+        }
         if (pp == null){
-            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Player Is Not Online!");;
+            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Player Is Not Online!");
             return;
         }
         String ppn = pp.getName();
-        if (!Main.isInFaction(ppn)) {
+        if (!pp.Faction.equalsIgnoreCase( Sender.Faction)) {
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "Target Player Not In Your Faction!");
             return;
         }
 
-        FactionRank r = fac.getPlayerRank((Player)Sender);
+        FactionRank r = fac.getPlayerRank(Sender);
         FactionRank fr = fac.getSettings().getAllowedToDemote();
         if(r.HasPerm(fr)){
             fac.DemotePlayer(pp);
+            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "'" + ppn + "' has been demoted!");
+            return;
+        } else {
+            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "You do not have permission!");
+            return;
         }
 
 //
