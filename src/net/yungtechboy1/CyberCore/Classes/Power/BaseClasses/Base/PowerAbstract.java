@@ -24,6 +24,7 @@ public abstract class PowerAbstract {
     public int TickUpdate = -1;
     public CoolDownTick Cooldown = null;
     public boolean PlayerToggleable = true;
+    public boolean CanSendCanNotRunMessage = true;
     LockedSlot LS = LockedSlot.NA;
     int Level = 0;
     private boolean Active = false;
@@ -103,7 +104,6 @@ public abstract class PowerAbstract {
         return event;
     }
 
-
     public EntityDamageEvent EntityDamageEvent(EntityDamageEvent e) {
         return e;
     }
@@ -159,12 +159,12 @@ public abstract class PowerAbstract {
         }
     }
 
+    ;
+
     public PowerEnum getType() {
         CyberCoreMain.getInstance().getLogger().error("ERROR GETTING TYPE FROM POWER!!!!!");
         return PowerEnum.Unknown;
     }
-
-    ;
 
     //USE TO RUN
     public final void initPowerRun(Object... args) {
@@ -174,7 +174,7 @@ public abstract class PowerAbstract {
             afterPowerRun(args);
         } else {
             if (Cooldown != null && Cooldown.isValid()) {
-                sendCanNotRunMessage();
+                if(CanSendCanNotRunMessage)sendCanNotRunMessage();
             }
         }
     }

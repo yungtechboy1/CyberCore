@@ -1312,7 +1312,7 @@ public class CorePlayer extends Player {
                             this.lastBreakPosition1 = currentBreakPosition;
                             break;
                         case PlayerActionPacket.ACTION_JUMP:
-                            sendMessage("JUMMMPPPPP!!!" + getDirection());
+                            sendMessage("JUMMMPPPPP!!!" + getDirection()+"|"+getMotion());
                             if (PlayerClass != null) PlayerClass.HandelEvent(new PlayerJumpEvent(this));
                             getServer().getPluginManager().callEvent(new PlayerJumpEvent(this));
 //                            addMovement(0,2.5,0,0,0,0);

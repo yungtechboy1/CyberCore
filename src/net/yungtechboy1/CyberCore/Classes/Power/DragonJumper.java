@@ -1,30 +1,27 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
-import cn.nukkit.entity.Entity;
 import cn.nukkit.event.entity.EntityDamageEvent;
-import cn.nukkit.item.ItemBlock;
-import cn.nukkit.level.particle.ItemBreakParticle;
-import cn.nukkit.level.particle.SpellParticle;
 import cn.nukkit.math.BlockFace;
-import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.math.Vector3;
-import cn.nukkit.utils.BlockColor;
+import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Passive.PassivePower;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBar;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
 import java.util.ArrayList;
 
-public class DragonJumper extends PowerHotBar {
+public class DragonJumper extends PassivePower {
     private boolean WaitingOnFall = false;
+    private int JumpTick = -1;
+
 
     public DragonJumper(BaseClass b) {
-        super(b, 100, 1, LockedSlot.SLOT_9);
+        super(b, 100);
         //TODO make this so that this power Runs Automatically!
         TickUpdate = 10;
+        CanSendCanNotRunMessage = false;
     }
 
     @Override
@@ -34,8 +31,9 @@ public class DragonJumper extends PowerHotBar {
 
     @Override
     public PlayerJumpEvent PlayerJumpEvent(PlayerJumpEvent e) {
-//        initPowerRun();
-        return super.PlayerJumpEvent(e);
+        initPowerRun();
+        return e;
+//        return super.PlayerJumpEvent(e);
     }
 
     @Override
@@ -43,6 +41,7 @@ public class DragonJumper extends PowerHotBar {
         if (WaitingOnFall) {
             if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
                 e.setCancelled();
+                getPlayer().sendMessage(TextFormat.GRAY+"POWER > Damage Nulled!");
                 WaitingOnFall = false;
             }
         }
@@ -50,8 +49,26 @@ public class DragonJumper extends PowerHotBar {
     }
 
     @Override
+    public int getPowerSuccessChance() {
+        return (90 / 5) * getStage().getValue();
+    }
+
+    @Override
     protected int getCooldownTime() {
-        return 15;
+        switch (getStage()) {
+            default:
+            case NA:
+            case STAGE_1:
+                return 45;
+            case STAGE_2:
+                return 35;
+            case STAGE_3:
+                return 30;
+            case STAGE_4:
+                return 25;
+            case STAGE_5:
+                return 15;
+        }
     }
 
     @Override
@@ -61,29 +78,13 @@ public class DragonJumper extends PowerHotBar {
 
     public Object usePower(Object... args) {
         BlockFace bf = getPlayer().getDirection();
-//        Vector3 m = bf.getUnitVector();
-        Vector3 mm = getPlayer().getMotion().add(0, 1, 0).multiply(1.5);
-//        getPlayer().addMovement(mm.x,mm.y,mm.z,0,0,0);
-//        getPlayer().addMotion(mm.x,mm.y,mm.z);
+        getPlayer().sendMessage("ORIGINBAL M " + getPlayer().getMotion());
+        Vector3 mm = getPlayer().getMotion().add(0, .5, 0).multiply(1.25);
         getPlayer().setMotion(mm);
         getPlayer().sendMessage("Drangon Jumper Activated!!!!!!!!!!!!!!!!!" + mm);
         WaitingOnFall = true;
+        JumpTick = getPlayer().getServer().getTick();
         return null;
-    }
-
-    private int getMaxSize() {
-        return getStage().getValue() + 2;
-    }
-
-    private ArrayList<Vector3> getAffectedVectors() {
-        ArrayList<Vector3> v = new ArrayList<>();
-        for (int x = -getMaxSize(); x < getMaxSize(); x++) {
-            for (int z = -getMaxSize(); z < getMaxSize(); z++) {
-                v.add(getPlayer().getLevel().getSafeSpawn(getPlayer().add(x, 0, z)));
-//                getPlayer().getLevel().addParticle(new InkParticle(v));
-            }
-        }
-        return v;
     }
 
     @Override
@@ -96,19 +97,19 @@ public class DragonJumper extends PowerHotBar {
         if (WaitingOnFall) {
             if (getPlayer().isOnGround() || getPlayer().isSwimming()) {
                 WaitingOnFall = false;
+                JumpTick = -1;
+            } else if (getPlayer().getLevel().getBlock(getPlayer().down()).getId() != 0) {
+                WaitingOnFall = false;
+                getPlayer().resetFallDistance();
+                JumpTick = -1;
+            } else if (((20 * 10) + JumpTick <  getPlayer().getServer().getTick())) {
+                WaitingOnFall = false;
+                JumpTick = -1;
+            }else{
+                getPlayer().resetFallDistance();
             }
         }
         super.onTick(tick);
     }
 
-    private Entity[] getEntitiesAround() {
-        return getPlayer().getLevel().getNearbyEntities(new SimpleAxisAlignedBB(getPlayer().add(-getMaxSize(), -5, -getMaxSize()), getPlayer().add(getMaxSize(), 5, getMaxSize())));
-    }
-
-    private void spawnParticles() {
-        ArrayList<Vector3> vv = getAffectedVectors();
-        for (Vector3 v : vv) {
-            getPlayer().getLevel().addParticle(new ItemBreakParticle(v.add(0, 1, 0), new ItemBlock(getPlayer().getLevel().getBlock(v.add(0,-1,0)))));
-        }
-    }
 }
