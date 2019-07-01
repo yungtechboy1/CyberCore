@@ -257,6 +257,11 @@ public abstract class PowerAbstract {
         return getName();
     }
 
+    /**
+     * Button Callback to add a Button to the Window!
+     *
+     * @param mainClassSettingsWindow
+     */
     public void addButton(MainClassSettingsWindow mainClassSettingsWindow) {
 //        if()
     }
