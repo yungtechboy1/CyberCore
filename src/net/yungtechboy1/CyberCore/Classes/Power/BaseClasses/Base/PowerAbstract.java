@@ -6,6 +6,7 @@ import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.event.inventory.InventoryClickEvent;
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.math.NukkitRandom;
+import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
@@ -21,54 +22,61 @@ import net.yungtechboy1.CyberCore.PlayerJumpEvent;
  * Created by carlt on 5/16/2019.
  */
 public abstract class PowerAbstract {
+
     public BaseClass PlayerClass = null;
     public int TickUpdate = -1;
     public CoolDownTick Cooldown = null;
     public boolean PlayerToggleable = true;
     public boolean CanSendCanNotRunMessage = true;
     LockedSlot LS = LockedSlot.NA;
-    int Level = 0;
+    private LevelingType LT = LevelingType.None;
     private boolean Active = false;
     private int PowerSuccessChance = 100;
     private int _lasttick = -1;
     private double PowerSourceCost = 0;
-
-    public PowerAbstract(BaseClass b, int psc) {
-        this(b, psc, 0);
+    public PowerAbstract(BaseClass b, LevelingType lt, int psc) {
+        this(b, lt, psc, 0);
     }
 
-    public PowerAbstract(BaseClass b, int psc, double cost) {
+    public PowerAbstract(BaseClass b, LevelingType lt, int psc, double cost) {
         PowerSuccessChance = psc;
         PlayerClass = b;
+        LT = lt;
 //        Level = lvl;
-        Level = b.getLVL();
+//        Level = b.getLVL();
         initStages();
         initAfterCreation();
         PowerSourceCost = cost;
+    }
+
+    public LevelingType getLT() {
+        return LT;
     }
 
     public boolean isActive() {
         return Active;
     }
 
-    public void setActive() {
-        setActive(true);
-    }
     public void setActive(boolean active) {
         Active = active;
         PowerEnum pe = getType();
-        if(PlayerClass.getClassSettings().getLearnedPowers().contains(pe)){
+        if (PlayerClass.getClassSettings().getLearnedPowers().contains(pe)) {
             PowerAbstract p = this;
             PlayerClass.getClassSettings().addActivePower(pe);
             onActivate();
-        }else{
-            getPlayer().sendMessage(TextFormat.RED+"ERROR > POWER > Could not activate "+getDispalyName()+TextFormat.RED+" Please make sure you have learned this power!");
+        } else {
+            getPlayer().sendMessage(TextFormat.RED + "ERROR > POWER > Could not activate " + getDispalyName() + TextFormat.RED + " Please make sure you have learned this power!");
         }
     }
 
-    public void onActivate(){
+    public void setActive() {
+        setActive(true);
+    }
+
+    public void onActivate() {
 
     }
+
 
     public LockedSlot getLS() {
         return LS;
@@ -160,6 +168,13 @@ public abstract class PowerAbstract {
         return getCooldownTime() * 20;
     }
 
+    public void importConfig(ConfigSection cs) {
+    }
+
+    public ConfigSection exportConfig() {
+        return new ConfigSection();
+    }
+
     public void initStages() {
 
     }
@@ -188,7 +203,7 @@ public abstract class PowerAbstract {
             afterPowerRun(args);
         } else {
             if (Cooldown != null && Cooldown.isValid()) {
-                if(CanSendCanNotRunMessage)sendCanNotRunMessage();
+                if (CanSendCanNotRunMessage) sendCanNotRunMessage();
             }
         }
     }
@@ -227,11 +242,6 @@ public abstract class PowerAbstract {
 
     }
 
-
-    public Stage getStage() {
-        return Stage.getStageFromInt(1 + ((int) Math.floor(Level / 20)));
-    }
-
     public CoolDownTick addCooldown() {
         return addCooldown(getCooldownTime());
     }
@@ -247,19 +257,35 @@ public abstract class PowerAbstract {
         return getName();
     }
 
+    /**
+     * Button Callback to add a Button to the Window!
+     *
+     * @param mainClassSettingsWindow
+     */
     public void addButton(MainClassSettingsWindow mainClassSettingsWindow) {
 //        if()
     }
 
-    public enum Stage {
+    public enum LevelingType {
+        None,
+        XPLevel,
+        Stage
+    }
+
+    public enum StageEnum {
         NA,
         STAGE_1,
         STAGE_2,
         STAGE_3,
         STAGE_4,
-        STAGE_5;
+        STAGE_5,
+        STAGE_6,
+        STAGE_7,
+        STAGE_8,
+        STAGE_9,
+        STAGE_10;
 
-        public static Stage getStageFromInt(int i) {
+        public static StageEnum getStageFromInt(int i) {
             if (i < values().length) {
                 return values()[i];
             }

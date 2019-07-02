@@ -123,7 +123,7 @@ public class MinnerBaseClass extends BaseClass {
 //    }
 //
 //    @Override
-//    public ConfigSection export() {
+//    public ConfigSection exportConfig() {
 //        return new ConfigSection() {{
 //            put("COOLDOWNS", COOLDOWNS);
 //            put("XP", getXP());

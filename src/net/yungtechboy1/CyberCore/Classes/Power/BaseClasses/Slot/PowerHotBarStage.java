@@ -6,20 +6,18 @@ import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.inventory.transaction.action.SlotChangeAction;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 
-public abstract class PowerHotBar extends PowerAbstract implements PowerHotBarInt {
+public abstract class PowerHotBarStage extends StagePowerAbstract  implements PowerHotBarInt {
 
     public int lastHotBarUpdate = -1;
-    
-    public PowerHotBar(BaseClass b, int psc, double cost, LockedSlot ls) {
-        super(b, LevelingType.None,psc, cost);
+
+    public PowerHotBarStage(BaseClass b, int psc, double cost, LockedSlot ls) {
+        super(b,psc, cost);
         TickUpdate = 20;
         setLS(ls);
         PowerHotBarInt.RemoveAnyItemsInSlot(getPlayer(),ls);
     }
-
-
 
     @Override
     public InventoryTransactionEvent InventoryTransactionEvent(InventoryTransactionEvent e) {
@@ -69,3 +67,4 @@ public abstract class PowerHotBar extends PowerAbstract implements PowerHotBarIn
     }
 
 }
+

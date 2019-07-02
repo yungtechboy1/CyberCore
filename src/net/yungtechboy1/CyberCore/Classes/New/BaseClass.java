@@ -330,7 +330,16 @@ public abstract class BaseClass {
     }
 
     private void addActivePower(PowerAbstract p){
-        ActivePowers.put(p.getType(),p);
+        addActivePower(p.getType());
+    }
+    private void addActivePower(PowerEnum p){
+        if(!ActivePowers.contains(p))ActivePowers.add(p);
+    }
+    private void delActivePower(PowerAbstract p){
+        delActivePower(p.getType());
+    }
+    private void delActivePower(PowerEnum p){
+        ActivePowers.remove(p);
     }
 
     public final void addPower(PowerAbstract power) {
@@ -668,7 +677,7 @@ public abstract class BaseClass {
     }
 
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
-        for (PowerAbstract p : ActivePowers.values()) p.CustomEntityDamageByEntityEvent(event);
+        for (PowerAbstract p : getActivePowers()) p.CustomEntityDamageByEntityEvent(event);
         float bd = event.getOriginalDamage();
         Buff b = getBuff(BuffType.Damage.ordinal());
         if (event.getEntity() instanceof Player && getBuff(BuffType.DamageToPlayer.ordinal()) != null) {
@@ -758,7 +767,7 @@ public abstract class BaseClass {
     }
 
     public void addButtons(MainClassSettingsWindow mainClassSettingsWindow) {
-        for (PowerAbstract p : ActivePowers.values()) {
+        for (PowerAbstract p : getActivePowers()) {
             p.addButton(mainClassSettingsWindow);
         }
     }
