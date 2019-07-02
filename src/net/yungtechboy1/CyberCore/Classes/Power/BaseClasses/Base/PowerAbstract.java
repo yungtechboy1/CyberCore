@@ -295,5 +295,8 @@ public abstract class PowerAbstract {
         public int getValue() {
             return ordinal();
         }
+        public String getDisplayName() {
+            return name();
+        }
     }
 }
