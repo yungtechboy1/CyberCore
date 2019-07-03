@@ -1,5 +1,9 @@
 package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot;
 
+import cn.nukkit.event.inventory.InventoryTransactionEvent;
+import cn.nukkit.inventory.PlayerInventory;
+import cn.nukkit.inventory.transaction.action.InventoryAction;
+import cn.nukkit.inventory.transaction.action.SlotChangeAction;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemRedstone;
 import cn.nukkit.item.ItemSlimeball;
@@ -36,6 +40,30 @@ public interface PowerHotBarInt {
         cp.getInventory().clear(ls.getSlot(), true);
     }
 
+
+    public LockedSlot getLS();
+    public CorePlayer getPlayer();
+
+    public default InventoryTransactionEvent InventoryTransactionEvent(InventoryTransactionEvent e) {
+        if(getLS() == LockedSlot.NA)return e;
+        for (InventoryAction action : e.getTransaction().getActions()) {
+            if (!(action instanceof SlotChangeAction)) {
+                continue;
+            }
+            SlotChangeAction slotChange = (SlotChangeAction) action;
+
+            if (slotChange.getInventory() instanceof PlayerInventory) {
+//                who = (Player) slotChange.getInventory().getHolder();
+                //Check to see if Slot is fucked with
+                if (slotChange.getSlot() == getLS().getSlot()) {
+                    e.setCancelled();
+                    getPlayer().sendMessage(TextFormat.RED + "Error! You can not change your Class Slot!");
+                }
+            }
+        }
+
+        return super.InventoryTransactionEvent(e);
+    }
 
 
 //    @Override

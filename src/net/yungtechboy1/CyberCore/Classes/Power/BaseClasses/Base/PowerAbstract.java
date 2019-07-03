@@ -11,6 +11,7 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBarInt;
 import net.yungtechboy1.CyberCore.CoolDownTick;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
@@ -18,10 +19,12 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsWindow;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
+import java.util.HashMap;
+
 /**
  * Created by carlt on 5/16/2019.
  */
-public abstract class PowerAbstract {
+public abstract class PowerAbstract implements PowerInt {
 
     public BaseClass PlayerClass = null;
     public int TickUpdate = -1;
@@ -190,10 +193,10 @@ public abstract class PowerAbstract {
         }
     }
 
-    public PowerEnum getType() {
-        CyberCoreMain.getInstance().getLogger().error("ERROR GETTING TYPE FROM POWER!!!!!");
-        return PowerEnum.Unknown;
-    }
+    public abstract PowerEnum getType();// {
+//        CyberCoreMain.getInstance().getLogger().error("ERROR GETTING TYPE FROM POWER!!!!!");
+//        return PowerEnum.Unknown;
+//    }
 
     //USE TO RUN
     public final void initPowerRun(Object... args) {
@@ -297,6 +300,193 @@ public abstract class PowerAbstract {
         }
         public String getDisplayName() {
             return name();
+        }
+    }
+
+
+    public interface StagePowerAbilityHotBar extends PowerHotBarInt {
+        
+//        public StagePowerAbilityHotBar(BaseClass b, int psc, double cost, LockedSlot ls) {
+//            super(b, psc, cost);
+//            TickUpdate = 20;
+//            setLS(ls);
+//            PowerHotBarInt.RemoveAnyItemsInSlot(getPlayer(),ls);
+//        }
+
+//    @Override
+//    public InventoryTransactionEvent InventoryTransactionEvent(InventoryTransactionEvent e) {
+//        if(getLS() == LockedSlot.NA)return e;
+//        for (InventoryAction action : e.getTransaction().getActions()) {
+//            if (!(action instanceof SlotChangeAction)) {
+//                continue;
+//            }
+//            SlotChangeAction slotChange = (SlotChangeAction) action;
+//
+//            if (slotChange.getInventory() instanceof PlayerInventory) {
+////                who = (Player) slotChange.getInventory().getHolder();
+//                //Check to see if Slot is fucked with
+//                if (slotChange.getSlot() == getLS().getSlot()) {
+//                    e.setCancelled();
+//                    getPlayer().sendMessage(TextFormat.RED + "Error! You can not change your Class Slot!");
+//                }
+//            }
+//        }
+//
+//        return super.InventoryTransactionEvent(e);
+//    }
+
+
+        boolean check = false;
+        @Override
+        void onTick(int tick) {
+            if(getLS() == LockedSlot.NA)return;
+            if (Cooldown == null || !Cooldown.isValid()) {
+                setPowerAvailable(this);
+                System.out.println("ACTIVE POWER");
+            } else {
+                System.out.println("UNNNNNNNNACTIVE POWER");
+                setPowerUnAvailable(this);
+            }
+            check = !check;
+            if (check) antiSpamCheck(this);
+            super.onTick(tick);
+        }
+
+
+
+
+    }
+
+
+    public abstract class StagePowerAbstract extends PowerAbstract {
+
+        public HashMap<StageEnum, String> CustomSageName = new HashMap<>();
+        private StageEnum MaxStage = StageEnum.STAGE_10;
+        private StageEnum Stage = StageEnum.NA;
+        public StagePowerAbstract(BaseClass b, int psc) {
+            super(b, LevelingType.Stage, psc);
+        }
+
+        public StagePowerAbstract(BaseClass b, int psc, double cost) {
+            super(b, LevelingType.Stage, psc, cost);
+        }
+
+        public StageEnum getMaxStage() {
+            return MaxStage;
+        }
+
+        public void setMaxStage(StageEnum maxStage) {
+            MaxStage = maxStage;
+        }
+
+        public StageEnum getStage() {
+//        if (getLT() == LevelingType.Stage) return StageEnum.getStageFromInt(Stage);
+            return Stage;
+        }
+
+        public void setStage(StageEnum s) {
+            if (s.ordinal() > MaxStage.ordinal()) s = MaxStage;
+            Stage = s;
+        }
+
+        @Override
+        public ConfigSection exportConfig() {
+            ConfigSection c = super.exportConfig();
+            c.put("Stage", getStage().ordinal());
+            return c;
+        }
+
+        @Override
+        public void importConfig(ConfigSection cs) {
+            super.importConfig(cs);
+            if (cs.containsKey("Stage")) setStage(StageEnum.getStageFromInt(cs.getInt("Stage")));
+        }
+    }
+
+
+    public abstract class XPLevelingPowerAbstract extends PowerAbstract {
+
+        private int XP = 0;
+        private int Stage = 0;
+        private int MaxLevel = 100;
+
+        public XPLevelingPowerAbstract(BaseClass b, int psc) {
+            super(b, LevelingType.XPLevel, psc);
+        }
+
+        public XPLevelingPowerAbstract(BaseClass b, int psc, double cost) {
+            super(b, LevelingType.XPLevel, psc, cost);
+        }
+
+        public int getMaxLevel() {
+            return MaxLevel;
+        }
+
+        public void setMaxLevel(int maxLevel) {
+            MaxLevel = maxLevel;
+        }
+
+        public StageEnum getStage() {
+//        if (getLT() == LevelingType.Stage) return StageEnum.getStageFromInt(Stage);
+            return StageEnum.getStageFromInt(1 + ((int) Math.floor(getLevel() / 20)));
+        }
+
+        protected int XPNeededToLevelUp(int CurrentLevel) {
+//        if(CurrentLevel == 0)return 0;
+//        int cl = NextLevel - 1;
+            int cl = CurrentLevel;
+            if (cl <= 15) {
+                return 2 * (cl) + 7;
+            } else if (cl <= 30) {
+                return 5 * (cl) - 38;
+            } else {
+                return 9 * (cl) - 158;
+            }
+        }
+
+        public int getLevel() {
+            int x = getXP();
+            int l = 0;
+            while (true) {
+                int a = XPNeededToLevelUp(l);
+                if (a < x) {
+                    x -= a;
+                    l++;
+                } else {
+                    break;
+                }
+            }
+            return l;
+        }
+
+        protected int getXP() {
+            return XP;
+        }
+
+        protected int getRealXP() {
+            return XP - XPNeededToLevelUp(getLevel());
+        }
+
+        protected void addXP(int a) {
+            XP += Math.abs(a);
+//        if(XP > XPNeededToLevelUp(getLevel()));
+        }
+
+        protected void takeXP(int a) {
+            XP -= Math.abs(a);
+        }
+
+        @Override
+        public ConfigSection exportConfig() {
+            ConfigSection c = super.exportConfig();
+            c.put("XP", getXP());
+            return c;
+        }
+
+        @Override
+        public void importConfig(ConfigSection cs) {
+            super.importConfig(cs);
+            if (cs.containsKey("XP")) addXP(cs.getInt("XP"));
         }
     }
 }
