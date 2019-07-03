@@ -82,7 +82,7 @@ public class Knight extends BaseClass {
 
 
 //        addPower();
-        addPower(new KnightSandShieldPower(this));
+        addPower(new (this));
     }
 
     @Override
