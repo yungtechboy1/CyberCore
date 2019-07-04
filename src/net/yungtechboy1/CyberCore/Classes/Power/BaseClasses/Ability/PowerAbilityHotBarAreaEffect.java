@@ -17,7 +17,7 @@ public abstract class PowerAbilityHotBarAreaEffect extends PowerAbilityAreaEffec
 
 
     public PowerAbilityHotBarAreaEffect(BaseClass b, int psc, LockedSlot ls, double cost) {
-        super(b, psc, cost);
+        super(b, null,psc, cost);
         TickUpdate = 20;
         setLS(ls);
         PowerHotBarInt.RemoveAnyItemsInSlot(getPlayer(), ls);

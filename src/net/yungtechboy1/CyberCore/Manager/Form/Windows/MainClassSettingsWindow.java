@@ -68,25 +68,25 @@ public class MainClassSettingsWindow extends CyberFormSimple {
     public boolean onRun(CorePlayer p) {
         if (super.onRun(p)) return true;
         int k = getResponse().getClickedButtonId();
-        if (k == 0) {
+        if (k == getKey()) {
             //TODO
             p.showFormWindow(p.getPlayerClass().getHowToUseClassWindow());
-        } else if (k == 1) {
+        } else if (k == getKey()) {
             p.showFormWindow(p.getPlayerClass().getClassMerchantWindow());
-        } else if (k == 2) {
+        } else if (k == getKey()) {
             CyberCoreMain.getInstance().ClassFactory.leaveClass(p);
-        } else if (k == 3) {
+        } else if (k == getKey()) {
             //Null
-        } else if (k == 4) {
+        } else if (k == getKey()) {
             //Choose active Powers
             p.showFormWindow(new MainClassSettingsWindowActivePowers(p.getPlayerClass()));
-        }else if (k == 5) {
+        }else if (k == getKey()) {
             //Choose active Powers
             p.showFormWindow(new MainClassSettingsWindowChooseLockedSlot(p.getPlayerClass(), LockedSlot.SLOT_9));
-        }else if (k == 6) {
+        }else if (k == getKey()) {
             //Choose active Powers
             p.showFormWindow(new MainClassSettingsWindowChooseLockedSlot(p.getPlayerClass(), LockedSlot.SLOT_8));
-        }else if (k == 7) {
+        }else if (k == getKey()) {
             //Choose active Powers
             p.showFormWindow(new MainClassSettingsWindowChooseLockedSlot(p.getPlayerClass(), LockedSlot.SLOT_7));
         }

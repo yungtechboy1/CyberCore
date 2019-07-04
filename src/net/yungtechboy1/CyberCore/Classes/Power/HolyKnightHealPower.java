@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class HolyKnightHealPower extends PowerAbstract {
     public HolyKnightHealPower(BaseClass b) {
-        super(b, 75);
+        super(b, null,75);
     }
 
     @Override

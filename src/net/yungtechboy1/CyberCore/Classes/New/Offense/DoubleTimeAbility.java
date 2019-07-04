@@ -1,47 +1,26 @@
 package net.yungtechboy1.CyberCore.Classes.New.Offense;
 
+import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability.PowerAbilityHotBar;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.ClassLevelingManagerXPLevel;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
-public class DoubleTimeAbility extends PowerAbilityHotBar implements XPLevelingPowerInt {
+public class DoubleTimeAbility extends PowerAbilityHotBar {
     public DoubleTimeAbility(Knight knight) {
-        super();
+        super(knight,new ClassLevelingManagerXPLevel(),75,10);
     }
 
-    @Override
-    public int getMaxLevel() {
-        return 0;
-    }
-
-    @Override
-    public void setMaxLevel(int maxLevel) {
-
-    }
-
-    @Override
-    public int getXP() {
-        return 0;
-    }
-
-    @Override
-    public int getRealXP() {
-        return 0;
-    }
-
-    @Override
-    public void addXP(int a) {
-
-    }
-
-    @Override
-    public void takeXP(int a) {
-
-    }
+    private Buff oldbuff = null;
 
     @Override
     public void onActivate() {
-
+        getPlayer().sendMessage("TUNNING");
+//        getPlayer().addTemporaryBuff(new Buff);
+//        oldbuff = PlayerClass.getBuff(Buff.BuffType.Movement);
+//        PlayerClass.addBuff(new Buff(Buff.BuffType.Movement,1.1f));
+//        PlayerClass.initBuffs();
     }
 
     @Override
@@ -49,28 +28,36 @@ public class DoubleTimeAbility extends PowerAbilityHotBar implements XPLevelingP
         return null;
     }
 
+
+    @Override
+    public PowerEnum getType() {
+        return PowerEnum.DoubleTime;
+    }
+
     @Override
     public String getName() {
-        return null;
+        return "Double Time";
     }
 
     @Override
     public void onAbilityActivate() {
-
+        getPlayer().sendMessage("ON ACTIVATE");
     }
 
     @Override
     public void whileAbilityActive() {
 
+        getPlayer().sendMessage("WHILE ACTIVATE");
     }
 
     @Override
     public void onAbilityDeActivate() {
 
+        getPlayer().sendMessage("ON DEACTIVATE");
     }
 
     @Override
     public boolean canUpdateHotBar(int tick) {
-        return false;
+        return true;
     }
 }

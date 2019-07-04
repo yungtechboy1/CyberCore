@@ -19,7 +19,7 @@ public class OreKnowledge extends PassivePower {
     int BlockRange = 10;
 
     public OreKnowledge(BaseClass b) {
-        super(b,1);
+        super(b,null,1);
     }
 
     @Override

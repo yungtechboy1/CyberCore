@@ -28,7 +28,7 @@ public class DragonSlayerFireStomp extends PowerHotBar {
     private int StartNullFire = -1;
 
     public DragonSlayerFireStomp(DragonSlayer b) {
-        super(b, 100, 1, LockedSlot.SLOT_9);
+        super(b, null,100, 1, LockedSlot.SLOT_9);
         TickUpdate = 10;
     }
 

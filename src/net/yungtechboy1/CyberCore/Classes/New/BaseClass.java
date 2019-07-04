@@ -248,7 +248,7 @@ public abstract class BaseClass {
         return (HashMap<BuffType, Buff>) Buffs.clone();
     }
 
-    public Buff getBuff(int o) {
+    public Buff getBuff(BuffType o) {
         return Buffs.get(o);
     }
 
@@ -679,11 +679,11 @@ public abstract class BaseClass {
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
         for (PowerAbstract p : getActivePowers()) p.CustomEntityDamageByEntityEvent(event);
         float bd = event.getOriginalDamage();
-        Buff b = getBuff(BuffType.Damage.ordinal());
-        if (event.getEntity() instanceof Player && getBuff(BuffType.DamageToPlayer.ordinal()) != null) {
-            b = getBuff(BuffType.DamageToPlayer.ordinal());
-        } else if (getBuff(BuffType.DamageToEntity.ordinal()) != null) {
-            b = getBuff(BuffType.DamageToEntity.ordinal());
+        Buff b = getBuff(BuffType.Damage);
+        if (event.getEntity() instanceof Player && getBuff(BuffType.DamageToPlayer) != null) {
+            b = getBuff(BuffType.DamageToPlayer);
+        } else if (getBuff(BuffType.DamageToEntity) != null) {
+            b = getBuff(BuffType.DamageToEntity);
         }
         if (b != null) bd *= b.getAmount();
         event.setDamage(bd);
@@ -692,7 +692,7 @@ public abstract class BaseClass {
 
     public CustomEntityDamageEvent CustomEntityDamageEvent(CustomEntityDamageEvent event) {
         float bd = event.getOriginalDamage();
-        Buff b = getBuff(BuffType.Damage.ordinal());
+        Buff b = getBuff(BuffType.Damage);
         if (b != null) bd *= b.getAmount();
         event.setDamage(bd);
         return event;

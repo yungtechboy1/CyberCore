@@ -7,6 +7,8 @@ import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.ClassLevelingManager;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.ClassLevelingManagerStage;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBarStage;
@@ -17,8 +19,14 @@ public class KnightSandShieldPower extends PowerHotBarStage {
     public KnightSandShieldPower(BaseClass b) {
         super(b, 80, 10, LockedSlot.SLOT_9);
 //        setPowerSourceCost(10);
-        setMaxStage(StageEnum.STAGE_5);
+        ((ClassLevelingManagerStage)getLM()).setMaxStage(StageEnum.STAGE_5);
     }
+
+
+//    @Override
+//    public ClassLevelingManager getLM() {
+//        return (ClassLevelingManagerStage)super.getLM();
+//    }
 
     @Override
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e) {

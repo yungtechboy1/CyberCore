@@ -9,7 +9,7 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 public class MercenaryReneration extends PowerAbility {
     public MercenaryReneration(BaseClass bc) {
-        super(bc,30);
+        super(bc,null,30);
         TickUpdate = 20 * 5;//Every 5 Secs make sure player is in combat
         PlayerToggleable = false;
     }

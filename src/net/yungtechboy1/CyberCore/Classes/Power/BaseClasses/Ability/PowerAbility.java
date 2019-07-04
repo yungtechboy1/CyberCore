@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability;
 
 import cn.nukkit.Server;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.ClassLevelingManager;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 
 public abstract class PowerAbility extends PowerAbstract implements PowerAbilityInterface {
@@ -9,14 +10,13 @@ public abstract class PowerAbility extends PowerAbstract implements PowerAbility
 //    private boolean Active = false;
     private int DeActivatedTick = -1;
 
-    public PowerAbility(BaseClass bc, int psc) {
-
-        super(bc, psc);
+    public PowerAbility(BaseClass b, ClassLevelingManager lt, int psc) {
+        super(b, lt, psc);
         TickUpdate = 10;//Every 10 Ticks
     }
 
-    public PowerAbility(BaseClass b, int psc, double cost) {
-        super(b, psc, cost);
+    public PowerAbility(BaseClass b, ClassLevelingManager lm, int psc, double cost) {
+        super(b, lm, psc, cost);
         TickUpdate = 10;//Every 10 Ticks
     }
 

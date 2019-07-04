@@ -10,7 +10,7 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 public class MercenaryDisarm extends PowerAbstract {
     public MercenaryDisarm(BaseClass b) {
-        super(b, 2);
+        super(b,null, 2);
     }
 
     @Override
