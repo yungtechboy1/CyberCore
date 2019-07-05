@@ -331,10 +331,10 @@ public class CorePlayer extends Player {
         }
     }
 
-    @Deprecated
-    public PlayerEconData GetEconData() {
-        return new PlayerEconData(GetData());
-    }
+//    @Deprecated
+//    public PlayerEconData GetEconData() {
+//        return new PlayerEconData(GetData());
+//    }
 
     public PlayerSettingsData GetData() {
         if (getSettingsData() == null) CreateDefaultSettingsData(this);

@@ -11,4 +11,6 @@ public abstract class ClassLevelingManager {
     public abstract void importConfig(ConfigSection cs);
 
     public abstract PowerAbstract.LevelingType getType();
+
+    public abstract void setMaxStage(PowerAbstract.StageEnum stage);
 }

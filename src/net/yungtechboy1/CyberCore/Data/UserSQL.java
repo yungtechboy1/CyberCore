@@ -107,7 +107,7 @@ public class UserSQL extends MySQL {
             return true;
 
         } catch (Exception e) {
-            plugin.getLogger().error("Error getting UserSQL PlayerSettingData");
+            plugin.getLogger().error("Error Saving UserSQL PlayerSettingData");
             e.printStackTrace();
             return false;
         }

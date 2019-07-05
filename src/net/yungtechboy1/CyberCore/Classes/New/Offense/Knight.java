@@ -55,7 +55,7 @@ public class Knight extends BaseClass {
     }
 
     @Override
-    protected void onPowerActivate(PowerAbstract p) {
+    public void onPowerActivate(PowerAbstract p) {
 
     }
 

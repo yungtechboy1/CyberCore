@@ -84,4 +84,9 @@ public class ClassLevelingManagerXPLevel extends ClassLevelingManager {
     public PowerAbstract.LevelingType getType() {
         return PowerAbstract.LevelingType.XPLevel;
     }
+
+    @Override
+    public void setMaxStage(PowerAbstract.StageEnum stage) {
+
+    }
 }

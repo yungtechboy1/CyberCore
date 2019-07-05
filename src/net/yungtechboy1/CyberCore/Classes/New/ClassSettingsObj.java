@@ -89,6 +89,12 @@ public class ClassSettingsObj {
     public PowerEnum getPreferedSlot7() {
         return PreferedSlot7;
     }
+    public PowerEnum getPreferedSlot(LockedSlot ls) {
+        if(ls == LockedSlot.SLOT_9)return PreferedSlot9;
+        if(ls == LockedSlot.SLOT_8)return PreferedSlot8;
+        if(ls == LockedSlot.SLOT_7)return PreferedSlot7;
+        return PowerEnum.Unknown;
+    }
 
     public void setPreferedSlot7(PowerEnum preferedSlot7) {
         PreferedSlot7 = preferedSlot7;
@@ -120,5 +126,18 @@ public class ClassSettingsObj {
 
     public void addActivePower(PowerEnum pe) {
         ActivatedPowers.add(pe);
+    }
+    public void delActivePower(PowerEnum pe) {
+        ActivatedPowers.remove(pe);
+    }
+
+    public void clearSlot7() {
+        PreferedSlot7 = PowerEnum.Unknown;
+    }
+    public void clearSlot8() {
+        PreferedSlot8 = PowerEnum.Unknown;
+    }
+    public void clearSlot9() {
+        PreferedSlot9 = PowerEnum.Unknown;
     }
 }

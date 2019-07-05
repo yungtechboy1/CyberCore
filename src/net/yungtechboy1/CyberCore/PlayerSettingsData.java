@@ -52,17 +52,12 @@ public class PlayerSettingsData {
         CreditScore = (int) a.get("CreditScore");
         CreditLimit = (int) a.get("CreditLimit");
         UsedCredit = (int) a.get("UsedCredit");
-        if (((String) a.get("PlayerWarnings")).equalsIgnoreCase("[]")) PlayerWarnings = new ArrayList<>();
-        else PlayerWarnings = new Gson().fromJson((String) a.get("PlayerWarnings"), pweType);
-        if (((String) a.get("PlayerTempBans")).equalsIgnoreCase("[]"))
-            PlayerTempBans = new Gson().fromJson((String) a.get("PlayerTempBans"), ptbType);
-        PlayerTempBans = new Gson().fromJson((String) a.get("PlayerTempBans"), uuidType);
-        if (((String) a.get("PlayerKicks")).equalsIgnoreCase("[]"))
-            PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), pkbType);
-        PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), uuidType);
-        if (((String) a.get("PlayerBans")).equalsIgnoreCase("[]"))
-            PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), pbbType);
-        PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), uuidType);
+        if (!((String) a.get("PlayerWarnings")).equalsIgnoreCase("[]")) PlayerWarnings = new Gson().fromJson((String) a.get("PlayerWarnings"), pweType);
+        if (!((String) a.get("PlayerTempBans")).equalsIgnoreCase("[]"))PlayerTempBans = new Gson().fromJson((String) a.get("PlayerTempBans"), ptbType);
+        if (!((String) a.get("PlayerKicks")).equalsIgnoreCase("[]"))PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), pkbType);
+//        PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), uuidType);
+        if (!((String) a.get("PlayerBans")).equalsIgnoreCase("[]"))PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), pbbType);
+//        PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), uuidType);
         try {
             Rank = Integer.parseInt((String) a.get("Rank"));
         } catch (Exception e) {

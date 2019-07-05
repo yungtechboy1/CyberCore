@@ -73,7 +73,7 @@ public abstract class PowerAbstract {
     public void setActive(boolean active) {
         Active = active;
         PowerEnum pe = getType();
-        if (PlayerClass.getClassSettings().getLearnedPowers().contains(pe)) {
+        if (PlayerClass.getClassSettings().getLearnedPowers().contains(pe) && active) {
             PowerAbstract p = this;
             PlayerClass.getClassSettings().addActivePower(pe);
             onActivate();
@@ -176,6 +176,10 @@ public abstract class PowerAbstract {
      */
     public abstract CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e);
 
+    /**
+     * Time in Secs
+     * @return int Time in secs
+     */
     protected int getCooldownTime() {
         return 60 * 3;//3 Mins
     }
