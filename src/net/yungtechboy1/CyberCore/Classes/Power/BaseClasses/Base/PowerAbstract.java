@@ -30,23 +30,36 @@ public abstract class PowerAbstract {
     public boolean CanSendCanNotRunMessage = true;
     LockedSlot LS = LockedSlot.NA;
     private LevelingType LT = LevelingType.None;
+    private ClassLevelingManager LM = null;
     private boolean Active = false;
     private int PowerSuccessChance = 100;
     private int _lasttick = -1;
     private double PowerSourceCost = 0;
-    public PowerAbstract(BaseClass b, LevelingType lt, int psc) {
+
+    public PowerAbstract(BaseClass b, ClassLevelingManager lt, int psc) {
         this(b, lt, psc, 0);
     }
 
-    public PowerAbstract(BaseClass b, LevelingType lt, int psc, double cost) {
+    public PowerAbstract(BaseClass b, ClassLevelingManager lm, int psc, double cost) {
         PowerSuccessChance = psc;
         PlayerClass = b;
-        LT = lt;
+        loadLevelManager(lm);
 //        Level = lvl;
 //        Level = b.getLVL();
         initStages();
         initAfterCreation();
         PowerSourceCost = cost;
+    }
+
+
+    public void loadLevelManager(ClassLevelingManager lm) {
+        if(lm == null)return;
+        LM = lm;
+        LT = LM.getType();
+    }
+
+    public ClassLevelingManager getLM() {
+        return LM;
     }
 
     public LevelingType getLT() {
@@ -60,7 +73,7 @@ public abstract class PowerAbstract {
     public void setActive(boolean active) {
         Active = active;
         PowerEnum pe = getType();
-        if (PlayerClass.getClassSettings().getLearnedPowers().contains(pe)) {
+        if (PlayerClass.getClassSettings().getLearnedPowers().contains(pe) && active) {
             PowerAbstract p = this;
             PlayerClass.getClassSettings().addActivePower(pe);
             onActivate();
@@ -71,6 +84,13 @@ public abstract class PowerAbstract {
 
     public void setActive() {
         setActive(true);
+    }
+
+    public StageEnum getStage() {
+        if (LM != null) {
+            return LM.getStage();
+        }
+        return StageEnum.STAGE_1;
     }
 
     public void onActivate() {
@@ -156,6 +176,10 @@ public abstract class PowerAbstract {
      */
     public abstract CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e);
 
+    /**
+     * Time in Secs
+     * @return int Time in secs
+     */
     protected int getCooldownTime() {
         return 60 * 3;//3 Mins
     }
@@ -169,10 +193,13 @@ public abstract class PowerAbstract {
     }
 
     public void importConfig(ConfigSection cs) {
+        if (LM != null) LM.importConfig(cs);
     }
 
     public ConfigSection exportConfig() {
-        return new ConfigSection();
+        ConfigSection c = new ConfigSection();
+        if (LM != null) c.put("LM", LM.exportConfig());
+        return c;
     }
 
     public void initStages() {
@@ -295,6 +322,7 @@ public abstract class PowerAbstract {
         public int getValue() {
             return ordinal();
         }
+
         public String getDisplayName() {
             return name();
         }

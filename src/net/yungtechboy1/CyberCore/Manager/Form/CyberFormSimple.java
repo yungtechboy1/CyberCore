@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CyberFormSimple extends CyberForm {
+    private int key = 0;
     private final String type;
     private String title;
     private String content;
@@ -31,6 +32,11 @@ public class CyberFormSimple extends CyberForm {
         this.title = title;
         this.content = content;
         this.buttons = buttons;
+    }
+    public int getKey(){
+        int k = key;
+        key++;
+        return k;
     }
 
     public String getTitle() {

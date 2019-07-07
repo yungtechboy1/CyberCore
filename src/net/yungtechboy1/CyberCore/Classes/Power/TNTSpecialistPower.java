@@ -20,7 +20,7 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 public class TNTSpecialistPower extends PowerStackable {
 
     public TNTSpecialistPower(BaseClass b, int aq, int maq) {
-        super(b,100, aq, maq);
+        super(b,null,100, aq, maq);
     }
 
     @Override

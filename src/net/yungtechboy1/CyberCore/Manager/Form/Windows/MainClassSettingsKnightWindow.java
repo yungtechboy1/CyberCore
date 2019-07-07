@@ -23,15 +23,15 @@ public class MainClassSettingsKnightWindow extends MainClassSettingsWindow {
         super.onRun(p);
         int k = getResponse().getClickedButtonId();
         NukkitRandom nr = new NukkitRandom();
-        if(k == 3){
+        if(k == getKey()){
             p.attack(1);
-        } else if(k == 4){
+        } else if(k == getKey()){
             p.attack(nr.nextRange(0,6));
-        } else if(k == 5){
+        } else if(k == getKey()){
             p.attack(nr.nextRange(0,9));
-        } else if(k == 6){
+        } else if(k == getKey()){
             p.getInventory().addItem(Item.get(Item.APPLE,0,60));
-        } else if(k == 7){
+        } else if(k == getKey()){
             p.sendAttributes();
         }
         return true;

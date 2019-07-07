@@ -4,7 +4,6 @@ import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
-import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.KnightSandShieldPower;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
@@ -56,7 +55,7 @@ public class Knight extends BaseClass {
     }
 
     @Override
-    protected void onPowerActivate(PowerAbstract p) {
+    public void onPowerActivate(PowerAbstract p) {
 
     }
 
@@ -83,6 +82,7 @@ public class Knight extends BaseClass {
 
 //        addPower();
         addPower(new KnightSandShieldPower(this));
+        addPower(new DoubleTimeAbility(this));
     }
 
     @Override

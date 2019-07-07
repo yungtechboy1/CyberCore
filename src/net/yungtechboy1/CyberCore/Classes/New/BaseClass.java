@@ -248,7 +248,7 @@ public abstract class BaseClass {
         return (HashMap<BuffType, Buff>) Buffs.clone();
     }
 
-    public Buff getBuff(int o) {
+    public Buff getBuff(BuffType o) {
         return Buffs.get(o);
     }
 
@@ -287,7 +287,7 @@ public abstract class BaseClass {
     }
 
     public ArrayList<PowerEnum> getActivePowersList() {
-        return ActivePowers;
+        return getClassSettings().getActivatedPowers();
     }
 
     public ArrayList<PowerAbstract> getActivePowers() {
@@ -313,6 +313,18 @@ public abstract class BaseClass {
         getClassSettings().getClassDefaultPowers().add(power.getType());
     }
 
+    public void deactivatePower(PowerEnum pe) {
+        PowerAbstract p = getPower(pe,false);
+        if(p == null){
+            getPlayer().sendMessage("Error DeActivating "+pe.name());
+        }
+        p.setActive(false);
+        getClassSettings().delActivePower(pe);
+        onPowerDeActivate(p);//callback
+        delActivePower(p);
+        getPlayer().sendMessage(TextFormat.RED+"POWER > "+p.getDispalyName()+" has been DEactivated!");
+    }
+
     public void activatePower(PowerEnum pe){
         PowerAbstract p = getPower(pe,false);
         if(p == null){
@@ -325,7 +337,11 @@ public abstract class BaseClass {
         getPlayer().sendMessage(TextFormat.GREEN+"POWER > "+p.getDispalyName()+" has been activated!");
     }
 
-    protected void onPowerActivate(PowerAbstract p){
+    public void onPowerDeActivate(PowerAbstract p){
+
+    }
+
+    public void onPowerActivate(PowerAbstract p){
 
     }
 
@@ -333,13 +349,16 @@ public abstract class BaseClass {
         addActivePower(p.getType());
     }
     private void addActivePower(PowerEnum p){
-        if(!ActivePowers.contains(p))ActivePowers.add(p);
+       if(!getClassSettings().getActivatedPowers().contains(p))getClassSettings().addActivePower(p);
     }
     private void delActivePower(PowerAbstract p){
         delActivePower(p.getType());
     }
     private void delActivePower(PowerEnum p){
-        ActivePowers.remove(p);
+        if(getClassSettings().getActivatedPowers().contains(p))getClassSettings().delActivePower(p);
+        if(getClassSettings().getPreferedSlot7() == p)getClassSettings().clearSlot7();
+        if(getClassSettings().getPreferedSlot8() == p)getClassSettings().clearSlot8();
+        if(getClassSettings().getPreferedSlot9() == p)getClassSettings().clearSlot9();
     }
 
     public final void addPower(PowerAbstract power) {
@@ -360,6 +379,7 @@ public abstract class BaseClass {
                 if (ClassSettings.getPreferedSlot8() == power.getType()) power.setLS(LockedSlot.SLOT_8);
                 if (ClassSettings.getPreferedSlot9() == power.getType()) power.setLS(LockedSlot.SLOT_9);
             }
+            power.setActive();
         } else if (!ClassSettings.getLearnedPowers().contains(power.getType())) {
             //Power not Active and Need to Be Learned
             ClassSettings.getLearnedPowers().add(power.getType());
@@ -679,11 +699,11 @@ public abstract class BaseClass {
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
         for (PowerAbstract p : getActivePowers()) p.CustomEntityDamageByEntityEvent(event);
         float bd = event.getOriginalDamage();
-        Buff b = getBuff(BuffType.Damage.ordinal());
-        if (event.getEntity() instanceof Player && getBuff(BuffType.DamageToPlayer.ordinal()) != null) {
-            b = getBuff(BuffType.DamageToPlayer.ordinal());
-        } else if (getBuff(BuffType.DamageToEntity.ordinal()) != null) {
-            b = getBuff(BuffType.DamageToEntity.ordinal());
+        Buff b = getBuff(BuffType.Damage);
+        if (event.getEntity() instanceof Player && getBuff(BuffType.DamageToPlayer) != null) {
+            b = getBuff(BuffType.DamageToPlayer);
+        } else if (getBuff(BuffType.DamageToEntity) != null) {
+            b = getBuff(BuffType.DamageToEntity);
         }
         if (b != null) bd *= b.getAmount();
         event.setDamage(bd);
@@ -692,7 +712,7 @@ public abstract class BaseClass {
 
     public CustomEntityDamageEvent CustomEntityDamageEvent(CustomEntityDamageEvent event) {
         float bd = event.getOriginalDamage();
-        Buff b = getBuff(BuffType.Damage.ordinal());
+        Buff b = getBuff(BuffType.Damage);
         if (b != null) bd *= b.getAmount();
         event.setDamage(bd);
         return event;
@@ -732,7 +752,8 @@ public abstract class BaseClass {
         for (PowerAbstract p : getActivePowers()) {
 //            System.out.println("TICKING POWER " + p.getName());
             try {
-                if (p.TickUpdate != -1) p.handleTick(tick);
+                //No Need to tick Disabled Or Non Ticking Powers
+                if (p.TickUpdate != -1 && p.isActive() ) p.handleTick(tick);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -771,6 +792,8 @@ public abstract class BaseClass {
             p.addButton(mainClassSettingsWindow);
         }
     }
+
+
 
     public enum ClassTeir {
         Class1,

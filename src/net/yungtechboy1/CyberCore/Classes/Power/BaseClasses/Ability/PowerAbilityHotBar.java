@@ -7,12 +7,19 @@ import cn.nukkit.inventory.transaction.action.SlotChangeAction;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability.PowerAbility;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.ClassLevelingManager;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBarInt;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 
 public abstract class PowerAbilityHotBar extends PowerAbility implements PowerHotBarInt {
-    public PowerAbilityHotBar(BaseClass b, int psc, double cost, LockedSlot ls) {
-        super(b, psc, cost);
+    public PowerAbilityHotBar(BaseClass b, ClassLevelingManager lt, int psc, double cost) {
+        super(b, lt,psc, cost);
+        TickUpdate = 20;
+//        setLS(ls);
+//        PowerHotBarInt.RemoveAnyItemsInSlot(getPlayer(),ls);
+    }
+    public PowerAbilityHotBar(BaseClass b,ClassLevelingManager lt, int psc, double cost, LockedSlot ls) {
+        super(b,lt, psc, cost);
         TickUpdate = 20;
         setLS(ls);
         PowerHotBarInt.RemoveAnyItemsInSlot(getPlayer(),ls);

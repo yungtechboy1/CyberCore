@@ -155,6 +155,24 @@ public class CorePlayer extends Player {
         return (HashMap<Buff.BuffType, Buff>) getBufflist().get(BuffOrigin.Class).clone();
     }
 
+//    private static String TempKey = "TEMPBuffs";
+    public void addTemporaryBuff(Buff b){
+        if(Bufflist.containsKey(BuffOrigin.Temp)){
+            HashMap<Buff.BuffType, Buff> o = Bufflist.get(BuffOrigin.Temp);
+            o.put(b.getBt(),b);
+        }else{
+            Bufflist.put(BuffOrigin.Temp,new HashMap<Buff.BuffType, Buff>(){{
+                put(b.getBt(),b);
+            }});
+        }
+    }
+    public void delTemporaryBuff(Buff b){
+        if(Bufflist.containsKey(BuffOrigin.Temp)){
+            HashMap<Buff.BuffType, Buff> o = Bufflist.get(BuffOrigin.Temp);
+            o.remove(b.getBt());
+        }
+    }
+
     @Deprecated
     //TODO
     public void clearClassBuffs() {
@@ -313,10 +331,10 @@ public class CorePlayer extends Player {
         }
     }
 
-    @Deprecated
-    public PlayerEconData GetEconData() {
-        return new PlayerEconData(GetData());
-    }
+//    @Deprecated
+//    public PlayerEconData GetEconData() {
+//        return new PlayerEconData(GetData());
+//    }
 
     public PlayerSettingsData GetData() {
         if (getSettingsData() == null) CreateDefaultSettingsData(this);

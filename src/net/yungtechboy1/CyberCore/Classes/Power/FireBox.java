@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class FireBox extends PowerHotBar {
 
     public FireBox(BaseClass b) {
-        super(b, 100, 250, LockedSlot.SLOT_8);
+        super(b,null, 100, 250, LockedSlot.SLOT_8);
         //TODO make this so that this power Runs Automatically!
 //        TickUpdate = 10;
 //        CanSendCanNotRunMessage = false;

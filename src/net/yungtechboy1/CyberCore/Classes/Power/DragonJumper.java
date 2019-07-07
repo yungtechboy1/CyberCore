@@ -18,7 +18,7 @@ public class DragonJumper extends PassivePower {
 
 
     public DragonJumper(BaseClass b) {
-        super(b, 100);
+        super(b, null,100);
         //TODO make this so that this power Runs Automatically!
         TickUpdate = 10;
         CanSendCanNotRunMessage = false;

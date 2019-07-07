@@ -11,7 +11,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class MineLifePower extends PowerCustomEffect {
     public MineLifePower(BaseClass b) {
-        super(b, ((int) Math.floor(.65d * b.getLVL()) + 1));
+        super(b, null,((int) Math.floor(.65d * b.getLVL()) + 1));
         int psc = ((int) Math.floor(.65d * b.getLVL()) + 1);
 
 //        PotionEffect = new

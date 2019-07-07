@@ -5,6 +5,7 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.ClassLevelingManager;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
@@ -17,8 +18,8 @@ public class PowerCustomEffect extends PowerAbstract {
     }
 
     int DurationTicks = 0;
-    public PowerCustomEffect(BaseClass b, int psc) {
-        super(b,LevelingType.None, psc);
+    public PowerCustomEffect(BaseClass b, ClassLevelingManager lm, int psc) {
+        super(b, lm, psc);
     }
 
     public Boolean getPotionOnSelf() {
