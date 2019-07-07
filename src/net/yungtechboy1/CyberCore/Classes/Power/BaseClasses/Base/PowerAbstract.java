@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base;
 
+import cn.nukkit.Player;
 import cn.nukkit.event.Event;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityInventoryChangeEvent;
@@ -32,7 +33,7 @@ public abstract class PowerAbstract {
     private LevelingType LT = LevelingType.None;
     private ClassLevelingManager LM = null;
     private boolean Active = false;
-    private int PowerSuccessChance = 100;
+    private int PowerSuccessChance = 0;
     private int _lasttick = -1;
     private double PowerSourceCost = 0;
 
@@ -116,6 +117,12 @@ public abstract class PowerAbstract {
 
     public int getPowerSuccessChance() {
         return PowerSuccessChance;
+    }
+    public int getDefaultPowerSuccessChance() {
+        NukkitRandom nr = new NukkitRandom();
+        int l = PlayerClass.getLVL();
+        double f = ((-Math.sin(l/90)*13+Math.sin(-50+(l/80))));
+        return (int)Math.round(f*100);
     }
 
     public void setPowerSuccessChance(int powerSuccessChance) {

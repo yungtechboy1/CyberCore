@@ -61,7 +61,6 @@ import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse;
 import net.yungtechboy1.CyberCore.Factory.Shop.ShopInv;
 import net.yungtechboy1.CyberCore.Factory.Shop.Spawner.SpawnerShop;
 import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
-import net.yungtechboy1.CyberCore.Manager.Econ.PlayerEconData;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
 import net.yungtechboy1.CyberCore.Rank.Rank;
@@ -107,6 +106,9 @@ public class CorePlayer extends Player {
     public CombatData Combat = null;
     public float CustomMovementSpeed = 0.1f;
     public int CustomExtraHP = 0;
+    public boolean DebuffsChanced = false;
+    public boolean BuffsChanced = false;
+    protected HashMap<Buff.BuffType, Float> lastdata = null;
     long uct = 0;
     boolean uw = false;
     private FormWindow nw;
@@ -155,21 +157,29 @@ public class CorePlayer extends Player {
         return (HashMap<Buff.BuffType, Buff>) getBufflist().get(BuffOrigin.Class).clone();
     }
 
-//    private static String TempKey = "TEMPBuffs";
-    public void addTemporaryBuff(Buff b){
-        if(Bufflist.containsKey(BuffOrigin.Temp)){
+    public HashMap<Buff.BuffType, Buff> getTempBuff() {
+        return (HashMap<Buff.BuffType, Buff>) getBufflist().get(BuffOrigin.Temp).clone();
+    }
+
+    //    private static String TempKey = "TEMPBuffs";
+    public void addTemporaryBuff(Buff b, Object... oo) {
+        if (Bufflist.containsKey(BuffOrigin.Temp)) {
             HashMap<Buff.BuffType, Buff> o = Bufflist.get(BuffOrigin.Temp);
-            o.put(b.getBt(),b);
-        }else{
-            Bufflist.put(BuffOrigin.Temp,new HashMap<Buff.BuffType, Buff>(){{
-                put(b.getBt(),b);
+            o.put(b.getBt(), b);
+            Bufflist.put(BuffOrigin.Temp, o);
+        } else {
+            //TODO DECIDE SHOULD WE ALLOW THIS TO BE WRITEN OVER WHEN THEIR IS ALREADY A TEMP BUFF SET FOR A BUFF TYPE.... ie I CANT OVER WRITE MOVEMENT BUFF
+
+            Bufflist.put(BuffOrigin.Temp, new HashMap<Buff.BuffType, Buff>() {{
+                put(b.getBt(), b);
             }});
         }
     }
-    public void delTemporaryBuff(Buff b){
-        if(Bufflist.containsKey(BuffOrigin.Temp)){
+
+    public void delTemporaryBuff(Buff.BuffType b) {
+        if (Bufflist.containsKey(BuffOrigin.Temp)) {
             HashMap<Buff.BuffType, Buff> o = Bufflist.get(BuffOrigin.Temp);
-            o.remove(b.getBt());
+            o.remove(b);
         }
     }
 
@@ -179,10 +189,15 @@ public class CorePlayer extends Player {
 
     }
 
+    public void initAllBuffs() {
+        initBuffs();
+    }
+
     //Used by BaseClass to update players effects and buffs, Debuffs
     public void initAllClassBuffs() {
-        initClassDeBuffs();
-        initClassBuffs();
+//        initClassDeBuffs();
+//        initClassBuffs();
+        initAllBuffs();
     }
 
     public void initClassDeBuffs() {
@@ -220,6 +235,54 @@ public class CorePlayer extends Player {
         }
     }
 
+    public void initBuffs() {
+        HashMap<Buff.BuffType, Float> data = new HashMap<>();
+        //BUFFS
+        ArrayList<Buff> ab = new ArrayList<>();
+        ab.addAll(getClassBuffList().values());
+//        ab.addAll(getTempBuff().values());
+        for (Buff b : getClassBuffList().values()) {
+            data.put(b.getBt(), (b.getAmount()));
+        }
+        for (DeBuff b : getClassDeBuffList().values()) {
+            if (data.containsKey(b.getBt())) {
+                Float f = data.get(b.getBt());
+                data.put(b.getBt(), f / b.getAmount());
+            } else {
+                data.put(b.getBt(), 1 / (b.getAmount()));
+            }
+        }
+
+        //Temp Buffs Override Everything!
+        for (Buff b : getTempBuff().values()) {
+            data.put(b.getBt(), (b.getAmount()));
+        }
+        if (!areequal(data, lastdata)) {
+            data.forEach((key, value) -> {
+                switch (key) {
+                    case Movement:
+                        setMovementSpeed(DEFAULT_SPEED * value, true);
+                        break;
+                    case Health:
+                        setMaxHealth(20 + Math.round(value));
+                        sendAttributes();
+                        break;
+                }
+            });
+            lastdata = data;
+        }
+    }
+
+    private boolean areequal(HashMap<Buff.BuffType, Float> a, HashMap<Buff.BuffType, Float> b) {
+        if (a == null || b == null || a.size() != b.size()) return false;
+        for (Map.Entry<Buff.BuffType, Float> entry : a.entrySet()) {
+            Buff.BuffType k = entry.getKey();
+            Float v = entry.getValue();
+            if (!b.containsKey(k) || !v.equals(b.get(k))) return false;
+        }
+        return true;
+    }
+
     @Override
     public float getHealth() {
         return super.getHealth();
@@ -231,6 +294,10 @@ public class CorePlayer extends Player {
     }
 
     public void addBuffFromClass(Buff b) {
+        addBuffFromClass(b, false);
+    }
+
+    public void addBuffFromClass(Buff b, boolean force) {
         if (b == null) return;
         if (!Bufflist.containsKey(BuffOrigin.Class) || Bufflist.get(BuffOrigin.Class) == null) {
             HashMap<Buff.BuffType, Buff> hash = new HashMap<Buff.BuffType, Buff>();
@@ -238,12 +305,17 @@ public class CorePlayer extends Player {
             Bufflist.put(BuffOrigin.Class, hash);
         } else {
             HashMap<Buff.BuffType, Buff> bm = Bufflist.get(BuffOrigin.Class);
+            if (bm.containsKey(b.getBt()) && !force) return;//Cant write it something is here
             bm.put(b.getBt(), b);
             Bufflist.put(BuffOrigin.Class, bm);
         }
     }
 
     public void addDeBuffFromClass(DeBuff b) {
+        addDeBuffFromClass(b, false);
+    }
+
+    public void addDeBuffFromClass(DeBuff b, boolean force) {
         if (b == null) return;
         if (!DeBufflist.containsKey(BuffOrigin.Class) || DeBufflist.get(BuffOrigin.Class) == null) {
             HashMap<Buff.BuffType, DeBuff> hash = new HashMap<Buff.BuffType, DeBuff>();
@@ -251,6 +323,7 @@ public class CorePlayer extends Player {
             DeBufflist.put(BuffOrigin.Class, hash);
         } else {
             HashMap<Buff.BuffType, DeBuff> bm = DeBufflist.get(BuffOrigin.Class);
+            if (bm.containsKey(b.getBt()) && !force) return;//Cant write it something is here
             bm.put(b.getBt(), b);
             DeBufflist.put(BuffOrigin.Class, bm);
         }
@@ -1428,6 +1501,7 @@ public class CorePlayer extends Player {
                         AddCoolDown(Cooldown_Class, 5);
                         BaseClass bc = getPlayerClass();
                         if (bc != null) bc.onUpdate(currentTick);
+                        initAllClassBuffs();
                     }
                     CooldownLock = false;
                 }
@@ -1458,7 +1532,7 @@ public class CorePlayer extends Player {
                     if (TeleportTick <= currentTick && isTeleporting) {
                         System.out.println("AAAAAA");
                         if (isTeleporting) {
-                            removeAllEffects();
+                            removeAllEffects();//TODO use `removeEffect` to only remove that Effect
                             if ((TargetTeleporting != null && !TargetTeleporting.isAlive())) {
                                 sendMessage("Error! Player Not found!!");
                                 isInTeleportingProcess = false;
