@@ -1,11 +1,12 @@
 package net.yungtechboy1.CyberCore.Classes.New.Offense;
 
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability.PowerAbilityHotBar;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.ClassLevelingManagerStage;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
-public class DoubleTimeAbility extends PowerAbility implements PowerHotBarInt {
+public class DoubleTimeAbility extends PowerAbilityHotBar {
     private Buff oldbuff = null;
 
     public DoubleTimeAbility(Knight knight) {
