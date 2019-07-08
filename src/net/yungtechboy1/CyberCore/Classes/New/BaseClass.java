@@ -23,14 +23,17 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Passive.PassivePower;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBarInt;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.*;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
+import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Power;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsWindow;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 

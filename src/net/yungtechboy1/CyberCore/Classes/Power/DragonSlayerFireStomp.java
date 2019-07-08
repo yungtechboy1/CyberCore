@@ -14,7 +14,6 @@ import cn.nukkit.network.protocol.LevelSoundEventPacket;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.DragonSlayer;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBar;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockFire;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;

@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot;
+package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability;
 
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.inventory.PlayerInventory;
@@ -6,24 +6,29 @@ import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.inventory.transaction.action.SlotChangeAction;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.ClassLevelingManagerStage;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBarInt;
 
-public abstract class PowerHotBarStage extends PowerAbstract implements PowerHotBarInt {
-
+//todo
+public abstract class PowerAbilityHotBarAreaEffect extends PowerAbilityAreaEffect implements PowerHotBarInt {
     public int lastHotBarUpdate = -1;
+    public boolean skip = false;
     boolean check = false;
 
-    public PowerHotBarStage(BaseClass b, int psc, double cost) {
-        super(b, new ClassLevelingManagerStage(), psc, cost);
-        TickUpdate = 20;
-    }
 
-    public PowerHotBarStage(BaseClass b, int psc, double cost, LockedSlot ls) {
-        super(b, new ClassLevelingManagerStage(), psc, cost);
+    public PowerAbilityHotBarAreaEffect(BaseClass b, int psc, LockedSlot ls, double cost) {
+        super(b, null,psc, cost);
         TickUpdate = 20;
         setLS(ls);
         PowerHotBarInt.RemoveAnyItemsInSlot(getPlayer(), ls);
+    }
+
+    public boolean canUpdateHotBar(int tick) {
+        if (tick > lastHotBarUpdate + 10) {
+            lastHotBarUpdate = tick;
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -50,27 +55,14 @@ public abstract class PowerHotBarStage extends PowerAbstract implements PowerHot
     }
 
     @Override
-    public void sendCanNotRunMessage() {
-        super.sendCanNotRunMessage();
-        if (canUpdateHotBar(getPlayer().getServer().getTick())) updateHotbar(getLS(), Cooldown, this);
-    }
-
-    public boolean canUpdateHotBar(int tick) {
-        if (tick > lastHotBarUpdate + 10) {
-            lastHotBarUpdate = tick;
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public void onTick(int tick) {
-        System.out.println("POWER TICKKKKKK1111111");
+        System.out.println("POWER TICKKKKKK1");
+//        if(skip){
         super.onTick(tick);
-        updateHotbar(getLS(), Cooldown, this);
+//            skip = false;
+//        }
+        if (canUpdateHotBar(tick)) updateHotbar(getLS(), Cooldown, this);
         check = !check;
         if (check) antiSpamCheck(this);
     }
-
 }
-
