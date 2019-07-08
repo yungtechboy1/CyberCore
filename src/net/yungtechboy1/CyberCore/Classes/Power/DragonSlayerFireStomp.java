@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
 import cn.nukkit.block.Block;
-import cn.nukkit.block.BlockFire;
 import cn.nukkit.block.BlockID;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.block.BlockIgniteEvent;
@@ -21,6 +20,7 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class DragonSlayerFireStomp extends PowerHotBar {
     private boolean WaitingOnFall = false;
@@ -28,7 +28,7 @@ public class DragonSlayerFireStomp extends PowerHotBar {
     private int StartNullFire = -1;
 
     public DragonSlayerFireStomp(DragonSlayer b) {
-        super(b, null,100, 1, LockedSlot.SLOT_9);
+        super(b, null, 100, 1, LockedSlot.SLOT_9);
         TickUpdate = 10;
     }
 
@@ -55,21 +55,32 @@ public class DragonSlayerFireStomp extends PowerHotBar {
 
     @Override
     public EntityDamageEvent EntityDamageEvent(EntityDamageEvent e) {
-        System.out.println("BNOOOOOO");
+        System.out.println("BNOOOOOO"+ e.getCause());
         if (WaitingOnFall) {
-            System.out.println("BNOOOOOO" + e.getCause());
+            System.out.println("BNOOOOOO!1111" + e.getCause());
             if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
                 e.setCancelled();
                 spawnParticles();
                 WaitingOnFall = false;
                 WaitingOnFallTick = -1;
+                return e;
+            } else if (e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK || e.getCause() == EntityDamageEvent.DamageCause.LAVA) {
+                e.setCancelled();
+                getPlayer().getLevel().addLevelSoundEvent(getPlayer(), LevelSoundEventPacket.SOUND_EXTINGUISH_FIRE);
+                getPlayer().fireTicks = 0;
+                StartNullFire = -1;
+                return e;
             }
-        } else if (StartNullFire != -1 && StartNullFire + GraceTicks() > getPlayer().getServer().getTick()) {
-            e.setCancelled();
-            getPlayer().getLevel().addLevelSoundEvent(getPlayer(), LevelSoundEventPacket.SOUND_EXTINGUISH_FIRE);
-            getPlayer().fireTicks = 0;
-            StartNullFire = -1;
+        }
+        if (e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK || e.getCause() == EntityDamageEvent.DamageCause.LAVA) {
+            System.out.println("Were HeRE >> "+StartNullFire+"||"+StartNullFire + GraceTicks()+"||"+getPlayer().getServer().getTick());
+            if (StartNullFire != -1 && StartNullFire + GraceTicks() > getPlayer().getServer().getTick()) {
+                e.setCancelled();
+                getPlayer().getLevel().addLevelSoundEvent(getPlayer(), LevelSoundEventPacket.SOUND_EXTINGUISH_FIRE);
+                getPlayer().fireTicks = 0;
+                StartNullFire = -1;
 
+            }
         }
         return super.EntityDamageEvent(e);
     }
@@ -125,12 +136,12 @@ public class DragonSlayerFireStomp extends PowerHotBar {
     public void onTick(int tick) {
         if (WaitingOnFall && ((getPlayer().isOnGround()) || getPlayer().getLevel().getBlock(getPlayer().down()).getId() != 0) || getPlayer().isSwimming()) {
             System.out.println("CLEANNNNNNNNNNNNNINGNNNGGG");
-            if (getPlayer().isSwimming() || getPlayer().getLevel().getBlock(getPlayer().down()).getId() == BlockID.WATER || getPlayer().getLevel().getBlock(getPlayer().down()).getId() != BlockID.STILL_WATER) {
+            if (getPlayer().isSwimming() || getPlayer().getLevel().getBlock(getPlayer().down()).getId() == BlockID.WATER || getPlayer().getLevel().getBlock(getPlayer().down()).getId() == BlockID.STILL_WATER) {
                 //In Water Cancels the Fire!
-//                WaitingOnFall =false;
+                WaitingOnFall = false;
                 getPlayer().getLevel().addLevelSoundEvent(getPlayer(), LevelSoundEventPacket.SOUND_BREAK);
             } else if (getPlayer().isOnGround() || getPlayer().getLevel().getBlock(getPlayer().down()).getId() != BlockID.AIR) {
-//                spawnParticles();
+                spawnParticles();
             }
             WaitingOnFall = false;
             WaitingOnFallTick = -1;
@@ -150,7 +161,7 @@ public class DragonSlayerFireStomp extends PowerHotBar {
         StartNullFire = getPlayer().getServer().getTick();
         ArrayList<Vector3> vv = getAffectedVectors();
         for (Vector3 v : vv) {
-            Block f = new BlockFire();
+            Block f = new CustomBlockFire();
             f.setComponents(v.x, v.y, v.z);
             f.setLevel(getPlayer().getLevel());
             getPlayer().getLevel().addParticle(new ItemBreakParticle(v.add(0, 1, 0), new ItemBlock(getPlayer().getLevel().getBlock(v.add(0, -1, 0)))));
@@ -159,7 +170,8 @@ public class DragonSlayerFireStomp extends PowerHotBar {
             getPlayer().getServer().getPluginManager().callEvent(e);
 //            CyberCoreMain.getInstance().HandleCyberEvent(e);
             if (!e.isCancelled()) {
-                getPlayer().getLevel().setBlock(v, new CustomBlockFire(), true, true);
+                getPlayer().getLevel().setBlock(v, f, true, true);
+                getPlayer().getLevel().scheduleUpdate(f, f.tickRate() + ThreadLocalRandom.current().nextInt(10));
 //                getPlayer().getLevel().setBlockDataAt(v,new BlockFire(),true,true);
             }
         }

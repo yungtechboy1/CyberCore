@@ -79,7 +79,13 @@ public class DragonJumper extends PassivePower {
     public Object usePower(Object... args) {
         BlockFace bf = getPlayer().getDirection();
         getPlayer().sendMessage("ORIGINBAL M " + getPlayer().getMotion());
-        Vector3 mm = getPlayer().getMotion().add(0, .5, 0).multiply(1.25);
+//        Vector3 mm = getPlayer().getMotion().add(0, .5, 0).multiply(1.25);
+        Vector3 mm = bf.getUnitVector().divide(3).add(0,.75,0);
+        System.out.println("LAST MOTION "+getPlayer().lastMotionX+"|"+getPlayer().lastMotionY+"|"+getPlayer().lastMotionZ+"|");
+        System.out.println("MOTION "+getPlayer().getMotion());
+        System.out.println("BF "+bf);
+        System.out.println("MM "+mm);
+        System.out.println("MY "+bf.getUnitVector().divide(3).add(0,.3,0));
         getPlayer().setMotion(mm);
         getPlayer().sendMessage("Drangon Jumper Activated!!!!!!!!!!!!!!!!!" + mm);
         WaitingOnFall = true;
@@ -89,7 +95,7 @@ public class DragonJumper extends PassivePower {
 
     @Override
     public String getName() {
-        return "Dragon Jumper";
+        return "Dragon Jumper | "+getStage().getDisplayName();
     }
 
     @Override

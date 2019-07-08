@@ -6,7 +6,6 @@ import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.inventory.transaction.action.SlotChangeAction;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability.PowerAbility;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.ClassLevelingManager;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBarInt;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;

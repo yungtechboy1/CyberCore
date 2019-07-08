@@ -35,6 +35,7 @@ public class CustomBlockFire extends BlockFlowable{
         public CustomBlockFire(int meta, boolean spread) {
             super(meta);
             firespread = spread;
+
         }
 
         @Override
@@ -90,6 +91,7 @@ public class CustomBlockFire extends BlockFlowable{
 
         @Override
         public int onUpdate(int type) {
+//            System.out.println("ONUPDDDAAATTTEEE"+type+"||"+this.level.gameRules.getBoolean(GameRule.DO_FIRE_TICK));
             if (type == Level.BLOCK_UPDATE_NORMAL || type == Level.BLOCK_UPDATE_RANDOM) {
                 if (!this.isBlockTopFacingSurfaceSolid(this.down()) && !this.canNeighborBurn()) {
                     this.getLevel().setBlock(this, new BlockAir(), true);
@@ -182,6 +184,8 @@ public class CustomBlockFire extends BlockFlowable{
                                 }
                             }
                         }
+                    }else{
+
                     }
                 }
             }

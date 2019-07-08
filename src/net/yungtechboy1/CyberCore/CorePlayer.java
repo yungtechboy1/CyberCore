@@ -150,14 +150,17 @@ public class CorePlayer extends Player {
     }
 
     public HashMap<Buff.BuffType, DeBuff> getClassDeBuffList() {
+        if (!getBufflist().containsKey(BuffOrigin.Class)) return new HashMap<>();
         return (HashMap<Buff.BuffType, DeBuff>) getDeBufflist().get(BuffOrigin.Class).clone();
     }
 
     public HashMap<Buff.BuffType, Buff> getClassBuffList() {
+        if (!getBufflist().containsKey(BuffOrigin.Class)) return new HashMap<>();
         return (HashMap<Buff.BuffType, Buff>) getBufflist().get(BuffOrigin.Class).clone();
     }
 
     public HashMap<Buff.BuffType, Buff> getTempBuff() {
+        if (!getBufflist().containsKey(BuffOrigin.Temp)) return new HashMap<>();
         return (HashMap<Buff.BuffType, Buff>) getBufflist().get(BuffOrigin.Temp).clone();
     }
 
@@ -249,13 +252,16 @@ public class CorePlayer extends Player {
                 Float f = data.get(b.getBt());
                 data.put(b.getBt(), f / b.getAmount());
             } else {
-                data.put(b.getBt(), 1 / (b.getAmount()));
+                data.put(b.getBt(), 1 / (
+                        b.getAmount()));
             }
         }
 
         //Temp Buffs Override Everything!
-        for (Buff b : getTempBuff().values()) {
-            data.put(b.getBt(), (b.getAmount()));
+        if (getTempBuff().size() > 0) {
+            for (Buff b : getTempBuff().values()) {
+                data.put(b.getBt(), (b.getAmount()));
+            }
         }
         if (!areequal(data, lastdata)) {
             data.forEach((key, value) -> {

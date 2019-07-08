@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class ClassLevelingManagerStage extends ClassLevelingManager {
     public HashMap<PowerAbstract.StageEnum, String> CustomSageName = new HashMap<>();
     private PowerAbstract.StageEnum MaxStage = PowerAbstract.StageEnum.STAGE_10;
-    private PowerAbstract.StageEnum Stage = PowerAbstract.StageEnum.NA;
+    private PowerAbstract.StageEnum Stage = PowerAbstract.StageEnum.STAGE_1;
 
 
     public ClassLevelingManagerStage(HashMap<PowerAbstract.StageEnum, String> customSageName, PowerAbstract.StageEnum maxStage, PowerAbstract.StageEnum stage) {
