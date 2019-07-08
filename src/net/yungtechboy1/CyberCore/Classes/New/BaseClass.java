@@ -221,6 +221,16 @@ public abstract class BaseClass {
     public abstract void initBuffs();
 
     private void registerAllBuffsToCorePlayer(CorePlayer cp) {
+//        for (Buff b : getBuffs().values()) {
+        for (Buff b : getBuffs().values()) {
+            cp.addBuffFromClass(b);
+        }
+        for (DeBuff b : getDeBuffs().values()) {
+            cp.addDeBuffFromClass(b);
+        }
+        cp.initAllClassBuffs();
+    }
+    private void recheckAllBuffs(CorePlayer cp, int tick) {
         for (Buff b : getBuffs().values()) {
             cp.addBuffFromClass(b);
         }

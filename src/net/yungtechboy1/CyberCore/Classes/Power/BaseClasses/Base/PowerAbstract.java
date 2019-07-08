@@ -1,5 +1,6 @@
 package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base;
 
+import cn.nukkit.Server;
 import cn.nukkit.event.Event;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityInventoryChangeEvent;
@@ -18,6 +19,13 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsWindow;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
+public enum PowerType {
+    None,
+    Regular,
+    Ability,
+    Hotbar
+}
+
 /**
  * Created by carlt on 5/16/2019.
  */
@@ -28,11 +36,14 @@ public abstract class PowerAbstract {
     public CoolDownTick Cooldown = null;
     public boolean PlayerToggleable = true;
     public boolean CanSendCanNotRunMessage = true;
+    public PowerType MainPowerType = PowerType.Regular;
+    public PowerType SecondaryPowerType = PowerType.None;
+    protected int DeActivatedTick = -1;
     LockedSlot LS = LockedSlot.NA;
     private LevelingType LT = LevelingType.None;
     private ClassLevelingManager LM = null;
     private boolean Active = false;
-    private int PowerSuccessChance = 100;
+    private int PowerSuccessChance = 0;
     private int _lasttick = -1;
     private double PowerSourceCost = 0;
 
@@ -51,9 +62,31 @@ public abstract class PowerAbstract {
         PowerSourceCost = cost;
     }
 
+    public final void activate() {
+        if (isActive()) return;
+        setActive(true);
+        onAbilityActivate();
+//        onActivate();
+    }
+
+    private void onAbilityActivate() {
+    }
+
+    public void setPowerAsAbility() {
+        MainPowerType = PowerType.Ability;
+        TickUpdate = 10;
+    }
+
+    public int getDeActivatedTick() {
+        return DeActivatedTick;
+    }
+
+    public final void setDeActivatedTick(int deActivatedTick) {
+        DeActivatedTick = deActivatedTick;
+    }
 
     public void loadLevelManager(ClassLevelingManager lm) {
-        if(lm == null)return;
+        if (lm == null) return;
         LM = lm;
         LT = LM.getType();
     }
@@ -72,6 +105,7 @@ public abstract class PowerAbstract {
 
     public void setActive(boolean active) {
         Active = active;
+        DeActivatedTick = Server.getInstance().getTick() + getRunTimeTick();
         PowerEnum pe = getType();
         if (PlayerClass.getClassSettings().getLearnedPowers().contains(pe) && active) {
             PowerAbstract p = this;
@@ -80,6 +114,10 @@ public abstract class PowerAbstract {
         } else {
             getPlayer().sendMessage(TextFormat.RED + "ERROR > POWER > Could not activate " + getDispalyName() + TextFormat.RED + " Please make sure you have learned this power!");
         }
+    }
+
+    public int getRunTimeTick() {
+        return getStage().getValue() * 20;//1-5 Secs
     }
 
     public void setActive() {
@@ -96,7 +134,6 @@ public abstract class PowerAbstract {
     public void onActivate() {
 
     }
-
 
     public LockedSlot getLS() {
         return LS;
@@ -120,6 +157,13 @@ public abstract class PowerAbstract {
 
     public void setPowerSuccessChance(int powerSuccessChance) {
         PowerSuccessChance = powerSuccessChance;
+    }
+
+    public int getDefaultPowerSuccessChance() {
+        NukkitRandom nr = new NukkitRandom();
+        int l = PlayerClass.getLVL();
+        double f = ((-Math.sin(l / 90) * 13 + Math.sin(-50 + (l / 80))));
+        return (int) Math.round(f * 100);
     }
 
     public void initAfterCreation() {
@@ -178,6 +222,7 @@ public abstract class PowerAbstract {
 
     /**
      * Time in Secs
+     *
      * @return int Time in secs
      */
     protected int getCooldownTime() {
@@ -248,7 +293,13 @@ public abstract class PowerAbstract {
         return TextFormat.GREEN + " > PowerAbstract " + getDispalyName() + TextFormat.GREEN + " has been activated!";
     }
 
-    public abstract Object usePower(Object... args);
+    public Object usePower(Object... args) {
+        if (MainPowerType == PowerType.Regular) {
+        } else if (MainPowerType == PowerType.Ability) {
+            activate();
+        }
+        return null;
+    }
 
     public boolean CanRun(boolean force, Object... args) {
         if (force) return true;
@@ -259,7 +310,13 @@ public abstract class PowerAbstract {
         NukkitRandom nr = new NukkitRandom();
         if (nr.nextRange(0, 100) <= PowerSuccessChance) {
             //Success
-            if (Cooldown != null) return !Cooldown.isValid();
+            if (Cooldown != null && Cooldown.isValid())return false;
+
+        }else return false;//Fail
+        if (MainPowerType == PowerType.Regular) {
+return true;
+        } else if (MainPowerType == PowerType.Ability) {
+            if (isActive()) return false;
             return true;
         }
         return false;
@@ -267,6 +324,22 @@ public abstract class PowerAbstract {
 
     public void onTick(int tick) {
 
+        if (MainPowerType == PowerType.Regular) {
+
+        } else if (MainPowerType == PowerType.Ability) {
+            //Only For Deactivation
+            System.out.println("POWER TICKKKKKK2");
+            if (isActive()) {
+                System.out.println("POWER TICKKKKKK3");
+                whileAbilityActive();
+                if (tick >= DeActivatedTick) {
+                    System.out.println("POWER TICKKKKKK444444444444444444444444444444444444444444444444444444444444444444444");
+                    setActive(false);
+                    DeActivatedTick = -1;
+                    onAbilityDeActivate();
+                }
+            }
+        }
     }
 
     public CoolDownTick addCooldown() {
@@ -324,6 +397,10 @@ public abstract class PowerAbstract {
         }
 
         public String getDisplayName() {
+            return name();
+        }
+
+        public String getDisplayName2() {
             return name();
         }
     }

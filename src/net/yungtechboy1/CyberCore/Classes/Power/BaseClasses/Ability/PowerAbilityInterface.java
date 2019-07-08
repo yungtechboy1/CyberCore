@@ -10,17 +10,14 @@ public interface PowerAbilityInterface {
 
     void setActive(boolean active);
 
-    void setDeActivatedTick(int deActivatedTick);
-
-    //    abstract void activate();
-    default void activate() {
-        if (isActive()) return;
-        setActive(true);
-        setDeActivatedTick(Server.getInstance().getTick() + getRunTimeTick());
-    }
+//    //    abstract void activate();
+//    default void activate() {
+//        if (isActive()) return;
+//        setActive(true);
+//        setDeActivatedTick(Server.getInstance().getTick() + getRunTimeTick());
+//    }
 
 
-    void onAbilityActivate();
     void whileAbilityActive();
 
     void onAbilityDeActivate();
