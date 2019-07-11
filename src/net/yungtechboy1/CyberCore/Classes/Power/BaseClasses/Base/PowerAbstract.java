@@ -19,13 +19,6 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsWindow;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
-public enum PowerType {
-    None,
-    Regular,
-    Ability,
-    Hotbar
-}
-
 /**
  * Created by carlt on 5/16/2019.
  */
@@ -340,6 +333,13 @@ return true;
                 }
             }
         }
+    }
+
+    public void onAbilityDeActivate(){
+
+    }
+    public void whileAbilityActive(){
+
     }
 
     public CoolDownTick addCooldown() {
