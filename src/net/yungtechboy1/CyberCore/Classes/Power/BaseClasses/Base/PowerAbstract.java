@@ -29,6 +29,7 @@ public abstract class PowerAbstract {
     public CoolDownTick Cooldown = null;
     public boolean PlayerToggleable = true;
     public boolean CanSendCanNotRunMessage = true;
+    public PowerSettings PS = null;
     public PowerType MainPowerType = PowerType.Regular;
     public PowerType SecondaryPowerType = PowerType.None;
     protected int DeActivatedTick = -1;
@@ -40,14 +41,32 @@ public abstract class PowerAbstract {
     private int _lasttick = -1;
     private double PowerSourceCost = 0;
 
-    public PowerAbstract(BaseClass b, ClassLevelingManager lt, int psc) {
-        this(b, lt, psc, 0);
+    public PowerSettings getPowerSettings(){
+        return PS;
     }
 
-    public PowerAbstract(BaseClass b, ClassLevelingManager lm, int psc, double cost) {
+    public PowerAbstract(BaseClass b, ClassLevelingManager lt, int psc) {
+        this(b, lt, new PowerSettings(),psc);
+    }
+    public PowerAbstract(BaseClass b, ClassLevelingManager lt, int psc, double cost) {
+        this(b, lt, new PowerSettings(),psc,cost);
+    }
+    public PowerAbstract(BaseClass b, ClassLevelingManager lt, PowerSettings ps,int psc) {
+        this(b, lt, ps,psc, 5);
+    }
+
+    protected void setPowerSettings(boolean ability,boolean effect,boolean hotbar,boolean passive){
+        getPowerSettings().setAbility(ability);
+        getPowerSettings().setEffect(effect);
+        getPowerSettings().setHotbar(hotbar);
+        getPowerSettings().setPassive(passive);
+    }
+
+    public PowerAbstract(BaseClass b, ClassLevelingManager lm, PowerSettings ps, int psc, double cost) {
         PowerSuccessChance = psc;
         PlayerClass = b;
         loadLevelManager(lm);
+        PS = ps;
 //        Level = lvl;
 //        Level = b.getLVL();
         initStages();
@@ -309,8 +328,7 @@ public abstract class PowerAbstract {
         if (MainPowerType == PowerType.Regular) {
 return true;
         } else if (MainPowerType == PowerType.Ability) {
-            if (isActive()) return false;
-            return true;
+            return !isActive();
         }
         return false;
     }
@@ -326,7 +344,7 @@ return true;
                 System.out.println("POWER TICKKKKKK3");
                 whileAbilityActive();
                 if (tick >= DeActivatedTick) {
-                    System.out.println("POWER TICKKKKKK444444444444444444444444444444444444444444444444444444444444444444444");
+                    System.out.println("POWER TICKKKKKK44444444444444444444444444444");
                     setActive(false);
                     DeActivatedTick = -1;
                     onAbilityDeActivate();

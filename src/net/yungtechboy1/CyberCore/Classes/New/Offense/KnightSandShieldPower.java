@@ -8,16 +8,18 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.ClassLevelingManagerStage;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
-public class KnightSandShieldPower extends PowerHotBarStage {
+public class KnightSandShieldPower extends StagePowerAbstract {
     public KnightSandShieldPower(BaseClass b) {
-        super(b, 80, 10, LockedSlot.SLOT_9);
-//        setPowerSourceCost(10);
-        ((ClassLevelingManagerStage)getLM()).setMaxStage(StageEnum.STAGE_5);
+        super(b,80,10);
+        setPowerSettings(false,false,true,false);
+        setMaxStage(StageEnum.STAGE_5);
     }
 
 
