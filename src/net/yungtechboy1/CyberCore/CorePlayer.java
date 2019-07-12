@@ -179,7 +179,7 @@ public class CorePlayer extends Player {
         }
     }
 
-    public void delTemporaryBuff(Buff.BuffType b) {
+    public void delTemporbparyBuff(Buff.BuffType b) {
         if (Bufflist.containsKey(BuffOrigin.Temp)) {
             HashMap<Buff.BuffType, Buff> o = Bufflist.get(BuffOrigin.Temp);
             o.remove(b);
