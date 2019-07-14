@@ -4,6 +4,7 @@ import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerType;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
@@ -11,6 +12,8 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 public class MercenaryDisarm extends PowerAbstract {
     public MercenaryDisarm(BaseClass b) {
         super(b,null, 2);
+//        MainPowerType = PowerType.Ability;
+        setPowerSettings(true,false,false,true);
     }
 
     @Override

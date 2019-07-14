@@ -1,17 +1,19 @@
 package net.yungtechboy1.CyberCore.Classes.New.Offense;
 
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability.PowerAbilityHotBar;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.ClassLevelingManagerStage;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
-
-public class DoubleTimeAbility extends PowerAbilityHotBar {
+//PowerAbilityHotBar
+public class DoubleTimeAbility extends StagePowerAbstract {
     private Buff oldbuff = null;
 
     public DoubleTimeAbility(Knight knight) {
-        super(knight, new ClassLevelingManagerStage(), 75, 10);
-        getLM().setMaxStage(StageEnum.STAGE_5);
+        super(knight, 75, 10);
+        setPowerSettings(true,false,true,false);
+        setMaxStage(StageEnum.STAGE_5);
     }
 
     @Override
@@ -33,6 +35,8 @@ public class DoubleTimeAbility extends PowerAbilityHotBar {
             case STAGE_3:
             case STAGE_4:
                 return 1.2f;
+            case STAGE_5:
+                return 1.25f;
         }
     }
 
@@ -120,11 +124,6 @@ public class DoubleTimeAbility extends PowerAbilityHotBar {
     }
 
     @Override
-    public void onAbilityActivate() {
-        getPlayer().sendMessage("ON ACTIVATE");
-    }
-
-    @Override
     public void whileAbilityActive() {
 
         getPlayer().sendMessage("WHILE ACTIVATE");
@@ -132,13 +131,7 @@ public class DoubleTimeAbility extends PowerAbilityHotBar {
 
     @Override
     public void onAbilityDeActivate() {
-
-        getPlayer().delTemporaryBuff(Buff.BuffType.Movement);
+        getPlayer().delTemporbparyBuff(Buff.BuffType.Movement);
         getPlayer().sendMessage("ON DEACTIVATE");
-    }
-
-    @Override
-    public boolean canUpdateHotBar(int tick) {
-        return true;
     }
 }
