@@ -4,13 +4,14 @@ import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
 import cn.nukkit.potion.Effect;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
-public class MineLifePower extends PowerCustomEffect {
+public class MineLifePower extends StagePowerAbstract {
     public MineLifePower(BaseClass b) {
-        super(b, null,((int) Math.floor(.65d * b.getLVL()) + 1));
+        super(b, ((int) Math.floor(.65d * b.getLVL()) + 1));
         int psc = ((int) Math.floor(.65d * b.getLVL()) + 1);
 
 //        PotionEffect = new
@@ -20,17 +21,17 @@ public class MineLifePower extends PowerCustomEffect {
     public void initStages() {
         switch (getStage()) {
             case STAGE_2:
-                setDurationTicks(20 * 25);
+                setDurationTick(20 * 25);
                 break;
             case STAGE_3:
-                setDurationTicks(20 * 35);
+                setDurationTick(20 * 35);
                 break;
             case STAGE_4:
-                setDurationTicks(20 * 50);
+                setDurationTick(20 * 50);
                 break;
             case STAGE_5:
             case STAGE_1:
-                setDurationTicks(20 * 15);
+                setDurationTick(20 * 15);
                 break;
             default:
         }
@@ -68,14 +69,10 @@ public class MineLifePower extends PowerCustomEffect {
     @Override
     public Effect getEffect() {
         Effect h = Effect.getEffect(Effect.HASTE);
-        h.setDuration(getEffectDuration());
+        h.setDuration(getDurationTick());
         return h;
     }
 
-    @Override
-    public int getEffectDuration() {
-        return super.getEffectDuration();
-    }
 
     private double GetBreakTime(Item itemInHand, Block target, double cbreakTime) {
         CyberCoreMain.getInstance().getLogger().info("BREAKTIMMMMM >> " + cbreakTime);

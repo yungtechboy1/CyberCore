@@ -3,12 +3,14 @@ package net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary;
 import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
-public class MercenaryReneration extends PowerAbility {
+public class MercenaryReneration extends StagePowerAbstract {
     public MercenaryReneration(BaseClass bc) {
-        super(bc,null,30);
+        super(bc, 30, 30);
+        setPowerSettings(false, false, true, false);
         TickUpdate = 20 * 5;//Every 5 Secs make sure player is in combat
         PlayerToggleable = false;
     }
@@ -59,7 +61,9 @@ public class MercenaryReneration extends PowerAbility {
 
     @Override
     public void onActivate() {
-
+        EntityRegainHealthEvent e = new EntityRegainHealthEvent(getPlayer(), 1, EntityRegainHealthEvent.CAUSE_REGEN);
+        getPlayer().heal(e);
+        getPlayer().sendMessage(TextFormat.GOLD + "[ABILITY] > Mercenary Regeneration Activated!");
     }
 
     @Override
@@ -81,13 +85,6 @@ public class MercenaryReneration extends PowerAbility {
     @Override
     public PowerEnum getType() {
         return PowerEnum.MercenaryRegeneration;
-    }
-
-    @Override
-    public void onAbilityActivate() {
-        EntityRegainHealthEvent e = new EntityRegainHealthEvent(getPlayer(),1, EntityRegainHealthEvent.CAUSE_REGEN);
-        getPlayer().heal(e);
-        getPlayer().sendMessage(TextFormat.GOLD+"[ABILITY] > Mercenary Regeneration Activated!");
     }
 
     @Override

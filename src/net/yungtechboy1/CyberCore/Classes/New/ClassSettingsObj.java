@@ -4,7 +4,6 @@ import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBarInt;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerData;
 
 import java.util.ArrayList;
@@ -115,7 +114,7 @@ public class ClassSettingsObj {
         ArrayList<PowerData> pd = new ArrayList<>();
         for (PowerEnum pe : getLearnedPowers()) {
             PowerAbstract pa = BC.getPower(pe,false);
-            PowerData p = new PowerData(pe, getActivatedPowers().contains(pe), pa instanceof PowerHotBarInt);
+            PowerData p = new PowerData(pe, getActivatedPowers().contains(pe), pa.getPowerSettings().isHotbar());
             if (getPreferedSlot7() == pe) p.setLS(LockedSlot.SLOT_7);
             if (getPreferedSlot8() == pe) p.setLS(LockedSlot.SLOT_8);
             if (getPreferedSlot9() == pe) p.setLS(LockedSlot.SLOT_9);

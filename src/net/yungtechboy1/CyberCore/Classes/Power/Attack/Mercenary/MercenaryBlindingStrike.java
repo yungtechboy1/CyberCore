@@ -2,14 +2,16 @@ package net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary;
 
 import cn.nukkit.potion.Effect;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.Mercenary;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
-public class MercenaryBlindingStrike extends PowerCustomEffect {
+public class MercenaryBlindingStrike extends StagePowerAbstract {
 
     public MercenaryBlindingStrike(Mercenary bc) {
-        super(bc,null, 2);
+        super(bc, 1, 2);
+        setPowerSettings(false, true, false, true);
     }
 
     @Override

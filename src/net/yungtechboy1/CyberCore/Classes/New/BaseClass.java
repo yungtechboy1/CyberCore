@@ -20,7 +20,7 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Classes.New.Buff.BuffType;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Passive.PassivePower;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBarInt;
@@ -28,12 +28,10 @@ import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.*;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
-import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Power;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsWindow;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -372,6 +370,7 @@ public abstract class BaseClass {
     }
 
     public final void addPower(PowerAbstract power) {
+        PowerSettings ps = power.getPowerSettings();
 //        if (power instanceof PowerHotBarInt) {
 //            LockedSlots.add(power.getLS());
 //            if( getClassSettings().getPreferedSlot7() == power.getType()){
@@ -384,7 +383,7 @@ public abstract class BaseClass {
         //Power is Learned
         if (!ClassSettings.getActivatedPowers().isEmpty() && ClassSettings.getActivatedPowers().contains(power.getType())) {
             //Power Active
-            if (power instanceof PowerHotBarInt) {
+            if (ps.isHotbar()) {
                 if (ClassSettings.getPreferedSlot7() == power.getType()) power.setLS(LockedSlot.SLOT_7);
                 if (ClassSettings.getPreferedSlot8() == power.getType()) power.setLS(LockedSlot.SLOT_8);
                 if (ClassSettings.getPreferedSlot9() == power.getType()) power.setLS(LockedSlot.SLOT_9);
@@ -393,7 +392,7 @@ public abstract class BaseClass {
         } else if (!ClassSettings.getLearnedPowers().contains(power.getType())) {
             //Power not Active and Need to Be Learned
             ClassSettings.getLearnedPowers().add(power.getType());
-            if (power instanceof PowerHotBarInt) {
+            if (ps.isHotbar()) {
                 //Cant Activate!
                 if (ClassSettings.getPreferedSlot9() == PowerEnum.Unknown) {
                     ClassSettings.setPreferedSlot9(power.getType());
@@ -410,7 +409,7 @@ public abstract class BaseClass {
                 } else {
                     getPlayer().sendMessage(TextFormat.GRAY + "Plugin > " + TextFormat.RED + " Error > Could not find a open Inventory slot to activate " + power.getDispalyName());
                 }
-            } else if (power instanceof PassivePower) {
+            } else if (ps.isPassive()) {
                 //Activate Automatically!
                 ClassSettings.getActivatedPowers().add(power.getType());
             } else {
