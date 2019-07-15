@@ -3,14 +3,16 @@ package net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 
-public class MercenaryDoubleTake extends PowerAbility {
+public class MercenaryDoubleTake extends StagePowerAbstract {
     public MercenaryDoubleTake(BaseClass bc) {
-        super(bc,null,20);
+        super(bc, 10, 20);
+        setPowerSettings(false, false, false, true);
     }
 
     @Override
@@ -64,12 +66,7 @@ public class MercenaryDoubleTake extends PowerAbility {
 
     @Override
     public void onActivate() {
-
-    }
-
-    @Override
-    public void onAbilityActivate() {
-        getPlayer().sendMessage(TextFormat.GOLD+"[ABILITY] > Double Take Activated!");
+        getPlayer().sendMessage(TextFormat.GOLD + "[ABILITY] > Double Take Activated!");
     }
 
     @Override

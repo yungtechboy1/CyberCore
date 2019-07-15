@@ -1,12 +1,9 @@
-package net.yungtechboy1.CyberCore.Classes.New.Offense;
+package net.yungtechboy1.CyberCore.Classes.Power;
 
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
-
-import static net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract.StageEnum.*;
 
 public class AntidotePower extends StagePowerAbstract {
     public AntidotePower(BaseClass baseClass) {

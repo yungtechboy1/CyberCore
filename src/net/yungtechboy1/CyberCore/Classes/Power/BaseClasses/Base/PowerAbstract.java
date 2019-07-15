@@ -7,6 +7,7 @@ import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.event.inventory.InventoryClickEvent;
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.math.NukkitRandom;
+import cn.nukkit.potion.Effect;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
@@ -15,7 +16,6 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 import net.yungtechboy1.CyberCore.CoolDownTick;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsWindow;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
@@ -27,6 +27,7 @@ public abstract class PowerAbstract {
     public BaseClass PlayerClass = null;
     public int TickUpdate = -1;
     public CoolDownTick Cooldown = null;
+    public boolean TakePowerOnFail = false;
     public boolean PlayerToggleable = true;
     public boolean CanSendCanNotRunMessage = true;
     public PowerSettings PS = null;
@@ -40,26 +41,18 @@ public abstract class PowerAbstract {
     private int PowerSuccessChance = 0;
     private int _lasttick = -1;
     private double PowerSourceCost = 0;
-
-    public PowerSettings getPowerSettings(){
-        return PS;
-    }
+    private int DurationTick = -1;
 
     public PowerAbstract(BaseClass b, ClassLevelingManager lt, int psc) {
-        this(b, lt, new PowerSettings(),psc);
-    }
-    public PowerAbstract(BaseClass b, ClassLevelingManager lt, int psc, double cost) {
-        this(b, lt, new PowerSettings(),psc,cost);
-    }
-    public PowerAbstract(BaseClass b, ClassLevelingManager lt, PowerSettings ps,int psc) {
-        this(b, lt, ps,psc, 5);
+        this(b, lt, new PowerSettings(), psc);
     }
 
-    protected void setPowerSettings(boolean ability,boolean effect,boolean hotbar,boolean passive){
-        getPowerSettings().setAbility(ability);
-        getPowerSettings().setEffect(effect);
-        getPowerSettings().setHotbar(hotbar);
-        getPowerSettings().setPassive(passive);
+    public PowerAbstract(BaseClass b, ClassLevelingManager lt, int psc, double cost) {
+        this(b, lt, new PowerSettings(), psc, cost);
+    }
+
+    public PowerAbstract(BaseClass b, ClassLevelingManager lt, PowerSettings ps, int psc) {
+        this(b, lt, ps, psc, 5);
     }
 
     public PowerAbstract(BaseClass b, ClassLevelingManager lm, PowerSettings ps, int psc, double cost) {
@@ -72,6 +65,17 @@ public abstract class PowerAbstract {
         initStages();
         initAfterCreation();
         PowerSourceCost = cost;
+    }
+
+    public PowerSettings getPowerSettings() {
+        return PS;
+    }
+
+    protected void setPowerSettings(boolean ability, boolean effect, boolean hotbar, boolean passive) {
+        getPowerSettings().setAbility(ability);
+        getPowerSettings().setEffect(effect);
+        getPowerSettings().setHotbar(hotbar);
+        getPowerSettings().setPassive(passive);
     }
 
     public final void activate() {
@@ -101,6 +105,14 @@ public abstract class PowerAbstract {
         if (lm == null) return;
         LM = lm;
         LT = LM.getType();
+    }
+
+    public int getDurationTick() {
+        return DurationTick;
+    }
+
+    public void setDurationTick(int t) {
+        DurationTick = t;
     }
 
     public ClassLevelingManager getLM() {
@@ -274,10 +286,11 @@ public abstract class PowerAbstract {
         }
     }
 
-    public PowerEnum getType() {
-        CyberCoreMain.getInstance().getLogger().error("ERROR GETTING TYPE FROM POWER!!!!!");
-        return PowerEnum.Unknown;
-    }
+    public abstract PowerEnum getType();
+//    {
+//        CyberCoreMain.getInstance().getLogger().error("ERROR GETTING TYPE FROM POWER!!!!!");
+//        return PowerEnum.Unknown;
+//    }
 
     //USE TO RUN
     public final void initPowerRun(Object... args) {
@@ -292,6 +305,12 @@ public abstract class PowerAbstract {
         }
     }
 
+    public final void initForcePowerRun(Object... args) {
+        PlayerClass.takePowerSourceCount(PowerSourceCost);
+        usePower(args);
+        afterPowerRun(args);
+    }
+
     public void sendCanNotRunMessage() {
         getPlayer().sendMessage(TextFormat.RED + "Error! PowerAbstract " + getDispalyName() + TextFormat.RED + " still has a " + TextFormat.LIGHT_PURPLE + Cooldown.toString() + TextFormat.RED + " Cooldown.");
     }
@@ -299,6 +318,10 @@ public abstract class PowerAbstract {
     public void afterPowerRun(Object... args) {
         addCooldown();
         getPlayer().sendMessage(getSuccessUsageMessage());
+    }
+
+    public Effect getEffect() {
+        return Effect.getEffect(Effect.FATAL_POISON);
     }
 
     public String getSuccessUsageMessage() {
@@ -322,22 +345,23 @@ public abstract class PowerAbstract {
         NukkitRandom nr = new NukkitRandom();
         if (nr.nextRange(0, 100) <= PowerSuccessChance) {
             //Success
-            if (Cooldown != null && Cooldown.isValid())return false;
+            if (Cooldown != null && Cooldown.isValid()) return false;
 
-        }else return false;//Fail
+        } else return false;//Fail
         if (MainPowerType == PowerType.Regular) {
-return true;
+            return true;
         } else if (MainPowerType == PowerType.Ability) {
             return !isActive();
         }
         return false;
     }
 
+    public boolean isAbility() {
+        return getPowerSettings().isAbility();
+    }
+
     public void onTick(int tick) {
-
-        if (MainPowerType == PowerType.Regular) {
-
-        } else if (MainPowerType == PowerType.Ability) {
+        if (isAbility()) {
             //Only For Deactivation
             System.out.println("POWER TICKKKKKK2");
             if (isActive()) {
@@ -353,10 +377,11 @@ return true;
         }
     }
 
-    public void onAbilityDeActivate(){
+    public void onAbilityDeActivate() {
 
     }
-    public void whileAbilityActive(){
+
+    public void whileAbilityActive() {
 
     }
 

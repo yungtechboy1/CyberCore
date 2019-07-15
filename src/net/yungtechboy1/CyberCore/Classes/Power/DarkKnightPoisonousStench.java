@@ -10,23 +10,19 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.BlockColor;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.DarkKnight;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability.PowerAbilityHotBarAreaEffect;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 import java.util.ArrayList;
 
-public class DarkKnightPoisonousStench extends PowerAbilityHotBarAreaEffect {
+public class DarkKnightPoisonousStench extends StagePowerAbstract {
 
 
     int s = 0;
 
-    public DarkKnightPoisonousStench(DarkKnight bc) {
-        super(bc, 100, LockedSlot.SLOT_9, 5);
-        TickUpdate = 5;//1 Secs or .75 Secs
-    }
+    Vector3 ActivatedLocation;
 
     private Entity[] getEntitiesAround() {
         return getPlayer().getLevel().getNearbyEntities(new SimpleAxisAlignedBB(getPlayer().add(-getMaxSize(), -5, -getMaxSize()), getPlayer().add(getMaxSize(), 5, getMaxSize())));
@@ -39,11 +35,10 @@ public class DarkKnightPoisonousStench extends PowerAbilityHotBarAreaEffect {
         }
     }
 
-    @Override
-    public void onAbilityActivate() {
-        spawnParticles();
-        getPlayer().getLevel().addSound(getPlayer(), Sound.MOB_WITCH_THROW);
-//        Entity[] es = getPlayer().getLevel().getNearbyEntities(new SimpleAxisAlignedBB(getPlayer().add(-getMaxSize(),-5,-getMaxSize()), getPlayer().add(getMaxSize(),5,getMaxSize()));
+    public DarkKnightPoisonousStench(DarkKnight bc) {
+        super(bc, 100, 5);
+        setPowerSettings(true, false, true, false);
+        TickUpdate = 5;//1 Secs or .75 Secs
     }
 
     @Override
@@ -76,6 +71,19 @@ public class DarkKnightPoisonousStench extends PowerAbilityHotBarAreaEffect {
             }
         }
         return v;
+    }
+
+    @Override
+    public void onActivate() {
+        super.onActivate();
+        ActivatedLocation = getPlayer().clone();
+        spawnParticles();
+        getPlayer().getLevel().addSound(getPlayer(), Sound.MOB_WITCH_THROW);
+//        Entity[] es = getPlayer().getLevel().getNearbyEntities(new SimpleAxisAlignedBB(getPlayer().add(-getMaxSize(),-5,-getMaxSize()), getPlayer().add(getMaxSize(),5,getMaxSize()));
+    }
+
+    private Vector3 getActivatedLocation() {
+        return ActivatedLocation;
     }
 
     @Override

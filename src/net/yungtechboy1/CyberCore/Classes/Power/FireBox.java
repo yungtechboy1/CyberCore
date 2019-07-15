@@ -8,17 +8,18 @@ import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.LevelSoundEventPacket;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 import java.util.ArrayList;
 
-public class FireBox extends PowerHotBar {
+public class FireBox extends StagePowerAbstract {
 
     public FireBox(BaseClass b) {
-        super(b,null, 100, 250, LockedSlot.SLOT_8);
+        super(b, 100, 250);
+        setPowerSettings(false, false, true, false);
         //TODO make this so that this power Runs Automatically!
 //        TickUpdate = 10;
 //        CanSendCanNotRunMessage = false;
