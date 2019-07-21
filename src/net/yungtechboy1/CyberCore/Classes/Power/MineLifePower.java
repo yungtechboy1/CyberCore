@@ -4,6 +4,7 @@ import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
 import cn.nukkit.potion.Effect;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
@@ -11,7 +12,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class MineLifePower extends StagePowerAbstract {
     public MineLifePower(BaseClass b) {
-        super(b, ((int) Math.floor(.65d * b.getLVL()) + 1));
+        super(b, new PowerSettings(false,true,true,false),(int) Math.floor(.65d * b.getLVL()) + 1);
         int psc = ((int) Math.floor(.65d * b.getLVL()) + 1);
 
 //        PotionEffect = new

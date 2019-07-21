@@ -28,6 +28,7 @@ public class DragonSlayerFireStomp extends StagePowerAbstract {
 
     public DragonSlayerFireStomp(DragonSlayer b) {
         super(b, 100, 1);
+        setPowerSettings(true,false,true,false);
         TickUpdate = 10;
     }
 
@@ -72,13 +73,14 @@ public class DragonSlayerFireStomp extends StagePowerAbstract {
             }
         }
         if (e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK || e.getCause() == EntityDamageEvent.DamageCause.LAVA) {
-            System.out.println("Were HeRE >> "+StartNullFire+"||"+StartNullFire + GraceTicks()+"||"+getPlayer().getServer().getTick());
-            if (StartNullFire != -1 && StartNullFire + GraceTicks() > getPlayer().getServer().getTick()) {
+            System.out.println("Were HeRE >> "+StartNullFire+"||"+(StartNullFire + GraceTicks())+"||"+getPlayer().getServer().getTick());
+            if (StartNullFire != -1 && (StartNullFire + GraceTicks()) > getPlayer().getServer().getTick()) {
+                System.out.println("stopped!!!!");
                 e.setCancelled();
                 getPlayer().getLevel().addLevelSoundEvent(getPlayer(), LevelSoundEventPacket.SOUND_EXTINGUISH_FIRE);
                 getPlayer().fireTicks = 0;
+            }else{
                 StartNullFire = -1;
-
             }
         }
         return super.EntityDamageEvent(e);

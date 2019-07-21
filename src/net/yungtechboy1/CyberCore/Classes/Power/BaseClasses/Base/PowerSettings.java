@@ -9,6 +9,13 @@ public class PowerSettings {
 
     }
 
+    public PowerSettings(boolean isPassive, boolean isHotbar, boolean isAbility, boolean isEffect) {
+        this.isPassive = isPassive;
+        this.isHotbar = isHotbar;
+        this.isAbility = isAbility;
+        this.isEffect = isEffect;
+    }
+
     public boolean isPassive() {
         return isPassive;
     }

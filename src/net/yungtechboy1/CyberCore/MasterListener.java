@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
+import cn.nukkit.block.Block;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
@@ -47,6 +48,20 @@ public class MasterListener implements Listener {
             p.setOp(true);
         } else {
             p.setOp(false);
+        }
+    }
+
+    public void InteractEvent(PlayerInteractEvent e){
+        String n = e.getPlayer().getName();
+        if(plugin.CrateMain.PrimedPlayer.contains(n)){
+            Block b = e.getBlock();
+            if(b.getId() != Block.CHEST){
+                plugin.CrateMain.PrimedPlayer.remove(n);
+                e.getPlayer().sendMessage("Error! That block can not be made a chest!");
+                return;
+            }else{
+
+            }
         }
     }
 

@@ -19,6 +19,8 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsWindow;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
+import java.util.concurrent.locks.Lock;
+
 /**
  * Created by carlt on 5/16/2019.
  */
@@ -44,11 +46,11 @@ public abstract class PowerAbstract {
     private int DurationTick = -1;
 
     public PowerAbstract(BaseClass b, ClassLevelingManager lt, int psc) {
-        this(b, lt, new PowerSettings(), psc);
+        this(b, lt, null, psc);
     }
 
     public PowerAbstract(BaseClass b, ClassLevelingManager lt, int psc, double cost) {
-        this(b, lt, new PowerSettings(), psc, cost);
+        this(b, lt, null, psc, cost);
     }
 
     public PowerAbstract(BaseClass b, ClassLevelingManager lt, PowerSettings ps, int psc) {
@@ -59,7 +61,10 @@ public abstract class PowerAbstract {
         PowerSuccessChance = psc;
         PlayerClass = b;
         loadLevelManager(lm);
-        PS = ps;
+        if (ps != null) {
+            PS = ps;
+        } else
+            b.getPlayer().getServer().getLogger().warning("POWER ABSTRACT ERROR! NO POWER SOURCE ASSIGNED FOR " + getName());
 //        Level = lvl;
 //        Level = b.getLVL();
         initStages();
@@ -68,10 +73,13 @@ public abstract class PowerAbstract {
     }
 
     public PowerSettings getPowerSettings() {
+        if (PS == null)
+            getPlayer().getServer().getLogger().error("POWER ABSTRACT ERROR! NO POWER SOURCE ASSIGNED FOR " + getName());
         return PS;
     }
 
     protected void setPowerSettings(boolean ability, boolean effect, boolean hotbar, boolean passive) {
+        if (getPowerSettings() == null) PS = new PowerSettings();
         getPowerSettings().setAbility(ability);
         getPowerSettings().setEffect(effect);
         getPowerSettings().setHotbar(hotbar);
@@ -128,16 +136,35 @@ public abstract class PowerAbstract {
     }
 
     public void setActive(boolean active) {
+        if (active) {
+            if (!hasPowerSettings()){
+                System.out.println("====> CAN NOT ACTIVATE POWER NO POWER SETTINGS!!!");
+                return;
+            }
+            if (getPowerSettings().isHotbar() && isLSNull()){
+                System.out.println("====> CAN NOT ACTIVATE POWER NO HOT BAR SLOT IN SETTINGS!!!");
+                return;
+            }
+        }
         Active = active;
         DeActivatedTick = Server.getInstance().getTick() + getRunTimeTick();
         PowerEnum pe = getType();
         if (PlayerClass.getClassSettings().getLearnedPowers().contains(pe) && active) {
-            PowerAbstract p = this;
             PlayerClass.getClassSettings().addActivePower(pe);
             onActivate();
         } else {
             getPlayer().sendMessage(TextFormat.RED + "ERROR > POWER > Could not activate " + getDispalyName() + TextFormat.RED + " Please make sure you have learned this power!");
         }
+    }
+
+    public boolean hasPowerSettings() {
+        return getPowerSettings() != null;
+    }
+
+    public boolean isLSNull() {
+        LockedSlot ls = getLS();
+        if(ls == null)return true;
+        return ls == LockedSlot.NA;
     }
 
     public int getRunTimeTick() {

@@ -1,9 +1,11 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 
 public class PowerData {
+    PowerAbstract PA = null;
     PowerEnum PowerID = PowerEnum.Unknown;
     Boolean Active = false;
     Boolean NeedsLockedSlot = false;
@@ -19,11 +21,16 @@ public class PowerData {
         NeedsLockedSlot = nls;
     }
 
-    public PowerData(PowerEnum powerID, Boolean active, Boolean nls, LockedSlot LS) {
+    public PowerData(PowerEnum powerID, Boolean active, Boolean nls, LockedSlot LS, PowerAbstract pa) {
         PowerID = powerID;
         NeedsLockedSlot = nls;
         Active = active;
+        PA = pa;
         this.LS = LS;
+    }
+
+    public PowerAbstract getPA(){
+        return PA;
     }
 
     public Boolean getNeedsLockedSlot() {

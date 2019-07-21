@@ -31,7 +31,7 @@ public final class FormType {
         Faction_Info_Other,
         Faction_Join_List,
         Faction_Kick_List,
-        Faction_Chat_Faction, Class_Settings_TNT, Class_HowToUse_TNT, Class_HowToUse_TNT_Commands, Class_HowToUse_TNT_PA, Class_HowToUse_TNT_Unlocks, Class_HowToUse_TNT_EXP, PlayerSettings0, PlayerSettings1, PlayerSettingsPage0, SettingsPage0, PlayerFactionSettingsPage0, Main_Class_Settings_Window, Class_Settings_Window_Knight, Class_Settings_Window_Mercenary, Class_Settings_Window, Main_Class_Settings_Window_Active_Powers;
+        Faction_Chat_Faction, Class_Settings_TNT, Class_HowToUse_TNT, Class_HowToUse_TNT_Commands, Class_HowToUse_TNT_PA, Class_HowToUse_TNT_Unlocks, Class_HowToUse_TNT_EXP, PlayerSettings0, PlayerSettings1, PlayerSettingsPage0, SettingsPage0, PlayerFactionSettingsPage0, Main_Class_Settings_Window, Class_Settings_Window_Knight, Class_Settings_Window_Mercenary, Class_Settings_Window, Main_Class_Settings_Window_Active_Powers, Admin_Main, Crate_Admin_ChooseCrate;
         public int getID(){
             return ordinal();
         }

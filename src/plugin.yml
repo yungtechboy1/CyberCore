@@ -3,6 +3,10 @@ main: net.yungtechboy1.CyberCore.CyberCoreMain
 version: "1.0.0"
 api: ["1.0.0"]
 
+custom-item-blocks:
+  - 100
+  - 101
+  - 102
 load: POSTWORLD
 author: Yungtechboy1
 description: Core Plugin from Yungtech

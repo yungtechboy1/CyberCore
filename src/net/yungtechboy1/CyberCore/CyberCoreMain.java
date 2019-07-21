@@ -49,10 +49,12 @@ import net.yungtechboy1.CyberCore.Factory.Shop.ShopFactory;
 import net.yungtechboy1.CyberCore.Factory.Shop.Spawner.SpawnShopFactory;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
+import net.yungtechboy1.CyberCore.Manager.Crate.CrateMain;
 import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
+import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Create;
 import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
@@ -146,6 +148,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public net.yungtechboy1.CyberCore.Manager.Warp.WarpManager WarpManager;
     public ServerSqlite ServerSQL;
     public CustomCraftingManager CraftingManager;
+    public CrateMain CrateMain;
     Vector3 p1;
     Vector3 p2;
     CustomRecipeCraftingManager CRM;
@@ -264,7 +267,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         PowerSourceTask = new PowerSourceTaskAsync(this);
         CraftingManager = new CustomCraftingManager();
         CRM = new CustomRecipeCraftingManager(this);
-
+        CrateMain = new CrateMain(this);
 //        CustomItemTNT
 //        ShapedRecipe nsr = new ShapedRecipe(Item.get(46), new String[]{"AAA", "BBB", "AAA"}, new CharObjectHashMap<Item>() {{
 //            put("A".charAt(0), new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));
