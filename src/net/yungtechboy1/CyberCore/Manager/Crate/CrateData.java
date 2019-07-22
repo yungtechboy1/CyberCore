@@ -1,6 +1,7 @@
 package net.yungtechboy1.CyberCore.Manager.Crate;
 
 import cn.nukkit.item.Item;
+import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.ConfigSection;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -12,6 +13,7 @@ public class CrateData {
 //    public final String PossibleItemsKey = "PI";
 
     public ArrayList<ItemChanceData> PossibleItems = new ArrayList<>();
+    public String Key = new NukkitRandom().nextRange(0,10000)+"__UNNAMED CRATE__";
     public String Name = "__UNNAMED CRATE__";
     public String SubName = "==========";
     public ArrayList<String> KeyItems = new ArrayList<String>();
@@ -24,6 +26,7 @@ public class CrateData {
     }
 
     public CrateData(ConfigSection c) {
+        if(c.containsKey("Key"))Key = c.getString("Key");
         if(c.containsKey("Name"))Name = c.getString("Name");
         if(c.containsKey("SubName"))SubName = c.getString("SubName");
         if(c.containsKey("KeyItems"))KeyItems = new ArrayList<>(c.getStringList("KeyItems"));
@@ -58,6 +61,7 @@ public class CrateData {
 //        c.put("Key_Meta", Key_Meta);
 //        c.put("Key_NBT", Key_NBT);
         c.put("KeyItems", KeyItems);
+        c.put("Key", Key);
         c.put("Name", Name);
         c.put("SubName", SubName);
         c.put("PossibleItems", getPossibleItemsToJSON());

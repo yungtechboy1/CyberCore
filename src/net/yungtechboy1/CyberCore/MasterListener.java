@@ -51,16 +51,25 @@ public class MasterListener implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void InteractEvent(PlayerInteractEvent e){
         String n = e.getPlayer().getName();
-        if(plugin.CrateMain.PrimedPlayer.contains(n)){
-            Block b = e.getBlock();
+        Block b = e.getBlock();
+        if(plugin.CrateMain.PrimedPlayer.remove(n)){
+            e.setCancelled();
             if(b.getId() != Block.CHEST){
-                plugin.CrateMain.PrimedPlayer.remove(n);
-                e.getPlayer().sendMessage("Error! That block can not be made a chest!");
+                e.getPlayer().sendMessage("Error! That block can not be made a crate!");
                 return;
             }else{
-
+                plugin.CrateMain.addCrate((CorePlayer) e.getPlayer(),b);
+            }
+        }else{
+            if(b.getId() == Block.CHEST){
+                if(plugin.CrateMain.CrateChests.containsKey(b)){
+                    e.setCancelled();
+                    e.getPlayer().sendMessage("Error! Invalid Crate Key!");
+                    //Try and Roll after!
+                }
             }
         }
     }
