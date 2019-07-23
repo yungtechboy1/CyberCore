@@ -10,7 +10,7 @@ import net.yungtechboy1.CyberCore.Manager.Crate.KeyData;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormCustom;
 
 public class AdminCrateKeyCreator extends CyberFormCustom {
-    public AdminCrateKeyCreator(FormType.MainForm ttype, String title) {
+    public AdminCrateKeyCreator() {
         super(FormType.MainForm.Crate_Admin_KeyCreator, "Admin > Crate > Key Creator");
         addElement(new ElementInput("Custom Item Name"));
         addElement(new ElementInput("Custom NBT Key"));

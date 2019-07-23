@@ -16,21 +16,21 @@ public class CrateListener implements Listener {
     }
 
 
-    @EventHandler
-    public void onHit(PlayerInteractEvent ev){
-        Block b = ev.getBlock();
-        if (b.getId() == 54){
-            ev.setCancelled();
-            Item i = ev.getItem();
-            if (i.getId() == 347 && ev.getPlayer().isOp()){
-
-            }
-            if (i.getNamedTag().getBoolean("ItemKey1")){
-                main.CrateMain.showCrate(b,ev.getPlayer());
-                main.getServer().getScheduler().scheduleDelayedTask(new CloseCrate(main,b,ev.getPlayer()), 40);
-            }
-        }
-    }
+//    @EventHandler
+//    public void onHit(PlayerInteractEvent ev){
+//        Block b = ev.getBlock();
+//        if (b.getId() == 54){
+//            ev.setCancelled();
+//            Item i = ev.getItem();
+//            if (i.getId() == 347 && ev.getPlayer().isOp()){
+//
+//            }
+//            if (i.getNamedTag().getBoolean("ItemKey1")){
+//                main.CrateMain.showCrate(b,ev.getPlayer());
+//                main.getServer().getScheduler().scheduleDelayedTask(new CloseCrate(main,b,ev.getPlayer()), 40);
+//            }
+//        }
+//    }
 }
 
 

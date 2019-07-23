@@ -12,8 +12,12 @@ import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.event.inventory.InventoryClickEvent;
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.event.player.*;
+import cn.nukkit.inventory.PlayerInventory;
+import cn.nukkit.item.Item;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.Manager.Crate.CrateMain;
+import net.yungtechboy1.CyberCore.Manager.Crate.CrateObject;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 
 import java.util.HashMap;
@@ -52,39 +56,65 @@ public class MasterListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void InteractEvent(PlayerInteractEvent e){
+    public void InteractEvent(PlayerInteractEvent e) {
         String n = e.getPlayer().getName();
         Block b = e.getBlock();
-        if(plugin.CrateMain.PrimedPlayer.remove(n)){
+        if (plugin.CrateMain.PrimedPlayer.remove(n)) {
             e.setCancelled();
-            if(b.getId() != Block.CHEST){
+            if (b.getId() != Block.CHEST) {
                 e.getPlayer().sendMessage("Error! That block can not be made a crate!");
                 return;
-            }else{
-                plugin.CrateMain.addCrate((CorePlayer) e.getPlayer(),b);
-            }
-        }else{
-            if(b.getId() == Block.CHEST){
-                if(plugin.CrateMain.CrateChests.containsKey(b)){
-                    e.setCancelled();
-                    e.getPlayer().sendMessage("Error! Invalid Crate Key!");
-                    //Try and Roll after!
+            } else {
+                if (plugin.CrateMain.SetKeyPrimedPlayer.remove(n)) {
+
+                } else {
+                    plugin.CrateMain.addCrate((CorePlayer) e.getPlayer(), b);
                 }
+            }
+        } else {
+            if (b.getId() == Block.CHEST) {
+                CrateObject x = CyberCoreMain.getInstance().CrateMain.isCrate(b);
+                if (x != null) {
+                    if (plugin.CrateMain.CrateChests.containsKey(b)) {
+                        //Check Key
+                        Item hand = e.getPlayer().getInventory().getItemInHand();
+                        e.setCancelled();
+                        if (!CrateMain.isItemKey(hand)) {
+                            e.getPlayer().sendMessage("Error! Item is not a valid Crate Key!");
+                            return;
+                        }
+                        if(x.checkKey(hand)){
+                            //Valid Key & Take it
+                            PlayerInventory pi = e.getPlayer().getInventory();
+                            Item i = pi.getItemInHand();
+                            i.count--;
+                            if(i.count == 0)i = Item.get(0);
+                            pi.setItemInHand(i);
+                            CyberCoreMain.getInstance().CrateMain.showCrate(b,e.getPlayer());
+                            CyberCoreMain.getInstance().CrateMain.rollCrate(b,e.getPlayer());
+                        }
+                        e.getPlayer().sendMessage("Error! Key was invalid!");
+                    }
+                }else{
+                    //Not Crate
             }
         }
     }
+
+}
 
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PlayerDropItemEvent(PlayerDropItemEvent event) {
-        CorePlayer cp  = (CorePlayer)event.getPlayer();
+        CorePlayer cp = (CorePlayer) event.getPlayer();
 
-        if(event.getItem().hasCompoundTag()){
-            if(event.getItem().getNamedTag().contains(getPowerHotBarItemNamedTagKey)){
+        if (event.getItem().hasCompoundTag()) {
+            if (event.getItem().getNamedTag().contains(getPowerHotBarItemNamedTagKey)) {
                 event.setCancelled();
             }
         }
     }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void InventoryClickEvent(InventoryClickEvent event) {
         Player p = event.getPlayer();
@@ -92,18 +122,19 @@ public class MasterListener implements Listener {
         if (cp.getPlayerClass() == null) return;
         for (PowerAbstract pp : cp.getPlayerClass().getActivePowers()) {
             if (pp.getPowerSettings().isHotbar()) {
-                event = (InventoryClickEvent)pp.handelEvent(event);
+                event = (InventoryClickEvent) pp.handelEvent(event);
             }
         }
-        if(event.isCancelled())System.out.println("CANNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+        if (event.isCancelled()) System.out.println("CANNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
     }
-//No need RN
-        @EventHandler(priority = EventPriority.HIGHEST)
+
+    //No need RN
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void InventoryTransactionEvent(InventoryTransactionEvent event) {
         Player p = event.getTransaction().getSource();
-        CorePlayer cp = (CorePlayer)p;
-        if(cp.getPlayerClass() == null)return;
-        for(PowerAbstract pp : cp.getPlayerClass().getActivePowers()){
+        CorePlayer cp = (CorePlayer) p;
+        if (cp.getPlayerClass() == null) return;
+        for (PowerAbstract pp : cp.getPlayerClass().getActivePowers()) {
             if (pp.getPowerSettings().isHotbar()) {
                 pp.handelEvent(event);
             }

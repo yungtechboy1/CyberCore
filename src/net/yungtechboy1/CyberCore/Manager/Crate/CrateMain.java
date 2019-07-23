@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Manager.Crate;
 
 
 import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Position;
@@ -12,8 +13,8 @@ import cn.nukkit.network.protocol.DataPacket;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CrateKey;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.Crate.Tasks.RollTick;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.Admin.Crate.AdminCrateChooseCrateWindow;
 
 import java.io.File;
@@ -25,22 +26,26 @@ import java.util.Map;
 public class CrateMain {
     public static final String CK = "CrateKey";
     public ArrayList<String> PrimedPlayer = new ArrayList<>();
-    public HashMap<String, CrateObject> CrateChests = new HashMap<>();
-    public HashMap<String,CrateKey> CrateKeys = new HashMap<>();
-//    private ConfigSection CrateLocations = new ConfigSection();
+    public ArrayList<String> SetKeyPrimedPlayer = new ArrayList<>();
+    public HashMap<Vector3, CrateObject> CrateChests = new HashMap<>();
+    public HashMap<String, KeyData> CrateKeys = new HashMap<>();
+    //    private ConfigSection CrateLocations = new ConfigSection();
     private HashMap<String, FloatingTextParticle> cratetxt = new HashMap<>();
     private HashMap<String, CrateData> CrateMap = new HashMap<>();
     private Config c;
     private Config cc;
     private Config ck;
     private CyberCoreMain CCM;
+
     //    public final String CrateKeyNBTKey =
     public CrateMain(CyberCoreMain ccm) {
         CCM = ccm;
         CCM.getLogger().info("Loaded Crates System");
 //        CCM.getServer().getPluginManager().registerEvents(new CrateListener(CCM), CCM);
-        c = new Config(new File(ccm.getDataFolder(), "crate-locations.yml"), Config.YAML, new LinkedHashMap<String, Object>() {});
-        ck= new Config(new File(ccm.getDataFolder(), "crate-keys.yml"), Config.YAML, new LinkedHashMap<String, Object>() {});
+        c = new Config(new File(ccm.getDataFolder(), "crate-locations.yml"), Config.YAML, new LinkedHashMap<String, Object>() {
+        });
+        ck = new Config(new File(ccm.getDataFolder(), "crate-keys.yml"), Config.YAML, new LinkedHashMap<String, Object>() {
+        });
         cc = new Config(new File(ccm.getDataFolder(), "crate-data.yml"), Config.YAML, new LinkedHashMap<String, Object>() {
         });
         c.save();
@@ -95,25 +100,22 @@ public class CrateMain {
             }
         }
 
+        ConfigSection CKC = ck.getRootSection();
         if (cl.isEmpty()) {
-            CrateKeys = ck.getRootSection();
 
         } else {
-            System.out.println("CL SIZE +=====>>" + cl.size());
-            for (Object o : cl.getAllMap().values()) {
+            System.out.println("CKC SIZE +=====>>" + CKC.size());
+            for (Object o : CKC.getAllMap().values()) {
                 if (o instanceof ConfigSection) {
                     ConfigSection c = (ConfigSection) o;
-                    String nme = c.getString("Key");
-                    CrateData cda = CrateMap.getOrDefault(nme, null);
-//                    ConfigSection cccc = c.getSection("Loc");;
-//                    Position po = new Position(cccc.getDouble("x"),cccc.getDouble("y"),cccc.getDouble("z"), Server.getInstance().getLevelByName(cccc.getString("level")));
-                    Position po = (Position) c.get("Loc");
-                    CrateObject co = new CrateObject(po, cda);
-                    if (cda != null) {
-                        CrateChests.put(po.asBlockVector3().asVector3(), co);
-                    } else {
-                        CyberCoreMain.getInstance().getLogger().error("Error Loading Chest Crate Location! " + nme);
+                    String nme = c.getString("Key_Name");
+                    if (nme == null || nme.length() == 0) {
+                        System.out.println("Error! The Key_Name was Null!");
+                        return;
                     }
+
+                    CrateKeys.put(nme, new KeyData(c));
+                    CyberCoreMain.getInstance().getLogger().info("Loaded " + nme + " Crate Key!");
                 }
 
             }
@@ -121,6 +123,10 @@ public class CrateMain {
 
     }
 
+    public static boolean isItemKey(Item i){
+        if(i == null || i.getId() == 0)return false;
+        return i.hasCompoundTag() && i.getNamedTag().contains(CrateMain.CK);
+    }
     public HashMap<String, CrateData> getCrateMap() {
         return CrateMap;
     }
@@ -200,14 +206,8 @@ public class CrateMain {
         return i.getNamedTag().contains((String) data.get("Item-NBT-Tag"));
     }
 
-    public String isCrate(Block b) {
-        String loc = b.getX() + ":" + b.getY() + ":" + b.getZ();
-        for (Map.Entry<String, Object> entry : c.getAll().entrySet()) {
-            HashMap<String, Object> data = (HashMap<String, Object>) entry.getValue();
-            if (data.get("Loc").equals(loc)) {
-                return entry.getKey();
-            }
-        }
+    public CrateObject isCrate(Vector3 b) {
+        if(CrateChests.containsKey(b))return CrateChests.get(b);
         return null;
     }
 
@@ -257,5 +257,22 @@ public class CrateMain {
     }
 
     public void addCrateKey(KeyData keyData) {
+        if (keyData == null) return;
+        CrateKeys.put(keyData.Key_Name, keyData);
+    }
+
+    public void rollCrate(Block b, Player player) {
+
+
+
+        ConfigSection data = new ConfigSection() {{
+            put("PlayerName", player.getName());
+            put("slot", -1);
+            put("possible-items", items);
+            put("crate-name", cn);
+            put("pos", pos);
+        }};
+        showCrate(pos, player);
+        Server.getInstance().getScheduler().scheduleTask(new RollTick(this, data));
     }
 }
