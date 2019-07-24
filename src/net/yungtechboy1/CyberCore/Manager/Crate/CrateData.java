@@ -31,6 +31,7 @@ public class CrateData {
         if(c.containsKey("SubName"))SubName = c.getString("SubName");
         if(c.containsKey("KeyItems"))KeyItems = new ArrayList<>(c.getStringList("KeyItems"));
         if(c.containsKey("PossibleItems"))PossibleItems = PossibleItemsFromJSON(c.getString("PossibleItems"));
+//        if(c.containsKey("PossibleItems"))PossibleItems = (ArrayList<ItemChanceData>)c.get("PossibleItems");
 
 //        if (c.containsKey(PossibleItemsKey)) {
 
@@ -65,6 +66,7 @@ public class CrateData {
         c.put("Name", Name);
         c.put("SubName", SubName);
         c.put("PossibleItems", getPossibleItemsToJSON());
+//        c.put("PossibleItems", PossibleItems);
         return c;
     }
 }

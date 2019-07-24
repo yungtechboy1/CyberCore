@@ -1,47 +1,47 @@
 package net.yungtechboy1.CyberCore.Manager.Crate.Tasks;
 
-import Crate.CenterText;
-import Crate.CustomFloatingText;
-import Crate.MainClass;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
+import cn.nukkit.level.Sound;
 import cn.nukkit.level.particle.DestroyBlockParticle;
 import cn.nukkit.level.particle.HugeExplodeSeedParticle;
-import cn.nukkit.level.sound.ExperienceOrbSound;
-import cn.nukkit.level.sound.ExplodeSound;
-import cn.nukkit.level.sound.Sound;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.AddItemEntityPacket;
 import cn.nukkit.network.protocol.DataPacket;
-import cn.nukkit.scheduler.PluginTask;
-import cn.nukkit.scheduler.ServerScheduler;
+import cn.nukkit.network.protocol.ExplodePacket;
+import cn.nukkit.scheduler.Task;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Manager.Crate.CrateMain;
+import net.yungtechboy1.CyberCore.Manager.Crate.Utils.CenterText;
+import net.yungtechboy1.CyberCore.Manager.Factions.CustomFloatingTextParticle;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class RollTick extends PluginTask<MainClass> {
-    private MainClass main;
+public class RollTick extends Task {
+
+    public final Integer MAX =266;
+    private CrateMain main;
     private ConfigSection data;
     private int tick;
     private boolean ff;
     private ConfigSection packets = new ConfigSection();
 
-    public RollTick(MainClass main, ConfigSection data) {
+    public RollTick(CrateMain main, ConfigSection data) {
         this(main, data, 0);
     }
 
-    public RollTick(MainClass main, ConfigSection data, int tick) {
+    public RollTick(CrateMain main, ConfigSection data, int tick) {
         this(main, data, tick, false);
     }
 
-    public RollTick(MainClass main, ConfigSection data, int tick, boolean ff) {
-        super(main);
+    public RollTick(CrateMain main, ConfigSection data, int tick, boolean ff) {
         this.main = main;
         this.data = data;
         this.tick = tick;
@@ -61,129 +61,6 @@ public class RollTick extends PluginTask<MainClass> {
     public void onRun(int servertick) {
         //for(Map.Entry<String,Object> a: main.rolls.entrySet()){
         ConfigSection b = data;
-        //Check for 0 Ticks and -1 Slot, then start Recursive Ticking
-        if (tick == 0) {
-            ServerScheduler SS = main.getServer().getScheduler();
-            int a = 1;
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3));
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 4));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 4));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 4));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 4));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 4));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 4));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 4));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 4));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 4));
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 5));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 5));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 5));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 5));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 5));
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 6));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 6));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 6));
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 7));
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 8));
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 9));
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 10));
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 12));
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 15));
-
-            /*SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 16));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 16));
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 16));*/
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 17));
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 18));
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick,true), (a += 20));
-
-
-
-
-            /*
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//3
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//6
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//9
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//12
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//15
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//18
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//21
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//24
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//27
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//30
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//33
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//36
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//39
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//42
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//45
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//48
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//51
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//54
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//57
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), a++ * 3);//60 - 3 Secs
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 2) * 3);//66
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 2) * 3);//66
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 2) * 3);//72
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 2) * 3);//78
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 2) * 3);//84 - 4 Secs
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 2) * 3);//90
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 2) * 3);//96
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 2) * 3);//102
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 2) * 3);//108
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 2) * 3);//114
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 2) * 3);//120 - 6 Secs
-
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3) * 3);//130
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3) * 3);//130
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3) * 3);//130
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3) * 3);//130
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3) * 3);//130
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 3) * 3);//130
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 4) * 3);//130
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 4) * 3);//130
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 4) * 3);//130
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 5) * 3);//130
-
-            SS.scheduleDelayedTask(new RollTick(main, data, ++tick), (a += 6) * 3);//130
-            */
-            return;
-        }
         int slot = b.getInt("slot");
         String pn = b.getString("PlayerName").toLowerCase();
         Vector3 pos = (Vector3) b.get("pos");
@@ -193,12 +70,13 @@ public class RollTick extends PluginTask<MainClass> {
             return;
         }
         if (slot == -1) slot = new NukkitRandom().nextRange(0, pis.size() - 1);
-        slot += tick;
+        slot += new NukkitRandom().nextRange(0, 10);
+        data.set("slot", slot);
 
         long eid;
         //Check to see if Item Exists
         if (this.main.eids.containsKey(pn)) {
-            eid = this.main.eids.getLong(pn);
+            eid = this.main.eids.get(pn);
         } else {
             eid = Entity.entityCount++;
         }
@@ -221,20 +99,19 @@ public class RollTick extends PluginTask<MainClass> {
         pk.speedZ = (float) 0;
 
         //Text Above Item
-        String f1 = CenterText.sendCenteredMessage("§r§c|---->§b"+ pis.get(slot).getName()+"§c<----|",246);
-        String f2 = CenterText.sendCenteredMessage(TextFormat.OBFUSCATED + "§b|||||||||§r" + TextFormat.RED + "ROLLING Item" + TextFormat.OBFUSCATED + "§b|||||||||§r",246);
-        CustomFloatingText ft = new CustomFloatingText(new Vector3(pos.getFloorX() + .5, pos.getFloorY() + 1, pos.getFloorZ() + .5), f1, f2);
+        String f1 = CenterText.sendCenteredMessage("§r§c|---->§b" + pis.get(slot).getName() + "§c<----|", 246);
+        String f2 = CenterText.sendCenteredMessage(TextFormat.OBFUSCATED + "§b|||||||||§r" + TextFormat.RED + "ROLLING Item" + TextFormat.OBFUSCATED + "§b|||||||||§r", 246);
+        CustomFloatingTextParticle ft = new CustomFloatingTextParticle(new Vector3(pos.getFloorX() + .5, pos.getFloorY() + 1, pos.getFloorZ() + .5), f1, f2);
         Long e1d = main.cratetxt.getLong(pn);
-        if(e1d != 0)ft.entityId = e1d;
+        if (e1d != 0) ft.entityId = e1d;
         DataPacket[] packets = ft.encode();
 
-        Level l = main.getServer().getLevelByName("world");
+        Level l = main.CCM.getServer().getLevelByName("world");
 
         main.eids.put(pn, eid);
-        Player p = main.getServer().getPlayerExact(pn);
+        Player p = main.CCM.getServer().getPlayerExact(pn);
         if (p != null) {
-            l.addSound(new ExperienceOrbSound(pos),p);
-
+            l.addSound(pos, Sound.RANDOM_ORB);
             p.batchDataPacket(pk);
             for (DataPacket packet : packets) {
                 p.dataPacket(packet);
@@ -248,8 +125,15 @@ public class RollTick extends PluginTask<MainClass> {
         //@TODO allow Config to choose break particle!
         l.addParticle(new DestroyBlockParticle(pos.add(.5, 1, .5), Block.get(Block.COBWEB)));
 
-        //Last Tick for Roll... Send Item!
-        if (ff) {
+
+        if (!ff) {
+            //Schedule Next
+            int k = getDelayFromTick(tick);
+            if(tick >= MAX){
+                main.CCM.getServer().getScheduler().scheduleDelayedTask(new RollTick(main, data, tick + k,true), k);
+            }else main.CCM.getServer().getScheduler().scheduleDelayedTask(new RollTick(main, data, tick + k), k);
+        } else {
+            //Last Tick for Roll... Send Item!
             data.put("slot", slot);
             //l.addParticle(new HugeExplodeParticle(pos));
             l.addParticle(new HugeExplodeSeedParticle(pos.add(.5, 1, .5)));
@@ -257,31 +141,69 @@ public class RollTick extends PluginTask<MainClass> {
             l.addParticle(new HugeExplodeSeedParticle(pos.add(1.5, 1, 1.5)));
             l.addParticle(new HugeExplodeSeedParticle(pos.add(1.5, 1, .5)));
             if (p != null) l.addParticle(new HugeExplodeSeedParticle(p));
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 5);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 10);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 15);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 20);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 25);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 30);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 35);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 40);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 45);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 50);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 55);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 60);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 65);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 70);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 75);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 80);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 85);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 90);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 95);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 100);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, 1.5), l), 100);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(1.5, 1, 1.5), l), 100);
-            main.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(1.5, 1, .5), l), 100);
-            main.getServer().getScheduler().scheduleDelayedTask(new SendItem(main, data), 20 * 5);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 5);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 10);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 15);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 20);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 25);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 30);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 35);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 40);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 45);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 50);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 55);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 60);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 65);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 70);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 75);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 80);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 85);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 90);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 95);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, .5), l), 100);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(.5, 1, 1.5), l), 100);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(1.5, 1, 1.5), l), 100);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new Explosion(main, pos.add(1.5, 1, .5), l), 100);
+            main.CCM.getServer().getScheduler().scheduleDelayedTask(new SendItem(main, data), 20 * 5);
+
         }
         //}
     }
+
+    public int getDelayFromTick(int t) {
+        if (t < 60) {
+            return 3;
+        } else if (t < 96) {
+            return 4;
+        } else if (t < 121) {
+            return 5;
+        } else if (t < 139) {
+            return 6;
+        } else if (t < 146) {
+            return 7;
+        } else if (t < 154) {
+            return 8;
+        } else if (t < 163) {
+            return 9;
+        } else if (t < 173) {
+            return 10;
+        } else if (t < 184) {
+            return 11;
+        } else if (t < 196) {
+            return 12;
+        } else if (t < 211) {
+            return 15;
+        } else if (t < 228) {
+            return 17;
+        } else if (t < 246) {
+            return 18;
+        } else if (t < 266) {
+            return 20;
+        } else {
+            return 20;
+        }
+
+    }
+
+
 }

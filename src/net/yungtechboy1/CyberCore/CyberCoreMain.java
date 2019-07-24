@@ -51,10 +51,9 @@ import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarManager;
 import net.yungtechboy1.CyberCore.Manager.BossBar.BossBarNotification;
 import net.yungtechboy1.CyberCore.Manager.Crate.CrateMain;
 import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
-import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
+import net.yungtechboy1.CyberCore.Manager.FT.CyberFloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
-import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Create;
 import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
@@ -174,8 +173,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public void ReloadBlockList(int id) {
         ReloadBlockList(id, null);
     }
+
     public void ReloadBlockList(int id, Class c) {
-        if(c == null)c = Block.list[id];
+        if (c == null) c = Block.list[id];
         if (c != null) {
             Block block;
             try {
@@ -249,7 +249,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
         BlockEntity.registerBlockEntity(BlockEntity.MOB_SPAWNER, SpawnerWithLevelBlockEntity.class);
         //Must be registered after custom block
-//        Item.registerCustomItemBlock(Item.MONSTER_SPAWNER, CustomItemBlockSpawnerWithLevelBlock.class);
+        Item.registerCustomItemBlock(Item.MONSTER_SPAWNER, CustomItemBlockSpawnerWithLevelBlock.class, this);
 
         ReloadBlockList(Block.MONSTER_SPAWNER, SpawnerWithLevelBlock.class);
         ReloadBlockList(Block.FIRE, CustomBlockFire.class);
@@ -267,7 +267,6 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         PowerSourceTask = new PowerSourceTaskAsync(this);
         CraftingManager = new CustomCraftingManager();
         CRM = new CustomRecipeCraftingManager(this);
-        CrateMain = new CrateMain(this);
 //        CustomItemTNT
 //        ShapedRecipe nsr = new ShapedRecipe(Item.get(46), new String[]{"AAA", "BBB", "AAA"}, new CharObjectHashMap<Item>() {{
 //            put("A".charAt(0), new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_2));
@@ -309,7 +308,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         //Threaded ONLY RUN FOR TESTING
         //TESTING
         FTM = new FloatingTextFactory(this);
-        FloatingTextFactory.AddFloatingText(new FloatingTextContainer(FTM, getServer().getLevelByName("world").getSafeSpawn().add(0, 5, 0), TextFormat.GREEN + "This is Spawn!"));
+        FloatingTextFactory.AddFloatingText(new CyberFloatingTextContainer(FTM, getServer().getLevelByName("world").getSafeSpawn().add(0, 5, 0), TextFormat.GREEN + "This is Spawn!"));
+
+        CrateMain = new CrateMain(this);
 
 
         //Mob Plugin
@@ -421,7 +422,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     public void onLoad() {
 
-        getServer().getNetwork().registerPacket(ProtocolInfo.INVENTORY_TRANSACTION_PACKET, CustomInventoryTransactionPacket.class);
+//        getServer().getNetwork().registerPacket(ProtocolInfo.INVENTORY_TRANSACTION_PACKET, CustomInventoryTransactionPacket.class);
 
         Entity.registerEntity(EntityPig.NETWORK_ID + "", Pig.class);
 
@@ -521,9 +522,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        PasswordFactoy.onDisable();
 
         //Classes
+        FTM.CTstop();
         PowerSourceTask.CTstop();
         ClassFactory.Saveall();
         FM.FFactory.SaveAllFactions();
+        CrateMain.save();
     }
 
 
@@ -862,8 +865,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         //TODO Implement \/
 //        cp.LastSentFormType = CorePlayer.FormType.Class_0;
-        if (me.getFrom().distance(me.getTo()) > .1)
-            FloatingTextFactory.AddFloatingText(new PopupFT(FTM, me.getPlayer().add(0, 1.5, 0), TextFormat.AQUA + me.getPlayer().getName() + " was Here!"));
+        //TODO Causes Lag maybe Fix
+//        if (me.getFrom().distance(me.getTo()) > .1)
+//            FloatingTextFactory.AddFloatingText(new PopupFT(FTM, me.getPlayer().add(0, 1.5, 0), TextFormat.AQUA + me.getPlayer().getName() + " was Here!"));
     }
 
     public ArrayList<Faction> getAllFactionNamesCloseTo(String arg) {

@@ -12,6 +12,7 @@ import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.LevelSoundEventPacket;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.DragonSlayer;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockFire;
@@ -27,8 +28,7 @@ public class DragonSlayerFireStomp extends StagePowerAbstract {
     private int StartNullFire = -1;
 
     public DragonSlayerFireStomp(DragonSlayer b) {
-        super(b, 100, 1);
-        setPowerSettings(true,false,true,false);
+        super(b, new PowerSettings(true,false,true,false),100, 1);
         TickUpdate = 10;
     }
 

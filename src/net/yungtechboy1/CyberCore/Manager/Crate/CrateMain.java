@@ -6,15 +6,17 @@ import cn.nukkit.Server;
 import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Position;
-import cn.nukkit.level.particle.FloatingTextParticle;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.BlockEventPacket;
 import cn.nukkit.network.protocol.DataPacket;
+import cn.nukkit.network.protocol.RemoveEntityPacket;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
+import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Crate.Tasks.RollTick;
+import net.yungtechboy1.CyberCore.Manager.Factions.CustomFloatingTextParticle;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.Admin.Crate.AdminCrateChooseCrateWindow;
 
 import java.io.File;
@@ -27,15 +29,18 @@ public class CrateMain {
     public static final String CK = "CrateKey";
     public ArrayList<String> PrimedPlayer = new ArrayList<>();
     public ArrayList<String> SetKeyPrimedPlayer = new ArrayList<>();
+    public ArrayList<String> SetCrateItemPrimedPlayer = new ArrayList<>();
     public HashMap<Vector3, CrateObject> CrateChests = new HashMap<>();
     public HashMap<String, KeyData> CrateKeys = new HashMap<>();
+    public HashMap<String, Long> eids = new HashMap<>();
     //    private ConfigSection CrateLocations = new ConfigSection();
-    private HashMap<String, FloatingTextParticle> cratetxt = new HashMap<>();
+    public ConfigSection cratetxt = new ConfigSection();
+    public CyberCoreMain CCM;
+    //    public HashMap<String, FloatingTextParticle> cratetxt = new HashMap<>();
     private HashMap<String, CrateData> CrateMap = new HashMap<>();
     private Config c;
     private Config cc;
     private Config ck;
-    private CyberCoreMain CCM;
 
     //    public final String CrateKeyNBTKey =
     public CrateMain(CyberCoreMain ccm) {
@@ -59,6 +64,7 @@ public class CrateMain {
         if (cd.isEmpty()) {
             CrateData ccd = new CrateData("DEFAULT");
             cc.set("DEFAULT", ccd.toConfig());
+            CrateMap.put(ccd.Key, ccd);
             cc.save();
         } else {
             System.out.println("CD SIZE +=====>>" + cd.size());
@@ -87,8 +93,8 @@ public class CrateMain {
                     String nme = c.getString("Key");
                     CrateData cda = CrateMap.getOrDefault(nme, null);
 //                    ConfigSection cccc = c.getSection("Loc");;
-//                    Position po = new Position(cccc.getDouble("x"),cccc.getDouble("y"),cccc.getDouble("z"), Server.getInstance().getLevelByName(cccc.getString("level")));
-                    Position po = (Position) c.get("Loc");
+                    Position po = new Position(c.getDouble("x"),c.getDouble("y"),c.getDouble("z"), Server.getInstance().getLevelByName(c.getString("level")));
+//                    Position po = (Position) c.get("Loc");
                     CrateObject co = new CrateObject(po, cda);
                     if (cda != null) {
                         CrateChests.put(po.asBlockVector3().asVector3(), co);
@@ -123,10 +129,16 @@ public class CrateMain {
 
     }
 
-    public static boolean isItemKey(Item i){
-        if(i == null || i.getId() == 0)return false;
+    public static boolean isItemKey(Item i) {
+        if (i == null || i.getId() == 0) return false;
         return i.hasCompoundTag() && i.getNamedTag().contains(CrateMain.CK);
     }
+
+    public String getKeyIDFromKey(Item i) {
+        if(!i.hasCompoundTag() || !i.getNamedTag().contains(CrateMain.CK))return null;
+        return i.getNamedTag().getString(CrateMain.CK);
+    }
+
     public HashMap<String, CrateData> getCrateMap() {
         return CrateMap;
     }
@@ -143,12 +155,18 @@ public class CrateMain {
             CrateObject cd = (CrateObject) o;
             config2.put("" + k++, cd.toConfig());
         }
+        k = 0;
+        ConfigSection config3 = new ConfigSection();
+        for (Object o : CrateKeys.values()) {
+            KeyData zd = (KeyData) o;
+            config3.put("" + k++, zd.toConfig());
+        }
         cc.setAll(config);
         cc.save();
         c.setAll(config2);
         c.save();
-
-
+        ck.setAll(config3);
+        ck.save();
     }
 
 
@@ -207,7 +225,7 @@ public class CrateMain {
     }
 
     public CrateObject isCrate(Vector3 b) {
-        if(CrateChests.containsKey(b))return CrateChests.get(b);
+        if (CrateChests.containsKey(b)) return CrateChests.get(b);
         return null;
     }
 
@@ -220,7 +238,7 @@ public class CrateMain {
         pk.case1 = 1;
         pk.case2 = 2;
         p.dataPacket(pk);
-        FloatingTextParticle ft = new FloatingTextParticle(new Vector3(b.getX() + 0.5, b.getY(), b.getZ() + 0.5), "", "Some Item");
+        CustomFloatingTextParticle ft = new CustomFloatingTextParticle(new Vector3(b.getFloorX() + .5, b.getFloorY() + 1, b.getFloorZ() + .5), "", TextFormat.OBFUSCATED + "§b|||||||||§r" + TextFormat.RED + "ROLLING Item" + TextFormat.OBFUSCATED + "§b|||||||||");
         DataPacket[] packets = ft.encode();
         if (packets.length == 1) {
             p.dataPacket(packets[0]);
@@ -229,10 +247,10 @@ public class CrateMain {
                 p.dataPacket(packet);
             }
         }
-        cratetxt.put(p.getName(), ft);
+        cratetxt.put(p.getName(), ft.entityId);
     }
 
-    public void hideCrate(Block b, Player p) {
+    public void hideCrate(Vector3 b, Player p) {
         p.sendMessage("Closed"); //Debug
         BlockEventPacket pk = new BlockEventPacket();
         pk.x = (int) b.getX();
@@ -242,37 +260,33 @@ public class CrateMain {
         pk.case2 = 0;
         p.dataPacket(pk);
         if (cratetxt.containsKey(p.getName())) {
-            FloatingTextParticle ft = cratetxt.get(p.getName());
-            ft.setInvisible();
-            DataPacket[] packets = ft.encode();
-            if (packets.length == 1) {
-                p.dataPacket(packets[0]);
-            } else {
-                for (DataPacket packet : packets) {
-                    p.dataPacket(packet);
-                }
-            }
+            RemoveEntityPacket pk2 = new RemoveEntityPacket();
+            pk2.eid = cratetxt.getLong(p.getName());
+            p.dataPacket(pk2);
             cratetxt.remove(p.getName());
         }
     }
 
     public void addCrateKey(KeyData keyData) {
         if (keyData == null) return;
-        CrateKeys.put(keyData.Key_Name, keyData);
+        CrateKeys.put(keyData.NBT_Key, keyData);
     }
 
     public void rollCrate(Block b, Player player) {
+        CrateObject co = isCrate(b);
+        if (co != null) {
+            ArrayList<Item> items = co.getPossibleItems();
 
 
-
-        ConfigSection data = new ConfigSection() {{
-            put("PlayerName", player.getName());
-            put("slot", -1);
-            put("possible-items", items);
-            put("crate-name", cn);
-            put("pos", pos);
-        }};
-        showCrate(pos, player);
-        Server.getInstance().getScheduler().scheduleTask(new RollTick(this, data));
+            ConfigSection data = new ConfigSection() {{
+                put("PlayerName", player.getName());
+                put("slot", -1);
+                put("possible-items", items);
+                put("crate-name", co.CD.Name);
+                put("pos", b.getLocation().asBlockVector3().asVector3());
+            }};
+            showCrate(b, player);
+            Server.getInstance().getScheduler().scheduleTask(new RollTick(this, data));
+        }
     }
 }

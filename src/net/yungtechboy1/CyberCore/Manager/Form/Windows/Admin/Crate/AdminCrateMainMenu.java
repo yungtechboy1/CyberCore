@@ -13,19 +13,19 @@ public class AdminCrateMainMenu extends CyberFormSimple {
         super(FormType.MainForm.Admin_Main, "Admin > Crate Admin Page");
         addButton(new ElementButton("Add Possible Item to Chest"));//0//TODO - LATER
         addButton(new ElementButton("View Possible Item from Chest"));//1//TODO - LATER
-        addButton(new ElementButton("Add Crate to Chest"));//2 // TODO DONE
-        addButton(new ElementButton("Add Crate Key to Chest"));//3 TODO IP
-        addButton(new ElementButton("Create Crate Key for Chest"));//4
-        addButton(new ElementButton("Get Crate Key for Chest"));//5
-        addButton(new ElementButton("Save Config"));//6
-        addButton(new ElementButton("Re-Load Config"));//7
+        addButton(new ElementButton("Add Crate to Chest"));//2 // DONE
+        addButton(new ElementButton("Add Crate Key to Chest"));//3 DONE
+        addButton(new ElementButton("Create Crate Key for Chest"));//4 DONE
+        addButton(new ElementButton("Get Crate Key for Chest"));//5 DONE
+        addButton(new ElementButton("Save Config"));//6 DONE
+        addButton(new ElementButton("Re-Load Config"));//7 DONE
         addButton(new ElementButton("Back"));//8
     }
 
     @Override
     public boolean onRun(CorePlayer p) {
         super.onRun(p);
-        switch (getResponse().getClickedButtonId()){
+        switch (getResponse().getClickedButtonId()) {
             case 2:
                 CyberCoreMain.getInstance().CrateMain.PrimedPlayer.add(p.getName());
                 p.sendMessage("Tap a chest to make that chest a chest crate");
@@ -35,15 +35,24 @@ public class AdminCrateMainMenu extends CyberFormSimple {
                 break;
             case 3:
                 Item hand = p.getInventory().getItemInHand();
-                if(CrateMain.isItemKey(hand)){
+                if (CrateMain.isItemKey(hand)) {
                     CyberCoreMain.getInstance().CrateMain.PrimedPlayer.add(p.getName());
                     CyberCoreMain.getInstance().CrateMain.SetKeyPrimedPlayer.add(p.getName());
                     p.sendMessage("Now tap the chest you would like to add the key to");
                 }
                 break;
-            case 0:
-            case 1:
             case 5:
+                p.showFormWindow(new AdminCrateGetCrateKey());
+                break;
+            case 0:
+                Item h = p.getInventory().getItemInHand();
+                if (!h.isNull()) {
+                    CyberCoreMain.getInstance().CrateMain.PrimedPlayer.add(p.getName());
+                    CyberCoreMain.getInstance().CrateMain.SetCrateItemPrimedPlayer.add(p.getName());
+                    p.sendMessage("Now tap the chest you would like to add your item to");
+                }
+                break;
+            case 1:
                 //TODO
                 break;
             case 6:

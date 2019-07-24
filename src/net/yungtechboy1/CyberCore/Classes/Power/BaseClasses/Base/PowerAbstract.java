@@ -87,8 +87,8 @@ public abstract class PowerAbstract {
     }
 
     public final void activate() {
-        if (isActive()) return;
-        setActive(true);
+        if (isAbilityActive()) return;
+        ActivateAbility();
         onAbilityActivate();
 //        onActivate();
     }
@@ -154,6 +154,7 @@ public abstract class PowerAbstract {
             onActivate();
         } else {
             getPlayer().sendMessage(TextFormat.RED + "ERROR > POWER > Could not activate " + getDispalyName() + TextFormat.RED + " Please make sure you have learned this power!");
+            throw new NullPointerException();
         }
     }
 
@@ -390,19 +391,33 @@ public abstract class PowerAbstract {
     public void onTick(int tick) {
         if (isAbility()) {
             //Only For Deactivation
-            System.out.println("POWER TICKKKKKK2");
-            if (isActive()) {
+//            System.out.println("POWER TICKKKKKK2");
+            if (isAbilityActive()) {
                 System.out.println("POWER TICKKKKKK3");
                 whileAbilityActive();
                 if (tick >= DeActivatedTick) {
                     System.out.println("POWER TICKKKKKK44444444444444444444444444444");
-                    setActive(false);
+//                    setActive(false);
+                    DeactivateAbility();
                     DeActivatedTick = -1;
                     onAbilityDeActivate();
                 }
             }
         }
     }
+
+    public boolean isAbilityActive(){
+        return AbilityActive;
+    }
+
+    public void DeactivateAbility(){
+        AbilityActive = false;
+    }
+    public void ActivateAbility(){
+        AbilityActive = true;
+    }
+
+    private boolean AbilityActive = false;
 
     public void onAbilityDeActivate() {
 

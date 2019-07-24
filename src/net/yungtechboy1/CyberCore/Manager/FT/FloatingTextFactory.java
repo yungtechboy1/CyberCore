@@ -8,10 +8,7 @@ import cn.nukkit.network.protocol.RemoveEntityPacket;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by carlt on 2/14/2019.
@@ -23,18 +20,18 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
 
     public static CyberCoreMain CCM;
 
-    private static HashMap<Long, ArrayList<String>> LastPL = new HashMap<Long, ArrayList<String>>();
+    private static HashMap<Long, ArrayList<String>> FTLastSentToRmv = new HashMap<Long, ArrayList<String>>();
 
     private static List LList = Collections.synchronizedList(new ArrayList(1));
-    private static List TList = Collections.synchronizedList(new ArrayList(1));
-    private static List RList = Collections.synchronizedList(new ArrayList(1));
+    private static List ToAddList = Collections.synchronizedList(new ArrayList(1));
+    private static List ToRemoveList = Collections.synchronizedList(new ArrayList(1));
     private final static Object llock = new Object();
 
     public FloatingTextFactory(CyberCoreMain CCM) {
         new FloatingTextFactory(CCM, new ArrayList<>());
     }
 
-    public FloatingTextFactory(CyberCoreMain c, ArrayList<FloatingTextContainer> al) {
+    public FloatingTextFactory(CyberCoreMain c, ArrayList<CyberFloatingTextContainer> al) {
         LList = al;
         CCM = c;
         start();
@@ -47,9 +44,9 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
     public List getLList() {
         List _l;
         synchronized (llock) {
-            LList.addAll(TList);
-            LList.removeAll(RList);
-            TList.clear();
+            LList.addAll(ToAddList);
+            LList.removeAll(ToRemoveList);
+            ToAddList.clear();
             _l =  LList;
         }
         return _l;
@@ -61,16 +58,16 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
         }
     }
 
-    public static void AddFloatingText(FloatingTextContainer ftc){
+    public static void AddFloatingText(CyberFloatingTextContainer ftc){
         synchronized (llock){
-            TList.add(ftc);
+            ToAddList.add(ftc);
 //            System.out.println("added!");
         }
     }
 
-    public void AddToRemoveList(FloatingTextContainer ftc){
+    public static void AddToRemoveList(CyberFloatingTextContainer ftc){
         synchronized (llock){
-            RList.add(ftc);
+            ToRemoveList.add(ftc);
 //            System.out.println("added!");
         }
     }
@@ -99,17 +96,17 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
 
 //                System.out.println("||||||||======");
                 lasttick = tick;
-                HashMap<String, Position> ppss = GetPlayerPoss();
+//                HashMap<String, Position> ppss = GetPlayerPoss();
                 for (Object ftt : getLList()) {
-
-//                    System.out.println("|||||");
-                    FloatingTextContainer ft;
-                    ft = (FloatingTextContainer) ftt;
-                    if( ft != null)continue;
+                    CyberFloatingTextContainer ft = (CyberFloatingTextContainer) ftt;
+                    if( ft == null){
+                        System.out.println("ERROR! Loading FT!!! "+ftt);
+                        continue;
+                    }
 
 //                    System.out.println("|||||"+ft.GetText(null));
-                    ArrayList<String> a = new ArrayList<>();
-                    if (!LastPL.containsKey(ft.EID)) LastPL.put(ft.EID, a);
+                    //Create Blank array if not present!
+                    if (!FTLastSentToRmv.containsKey(ft.EID)) FTLastSentToRmv.put(ft.EID, new ArrayList<>());
 
 //                    System.out.println("OU");
                     ft.OnUpdate(tick);
@@ -119,23 +116,38 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
 // if (ftlt >= tick) continue;
 
                     ArrayList<String> ap = new ArrayList<>();
-                    for (String player : ppss.keySet()) {
-
+                    ArrayList<Player> app = new ArrayList<>();
+                    //For Each player with pos
+//                    for (String player : ppss.keySet()) {
+//                    System.out.println("ERroror >> 1");
+//                    System.out.println("ERroror >> "+ft.Lvl);
+//                    System.out.println("ERroror >> "+ft.Syntax);
+                    Collection<Player> pc = ft.Lvl.getChunkPlayers(ft.Pos.getChunkX(),ft.Pos.getChunkZ()).values();
+                    if(pc == null || pc.isEmpty() || pc.size() == 0){
+//                        System.out.println("ERroror roor ororororo E15072458");
+                        continue;
+                    }
+                    for (Player p : pc ) {
+                    String player = p.getName();
 //                        System.out.println("2222"+player);
-                        Position ppos = ppss.get(player);
+                        Position ppos = p.getPosition();
                         //TODO many implement a Quick Check?
                         //Check HERE If X is less that 100
                         //To Save resources
                         if (!ppos.level.getName().equalsIgnoreCase(ft.Pos.level.getName()) && ppos.distance(ft.Pos) > 100)//Not same World & 100+ Blocks away
                             continue;
                         ap.add(player);
+                        app.add(p);
 //                        System.out.println("AP");
-                        if (LastPL.get(ft.EID).size() > 0) LastPL.get(ft.EID).remove(player);
+                        //Remove Player we just added cuz We dont need to remove the FT particle from them!
+                        if (FTLastSentToRmv.get(ft.EID).size() > 0) FTLastSentToRmv.get(ft.EID).remove(player);
                     }
 
+                    //TODO Alt - Chunk Packet!
+
                     if(ft._CE_Done){
-                        LastPL.get(ft.EID).addAll(ap);
-                        KillUnnneded(LastPL.get(ft.EID), ft.EID);
+                        FTLastSentToRmv.get(ft.EID).addAll(ap);
+                        KillUnnneded(FTLastSentToRmv.get(ft.EID), ft.EID);
                         ap.clear();
                         AddToRemoveList(ft);
                         continue;
@@ -143,9 +155,11 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
                     if (ap.size() == 0) continue;
                     //Last time AP
 
-                    //Remove Each player from LastPL
-                    KillUnnneded(LastPL.get(ft.EID), ft.EID);
-                    ft.HaldleSend(ap);
+                    //Remove Each player from FTLastSentToRmv
+                    KillUnnneded(FTLastSentToRmv.get(ft.EID), ft.EID);
+                    ft.HaldleSendP(app);
+                    //Add All Players who we sent the packet to the remove list just in case they walk away
+                    FTLastSentToRmv.get(ft.EID).addAll(ap);
 
                     //Should i send packes within the Thread?
 
@@ -154,9 +168,9 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
 
             }
             //A little faster than .1 of a sec (.06 to be exact...or 1 tick = 50millis and this is 60 millisecs)
-            //Low key Every other 4 thics is fine
+            //Low key Every other 4 thiks is fine
             try {
-                Thread.sleep(200);//4 Ticks
+                Thread.sleep(200*2);//4 Ticks*2
             } catch (InterruptedException e) {
                 //ignore
             }

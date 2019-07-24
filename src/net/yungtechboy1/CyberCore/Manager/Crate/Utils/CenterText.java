@@ -1,11 +1,5 @@
-package Crate;
+package net.yungtechboy1.CyberCore.Manager.Crate.Utils;
 
-import cn.nukkit.Player;
-import cn.nukkit.Server;
-import cn.nukkit.utils.TextFormat;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by carlt_000 on 1/18/2017.
@@ -38,7 +32,7 @@ public class CenterText {
                     continue;
                 }else isBold = false;
             }else{
-                DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
+                Crate.DefaultFontInfo dFI = Crate.DefaultFontInfo.getDefaultFontInfo(c);
                 messagePxSize += isBold ? dFI.getBoldLength() : dFI.getLength();
                 messagePxSize++;
             }
@@ -48,7 +42,7 @@ public class CenterText {
         int halvedMessageSize = messagePxSize / 2;
         int toCompensate = cp - halvedMessageSize;
         if ((toCompensate & 1) != 0 )toCompensate -= 1;
-        int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
+        int spaceLength = Crate.DefaultFontInfo.SPACE.getLength() + 1;
         int compensated = 0;
         StringBuilder sb = new StringBuilder();
         while(compensated < toCompensate){
@@ -76,7 +70,7 @@ public class CenterText {
                     continue;
                 }else isBold = false;
             }else{
-                DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
+                Crate.DefaultFontInfo dFI = Crate.DefaultFontInfo.getDefaultFontInfo(c);
                 messagePxSize += isBold ? dFI.getBoldLength() : dFI.getLength();
                 messagePxSize++;
             }

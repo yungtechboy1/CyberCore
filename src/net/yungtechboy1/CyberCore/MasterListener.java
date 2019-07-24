@@ -16,8 +16,10 @@ import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.Manager.Crate.CrateData;
 import net.yungtechboy1.CyberCore.Manager.Crate.CrateMain;
 import net.yungtechboy1.CyberCore.Manager.Crate.CrateObject;
+import net.yungtechboy1.CyberCore.Manager.Crate.ItemChanceData;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 
 import java.util.HashMap;
@@ -66,7 +68,18 @@ public class MasterListener implements Listener {
                 return;
             } else {
                 if (plugin.CrateMain.SetKeyPrimedPlayer.remove(n)) {
-
+                    CrateObject x = CyberCoreMain.getInstance().CrateMain.isCrate(b);
+                    CrateData cd = x.CD;
+                    Item hand = e.getPlayer().getInventory().getItemInHand();
+                    String ki = plugin.CrateMain.getKeyIDFromKey(hand);
+                    if(ki != null)cd.KeyItems.add(ki);
+                    x.CD = cd;
+                    plugin.CrateMain.CrateChests.put(x.Location.asBlockVector3().asVector3(),x);
+                } else if(plugin.CrateMain.SetCrateItemPrimedPlayer.remove(n)){
+                    CrateObject x = CyberCoreMain.getInstance().CrateMain.isCrate(b);
+                    CrateData cd = x.CD;
+                    Item hand = e.getPlayer().getInventory().getItemInHand();
+                    cd.PossibleItems.add(new ItemChanceData(hand,100,hand.getCount()));
                 } else {
                     plugin.CrateMain.addCrate((CorePlayer) e.getPlayer(), b);
                 }

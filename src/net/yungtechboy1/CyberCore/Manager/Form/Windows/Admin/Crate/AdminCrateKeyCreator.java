@@ -28,6 +28,7 @@ public class AdminCrateKeyCreator extends CyberFormCustom {
             String k2 = getResponse().getInputResponse(1);
             hand.getNamedTag().putString(CrateMain.CK,k2);
             CyberCoreMain.getInstance().CrateMain.addCrateKey(new KeyData(hand,k3,k1));
+            p.getInventory().setItemInHand(hand);
         }
         return true;
     }

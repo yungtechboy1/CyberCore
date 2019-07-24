@@ -5,7 +5,7 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
+import net.yungtechboy1.CyberCore.Manager.FT.CyberFloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 
 /**
@@ -25,7 +25,7 @@ public class FT extends Command {
     public boolean execute(CommandSender s, String label, String[] args) {
 
         //TODO
-        FloatingTextFactory.AddFloatingText(new FloatingTextContainer(Owner.FTM,(CorePlayer)s,"TEMP TEXT!~"));
+        FloatingTextFactory.AddFloatingText(new CyberFloatingTextContainer(Owner.FTM,(CorePlayer)s,"TEMP TEXT!~"));
         s.sendMessage(TextFormat.GREEN+"Floating Text Created!");
 
 

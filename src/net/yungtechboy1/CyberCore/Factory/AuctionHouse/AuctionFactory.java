@@ -589,7 +589,7 @@ public class AuctionFactory implements Listener {
         }
     }
 
-    private void PurchaseItem(CorePlayer holder, int page, int slot) {
+    public void PurchaseItem(CorePlayer holder, int page, int slot) {
         AuctionItemData aid = getAIDFromPage(page, slot);
         if (aid == null) {
             System.out.println("ERROR IN SELECTION!!!!");
