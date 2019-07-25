@@ -112,7 +112,6 @@ public abstract class BaseClass {
         startSetPowers();
     }
 
-
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank) {
         CCM = main;
 //        MainID = mid;
@@ -337,11 +336,11 @@ public abstract class BaseClass {
         PowerAbstract p = getPower(pe,false);
         if(p == null){
             getPlayer().sendMessage("Error Activating "+pe.name());
+            return;
         }
         p.setActive();
-        getClassSettings().addActivePower(pe);
         onPowerActivate(p);//callback
-        addActivePower(p);
+//        addActivePower(p);
         getPlayer().sendMessage(TextFormat.GREEN+"POWER > "+p.getDispalyName()+" has been activated!");
     }
 
@@ -371,6 +370,11 @@ public abstract class BaseClass {
 
     public final void addPower(PowerAbstract power) {
         PowerSettings ps = power.getPowerSettings();
+        if(ps == null){
+            getPlayer().getServer().getLogger().error("CAN NOT ADD POWER "+power.getName()+"! No PowerSetting Set!");
+            getPlayer().sendMessage(TextFormat.RED+"Error > Plugin > Power > "+power.getName()+" | Error activating power! No Power Setting Set!!!!");
+            return;
+        }
 //        if (power instanceof PowerHotBarInt) {
 //            LockedSlots.add(power.getLS());
 //            if( getClassSettings().getPreferedSlot7() == power.getType()){
@@ -398,14 +402,17 @@ public abstract class BaseClass {
                     ClassSettings.setPreferedSlot9(power.getType());
                     power.setLS(LockedSlot.SLOT_9);
                     ClassSettings.getActivatedPowers().add(power.getType());
+                    power.setActive();
                 } else if (ClassSettings.getPreferedSlot8() == PowerEnum.Unknown) {
                     ClassSettings.setPreferedSlot8(power.getType());
                     power.setLS(LockedSlot.SLOT_8);
                     ClassSettings.getActivatedPowers().add(power.getType());
+                    power.setActive();
                 } else if (ClassSettings.getPreferedSlot7() == PowerEnum.Unknown) {
                     ClassSettings.setPreferedSlot7(power.getType());
                     power.setLS(LockedSlot.SLOT_7);
                     ClassSettings.getActivatedPowers().add(power.getType());
+                    power.setActive();
                 } else {
                     getPlayer().sendMessage(TextFormat.GRAY + "Plugin > " + TextFormat.RED + " Error > Could not find a open Inventory slot to activate " + power.getDispalyName());
                 }
@@ -793,7 +800,11 @@ public abstract class BaseClass {
         return null;
     }
 
+    /**
+     * After Creating the class from the class manager this method is ran for final checks
+     */
     public void onCreate() {
+        if(getClassSettings() != null)ClassSettings.check();
     }
 
     public void addButtons(MainClassSettingsWindow mainClassSettingsWindow) {

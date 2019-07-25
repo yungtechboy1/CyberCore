@@ -358,7 +358,7 @@ public class SpawnShopFactory implements Listener {
     }
     
     //SetupPageToFinalConfirmItemSell
-    private void PurchaseItem(CorePlayer holder, int page, int slot, int count) {
+    public void PurchaseItem(CorePlayer holder, int page, int slot, int count) {
         SpawnerShopData aid = getItemFrom(page, slot);
         if (aid == null) {
             System.out.println("ERROR IN SELECTION!!!!");

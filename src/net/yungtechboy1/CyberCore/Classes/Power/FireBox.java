@@ -8,6 +8,7 @@ import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.LevelSoundEventPacket;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -18,8 +19,7 @@ import java.util.ArrayList;
 public class FireBox extends StagePowerAbstract {
 
     public FireBox(BaseClass b) {
-        super(b, 100, 250);
-        setPowerSettings(false, false, true, false);
+        super(b, new PowerSettings( false, false, true, false) ,100, 250);
         //TODO make this so that this power Runs Automatically!
 //        TickUpdate = 10;
 //        CanSendCanNotRunMessage = false;

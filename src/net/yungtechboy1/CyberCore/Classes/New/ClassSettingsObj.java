@@ -124,7 +124,7 @@ public class ClassSettingsObj {
     }
 
     public void addActivePower(PowerEnum pe) {
-        ActivatedPowers.add(pe);
+        if(!ActivatedPowers.contains(pe))ActivatedPowers.add(pe);
     }
     public void delActivePower(PowerEnum pe) {
         ActivatedPowers.remove(pe);
@@ -138,5 +138,16 @@ public class ClassSettingsObj {
     }
     public void clearSlot9() {
         PreferedSlot9 = PowerEnum.Unknown;
+    }
+
+    //Ran to Activate Powers from Settings
+    public void check() {
+        for(PowerData pd : getPowerDataList()){
+            BC.activatePower(pd.getPowerID());
+//            PowerAbstract pa = pd.getPA();
+//            if(pa != null){
+//                pa.setActive();
+//            }
+        }
     }
 }

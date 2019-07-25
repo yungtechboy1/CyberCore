@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Classes.Power;
 
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
@@ -10,8 +11,7 @@ public class DoubleTimeAbility extends StagePowerAbstract {
     private Buff oldbuff = null;
 
     public DoubleTimeAbility(Knight knight) {
-        super(knight, 75, 10);
-        setPowerSettings(true,false,true,false);
+        super(knight, new PowerSettings(true,false,true,false),75, 10);
         setMaxStage(StageEnum.STAGE_5);
     }
 

@@ -7,6 +7,7 @@ import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -14,8 +15,8 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 public class KnightSandShieldPower extends StagePowerAbstract {
     public KnightSandShieldPower(BaseClass b) {
-        super(b,80,10);
-        setPowerSettings(false,false,true,false);
+        super(b,new PowerSettings(false,false,true,false),80,10);
+//        setPowerSettings();
         setMaxStage(StageEnum.STAGE_5);
     }
 

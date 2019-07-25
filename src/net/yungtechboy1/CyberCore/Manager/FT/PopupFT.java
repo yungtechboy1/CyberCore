@@ -7,7 +7,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 /**
  * Created by carlt on 3/8/2019.
  */
-public class PopupFT extends FloatingTextContainer {
+public class PopupFT extends CyberFloatingTextContainer {
     public boolean Frozen = false;
     public int Lifespan = 150;// 7.5 secs
     public long Created = -1;

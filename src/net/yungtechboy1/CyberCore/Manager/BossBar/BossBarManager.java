@@ -6,10 +6,8 @@ import cn.nukkit.Server;
 import cn.nukkit.entity.Attribute;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.data.EntityMetadata;
-import cn.nukkit.level.Position;
 import cn.nukkit.network.protocol.*;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextContainer;
 
 import java.util.*;
 

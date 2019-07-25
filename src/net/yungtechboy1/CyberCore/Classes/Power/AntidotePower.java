@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Classes.Power;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 public class AntidotePower extends StagePowerAbstract {
@@ -26,6 +27,11 @@ public class AntidotePower extends StagePowerAbstract {
     @Override
     protected int getCooldownTime() {
         return getRunTimeTick() * 2 / 20;
+    }
+
+    @Override
+    public PowerEnum getType() {
+        return PowerEnum.AntidotePower;
     }
 
     @Override
