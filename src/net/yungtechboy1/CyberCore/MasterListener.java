@@ -142,17 +142,17 @@ public class MasterListener implements Listener {
     }
 
     //No need RN
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void InventoryTransactionEvent(InventoryTransactionEvent event) {
-        Player p = event.getTransaction().getSource();
-        CorePlayer cp = (CorePlayer) p;
-        if (cp.getPlayerClass() == null) return;
-        for (PowerAbstract pp : cp.getPlayerClass().getActivePowers()) {
-            if (pp.getPowerSettings().isHotbar()) {
-                pp.handelEvent(event);
-            }
-        }
-    }
+//    @EventHandler(priority = EventPriority.HIGHEST)
+//    public void InventoryTransactionEvent(InventoryTransactionEvent event) {
+//        Player p = event.getTransaction().getSource();
+//        CorePlayer cp = (CorePlayer) p;
+//        if (cp.getPlayerClass() == null) return;
+//        for (PowerAbstract pp : cp.getPlayerClass().getActivePowers()) {
+//            if (pp.getPowerSettings().isHotbar()) {
+//                pp.handelEvent(event);
+//            }
+//        }
+//    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void spawnEvent(PlayerRespawnEvent event) {

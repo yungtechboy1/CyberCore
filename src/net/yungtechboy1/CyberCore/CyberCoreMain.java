@@ -422,7 +422,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
     public void onLoad() {
 
-//        getServer().getNetwork().registerPacket(ProtocolInfo.INVENTORY_TRANSACTION_PACKET, CustomInventoryTransactionPacket.class);
+        getServer().getNetwork().registerPacket(ProtocolInfo.INVENTORY_TRANSACTION_PACKET, CustomInventoryTransactionPacket.class);
 
         Entity.registerEntity(EntityPig.NETWORK_ID + "", Pig.class);
 

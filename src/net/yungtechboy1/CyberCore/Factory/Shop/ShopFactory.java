@@ -7,9 +7,9 @@ import cn.nukkit.block.BlockChest;
 import cn.nukkit.block.BlockID;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.inventory.InventoryClickEvent;
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.inventory.Inventory;
+import cn.nukkit.inventory.PlayerCursorInventory;
 import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.inventory.transaction.InventoryTransaction;
 import cn.nukkit.inventory.transaction.action.InventoryAction;
@@ -428,14 +428,18 @@ public class ShopFactory implements Listener {
 //    @EventHandler(ignoreCancelled = true)
 //    public void T(InventoryClickEvent e){
 //
-//                System.out.println("CHECK INNNNNVVVVVVV ");
+//                System.out.println("CHECK INNNNNVVVVVVV1111");
 //
 //                Inventory inv = e.getInventory();
-////                System.out.println("CHECK INNNNNVVVVVVV " + inv.getClass().getName());
+//                System.out.println("CHECK INNNNNVVVVVVV " + inv.getClass().getName());
 ////                if (inv.isEmpty()) return;
 //
 ////                System.out.println("NEEEEEEE" + inv.getClass().getTypeName());
 //                if (inv instanceof PlayerInventory) {
+//
+//                }else if (inv instanceof PlayerCursorInventory) {
+//                    PlayerCursorInventory pci = (PlayerCursorInventory)inv;
+//                    e.setCancelled();
 //
 //                }else if (inv instanceof ShopInv) {
 //
@@ -541,12 +545,20 @@ public class ShopFactory implements Listener {
 //                }
 //            }
 
-//    TODO MAke Pages with new API
+    //    TODO MAke Pages with new API
     @EventHandler(ignoreCancelled = true)
     public void TE(InventoryTransactionEvent event) {
+
+//        event.setCancelled();
         System.out.println("CALLLL");
+//        event.getTransaction().
         InventoryTransaction transaction = event.getTransaction();
         Set<InventoryAction> traa = transaction.getActions();
+        boolean s = true;
+        for (Inventory i :transaction.getInventories()) {
+            if(i instanceof ShopInv)s  = false;
+        }
+        if(s)return;
         for (InventoryAction t : traa) {
             System.out.println("CALLLL TTTTTTTTTTTTTTTTTTT" + t.getClass().getName());
             if (t instanceof SlotChangeAction) {
@@ -560,13 +572,19 @@ public class ShopFactory implements Listener {
 
 //                System.out.println("NEEEEEEE" + inv.getClass().getTypeName());
                 if (inv instanceof PlayerInventory) {
-                System.out.println("CHECK INNNNNVVVVVVV "+sca);
-                event.setCancelled();
+                    System.out.println("CHECK INNNNNVVVVVVV " + sca);
+//                event.setCancelled();
 
+                } else if (inv instanceof PlayerCursorInventory) {
+                    event.setCancelled();
+                    transaction.getSource().getCursorInventory().clearAll();
+                    transaction.getSource().sendAllInventories();
+                    System.out.println("+++++>" + transaction.getSource().getCursorInventory());
+                    System.out.println("+++++>" + transaction.getSource().getCursorInventory().slots);
                 }
                 if (inv instanceof ShopInv) {
 
-                    System.out.println("CHECK INNNNNVVV222222VVVV "+sca);
+                    System.out.println("CHECK INNNNNVVV222222VVVV " + sca);
                     ShopInv ah = (ShopInv) inv;
 //                    if(!ah.Init)return;
                     System.out.println(sca.getSlot() + " || " + ah.getHolder().getName() + " || " + ah.getHolder().getClass().getName());
@@ -575,7 +593,6 @@ public class ShopFactory implements Listener {
                     int sx = slot % 9;
                     int sy = (int) Math.floor(slot / 9);
 //                    event.setCancelled();
-                    event.setCancelled();
                     if (slot < 5 * 9) {
                         System.out.println("TOP INV");
                         //TODO CONFIRM AND SHOW ITEM
@@ -616,7 +633,7 @@ public class ShopFactory implements Listener {
                                         }
                                     }
                                 }
-                                event.setCancelled();
+//                                event.setCancelled();
                                 return;
                             } else {
                                 Item si = ah.getContents().get(slot);
@@ -648,6 +665,7 @@ public class ShopFactory implements Listener {
                                 }
                             }
                         }
+                        event.setCancelled();
                     } else {
                         switch (slot) {
                             case ShopInv.MainPageItemRef.LastPage:
@@ -675,6 +693,7 @@ public class ShopFactory implements Listener {
                 }
             }
         }
+        event.getTransaction().getSource().sendAllInventories();
     }
 
     //SetupPageToFinalConfirmItemSell
