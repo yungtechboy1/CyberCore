@@ -4,16 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.block.BlockChest;
-import cn.nukkit.block.BlockID;
-import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.inventory.InventoryTransactionEvent;
-import cn.nukkit.inventory.Inventory;
-import cn.nukkit.inventory.PlayerCursorInventory;
-import cn.nukkit.inventory.PlayerInventory;
-import cn.nukkit.inventory.transaction.InventoryTransaction;
-import cn.nukkit.inventory.transaction.action.InventoryAction;
-import cn.nukkit.inventory.transaction.action.SlotChangeAction;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
 import cn.nukkit.level.GlobalBlockPalette;
@@ -33,9 +24,6 @@ import java.nio.ByteOrder;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
-
-import static net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse.CurrentPageEnum.*;
 
 /**
  * Created by carlt_000 on 2/22/2017.
@@ -44,7 +32,7 @@ public class AuctionFactory implements Listener {
     private final AHSqlite Sqlite;
     CyberCoreMain CCM;
     /**
-     * Settings:
+     * InternalPlayerSettings:
      * Key: {
      * id:
      * meta:
@@ -448,7 +436,7 @@ public class AuctionFactory implements Listener {
 //                            if (si != null) {
 //                                if (si.getId() == BlockID.EMERALD_BLOCK) {
 //                                    System.out.println("CONFIRM PURCHASE!!!!!!!");
-////                                    ah.AF.PurchaseItem((CorePlayer) ah.getHolder(), Page, slot);
+////                                    ah.SF.PurchaseItem((CorePlayer) ah.getHolder(), Page, slot);
 //                                } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
 //                                    System.out.println("DENCLINE PURCHASE!!!!!!!!");
 //                                }
@@ -551,7 +539,7 @@ public class AuctionFactory implements Listener {
 //
 //                                    if (si.getId() == BlockID.EMERALD_BLOCK) {
 //                                        System.out.println("CONFIRM PURCHASE!!!!!!!");
-//                                        ah.AF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot);
+//                                        ah.SF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot);
 //                                        break;
 //                                    } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
 //                                        System.out.println("DENCLINE PURCHASE!!!!!!!!");
@@ -599,7 +587,7 @@ public class AuctionFactory implements Listener {
         AuctionItemData aid = getAIDFromPage(page, slot);
         if (aid == null) {
             System.out.println("ERROR IN SELECTION!!!!");
-        } else if (aid.getCost() > holder.GetMoney()) {
+        } else if (aid.getCost() > holder.getMoney()) {
             holder.AH.SetupPageNotEnoughMoney(aid);
             return;
         }

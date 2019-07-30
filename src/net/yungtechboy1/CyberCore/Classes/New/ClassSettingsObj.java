@@ -140,7 +140,7 @@ public class ClassSettingsObj {
         PreferedSlot9 = PowerEnum.Unknown;
     }
 
-    //Ran to Activate Powers from Settings
+    //Ran to Activate Powers from InternalPlayerSettings
     public void check() {
         for(PowerData pd : getPowerDataList()){
             BC.activatePower(pd.getPowerID());

@@ -154,7 +154,7 @@ public class FactionFactory {
                     "            `x` int(250) NOT NULL,  " +
                     "            `z` int(250) NOT NULL  " +
                     "            );";
-            String sql6 = "CREATE TABLE IF NOT EXISTS \"Settings\" (" +
+            String sql6 = "CREATE TABLE IF NOT EXISTS \"InternalPlayerSettings\" (" +
                     "`faction`varchar(250) NOT NULL UNIQUE," +
                     "`max`int(250) NOT NULL," +
                     "`powerbonus`int(50) NOT NULL," +
@@ -174,7 +174,7 @@ public class FactionFactory {
             stmt2.executeUpdate(sql3);
             stmt2.executeUpdate(sql4);
             stmt2.executeUpdate(sql6);*/
-            //stmt.executeUpdate("DELETE FROM allies; DELETE FROM confirm; DELETE FROM home; DELETE FROM plots; DELETE FROM Settings; DELETE FROM master;");
+            //stmt.executeUpdate("DELETE FROM allies; DELETE FROM confirm; DELETE FROM home; DELETE FROM plots; DELETE FROM InternalPlayerSettings; DELETE FROM master;");
             Main.plugin.getLogger().info("Going to save: " + List.size());
             stmt.executeUpdate("BEGIN;");
             String yaml = "";

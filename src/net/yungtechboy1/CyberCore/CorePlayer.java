@@ -15,7 +15,6 @@ import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.event.player.PlayerKickEvent;
 import cn.nukkit.event.player.*;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
-import cn.nukkit.event.server.DataPacketSendEvent;
 import cn.nukkit.form.window.FormWindow;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.inventory.transaction.action.InventoryAction;
@@ -64,6 +63,10 @@ import net.yungtechboy1.CyberCore.Factory.Shop.Spawner.SpawnerShop;
 import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
+import net.yungtechboy1.CyberCore.Manager.LeaderBoard.api.ScoreboardAPI;
+import net.yungtechboy1.CyberCore.Manager.LeaderBoard.network.DisplaySlot;
+import net.yungtechboy1.CyberCore.Manager.LeaderBoard.network.Scoreboard;
+import net.yungtechboy1.CyberCore.Manager.LeaderBoard.network.ScoreboardDisplay;
 import net.yungtechboy1.CyberCore.Rank.Rank;
 import net.yungtechboy1.CyberCore.Rank.RankList;
 
@@ -77,6 +80,7 @@ public class CorePlayer extends Player {
     private static boolean CooldownLock = false;
     private final String Cooldown_Faction = "Faction";
     private final String Cooldown_Class = "Class";
+    private final String Scoreboard_Class = "ScoreBoard";
     public String TPR = null;
     public FormType.MainForm LastSentFormType = FormType.MainForm.NULL;
     public FormType.SubMenu LastSentSubMenu = FormType.SubMenu.MainMenu;
@@ -85,7 +89,7 @@ public class CorePlayer extends Player {
     public String Faction = null;
     public String FactionInvite = null;
     public FactionSettings fsettings = new FactionSettings();
-    public CoreSettings Settings = new CoreSettings();
+    public CoreSettings InternalPlayerSettings = new CoreSettings();
     /**
      * @@deprecated
      */
@@ -109,6 +113,7 @@ public class CorePlayer extends Player {
     public int CustomExtraHP = 0;
     public boolean DebuffsChanced = false;
     public boolean BuffsChanced = false;
+    public Scoreboard PlayerScoreBoard = ScoreboardAPI.createScoreboard();
     protected HashMap<Buff.BuffType, Float> lastdata = null;
     long uct = 0;
     boolean uw = false;
@@ -345,20 +350,6 @@ public class CorePlayer extends Player {
         return PlayerClass;
     }
 
-    @Override
-    public void sendAttributes() {
-        UpdateAttributesPacket pk = new UpdateAttributesPacket();
-        pk.entityId = this.getId();
-        pk.entries = new Attribute[]{
-                Attribute.getAttribute(Attribute.MAX_HEALTH).setMaxValue(this.getMaxHealth()).setValue(health > 0 ? (health < getMaxHealth() ? health : getMaxHealth()) : 0),
-                Attribute.getAttribute(Attribute.MAX_HUNGER).setValue(this.getFoodData().getLevel()),
-                Attribute.getAttribute(Attribute.MOVEMENT_SPEED).setValue(this.getMovementSpeed()),
-                Attribute.getAttribute(Attribute.EXPERIENCE_LEVEL).setValue(this.getExperienceLevel()),
-                Attribute.getAttribute(Attribute.EXPERIENCE).setValue(((float) this.getExperience()) / calculateRequireExperience(this.getExperienceLevel()))
-        };
-        this.dataPacket(pk);
-    }
-
     //for testing
 //    @Override
 //    public int dataPacket(DataPacket packet, boolean needACK) {
@@ -387,6 +378,20 @@ public class CorePlayer extends Player {
 //        }
 //        return 0;
 //    }
+
+    @Override
+    public void sendAttributes() {
+        UpdateAttributesPacket pk = new UpdateAttributesPacket();
+        pk.entityId = this.getId();
+        pk.entries = new Attribute[]{
+                Attribute.getAttribute(Attribute.MAX_HEALTH).setMaxValue(this.getMaxHealth()).setValue(health > 0 ? (health < getMaxHealth() ? health : getMaxHealth()) : 0),
+                Attribute.getAttribute(Attribute.MAX_HUNGER).setValue(this.getFoodData().getLevel()),
+                Attribute.getAttribute(Attribute.MOVEMENT_SPEED).setValue(this.getMovementSpeed()),
+                Attribute.getAttribute(Attribute.EXPERIENCE_LEVEL).setValue(this.getExperienceLevel()),
+                Attribute.getAttribute(Attribute.EXPERIENCE).setValue(((float) this.getExperience()) / calculateRequireExperience(this.getExperienceLevel()))
+        };
+        this.dataPacket(pk);
+    }
 
     public boolean isInTeleportingProcess() {
         return isInTeleportingProcess;
@@ -431,6 +436,11 @@ public class CorePlayer extends Player {
         setItemBeingEnchantedLock(true);
     }
 
+//    @Deprecated
+//    public PlayerEconData GetEconData() {
+//        return new PlayerEconData(GetData());
+//    }
+
     public void ReturnItemBeingEnchanted() {
         if (IsItemBeingEnchanted() && !isItemBeingEnchantedLock()) {
             Item i = getItemBeingEnchanted();
@@ -439,11 +449,6 @@ public class CorePlayer extends Player {
             removeItemBeingEnchantedLock();
         }
     }
-
-//    @Deprecated
-//    public PlayerEconData GetEconData() {
-//        return new PlayerEconData(GetData());
-//    }
 
     public PlayerSettingsData GetData() {
         if (getSettingsData() == null) CreateDefaultSettingsData(this);
@@ -488,7 +493,7 @@ public class CorePlayer extends Player {
     }
 
     public boolean MakeTransaction(double price) {
-        if (price > GetMoney()) return false;
+        if (price > getMoney()) return false;
         TakeMoney(price);
         return true;
     }
@@ -510,7 +515,7 @@ public class CorePlayer extends Player {
         ped.Cash += price;
     }
 
-    public double GetMoney() {
+    public double getMoney() {
         return GetData().Cash;
     }
 
@@ -762,7 +767,7 @@ public class CorePlayer extends Player {
 
     @Override
     public void handleDataPacket(DataPacket packet) {
-        System.out.println("DP >>>> "+packet+ "||"+packet.pid() );
+        System.out.println("DP >>>> " + packet + "||" + packet.pid());
         if (!connected) {
             return;
         }
@@ -845,7 +850,7 @@ public class CorePlayer extends Player {
                             InventoryAction aa = na.createInventoryAction(this);
 
 //                            System.out.println("zACTIONz xxxx>"+new CustomNetworkInventoryAction(na));
-                            System.out.println("zACTIONz xxxx>"+na);
+                            System.out.println("zACTIONz xxxx>" + na);
 //                            System.out.println("zACTIONz z");
 //                            System.out.println("zACTIONz z > "+a);
 //                            System.out.println("zACTIONz z > "+a.getClass().getName());
@@ -920,7 +925,7 @@ public class CorePlayer extends Player {
                                 if (transactionPacket2.actions.length > 0) {
                                     this.server.getLogger().debug("Expected 0 actions for mismatch, got " + transactionPacket2.actions.length + ", " + Arrays.toString(transactionPacket2.actions));
                                     this.server.getLogger().error("Expected 0 actions for mismatch, got " + transactionPacket2.actions.length + ", " + Arrays.toString(transactionPacket2.actions));
-                                }else{
+                                } else {
                                     this.server.getLogger().error("Expected 0 actions for mismatch, got " + transactionPacket2.actions.length + ", " + Arrays.toString(transactionPacket2.actions));
                                 }
                                 this.sendAllInventories();
@@ -1451,6 +1456,55 @@ public class CorePlayer extends Player {
         if (f < max) setOnFire(nr.nextRange(1, 4));
     }
 
+    public void ReloadScoreBoard() {
+        Scoreboard s = PlayerScoreBoard;
+        if (s != null) {
+            s.hideFor(this);
+        }
+        s = ScoreboardAPI.createScoreboard();
+        ScoreboardDisplay sd = s.addDisplay(DisplaySlot.SIDEBAR, "PlayerInfo", TextFormat.AQUA + "~~| UnlimitedPE Factions |~~");
+        int k = 0;
+        if (!InternalPlayerSettings.isHudPosOff()) {
+            sd.addLine(TextFormat.AQUA + "Positon:", k++);
+            sd.addLine("    " + TextFormat.GOLD + "X: " + TextFormat.GREEN + getFloorX() + TextFormat.GOLD + " Y: " + TextFormat.GREEN + getFloorY() + TextFormat.GOLD + " Z: " + TextFormat.GREEN + getFloorZ(), k++);
+        }
+        if (!InternalPlayerSettings.isHudFactionOff() && getFaction() != null) {
+            sd.addLine(TextFormat.GRAY + "Faction : " + TextFormat.AQUA + getFaction().GetDisplayName(), k++);
+            sd.addLine("    " + TextFormat.AQUA + "XP" + TextFormat.GRAY + " | " + TextFormat.GREEN + getFaction().GetXP() + TextFormat.AQUA + " / " + TextFormat.GOLD + getFaction().calculateRequireExperience() + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + getFaction().GetLevel(), k++);
+        }
+        if (!InternalPlayerSettings.isHudClassOff()) {
+//            TODO
+            BaseClass bc = getPlayerClass();
+            if (bc != null) {
+                String pclass = "NONE";
+                String t = bc.FormatHudText();
+                if (t != null && t.length() != 0) {
+                    sd.addLine("Class:", k++);
+                    sd.addLine("    " + t, k++);
+                } else {
+                    sd.addLine("Class: None", k++);
+                }
+            }
+        }
+
+
+//        if(!InternalPlayerSettings.isHudClassOff())sd.addLine(TextFormat.GOLD+"X: "+TextFormat.GREEN+getX()+TextFormat.GOLD+"Y: "+TextFormat.GREEN+getY()+TextFormat.GOLD+"Z: "+TextFormat.GREEN+getZ(),k++);
+        sd.addLine(TextFormat.YELLOW + "Money : " + TextFormat.AQUA + "$" + getMoney(), k++);
+        sd.addLine(TextFormat.YELLOW + "Hunger : " + TextFormat.AQUA + getFoodData().getLevel(), k++);
+        sd.addLine(TextFormat.YELLOW + "HP : " + TextFormat.AQUA + getHealth() + " / " + getMaxHealth(), k++);
+        sd.addLine(TextFormat.GRAY + "Class & Power COOLDOWNS:", k++);
+        sd.addEntity(this, k++);
+//        sd.addLine("TEST LINE 1",1);
+//        sd.addLine("YOUR NAME"+p.getDisplayName(),2);
+//        }else{
+//            ScoreboardDisplay sd = s.addDisplay();
+//            sd.addEntity(this,10);
+//
+//        }
+        PlayerScoreBoard = s;
+        ScoreboardAPI.setScoreboard(this, s);
+    }
+
     private void AddCoolDown(String key, int secs) {
 
         CDL.put(key, new CoolDownTick(key, (secs * 20)));
@@ -1499,7 +1553,7 @@ public class CorePlayer extends Player {
     public boolean onUpdate(int currentTick) {
         //Check for Faction!
         if (this.spawned) {
-            if (currentTick % 5 == 0) {
+            if (currentTick % 5 == 0) {//Only allows 4 Ticks per Sec
                 if (!CooldownLock && isAlive() && spawned) {
                     if (Combat != null) {
                         if (Combat.getTick() < currentTick) {
@@ -1543,6 +1597,23 @@ public class CorePlayer extends Player {
                         BaseClass bc = getPlayerClass();
                         if (bc != null) bc.onUpdate(currentTick);
                         initAllClassBuffs();
+                    }
+                    CoolDownTick sc = GetCooldown(Scoreboard_Class, true);
+                    if (sc == null) {
+//                    CyberCoreMain.getInstance().getLogger().info("RUNNNING CLASS CHECK IN CP" + CDL.size()+"||"+ getPlayerClass());
+                        AddCoolDown(Scoreboard_Class, 3);
+                        ReloadScoreBoard();
+
+                        //REMOVE SHOP/AH/SpawnShop GUI Items
+                        int k = 0;
+                        for (Item i : getInventory().getContents().values()) {
+                            if (i.hasCompoundTag()) {
+                                if (i.getNamedTag().contains(ShopInv.StaticItems.KeyName)) getInventory().remove(i);
+                                if (i.getNamedTag().contains("AHITEM")) getInventory().remove(i);
+                                if (i.getNamedTag().contains(net.yungtechboy1.CyberCore.Factory.Shop.Spawner.SpawnerShop.StaticItems.KeyName))getInventory().remove(i);
+//                                k++;
+                            }
+                        }
                     }
                     CooldownLock = false;
                 }

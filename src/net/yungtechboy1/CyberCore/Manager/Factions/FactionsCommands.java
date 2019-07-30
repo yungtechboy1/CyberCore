@@ -123,7 +123,7 @@ public class FactionsCommands {
                 if(command.equalsIgnoreCase("join")) {
                     new Join(sender,args,main);return true;
                 }
-                //Settings
+                //InternalPlayerSettings
                 //Usage: /f motd <Desc>
                 //Example: /f motd CyberFaction Is Awesome
                 if(command.equalsIgnoreCase("motd")) {

@@ -23,7 +23,7 @@ public class MainClassSettingsWindowChooseLockedSlot extends CyberFormCustom {
     }
 
     public MainClassSettingsWindowChooseLockedSlot(BaseClass _BC, LockedSlot ls) {
-        super(FormType.MainForm.Main_Class_Settings_Window_Active_Powers, _BC.getDisplayName() + " Power Slot Settings");
+        super(FormType.MainForm.Main_Class_Settings_Window_Active_Powers, _BC.getDisplayName() + " Power Slot InternalPlayerSettings");
         this._BC = _BC;
         _LS = ls;
         inti();

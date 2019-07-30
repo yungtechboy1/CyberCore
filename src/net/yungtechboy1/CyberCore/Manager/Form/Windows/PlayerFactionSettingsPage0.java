@@ -16,7 +16,7 @@ public class PlayerFactionSettingsPage0  extends CyberFormCustom {
     }
 
     public PlayerFactionSettingsPage0(List<ElementButton> buttons) {
-        super(FormType.MainForm.PlayerFactionSettingsPage0, "CyberFactions | Player Faction Settings Page (1/1)");
+        super(FormType.MainForm.PlayerFactionSettingsPage0, "CyberFactions | Player Faction InternalPlayerSettings Page (1/1)");
 
         addElement(new ElementToggle("Allow Faction Invite Pop-Ups"));
 //        addButton(new ElementButton("Show Advanced Damage Tags"));
@@ -27,8 +27,8 @@ public class PlayerFactionSettingsPage0  extends CyberFormCustom {
     public boolean onRun(CorePlayer cp) {
         super.onRun(cp);
         FormResponseCustom fap = getResponse();
-        cp.Settings.updateFromWindow(fap);
-        cp.sendMessage("Settings Updated!");
+        cp.InternalPlayerSettings.updateFromWindow(fap);
+        cp.sendMessage("InternalPlayerSettings Updated!");
         cp.showFormWindow(new SettingsPage0());
         return false;
     }

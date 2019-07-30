@@ -24,8 +24,6 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse;
-import net.yungtechboy1.CyberCore.Factory.Shop.ShopFactory;
-import net.yungtechboy1.CyberCore.Factory.Shop.ShopInv;
 
 import java.util.*;
 
@@ -38,14 +36,14 @@ public class SpawnerShop extends BaseInventory implements Inventory {
     public boolean AdminMode = false;
     public boolean ConfirmPurchase = false;
     public int ConfirmPurchaseSlot = 0;
-    public SpawnShopFactory AF = null;
+    public SpawnShopFactory SSF = null;
     protected int maxStackSize = Inventory.MAX_STACK;
     EntityHuman holder;
     Vector3 BA;
     CyberCoreMain CCM;
     BlockEntity blockEntity2 = null;
     BlockEntity blockEntity = null;
-    CurrentPageEnum CurrentPage;
+    public CurrentPageEnum CurrentPage;
     private int Page = 1;
 
     public SpawnerShop(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba) {
@@ -53,15 +51,15 @@ public class SpawnerShop extends BaseInventory implements Inventory {
     }
 
     public SpawnerShop(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba, int page) {
-//        super(Holder, InventoryType.DOUBLE_CHEST, CyberCoreMain.getInstance().AF.getPageHash(page), 9 * 6);//54??
+//        super(Holder, InventoryType.DOUBLE_CHEST, CyberCoreMain.getInstance().SF.getPageHash(page), 9 * 6);//54??
         super(Holder, InventoryType.DOUBLE_CHEST, ccm.SpawnShop.getPageHash(page), 9 * 6);//54??
         //TODO SHOULD SIZE BE 54!?!?
         holder = Holder;
 //        this.size = 9 * 6;
 
         CCM = ccm;
-        AF = CCM.SpawnShop;
-//        addItem(AF.getPage(Page));
+        SSF = CCM.SpawnShop;
+//        addItem(SF.getPage(Page));
         Page = page;
 
         BA = ba;
@@ -70,8 +68,8 @@ public class SpawnerShop extends BaseInventory implements Inventory {
 
         this.name = title;
         System.out.println("Creating SHopIn Class");
-//        if (CyberCoreMain.getInstance().AF.getPageHash(page) == null) System.out.println("NUUUUUUUUUUU");
-//        setContents(CyberCoreMain.getInstance().AF.getPageHash(page));
+//        if (CyberCoreMain.getInstance().SF.getPageHash(page) == null) System.out.println("NUUUUUUUUUUU");
+//        setContents(CyberCoreMain.getInstance().SF.getPageHash(page));
     }
 
     public CurrentPageEnum getCurrentPage() {
@@ -85,7 +83,7 @@ public class SpawnerShop extends BaseInventory implements Inventory {
     public void GoToSellerPage() {
         clearAll();
         setPage(1);
-        setContents(AF.getPageHash(getPage()), true);
+        setContents(SSF.getPageHash(getPage()), true);
         ReloadInv();
         sendContents(getHolder());
         SendAllSlots(getHolder());
@@ -139,7 +137,7 @@ public class SpawnerShop extends BaseInventory implements Inventory {
         Page = page;
         CurrentPage = CurrentPageEnum.PlayerSellingPage;
         clearAll();
-        setContents(AF.getPageHash(getPage()));
+        setContents(SSF.getPageHash(getPage()));
         ReloadInv();
         SendAllSlots(getHolder());
     }
@@ -153,7 +151,7 @@ public class SpawnerShop extends BaseInventory implements Inventory {
         Page = page;
         CurrentPage = CurrentPageEnum.ItemPage;
         clearAll();
-        addItem(AF.getPage(getPage()));
+        addItem(SSF.getPage(getPage()));
         ReloadInv();
         SendAllSlots(getHolder());
     }
@@ -227,7 +225,7 @@ public class SpawnerShop extends BaseInventory implements Inventory {
 
     public void ConfirmItemPurchase(int slot) {
         clearAll();
-        SpawnerShopData aid = AF.getItemFrom(Page, slot);
+        SpawnerShopData aid = SSF.getItemFrom(Page, slot);
         SetupPageToConfirmMultiItem(aid);
         ReloadInv();
         ConfirmPurchase = true;
@@ -266,11 +264,11 @@ public class SpawnerShop extends BaseInventory implements Inventory {
                         setItem(key, add, true);
                     } else if(ii == 4){
                         Item g = si.Gold.clone();
-                        g.setCustomName(TextFormat.GOLD + " Your money: " + cp.GetMoney());
+                        g.setCustomName(TextFormat.GOLD + " Your money: " + cp.getMoney());
                         setItem(key, g, true);
                     } else {
                         add = si.ChestBuy.clone();
-                        int mb = (int)Math.floor(cp.GetMoney()/aid.getPrice());
+                        int mb = (int)Math.floor(cp.getMoney()/aid.getPrice());
                         add.setLore("You can buy "+mb+" "+item.getName()+"(s)");
                         setItem(key, add, true);
                     }
@@ -303,22 +301,22 @@ public class SpawnerShop extends BaseInventory implements Inventory {
                         setItem(key, add, true);
                         break;
                     case 5:
-                        if(cp.GetMoney() > aid.getPrice())add = si.AddX1.clone();
+                        if(cp.getMoney() > aid.getPrice())add = si.AddX1.clone();
                         else add = si.AddX1N.clone();
                         setItem(key, add, true);
                         break;
                     case 6:
-                        if(cp.GetMoney() > aid.getPrice(10))add = si.AddX10.clone();
+                        if(cp.getMoney() > aid.getPrice(10))add = si.AddX10.clone();
                         else add = si.AddX10N.clone();
                         setItem(key, add, true);
                         break;
                     case 7:
-                        if(cp.GetMoney() > aid.getPrice(32))add = si.AddX32.clone();
+                        if(cp.getMoney() > aid.getPrice(32))add = si.AddX32.clone();
                         else add = si.AddX32N.clone();
                         setItem(key, add, true);
                         break;
                     case 8:
-                        if(cp.GetMoney() > aid.getPrice(64))add = si.AddX64.clone();
+                        if(cp.getMoney() > aid.getPrice(64))add = si.AddX64.clone();
                         else add = si.AddX64N.clone();
                         setItem(key, add, true);
                         break;
@@ -481,11 +479,11 @@ public class SpawnerShop extends BaseInventory implements Inventory {
                         setItem(key, item, true);
                     } else if (i == 0) {
                         Item g = si.Gold.clone();
-                        g.setCustomName(TextFormat.GOLD + " Your money: " + cp.GetMoney());
+                        g.setCustomName(TextFormat.GOLD + " Your money: " + cp.getMoney());
                         setItem(key, g, true);
                     } else {
                         Item r = Item.get(160, 14);
-                        r.setCustomName(TextFormat.RED + "Not Enough Money \n" + TextFormat.YELLOW + " Your Balance : " + cp.GetMoney() + "\n" + TextFormat.AQUA + "Item Cost : " + aid.getPrice());
+                        r.setCustomName(TextFormat.RED + "Not Enough Money \n" + TextFormat.YELLOW + " Your Balance : " + cp.getMoney() + "\n" + TextFormat.AQUA + "Item Cost : " + aid.getPrice());
                         setItem(key, r, true);
                     }
                 }
@@ -528,7 +526,7 @@ public class SpawnerShop extends BaseInventory implements Inventory {
 
                     } else if (i == 0) {
                         Item g = si.Gold.clone();
-                        g.setCustomName(TextFormat.GOLD + " Your money: " + cp.GetMoney());
+                        g.setCustomName(TextFormat.GOLD + " Your money: " + cp.getMoney());
                         setItem(key, g, true);
                     } else {
                         setItem(key, Item.get(160), true);
@@ -818,7 +816,7 @@ public class SpawnerShop extends BaseInventory implements Inventory {
         public final Item RmvX64N;
         public final Item Deny;
         public final Item Gold;
-        public final String KeyName = "SHOPITEM";
+        public static final String KeyName = "SSHOPITEM";
 
         StaticItems() {
             this(-1);

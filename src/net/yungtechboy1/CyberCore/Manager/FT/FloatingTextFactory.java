@@ -229,7 +229,7 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
             String money = "0";
 //            ArchEconMain AA = (ArchEconMain) CCM.getServer().getPluginManager().getPlugin("ArchEcon");
 //            if(AA != null){
-//                money = ""+AA.GetMoney(player.getName());
+//                money = ""+AA.getMoney(player.getName());
 //            }
 
             text = text

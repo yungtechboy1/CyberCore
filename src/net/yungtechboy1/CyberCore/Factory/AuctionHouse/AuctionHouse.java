@@ -65,7 +65,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
     }
 
     public AuctionHouse(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba, int page) {
-//        super(Holder, InventoryType.DOUBLE_CHEST, CyberCoreMain.getInstance().AF.getPageHash(page), 9 * 6);//54??
+//        super(Holder, InventoryType.DOUBLE_CHEST, CyberCoreMain.getInstance().SF.getPageHash(page), 9 * 6);//54??
         super(Holder, InventoryType.DOUBLE_CHEST, ccm.AF.getPageHash(page), 9 * 6);//54??
         //TODO SHOULD SIZE BE 54!?!?
         holder = Holder;
@@ -73,7 +73,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
         CCM = ccm;
         AF = CCM.AF;
-//        addItem(AF.getPage(Page));
+//        addItem(SF.getPage(Page));
         Page = page;
 
         BA = ba;
@@ -82,8 +82,8 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
         this.name = title;
         System.out.println("Creating AuctionHouse Class");
-//        if (CyberCoreMain.getInstance().AF.getPageHash(page) == null) System.out.println("NUUUUUUUUUUU");
-//        setContents(CyberCoreMain.getInstance().AF.getPageHash(page));
+//        if (CyberCoreMain.getInstance().SF.getPageHash(page) == null) System.out.println("NUUUUUUUUUUU");
+//        setContents(CyberCoreMain.getInstance().SF.getPageHash(page));
     }
 
     public void GoToSellerPage() {
@@ -449,11 +449,11 @@ public class AuctionHouse extends BaseInventory implements Inventory {
                         setItem(key, item, true);
                     } else if (i == 0) {
                         Item g = si.Gold.clone();
-                        g.setCustomName(TextFormat.GOLD + " Your money: "+ cp.GetMoney());
+                        g.setCustomName(TextFormat.GOLD + " Your money: "+ cp.getMoney());
                         setItem(key, g, true);
                     } else {
                         Item r = Item.get(160, 14);
-                        r.setCustomName(TextFormat.RED + "Not Enough Money \n" + TextFormat.YELLOW + " Your Balance : " + cp.GetMoney() + "\n" + TextFormat.AQUA + "Item Cost : " + aid.getCost());
+                        r.setCustomName(TextFormat.RED + "Not Enough Money \n" + TextFormat.YELLOW + " Your Balance : " + cp.getMoney() + "\n" + TextFormat.AQUA + "Item Cost : " + aid.getCost());
                         setItem(key, r, true);
                     }
                 }
@@ -482,7 +482,7 @@ public class AuctionHouse extends BaseInventory implements Inventory {
 
                     } else if (i == 0) {
                         Item g = si.Gold.clone();
-                        g.setCustomName(TextFormat.GOLD + " Your money: " + cp.GetMoney());
+                        g.setCustomName(TextFormat.GOLD + " Your money: " + cp.getMoney());
                         setItem(key, g, true);
                     } else {
                         setItem(key, Item.get(160), true);

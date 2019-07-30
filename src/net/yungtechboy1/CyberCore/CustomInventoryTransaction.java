@@ -195,11 +195,11 @@ public class CustomInventoryTransaction extends InventoryTransaction {
         if (!this.hasExecuted() && this.canExecute()) {
 //            System.out.println("CALL 1111111111111112");
             if (!this.callExecuteEvent()) {
-//                System.out.println("CALL 1.1");
+                System.out.println("CALL 1.1!!!!!!!!!!!!!!2222222222222222333333333444444444444");
                 this.sendInventories();
                 return true;
             } else {
-//                System.out.println("CALL 1.2");
+                System.out.println("CALL 1.2 | TRANSACTION IS BEING RAN!!!!!!!!!!!!");
                 Iterator var1 = this.actions.iterator();
 
                 InventoryAction action;
@@ -232,7 +232,7 @@ public class CustomInventoryTransaction extends InventoryTransaction {
                 return true;
             }
         } else {
-//            System.out.println("CALL 2");
+            System.out.println("CALL 2");
 //            if (this.hasExecuted()) System.out.println("CALL 2.1");
 //            if (!this.canExecute()) System.out.println("CALL 2.2");
 //            if (this.recipe == null) System.out.println("CALL 2.3");

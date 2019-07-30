@@ -42,7 +42,7 @@ public class EconManager {
 //    }
 //
 //    public boolean MakeTransaction(String s, double price) {
-//    if(price > GetMoney(s))return false;
+//    if(price > getMoney(s))return false;
 //    TakeMoney(s,price);
 //    return true;
 //    }
@@ -59,7 +59,7 @@ public class EconManager {
 //        ped.Cash += price;
 //    }
 //
-//    public double GetMoney(String s) {
+//    public double getMoney(String s) {
 //        PlayerEconData ped = GetData(s);
 //        return ped.Cash;
 //    }

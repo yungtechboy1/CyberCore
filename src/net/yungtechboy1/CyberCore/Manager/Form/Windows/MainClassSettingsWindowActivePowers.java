@@ -21,7 +21,7 @@ public class MainClassSettingsWindowActivePowers extends CyberFormCustom {
     }
 
     public MainClassSettingsWindowActivePowers(BaseClass _BC) {
-        super(FormType.MainForm.Main_Class_Settings_Window_Active_Powers, _BC.getDisplayName() + " Passive Power Settings");
+        super(FormType.MainForm.Main_Class_Settings_Window_Active_Powers, _BC.getDisplayName() + " Passive Power InternalPlayerSettings");
         this._BC = _BC;
         inti();
     }

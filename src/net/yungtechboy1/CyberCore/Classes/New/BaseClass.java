@@ -427,7 +427,7 @@ public abstract class BaseClass {
 
         }
 //        }
-        //Check Class Settings!
+        //Check Class InternalPlayerSettings!
 
 //        ActivePowers.put(power.getType(), power);
     }
@@ -652,7 +652,7 @@ public abstract class BaseClass {
 
     //TODO Change to MainClassSettingsWindow return tyoe
     public CyberForm getSettingsWindow() {
-        return new MainClassSettingsWindow(this, FormType.MainForm.NULL, "Settings Window", "");
+        return new MainClassSettingsWindow(this, FormType.MainForm.NULL, "InternalPlayerSettings Window", "");
     }
 
     @Deprecated

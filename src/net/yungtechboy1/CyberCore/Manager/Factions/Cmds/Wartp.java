@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.Player;
-import cn.nukkit.command.CommandSender;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 
@@ -31,7 +30,7 @@ public class Wartp extends Commands {
             Sender.sendMessage(FactionsMain.NAME+ TextFormat.RED + " You must be at war to use this command!!!");
             return;
         }
-        if(Sender.GetMoney() < 500){
+        if(Sender.getMoney() < 500){
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+" Error! You must have $500 inorder to teleport!");
             return;
         }

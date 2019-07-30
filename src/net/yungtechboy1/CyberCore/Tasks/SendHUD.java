@@ -54,7 +54,7 @@ public class SendHUD extends Thread implements InterruptibleThread {
     }
 
     private void FormatHUD(CorePlayer p) {
-        if (p == null || p.Settings.isHudOff()) return;
+        if (p == null || p.InternalPlayerSettings.isHudOff()) return;
         CyberCoreMain Main = CyberCoreMain.getInstance();
 
         int px = p.getFloorX();
@@ -78,11 +78,11 @@ public class SendHUD extends Thread implements InterruptibleThread {
 
         String f = "";
         f += TextFormat.GRAY + " ----------- " + TextFormat.GREEN + "Hunger " + p.getFoodData().getLevel() + " HP: " + p.getHealth() + " MX/HP:" + p.getMaxHealth() + TextFormat.GRAY + " ----------- " + TextFormat.RESET + "\n";
-        if (!p.Settings.isHudPosOff())
+        if (!p.InternalPlayerSettings.isHudPosOff())
             f += TextFormat.GRAY + " ----------- " + TextFormat.GREEN + "X: " + px + " Y: " + py + " Z:" + pz + TextFormat.GRAY + " ----------- " + TextFormat.RESET + "\n";
-        if (!p.Settings.isHudFactionOff())
+        if (!p.InternalPlayerSettings.isHudFactionOff())
             f += TextFormat.GRAY + " -- " + TextFormat.GRAY + "Faction : " + TextFormat.AQUA + fn + TextFormat.GRAY + " | " + TextFormat.GREEN + fxp + TextFormat.AQUA + " / " + TextFormat.GOLD + fxpm + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + flvl + TextFormat.GRAY + " -- " + TextFormat.RESET + "\n";
-        if (!p.Settings.isHudClassOff()) {
+        if (!p.InternalPlayerSettings.isHudClassOff()) {
 //            TODO
             if (p.getPlayerClass() != null) {
                 String pclass = "NONE";

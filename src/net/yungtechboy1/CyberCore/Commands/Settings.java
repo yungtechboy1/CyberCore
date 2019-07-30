@@ -13,7 +13,7 @@ public class Settings  extends Command {
     CyberCoreMain Owner;
 
     public Settings(CyberCoreMain server) {
-        super("settings", "Manage your server Settings", "/settings");
+        super("settings", "Manage your server InternalPlayerSettings", "/settings");
         Owner = server;
         this.commandParameters.clear();
         this.commandParameters.put("default", new CommandParameter[]{});

@@ -98,7 +98,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public Config cooldowns;
     //HUD Off
     //TODO add PlayerSetting Object to allow players to save
-    //TODO add /Settings commands that adds GUI
+    //TODO add /InternalPlayerSettings commands that adds GUI
     public Config RankChatColor;
     public Config RankConfig;
     public Config MainConfig;
@@ -363,7 +363,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        getServer().getScheduler().scheduleDelayedTask(new Restart(this), 20 * 60 * 60 * 2);//EVERY 2 Hours
 //        getServer().getScheduler().scheduleRepeatingTask(new SendHUD(this), 50);//EVERY Sec
-        SH = new SendHUD();
+//        SH = new SendHUD();
 
         //COMMANDS
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new AdminCMD(this));

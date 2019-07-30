@@ -50,7 +50,7 @@ timings:
  bypass-max: false
  #If set to true, name of your server won't be sent
  privacy: false
- #Settings sections to ignore. These sections won't be sent to Aikar's Timing parser
+ #InternalPlayerSettings sections to ignore. These sections won't be sent to Aikar's Timing parser
  #For example: [all] or [settings, timings]
  ignore: []
 

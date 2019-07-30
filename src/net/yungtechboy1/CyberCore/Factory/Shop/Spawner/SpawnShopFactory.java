@@ -4,15 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.block.BlockChest;
-import cn.nukkit.block.BlockID;
-import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.inventory.InventoryTransactionEvent;
-import cn.nukkit.inventory.Inventory;
-import cn.nukkit.inventory.PlayerInventory;
-import cn.nukkit.inventory.transaction.InventoryTransaction;
-import cn.nukkit.inventory.transaction.action.InventoryAction;
-import cn.nukkit.inventory.transaction.action.SlotChangeAction;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
 import cn.nukkit.level.GlobalBlockPalette;
@@ -20,25 +12,20 @@ import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.BlockEntityDataPacket;
 import cn.nukkit.network.protocol.UpdateBlockPacket;
-import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Data.AuctionItemData;
-import net.yungtechboy1.CyberCore.Data.ShopSQL;
-import net.yungtechboy1.CyberCore.Factory.Shop.OpenShop;
+
 import java.io.IOException;
 import java.nio.ByteOrder;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 public class SpawnShopFactory implements Listener {
 //    private final ShopSQL SQL;
     CyberCoreMain CCM;
     /**
-     * Settings:
+     * InternalPlayerSettings:
      * Key: {
      * id:
      * meta:
@@ -48,13 +35,13 @@ public class SpawnShopFactory implements Listener {
      * soldby:
      * }
      */
-//        Config Settings;
+//        Config InternalPlayerSettings;
 
     public ArrayList<SpawnerShopData> ShopCache;
 
     public SpawnShopFactory(CyberCoreMain CCM) {
         this.CCM = CCM;
-//            Settings = new Config(new File(CCM.getDataFolder(), "Auctions.yml"), Config.YAML);
+//            InternalPlayerSettings = new Config(new File(CCM.getDataFolder(), "Auctions.yml"), Config.YAML);
 //        SQL = new ShopSQL(CCM);
         ShopCache = new ArrayList<>();
         ShopCache.add(new SpawnerShopData(SpawnerWithLevelBlock.SpawnerType.Pig, 100, 2, 0));
@@ -311,7 +298,7 @@ public class SpawnShopFactory implements Listener {
 //
 //                                        if (si.getId() == BlockID.EMERALD_BLOCK) {
 //                                            System.out.println("CONFIRM PURCHASE!!!!!!!");
-//                                            ah.AF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot, si.getCount());
+//                                            ah.SF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot, si.getCount());
 //                                            break;
 //                                        } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
 //                                            System.out.println("DENCLINE PURCHASE!!!!!!!!");
@@ -362,7 +349,7 @@ public class SpawnShopFactory implements Listener {
         SpawnerShopData aid = getItemFrom(page, slot);
         if (aid == null) {
             System.out.println("ERROR IN SELECTION!!!!");
-        } else if (aid.getPrice() > holder.GetMoney()) {
+        } else if (aid.getPrice() > holder.getMoney()) {
             holder.SpawnerShop.SetupPageNotEnoughMoney(aid);
             return;
         }
