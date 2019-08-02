@@ -135,6 +135,35 @@ public abstract class PowerAbstract {
         return Active;
     }
 
+    private boolean Enabled = false;
+
+    public boolean isEnabled() {
+        return Enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        Enabled = enabled;
+    }
+
+    public void enablePower() {
+        if (!hasPowerSettings()){
+            System.out.println("====> CAN NOT ACTIVATE POWER NO POWER SETTINGS!!!");
+            return;
+        }
+        if (getPowerSettings().isHotbar() && isLSNull()){
+            System.out.println("====> CAN NOT ACTIVATE POWER NO HOT BAR SLOT IN SETTINGS!!!");
+            return;
+        }
+        setEnabled(true);
+        onEnable();
+    }
+
+    public void onEnable(){
+
+    }
+
+
+
     public void setActive(boolean active) {
         if (active) {
             if (!hasPowerSettings()){

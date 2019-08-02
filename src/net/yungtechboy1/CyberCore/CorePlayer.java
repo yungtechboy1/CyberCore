@@ -767,7 +767,7 @@ public class CorePlayer extends Player {
 
     @Override
     public void handleDataPacket(DataPacket packet) {
-        System.out.println("DP >>>> " + packet + "||" + packet.pid());
+//        System.out.println("DP >>>> " + packet + "||" + packet.pid());
         if (!connected) {
             return;
         }
@@ -851,7 +851,7 @@ public class CorePlayer extends Player {
 
 //                            System.out.println("zACTIONz xxxx>"+new CustomNetworkInventoryAction(na));
                             System.out.println("zACTIONz xxxx>" + na);
-//                            System.out.println("zACTIONz z");
+//                            System.out.println("zACTIONz z");Cybers
 //                            System.out.println("zACTIONz z > "+a);
 //                            System.out.println("zACTIONz z > "+a.getClass().getName());
                             if (a instanceof SlotChangeAction && aa instanceof SlotChangeAction) {
@@ -1476,11 +1476,10 @@ public class CorePlayer extends Player {
 //            TODO
             BaseClass bc = getPlayerClass();
             if (bc != null) {
-                String pclass = "NONE";
-                String t = bc.FormatHudText();
-                if (t != null && t.length() != 0) {
+                ArrayList<String> t = bc.FormatHudText();
+                if (t != null && t.size() != 0) {
                     sd.addLine("Class:", k++);
-                    sd.addLine("    " + t, k++);
+                    for(String ss:t)sd.addLine("    " + ss, k++);
                 } else {
                     sd.addLine("Class: None", k++);
                 }

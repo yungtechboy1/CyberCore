@@ -16,6 +16,7 @@ import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
+import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.plugin.PluginBase;
@@ -53,7 +54,6 @@ import net.yungtechboy1.CyberCore.Manager.Crate.CrateMain;
 import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
 import net.yungtechboy1.CyberCore.Manager.FT.CyberFloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
-import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
 import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
@@ -148,6 +148,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public ServerSqlite ServerSQL;
     public CustomCraftingManager CraftingManager;
     public CrateMain CrateMain;
+    public ArrayList<CyberFloatingTextContainer> SavedFloatingText = new ArrayList<>();
     Vector3 p1;
     Vector3 p2;
     CustomRecipeCraftingManager CRM;
@@ -309,6 +310,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         //TESTING
         FTM = new FloatingTextFactory(this);
         FloatingTextFactory.AddFloatingText(new CyberFloatingTextContainer(FTM, getServer().getLevelByName("world").getSafeSpawn().add(0, 5, 0), TextFormat.GREEN + "This is Spawn!"));
+        loadFloatingText();
 
         CrateMain = new CrateMain(this);
 
@@ -437,6 +439,71 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         BBM = new BossBarManager(this);
     }
 
+    public void loadFloatingText() {
+        Config ftc = new Config(new File(this.getDataFolder(), "FT.yml"), Config.YAML, new ConfigSection());
+
+        /*
+        *
+            put("Syntax", Syntax);
+            put("PlayerUnique", PlayerUnique);
+            put("UpdateTicks", UpdateTicks);
+            put("LastUpdate", LastUpdate);
+            put("X", Pos.getX());
+            put("Y", Pos.getY());
+            put("Z", Pos.getZ());
+            if(Pos.getLevel() != null)put("Level", Pos.getLevel().getName());
+        * */
+
+
+        for (Object e : ftc.getRootSection().getAllMap().values()) {
+            if (e instanceof ConfigSection) {
+                System.out.println(e);
+                System.out.println(((ConfigSection) e).getLong("x")+" || "+((ConfigSection) e).getDouble("x")+" || "+((ConfigSection) e).get("x"));
+                double x = ((ConfigSection) e).getDouble("X");
+                double y = ((ConfigSection) e).getDouble("Y");
+                double z = ((ConfigSection) e).getDouble("Z");
+                Level l = Server.getInstance().getLevelByName(((ConfigSection) e).getString("Level"));
+                String syntax = ((ConfigSection) e).getString("Syntax");
+                Boolean v = ((ConfigSection) e).getBoolean("Vertical");
+                boolean pu = ((ConfigSection) e).getBoolean("PlayereUnique");
+                int lu = ((ConfigSection) e).getInt("LastUpdate");
+                Position pos = new Position(x, y, z, l);
+                CyberFloatingTextContainer cft = new CyberFloatingTextContainer(FTM, pos, syntax);
+                System.out.println("Loading FLOATING TEXTTTTTTTTT");
+                System.out.println(cft.toString());
+                cft.PlayerUnique = pu;
+                cft.Vertical  = v;
+//                cft.LastUpdate = lu;
+                FloatingTextFactory.AddFloatingText(cft, false);
+                SavedFloatingText.add(cft);
+            }
+        }
+    }
+
+    public void saveFloatingText() {
+        Config ftc = new Config(new File(this.getDataFolder(), "FT.yml"), Config.YAML, new ConfigSection());
+
+        /*
+        *
+            put("Syntax", Syntax);
+            put("PlayerUnique", PlayerUnique);
+            put("UpdateTicks", UpdateTicks);
+            put("LastUpdate", LastUpdate);
+            put("X", Pos.getX());
+            put("Y", Pos.getY());
+            put("Z", Pos.getZ());
+            if(Pos.getLevel() != null)put("Level", Pos.getLevel().getName());
+        * */
+
+        ConfigSection c = ftc.getRootSection();
+        for (CyberFloatingTextContainer e : SavedFloatingText) {
+            if(!e.isValid())continue;
+            c.put(e.getKeyPos(), e.getSave());
+        }
+        ftc.setAll(c);
+        ftc.save();
+    }
+
 
     public void log(String string) {
         getLogger().info(colorize(string));
@@ -523,6 +590,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         //Classes
         FTM.CTstop();
+        saveFloatingText();
         PowerSourceTask.CTstop();
         ClassFactory.Saveall();
         FM.FFactory.SaveAllFactions();

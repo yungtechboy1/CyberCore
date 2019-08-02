@@ -34,10 +34,10 @@ public class DragonSlayer extends BaseClass {
     @Override
     public void SetPowers() {
 
-        addPower(new DragonSlayerFireStomp(this));
-        addPower(new DragonJumper(this));
-//        addPower(new DragonJumper(this));
-//        addPower(new TNTAirStrikePower(this));
+        addPossiblePower(new DragonSlayerFireStomp(this));
+        addPossiblePower(new DragonJumper(this));
+//        addPossiblePower(new DragonJumper(this));
+//        addPossiblePower(new TNTAirStrikePower(this));
     }
 
     @Override
@@ -80,7 +80,7 @@ public class DragonSlayer extends BaseClass {
 //
 //    private Object loadingBarCooldownForPower(int loadingBarLength, String BarChar, PowerEnum powertype) {
 //        String finaltext = "";
-//        PowerAbstract p = getPower(powertype);
+//        PowerAbstract p = getPossiblePower(powertype);
 //        if(p instanceof DragonJumper){
 //
 //            for (int i = 0; i < loadingBarLength ;i++){

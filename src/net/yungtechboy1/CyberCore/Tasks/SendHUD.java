@@ -87,8 +87,9 @@ public class SendHUD extends Thread implements InterruptibleThread {
             if (p.getPlayerClass() != null) {
                 String pclass = "NONE";
                 BaseClass bc = p.getPlayerClass();
-                String t = bc.FormatHudText();
-                if (t != null && t.length() != 0) f += t;
+                //BUG TODO ERROR k
+//                String t = bc.FormatHudText();
+//                if (t != null && t.length() != 0) f += t;
             }
         }
         p.sendTip(f);

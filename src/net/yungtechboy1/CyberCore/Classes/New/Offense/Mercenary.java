@@ -71,10 +71,10 @@ public class Mercenary  extends BaseClass {
 
     @Override
     public void SetPowers() {
-        addPower(new MercenaryDisarm(this));
-        addPower(new MercenaryBlindingStrike(this));
-        addPower(new MercenaryDoubleTake(this));
-        addPower(new MercenaryReneration(this));
+        addPossiblePower(new MercenaryDisarm(this));
+        addPossiblePower(new MercenaryBlindingStrike(this));
+        addPossiblePower(new MercenaryDoubleTake(this));
+        addPossiblePower(new MercenaryReneration(this));
     }
 
     @Override

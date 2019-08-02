@@ -44,7 +44,7 @@ public class TNT extends CheckPermCommand {
             System.out.println("CCCCCCCC");
 
             TNTSpecialist ts = (TNTSpecialist) c;
-            TNTSpecialistPower tsp = (TNTSpecialistPower) ts.getPower(PowerEnum.TNTSpecalist);
+            TNTSpecialistPower tsp = (TNTSpecialistPower) ts.getPossiblePower(PowerEnum.TNTSpecalist);
             if (tsp == null) {
                 commandSender.sendMessage(CyberCoreMain.NAME + TextFormat.RED + "Error! GETTING POWER");
                 return true;

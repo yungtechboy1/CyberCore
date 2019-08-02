@@ -28,11 +28,11 @@ public class DarkKnight extends BaseClass {
 
     @Override
     public void SetPowers() {
-//        addPower(new TNTAirStrikePower(this));
-        addPower(new DarkKnightPoisonousStench(this));
+//        addPossiblePower(new TNTAirStrikePower(this));
+        addPossiblePower(new DarkKnightPoisonousStench(this));
     }
 //    public void SetPowers() {
-//        addPower(new HolyKnightHealPower(this));
+//        addPossiblePower(new HolyKnightHealPower(this));
 //    }
 
     @Override

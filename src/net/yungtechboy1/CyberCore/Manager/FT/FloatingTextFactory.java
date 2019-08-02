@@ -41,6 +41,16 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
 
     }
 
+    public static void killall() {
+//        ToRemoveList.addAll(LList);
+//        LList.clear();
+        for(Object e: LList){
+            if(e instanceof CyberFloatingTextContainer){
+                ((CyberFloatingTextContainer) e).kill();
+            }
+        }
+    }
+
     public List getLList() {
         List _l;
         synchronized (llock) {
@@ -59,6 +69,10 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
     }
 
     public static void AddFloatingText(CyberFloatingTextContainer ftc){
+        AddFloatingText(ftc,false);
+    }
+    public static void AddFloatingText(CyberFloatingTextContainer ftc, boolean save){
+        if(save)CyberCoreMain.getInstance().SavedFloatingText.add(ftc);
         synchronized (llock){
             ToAddList.add(ftc);
 //            System.out.println("added!");
@@ -122,7 +136,11 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
 //                    System.out.println("ERroror >> 1");
 //                    System.out.println("ERroror >> "+ft.Lvl);
 //                    System.out.println("ERroror >> "+ft.Syntax);
-                    Collection<Player> pc = ft.Lvl.getChunkPlayers(ft.Pos.getChunkX(),ft.Pos.getChunkZ()).values();
+                    if(ft.Pos == null || ft.Pos.getLevel() == null){
+                        CyberCoreMain.getInstance().getLogger().error("Error!!! Floating Text Syntax: "+ft.Syntax+"||"+ft.toString());
+                        continue;
+                    }
+                    Collection<Player> pc = ft.Pos.getLevel().getChunkPlayers(ft.Pos.getChunkX(),ft.Pos.getChunkZ()).values();
                     if(pc == null || pc.isEmpty() || pc.size() == 0){
 //                        System.out.println("ERroror roor ororororo E15072458");
                         continue;
@@ -185,6 +203,9 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
     }
 
     public String FormatText(String text, Player player) {
+        return FormatText(text,player,false);
+    }
+    public String FormatText(String text, Player player, boolean vertical) {
 //        if(text == null)System.out.println("----0");
 //        if(CCM == null)System.out.println("----1");
 //        if(CCM.getServer() == null)System.out.println("----2");
@@ -242,14 +263,18 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
                     .replace("{players}", players)
                     .replace("{max}", max)
                     .replace("{money}", money)
+                    .replaceAll("\\|n", "\n")
             ;
         } else {
             text = text
                     .replace("{faction}", "No Faction")
                     .replace("{kills}", "N/A")
                     .replace("{deaths}", "N/A")
+                    .replaceAll("\\|n", "\n")
                     .replace("{kdr}", "N/A");
         }
+        if(vertical)text = text.replaceAll("|n","\n");
+        System.out.println(text);
         return text;
     }
 

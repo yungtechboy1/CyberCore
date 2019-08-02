@@ -11,8 +11,12 @@ import cn.nukkit.network.protocol.AddPlayerPacket;
 import cn.nukkit.network.protocol.DataPacket;
 import cn.nukkit.network.protocol.RemoveEntityPacket;
 import cn.nukkit.network.protocol.SetEntityDataPacket;
+import cn.nukkit.plugin.Plugin;
 import cn.nukkit.utils.ConfigSection;
+import cn.nukkit.utils.SimpleConfig;
 import com.google.common.base.Strings;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Data.CustomConfigSection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,17 +37,42 @@ public class CyberFloatingTextContainer {
     public int Range = 64;
     public long EID = -1;
     public Position Pos;
-    public Level Lvl;
+//    public Level Lvl;
     public boolean _CE_Lock = false;
     public boolean _CE_Done = false;
+    public boolean Vertical = false;
     public FloatingTextFactory FTF;
+
+    @Override
+    public String toString() {
+        return "CyberFloatingTextContainer{" +
+                "TYPE=" + TYPE +
+                ", Syntax='" + Syntax + '\'' +
+                ", PlayerUnique=" + PlayerUnique +
+                ", Active=" + Active +
+                ", Formated=" + Formated +
+                ", UpdateTicks=" + UpdateTicks +
+                ", LastUpdate=" + LastUpdate +
+                ", Range=" + Range +
+                ", EID=" + EID +
+                ", Pos=" + Pos +
+                ", Vertical=" + Vertical +
+//                ", Lvl=" + Lvl +
+                ", _CE_Lock=" + _CE_Lock +
+                ", _CE_Done=" + _CE_Done +
+                ", FTF=" + FTF +
+                ", lastSyntax='" + lastSyntax + '\'' +
+                ", uuid=" + uuid +
+                ", metadata=" + metadata +
+                '}';
+    }
 
     public CyberFloatingTextContainer(FloatingTextFactory ftf, Position pos, String syntax) {
         FTF = ftf;
         generateEID();
         Syntax = syntax;
         Pos = pos;
-        Lvl = pos.level;
+//        Lvl = pos.level;
         long flags = (
                 1L << Entity.DATA_FLAG_NO_AI
         );
@@ -61,18 +90,36 @@ public class CyberFloatingTextContainer {
         return EID;
     }
 
-    public ConfigSection GetSave() {
+    public ConfigSection getSave() {
         //todo
         return new ConfigSection() {{
             put("Syntax", Syntax);
             put("PlayerUnique", PlayerUnique);
             put("UpdateTicks", UpdateTicks);
             put("LastUpdate", LastUpdate);
+            put("Vertical", Vertical);
+            put("X", Pos.getX());
+            put("Y", Pos.getY());
+            put("Z", Pos.getZ());
+            if(Pos.getLevel() != null)put("Level", Pos.getLevel().getName());
         }};
     }
 
+//    public class CFTCS extends CustomConfigSection {
+//        public CFTCS() {
+//        }
+//
+//        public CFTCS(ConfigSection c){
+//            super(c);
+//        }
+//
+//    }
+
     public String GetText(Player p) {
-        return FTF.FormatText(Syntax, p);
+        return GetText(p,false);
+    }
+    public String GetText(Player p, boolean vertical) {
+        return FTF.FormatText(Syntax, p, vertical);
     }
 
     //Generate Flaoting Text for following players
@@ -126,7 +173,7 @@ private String lastSyntax = null;
         protected UUID uuid = UUID.randomUUID();
         EntityMetadata metadata = new EntityMetadata();
         private void sendMetadata (Player p){
-            if (Lvl != null) {
+            if (Pos.getLevel() != null) {
                 SetEntityDataPacket packet = new SetEntityDataPacket();
                 packet.eid = EID;
 
@@ -134,7 +181,7 @@ private String lastSyntax = null;
 //                metadata.putString(Entity.DATA_SCORE_TAG, text);
 //            }
                 packet.metadata = metadata;
-                Lvl.addChunkPacket(Pos.getChunkX(), Pos.getChunkZ(), packet);
+                Pos.getLevel().addChunkPacket(Pos.getChunkX(), Pos.getChunkZ(), packet);
             }
         }
 
@@ -163,7 +210,7 @@ private String lastSyntax = null;
             pk.yaw = 0;
             pk.pitch = 0;
             if (!Strings.isNullOrEmpty(Syntax)) {
-                metadata.putString(Entity.DATA_NAMETAG, FTF.FormatText(Syntax, p));
+                metadata.putString(Entity.DATA_NAMETAG, GetText(p, Vertical));
             }
             pk.metadata = metadata;
             pk.item = Item.get(Item.AIR);
@@ -227,4 +274,12 @@ private String lastSyntax = null;
             _CE_Done = true;
         }
 
+    public String getKeyPos() {
+            return Pos.getX()+"|"+Pos.getY()+"|"+Pos.getZ()+"|"+Pos.getLevel().getName()+"|";
     }
+
+    public boolean isValid() {
+            if(Pos == null)return false;
+            return true;
+    }
+}

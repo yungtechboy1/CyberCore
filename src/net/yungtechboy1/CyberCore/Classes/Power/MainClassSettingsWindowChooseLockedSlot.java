@@ -40,7 +40,7 @@ public class MainClassSettingsWindowChooseLockedSlot extends CyberFormCustom {
             boolean e = pd.getActive();
             PowerEnum pe = pd.getPowerID();
             if (pe == _BC.getClassSettings().getPreferedSlot(_LS)) d = k;
-            PowerAbstract p = _BC.getPower(pe);
+            PowerAbstract p = _BC.getPossiblePower(pe);
             String pn = p.getDispalyName();
             l.add(pn);
         }
