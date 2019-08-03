@@ -25,6 +25,10 @@ import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.AntidotePower;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.DoubleTimeAbility;
+import net.yungtechboy1.CyberCore.Classes.Power.KnightSandShieldPower;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PowerSourceTaskAsync;
 import net.yungtechboy1.CyberCore.Commands.*;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
@@ -57,6 +61,7 @@ import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
+import net.yungtechboy1.CyberCore.Manager.PowerManager;
 import net.yungtechboy1.CyberCore.Manager.Purge.PurgeManager;
 import net.yungtechboy1.CyberCore.Manager.SQLManager;
 import net.yungtechboy1.CyberCore.Manager.Warp.WarpManager;
@@ -123,6 +128,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public net.yungtechboy1.CyberCore.Factory.CustomFactory CustomFactory;
     //FactoriesA
     public HomeManager HomeFactory;
+    public PowerManager PowerManagerr;
     public net.yungtechboy1.CyberCore.Rank.RankFactory RF;
     public net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionFactory AF;
     public ShopFactory Shop;
@@ -288,6 +294,12 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //
 //        getServer().getCraftingManager().registerShapelessRecipe();
 
+        PowerManagerr = new PowerManager(this);
+
+        PowerManager.addPowerToList(PowerEnum.KnightSandShield,KnightSandShieldPower.class);
+        PowerManager.addPowerToList(PowerEnum.DoubleTime,DoubleTimeAbility.class);
+        addPossiblePower(new DoubleTimeAbility(this));
+        addPossiblePower(new AntidotePower(this));
         ClassFactory = new ClassFactory(this);
         WarpManager = new WarpManager(this);
 

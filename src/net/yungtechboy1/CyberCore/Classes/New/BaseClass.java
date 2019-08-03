@@ -42,6 +42,7 @@ public abstract class BaseClass {
     public int PrimeKey = 0;
     public int SwingTime = 20;
     public ArrayList<PowerEnum> ActivePowers = new ArrayList<>();
+    public ArrayList<PowerEnum> DefaultPowers = new ArrayList<>();
     public HashMap<PowerEnum, PowerAbstract> PossiblePowerList = new HashMap<>();
     protected int MainID = 0;
     protected CyberCoreMain CCM;
@@ -127,7 +128,7 @@ public abstract class BaseClass {
     }
 
     private void startSetPowers() {
-        PowerManager.getPossiblePowers(getClassSettings().getLearnedPowers());
+        CCM.PowerManagerr.getPossiblePowers(getClassSettings().getLearnedPowers());
         SetPowers();
     }
 
@@ -209,6 +210,7 @@ public abstract class BaseClass {
         int d = (int) Math.floor(getLVL() / 10);
         return ClassTeir.values()[d];
     }
+
 
     public ClassType getTYPE() {
         return TYPE;

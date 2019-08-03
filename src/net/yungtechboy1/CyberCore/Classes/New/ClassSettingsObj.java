@@ -1,10 +1,12 @@
 package net.yungtechboy1.CyberCore.Classes.New;
 
 import cn.nukkit.utils.ConfigSection;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 import net.yungtechboy1.CyberCore.Classes.Power.PowerData;
+import net.yungtechboy1.CyberCore.Manager.PowerManager;
 
 import java.util.ArrayList;
 
@@ -12,7 +14,7 @@ public class ClassSettingsObj {
     //ALL Player Powers
     //Powers that cant be given automatically
     //Class Level up powers too!
-    private ArrayList<PowerEnum> LearnedPowers = new ArrayList<>();
+    private ArrayList<AdvancedPowerEnum> LearnedPowers = new ArrayList<>();
     //Powers given from Class
     private ArrayList<PowerEnum> ClassDefaultPowers = new ArrayList<>();
     //Only Powers that are Currently Active
@@ -27,11 +29,11 @@ public class ClassSettingsObj {
     }
 
     public ClassSettingsObj(BaseClass bc, ConfigSection c) {
-        LearnedPowers = ArrayListStringtoPE((ArrayList<String>) c.get("lp"));
+        LearnedPowers = ArrayListtoAPEList((ArrayList<String>)c.get("lp"));
         ClassDefaultPowers = ArrayListStringtoPE((ArrayList<String>) c.get("cdp"));
         ActivatedPowers = ArrayListStringtoPE((ArrayList<String>) c.get("ap"));
-        PreferedSlot9 = PowerEnum.fromstr((String)c.get("ps9"));
-        PreferedSlot8 = PowerEnum.fromstr((String)c.get("ps8"));
+        PreferedSlot9 = PowerEnum.fromstr((String) c.get("ps9"));
+        PreferedSlot8 = PowerEnum.fromstr((String) c.get("ps8"));
         PreferedSlot7 = PowerEnum.fromstr((String) c.get("ps7"));
         BC = bc;
     }
@@ -39,29 +41,41 @@ public class ClassSettingsObj {
     public ArrayList<PowerEnum> getActivatedPowers() {
         return ActivatedPowers;
     }
+
     public ArrayList<String> getActivatedPowersJSON() {
         ArrayList<String> i = new ArrayList<>();
-        for(PowerEnum e: getActivatedPowers()){
+        for (PowerEnum e : getActivatedPowers()) {
             i.add(e.name());
         }
         return i;
     }
+
     public ArrayList<String> ArrayListPEtoString(ArrayList<PowerEnum> p) {
         ArrayList<String> i = new ArrayList<>();
-        for(PowerEnum e: p){
+        for (PowerEnum e : p) {
             i.add(e.name());
         }
         return i;
     }
+
+
+    public ArrayList<AdvancedPowerEnum> ArrayListtoAPEList(ArrayList<String> p) {
+        ArrayList<AdvancedPowerEnum> i = new ArrayList<>();
+        for (String e : p) {
+            i.add(AdvancedPowerEnum.fromString(e));
+        }
+        return i;
+    }
+
     public ArrayList<PowerEnum> ArrayListStringtoPE(ArrayList<String> p) {
         ArrayList<PowerEnum> i = new ArrayList<>();
-        for(String e: p){
+        for (String e : p) {
             i.add(PowerEnum.fromstr(e));
         }
         return i;
     }
 
-    public ArrayList<PowerEnum> getLearnedPowers() {
+    public ArrayList<AdvancedPowerEnum> getLearnedPowers() {
         return LearnedPowers;
     }
 
@@ -88,20 +102,21 @@ public class ClassSettingsObj {
     public PowerEnum getPreferedSlot7() {
         return PreferedSlot7;
     }
-    public PowerEnum getPreferedSlot(LockedSlot ls) {
-        if(ls == LockedSlot.SLOT_9)return PreferedSlot9;
-        if(ls == LockedSlot.SLOT_8)return PreferedSlot8;
-        if(ls == LockedSlot.SLOT_7)return PreferedSlot7;
-        return PowerEnum.Unknown;
-    }
 
     public void setPreferedSlot7(PowerEnum preferedSlot7) {
         PreferedSlot7 = preferedSlot7;
     }
 
+    public PowerEnum getPreferedSlot(LockedSlot ls) {
+        if (ls == LockedSlot.SLOT_9) return PreferedSlot9;
+        if (ls == LockedSlot.SLOT_8) return PreferedSlot8;
+        if (ls == LockedSlot.SLOT_7) return PreferedSlot7;
+        return PowerEnum.Unknown;
+    }
+
     public ConfigSection export() {
         return new ConfigSection() {{
-            put("lp", ArrayListPEtoString(getLearnedPowers()));
+            put("lp", ArrayListAPEtoStrings(getLearnedPowers()));
             put("cdp", ArrayListPEtoString(getClassDefaultPowers()));
             put("ap", ArrayListPEtoString(getActivatedPowers()));
             put("ps9", getPreferedSlot9().name());
@@ -110,10 +125,27 @@ public class ClassSettingsObj {
         }};
     }
 
+    private ArrayList<String> ArrayListAPEtoStrings(ArrayList<AdvancedPowerEnum> learnedPowers) {
+        ArrayList<String> c = new ArrayList<>();
+        for (AdvancedPowerEnum ape : learnedPowers) {
+            if (!ape.isValid()) continue;
+            c.add(ape.toString());
+        }
+        return c;
+    }
+//    private ConfigSection ArrayListAPEtoConfigSection(ArrayList<AdvancedPowerEnum> learnedPowers) {
+//        ConfigSection c = new ConfigSection();
+//        for(AdvancedPowerEnum ape: learnedPowers){
+//            if(!ape.isValid() || ape.toConfig().isEmpty())continue;
+//        c.put(ape.getPowerEnum().name(),ape.toConfig());
+//        }
+//    }
+
     public PowerData[] getPowerDataList() {
         ArrayList<PowerData> pd = new ArrayList<>();
-        for (PowerEnum pe : getLearnedPowers()) {
-            PowerAbstract pa = BC.getPossiblePower(pe,false);
+        for (AdvancedPowerEnum pe : getLearnedPowers()) {
+            PowerAbstract ppa = PowerManager.getPowerfromAPE(pe);
+            PowerAbstract pa = BC.getPossiblePower(pe, false);
             PowerData p = new PowerData(pe, getActivatedPowers().contains(pe), pa.getPowerSettings().isHotbar());
             if (getPreferedSlot7() == pe) p.setLS(LockedSlot.SLOT_7);
             if (getPreferedSlot8() == pe) p.setLS(LockedSlot.SLOT_8);
@@ -124,8 +156,9 @@ public class ClassSettingsObj {
     }
 
     public void addActivePower(PowerEnum pe) {
-        if(!ActivatedPowers.contains(pe))ActivatedPowers.add(pe);
+        if (!ActivatedPowers.contains(pe)) ActivatedPowers.add(pe);
     }
+
     public void delActivePower(PowerEnum pe) {
         ActivatedPowers.remove(pe);
     }
@@ -133,16 +166,18 @@ public class ClassSettingsObj {
     public void clearSlot7() {
         PreferedSlot7 = PowerEnum.Unknown;
     }
+
     public void clearSlot8() {
         PreferedSlot8 = PowerEnum.Unknown;
     }
+
     public void clearSlot9() {
         PreferedSlot9 = PowerEnum.Unknown;
     }
 
     //Ran to Activate Powers from InternalPlayerSettings
     public void check() {
-        for(PowerData pd : getPowerDataList()){
+        for (PowerData pd : getPowerDataList()) {
             BC.activatePower(pd.getPowerID());
 //            PowerAbstract pa = pd.getPA();
 //            if(pa != null){

@@ -15,4 +15,9 @@ public enum PowerEnum {
        }
         return Unknown;
     }
+
+    @Override
+    public String toString() {
+        return this.name();
+    }
 }

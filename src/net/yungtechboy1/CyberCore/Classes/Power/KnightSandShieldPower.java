@@ -7,6 +7,7 @@ import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
@@ -15,12 +16,29 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 public class KnightSandShieldPower extends StagePowerAbstract {
     public KnightSandShieldPower(BaseClass b) {
-        super(b,new PowerSettings(false,false,true,false),80,10);
+        super(b);
 //        setPowerSettings();
         setMaxStage(StageEnum.STAGE_5);
     }
 
+    public KnightSandShieldPower(BaseClass b, AdvancedPowerEnum ape) {
+        super(b, ape);
+    }
 
+    @Override
+    public int getPowerSuccessChance() {
+        return  80;
+    }
+
+    @Override
+    public double getPowerSourceCost() {
+        return 10;
+    }
+
+    @Override
+    public PowerSettings getPowerSettings() {
+        return new PowerSettings(false,false,true,false);
+    }
 //    @Override
 //    public ClassLevelingManager getLM() {
 //        return (ClassLevelingManagerStage)super.getLM();
