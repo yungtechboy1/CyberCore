@@ -4,6 +4,7 @@ package net.yungtechboy1.CyberCore.Commands;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 
 /**
  * Created by carlt_000 on 1/30/2017.
@@ -20,6 +21,8 @@ public class FTR extends Command {
 
     @Override
     public boolean execute(CommandSender s, String label, String[] args) {
+        FloatingTextFactory.killall();
+        Owner.loadFloatingText();
 //        for(Long eid: Owner.FTM.Eids){
 //            RemoveEntityPacket pk = new RemoveEntityPacket();
 //            pk.eid = eid;

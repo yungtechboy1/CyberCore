@@ -9,7 +9,7 @@ import net.yungtechboy1.CyberCore.FormType;
 
 public class MainClassSettingsMercenaryWindow extends MainClassSettingsWindow {
     public MainClassSettingsMercenaryWindow(Mercenary mercenary) {
-        super(mercenary, FormType.MainForm.Class_Settings_Window_Mercenary,"Mercenary Settings","");
+        super(mercenary, FormType.MainForm.Class_Settings_Window_Mercenary,"Mercenary InternalPlayerSettings","");
         addButton(new ElementButton("Damage Lvl1"));
         addButton(new ElementButton("Damage Lvl2"));
         addButton(new ElementButton("Damage Lvl3"));

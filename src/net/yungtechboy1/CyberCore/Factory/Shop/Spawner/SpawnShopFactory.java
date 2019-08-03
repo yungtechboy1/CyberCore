@@ -4,15 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.block.BlockChest;
-import cn.nukkit.block.BlockID;
-import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.inventory.InventoryTransactionEvent;
-import cn.nukkit.inventory.Inventory;
-import cn.nukkit.inventory.PlayerInventory;
-import cn.nukkit.inventory.transaction.InventoryTransaction;
-import cn.nukkit.inventory.transaction.action.InventoryAction;
-import cn.nukkit.inventory.transaction.action.SlotChangeAction;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
 import cn.nukkit.level.GlobalBlockPalette;
@@ -20,25 +12,20 @@ import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.BlockEntityDataPacket;
 import cn.nukkit.network.protocol.UpdateBlockPacket;
-import net.yungtechboy1.CyberCore.CoolDown;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Data.AuctionItemData;
-import net.yungtechboy1.CyberCore.Data.ShopSQL;
-import net.yungtechboy1.CyberCore.Factory.Shop.OpenShop;
+
 import java.io.IOException;
 import java.nio.ByteOrder;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 public class SpawnShopFactory implements Listener {
 //    private final ShopSQL SQL;
     CyberCoreMain CCM;
     /**
-     * Settings:
+     * InternalPlayerSettings:
      * Key: {
      * id:
      * meta:
@@ -48,13 +35,13 @@ public class SpawnShopFactory implements Listener {
      * soldby:
      * }
      */
-//        Config Settings;
+//        Config InternalPlayerSettings;
 
     public ArrayList<SpawnerShopData> ShopCache;
 
     public SpawnShopFactory(CyberCoreMain CCM) {
         this.CCM = CCM;
-//            Settings = new Config(new File(CCM.getDataFolder(), "Auctions.yml"), Config.YAML);
+//            InternalPlayerSettings = new Config(new File(CCM.getDataFolder(), "Auctions.yml"), Config.YAML);
 //        SQL = new ShopSQL(CCM);
         ShopCache = new ArrayList<>();
         ShopCache.add(new SpawnerShopData(SpawnerWithLevelBlock.SpawnerType.Pig, 100, 2, 0));
@@ -240,129 +227,129 @@ public class SpawnShopFactory implements Listener {
     }
 
     //TODO MAke Pages with new API
-    @EventHandler(ignoreCancelled = true)
-    public void TE(InventoryTransactionEvent event) {
-//        System.out.println("CALLLL");
-        InventoryTransaction transaction = event.getTransaction();
-        Set<InventoryAction> traa = transaction.getActions();
-        for (InventoryAction t : traa) {
-//            System.out.println("CALLLL TTTTTTTTTTTTTTTTTTT" + t.getClass().getName());
-            if (t instanceof SlotChangeAction) {
-//                System.out.println("CALLLL SLOTCCCCCCCC");
-                SlotChangeAction sca = (SlotChangeAction) t;
-
-//                sca.getInventory()
-
-                Inventory inv = sca.getInventory();
-//                System.out.println("CHECK INNNNNVVVVVVV " + inv.getClass().getName());
-//                if (inv.isEmpty()) return;
-
-//                System.out.println("NEEEEEEE" + inv.getClass().getTypeName());
-                if (inv instanceof PlayerInventory) {
-
-                }
-                if (inv instanceof SpawnerShop) {
-
-                    SpawnerShop ah = (SpawnerShop) inv;
-//                    if(!ah.Init)return;
-                    System.out.println(sca.getSlot() + " || " + ah.getHolder().getName() + " || " + ah.getHolder().getClass().getName());
-                    CorePlayer ccpp = (CorePlayer) ah.getHolder();
-                    int slot = sca.getSlot();
+//    @EventHandler(ignoreCancelled = true)
+//    public void TE(InventoryTransactionEvent event) {
+////        System.out.println("CALLLL");
+//        InventoryTransaction transaction = event.getTransaction();
+//        Set<InventoryAction> traa = transaction.getActions();
+//        for (InventoryAction t : traa) {
+////            System.out.println("CALLLL TTTTTTTTTTTTTTTTTTT" + t.getClass().getName());
+//            if (t instanceof SlotChangeAction) {
+////                System.out.println("CALLLL SLOTCCCCCCCC");
+//                SlotChangeAction sca = (SlotChangeAction) t;
+//
+////                sca.getInventory()
+//
+//                Inventory inv = sca.getInventory();
+////                System.out.println("CHECK INNNNNVVVVVVV " + inv.getClass().getName());
+////                if (inv.isEmpty()) return;
+//
+////                System.out.println("NEEEEEEE" + inv.getClass().getTypeName());
+//                if (inv instanceof PlayerInventory) {
+//
+//                }
+//                if (inv instanceof SpawnerShop) {
+//
+//                    SpawnerShop ah = (SpawnerShop) inv;
+////                    if(!ah.Init)return;
+//                    System.out.println(sca.getSlot() + " || " + ah.getHolder().getName() + " || " + ah.getHolder().getClass().getName());
+//                    CorePlayer ccpp = (CorePlayer) ah.getHolder();
+//                    int slot = sca.getSlot();
+////                    event.setCancelled();
 //                    event.setCancelled();
-                    event.setCancelled();
-                    if (slot < 5 * 9) {
-                        System.out.println("TOP INV");
-                        //TODO CONFIRM AND SHOW ITEM
-                        if (!ah.ConfirmPurchase) {
-                            ah.ConfirmItemPurchase(slot);
-//                        ccpp.AH.ConfirmItemPurchase(slot);
-                        } else {
-                            if (ah.CurrentPage == SpawnerShop.CurrentPageEnum.PlayerSellingPage) {
-                                int sx = slot % 9;
-                                int sy = (int) Math.floor(slot / 9);
-                                Item is = ah.getItem(slot);
-                                boolean isi = false;
-                                int isc = is.getCount();
-                                if (is != null && is.getId() != 0) {
-                                    if (is.getId() == Item.IRON_BLOCK) isi = true;
-                                    System.out.println("Selected Slot SX:" + sx + " | SY:" + sy);
-                                    if (sy != 0 && sy != 5 && sx != 4 && !isi) {
-                                        if (sx < 4) {
-                                            //Cancel
-                                            ah.setPage(1);
-                                        } else {
-                                            //Buy
-                                            ah.SetupPageToFinalConfirmItem(ah.MultiConfirmData, isc, false);
-                                        }
-                                    }
-                                }
-                                event.setCancelled();
-                                return;
-                            } else {
-                                Item si = ah.getContents().get(slot);
-                                if (si != null) {
-                                    if (ah.getCurrentPage() == SpawnerShop.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money) {
-                                        ah.setPage(1);
-                                        ah.ClearConfirmPurchase();
-                                        //Back Home
-                                        break;
-                                    } else {
-                                        System.out.println("CPPPPPPPP");
-
-                                        if (si.getId() == BlockID.EMERALD_BLOCK) {
-                                            System.out.println("CONFIRM PURCHASE!!!!!!!");
-                                            ah.AF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot, si.getCount());
-                                            break;
-                                        } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
-                                            System.out.println("DENCLINE PURCHASE!!!!!!!!");
-                                            ah.setPage(1);
-                                            ah.ClearConfirmPurchase();
-                                            break;
-                                        } else {
-                                            ah.setPage(1);
-                                            System.out.println("UNKNOWNMNNN!!!!!!!!");
-                                            ah.ClearConfirmPurchase();
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        switch (slot) {
-                            case SpawnerShop.MainPageItemRef.LastPage:
-                                ah.GoToPrevPage();
-                                break;
-                            case SpawnerShop.MainPageItemRef.NextPage:
-                                ah.GoToNextPage();
-                                break;
-                            case SpawnerShop.MainPageItemRef.Search:
-                                break;
-                            case SpawnerShop.MainPageItemRef.Reload:
-                                ah.ReloadCurrentPage();
-                                break;
-                            case SpawnerShop.MainPageItemRef.Catagories:
-                                ah.DisplayCatagories();
-                                break;
-                            case SpawnerShop.MainPageItemRef.ToggleAdmin:
-                                ah.AdminMode = !ah.AdminMode;
-                                event.setCancelled(false);
-                                ah.ReloadCurrentPage();
-                                break;
-
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
+//                    if (slot < 5 * 9) {
+//                        System.out.println("TOP INV");
+//                        //TODO CONFIRM AND SHOW ITEM
+//                        if (!ah.ConfirmPurchase) {
+//                            ah.ConfirmItemPurchase(slot);
+////                        ccpp.AH.ConfirmItemPurchase(slot);
+//                        } else {
+//                            if (ah.CurrentPage == SpawnerShop.CurrentPageEnum.PlayerSellingPage) {
+//                                int sx = slot % 9;
+//                                int sy = (int) Math.floor(slot / 9);
+//                                Item is = ah.getItem(slot);
+//                                boolean isi = false;
+//                                int isc = is.getCount();
+//                                if (is != null && is.getId() != 0) {
+//                                    if (is.getId() == Item.IRON_BLOCK) isi = true;
+//                                    System.out.println("Selected Slot SX:" + sx + " | SY:" + sy);
+//                                    if (sy != 0 && sy != 5 && sx != 4 && !isi) {
+//                                        if (sx < 4) {
+//                                            //Cancel
+//                                            ah.setPage(1);
+//                                        } else {
+//                                            //Buy
+//                                            ah.SetupPageToFinalConfirmItem(ah.MultiConfirmData, isc, false);
+//                                        }
+//                                    }
+//                                }
+//                                event.setCancelled();
+//                                return;
+//                            } else {
+//                                Item si = ah.getContents().get(slot);
+//                                if (si != null) {
+//                                    if (ah.getCurrentPage() == SpawnerShop.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money) {
+//                                        ah.setPage(1);
+//                                        ah.ClearConfirmPurchase();
+//                                        //Back Home
+//                                        break;
+//                                    } else {
+//                                        System.out.println("CPPPPPPPP");
+//
+//                                        if (si.getId() == BlockID.EMERALD_BLOCK) {
+//                                            System.out.println("CONFIRM PURCHASE!!!!!!!");
+//                                            ah.SF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot, si.getCount());
+//                                            break;
+//                                        } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
+//                                            System.out.println("DENCLINE PURCHASE!!!!!!!!");
+//                                            ah.setPage(1);
+//                                            ah.ClearConfirmPurchase();
+//                                            break;
+//                                        } else {
+//                                            ah.setPage(1);
+//                                            System.out.println("UNKNOWNMNNN!!!!!!!!");
+//                                            ah.ClearConfirmPurchase();
+//                                            break;
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    } else {
+//                        switch (slot) {
+//                            case SpawnerShop.MainPageItemRef.LastPage:
+//                                ah.GoToPrevPage();
+//                                break;
+//                            case SpawnerShop.MainPageItemRef.NextPage:
+//                                ah.GoToNextPage();
+//                                break;
+//                            case SpawnerShop.MainPageItemRef.Search:
+//                                break;
+//                            case SpawnerShop.MainPageItemRef.Reload:
+//                                ah.ReloadCurrentPage();
+//                                break;
+//                            case SpawnerShop.MainPageItemRef.Catagories:
+//                                ah.DisplayCatagories();
+//                                break;
+//                            case SpawnerShop.MainPageItemRef.ToggleAdmin:
+//                                ah.AdminMode = !ah.AdminMode;
+//                                event.setCancelled(false);
+//                                ah.ReloadCurrentPage();
+//                                break;
+//
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
     //SetupPageToFinalConfirmItemSell
     public void PurchaseItem(CorePlayer holder, int page, int slot, int count) {
         SpawnerShopData aid = getItemFrom(page, slot);
         if (aid == null) {
             System.out.println("ERROR IN SELECTION!!!!");
-        } else if (aid.getPrice() > holder.GetMoney()) {
+        } else if (aid.getPrice() > holder.getMoney()) {
             holder.SpawnerShop.SetupPageNotEnoughMoney(aid);
             return;
         }

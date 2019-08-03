@@ -51,7 +51,7 @@ public class Help extends Commands {
         a.add("/f list [page] - List all factions");
         a.add("/f map - Show map of area");
         a.add("/f mission - Show all mission commands");
-        a.add("/f motd <Settings> - Set faction MOTD ");
+        a.add("/f motd <InternalPlayerSettings> - Set faction MOTD ");
         a.add("/f overclaim [radius] - Overclaim land ");
         a.add("/f perk - View All Faction Perks ");
         a.add("/f power - View faction's power");

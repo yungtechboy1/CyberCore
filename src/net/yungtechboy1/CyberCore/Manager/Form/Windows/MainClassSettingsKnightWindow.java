@@ -9,7 +9,7 @@ import net.yungtechboy1.CyberCore.FormType;
 
 public class MainClassSettingsKnightWindow extends MainClassSettingsWindow {
     public MainClassSettingsKnightWindow(Knight knight) {
-        super(knight,FormType.MainForm.Class_Settings_Window_Knight,"Knight Settings","");
+        super(knight,FormType.MainForm.Class_Settings_Window_Knight,"Knight InternalPlayerSettings","");
         addButton(new ElementButton("Damage Lvl1"));
         addButton(new ElementButton("Damage Lvl2"));
         addButton(new ElementButton("Damage Lvl3"));

@@ -25,7 +25,15 @@ public class FT extends Command {
     public boolean execute(CommandSender s, String label, String[] args) {
 
         //TODO
-        FloatingTextFactory.AddFloatingText(new CyberFloatingTextContainer(Owner.FTM,(CorePlayer)s,"TEMP TEXT!~"));
+        String txt = TextFormat.DARK_PURPLE+"Temporary Text "+((CorePlayer)s).getPosition().floor().toString();
+        if(args != null && args.length > 0){
+            String f = "";
+            for(String ss: args){
+                f += (ss +" ");
+            }
+        txt += "|n"+f;
+        }
+        FloatingTextFactory.AddFloatingText(new CyberFloatingTextContainer(Owner.FTM,((CorePlayer) s).getPosition().clone(),txt),true);
         s.sendMessage(TextFormat.GREEN+"Floating Text Created!");
 
 

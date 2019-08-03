@@ -376,6 +376,9 @@ public class Faction {
         SetLevel(a);
     }
 
+    public int calculateRequireExperience() {
+        return calculateRequireExperience(GetLevel());
+    }
     public int calculateRequireExperience(int level) {
         if (level >= 30) {
             return 112 + (level - 30) * 9 * 100;

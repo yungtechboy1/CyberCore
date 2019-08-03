@@ -21,7 +21,7 @@ public class MainClassSettingsWindowActivePowers extends CyberFormCustom {
     }
 
     public MainClassSettingsWindowActivePowers(BaseClass _BC) {
-        super(FormType.MainForm.Main_Class_Settings_Window_Active_Powers, _BC.getDisplayName() + " Passive Power Settings");
+        super(FormType.MainForm.Main_Class_Settings_Window_Active_Powers, _BC.getDisplayName() + " Passive Power InternalPlayerSettings");
         this._BC = _BC;
         inti();
     }
@@ -33,7 +33,7 @@ public class MainClassSettingsWindowActivePowers extends CyberFormCustom {
             System.out.println("\\/\\/\\/\\/ NExt!!");
             boolean e = pd.getActive();
             PowerEnum pe = pd.getPowerID();
-            PowerAbstract p = _BC.getPower(pe, false);
+            PowerAbstract p = _BC.getPossiblePower(pe, false);
             System.out.println("NOW PPPPPP >>> " + p + " || ");//+p.getDispalyName()+"||"+p.getName());
             String pn;
             String ppn = TextFormat.GREEN + "[Currently Active]";

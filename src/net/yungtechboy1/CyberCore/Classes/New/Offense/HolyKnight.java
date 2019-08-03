@@ -29,7 +29,7 @@ public class HolyKnight extends BaseClass {
 
     @Override
     public void SetPowers() {
-        addPower(new HolyKnightHealPower(this));
+        addPossiblePower(new HolyKnightHealPower(this));
     }
 
     @Override
@@ -78,7 +78,7 @@ public class HolyKnight extends BaseClass {
 //
 //    private Object loadingBarCooldownForPower(int loadingBarLength, String BarChar, PowerEnum powertype) {
 //        String finaltext = "";
-//        PowerAbstract p = getPower(powertype);
+//        PowerAbstract p = getPossiblePower(powertype);
 //        if(p instanceof HolyKnightHealPower){
 //
 //        for (int i = 0; i < loadingBarLength ;i++){

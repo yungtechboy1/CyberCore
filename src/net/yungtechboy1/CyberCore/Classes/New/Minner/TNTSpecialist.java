@@ -11,6 +11,8 @@ import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.ClassHowToUseTNT;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsTNTWindow;
 
+import java.util.ArrayList;
+
 /**
  * Created by carlt on 5/16/2019.
  */
@@ -47,7 +49,7 @@ public class TNTSpecialist extends MinnerBaseClass {
 
     @Override
     public void SetPowers() {
-        addPower(new TNTSpecialistPower(this,  3, GetMaxTNTPower()));
+        addPossiblePower(new TNTSpecialistPower(this,  3, GetMaxTNTPower()));
     }
 
     @Override
@@ -55,7 +57,7 @@ public class TNTSpecialist extends MinnerBaseClass {
         if (powerid == PowerEnum.TNTSpecalist && args.length == 1) {
             System.out.println("GGGGGG");
             CorePlayer p = (CorePlayer) args[0];
-            TNTSpecialistPower tsp = (TNTSpecialistPower) getPower(PowerEnum.TNTSpecalist);
+            TNTSpecialistPower tsp = (TNTSpecialistPower) getPossiblePower(PowerEnum.TNTSpecalist);
             tsp.UsePower(p, getFuse());
             System.out.println("aaaaaa" + p.getClass().getName());
         } else {
@@ -134,7 +136,7 @@ public class TNTSpecialist extends MinnerBaseClass {
         if (tntaddcd == null) {
             AddCooldown(TNT_Specialist_Add_Tick, GetTNTAddWaitTime());
             //Add Tnt
-            ((TNTSpecialistPower) getPower(PowerEnum.TNTSpecalist)).AddAvailbleQuantity();
+            ((TNTSpecialistPower) getPossiblePower(PowerEnum.TNTSpecalist)).AddAvailbleQuantity();
         }
     }
 
@@ -152,15 +154,16 @@ public class TNTSpecialist extends MinnerBaseClass {
     }
 
     @Override
-    public String FormatHudText() {
-        String f = super.FormatHudText();
+    public ArrayList<String> FormatHudText() {
+        ArrayList<String> f = super.FormatHudText();
         //Show TNT PowerAbstract
-        TNTSpecialistPower p = (TNTSpecialistPower) getPower(PowerEnum.TNTSpecalist);
+        TNTSpecialistPower p = (TNTSpecialistPower) getPossiblePower(PowerEnum.TNTSpecalist);
         if (p == null) return f;
         int q = p.getAvailbleQuantity();
         int m = p.getMaxAvailbleQuantity();
         String n = TextFormat.GRAY + " | " + TextFormat.RED + " TNT: " + q;
-        return f + n;
+        f.add(n);
+        return f;
     }
 
     @Override

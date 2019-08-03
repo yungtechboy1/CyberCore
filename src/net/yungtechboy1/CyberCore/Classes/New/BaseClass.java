@@ -42,7 +42,8 @@ public abstract class BaseClass {
     public int PrimeKey = 0;
     public int SwingTime = 20;
     public ArrayList<PowerEnum> ActivePowers = new ArrayList<>();
-    public HashMap<PowerEnum, PowerAbstract> PowerList = new HashMap<>();
+    public ArrayList<PowerEnum> DefaultPowers = new ArrayList<>();
+    public HashMap<PowerEnum, PowerAbstract> PossiblePowerList = new HashMap<>();
     protected int MainID = 0;
     protected CyberCoreMain CCM;
     HashMap<Integer, Integer> Herbal = new HashMap<Integer, Integer>() {{
@@ -83,6 +84,10 @@ public abstract class BaseClass {
 
     private ClassSettingsObj ClassSettings = new ClassSettingsObj(this);
 
+
+    //Get all the Powers that the player has Learned
+    //Next Filter By the Class Currently Choosen
+    //Then Add all aplicable Powers
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank, ConfigSection data) {
         this(main, player, rank);
         if (data != null) {
@@ -105,7 +110,7 @@ public abstract class BaseClass {
             }
             if (data.containsKey("ClassSettings")) {
 //                int psc = data.getInt("PowerSourceCount", 0);
-                ClassSettings = new ClassSettingsObj(this,((ConfigSection) data.get("cs")));
+                ClassSettings = new ClassSettingsObj(this, ((ConfigSection) data.get("cs")));
             }
         }
         startbuffs();
@@ -123,6 +128,7 @@ public abstract class BaseClass {
     }
 
     private void startSetPowers() {
+        CCM.PowerManagerr.getPossiblePowers(getClassSettings().getLearnedPowers());
         SetPowers();
     }
 
@@ -205,6 +211,7 @@ public abstract class BaseClass {
         return ClassTeir.values()[d];
     }
 
+
     public ClassType getTYPE() {
         return TYPE;
     }
@@ -227,6 +234,7 @@ public abstract class BaseClass {
         }
         cp.initAllClassBuffs();
     }
+
     private void recheckAllBuffs(CorePlayer cp, int tick) {
         for (Buff b : getBuffs().values()) {
             cp.addBuffFromClass(b);
@@ -299,19 +307,19 @@ public abstract class BaseClass {
 
     public ArrayList<PowerAbstract> getActivePowers() {
         ArrayList<PowerAbstract> pp = new ArrayList<>();
-        for(PowerEnum pe: getActivePowersList()){
-            pp.add(getPower(pe));
+        for (PowerEnum pe : getActivePowersList()) {
+            pp.add(getPossiblePower(pe));
         }
         return pp;
     }
 
-    public PowerAbstract getPower(PowerEnum key, boolean active) {
+    public PowerAbstract getPossiblePower(PowerEnum key, boolean active) {
 //        if(active)return ActivePowers.get(key);
-        return PowerList.get(key);
+        return PossiblePowerList.get(key);
     }
 
-    public PowerAbstract getPower(PowerEnum key) {
-        return getPower(key,true);
+    public PowerAbstract getPossiblePower(PowerEnum key) {
+        return getPossiblePower(key, true);
     }
 
     public abstract Object RunPower(PowerEnum powerid, Object... args);
@@ -321,58 +329,61 @@ public abstract class BaseClass {
     }
 
     public void deactivatePower(PowerEnum pe) {
-        PowerAbstract p = getPower(pe,false);
-        if(p == null){
-            getPlayer().sendMessage("Error DeActivating "+pe.name());
+        PowerAbstract p = getPossiblePower(pe, false);
+        if (p == null) {
+            getPlayer().sendMessage("Error DeActivating " + pe.name());
         }
         p.setActive(false);
         getClassSettings().delActivePower(pe);
         onPowerDeActivate(p);//callback
         delActivePower(p);
-        getPlayer().sendMessage(TextFormat.RED+"POWER > "+p.getDispalyName()+" has been DEactivated!");
+        getPlayer().sendMessage(TextFormat.RED + "POWER > " + p.getDispalyName() + " has been DEactivated!");
     }
 
-    public void activatePower(PowerEnum pe){
-        PowerAbstract p = getPower(pe,false);
-        if(p == null){
-            getPlayer().sendMessage("Error Activating "+pe.name());
+    public void activatePower(PowerEnum pe) {
+        PowerAbstract p = getPossiblePower(pe, false);
+        if (p == null) {
+            getPlayer().sendMessage("Error Activating " + pe.name());
             return;
         }
         p.setActive();
         onPowerActivate(p);//callback
 //        addActivePower(p);
-        getPlayer().sendMessage(TextFormat.GREEN+"POWER > "+p.getDispalyName()+" has been activated!");
+        getPlayer().sendMessage(TextFormat.GREEN + "POWER > " + p.getDispalyName() + " has been activated!");
     }
 
-    public void onPowerDeActivate(PowerAbstract p){
-
-    }
-
-    public void onPowerActivate(PowerAbstract p){
+    public void onPowerDeActivate(PowerAbstract p) {
 
     }
 
-    private void addActivePower(PowerAbstract p){
+    public void onPowerActivate(PowerAbstract p) {
+
+    }
+
+    private void addActivePower(PowerAbstract p) {
         addActivePower(p.getType());
     }
-    private void addActivePower(PowerEnum p){
-       if(!getClassSettings().getActivatedPowers().contains(p))getClassSettings().addActivePower(p);
-    }
-    private void delActivePower(PowerAbstract p){
-        delActivePower(p.getType());
-    }
-    private void delActivePower(PowerEnum p){
-        if(getClassSettings().getActivatedPowers().contains(p))getClassSettings().delActivePower(p);
-        if(getClassSettings().getPreferedSlot7() == p)getClassSettings().clearSlot7();
-        if(getClassSettings().getPreferedSlot8() == p)getClassSettings().clearSlot8();
-        if(getClassSettings().getPreferedSlot9() == p)getClassSettings().clearSlot9();
+
+    private void addActivePower(PowerEnum p) {
+        if (!getClassSettings().getActivatedPowers().contains(p)) getClassSettings().addActivePower(p);
     }
 
-    public final void addPower(PowerAbstract power) {
+    private void delActivePower(PowerAbstract p) {
+        delActivePower(p.getType());
+    }
+
+    private void delActivePower(PowerEnum p) {
+        if (getClassSettings().getActivatedPowers().contains(p)) getClassSettings().delActivePower(p);
+        if (getClassSettings().getPreferedSlot7() == p) getClassSettings().clearSlot7();
+        if (getClassSettings().getPreferedSlot8() == p) getClassSettings().clearSlot8();
+        if (getClassSettings().getPreferedSlot9() == p) getClassSettings().clearSlot9();
+    }
+
+    public final void addPossiblePower(PowerAbstract power) {
         PowerSettings ps = power.getPowerSettings();
-        if(ps == null){
-            getPlayer().getServer().getLogger().error("CAN NOT ADD POWER "+power.getName()+"! No PowerSetting Set!");
-            getPlayer().sendMessage(TextFormat.RED+"Error > Plugin > Power > "+power.getName()+" | Error activating power! No Power Setting Set!!!!");
+        if (ps == null) {
+            getPlayer().getServer().getLogger().error("CAN NOT ADD POWER " + power.getName() + "! No PowerSetting Set!");
+            getPlayer().sendMessage(TextFormat.RED + "Error > Plugin > Power > " + power.getName() + " | Error activating power! No Power Setting Set!!!!");
             return;
         }
 //        if (power instanceof PowerHotBarInt) {
@@ -383,7 +394,7 @@ public abstract class BaseClass {
 //        }
 //        if(ClassSettings.getLearnedPowers().contains(power.getType())){
         //Add to Power List to Pick From!
-        PowerList.put(power.getType(), power);
+        PossiblePowerList.put(power.getType(), power);
         //Power is Learned
         if (!ClassSettings.getActivatedPowers().isEmpty() && ClassSettings.getActivatedPowers().contains(power.getType())) {
             //Power Active
@@ -392,7 +403,7 @@ public abstract class BaseClass {
                 if (ClassSettings.getPreferedSlot8() == power.getType()) power.setLS(LockedSlot.SLOT_8);
                 if (ClassSettings.getPreferedSlot9() == power.getType()) power.setLS(LockedSlot.SLOT_9);
             }
-            power.setActive();
+            power.enablePower();
         } else if (!ClassSettings.getLearnedPowers().contains(power.getType())) {
             //Power not Active and Need to Be Learned
             ClassSettings.getLearnedPowers().add(power.getType());
@@ -402,17 +413,17 @@ public abstract class BaseClass {
                     ClassSettings.setPreferedSlot9(power.getType());
                     power.setLS(LockedSlot.SLOT_9);
                     ClassSettings.getActivatedPowers().add(power.getType());
-                    power.setActive();
+                    power.enablePower();
                 } else if (ClassSettings.getPreferedSlot8() == PowerEnum.Unknown) {
                     ClassSettings.setPreferedSlot8(power.getType());
                     power.setLS(LockedSlot.SLOT_8);
                     ClassSettings.getActivatedPowers().add(power.getType());
-                    power.setActive();
+                    power.enablePower();
                 } else if (ClassSettings.getPreferedSlot7() == PowerEnum.Unknown) {
                     ClassSettings.setPreferedSlot7(power.getType());
                     power.setLS(LockedSlot.SLOT_7);
                     ClassSettings.getActivatedPowers().add(power.getType());
-                    power.setActive();
+                    power.enablePower();
                 } else {
                     getPlayer().sendMessage(TextFormat.GRAY + "Plugin > " + TextFormat.RED + " Error > Could not find a open Inventory slot to activate " + power.getDispalyName());
                 }
@@ -427,7 +438,7 @@ public abstract class BaseClass {
 
         }
 //        }
-        //Check Class Settings!
+        //Check Class InternalPlayerSettings!
 
 //        ActivePowers.put(power.getType(), power);
     }
@@ -435,7 +446,6 @@ public abstract class BaseClass {
     public ClassSettingsObj getClassSettings() {
         return ClassSettings;
     }
-
 
 
 //        PowerAbstract p = ActivePowers.get(powerid);
@@ -451,7 +461,7 @@ public abstract class BaseClass {
 //    }
 
     public boolean TryRunPower(PowerEnum powerid) {
-        PowerAbstract p = getPower(powerid);
+        PowerAbstract p = getPossiblePower(powerid);
         if (p == null) return false;
         return p.CanRun(false);
     }
@@ -461,7 +471,7 @@ public abstract class BaseClass {
     }
 
     public void RunPower(PowerEnum powerid) {
-        PowerAbstract p = getPower(powerid);
+        PowerAbstract p = getPossiblePower(powerid);
         if (p == null) return;
         p.usePower(getPlayer());
 
@@ -652,7 +662,7 @@ public abstract class BaseClass {
 
     //TODO Change to MainClassSettingsWindow return tyoe
     public CyberForm getSettingsWindow() {
-        return new MainClassSettingsWindow(this, FormType.MainForm.NULL, "Settings Window", "");
+        return new MainClassSettingsWindow(this, FormType.MainForm.NULL, "InternalPlayerSettings Window", "");
     }
 
     @Deprecated
@@ -769,7 +779,7 @@ public abstract class BaseClass {
 //            System.out.println("TICKING POWER " + p.getName());
             try {
                 //No Need to tick Disabled Or Non Ticking Powers
-                if (p.TickUpdate != -1 && p.isActive() ) p.handleTick(tick);
+                if (p.TickUpdate != -1 && p.isActive()) p.handleTick(tick);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -781,14 +791,17 @@ public abstract class BaseClass {
         tickPowers(tick);
     }
 
-    public String FormatHudText() {
-        String f = "";
+    public ArrayList<String> FormatHudText() {
+        ArrayList<String> f = new ArrayList<>();
         int lvl = XPToLevel(getXP());
         String pclass = getName();
         int pxp = XPRemainder(getXP());
         int pxpof = calculateRequireExperience(lvl + 1);
         int plvl = lvl;
-        f += TextFormat.AQUA + pclass + TextFormat.GRAY + " | " + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl + TextFormat.GRAY + " | " + TextFormat.AQUA + getPowerSourceType().name() + " PowerAbstract : " + getPowerSourceCount() + " / " + getMaxPowerSourceCount();
+        f.add(TextFormat.AQUA + pclass);
+        f.add("" + TextFormat.GREEN + pxp + TextFormat.AQUA + " / " + TextFormat.GOLD + pxpof);
+        f.add(TextFormat.GREEN + "Level: " + TextFormat.YELLOW + plvl);
+        f.add(TextFormat.AQUA + getPowerSourceType().name() + " PowerAbstract : " + getPowerSourceCount() + " / " + getMaxPowerSourceCount());
         return f;
     }
 
@@ -804,7 +817,7 @@ public abstract class BaseClass {
      * After Creating the class from the class manager this method is ran for final checks
      */
     public void onCreate() {
-        if(getClassSettings() != null)ClassSettings.check();
+        if (getClassSettings() != null) ClassSettings.check();
     }
 
     public void addButtons(MainClassSettingsWindow mainClassSettingsWindow) {
@@ -812,7 +825,6 @@ public abstract class BaseClass {
             p.addButton(mainClassSettingsWindow);
         }
     }
-
 
 
     public enum ClassTeir {

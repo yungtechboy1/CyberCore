@@ -30,19 +30,19 @@ public class Hud extends Command {
             CorePlayer p = (CorePlayer) s;
             String snl = s.getName().toLowerCase();
             if (args[0].equalsIgnoreCase("on")) {
-                p.Settings.TurnOnHUD();
+                p.InternalPlayerSettings.TurnOnHUD();
             } else if (args[0].equalsIgnoreCase("class")) {
-                p.Settings.setHudOff(false);
-                p.Settings.setHudClassOff();
+                p.InternalPlayerSettings.setHudOff(false);
+                p.InternalPlayerSettings.setHudClassOff();
             } else if (args[0].equalsIgnoreCase("fac")) {
-                p.Settings.setHudOff(false);
-                p.Settings.setHudFactionOff();
+                p.InternalPlayerSettings.setHudOff(false);
+                p.InternalPlayerSettings.setHudFactionOff();
             } else if (args[0].equalsIgnoreCase("pos")) {
-                p.Settings.setHudOff(false);
-                p.Settings.setHudPosOff();
+                p.InternalPlayerSettings.setHudOff(false);
+                p.InternalPlayerSettings.setHudPosOff();
             } else if (args[0].equalsIgnoreCase("off")) {
-                p.Settings.setHudOff(false);
-               p.Settings.setHudOff();
+                p.InternalPlayerSettings.setHudOff(false);
+               p.InternalPlayerSettings.setHudOff();
             }
             s.sendMessage(TextFormat.GREEN + "HUD Updated!");
             return true;

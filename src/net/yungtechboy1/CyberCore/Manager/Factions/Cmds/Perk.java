@@ -65,7 +65,7 @@ public class Perk extends Commands {
 //                return;
 //            }
 //            fac.TakeLevel(clevel);
-//            if(cmoney != 0 && fac.GetMoney() < cmoney){
+//            if(cmoney != 0 && fac.getMoney() < cmoney){
 //                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Error! You don't have enough faction money! $"+cmoney+" is required for this perk!");
 //                return;
 //            }

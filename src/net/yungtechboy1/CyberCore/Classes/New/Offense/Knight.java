@@ -80,9 +80,9 @@ public class Knight extends BaseClass {
 
     @Override
     public void SetPowers() {
-        addPower(new KnightSandShieldPower(this));
-        addPower(new DoubleTimeAbility(this));
-        addPower(new AntidotePower(this));
+        addPossiblePower(new KnightSandShieldPower(this));
+        addPossiblePower(new DoubleTimeAbility(this));
+        addPossiblePower(new AntidotePower(this));
     }
 
     @Override

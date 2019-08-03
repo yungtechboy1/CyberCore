@@ -15,10 +15,10 @@ public class SettingsPage0 extends CyberFormSimple {
     }
 
     public SettingsPage0(List<ElementButton> buttons) {
-        super(FormType.MainForm.SettingsPage0, "CyberFactions | Settings Manager");
+        super(FormType.MainForm.SettingsPage0, "CyberFactions | InternalPlayerSettings Manager");
         addButton(new ElementButton("Player Setting"));
-        addButton(new ElementButton("Faction Settings"));
-        addButton(new ElementButton("Class Settings"));
+        addButton(new ElementButton("Faction InternalPlayerSettings"));
+        addButton(new ElementButton("Class InternalPlayerSettings"));
 //        addButton(new ElementButton("Show Damage Tags"));
 //        addButton(new ElementButton("Show Advanced Damage Tags"));
     }
