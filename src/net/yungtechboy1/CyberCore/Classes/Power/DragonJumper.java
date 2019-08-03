@@ -11,6 +11,8 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
+import java.util.ArrayList;
+
 public class DragonJumper extends PowerAbstract {
     private boolean WaitingOnFall = false;
     private int JumpTick = -1;
@@ -21,6 +23,11 @@ public class DragonJumper extends PowerAbstract {
         //TODO make this so that this power Runs Automatically!
         TickUpdate = 10;
         CanSendCanNotRunMessage = false;
+    }
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
     }
 
     @Override

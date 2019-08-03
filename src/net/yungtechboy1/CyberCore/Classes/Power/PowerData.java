@@ -7,13 +7,13 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 public class PowerData {
     PowerAbstract PA = null;
     PowerEnum PowerID = PowerEnum.Unknown;
-    Boolean Active = false;
+    Boolean Enabled = false;
     Boolean NeedsLockedSlot = false;
     LockedSlot LS = LockedSlot.NA;
 
-    public PowerData(PowerEnum powerID, Boolean active) {
+    public PowerData(PowerEnum powerID, Boolean enabled) {
         PowerID = powerID;
-        Active = active;
+        Enabled = enabled;
     }
 
     public PowerData(PowerAbstract PA) {
@@ -24,16 +24,16 @@ public class PowerData {
         }
     }
 
-    public PowerData(PowerEnum powerID, Boolean active, Boolean nls) {
+    public PowerData(PowerEnum powerID, Boolean enabled, Boolean nls) {
         PowerID = powerID;
-        Active = active;
+        Enabled = enabled;
         NeedsLockedSlot = nls;
     }
 
-    public PowerData(PowerEnum powerID, Boolean active, Boolean nls, LockedSlot LS, PowerAbstract pa) {
+    public PowerData(PowerEnum powerID, Boolean enabled, Boolean nls, LockedSlot LS, PowerAbstract pa) {
         PowerID = powerID;
         NeedsLockedSlot = nls;
-        Active = active;
+        Enabled = enabled;
         PA = pa;
         this.LS = LS;
     }
@@ -58,12 +58,12 @@ public class PowerData {
         PowerID = powerID;
     }
 
-    public Boolean getActive() {
-        return Active;
+    public Boolean getEnabled() {
+        return Enabled;
     }
 
-    public void setActive(Boolean active) {
-        Active = active;
+    public void setEnabled(Boolean enabled) {
+        Enabled = enabled;
     }
 
     public LockedSlot getLS() {

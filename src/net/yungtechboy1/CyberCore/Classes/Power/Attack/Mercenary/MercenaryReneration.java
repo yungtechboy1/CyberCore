@@ -8,11 +8,18 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstr
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
+import java.util.ArrayList;
+
 public class MercenaryReneration extends StagePowerAbstract {
     public MercenaryReneration(BaseClass bc) {
         super(bc);
         TickUpdate = 20 * 5;//Every 5 Secs make sure player is in combat
         PlayerToggleable = false;
+    }
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
     }
 
     @Override

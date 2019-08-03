@@ -9,6 +9,8 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
+import java.util.ArrayList;
+
 public class MercenaryDisarm extends PowerAbstract {
     public MercenaryDisarm(BaseClass b) {
         super(b,null, 2);
@@ -25,6 +27,11 @@ public class MercenaryDisarm extends PowerAbstract {
     @Override
     public PowerEnum getType() {
         return PowerEnum.MercenaryDisarm;
+    }
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
     }
 
     @Override

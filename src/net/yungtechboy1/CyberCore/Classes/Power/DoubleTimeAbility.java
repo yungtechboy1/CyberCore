@@ -8,9 +8,17 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
+
+import java.util.ArrayList;
+
 //PowerAbilityHotBar
 public class DoubleTimeAbility extends StagePowerAbstract {
     private Buff oldbuff = null;
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
+    }
 
     public DoubleTimeAbility(BaseClass knight, AdvancedPowerEnum ape)  {
         super(knight, ape);
@@ -25,7 +33,7 @@ public class DoubleTimeAbility extends StagePowerAbstract {
 
     @Override
     public PowerSettings getPowerSettings() {
-        return new PowerSettings(true,false,true,false);
+        return new PowerSettings(true,true,true,false);
     }
 
     @Override

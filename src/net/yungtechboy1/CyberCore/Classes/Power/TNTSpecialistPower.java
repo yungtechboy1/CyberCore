@@ -15,10 +15,17 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerStackable;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
+import java.util.ArrayList;
+
 /**
  * Created by carlt on 5/16/2019.
  */
 public class TNTSpecialistPower extends PowerStackable {
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
+    }
 
     public TNTSpecialistPower(BaseClass b, AdvancedPowerEnum ape) {
         super(b,ape);

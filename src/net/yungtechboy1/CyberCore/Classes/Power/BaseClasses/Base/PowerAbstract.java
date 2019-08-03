@@ -18,6 +18,8 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsWindow;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
+import java.util.ArrayList;
+
 /**
  * Created by carlt on 5/16/2019.
  */
@@ -57,6 +59,8 @@ public abstract class PowerAbstract {
 //        this(b, lt, ps, psc, 5);
 //    }
 
+    public  abstract ArrayList<Class> getAllowedClasses();
+
     public PowerAbstract(BaseClass b, AdvancedPowerEnum ape, PowerSettings ps) {
         if (!ape.isValid()) {
             System.out.println("Error! APE is not valid!");
@@ -81,7 +85,14 @@ public abstract class PowerAbstract {
     public PowerAbstract(BaseClass b, AdvancedPowerEnum ape) {
         if (!ape.isValid()) {
             System.out.println("Error! APE is not valid!");
-            return;
+            if(this instanceof StagePowerAbstract){
+                try {
+                    ape = new AdvancedPowerEnum(ape.getPowerEnum(), StageEnum.STAGE_1);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    return;
+                }
+            }else return;
         }
         PlayerClass = b;
         if (ape.isStage()) {
@@ -530,7 +541,7 @@ public abstract class PowerAbstract {
                 whileAbilityActive();
                 if (tick >= DeActivatedTick) {
                     System.out.println("POWER TICKKKKKK44444444444444444444444444444");
-//                    setActive(false);
+//                    setEnabled(false);
                     DeactivateAbility();
                     DeActivatedTick = -1;
                     onAbilityDeActivate();

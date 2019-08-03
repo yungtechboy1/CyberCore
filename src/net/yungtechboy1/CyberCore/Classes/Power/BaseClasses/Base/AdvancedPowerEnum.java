@@ -29,7 +29,8 @@ public class AdvancedPowerEnum {
     }
 
     public boolean isStage(){
-        if(getStageEnum() == PowerAbstract.StageEnum.NA)return true;
+        //Something so Simple low key caused 2 hours of work! >:(
+        if(getStageEnum() != PowerAbstract.StageEnum.NA)return true;
         return false;
     }
 

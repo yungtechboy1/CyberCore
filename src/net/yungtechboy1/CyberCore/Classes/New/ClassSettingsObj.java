@@ -1,6 +1,8 @@
 package net.yungtechboy1.CyberCore.Classes.New;
 
 import cn.nukkit.utils.ConfigSection;
+import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
@@ -149,17 +151,28 @@ public class ClassSettingsObj {
     public PowerData[] getPowerDataList() {
         ArrayList<PowerData> pd = new ArrayList<>();
         for (AdvancedPowerEnum pe : getLearnedPowers()) {
+            System.out.println("GPDL >>>>>>>> "+pe.getPowerEnum());
             PowerAbstract ppa = PowerManager.getPowerfromAPE(pe,BC);
             if(ppa == null){
                 System.out.println("EEEEEE1342342 234423334 !!!!!!!!!!!!!!!!!!!!!!!!");
-                return null;
+                continue;
+            }
+            boolean a = false;
+            if(ppa.getAllowedClasses() != null) {
+                for (Class b : ppa.getAllowedClasses()) {
+                    if (BC.getClass().isInstance(b)) {
+                        a = true;
+                        break;
+                    }
+                }
+                if (!a) continue;
             }
 //            PowerAbstract pa = BC.getPossiblePower(pe, false);
             PowerData p = new PowerData(ppa);
             if (getPreferedSlot7() == pe.getPowerEnum()) p.setLS(LockedSlot.SLOT_7);
             if (getPreferedSlot8() == pe.getPowerEnum()) p.setLS(LockedSlot.SLOT_8);
             if (getPreferedSlot9() == pe.getPowerEnum()) p.setLS(LockedSlot.SLOT_9);
-            if(getActivatedPowers().contains(ppa.getType()))p.setActive(true);
+            if(getActivatedPowers().contains(ppa.getType()))p.setEnabled(true);
             pd.add(p);
         }
         return pd.toArray(new PowerData[0]);
@@ -188,11 +201,32 @@ public class ClassSettingsObj {
     //Ran to Activate Powers from InternalPlayerSettings
     public void check() {
         for (PowerData pd : getPowerDataList()) {
-            BC.activatePower(pd.getPowerID());
+            BC.activatePower(pd);
 //            PowerAbstract pa = pd.getPA();
 //            if(pa != null){
-//                pa.setActive();
+//                pa.setEnabled();
 //            }
         }
+    }
+
+    public void learnNewPower(PowerEnum pe) {
+        learnNewPower(new AdvancedPowerEnum(pe));
+    }
+    public void learnNewPower(PowerEnum pe, boolean silentfail) {
+        learnNewPower(new AdvancedPowerEnum(pe), silentfail);
+    }
+    public boolean canLearnNewPower(AdvancedPowerEnum a){
+        for(AdvancedPowerEnum ape: getLearnedPowers()){
+            if(ape.getPowerEnum() == a.getPowerEnum() && ape.isValid())return false;
+        }
+        return true;
+    }
+    public void learnNewPower(AdvancedPowerEnum advancedPowerEnum) {
+        learnNewPower(advancedPowerEnum,false);
+    }
+    public void learnNewPower(AdvancedPowerEnum advancedPowerEnum, boolean silentfail) {
+        if(!canLearnNewPower(advancedPowerEnum) && !silentfail)BC.getPlayer().sendMessage(TextFormat.YELLOW+"ClassSettings > WARNING > Can not re-learn"+advancedPowerEnum.getPowerEnum()+" Power has now been learned!");
+        LearnedPowers.add(advancedPowerEnum);
+        BC.getPlayer().sendMessage(TextFormat.GREEN+"ClassSettings > "+advancedPowerEnum.getPowerEnum()+" Power has now been learned!");
     }
 }

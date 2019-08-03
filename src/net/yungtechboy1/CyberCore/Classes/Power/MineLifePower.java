@@ -10,6 +10,8 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
+import java.util.ArrayList;
+
 public class MineLifePower extends StagePowerAbstract {
     public MineLifePower(BaseClass b) {
         super(b);
@@ -19,6 +21,11 @@ public class MineLifePower extends StagePowerAbstract {
     @Override
     public int getPowerSuccessChance() {
         return ((int) Math.floor(.65d * PlayerClass.getLVL()) + 1);
+    }
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
     }
 
     @Override

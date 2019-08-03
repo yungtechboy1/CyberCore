@@ -52,6 +52,11 @@ public class DarkKnightPoisonousStench extends StagePowerAbstract {
     }
 
     @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
+    }
+
+    @Override
     public PowerSettings getPowerSettings() {
         return new PowerSettings(true, false, true, false);
     }

@@ -37,10 +37,10 @@ public class MainClassSettingsWindowChooseLockedSlot extends CyberFormCustom {
         for (PowerData pd : _BC.getClassSettings().getPowerDataList()) {
             k++;
             if (!pd.getNeedsLockedSlot()) continue;//Can not Enable NOT LockedSlot Powers here
-            boolean e = pd.getActive();
+            boolean e = pd.getEnabled();
             PowerEnum pe = pd.getPowerID();
             if (pe == _BC.getClassSettings().getPreferedSlot(_LS)) d = k;
-            PowerAbstract p = _BC.getPossiblePower(pe);
+            PowerAbstract p = pd.getPA();
             String pn = p.getDispalyName();
             l.add(pn);
         }
@@ -67,7 +67,7 @@ public class MainClassSettingsWindowChooseLockedSlot extends CyberFormCustom {
                 if (!pd.getNeedsLockedSlot()) continue;//Can not Enable NOT LockedSlot Powers here
                 kk++;
                 if (kk == k) {
-                    if(!pd.getActive()){
+                    if(!pd.getEnabled()){
                         p.sendMessage("Attempting to set active slot and Class!");
                         _BC.activatePower(pd.getPowerID());
                     }

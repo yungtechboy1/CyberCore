@@ -31,9 +31,9 @@ public class MainClassSettingsWindowActivePowers extends CyberFormCustom {
             System.out.println("YEAHHHHH >>> " + pd + " || " + pd.getNeedsLockedSlot() + "||" + pd.getPowerID() + "||" + pd.getPowerID().name());
             if (check(pd)) continue;//Can not Enable LockedSlot Powers here
             System.out.println("\\/\\/\\/\\/ NExt!!");
-            boolean e = pd.getActive();
+            boolean e = pd.getEnabled();
             PowerEnum pe = pd.getPowerID();
-            PowerAbstract p = _BC.getPossiblePower(pe, false);
+            PowerAbstract p = pd.getPA();//_BC.getPossiblePower(pe, false);
             System.out.println("NOW PPPPPP >>> " + p + " || ");//+p.getDispalyName()+"||"+p.getName());
             String pn;
             String ppn = TextFormat.GREEN + "[Currently Active]";

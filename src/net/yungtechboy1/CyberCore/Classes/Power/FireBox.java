@@ -26,6 +26,11 @@ public class FireBox extends StagePowerAbstract {
     }
 
     @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
+    }
+
+    @Override
     public PowerSettings getPowerSettings() {
         return new PowerSettings( false, false, true, false);
     }

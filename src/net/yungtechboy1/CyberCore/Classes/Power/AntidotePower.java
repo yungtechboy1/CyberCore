@@ -7,6 +7,8 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstr
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
+import java.util.ArrayList;
+
 public class AntidotePower extends StagePowerAbstract {
     public AntidotePower(BaseClass baseClass) {
         super(baseClass);
@@ -22,6 +24,11 @@ public class AntidotePower extends StagePowerAbstract {
     @Override
     public double getPowerSourceCost() {
         return 25;
+    }
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
     }
 
     @Override

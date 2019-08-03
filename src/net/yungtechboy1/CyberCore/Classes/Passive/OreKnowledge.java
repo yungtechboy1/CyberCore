@@ -25,6 +25,11 @@ public class OreKnowledge extends StagePowerAbstract {
     }
 
     @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
+    }
+
+    @Override
     public double getPowerSourceCost() {
         return 1;
     }

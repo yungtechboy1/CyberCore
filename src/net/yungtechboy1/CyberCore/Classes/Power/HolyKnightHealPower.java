@@ -117,6 +117,11 @@ public class HolyKnightHealPower extends PowerAbstract {
     }
 
     @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
+    }
+
+    @Override
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e) {
         return e;
     }

@@ -26,6 +26,7 @@ public abstract class StagePowerAbstract extends PowerAbstract{
 //    }
     public StagePowerAbstract(BaseClass b) {
         super(b, StageEnum.STAGE_1);
+        System.out.println("1---------------------------------------------------------------------1");
     }
 
     public StagePowerAbstract(BaseClass b, AdvancedPowerEnum ape)  {
@@ -37,6 +38,11 @@ public abstract class StagePowerAbstract extends PowerAbstract{
 //    }
 
     public void setMaxStage(StageEnum s){
+        System.out.println("2---------------------------------------------------------------------2");
+        if(getStageLevelManager() == null){
+            System.out.println("ERRORORORO RWTF HOW IS THIS NULLLLL!!!");
+            return;
+        }
         getStageLevelManager().setMaxStage(s);
     }
 }

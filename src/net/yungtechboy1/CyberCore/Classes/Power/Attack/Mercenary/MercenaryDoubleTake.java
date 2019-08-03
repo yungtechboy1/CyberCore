@@ -9,6 +9,8 @@ import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 
+import java.util.ArrayList;
+
 public class MercenaryDoubleTake extends StagePowerAbstract {
     public MercenaryDoubleTake(BaseClass bc) {
         super(bc);
@@ -67,6 +69,11 @@ public class MercenaryDoubleTake extends StagePowerAbstract {
             return !(cp.getHealth() > 8);
         }
         return false;
+    }
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
     }
 
     @Override

@@ -5,10 +5,17 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
+import java.util.ArrayList;
+
 public  class TNTAirStrikePower extends PowerAbstract {
     public TNTAirStrikePower(BaseClass b) {
         super(b,null, 100);
         TickUpdate = 20*5;//5 Secs
+    }
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
     }
 
     @Override

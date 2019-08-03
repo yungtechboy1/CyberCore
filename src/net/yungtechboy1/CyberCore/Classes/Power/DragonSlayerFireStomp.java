@@ -38,6 +38,11 @@ public class DragonSlayerFireStomp extends StagePowerAbstract {
     }
 
     @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
+    }
+
+    @Override
     public double getPowerSourceCost() {
         return 1;
     }

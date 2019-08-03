@@ -38,6 +38,8 @@ public class Knight extends BaseClass {
     public ArrayList<PowerEnum> getDefaultPowers() {
         ArrayList<PowerEnum> pe = new ArrayList<>();
         pe.add(PowerEnum.KnightSandShield);
+        pe.add(PowerEnum.DoubleTime);
+        pe.add(PowerEnum.AntidotePower);
         return pe;
     }
 
