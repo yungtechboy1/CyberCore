@@ -469,8 +469,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         for (Object e : ftc.getRootSection().getAllMap().values()) {
             if (e instanceof ConfigSection) {
-                System.out.println(e);
-                System.out.println(((ConfigSection) e).getLong("x")+" || "+((ConfigSection) e).getDouble("x")+" || "+((ConfigSection) e).get("x"));
+//                System.out.println(e);
+//                System.out.println(((ConfigSection) e).getLong("x")+" || "+((ConfigSection) e).getDouble("x")+" || "+((ConfigSection) e).get("x"));
                 double x = ((ConfigSection) e).getDouble("X");
                 double y = ((ConfigSection) e).getDouble("Y");
                 double z = ((ConfigSection) e).getDouble("Z");
@@ -481,8 +481,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
                 int lu = ((ConfigSection) e).getInt("LastUpdate");
                 Position pos = new Position(x, y, z, l);
                 CyberFloatingTextContainer cft = new CyberFloatingTextContainer(FTM, pos, syntax);
-                System.out.println("Loading FLOATING TEXTTTTTTTTT");
-                System.out.println(cft.toString());
+//                System.out.println("Loading FLOATING TEXTTTTTTTTT");
+//                System.out.println(cft.toString());
                 cft.PlayerUnique = pu;
                 cft.Vertical  = v;
 //                cft.LastUpdate = lu;

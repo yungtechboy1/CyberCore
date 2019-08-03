@@ -19,6 +19,7 @@ import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Abilities.Ability;
 import net.yungtechboy1.CyberCore.Classes.New.Buff.BuffType;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
@@ -42,7 +43,7 @@ public abstract class BaseClass {
     public int PrimeKey = 0;
     public int SwingTime = 20;
     public ArrayList<PowerEnum> ActivePowers = new ArrayList<>();
-    public ArrayList<PowerEnum> DefaultPowers = new ArrayList<>();
+//    public ArrayList<PowerEnum> DefaultPowers = new ArrayList<>();
     public HashMap<PowerEnum, PowerAbstract> PossiblePowerList = new HashMap<>();
     protected int MainID = 0;
     protected CyberCoreMain CCM;
@@ -112,9 +113,17 @@ public abstract class BaseClass {
 //                int psc = data.getInt("PowerSourceCount", 0);
                 ClassSettings = new ClassSettingsObj(this, ((ConfigSection) data.get("cs")));
             }
+        }else{
+            learnPlayerDefaultPowers();
         }
         startbuffs();
         startSetPowers();
+    }
+
+    public void learnPlayerDefaultPowers() {
+        for(PowerEnum pe: getDefaultPowers()){
+            getClassSettings().getLearnedPowers().add(new AdvancedPowerEnum(pe));
+        }
     }
 
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank) {
@@ -170,6 +179,10 @@ public abstract class BaseClass {
         } else {
             PowerSourceCount += Math.abs(a);
         }
+    }
+
+    public ArrayList<PowerEnum> getDefaultPowers(){
+        return new ArrayList<>();
     }
 
     public TextFormat getColor() {
@@ -324,9 +337,12 @@ public abstract class BaseClass {
 
     public abstract Object RunPower(PowerEnum powerid, Object... args);
 
-    public void addDefaultPower(PowerAbstract power) {
-        getClassSettings().getClassDefaultPowers().add(power.getType());
-    }
+    public ArrayList<AdvancedPowerEnum> DefaultPowers1 = new ArrayList<>();
+//
+//    public void addDefaultPower(PowerEnum power) {
+//        DefaultPowers.add(power);
+////        getClassSettings().getClassDefaultPowers().add(power);
+//    }
 
     public void deactivatePower(PowerEnum pe) {
         PowerAbstract p = getPossiblePower(pe, false);
@@ -819,6 +835,7 @@ public abstract class BaseClass {
      */
     public void onCreate() {
         if (getClassSettings() != null) ClassSettings.check();
+        else System.out.println("ERRROROROOROROROOROROROROOasdasd asd asdas dasd111231232122333");
     }
 
     public void addButtons(MainClassSettingsWindow mainClassSettingsWindow) {

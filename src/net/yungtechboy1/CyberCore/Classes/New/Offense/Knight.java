@@ -14,8 +14,11 @@ import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Power;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsKnightWindow;
+
+import java.util.ArrayList;
 
 public class Knight extends BaseClass {
 //    public Knight(CyberCoreMain main, Player player, int rank, int xp, ConfigSection cooldowns) {
@@ -25,6 +28,17 @@ public class Knight extends BaseClass {
 
     public Knight(CyberCoreMain main, CorePlayer player, ConfigSection data) {
         super(main, player, ClassType.Class_Miner_TNT_Specialist, data);
+
+//        addDefaultPower(PowerEnum.KnightSandShield);
+//        addPossiblePower(new DoubleTimeAbility(this));
+//        addPossiblePower(new AntidotePower(this));
+    }
+
+    @Override
+    public ArrayList<PowerEnum> getDefaultPowers() {
+        ArrayList<PowerEnum> pe = new ArrayList<>();
+        pe.add(PowerEnum.KnightSandShield);
+        return pe;
     }
 
     @Override
