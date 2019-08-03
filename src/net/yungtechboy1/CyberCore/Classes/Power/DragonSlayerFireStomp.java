@@ -28,8 +28,18 @@ public class DragonSlayerFireStomp extends StagePowerAbstract {
     private int StartNullFire = -1;
 
     public DragonSlayerFireStomp(DragonSlayer b) {
-        super(b, new PowerSettings(true,false,true,false),100, 1);
+        super(b);
         TickUpdate = 10;
+    }
+
+    @Override
+    public int getPowerSuccessChance() {
+        return 100;
+    }
+
+    @Override
+    public double getPowerSourceCost() {
+        return 1;
     }
 
     @Override

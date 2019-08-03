@@ -15,6 +15,15 @@ public class PowerData {
         PowerID = powerID;
         Active = active;
     }
+
+    public PowerData(PowerAbstract PA) {
+        this.PA = PA;
+        PowerID = PA.getType();
+        if(PA.getPowerSettings() != null){
+            NeedsLockedSlot = PA.getPowerSettings().isHotbar();
+        }
+    }
+
     public PowerData(PowerEnum powerID, Boolean active, Boolean nls) {
         PowerID = powerID;
         Active = active;
@@ -61,7 +70,8 @@ public class PowerData {
         return LS;
     }
 
-    public void setLS(LockedSlot LS) {
-        this.LS = LS;
+    public void setLS(LockedSlot l) {
+        if(l != LockedSlot.NA)NeedsLockedSlot = true;
+        LS = l;
     }
 }

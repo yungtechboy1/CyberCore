@@ -12,10 +12,18 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class MineLifePower extends StagePowerAbstract {
     public MineLifePower(BaseClass b) {
-        super(b, new PowerSettings(false,true,true,false),(int) Math.floor(.65d * b.getLVL()) + 1);
-        int psc = ((int) Math.floor(.65d * b.getLVL()) + 1);
-
+        super(b);
 //        PotionEffect = new
+    }
+
+    @Override
+    public int getPowerSuccessChance() {
+        return ((int) Math.floor(.65d * PlayerClass.getLVL()) + 1);
+    }
+
+    @Override
+    public PowerSettings getPowerSettings() {
+        return  new PowerSettings(false,true,true,false);
     }
 
     @Override

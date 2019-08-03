@@ -3,16 +3,31 @@ package net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary;
 import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 public class MercenaryReneration extends StagePowerAbstract {
     public MercenaryReneration(BaseClass bc) {
-        super(bc, 30, 30);
-        setPowerSettings(false, false, true, false);
+        super(bc);
         TickUpdate = 20 * 5;//Every 5 Secs make sure player is in combat
         PlayerToggleable = false;
+    }
+
+    @Override
+    public PowerSettings getPowerSettings() {
+        return new PowerSettings(false,false,true,false);
+    }
+
+    @Override
+    public double getPowerSourceCost() {
+        return 30;
+    }
+
+    @Override
+    public int getPowerSuccessChance() {
+        return 30;
     }
 
     @Override

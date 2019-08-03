@@ -10,6 +10,7 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.BlockColor;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.DarkKnight;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -36,9 +37,23 @@ public class DarkKnightPoisonousStench extends StagePowerAbstract {
     }
 
     public DarkKnightPoisonousStench(DarkKnight bc) {
-        super(bc, 100, 5);
-        setPowerSettings(true, false, true, false);
+        super(bc);
         TickUpdate = 5;//1 Secs or .75 Secs
+    }
+
+    @Override
+    public int getPowerSuccessChance() {
+        return 100;
+    }
+
+    @Override
+    public double getPowerSourceCost() {
+        return  5;
+    }
+
+    @Override
+    public PowerSettings getPowerSettings() {
+        return new PowerSettings(true, false, true, false);
     }
 
     @Override

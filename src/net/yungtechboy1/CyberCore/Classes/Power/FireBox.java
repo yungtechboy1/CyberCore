@@ -19,10 +19,20 @@ import java.util.ArrayList;
 public class FireBox extends StagePowerAbstract {
 
     public FireBox(BaseClass b) {
-        super(b, new PowerSettings( false, false, true, false) ,100, 250);
+        super(b);
         //TODO make this so that this power Runs Automatically!
 //        TickUpdate = 10;
 //        CanSendCanNotRunMessage = false;
+    }
+
+    @Override
+    public PowerSettings getPowerSettings() {
+        return new PowerSettings( false, false, true, false);
+    }
+
+    @Override
+    public double getPowerSourceCost() {
+        return 10;//250? TODO
     }
 
     @Override

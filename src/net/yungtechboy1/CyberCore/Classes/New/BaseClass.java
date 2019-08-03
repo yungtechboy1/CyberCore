@@ -128,8 +128,8 @@ public abstract class BaseClass {
     }
 
     private void startSetPowers() {
-        CCM.PowerManagerr.getPossiblePowers(getClassSettings().getLearnedPowers());
-        SetPowers();
+//        CCM.PowerManagerr.getPossiblePowers(getClassSettings().getLearnedPowers());
+//        SetPowers();
     }
 
     public ArrayList<LockedSlot> getLockedSlots() {
@@ -379,6 +379,7 @@ public abstract class BaseClass {
         if (getClassSettings().getPreferedSlot9() == p) getClassSettings().clearSlot9();
     }
 
+    @Deprecated
     public final void addPossiblePower(PowerAbstract power) {
         PowerSettings ps = power.getPowerSettings();
         if (ps == null) {
@@ -406,7 +407,7 @@ public abstract class BaseClass {
             power.enablePower();
         } else if (!ClassSettings.getLearnedPowers().contains(power.getType())) {
             //Power not Active and Need to Be Learned
-            ClassSettings.getLearnedPowers().add(power.getType());
+//            ClassSettings.getLearnedPowers().add(power.getType());
             if (ps.isHotbar()) {
                 //Cant Activate!
                 if (ClassSettings.getPreferedSlot9() == PowerEnum.Unknown) {

@@ -11,8 +11,18 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 
 public class MercenaryDoubleTake extends StagePowerAbstract {
     public MercenaryDoubleTake(BaseClass bc) {
-        super(bc, 10, 20);
+        super(bc);
         setPowerSettings(false, false, false, true);
+    }
+
+    @Override
+    public double getPowerSourceCost() {
+        return 20;
+    }
+
+    @Override
+    public int getPowerSuccessChance() {
+        return 10;
     }
 
     @Override

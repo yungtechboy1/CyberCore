@@ -134,6 +134,10 @@ public abstract class PowerAbstract {
         initAfterCreation();
     }
 
+    public PowerAbstract(BaseClass b, AdvancedPowerEnum advancedPowerEnum, int i) {
+        System.out.println("NOT IMPLEMENTEDDDDDD");
+    }
+
     public ClassLevelingManagerStage getStageLevelManager() {
         return SLM;
     }

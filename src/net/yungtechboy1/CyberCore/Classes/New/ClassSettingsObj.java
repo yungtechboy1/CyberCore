@@ -141,15 +141,25 @@ public class ClassSettingsObj {
 //        }
 //    }
 
+    /**
+     * Returns All learned powers as a PowerData[] Active or Not
+     * Which contains the class it self, The Slot that it should be assigned to
+     * @return
+     */
     public PowerData[] getPowerDataList() {
         ArrayList<PowerData> pd = new ArrayList<>();
         for (AdvancedPowerEnum pe : getLearnedPowers()) {
-            PowerAbstract ppa = PowerManager.getPowerfromAPE(pe);
-            PowerAbstract pa = BC.getPossiblePower(pe, false);
-            PowerData p = new PowerData(pe, getActivatedPowers().contains(pe), pa.getPowerSettings().isHotbar());
-            if (getPreferedSlot7() == pe) p.setLS(LockedSlot.SLOT_7);
-            if (getPreferedSlot8() == pe) p.setLS(LockedSlot.SLOT_8);
-            if (getPreferedSlot9() == pe) p.setLS(LockedSlot.SLOT_9);
+            PowerAbstract ppa = PowerManager.getPowerfromAPE(pe,BC);
+            if(ppa == null){
+                System.out.println("EEEEEE1342342 234423334 !!!!!!!!!!!!!!!!!!!!!!!!");
+                return null;
+            }
+//            PowerAbstract pa = BC.getPossiblePower(pe, false);
+            PowerData p = new PowerData(ppa);
+            if (getPreferedSlot7() == pe.getPowerEnum()) p.setLS(LockedSlot.SLOT_7);
+            if (getPreferedSlot8() == pe.getPowerEnum()) p.setLS(LockedSlot.SLOT_8);
+            if (getPreferedSlot9() == pe.getPowerEnum()) p.setLS(LockedSlot.SLOT_9);
+            if(getActivatedPowers().contains(ppa.getType()))p.setActive(true);
             pd.add(p);
         }
         return pd.toArray(new PowerData[0]);
