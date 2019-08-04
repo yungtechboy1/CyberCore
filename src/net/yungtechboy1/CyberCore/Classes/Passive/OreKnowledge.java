@@ -12,6 +12,7 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
 
 import java.util.ArrayList;
@@ -115,7 +116,7 @@ public class OreKnowledge extends StagePowerAbstract {
         for(Vector3 v3: bl){
             Block b = p.getLevel().getBlock(v3);
             String bn = TextFormat.YELLOW+b.getName();
-            CyberCoreMain.getInstance().FTM.AddToRemoveList(new PopupFT(new Position(v3.x,v3.y,v3.z,p.getLevel()),bn){{
+            FloatingTextFactory.AddToRemoveList(new PopupFT(new Position(v3.x,v3.y,v3.z,p.getLevel()),bn){{
                 Frozen = true;
                 Lifespan = 10;
             }});

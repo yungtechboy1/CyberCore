@@ -33,6 +33,7 @@ public class KnightSandShieldPower extends StagePowerAbstract {
 
     public KnightSandShieldPower(BaseClass b, AdvancedPowerEnum ape) {
         super(b, ape);
+        setMaxStage(StageEnum.STAGE_5);
     }
 
     @Override

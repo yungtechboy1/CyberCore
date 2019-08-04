@@ -30,8 +30,7 @@ public class AdvancedPowerEnum {
 
     public boolean isStage(){
         //Something so Simple low key caused 2 hours of work! >:(
-        if(getStageEnum() != PowerAbstract.StageEnum.NA)return true;
-        return false;
+        return getStageEnum() != PowerAbstract.StageEnum.NA;
     }
 
     //0    1            2  3
@@ -83,7 +82,7 @@ public class AdvancedPowerEnum {
             if (XP == -1) return false;
         }
         if (tt == PowerAbstract.LevelingType.Stage) {
-            if (SE == PowerAbstract.StageEnum.NA) return false;
+            return SE != PowerAbstract.StageEnum.NA;
         }
         return true;
     }

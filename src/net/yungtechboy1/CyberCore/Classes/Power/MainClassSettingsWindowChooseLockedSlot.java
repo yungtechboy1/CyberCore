@@ -34,16 +34,31 @@ public class MainClassSettingsWindowChooseLockedSlot extends CyberFormCustom {
         int k = 0;
         ArrayList<String> l = new ArrayList<>();
         l.add("N/A");
-        for (PowerData pd : _BC.getClassSettings().getPowerDataList()) {
+        for (PowerAbstract pa : _BC.getActivePowers()) {
             k++;
-            if (!pd.getNeedsLockedSlot()) continue;//Can not Enable NOT LockedSlot Powers here
-            boolean e = pd.getEnabled();
-            PowerEnum pe = pd.getPowerID();
+            PowerEnum pe = pa.getType();
+            if (!pa.isHotbar()) {
+                System.out.println(pe+" NO LOCKED SLOT!!!");
+                continue;//Can not Enable NOT LockedSlot Powers here
+            }
+            boolean e = pa.isEnabled();
             if (pe == _BC.getClassSettings().getPreferedSlot(_LS)) d = k;
-            PowerAbstract p = pd.getPA();
-            String pn = p.getDispalyName();
+            String pn = pa.getDispalyName();
             l.add(pn);
         }
+//        for (PowerData pd : _BC.getClassSettings().getPowerDataList()) {
+//            k++;
+//            if (!pd.getNeedsLockedSlot()) {
+//                System.out.println(pd.getPowerID()+" NO LOCKED SLOT!!!");
+//                continue;//Can not Enable NOT LockedSlot Powers here
+//            }
+//            boolean e = pd.getEnabled();
+//            PowerEnum pe = pd.getPowerID();
+//            if (pe == _BC.getClassSettings().getPreferedSlot(_LS)) d = k;
+//            PowerAbstract p = pd.getPA();
+//            String pn = p.getDispalyName();
+//            l.add(pn);
+//        }
         addElement(new ElementDropdown("Choose Which Power Will be In Slot " + _LS.getSlot(), l, d));
 //        addButton(new ElementButton("<< Back"));
     }
@@ -62,17 +77,26 @@ public class MainClassSettingsWindowChooseLockedSlot extends CyberFormCustom {
             _BC.deactivatePower(_BC.getClassSettings().getPreferedSlot(_LS));
         } else {
             int kk = 0;
-            for (PowerData pd : _BC.getClassSettings().getPowerDataList()) {
 
-                if (!pd.getNeedsLockedSlot()) continue;//Can not Enable NOT LockedSlot Powers here
+            for (PowerAbstract pa : _BC.getActivePowers()) {
                 kk++;
                 if (kk == k) {
-                    if(!pd.getEnabled()){
-                        p.sendMessage("Attempting to set active slot and Class!");
-                        _BC.activatePower(pd.getPowerID());
-                    }
+                    _BC.enablePower(pa.getType());
                 }
             }
+
+//            for (PowerData pd : _BC.getClassSettings().getPowerDataList()) {
+//
+//                if (!pd.getNeedsLockedSlot()) continue;//Can not Enable NOT LockedSlot Powers here
+//                kk++;
+//                if (kk == k) {
+//                    _BC.enablePower(pd);
+////                    if(!pd.getEnabled()){
+////                        p.sendMessage("Attempting to set active slot and Class!");
+////                        _BC.enablePower(pd);
+////                    }
+//                }
+//            }
         }
 
 

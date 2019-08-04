@@ -298,6 +298,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         PowerManager.addPowerToList(PowerEnum.KnightSandShield,KnightSandShieldPower.class);
         PowerManager.addPowerToList(PowerEnum.DoubleTime,DoubleTimeAbility.class);
+        PowerManager.addPowerToList(PowerEnum.AntidotePower,AntidotePower.class);
 //        addPossiblePower(new DoubleTimeAbility(this));
 //        addPossiblePower(new AntidotePower(this));
         ClassFactory = new ClassFactory(this);

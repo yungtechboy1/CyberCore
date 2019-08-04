@@ -35,7 +35,7 @@ public class PowerManager {
     public static PowerAbstract getPowerfromAPE(AdvancedPowerEnum pe, BaseClass b) {
         Class cpa = PowerList.get(pe.getPowerEnum());
         if (cpa == null) {
-            System.out.println("NONE IN POWER LIST!!!");
+            System.out.println("NONE IN POWER LIST!!!"+pe);
             return null;
         }
         if(cpa.getSuperclass().isAssignableFrom(StagePowerAbstract.class)) {
@@ -45,10 +45,6 @@ public class PowerManager {
                 if(c == null) {
                     System.out.println("ERRORROOORROR C  +++++=====  NUUULLLLLL");
                     return null;
-                }else{
-                    for(Constructor cc: cpa.getConstructors()){
-                        System.out.println(">>>1"+cc);
-                    }
                 }
                     return (PowerAbstract)c.newInstance(b,pe);
             } catch (InstantiationException e) {

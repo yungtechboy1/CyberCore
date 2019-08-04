@@ -314,13 +314,13 @@ public abstract class BaseClass {
         return 0;
     }
 
-    public ArrayList<PowerEnum> getActivePowersList() {
-        return getClassSettings().getActivatedPowers();
+    public ArrayList<PowerEnum> getEnabledPowersList() {
+        return getClassSettings().getEnabledPowers();
     }
 
     public ArrayList<PowerAbstract> getActivePowers() {
         ArrayList<PowerAbstract> pp = new ArrayList<>();
-        for (PowerEnum pe : getActivePowersList()) {
+        for (PowerEnum pe : getEnabledPowersList()) {
             pp.add(getPossiblePower(pe));
         }
         return pp;
@@ -350,23 +350,38 @@ public abstract class BaseClass {
             getPlayer().sendMessage("Error DeActivating " + pe.name());
         }
         p.setActive(false);
-        getClassSettings().delActivePower(pe);
+//        getClassSettings().delActiveGPDLPower(pe);
         onPowerDeActivate(p);//callback
         delActivePower(p);
         getPlayer().sendMessage(TextFormat.RED + "POWER > " + p.getDispalyName() + " has been DEactivated!");
     }
 
-    public void activatePower(PowerData pe) {
+
+@Deprecated
+    public void enablePower(PowerData pe) {
+        System.out.println("Attempting to activate "+pe.getPowerID());
         PowerAbstract p = pe.getPA();
         if (p == null) {
-            getPlayer().sendMessage("Error Activating " + pe.getPowerID());
+            getPlayer().sendMessage("E:221S: Error attempting to Activating " + pe.getPowerID());
             return;
         }
-        PossiblePowerList.put(pe.getPowerID(),pe.getPA());
-        p.setEnabled(true);
+        PossiblePowerList.put(pe.getPowerID(),p);
+        p.enablePower();
         onPowerEnabled(p);//callback
 //        addActivePower(p);
         getPlayer().sendMessage(TextFormat.GREEN + "POWER > " + p.getDispalyName() + " has been activated!");
+    }
+    public void enablePower(PowerEnum pe) {
+        System.out.println("Attempting to activate222 "+pe);
+        PowerAbstract p = getPossiblePower(pe);
+        if (p == null) {
+            getPlayer().sendMessage("E:221S: Error attempting to Activating " + pe);
+            return;
+        }
+        p.enablePower();
+        onPowerEnabled(p);//callback
+//        addActivePower(p);
+        getPlayer().sendMessage(TextFormat.GREEN + "POWER2 > " + p.getDispalyName() + " has been activated!");
     }
 
     private void onPowerEnabled(PowerAbstract p) {
@@ -397,7 +412,7 @@ public abstract class BaseClass {
     }
 
     private void addActivePower(PowerEnum p) {
-        if (!getClassSettings().getActivatedPowers().contains(p)) getClassSettings().addActivePower(p);
+        if (!getClassSettings().getEnabledPowers().contains(p)) getClassSettings().addActivePower(p);
     }
 
     private void delActivePower(PowerAbstract p) {
@@ -405,13 +420,12 @@ public abstract class BaseClass {
     }
 
     private void delActivePower(PowerEnum p) {
-        if (getClassSettings().getActivatedPowers().contains(p)) getClassSettings().delActivePower(p);
+        if (getClassSettings().getEnabledPowers().contains(p)) getClassSettings().delActivePower(p);
         if (getClassSettings().getPreferedSlot7() == p) getClassSettings().clearSlot7();
         if (getClassSettings().getPreferedSlot8() == p) getClassSettings().clearSlot8();
         if (getClassSettings().getPreferedSlot9() == p) getClassSettings().clearSlot9();
     }
 
-    @Deprecated
     public final void addPossiblePower(PowerAbstract power) {
         PowerSettings ps = power.getPowerSettings();
         if (ps == null) {
@@ -429,45 +443,37 @@ public abstract class BaseClass {
         //Add to Power List to Pick From!
         PossiblePowerList.put(power.getType(), power);
         //Power is Learned
-//        if (!ClassSettings.getActivatedPowers().isEmpty() && ClassSettings.getActivatedPowers().contains(power.getType())) {
-//            //Power Active
-//            if (ps.isHotbar()) {
-//                if (ClassSettings.getPreferedSlot7() == power.getType()) power.setLS(LockedSlot.SLOT_7);
-//                if (ClassSettings.getPreferedSlot8() == power.getType()) power.setLS(LockedSlot.SLOT_8);
-//                if (ClassSettings.getPreferedSlot9() == power.getType()) power.setLS(LockedSlot.SLOT_9);
-//            }
-//            power.enablePower();
-//        } else if (!ClassSettings.getLearnedPowers().contains(power.getType())) {
-//            //Power not Active and Need to Be Learned
-////            ClassSettings.getLearnedPowers().add(power.getType());
-//            if (ps.isHotbar()) {
-//                //Cant Activate!
-//                if (ClassSettings.getPreferedSlot9() == PowerEnum.Unknown) {
-//                    ClassSettings.setPreferedSlot9(power.getType());
-//                    power.setLS(LockedSlot.SLOT_9);
-//                    ClassSettings.getActivatedPowers().add(power.getType());
-//                    power.enablePower();
-//                } else if (ClassSettings.getPreferedSlot8() == PowerEnum.Unknown) {
-//                    ClassSettings.setPreferedSlot8(power.getType());
-//                    power.setLS(LockedSlot.SLOT_8);
-//                    ClassSettings.getActivatedPowers().add(power.getType());
-//                    power.enablePower();
-//                } else if (ClassSettings.getPreferedSlot7() == PowerEnum.Unknown) {
-//                    ClassSettings.setPreferedSlot7(power.getType());
-//                    power.setLS(LockedSlot.SLOT_7);
-//                    ClassSettings.getActivatedPowers().add(power.getType());
-//                    power.enablePower();
-//                } else {
-//                    getPlayer().sendMessage(TextFormat.GRAY + "Plugin > " + TextFormat.RED + " Error > Could not find a open Inventory slot to activate " + power.getDispalyName());
-//                }
-//            } else if (ps.isPassive()) {
-//                //Activate Automatically!
-//                ClassSettings.getActivatedPowers().add(power.getType());
-//            } else {
-//                //Low key nothing to do here!
-//                //Register Possible Powers
-////                ClassSettings.
-//            }
+        if (!ClassSettings.getEnabledPowers().isEmpty() && ClassSettings.getEnabledPowers().contains(power.getType())) {
+            //Power Active
+            if (ps.isHotbar()) {
+                if (ClassSettings.getPreferedSlot7() == power.getType()) power.setLS(LockedSlot.SLOT_7);
+                if (ClassSettings.getPreferedSlot8() == power.getType()) power.setLS(LockedSlot.SLOT_8);
+                if (ClassSettings.getPreferedSlot9() == power.getType()) power.setLS(LockedSlot.SLOT_9);
+            }
+            power.enablePower();
+        } else if (!ClassSettings.getLearnedPowers().contains(power.getType())) {
+            //Power not Active and Need to Be Learned
+//            ClassSettings.getLearnedPowers().add(power.getType());
+            if (ps.isHotbar()) {
+                //Cant Activate!
+                if (ClassSettings.getPreferedSlot9() == PowerEnum.Unknown) {
+                    power.enablePower(LockedSlot.SLOT_9);
+                } else if (ClassSettings.getPreferedSlot8() == PowerEnum.Unknown) {
+                    power.enablePower(LockedSlot.SLOT_8);
+                } else if (ClassSettings.getPreferedSlot7() == PowerEnum.Unknown) {
+                    power.enablePower(LockedSlot.SLOT_7);
+                } else {
+                    getPlayer().sendMessage(TextFormat.GRAY + "Plugin > " + TextFormat.RED + " Error > Could not find a open Inventory slot to activate " + power.getDispalyName());
+                }
+            } else if (ps.isPassive()) {
+                //Activate Automatically!
+                ClassSettings.getEnabledPowers().add(power.getType());
+            } else {
+                //Low key nothing to do here!
+                //Register Possible Powers
+//                ClassSettings.
+            }
+            }
 //
 //        }
 //        }
@@ -812,7 +818,7 @@ public abstract class BaseClass {
 //            System.out.println("TICKING POWER " + p.getName());
             try {
                 //No Need to tick Disabled Or Non Ticking Powers
-                if (p.TickUpdate != -1 && p.isActive()) p.handleTick(tick);
+                if (p.TickUpdate != -1 && p.isActive() || p.isHotbar()) p.handleTick(tick);
             } catch (Exception e) {
                 e.printStackTrace();
             }

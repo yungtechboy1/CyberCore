@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Classes.Power;
 
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
@@ -12,6 +13,12 @@ import java.util.ArrayList;
 public class AntidotePower extends StagePowerAbstract {
     public AntidotePower(BaseClass baseClass) {
         super(baseClass);
+        setMaxStage(StageEnum.STAGE_5);
+        TickUpdate = getTickInterval();
+    }
+
+    public AntidotePower(BaseClass b, AdvancedPowerEnum ape) {
+        super(b, ape);
         setMaxStage(StageEnum.STAGE_5);
         TickUpdate = getTickInterval();
     }

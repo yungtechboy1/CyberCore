@@ -71,7 +71,10 @@ public class PowerData {
     }
 
     public void setLS(LockedSlot l) {
-        if(l != LockedSlot.NA)NeedsLockedSlot = true;
+        System.out.println("LOCKEDSLOT22222222 SET FOR "+this.getClass().getName()+" || "+l);
+        if(l == null)l = LockedSlot.NA;
+        NeedsLockedSlot = (l != LockedSlot.NA);
+        if(l != LockedSlot.NA && getPA() != null)getPA().setLS(l);
         LS = l;
     }
 }

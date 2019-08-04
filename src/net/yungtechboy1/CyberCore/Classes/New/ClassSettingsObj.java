@@ -2,7 +2,6 @@ package net.yungtechboy1.CyberCore.Classes.New;
 
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
@@ -40,13 +39,13 @@ public class ClassSettingsObj {
         BC = bc;
     }
 
-    public ArrayList<PowerEnum> getActivatedPowers() {
+    public ArrayList<PowerEnum> getEnabledPowers() {
         return ActivatedPowers;
     }
 
     public ArrayList<String> getActivatedPowersJSON() {
         ArrayList<String> i = new ArrayList<>();
-        for (PowerEnum e : getActivatedPowers()) {
+        for (PowerEnum e : getEnabledPowers()) {
             i.add(e.name());
         }
         return i;
@@ -89,6 +88,22 @@ public class ClassSettingsObj {
         return PreferedSlot9;
     }
 
+    public void setPreferedSlot(LockedSlot ls,PowerEnum pe) {
+        switch (ls){
+            case NA:
+                default:
+                return;
+            case SLOT_7:
+                setPreferedSlot7(pe);
+                return;
+            case SLOT_8:
+                setPreferedSlot8(pe);
+                return;
+            case SLOT_9:
+                setPreferedSlot9(pe);
+                return;
+        }
+    }
     public void setPreferedSlot9(PowerEnum preferedSlot9) {
         PreferedSlot9 = preferedSlot9;
     }
@@ -120,7 +135,7 @@ public class ClassSettingsObj {
         return new ConfigSection() {{
             put("lp", ArrayListAPEtoStrings(getLearnedPowers()));
             put("cdp", ArrayListPEtoString(getClassDefaultPowers()));
-            put("ap", ArrayListPEtoString(getActivatedPowers()));
+            put("ap", ArrayListPEtoString(getEnabledPowers()));
             put("ps9", getPreferedSlot9().name());
             put("ps8", getPreferedSlot8().name());
             put("ps7", getPreferedSlot7().name());
@@ -151,7 +166,7 @@ public class ClassSettingsObj {
     public PowerData[] getPowerDataList() {
         ArrayList<PowerData> pd = new ArrayList<>();
         for (AdvancedPowerEnum pe : getLearnedPowers()) {
-            System.out.println("GPDL >>>>>>>> "+pe.getPowerEnum());
+//            System.out.println("GPDL >>>>>>>> "+pe.getPowerEnum());
             PowerAbstract ppa = PowerManager.getPowerfromAPE(pe,BC);
             if(ppa == null){
                 System.out.println("EEEEEE1342342 234423334 !!!!!!!!!!!!!!!!!!!!!!!!");
@@ -160,7 +175,7 @@ public class ClassSettingsObj {
             boolean a = false;
             if(ppa.getAllowedClasses() != null) {
                 for (Class b : ppa.getAllowedClasses()) {
-                    if (BC.getClass().isInstance(b)) {
+                    if (BC.getClass().isAssignableFrom(b)) {
                         a = true;
                         break;
                     }
@@ -172,7 +187,7 @@ public class ClassSettingsObj {
             if (getPreferedSlot7() == pe.getPowerEnum()) p.setLS(LockedSlot.SLOT_7);
             if (getPreferedSlot8() == pe.getPowerEnum()) p.setLS(LockedSlot.SLOT_8);
             if (getPreferedSlot9() == pe.getPowerEnum()) p.setLS(LockedSlot.SLOT_9);
-            if(getActivatedPowers().contains(ppa.getType()))p.setEnabled(true);
+            if(getEnabledPowers().contains(ppa.getType()))p.setEnabled(true);
             pd.add(p);
         }
         return pd.toArray(new PowerData[0]);
@@ -201,7 +216,12 @@ public class ClassSettingsObj {
     //Ran to Activate Powers from InternalPlayerSettings
     public void check() {
         for (PowerData pd : getPowerDataList()) {
-            BC.activatePower(pd);
+            if(pd.getPA() == null){
+                System.out.println("ERRROO3333333R!!! "+pd.getPowerID());
+                return;
+            }
+            BC.addPossiblePower(pd.getPA());
+//            BC.enablePower(pd);
 //            PowerAbstract pa = pd.getPA();
 //            if(pa != null){
 //                pa.setEnabled();
@@ -228,5 +248,17 @@ public class ClassSettingsObj {
         if(!canLearnNewPower(advancedPowerEnum) && !silentfail)BC.getPlayer().sendMessage(TextFormat.YELLOW+"ClassSettings > WARNING > Can not re-learn"+advancedPowerEnum.getPowerEnum()+" Power has now been learned!");
         LearnedPowers.add(advancedPowerEnum);
         BC.getPlayer().sendMessage(TextFormat.GREEN+"ClassSettings > "+advancedPowerEnum.getPowerEnum()+" Power has now been learned!");
+    }
+
+    public void delLearnedPower(PowerEnum pe) {
+        if(pe == null)return;
+        int k = 0;
+        System.out.println("LFFFF >>> "+pe);
+        for(AdvancedPowerEnum ape: LearnedPowers){
+            System.out.println("|||||"+ape);
+            if(ape.getPowerEnum() == pe)break;
+            k++;
+        }
+        if(k < LearnedPowers.size())LearnedPowers.remove(k);
     }
 }
