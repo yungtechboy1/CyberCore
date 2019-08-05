@@ -84,7 +84,7 @@ public abstract class BaseClass {
     private ArrayList<LockedSlot> LockedSlots = new ArrayList<>();
     private double PowerSourceCount = 0;
 
-    private ClassSettingsObj ClassSettings = new ClassSettingsObj(this);
+    private ClassSettingsObj ClassSettings = null;//new ClassSettingsObj(this);
 
 
     //Get all the Powers that the player has Learned
@@ -93,8 +93,8 @@ public abstract class BaseClass {
     public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank, ConfigSection data) {
         this(main, player, rank);
         if (data != null) {
-            if (data.containsKey("cooldowns")) {
-                ArrayList<CoolDown> css = (ArrayList<CoolDown>) data.get("cooldowns");
+            if (data.containsKey("COOLDONWS")) {
+                ArrayList<CoolDown> css = (ArrayList<CoolDown>) data.get("COOLDONWS");
                 if (css == null) {
                     System.out.println("ERROROORR COOLDOWNS NOT IN CORRECT FOPRMT");
                 } else {
@@ -102,17 +102,19 @@ public abstract class BaseClass {
                 }
             }
 
-            if (data.containsKey("xp")) {
-                int xpi = data.getInt("xp", 0);
+            if (data.containsKey("XP")) {
+                int xpi = data.getInt("XP", 0);
                 addXP(xpi);
             }
             if (data.containsKey("PowerSourceCount")) {
                 int psc = data.getInt("PowerSourceCount", 0);
                 addPowerSourceCount(psc);
             }
-            if (data.containsKey("ClassSettings")) {
+            if (data.containsKey("CS")) {
 //                int psc = data.getInt("PowerSourceCount", 0);
-                ClassSettings = new ClassSettingsObj(this, ((ConfigSection) data.get("cs")));
+                ClassSettings = new ClassSettingsObj(this, ((ConfigSection) data.get("CS")));
+            }else{
+                System.out.println("Error! No ClassSetting Found!!!");
             }
         }
         learnPlayerDefaultPowers();
@@ -122,7 +124,10 @@ public abstract class BaseClass {
 
     public void learnPlayerDefaultPowers() {
         for(PowerEnum pe: getDefaultPowers()){
-            getClassSettings().learnNewPower(pe, true);
+            if(!getClassSettings().isPowerLearned(pe)){
+                System.out.println("SEND LEARN TO "+pe);
+                getClassSettings().learnNewPower(pe, true);
+            }
         }
     }
 

@@ -261,4 +261,31 @@ public class ClassSettingsObj {
         }
         if(k < LearnedPowers.size())LearnedPowers.remove(k);
     }
+
+    public boolean isPowerLearned(PowerEnum pe) {
+        for(AdvancedPowerEnum ape: LearnedPowers){
+            if(ape.getPowerEnum() == pe)return true;
+        }
+        return false;
+    }
+
+    public void delLearnedPowerAndLearnIfNotEqual(AdvancedPowerEnum ape) {
+        boolean rl = false;
+        for(AdvancedPowerEnum aa: LearnedPowers){
+            if(aa.sameType(ape)) {
+                if(!aa.checkEquals(ape)) {
+                    rl = true;
+                }
+               break;
+            }
+        }
+        if(rl){
+                delLearnedPower(ape);
+                learnNewPower(ape, true);
+        }
+    }
+
+    public void delLearnedPower(AdvancedPowerEnum ape) {
+        delLearnedPower(ape.getPowerEnum());
+    }
 }

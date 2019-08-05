@@ -245,11 +245,11 @@ public class ClassFactory implements Listener {
         }
     }*/
 
-    public void HandelEvent(Event event, CorePlayer p) {
-        BaseClass bc = GetClass(p);
-        if (bc == null) return;
-        bc.HandelEvent(event);
-    }
+//    public void HandelEvent(Event event, CorePlayer p) {
+//        BaseClass bc = GetClass(p);
+//        if (bc == null) return;
+//        bc.HandelEvent(event);
+//    }
 
     public void Saveall() {
         CCM.getLogger().info("SAving All Classes!");
@@ -257,9 +257,17 @@ public class ClassFactory implements Listener {
             if (!(p instanceof CorePlayer)) continue;
             CorePlayer cp = (CorePlayer) p;
             if (cp.getPlayerClass() == null) continue;
-            MMOSave.set(cp.getName().toLowerCase(), cp.getPlayerClass().export());
+            save(cp,false);
         }
         CCM.getLogger().info("SAving File!");
         MMOSave.save();
+    }
+
+    public void save(CorePlayer cp){
+        save(cp,true);
+    }
+    public void save(CorePlayer cp, boolean savefile){
+        MMOSave.set(cp.getName().toLowerCase(), cp.getPlayerClass().export());
+        if(savefile)MMOSave.save();
     }
 }

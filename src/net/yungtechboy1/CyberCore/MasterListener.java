@@ -556,7 +556,10 @@ public class MasterListener implements Listener {
     public void quitEvent(PlayerQuitEvent event) {
         String Msg = (String) plugin.MainConfig.get("Leave-Message");
         event.setQuitMessage(Msg.replace("{player}", event.getPlayer().getName()));
-
+        Player p = event.getPlayer();
+        if(p instanceof CorePlayer){
+            plugin.ClassFactory.save((CorePlayer) p);
+        }
     }
 
 

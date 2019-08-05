@@ -297,22 +297,24 @@ public abstract class PowerAbstract {
             return;
         }
         setEnabled(true);
-        PlayerClass.getClassSettings().delLearnedPower(getType());
-        PlayerClass.getClassSettings().learnNewPower(getAPE(),true);
-        PlayerClass.getClassSettings().getEnabledPowers().add(getType());
+        PlayerClass.getClassSettings().delLearnedPowerAndLearnIfNotEqual(getAPE());
+//        PlayerClass.getClassSettings().delLearnedPower(getType());
+//        PlayerClass.getClassSettings().learnNewPower(getAPE(),true);
+        if(!PlayerClass.getClassSettings().getEnabledPowers().contains(getType()))PlayerClass.getClassSettings().getEnabledPowers().add(getType());
         PlayerClass.getClassSettings().setPreferedSlot(getLS(), getType());
         onEnable();
     }
 
     public AdvancedPowerEnum getAPE(){
-        if(isHotbar()) {
+        if(getStageLevelManager() != null) {
             try {
                 return new AdvancedPowerEnum(getType(),getStage());
             } catch (Exception e) {
+                System.out.println("ERRORR ###@@@ "+this+" || "+getClass().getName());
                 e.printStackTrace();
+                return null;
             }
-        }
-        return new AdvancedPowerEnum(getType(),getXLM().getXP());
+        }else return new AdvancedPowerEnum(getType(),getXLM().getXP());
     }
 
     public void onEnable() {

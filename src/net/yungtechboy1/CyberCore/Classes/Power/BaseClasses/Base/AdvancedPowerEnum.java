@@ -92,13 +92,24 @@ public class AdvancedPowerEnum {
         switch (tt) {
             case XPLevel:
                 s += "XP|" + getXP();
+                break;
             case Stage:
                 s += "Stage|" + getStageEnum().ordinal();
+                break;
             case None:
             default:
                 s += "None";
+                break;
         }
         return s;
+    }
+
+    public boolean checkEquals(AdvancedPowerEnum ape) {
+        return toString().equalsIgnoreCase(ape.toString());
+    }
+
+    public boolean sameType(AdvancedPowerEnum ape) {
+        return getPowerEnum() == ape.getPowerEnum();
     }
 
 //    public ConfigSection toConfig() {
