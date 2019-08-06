@@ -31,8 +31,8 @@ public class Wild extends Command {
             return true;
         }
         NukkitRandom rand = new NukkitRandom();
-        Integer X = rand.nextRange(-(500000),(500000));
-        Integer Z = rand.nextRange(-(500000),(500000));
+        Integer X = rand.nextRange(-(5000),(5000));
+        Integer Z = rand.nextRange(-(5000),(5000));
         Position pos = ((Player) s).getLevel().getSafeSpawn(new Vector3(X,50,Z));
         ((Player) s).getLevel().generateChunk(X >> 4,Z >> 4,true);
         s.sendMessage(TextFormat.GREEN+"Teleporting to Wild in 5 Secs!");

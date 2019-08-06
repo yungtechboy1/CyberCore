@@ -82,9 +82,18 @@ public class CoolDown {//TODO Maybe extend ConfigSelection
         return isValidTime();
     }
 
+    @Override
+    public String toString() {
+        return "CoolDown{" +
+                "Key='" + Key + '\'' +
+                ", Time=" + Time +
+                '}';
+    }
+
     private boolean isValidTime() {
         int ct = CyberCoreMain.getInstance().GetIntTime();
 //        System.out.println(ct+" > "+Time);
         return ct < Time;
     }
+
 }

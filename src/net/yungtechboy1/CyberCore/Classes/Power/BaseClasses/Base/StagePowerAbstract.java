@@ -1,6 +1,7 @@
 package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base;
 
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 
 public abstract class StagePowerAbstract extends PowerAbstract{
 //    @Deprecated
@@ -35,6 +36,8 @@ public abstract class StagePowerAbstract extends PowerAbstract{
 //    public StagePowerAbstract(BaseClass b, int psc, double cost, PowerSettings ps) {
 //        super(b,  new ClassLevelingManagerStage(),ps, psc, cost);
 //    }
+
+    public abstract StageEnum getMaxStage();
 
     public void setMaxStage(StageEnum s){
         if(getStageLevelManager() == null){

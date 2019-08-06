@@ -12,6 +12,7 @@ import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.utils.TextFormat;
+import javafx.stage.Stage;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
@@ -30,7 +31,7 @@ public abstract class PowerAbstract {
 
     public static final String PowerHotBarNBTTag = "PowerHotBar";
     public BaseClass PlayerClass = null;
-    public int TickUpdate = -1;
+//    public int TickUpdate = -1;
     public CoolDownTick Cooldown = null;
     public boolean TakePowerOnFail = false;
     public boolean PlayerToggleable = true;
@@ -42,7 +43,7 @@ public abstract class PowerAbstract {
     LockedSlot LS = LockedSlot.NA;
     //    private LevelingType LT;
     private boolean Active = false;
-    private int PowerSuccessChance = 0;
+//    private int PowerSuccessChance = 0;
     private int _lasttick = -1;
     private double PowerSourceCost = 0;
     private int DurationTick = -1;
@@ -50,6 +51,13 @@ public abstract class PowerAbstract {
     private boolean AbilityActive = false;
     private ClassLevelingManagerStage SLM;
     private ClassLevelingManagerXPLevel XLM;
+
+    public int getTickUpdate(){
+        if(isAbility())return 20;
+        if(isHotbar())return 20*5;
+        return -1;
+    }
+
     @Deprecated
     public PowerAbstract(BaseClass b, AdvancedPowerEnum ape, PowerSettings ps) {
         if (!ape.isValid()) {
@@ -85,11 +93,16 @@ public abstract class PowerAbstract {
 //    }
 
     public PowerAbstract(BaseClass b, AdvancedPowerEnum ape) {
+        if(ape == null)ape = new AdvancedPowerEnum(getType());
         if (!ape.isValid()) {
             System.out.println("Error! APE is not valid!");
 //            if(this instanceof StagePowerAbstract){
             try {
-                ape = new AdvancedPowerEnum(ape.getPowerEnum(), StageEnum.STAGE_1);
+                if(this instanceof StagePowerAbstract){
+                    System.out.println("IS STAGE ABSTRACT!!!!!");
+                    ape = new AdvancedPowerEnum(ape.getPowerEnum(), StageEnum.STAGE_1);
+                }
+                else ape = new AdvancedPowerEnum(ape.getPowerEnum(),0);
             } catch (Exception e) {
                 System.out.println("Error!eeeeeeeeeeeeeeeeeeee");
                 e.printStackTrace();
@@ -111,19 +124,28 @@ public abstract class PowerAbstract {
         initAfterCreation();
     }
 
-    public PowerAbstract(BaseClass b, Integer xp, PowerSettings ps, int psc, double cost) {
-//        PowerSuccessChance = psc;
+//    public PowerAbstract(BaseClass b, Integer xp, PowerSettings ps, int psc, double cost) {
+////        PowerSuccessChance = psc;
+//        PlayerClass = b;
+//        loadLevelManager(new ClassLevelingManagerXPLevel(xp));
+//        if (ps != null) {
+//            setPowerSettings(ps);
+//        } else
+//            b.getPlayer().getServer().getLogger().warning("POWER ABSTRACT ERROR! NO POWER SOURCE ASSIGNED FOR " + getName());
+////        Level = lvl;
+////        Level = b.getLVL();
+//        initStages();
+//        initAfterCreation();
+//        PowerSourceCost = cost;
+//    }
+
+    public PowerAbstract(BaseClass b) {
         PlayerClass = b;
-        loadLevelManager(new ClassLevelingManagerXPLevel(xp));
-        if (ps != null) {
-            setPowerSettings(ps);
-        } else
+        loadLevelManager(new ClassLevelingManagerXPLevel());
+        if (getPowerSettings() == null)
             b.getPlayer().getServer().getLogger().warning("POWER ABSTRACT ERROR! NO POWER SOURCE ASSIGNED FOR " + getName());
-//        Level = lvl;
-//        Level = b.getLVL();
         initStages();
         initAfterCreation();
-        PowerSourceCost = cost;
     }
 
     public PowerAbstract(BaseClass b, StageEnum stageEnum) {
@@ -135,22 +157,22 @@ public abstract class PowerAbstract {
         initAfterCreation();
     }
 
-    public PowerAbstract(BaseClass b, StageEnum stageEnum, PowerSettings ps) {
-        PlayerClass = b;
-        loadLevelManager(new ClassLevelingManagerStage(stageEnum));
-        if (ps != null) {
-            setPowerSettings(ps);
-        } else
-            b.getPlayer().getServer().getLogger().warning("POWER ABSTRACT ERROR! NO POWER SOURCE ASSIGNED FOR " + getName());
-//        Level = lvl;
-//        Level = b.getLVL();
-        initStages();
-        initAfterCreation();
-    }
+//    public PowerAbstract(BaseClass b, StageEnum stageEnum, PowerSettings ps) {
+//        PlayerClass = b;
+//        loadLevelManager(new ClassLevelingManagerStage(stageEnum));
+//        if (ps != null) {
+//            setPowerSettings(ps);
+//        } else
+//            b.getPlayer().getServer().getLogger().warning("POWER ABSTRACT ERROR! NO POWER SOURCE ASSIGNED FOR " + getName());
+////        Level = lvl;
+////        Level = b.getLVL();
+//        initStages();
+//        initAfterCreation();
+//    }
 
-    public PowerAbstract(BaseClass b, AdvancedPowerEnum advancedPowerEnum, int i) {
-        System.out.println("NOT IMPLEMENTEDDDDDD");
-    }
+//    public PowerAbstract(BaseClass b, AdvancedPowerEnum advancedPowerEnum, int i) {
+//        System.out.println("NOT IMPLEMENTEDDDDDD");
+//    }
 
     public CoolDownTick getCooldown() {
         if (Cooldown == null || !Cooldown.isValid()) {
@@ -178,9 +200,7 @@ public abstract class PowerAbstract {
         this.XLM = XLM;
     }
 
-    public StageEnum getMaxStage() throws Exception {
-        throw new Exception("error! can not get");
-    }
+
 
     public PowerSettings getPowerSettings() {
         if (PS == null)
@@ -208,11 +228,6 @@ public abstract class PowerAbstract {
     }
 
     private void onAbilityActivate() {
-    }
-
-    public void setPowerAsAbility() {
-        MainPowerType = PowerType.Ability;
-        TickUpdate = 10;
     }
 
     public int getDeActivatedTick() {
@@ -364,21 +379,21 @@ public abstract class PowerAbstract {
     public Item getHotbarItem_Success() {
         Item i = Item.get(Item.EMERALD);
         i.setCustomName(getDispalyName() + " Power");
-        i.setLore(TextFormat.GREEN + "Ready for Use!", TextFormat.GRAY + "Cooldown: " + getCooldownTime() + " Secs");
+        i.setLore(TextFormat.GREEN + "Ready for Use!", TextFormat.GRAY + "Cooldown: " + getCooldownTimeSecs() + " Secs");
         return i;
     }
 
     public Item getHotbarItem_Fail() {
         Item i = Item.get(Item.REDSTONE_DUST);
         i.setCustomName(getDispalyName() + " Power");
-        i.setLore(TextFormat.RED + "Power Failed Please Wait!", TextFormat.GRAY + "Cooldown: " + getCooldownTime() + " Secs");
+        i.setLore(TextFormat.RED + "Power Failed Please Wait!", TextFormat.GRAY + "Cooldown: " + getCooldownTimeSecs() + " Secs");
         return i;
     }
 
     public Item getHotbarItem_Cooldown() {
         Item i = Item.get(Item.GLOWSTONE_DUST);
         i.setCustomName(getDispalyName() + " Power");
-        i.setLore(TextFormat.YELLOW + "Power is in Cooldown!", TextFormat.RED + "Cooldown Time Left: " + ((getCooldown().getTick() - getPlayer().getServer().getTick()) / 20) + " Secs", TextFormat.GRAY + "Cooldown: " + getCooldownTime() + " Secs");
+        i.setLore(TextFormat.YELLOW + "Power is in Cooldown!", TextFormat.RED + "Cooldown Time Left: " + ((getCooldown().getTick() - getPlayer().getServer().getTick()) / 20) + " Secs", TextFormat.GRAY + "Cooldown: " + getCooldownTimeSecs() + " Secs");
         return i;
     }
 
@@ -431,11 +446,7 @@ public abstract class PowerAbstract {
     }
 
     public int getPowerSuccessChance() {
-        return PowerSuccessChance;
-    }
-
-    public void setPowerSuccessChance(int powerSuccessChance) {
-//        PowerSuccessChance = powerSuccessChance;
+        return 100;
     }
 
     public int getDefaultPowerSuccessChance() {
@@ -504,7 +515,7 @@ public abstract class PowerAbstract {
      *
      * @return int Time in secs
      */
-    protected int getCooldownTime() {
+    protected int getCooldownTimeSecs() {
         return 60 * 3;//3 Mins
     }
 
@@ -513,7 +524,7 @@ public abstract class PowerAbstract {
     }
 
     public final int getCooldownTimeTick() {
-        return getCooldownTime() * 20;
+        return getCooldownTimeSecs() * 20;
     }
 
     public void initStages() {
@@ -532,12 +543,9 @@ public abstract class PowerAbstract {
 
     public final void handleTick(int tick) {
 //        System.out.println("PowerAbstract Call TICK");
-        if (TickUpdate == -1){
-            if(isHotbar())TickUpdate = 20*5;
-            return;
-        }
 //        System.out.println("PowerAbstract Call TICK 1");
-        if (_lasttick + TickUpdate < tick) {
+        if(getTickUpdate() == -1)return;
+        if (_lasttick + getTickUpdate() < tick) {
 //            System.out.println("PowerAbstract Called THE ACTUAL TICK");
             onTick(tick);
             _lasttick = tick;
@@ -697,7 +705,7 @@ public abstract class PowerAbstract {
     }
 
     public CoolDownTick addCooldown() {
-        return addCooldown(getCooldownTime());
+        return addCooldown(getCooldownTimeSecs());
     }
 
     public CoolDownTick addCooldown(int secs) {

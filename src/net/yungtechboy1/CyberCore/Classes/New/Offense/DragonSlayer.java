@@ -14,11 +14,11 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class DragonSlayer extends BaseClass {
     public DragonSlayer(CyberCoreMain main, CorePlayer player, ConfigSection data) {
-        super(main, player, ClassType.DragonSlayer, data);
+        super(main, player, ClassType.Class_Offense_DragonSlayer, data);
     }
 
     public DragonSlayer(CyberCoreMain main, CorePlayer player) {
-        super(main, player, ClassType.DragonSlayer);
+        super(main, player, ClassType.Class_Offense_DragonSlayer);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class DragonSlayer extends BaseClass {
 
     @Override
     public ClassType getTYPE() {
-        return ClassType.DragonSlayer;
+        return ClassType.Class_Offense_DragonSlayer;
     }
 
     @Override

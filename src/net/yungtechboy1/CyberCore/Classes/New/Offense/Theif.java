@@ -6,13 +6,14 @@ import cn.nukkit.item.Item;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
-public abstract class Thief extends BaseClass {
+public class Theif extends BaseClass {
 
-    public Thief(CyberCoreMain main, CorePlayer player, ConfigSection cs) {
-        super(main, player, ClassType.Class_Miner_TNT_Specialist);
+    public Theif(CyberCoreMain main, CorePlayer player, ConfigSection cs) {
+        super(main, player, ClassType.Class_Rouge_Theif);
     }
 
     @Override
@@ -26,13 +27,18 @@ public abstract class Thief extends BaseClass {
 
     @Override
     public String getName() {
-        return "Thief";
+        return "Theif";
     }
 
 
     @Override
+    public PrimalPowerType getPowerSourceType() {
+        return PrimalPowerType.Moon;
+    }
+
+    @Override
     public ClassType getTYPE() {
-        return ClassType.Class_Rouge_Thief;
+        return ClassType.Class_Rouge_Theif;
     }
 
     @Override

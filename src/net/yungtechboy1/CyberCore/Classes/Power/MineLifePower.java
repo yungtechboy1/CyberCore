@@ -29,6 +29,11 @@ public class MineLifePower extends StagePowerAbstract {
     }
 
     @Override
+    public StageEnum getMaxStage() {
+        return StageEnum.STAGE_5;
+    }
+
+    @Override
     public PowerSettings getPowerSettings() {
         return  new PowerSettings(false,true,true,false);
     }
@@ -111,7 +116,7 @@ public class MineLifePower extends StagePowerAbstract {
     }
 
     @Override
-    public int getCooldownTime() {
+    public int getCooldownTimeSecs() {
         if (PlayerClass.getLVL() <= 19) {
             return 60 * 15;
         } else if (PlayerClass.getLVL() <= 39) {
@@ -123,6 +128,6 @@ public class MineLifePower extends StagePowerAbstract {
         } else if (PlayerClass.getLVL() <= 100) {
             return 60 * 5;
         }
-        return super.getCooldownTime();
+        return super.getCooldownTimeSecs();
     }
 }

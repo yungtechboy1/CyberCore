@@ -94,11 +94,14 @@ public abstract class BaseClass {
         this(main, player, rank);
         if (data != null) {
             if (data.containsKey("COOLDONWS")) {
-                ArrayList<CoolDown> css = (ArrayList<CoolDown>) data.get("COOLDONWS");
+                ConfigSection css = data.getSection("COOLDONWS");
                 if (css == null) {
                     System.out.println("ERROROORR COOLDOWNS NOT IN CORRECT FOPRMT");
                 } else {
-                    COOLDOWNS = css;
+                    css.getAllMap().forEach((key, value) -> {
+                        System.out.println(value+" <<<<<<<<<<<<<<<<<<<<<< ");
+                        AddCooldown(key,(int)value);
+                    });
                 }
             }
 
@@ -116,6 +119,8 @@ public abstract class BaseClass {
             }else{
                 System.out.println("Error! No ClassSetting Found!!!");
             }
+        }else{
+            ClassSettings = new ClassSettingsObj(this);
         }
         learnPlayerDefaultPowers();
         startbuffs();
@@ -253,14 +258,15 @@ public abstract class BaseClass {
         cp.initAllClassBuffs();
     }
 
-    private void recheckAllBuffs(CorePlayer cp, int tick) {
-        for (Buff b : getBuffs().values()) {
-            cp.addBuffFromClass(b);
-        }
-        for (DeBuff b : getDeBuffs().values()) {
-            cp.addDeBuffFromClass(b);
-        }
-        cp.initAllClassBuffs();
+    private void recheckAllBuffs(int tick) {
+        //No Need to Keep resending :/
+//        for (Buff b : getBuffs().values()) {
+//            getPlayer().addBuffFromClass(b);
+//        }
+//        for (DeBuff b : getDeBuffs().values()) {
+//            getPlayer().addDeBuffFromClass(b);
+//        }
+        getPlayer().initAllClassBuffs();
     }
 
     public String getDisplayName() {
@@ -488,6 +494,7 @@ public abstract class BaseClass {
     }
 
     public ClassSettingsObj getClassSettings() {
+//        if(ClassSettings == null)
         return ClassSettings;
     }
 
@@ -530,12 +537,22 @@ public abstract class BaseClass {
 
     public ConfigSection export() {
         return new ConfigSection() {{
-            put("COOLDOWNS", getCOOLDOWNS());
+            put("COOLDOWNS", getCOOLDOWNStoConfig());
             put("PowerSourceCount", PowerSourceCount);
-            put("CS", getClassSettings().export());
+            if(getClassSettings() != null)put("CS", getClassSettings().export());
+            else put("CS","{}");
             put("XP", getXP());
             put("TYPE", getTYPE().ordinal());
         }};
+    }
+
+    public ConfigSection getCOOLDOWNStoConfig() {
+        ConfigSection conf = new ConfigSection();
+        for(CoolDown c: getCOOLDOWNS()){
+            System.out.println(c.toString()+"|||| AND "+c.isValid());
+            if(c.isValid())conf.set(c.getKey(),c.getTime());
+        }
+        return conf;
     }
 
     public CorePlayer getPlayer() {
@@ -823,7 +840,7 @@ public abstract class BaseClass {
 //            System.out.println("TICKING POWER " + p.getName());
             try {
                 //No Need to tick Disabled Or Non Ticking Powers
-                if (p.TickUpdate != -1 && p.isActive() || p.isHotbar()) p.handleTick(tick);
+                if (p.getTickUpdate() != -1 && p.isActive() || p.isHotbar()) p.handleTick(tick);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -833,6 +850,10 @@ public abstract class BaseClass {
     public void onUpdate(int tick) {
 //        System.out.println("TICKING BASECLASS");
         tickPowers(tick);
+        if(GetCooldown("CheckBuff") == null) {
+            AddCooldown("CheckBuff", 15);
+            recheckAllBuffs(tick);
+        }
     }
 
     public ArrayList<String> FormatHudText() {
@@ -887,7 +908,7 @@ public abstract class BaseClass {
 
 
     public enum ClassType {
-        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary, DragonSlayer, Class_Magic_Enchanter, Class_Rouge_Thief, Class_Offense_Knight, Class_Offense_Holy_Knight, Class_Offense_Dark_Knight, Class_Offense_Assassin, Class_Offense_Raider;
+        Unknown, Class_Miner_TNT_Specialist, Class_Miner_MineLife, Class_Offense_Mercenary, Class_Offense_DragonSlayer, Class_Magic_Enchanter, Class_Rouge_Theif, Class_Offense_Knight, Class_Offense_Holy_Knight, Class_Offense_Dark_Knight, Class_Offense_Assassin, Class_Offense_Raider, Class_Magic_Sorcerer, Class_Priest, Priest;
 
 
         public int getKey() {

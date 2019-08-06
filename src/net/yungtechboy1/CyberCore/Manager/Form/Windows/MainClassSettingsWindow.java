@@ -53,6 +53,8 @@ public class MainClassSettingsWindow extends CyberFormSimple {
         addButton(new ElementButton("Set Preferred Power For Slot 9"));
         addButton(new ElementButton("Set Preferred Power For Slot 8"));
         addButton(new ElementButton("Set Preferred Power For Slot 7"));
+        addButton(new ElementButton(TextFormat.BLACK + "-------------"));
+        addButton(new ElementButton("Learned Powers"));
         //Plugin Callback
         _BC.addButtons(this);
         addButton(new ElementButton(TextFormat.BLACK + "-------------"));
@@ -89,6 +91,11 @@ public class MainClassSettingsWindow extends CyberFormSimple {
         }else if (k == getKey()) {
             //Choose active Powers
             p.showFormWindow(new MainClassSettingsWindowChooseLockedSlot(p.getPlayerClass(), LockedSlot.SLOT_7));
+        }else if (k == getKey()) {
+            //Null
+        }else if (k == getKey()) {
+            //Choose active Powers
+            p.showFormWindow(new MainClassWindowLearnedPowers(p.getPlayerClass()));
         }
         return true;
     }

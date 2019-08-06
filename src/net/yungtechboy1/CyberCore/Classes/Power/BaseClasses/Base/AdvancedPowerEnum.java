@@ -112,6 +112,18 @@ public class AdvancedPowerEnum {
         return getPowerEnum() == ape.getPowerEnum();
     }
 
+    public String getValue() {
+        switch (tt) {
+            case XPLevel:
+                return "XP =" + getXP();
+            case Stage:
+                return "Stage = " + getStageEnum().ordinal();
+            case None:
+            default:
+                return "Unknown Data!";
+        }
+    }
+
 //    public ConfigSection toConfig() {
 //        ConfigSection c = new ConfigSection();
 //        if (tt == PowerAbstract.LevelingType.None) return c;

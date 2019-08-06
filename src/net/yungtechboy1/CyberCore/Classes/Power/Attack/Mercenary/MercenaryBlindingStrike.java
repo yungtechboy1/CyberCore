@@ -1,7 +1,9 @@
 package net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary;
 
 import cn.nukkit.potion.Effect;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.Mercenary;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
@@ -12,8 +14,13 @@ import java.util.ArrayList;
 
 public class MercenaryBlindingStrike extends StagePowerAbstract {
 
-    public MercenaryBlindingStrike(Mercenary bc) {
-        super(bc);
+
+    public MercenaryBlindingStrike(BaseClass b) {
+        super(b);
+    }
+
+    public MercenaryBlindingStrike(BaseClass b, AdvancedPowerEnum ape) {
+        super(b, ape);
     }
 
     @Override
@@ -69,5 +76,10 @@ public class MercenaryBlindingStrike extends StagePowerAbstract {
     @Override
     public String getName() {
         return "Blinding Strike";
+    }
+
+    @Override
+    public StageEnum getMaxStage() {
+        return StageEnum.STAGE_5;
     }
 }

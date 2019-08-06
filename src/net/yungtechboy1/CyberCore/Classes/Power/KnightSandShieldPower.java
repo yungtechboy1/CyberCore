@@ -20,8 +20,6 @@ import java.util.ArrayList;
 public class KnightSandShieldPower extends StagePowerAbstract {
     public KnightSandShieldPower(BaseClass b) {
         super(b);
-//        setPowerSettings();
-        setMaxStage(StageEnum.STAGE_5);
     }
 
     @Override
@@ -33,7 +31,11 @@ public class KnightSandShieldPower extends StagePowerAbstract {
 
     public KnightSandShieldPower(BaseClass b, AdvancedPowerEnum ape) {
         super(b, ape);
-        setMaxStage(StageEnum.STAGE_5);
+    }
+
+    @Override
+    public StageEnum getMaxStage() {
+        return StageEnum.STAGE_5;
     }
 
     @Override

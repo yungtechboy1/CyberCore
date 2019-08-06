@@ -1,21 +1,37 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 import java.util.ArrayList;
 
-public  class TNTAirStrikePower extends PowerAbstract {
+public  class TNTAirStrikePower extends StagePowerAbstract {
+
     public TNTAirStrikePower(BaseClass b) {
-        super(b,null, 100);
-        TickUpdate = 20*5;//5 Secs
+        super(b);
+    }
+
+    public TNTAirStrikePower(BaseClass b, AdvancedPowerEnum ape) {
+        super(b, ape);
+    }
+
+    @Override
+    public int getTickUpdate() {
+        return 20*5;
     }
 
     @Override
     public ArrayList<Class> getAllowedClasses() {
         return null;
+    }
+
+    @Override
+    public StageEnum getMaxStage() {
+        return StageEnum.STAGE_5;
     }
 
     @Override

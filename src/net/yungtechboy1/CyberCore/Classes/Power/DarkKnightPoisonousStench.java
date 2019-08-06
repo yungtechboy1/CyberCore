@@ -10,6 +10,7 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.BlockColor;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.DarkKnight;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
@@ -18,7 +19,7 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
 import java.util.ArrayList;
 
-public class DarkKnightPoisonousStench extends StagePowerAbstract {
+public class DarkKnightPoisonousStench extends PowerAbstract {
 
 
     int s = 0;
@@ -38,7 +39,11 @@ public class DarkKnightPoisonousStench extends StagePowerAbstract {
 
     public DarkKnightPoisonousStench(DarkKnight bc) {
         super(bc);
-        TickUpdate = 5;//1 Secs or .75 Secs
+    }
+
+    @Override
+    public int getTickUpdate() {
+        return 8;
     }
 
     @Override
@@ -55,6 +60,8 @@ public class DarkKnightPoisonousStench extends StagePowerAbstract {
     public ArrayList<Class> getAllowedClasses() {
         return null;
     }
+
+
 
     @Override
     public PowerSettings getPowerSettings() {

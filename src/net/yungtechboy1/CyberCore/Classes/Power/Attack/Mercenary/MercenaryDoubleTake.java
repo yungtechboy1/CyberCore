@@ -3,6 +3,9 @@ package net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -11,10 +14,18 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 
 import java.util.ArrayList;
 
-public class MercenaryDoubleTake extends StagePowerAbstract {
+public class MercenaryDoubleTake extends PowerAbstract {
     public MercenaryDoubleTake(BaseClass bc) {
         super(bc);
-        setPowerSettings(false, false, false, true);
+    }
+
+    public MercenaryDoubleTake(BaseClass b, AdvancedPowerEnum ape) {
+        super(b, ape);
+    }
+
+    @Override
+    public PowerSettings getPowerSettings() {
+        return new PowerSettings(false,false,false,true);
     }
 
     @Override

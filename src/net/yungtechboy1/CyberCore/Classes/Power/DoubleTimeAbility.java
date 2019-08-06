@@ -12,7 +12,7 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import java.util.ArrayList;
 
 //PowerAbilityHotBar
-public class DoubleTimeAbility extends StagePowerAbstract {
+public  class DoubleTimeAbility extends StagePowerAbstract {
     private Buff oldbuff = null;
 
     @Override
@@ -22,12 +22,15 @@ public class DoubleTimeAbility extends StagePowerAbstract {
 
     public DoubleTimeAbility(BaseClass knight, AdvancedPowerEnum ape)  {
         super(knight, ape);
-        setMaxStage(StageEnum.STAGE_5);
+    }
+
+    @Override
+    public StageEnum getMaxStage() {
+        return StageEnum.STAGE_5;
     }
 
     public DoubleTimeAbility(BaseClass knight)  {
         super(knight);
-        setMaxStage(StageEnum.STAGE_5);
     }
 
 
@@ -40,6 +43,7 @@ public class DoubleTimeAbility extends StagePowerAbstract {
     public void onActivate() {
         getPlayer().sendMessage("TUNNING");
         getPlayer().addTemporaryBuff(new Buff(Buff.BuffType.Movement, getMovementBuff()));
+        getPlayer().initAllClassBuffs();
 //        oldbuff = PlayerClass.getBuff(Buff.BuffType.Movement);
 //        PlayerClass.addBuff(new Buff(Buff.BuffType.Movement,1.1f));
 //        PlayerClass.initBuffs();
@@ -84,7 +88,7 @@ public class DoubleTimeAbility extends StagePowerAbstract {
     }
 
     @Override
-    protected int getCooldownTime() {
+    protected int getCooldownTimeSecs() {
         switch (getStage()) {
             default:
             case STAGE_5:

@@ -245,6 +245,7 @@ public class CorePlayer extends Player {
     }
 
     public void initBuffs() {
+        System.out.println("Runing INITBUFFS BUFFFFFFFFFFFFFF");
         HashMap<Buff.BuffType, Float> data = new HashMap<>();
         //BUFFS
         ArrayList<Buff> ab = new ArrayList<>();
@@ -265,19 +266,49 @@ public class CorePlayer extends Player {
 
         //Temp Buffs Override Everything!
         if (getTempBuff().size() > 0) {
+            System.out.println("HAS TEMPPPPPPPPP BUFFFFFFFFFFFFFF");
             for (Buff b : getTempBuff().values()) {
                 data.put(b.getBt(), (b.getAmount()));
             }
         }
+        if(!data.containsKey(Buff.BuffType.Health))CustomExtraHP = 0;
+        if(!data.containsKey(Buff.BuffType.Movement))setMovementSpeed(DEFAULT_SPEED, true);
         if (!areequal(data, lastdata)) {
             data.forEach((key, value) -> {
                 switch (key) {
                     case Movement:
                         setMovementSpeed(DEFAULT_SPEED * value, true);
                         break;
+                    case NULL:
+                        break;
                     case Health:
-                        setMaxHealth(20 + Math.round(value));
+                        CustomExtraHP = (int) (value+0);
+                        setMaxHealth(20 + CustomExtraHP);
                         sendAttributes();
+                        break;
+                    case Armor:
+                        break;
+                    case DamageFromPlayer:
+                        break;
+                    case DamageToPlayer:
+                        break;
+                    case DamageToEntity:
+                        break;
+                    case DamageFromEntity:
+                        break;
+                    case Damage:
+                        break;
+                    case SwingSpeed:
+                        break;
+                    case Reach:
+                        break;
+                    case Healing:
+                        break;
+                    case SuperFoodHeartRegin:
+                        break;
+                    case Magic:
+                        break;
+                    case Jump:
                         break;
                 }
             });

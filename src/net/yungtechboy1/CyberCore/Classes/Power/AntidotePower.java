@@ -13,14 +13,20 @@ import java.util.ArrayList;
 public class AntidotePower extends StagePowerAbstract {
     public AntidotePower(BaseClass baseClass) {
         super(baseClass);
-        setMaxStage(StageEnum.STAGE_5);
-        TickUpdate = getTickInterval();
     }
 
     public AntidotePower(BaseClass b, AdvancedPowerEnum ape) {
         super(b, ape);
-        setMaxStage(StageEnum.STAGE_5);
-        TickUpdate = getTickInterval();
+    }
+
+    @Override
+    public StageEnum getMaxStage() {
+        return StageEnum.STAGE_5;
+    }
+
+    @Override
+    public int getTickUpdate() {
+        return getTickInterval();
     }
 
     @Override
@@ -54,7 +60,7 @@ public class AntidotePower extends StagePowerAbstract {
     }
 
     @Override
-    protected int getCooldownTime() {
+    protected int getCooldownTimeSecs() {
         return getRunTimeTick() * 2 / 20;
     }
 
