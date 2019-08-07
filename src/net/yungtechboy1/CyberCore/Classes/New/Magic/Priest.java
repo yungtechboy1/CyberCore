@@ -50,7 +50,7 @@ public class Priest extends BaseClass {
 
     @Override
     public ClassType getTYPE() {
-        return ClassType.Priest;
+        return ClassType.Class_Priest;
     }
 
     @Override

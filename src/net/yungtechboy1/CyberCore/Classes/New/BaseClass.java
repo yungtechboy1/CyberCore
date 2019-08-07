@@ -579,7 +579,7 @@ public abstract class BaseClass {
     }
 
     public int getLVL() {
-        return LVL;
+        return XPToLevel(getXP());
     }
 
     public boolean isPrime() {
@@ -805,7 +805,7 @@ public abstract class BaseClass {
         return event;
     }
 
-    public int XPToLevel(int xp) {
+    public static int XPToLevel(int xp) {
         int lvl = 0;
         while (xp >= calculateRequireExperience(lvl)) {
             xp = xp - calculateRequireExperience(lvl);
@@ -814,7 +814,10 @@ public abstract class BaseClass {
         return lvl;
     }
 
-    public int XPRemainder(int xp) {
+    public int XPRemainder() {
+        return XPRemainder(getXP());
+    }
+    public static int XPRemainder(int xp) {
         int lvl = 0;
         while (xp >= calculateRequireExperience(lvl)) {
             xp = xp - calculateRequireExperience(lvl);
@@ -823,7 +826,15 @@ public abstract class BaseClass {
         return xp;
     }
 
-    public int calculateRequireExperience(int level) {
+    public static int XPToGetToLevel(int level) {
+        int xp = 0 ;
+        for(;level > 0;){
+            xp += calculateRequireExperience(level);
+            --level;
+        }
+        return xp;
+    }
+    public static int calculateRequireExperience(int level) {
         if (level >= 30) {
             return 112 + (level - 30) * 9 * 100;
         } else if (level >= 15) {
@@ -875,8 +886,8 @@ public abstract class BaseClass {
     }
 
     public FormWindow getClassMerchantWindow() {
-//        return new CyberFormSimpleClassMerchant();
-        return null;
+        return new CyberFormSimpleClassMerchant(this);
+//        return null;
     }
 
     /**

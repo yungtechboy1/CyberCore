@@ -14,17 +14,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL.SBBB;
+
 /**
  * Created by carlt on 5/1/2019.
  */
 public class AHSqlite extends MySQL {
 
 
+    public static Connection SC = null;
+
+
     public AHSqlite(CyberCoreMain plugin) {
         super(plugin);
         LoadAllItems();
     }
-
 
     @Override
     public Connection connectToDb() {
@@ -33,11 +37,23 @@ public class AHSqlite extends MySQL {
         int port = plugin.MainConfig.getSection("db2").getInt("mysql-port");
         String user = plugin.MainConfig.getSection("db2").getString("mysql-user");
         String db = plugin.MainConfig.getSection("db2").getString("mysql-db-Server");
-        if (!enabled) return null;
-        Connection connection = DbLib.getMySqlConnection(host, port,
-                db, user, pass);
+        if (SC != null) {
+            try {
+                if(!SC.isClosed())return SC;
+            } catch (Exception e) {
 
-        if (connection == null) enabled = false;
+            }
+        }
+        if (!enabled) return null;
+
+        Connection connection = DbLib.getMySqlConnection(SBBB(host, port, db), user, pass);
+
+        if (connection == null) {
+            System.out.println("CONEEEEECTTTTTTTTTIONNNNNNNNNNNN FAILEDDDDDDDD!!!!!!!!!!!!");
+            enabled = false;
+        } else {
+            SC = connection;
+        }
         return connection;
     }
 
@@ -105,7 +121,6 @@ public class AHSqlite extends MySQL {
         Connection connection = connectToDb();
         if (connection == null) return null;
         ResultSet resultSet = connection.createStatement().executeQuery(sql);
-        if (resultSet == null) return null;
         return resultSet;
     }
 

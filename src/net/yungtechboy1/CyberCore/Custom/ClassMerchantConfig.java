@@ -2,9 +2,9 @@ package net.yungtechboy1.CyberCore.Custom;
 
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.plugin.Plugin;
-import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.ClassType;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Commands.ClassMerchant;
 import net.yungtechboy1.CyberCore.Data.CustomSimpleConfig;
 
 import java.util.ArrayList;
@@ -16,22 +16,31 @@ public class ClassMerchantConfig extends CustomSimpleConfig {
     public ClassMerchantConfig(Plugin plugin) {
         super(plugin, "ClassMerchantConfig.yml");
         load();
+//        for (ClassMerchantData cmd : CMD) {
+////            System.out.println(cmd.toString()+"!!!!!!!!!!!!!!!!!!");
+//        }
+        if(CMD.isEmpty())CMD.add(RandomData());
+//        for (ClassMerchantData cmd : CMD) {
+////            System.out.println(cmd.toString()+"2!!!!!!!!!!!!!!!!!!");
+//        }
+    }
+
+    public ArrayList<ClassMerchantData> getPurchaseablePowers(ClassType ct){
+        ArrayList<ClassMerchantData> c = new ArrayList<>();
         for(ClassMerchantData cmd: CMD){
-//            System.out.println(cmd.toString()+"!!!!!!!!!!!!!!!!!!");
+            if(cmd.AllowedToPurchase.isEmpty())continue;
+            if(cmd.AllowedToPurchase.contains(ct))c.add(cmd);
         }
-        CMD.add(RandomData());
-        for(ClassMerchantData cmd: CMD){
-//            System.out.println(cmd.toString()+"2!!!!!!!!!!!!!!!!!!");
-        }
+        return c;
     }
 
     public ClassMerchantData RandomData() {
         NukkitRandom nr = new NukkitRandom();
         ClassMerchantData cmd = new ClassMerchantData(PowerEnum.values()[nr.nextRange(0, PowerEnum.values().length - 1)]);
         cmd.setMoneyCost(nr.nextRange(500, 10000));
-        cmd.getAllowedToPurchase().add(ClassType.values()[nr.nextRange(1, ClassType.values().length-1)]);
-        cmd.getAllowedToPurchase().add(ClassType.values()[nr.nextRange(1, ClassType.values().length-1)]);
-        cmd.getAllowedToPurchase().add(ClassType.values()[nr.nextRange(1, ClassType.values().length-1)]);
+        cmd.getAllowedToPurchase().add(ClassType.values()[nr.nextRange(1, ClassType.values().length - 1)]);
+        cmd.getAllowedToPurchase().add(ClassType.values()[nr.nextRange(1, ClassType.values().length - 1)]);
+        cmd.getAllowedToPurchase().add(ClassType.values()[nr.nextRange(1, ClassType.values().length - 1)]);
         return cmd;
     }
 

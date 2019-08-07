@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL.SBBB;
+
 /**
  * Created by carlt on 4/15/2019.
  */
@@ -28,22 +30,33 @@ public class ServerSqlite extends MySQL {
         super(plugin);
     }
 
-    @Override
+    public static Connection SC = null;
+@Override
     public Connection connectToDb() {
         String host = plugin.MainConfig.getSection("db2").getString("mysql-host");
         String pass = plugin.MainConfig.getSection("db2").getString("mysql-pass");
         int port = plugin.MainConfig.getSection("db2").getInt("mysql-port");
         String user = plugin.MainConfig.getSection("db2").getString("mysql-user");
         String db = plugin.MainConfig.getSection("db2").getString("mysql-db-Server");
-        if (!enabled) return null;
-        Connection connection = DbLib.getMySqlConnection(host, port,
-                db, user, pass);
+    if (SC != null) {
+        try {
+            if(!SC.isClosed())return SC;
+        } catch (Exception e) {
 
-        if (connection == null) enabled = false;
-        return connection;
+        }
     }
+        if (!enabled) return null;
 
-    public ArrayList<HashMap<String, Object>> executeSelect(String query) throws SQLException {
+        Connection connection = DbLib.getMySqlConnection(SBBB(host, port, db), user, pass);
+
+        if (connection == null) {
+            System.out.println("CONEEEEECTTTTTTTTTIONNNNNNNNNNNN FAILEDDDDDDDD!!!!!!!!!!!!");
+            enabled = false;
+        }else{
+            SC = connection;
+        }
+        return connection;
+    }public ArrayList<HashMap<String, Object>> executeSelect(String query) throws SQLException {
         ArrayList<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
         Connection connection = connectToDb();
         if (connection == null) return null;

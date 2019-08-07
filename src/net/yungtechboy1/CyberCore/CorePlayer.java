@@ -160,6 +160,35 @@ public class CorePlayer extends Player {
         return (HashMap<Buff.BuffType, DeBuff>) getDeBufflist().get(BuffOrigin.Class).clone();
     }
 
+    public boolean takeExperience(int add) {
+        if (add != 0 || getTotalExperience() < add) {
+            int now = this.getExperience();
+            int added = now - add;
+            int level = this.getExperienceLevel();
+
+            for(int most = calculateRequireExperience(level-1); added < 0; ) {
+                added += most;
+                --level;
+            }
+
+            this.setExperience(added, level);
+            return true;
+        }
+        return false;
+    }
+    public int getTotalExperience() {
+//        int t = 0;
+            int now = this.getExperience();
+            int added = now;
+            int level = this.getExperienceLevel();
+
+            for(int most = calculateRequireExperience(level-1); level > 0; ) {
+                added += most;
+                --level;
+            }
+return added;
+    }
+
     public HashMap<Buff.BuffType, Buff> getClassBuffList() {
         if (!getBufflist().containsKey(BuffOrigin.Class)) return new HashMap<>();
         return (HashMap<Buff.BuffType, Buff>) getBufflist().get(BuffOrigin.Class).clone();
@@ -488,7 +517,9 @@ public class CorePlayer extends Player {
 
     @Override
     public void close(TextContainer message, String reason, boolean notify) {
+        System.out.println("CCCCCCCC1");
         CyberCoreMain.getInstance().ServerSQL.UnLoadPlayer(this);
+        System.out.println("CCCCCCCC2");
         super.close(message, reason, notify);
     }
 
@@ -523,6 +554,11 @@ public class CorePlayer extends Player {
         }
     }
 
+    public boolean canMakeTransaction(double price) {
+        if (price > getMoney()) return false;
+//        TakeMoney(price);
+        return true;
+    }
     public boolean MakeTransaction(double price) {
         if (price > getMoney()) return false;
         TakeMoney(price);

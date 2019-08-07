@@ -1,9 +1,11 @@
 package net.yungtechboy1.CyberCore.Custom;
 
+import cn.nukkit.item.Item;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.ClassType;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
+import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
 import net.yungtechboy1.CyberCore.Data.CustomSimpleConfigClass;
 
 import java.util.ArrayList;
@@ -113,4 +115,19 @@ public class ClassMerchantData extends CustomSimpleConfigClass {
         MoneyCost = moneyCost;
     }
 
+    public String toButtonString() {
+        String s = "";
+        s += PE;
+        if(getClassXPCost() > 0)s += " | ClassXP: "+getClassXPCost();
+        if(getClassLevelCost() > 0)s += " | ClassLevel: "+getClassLevelCost();
+        if(getPlayerLevelCost() > 0)s += " | PlayerLevel: "+getPlayerLevelCost();
+        if(getPlayerXPCost() > 0)s += " | PlayerXP: "+getPlayerXPCost();
+        if(getMoneyCost() > 0)s += " | Money: $"+getMoneyCost();
+        return s;
+    }
+
+    public Item getItemBook() {
+        CItemBook i = new CItemBook(getPE());
+        return i;
+    }
 }

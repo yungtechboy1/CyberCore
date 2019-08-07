@@ -6,13 +6,15 @@ import net.yungtechboy1.CyberCore.PlayerSettingsData;
 import ru.nukkit.dblib.DbLib;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL.SBBB;
 
 public class UserSQL extends MySQL {
 
 
+    public static Connection SC = null;
     /**
      * Connects to the MYSQL database assigned in config.yml for GLOBAL data
      *
@@ -39,11 +41,23 @@ public class UserSQL extends MySQL {
         int port = plugin.MainConfig.getSection("db2").getInt("mysql-port");
         String user = plugin.MainConfig.getSection("db2").getString("mysql-user");
         String db = plugin.MainConfig.getSection("db2").getString("mysql-db-Server");
-        if (!enabled) return null;
-        Connection connection = DbLib.getMySqlConnection(host, port,
-                db, user, pass);
+        if (SC != null) {
+            try {
+                if(!SC.isClosed())return SC;
+            } catch (Exception e) {
 
-        if (connection == null) enabled = false;
+            }
+        }
+        if (!enabled) return null;
+
+        Connection connection = DbLib.getMySqlConnection(SBBB(host, port, db), user, pass);
+
+        if (connection == null) {
+            System.out.println("CONEEEEECTTTTTTTTTIONNNNNNNNNNNN FAILEDDDDDDDD!!!!!!!!!!!!");
+            enabled = false;
+        } else {
+            SC = connection;
+        }
         return connection;
     }
 
@@ -81,7 +95,7 @@ public class UserSQL extends MySQL {
 
     public boolean savePlayerSettingData(CorePlayer corePlayer) {
         PlayerSettingsData psd = corePlayer.getSettingsData();
-        if(psd == null)return false;
+        if (psd == null) return false;
         if (!psd.UUIDS.contains(corePlayer.getUniqueId())) psd.UUIDS.add(corePlayer.getUniqueId());
         try {
             try {

@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MySQL {
+public abstract class MySQL {
 
     public Connection connection;
     public CyberCoreMain plugin;
@@ -34,19 +34,19 @@ public class MySQL {
      *
      * @return Connection
      */
-    public Connection connectToDb() {
-        String host = plugin.MainConfig.getString("mysql-host");
-        String pass = plugin.MainConfig.getString("mysql-pass");
-        int port = plugin.MainConfig.getInt("mysql-port");
-        String user = plugin.MainConfig.getString("mysql-user");
-        String db = plugin.MainConfig.getString("mysql-db");
-        if (!enabled) return null;
-        Connection connection = DbLib.getMySqlConnection(host, port,
-                db, user, pass);
-
-        if (connection == null) enabled = false;
-        return connection;
-    }
+    public abstract Connection connectToDb();// {
+//        String host = plugin.MainConfig.getString("mysql-host");
+//        String pass = plugin.MainConfig.getString("mysql-pass");
+//        int port = plugin.MainConfig.getInt("mysql-port");
+//        String user = plugin.MainConfig.getString("mysql-user");
+//        String db = plugin.MainConfig.getString("mysql-db");
+//        if (!enabled) return null;
+//        Connection connection = DbLib.getMySqlConnection(SBBB(host, port,
+//                db, user, pass);
+//
+//        if (connection == null) enabled = false;
+//        return connection;
+//    }
 
     public boolean executeUpdate(String query) throws SQLException {
         Connection connection = connectToDb();

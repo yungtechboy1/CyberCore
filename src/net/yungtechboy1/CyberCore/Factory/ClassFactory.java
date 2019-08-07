@@ -134,6 +134,7 @@ public class ClassFactory implements Listener {
                 case Class_Magic_Enchanter:
                     break;
                 case Class_Rouge_Theif:
+                    data = new Theif(CCM, p, o);
                     break;
                 case Class_Offense_Knight:
                     data = new Knight(CCM, p, o);
@@ -160,10 +161,12 @@ public class ClassFactory implements Listener {
                 case Class_Priest:
                     data = new Priest(CCM, p, o);
                     break;
-                case Priest:
-                    break;
             }
-            if(data == null)return null;
+            if(data == null){
+                System.out.println("ERROROROROR NONEEE WEREEEEEE DDDDDDDDDDD"+o.getInt("TYPE", 0));
+                return null;
+            }
+            System.out.println(p.getName()+"'s CLASS WAS LOADEDEDDDD NONEEE WEREEEEEE DDDDDDDDDDD");
             data.onCreate();
             p.SetPlayerClass(data);
             return data;
@@ -179,6 +182,7 @@ public class ClassFactory implements Listener {
         } else {
             System.out.println(p.getName() + " HASS NUNN CLASS???");
         }
+        MMOSave.save();
     }
 
 //    @EventHandler
@@ -271,7 +275,7 @@ public class ClassFactory implements Listener {
 
     public void Saveall() {
         CCM.getLogger().info("SAving All Classes!");
-        for (Player p : CCM.getServer().getOnlinePlayers().values()) {
+        for (Player p : new ArrayList<>(CCM.getServer().getOnlinePlayers().values())) {
             if (!(p instanceof CorePlayer)) continue;
             CorePlayer cp = (CorePlayer) p;
             if (cp.getPlayerClass() == null) continue;
