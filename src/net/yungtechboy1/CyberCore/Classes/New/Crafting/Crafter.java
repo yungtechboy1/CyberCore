@@ -14,7 +14,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 public class Crafter extends BaseClass{
     public Crafter(CyberCoreMain main, CorePlayer player, int mid, int rank, int xp, ConfigSection cooldowns) {
 
-        super(main, player, ClassType.Class_Miner_TNT_Specialist);
+        super(main, player);
     }
 
     @Override

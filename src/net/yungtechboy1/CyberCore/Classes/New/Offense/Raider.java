@@ -14,7 +14,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 public class Raider extends BaseClass {
 
     public Raider(CyberCoreMain main, CorePlayer player, ConfigSection cs) {
-        super(main, player, ClassType.Class_Miner_TNT_Specialist);
+        super(main, player);
     }
 
     public CustomEntityDamageEvent CustomEntityDamageEvent(CustomEntityDamageEvent event) {

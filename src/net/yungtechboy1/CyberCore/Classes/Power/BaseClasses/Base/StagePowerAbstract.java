@@ -25,6 +25,9 @@ public abstract class StagePowerAbstract extends PowerAbstract{
 //    public StagePowerAbstract(BaseClass b, AdvancedPowerEnum ape,PowerSettings ps,int psc, double cost)  {
 //        super(b,ape,ps, psc, cost);
 //    }
+    public StagePowerAbstract(AdvancedPowerEnum ape) {
+        super(ape);
+    }
     public StagePowerAbstract(BaseClass b) {
         super(b, StageEnum.STAGE_1);
     }

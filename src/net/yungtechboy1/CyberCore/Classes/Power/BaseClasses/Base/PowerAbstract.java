@@ -52,6 +52,31 @@ public abstract class PowerAbstract {
     private ClassLevelingManagerStage SLM;
     private ClassLevelingManagerXPLevel XLM;
 
+    public PowerAbstract(AdvancedPowerEnum ape) {
+        if(ape == null)ape = new AdvancedPowerEnum(getType());
+        if (!ape.isValid()) {
+            System.out.println("Error! APE is not valid!");
+//            if(this instanceof StagePowerAbstract){
+            try {
+                if(this instanceof StagePowerAbstract){
+                    System.out.println("IS STAGE ABSTRACT!!!!!");
+                    ape = new AdvancedPowerEnum(ape.getPowerEnum(), StageEnum.STAGE_1);
+                }
+                else ape = new AdvancedPowerEnum(ape.getPowerEnum(),0);
+            } catch (Exception e) {
+                System.out.println("Error!eeeeeeeeeeeeeeeeeeee");
+                e.printStackTrace();
+                return;
+            }
+//            }else return;
+        }
+        if (ape.isStage()) {
+            loadLevelManager(new ClassLevelingManagerStage(ape.getStageEnum()));
+        } else {
+            loadLevelManager(new ClassLevelingManagerXPLevel(ape.getXP()));
+        }
+    }
+
     public int getTickUpdate(){
         if(isAbility())return 20;
         if(isHotbar())return 20*5;

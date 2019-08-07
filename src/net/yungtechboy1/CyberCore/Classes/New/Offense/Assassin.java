@@ -11,7 +11,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class Assassin extends BaseClass {
     public Assassin(CyberCoreMain main, CorePlayer player, ConfigSection cs) {
-        super(main, player, ClassType.Class_Miner_TNT_Specialist);
+        super(main, player);
     }
 
     @Override

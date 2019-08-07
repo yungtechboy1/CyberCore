@@ -100,9 +100,8 @@ public abstract class MySQL {
                 }
             } else {
                 for (int i = 1; i < resultSet.getMetaData().getColumnCount()+1; i++) {
-                    System.out.println(i);
-                    System.out.println(resultSet.getMetaData().getColumnName(i));
-                    System.out.println(resultSet.getObject(i));
+//                    System.out.println(i);
+                    System.out.println(resultSet.getMetaData().getColumnName(i)+"|"+resultSet.getObject(i));
                     System.out.println("=====================");
                     map.put(resultSet.getMetaData().getColumnName(i), resultSet.getObject(i));
                 }

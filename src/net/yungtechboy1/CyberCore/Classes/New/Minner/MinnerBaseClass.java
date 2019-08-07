@@ -17,8 +17,8 @@ public class MinnerBaseClass extends BaseClass {
     public static final String TNT_Specialist_Add_Tick = "TSAT";
     public static final int Power_TNT_Specialist = 0;
 
-    public MinnerBaseClass(CyberCoreMain main, CorePlayer player, ClassType t, ConfigSection data) {
-        super(main, player, t, data);
+    public MinnerBaseClass(CyberCoreMain main, CorePlayer player, ConfigSection data) {
+        super(main, player, data);
     }
 
     @Override

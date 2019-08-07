@@ -75,7 +75,7 @@ public abstract class BaseClass {
         put(Block.CLAY_BLOCK, 40);
     }};
     private CorePlayer P;
-    private ClassType TYPE;
+//    private ClassType TYPE;
     private int LVL = 0;
     private int XP = 0;
     private Ability ActiveAbility;
@@ -90,8 +90,8 @@ public abstract class BaseClass {
     //Get all the Powers that the player has Learned
     //Next Filter By the Class Currently Choosen
     //Then Add all aplicable Powers
-    public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank, ConfigSection data) {
-        this(main, player, rank);
+    public BaseClass(CyberCoreMain main, CorePlayer player,  ConfigSection data) {
+        this(main, player);
         if (data != null) {
             if (data.containsKey("COOLDONWS")) {
                 ConfigSection css = data.getSection("COOLDONWS");
@@ -136,14 +136,26 @@ public abstract class BaseClass {
         }
     }
 
-    public BaseClass(CyberCoreMain main, CorePlayer player, ClassType rank) {
+    public BaseClass(CyberCoreMain main, CorePlayer player) {
         CCM = main;
 //        MainID = mid;
         P = player;
-        TYPE = rank;
-        LVL = XPToLevel(XP);
+//        TYPE = rank;
+//        LVL = XPToLevel(XP);
+        ClassSettings = new ClassSettingsObj(this);
         startbuffs();
         startSetPowers();
+    }
+
+    public BaseClass(CyberCoreMain main) {
+        CCM = main;
+        ClassSettings = new ClassSettingsObj(this);
+//        MainID = mid;
+//        P = player;
+//        TYPE = rank;
+//        LVL = XPToLevel(XP);
+//        startbuffs();
+//        startSetPowers();
     }
 
     private void startSetPowers() {
@@ -235,9 +247,7 @@ public abstract class BaseClass {
     }
 
 
-    public ClassType getTYPE() {
-        return TYPE;
-    }
+    public abstract ClassType getTYPE();
 
     public abstract void SetPowers();
 

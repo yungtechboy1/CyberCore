@@ -12,7 +12,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
  */
 public class MadScientist extends BaseClass {
     public MadScientist(CyberCoreMain main, CorePlayer player, int mid, int rank, int xp) {
-        super(main, player, ClassType.Class_Miner_TNT_Specialist);
+        super(main, player);
     }
 
     public int GetImpurity(){

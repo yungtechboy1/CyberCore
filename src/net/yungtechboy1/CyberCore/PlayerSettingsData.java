@@ -15,10 +15,43 @@ public class PlayerSettingsData {
 
     public String Name;
     public ArrayList<UUID> UUIDS = new ArrayList<>();
-    public double Cash = 0;
-    public int CreditScore = 0;
-    public int CreditLimit = 500;
-    public int UsedCredit = 0;
+    private double Cash = 0;
+    private int CreditScore = 0;
+
+    public double getCash() {
+        return Cash;
+    }
+
+    public void setCash(double cash) {
+        Cash = cash;
+    }
+
+    public int getCreditScore() {
+        return CreditScore;
+    }
+
+    public void setCreditScore(int creditScore) {
+        CreditScore = creditScore;
+    }
+
+    public int getCreditLimit() {
+        return CreditLimit;
+    }
+
+    public void setCreditLimit(int creditLimit) {
+        CreditLimit = creditLimit;
+    }
+
+    public int getUsedCredit() {
+        return UsedCredit;
+    }
+
+    public void setUsedCredit(int usedCredit) {
+        UsedCredit = usedCredit;
+    }
+
+    private int CreditLimit = 500;
+    private int UsedCredit = 0;
     //TODO Intergrate
     public ArrayList<PlayerWarningEvent> PlayerWarnings = new ArrayList<>();
     public ArrayList<PlayerTempBanEvent> PlayerTempBans = new ArrayList<>();
@@ -87,6 +120,17 @@ public class PlayerSettingsData {
     public String PlayerBansToJSON() {
 //        if (PlayerBans.size() == 0) return "[]";
         return new Gson().toJson(PlayerBans, pbbType);
+    }
+
+    public void addCash(double price) {
+        Cash += price;
+    }
+
+    public boolean takeCash(double price) {
+
+        if(getCash() < price)return false;
+        Cash -= price;
+        return true;
     }
 }
 

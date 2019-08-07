@@ -14,7 +14,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 public class Smith extends BaseClass {
     public Smith(CyberCoreMain main, CorePlayer player, int mid, ConfigSection cs) {
 
-        super(main, player, ClassType.Class_Miner_TNT_Specialist);
+        super(main, player);
     }
 
     @Override

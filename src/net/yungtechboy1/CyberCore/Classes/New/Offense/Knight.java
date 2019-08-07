@@ -24,7 +24,7 @@ public class Knight extends BaseClass {
 //    }
 
     public Knight(CyberCoreMain main, CorePlayer player, ConfigSection data) {
-        super(main, player, ClassType.Class_Offense_Knight, data);
+        super(main, player, data);
 
 //        addDefaultPower(PowerEnum.KnightSandShield);
 //        addPossiblePower(new DoubleTimeAbility(this));

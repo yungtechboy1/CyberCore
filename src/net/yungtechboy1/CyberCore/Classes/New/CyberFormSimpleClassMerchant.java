@@ -45,15 +45,22 @@ BaseClass _BC ;
             p.showFormWindow(_BC.getSettingsWindow());
         }else {
             ArrayList<ClassMerchantData> a = CyberCoreMain.getInstance().CMC.getPurchaseablePowers(_BC.getTYPE());
-            if(a.isEmpty() || k >= a.size())return false;
-            ClassMerchantData cmd = a.get(k);
-            if(cmd == null)return false;
+            if(a.isEmpty() || k > a.size()){
+                System.out.println("EEEE A WAS EMPTY!!!"+(k > a.size()));
+                return false;
+            }
+            ClassMerchantData cmd = a.get(k-1);
+            if(cmd == null){
+                System.out.println("222222222 CMDDDD WAS EMPTY!!!");
+                return false;
+            }
             tryPurchaseCMD(cmd,p);
         }
         return true;
     }
 
     public void tryPurchaseCMD(ClassMerchantData cmd, CorePlayer p){
+        System.out.println("--- STARTING PURCHASE ---");
         if(cmd.getMoneyCost() > 0 && !p.canMakeTransaction(cmd.getMoneyCost())){
             p.sendMessage("Error! You do not have $"+cmd.getMoneyCost()+" to make this purchase!");
             return;
@@ -75,11 +82,13 @@ BaseClass _BC ;
             if(p.getPlayerClass() != null)p.sendMessage("Error! You do not have enough Class XP to purchase this power! Try again when you are Class Level "+cmd.getClassLevelCost()+" to make this purchase!");
             return;
         }
+        System.out.println("--- SENDING MONEY PURCHASE ---");
         if(cmd.getMoneyCost() > 0)p.MakeTransaction(cmd.getMoneyCost());
         if(cmd.getPlayerLevelCost() > 0)p.takeExperience(XPToGetToLevel(cmd.getPlayerLevelCost()));
         if(cmd.getPlayerXPCost() > 0)p.takeExperience(cmd.getPlayerXPCost());
         if(cmd.getClassLevelCost() > 0)p.getPlayerClass().takeXP(XPToGetToLevel(cmd.getClassLevelCost()));
         if(cmd.getClassXPCost() > 0)p.getPlayerClass().takeXP(cmd.getClassXPCost());
+        System.out.println("--- ADDING ITEM ---");
         p.getInventory().addItem(cmd.getItemBook());
 
 

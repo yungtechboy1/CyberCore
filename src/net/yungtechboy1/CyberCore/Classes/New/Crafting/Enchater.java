@@ -12,7 +12,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
  */
 public class Enchater extends BaseClass {
     public Enchater(CyberCoreMain main, CorePlayer player, int xp) {
-        super(main, player, ClassType.Class_Miner_TNT_Specialist);
+        super(main, player);
     }
 
     public int GetMaxFail(){

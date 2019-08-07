@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class Sorcerer extends BaseClass {
     public Sorcerer(CyberCoreMain main, CorePlayer player, ConfigSection data) {
-        super(main, player, ClassType.Class_Magic_Sorcerer, data);
+        super(main, player,data);
     }
 
     public Sorcerer(CyberCoreMain main, CorePlayer player) {
@@ -54,7 +54,7 @@ public class Sorcerer extends BaseClass {
 
     @Override
     public ClassType getTYPE() {
-        return super.getTYPE();
+        return ClassType.Class_Magic_Sorcerer;
     }
 
     @Override

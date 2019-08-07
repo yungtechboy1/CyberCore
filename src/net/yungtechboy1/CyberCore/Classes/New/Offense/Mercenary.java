@@ -22,7 +22,7 @@ public class Mercenary  extends BaseClass {
 //    }
 
     public Mercenary(CyberCoreMain main, CorePlayer player, ConfigSection cs) {
-        super(main, player, ClassType.Class_Offense_Mercenary);
+        super(main, player);
     }
 
     @Override

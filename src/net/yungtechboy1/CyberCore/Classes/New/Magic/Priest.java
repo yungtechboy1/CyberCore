@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class Priest extends BaseClass {
     public Priest(CyberCoreMain main, CorePlayer player, ConfigSection data) {
-        super(main, player, ClassType.Class_Priest, data);
+        super(main, player,data);
     }
 
     public Priest(CyberCoreMain main, CorePlayer player) {

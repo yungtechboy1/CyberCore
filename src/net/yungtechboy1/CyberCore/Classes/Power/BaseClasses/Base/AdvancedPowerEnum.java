@@ -1,7 +1,9 @@
 package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base;
 
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.PowerManager;
 
 public class AdvancedPowerEnum {
     PowerEnum PE;
@@ -21,16 +23,11 @@ public class AdvancedPowerEnum {
     }
 
     public AdvancedPowerEnum(PowerEnum PE, PowerAbstract.StageEnum SE) {
-        if (SE == PowerAbstract.StageEnum.NA)System.out.println("Error! CAN NOT SEND NA!!!!");
+        if (SE == PowerAbstract.StageEnum.NA) System.out.println("Error! CAN NOT SEND NA!!!!");
 //            throw new Exception("Error! Can not pass StageEnum.NA to AdvancedPowerEnum Constructor!");
         this.PE = PE;
         this.SE = SE;
         tt = PowerAbstract.LevelingType.Stage;
-    }
-
-    public boolean isStage(){
-        //Something so Simple low key caused 2 hours of work! >:(
-        return getStageEnum() != PowerAbstract.StageEnum.NA;
     }
 
     //0    1            2  3
@@ -48,7 +45,7 @@ public class AdvancedPowerEnum {
             return null;
         }
         if (ss[2].equalsIgnoreCase("xp")) {
-            return new AdvancedXPPowerEnum(pe,Integer.parseInt(ss[3]));
+            return new AdvancedXPPowerEnum(pe, Integer.parseInt(ss[3]));
         } else if (ss[2].equalsIgnoreCase("stage")) {
             try {
                 return new AdvancedStagePowerEnum(pe, PowerAbstract.StageEnum.getStageFromInt(Integer.parseInt(ss[3])));
@@ -58,6 +55,11 @@ public class AdvancedPowerEnum {
         }
         System.out.println("Error! Why did this go all the way!?!?!? E110393");
         return null;
+    }
+
+    public boolean isStage() {
+        //Something so Simple low key caused 2 hours of work! >:(
+        return getStageEnum() != PowerAbstract.StageEnum.NA;
     }
 
     public PowerEnum getPowerEnum() {
@@ -122,6 +124,45 @@ public class AdvancedPowerEnum {
             default:
                 return "Unknown Data!";
         }
+    }
+
+    public String getLore1() {
+        return getPowerEnum().name();
+    }
+
+    public String getLore2() {
+        switch (tt) {
+            case XPLevel:
+                return "XP =" + getXP();
+            case Stage:
+                return "Stage = " + getStageEnum().ordinal();
+            case None:
+            default:
+                return "------------";
+        }
+    }
+
+    public String getLore3() {
+        PowerAbstract ape = PowerManager.getPowerfromAPE(this);
+        String s = "";
+        if (ape == null) {
+            s = "=====N/A=====";
+        } else {
+            if (ape.getAllowedClasses() == null || ape.getAllowedClasses().isEmpty()) {
+                s = "== ANY CLASS ==";
+            } else {
+                for (Class v : ape.getAllowedClasses()) {
+                    try {
+                        BaseClass bc = (BaseClass) v.getConstructor(CyberCoreMain.class).newInstance(CyberCoreMain.getInstance());
+                        bc.getDisplayName();
+                    } catch (Exception e) {
+
+                    }
+                    s += v.getName() + "\n";
+                }
+            }
+        }
+        return s;
     }
 
 //    public ConfigSection toConfig() {

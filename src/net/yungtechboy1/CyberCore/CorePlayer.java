@@ -573,17 +573,17 @@ return added;
     public void TakeMoney(double price) {
         if (price <= 0) return;
         PlayerSettingsData ped = GetData();
-        ped.Cash -= price;
+        ped.takeCash(price);
     }
 
     public void AddMoney(double price) {
         if (price <= 0) return;
         PlayerSettingsData ped = GetData();
-        ped.Cash += price;
+        ped.addCash(price);
     }
 
     public double getMoney() {
-        return GetData().Cash;
+        return GetData().getCash();
     }
 
     public void SetRank(RankList r) {

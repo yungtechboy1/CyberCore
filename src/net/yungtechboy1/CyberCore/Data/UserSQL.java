@@ -79,6 +79,7 @@ public class UserSQL extends MySQL {
 
             ArrayList<HashMap<String, Object>> a = executeSelect("SELECT * FROM `PlayerSettings` WHERE `Name` LIKE '" + corePlayer.getName() + "'");
             if (a == null || a.size() == 0) {
+                System.out.println("===> No PlayerSettingData Found in SQL!");
                 corePlayer.setSettingsData(psd);
                 return psd;
             }
@@ -102,14 +103,15 @@ public class UserSQL extends MySQL {
                 executeUpdate("DELETE FROM `PlayerSettings` WHERE `Name` LIKE '" + corePlayer.getName() + "'");
             } catch (Exception e) {
                 e.printStackTrace();
+                System.out.println("Could not Delete!!!!! E55425");
             }
             String q = "INSERT INTO `PlayerSettings` VALUES (";
             q = addToQuery(q, corePlayer.getName()) + ",";
             q = addToQuery(q, psd.UUIDSToJSON()) + ",";
-            q = addToQuery(q, psd.Cash) + ",";
-            q = addToQuery(q, psd.CreditScore) + ",";
-            q = addToQuery(q, psd.CreditLimit) + ",";
-            q = addToQuery(q, psd.UsedCredit) + ",";
+            q = addToQuery(q, psd.getCash()) + ",";
+            q = addToQuery(q, psd.getCreditScore()) + ",";
+            q = addToQuery(q, psd.getCreditLimit()) + ",";
+            q = addToQuery(q, psd.getUsedCredit()) + ",";
             q = addToQuery(q, psd.PlayerWarningToJSON()) + ",";
             q = addToQuery(q, psd.PlayerTempBansToJSON()) + ",";
             q = addToQuery(q, psd.PlayerKicksToJSON()) + ",";

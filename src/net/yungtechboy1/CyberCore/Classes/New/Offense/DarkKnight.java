@@ -14,7 +14,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class DarkKnight extends BaseClass {
     public DarkKnight(CyberCoreMain main, CorePlayer player, ConfigSection data) {
-        super(main, player, ClassType.Class_Offense_Dark_Knight, data);
+        super(main, player,data);
     }
 
     @Override

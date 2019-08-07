@@ -14,7 +14,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 public class Theif extends BaseClass {
 
     public Theif(CyberCoreMain main, CorePlayer player, ConfigSection cs) {
-        super(main, player, ClassType.Class_Rouge_Theif);
+        super(main, player);
     }
 
     @Override
