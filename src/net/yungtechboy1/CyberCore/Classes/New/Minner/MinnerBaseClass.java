@@ -6,6 +6,7 @@ import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.New.ClassType;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -16,7 +17,7 @@ public class MinnerBaseClass extends BaseClass {
     public static final String TNT_Specialist_Add_Tick = "TSAT";
     public static final int Power_TNT_Specialist = 0;
 
-    public MinnerBaseClass(CyberCoreMain main, CorePlayer player,ClassType t, ConfigSection data) {
+    public MinnerBaseClass(CyberCoreMain main, CorePlayer player, ClassType t, ConfigSection data) {
         super(main, player, t, data);
     }
 

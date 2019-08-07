@@ -20,9 +20,9 @@ public class AdvancedPowerEnum {
         tt = PowerAbstract.LevelingType.XPLevel;
     }
 
-    public AdvancedPowerEnum(PowerEnum PE, PowerAbstract.StageEnum SE) throws Exception {
-        if (SE == PowerAbstract.StageEnum.NA)
-            throw new Exception("Error! Can not pass StageEnum.NA to AdvancedPowerEnum Constructor!");
+    public AdvancedPowerEnum(PowerEnum PE, PowerAbstract.StageEnum SE) {
+        if (SE == PowerAbstract.StageEnum.NA)System.out.println("Error! CAN NOT SEND NA!!!!");
+//            throw new Exception("Error! Can not pass StageEnum.NA to AdvancedPowerEnum Constructor!");
         this.PE = PE;
         this.SE = SE;
         tt = PowerAbstract.LevelingType.Stage;

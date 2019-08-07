@@ -8,6 +8,7 @@ import cn.nukkit.utils.TextFormat;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.New.ClassType;
 import net.yungtechboy1.CyberCore.Classes.New.Magic.Priest;
 import net.yungtechboy1.CyberCore.Classes.New.Magic.Sorcerer;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
@@ -121,7 +122,7 @@ public class ClassFactory implements Listener {
         ConfigSection o = (ConfigSection) MMOSave.get(p.getName().toLowerCase());
         if (o != null) {
             BaseClass data = null;//new BaseClass(CCM, p, (ConfigSection) o);
-            switch (BaseClass.ClassType.values()[o.getInt("TYPE", 0)]) {
+            switch (ClassType.values()[o.getInt("TYPE", 0)]) {
                 case Unknown:
                     break;
                 case Class_Miner_TNT_Specialist:

@@ -1,6 +1,7 @@
 package net.yungtechboy1.CyberCore.Classes.New.Minner;
 
 import cn.nukkit.utils.ConfigSection;
+import net.yungtechboy1.CyberCore.Classes.New.ClassType;
 import net.yungtechboy1.CyberCore.Classes.Passive.OreKnowledge;
 import net.yungtechboy1.CyberCore.Classes.Power.MineLifePower;
 import net.yungtechboy1.CyberCore.CorePlayer;

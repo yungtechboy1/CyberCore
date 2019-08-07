@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Classes.New.Minner;
 
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Classes.New.ClassType;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.TNTSpecialistPower;
 import net.yungtechboy1.CyberCore.CoolDown;

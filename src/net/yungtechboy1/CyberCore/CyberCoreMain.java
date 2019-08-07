@@ -42,6 +42,7 @@ import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockFire;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
+import net.yungtechboy1.CyberCore.Custom.ClassMerchantConfig;
 import net.yungtechboy1.CyberCore.Custom.Crafting.CustomRecipeCraftingManager;
 import net.yungtechboy1.CyberCore.Custom.CustomInventoryTransactionPacket;
 import net.yungtechboy1.CyberCore.Custom.Item.*;
@@ -431,8 +432,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new AuctionHouseCmd(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new SellHand(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new HowToPlay(this));
-    }
 
+
+        CMC = new ClassMerchantConfig(this);
+    }
+    public ClassMerchantConfig CMC;
     private void loadPowerManager() {
         PowerManagerr = new PowerManager(this);
         loadPowersToPM();
@@ -612,6 +616,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        PasswordFactoy.onDisable();
 
         //Classes
+        CMC.save();
         FTM.CTstop();
         saveFloatingText();
         PowerSourceTask.CTstop();
