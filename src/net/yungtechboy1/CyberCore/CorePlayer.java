@@ -1033,13 +1033,13 @@ return added;
                                                         inventory.setItemInHand(i);
                                                         inventory.sendHeldItem(this.getViewers().values());
                                                     }
-                                                    break packetswitch;
                                                 } else {
                                                     if (i instanceof ItemBlock)
                                                         System.out.println("YYYYYYYYYYYYYYYYEEEEEE222222222222E");
                                                     System.out.println("ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR" + i);
                                                 }
                                             }
+                                            break packetswitch;
                                         }
 
                                         inventory.sendHeldItem(this);

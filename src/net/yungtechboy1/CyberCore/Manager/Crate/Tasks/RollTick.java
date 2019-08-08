@@ -13,7 +13,6 @@ import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.AddItemEntityPacket;
 import cn.nukkit.network.protocol.DataPacket;
-import cn.nukkit.network.protocol.ExplodePacket;
 import cn.nukkit.scheduler.Task;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
@@ -21,12 +20,11 @@ import net.yungtechboy1.CyberCore.Manager.Crate.CrateMain;
 import net.yungtechboy1.CyberCore.Manager.Crate.Utils.CenterText;
 import net.yungtechboy1.CyberCore.Manager.Factions.CustomFloatingTextParticle;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class RollTick extends Task {
 
-    public final Integer MAX =266;
+    public final Integer MAX = 800;
     private CrateMain main;
     private ConfigSection data;
     private int tick;
@@ -71,6 +69,9 @@ public class RollTick extends Task {
         }
         if (slot == -1) slot = new NukkitRandom().nextRange(0, pis.size() - 1);
         slot += new NukkitRandom().nextRange(0, 10);
+        while (slot > pis.size()) {
+            slot -= new NukkitRandom().nextRange(0, pis.size() / 2);
+        }
         data.set("slot", slot);
 
         long eid;
@@ -90,18 +91,28 @@ public class RollTick extends Task {
         pk.entityUniqueId = eid;
         pk.entityRuntimeId = eid;
         //CompoundTag ct1 = new CompoundTag();
-        pk.item = pis.get(slot);
+        try {
+            pk.item = pis.get(slot);
+            pis.get(slot).getName();
+            System.out.println("In TRy!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            pk.item = Item.get(Item.AIR);
+        }
         pk.x = pos.getFloorX() + 0.5f;
         pk.y = pos.getFloorY() + 0.5f;
         pk.z = pos.getFloorZ() + 0.5f;
         pk.speedX = (float) 0;
         pk.speedY = (float) 0;
         pk.speedZ = (float) 0;
-
+        String i;
+        i = pk.item.getName();
         //Text Above Item
-        String f1 = CenterText.sendCenteredMessage("§r§c|---->§b" + pis.get(slot).getName() + "§c<----|", 246);
+        String f1 = CenterText.sendCenteredMessage("§r§c|---->§b" + i + "§c<----|", 246);
         String f2 = CenterText.sendCenteredMessage(TextFormat.OBFUSCATED + "§b|||||||||§r" + TextFormat.RED + "ROLLING Item" + TextFormat.OBFUSCATED + "§b|||||||||§r", 246);
         CustomFloatingTextParticle ft = new CustomFloatingTextParticle(new Vector3(pos.getFloorX() + .5, pos.getFloorY() + 1, pos.getFloorZ() + .5), f1, f2);
+
+//        FloatingTextFactory.AddFloatingText(new CyberFloatingTextContainer(FTM, getServer().getLevelByName("world").getSafeSpawn().add(0, 5, 0), TextFormat.GREEN + "This is Spawn!"));
         Long e1d = main.cratetxt.getLong(pn);
         if (e1d != 0) ft.entityId = e1d;
         DataPacket[] packets = ft.encode();
@@ -129,9 +140,9 @@ public class RollTick extends Task {
         if (!ff) {
             //Schedule Next
             int k = getDelayFromTick(tick);
-            if(tick >= MAX){
-                main.CCM.getServer().getScheduler().scheduleDelayedTask(new RollTick(main, data, tick + k,true), k);
-            }else main.CCM.getServer().getScheduler().scheduleDelayedTask(new RollTick(main, data, tick + k), k);
+            if (tick >= MAX) {
+                main.CCM.getServer().getScheduler().scheduleDelayedTask(new RollTick(main, data, tick + k, true), k);
+            } else main.CCM.getServer().getScheduler().scheduleDelayedTask(new RollTick(main, data, tick + k), k);
         } else {
             //Last Tick for Roll... Send Item!
             data.put("slot", slot);
@@ -171,38 +182,40 @@ public class RollTick extends Task {
     }
 
     public int getDelayFromTick(int t) {
-        if (t < 60) {
-            return 3;
-        } else if (t < 96) {
-            return 4;
-        } else if (t < 121) {
-            return 5;
-        } else if (t < 139) {
-            return 6;
-        } else if (t < 146) {
-            return 7;
-        } else if (t < 154) {
-            return 8;
-        } else if (t < 163) {
-            return 9;
-        } else if (t < 173) {
-            return 10;
-        } else if (t < 184) {
-            return 11;
-        } else if (t < 196) {
-            return 12;
-        } else if (t < 211) {
-            return 15;
-        } else if (t < 228) {
-            return 17;
-        } else if (t < 246) {
-            return 18;
-        } else if (t < 266) {
-            return 20;
+        int f = 0;
+        if (t < (MAX/10)) {
+            f = 6;
+        } else if (t < (2*MAX/16)) {
+            f = 6;
+        } else if (t < (3*MAX/16)) {
+            f = 6;
+        } else if (t < (4*MAX/16)) {
+            f = 6;
+        } else if (t < (5*MAX/16)) {
+            f = 7;
+        } else if (t < (6*MAX/16)) {
+            f = 8;
+        } else if (t < (7*MAX/16)) {
+            f = 9;
+        } else if (t < (8*MAX/16)) {
+            f = 10;
+        } else if (t < (9*MAX/16)) {
+            f = 11;
+        } else if (t < (10*MAX/16)) {
+            f = 12;
+        } else if (t < (12*MAX/16)) {
+            f = 15;
+        } else if (t < (13*MAX/16)) {
+            f = 17;
+        } else if (t < (14*MAX/16)) {
+            f = 18;
+        } else if (t < (15*MAX/16)) {
+            f = 19;
         } else {
-            return 20;
+            f = 20;
         }
-
+//        f += 3;
+        return f;
     }
 
 

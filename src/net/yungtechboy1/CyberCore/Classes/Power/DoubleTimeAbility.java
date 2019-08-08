@@ -2,7 +2,6 @@ package net.yungtechboy1.CyberCore.Classes.Power;
 
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
-import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
@@ -12,16 +11,24 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import java.util.ArrayList;
 
 //PowerAbilityHotBar
-public  class DoubleTimeAbility extends StagePowerAbstract {
+public class DoubleTimeAbility extends StagePowerAbstract {
     private Buff oldbuff = null;
+
+    public DoubleTimeAbility(BaseClass knight, AdvancedPowerEnum ape) {
+        super(knight, ape);
+    }
+
+    public DoubleTimeAbility(BaseClass knight) {
+        super(knight);
+    }
+
+    public DoubleTimeAbility(AdvancedPowerEnum ape) {
+        super(ape);
+    }
 
     @Override
     public ArrayList<Class> getAllowedClasses() {
         return null;
-    }
-
-    public DoubleTimeAbility(BaseClass knight, AdvancedPowerEnum ape)  {
-        super(knight, ape);
     }
 
     @Override
@@ -29,19 +36,14 @@ public  class DoubleTimeAbility extends StagePowerAbstract {
         return StageEnum.STAGE_5;
     }
 
-    public DoubleTimeAbility(BaseClass knight)  {
-        super(knight);
-    }
-
-
     @Override
     public PowerSettings getPowerSettings() {
-        return new PowerSettings(true,true,true,false);
+        return new PowerSettings(true, true, true, false);
     }
 
     @Override
     public void onActivate() {
-        getPlayer().sendMessage("TUNNING");
+        getPlayer().sendMessage("SHOUDL RUN FASSSSSSTTTTTTTTTTTTEEEEEEEERRRRRRRRR");
         getPlayer().addTemporaryBuff(new Buff(Buff.BuffType.Movement, getMovementBuff()));
         getPlayer().initAllClassBuffs();
 //        oldbuff = PlayerClass.getBuff(Buff.BuffType.Movement);

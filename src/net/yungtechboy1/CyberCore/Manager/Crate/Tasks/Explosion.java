@@ -18,11 +18,16 @@ import java.util.ArrayList;
  * Created by carlt_000 on 1/18/2017.
  */
 public class Explosion extends Task {
-    CrateMain main;
+//    CrateMain main;
     Vector3 v3;
     Level l;
     public Explosion(CrateMain main, Vector3 v3, Level l){
-        this.main = main;
+//        this.main = main;
+        this.v3 = v3;
+        this.l = l;
+    }
+    public Explosion(Vector3 v3, Level l){
+//        this.main = main;
         this.v3 = v3;
         this.l = l;
     }

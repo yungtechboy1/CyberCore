@@ -57,6 +57,10 @@ public class AdvancedPowerEnum {
         return null;
     }
 
+    public void setSE(PowerAbstract.StageEnum SE) {
+        this.SE = SE;
+    }
+
     public boolean isStage() {
         //Something so Simple low key caused 2 hours of work! >:(
         return getStageEnum() != PowerAbstract.StageEnum.NA;
@@ -151,14 +155,15 @@ public class AdvancedPowerEnum {
             if (ape.getAllowedClasses() == null || ape.getAllowedClasses().isEmpty()) {
                 s = "== ANY CLASS ==";
             } else {
+                s = "== Available Classes ==\n";
                 for (Class v : ape.getAllowedClasses()) {
                     try {
                         BaseClass bc = (BaseClass) v.getConstructor(CyberCoreMain.class).newInstance(CyberCoreMain.getInstance());
-                        bc.getDisplayName();
+                        s += " - "+bc.getDisplayName() + "\n";
                     } catch (Exception e) {
-
+                        e.printStackTrace();
+                        s += v.getName() + "\n";
                     }
-                    s += v.getName() + "\n";
                 }
             }
         }

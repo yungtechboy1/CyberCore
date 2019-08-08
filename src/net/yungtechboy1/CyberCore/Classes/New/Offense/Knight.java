@@ -23,6 +23,14 @@ public class Knight extends BaseClass {
 //        SwingTime = 27;
 //    }
 
+    public Knight(CyberCoreMain main) {
+        super(main);
+    }
+
+    public Knight(CyberCoreMain main, CorePlayer player) {
+        super(main, player);
+    }
+
     public Knight(CyberCoreMain main, CorePlayer player, ConfigSection data) {
         super(main, player, data);
 
@@ -39,6 +47,8 @@ public class Knight extends BaseClass {
         pe.add(PowerEnum.AntidotePower);
         return pe;
     }
+
+
 
     @Override
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {

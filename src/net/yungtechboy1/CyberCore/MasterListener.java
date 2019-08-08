@@ -8,11 +8,13 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
+import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.event.inventory.InventoryClickEvent;
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
 import cn.nukkit.event.player.*;
+import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.inventory.Inventory;
 import cn.nukkit.inventory.PlayerCursorInventory;
 import cn.nukkit.inventory.PlayerInventory;
@@ -20,6 +22,7 @@ import cn.nukkit.inventory.transaction.InventoryTransaction;
 import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.inventory.transaction.action.SlotChangeAction;
 import cn.nukkit.item.Item;
+import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse;
@@ -30,10 +33,7 @@ import net.yungtechboy1.CyberCore.Manager.Crate.CrateMain;
 import net.yungtechboy1.CyberCore.Manager.Crate.CrateObject;
 import net.yungtechboy1.CyberCore.Manager.Crate.ItemChanceData;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
-import net.yungtechboy1.CyberCore.Manager.LeaderBoard.api.ScoreboardAPI;
-import net.yungtechboy1.CyberCore.Manager.LeaderBoard.network.DisplaySlot;
-import net.yungtechboy1.CyberCore.Manager.LeaderBoard.network.Scoreboard;
-import net.yungtechboy1.CyberCore.Manager.LeaderBoard.network.ScoreboardDisplay;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.CrateConfirmWindow;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -83,61 +83,82 @@ public class MasterListener implements Listener {
     public void InteractEvent(PlayerInteractEvent e) {
         String n = e.getPlayer().getName();
         Block b = e.getBlock();
-        if (plugin.CrateMain.PrimedPlayer.remove(n)) {
-            e.setCancelled();
-            if (b.getId() != Block.CHEST) {
-                e.getPlayer().sendMessage("Error! That block can not be made a crate!");
-                return;
-            } else {
-                if (plugin.CrateMain.SetKeyPrimedPlayer.remove(n)) {
-                    CrateObject x = CyberCoreMain.getInstance().CrateMain.isCrate(b);
-                    CrateData cd = x.CD;
-                    Item hand = e.getPlayer().getInventory().getItemInHand();
-                    String ki = plugin.CrateMain.getKeyIDFromKey(hand);
-                    if (ki != null) cd.KeyItems.add(ki);
-                    x.CD = cd;
-                    plugin.CrateMain.CrateChests.put(x.Location.asBlockVector3().asVector3(), x);
-                } else if (plugin.CrateMain.SetCrateItemPrimedPlayer.remove(n)) {
-                    CrateObject x = CyberCoreMain.getInstance().CrateMain.isCrate(b);
-                    CrateData cd = x.CD;
-                    Item hand = e.getPlayer().getInventory().getItemInHand();
-                    cd.PossibleItems.add(new ItemChanceData(hand, 100, hand.getCount()));
-                } else {
-                    plugin.CrateMain.addCrate((CorePlayer) e.getPlayer(), b);
-                }
-            }
-        } else {
-            if (b.getId() == Block.CHEST) {
-                CrateObject x = CyberCoreMain.getInstance().CrateMain.isCrate(b);
-                if (x != null) {
-                    if (plugin.CrateMain.CrateChests.containsKey(b)) {
-                        //Check Key
+        if (b.getId() == Block.CHEST) {
+            CrateObject x = CyberCoreMain.getInstance().CrateMain.isCrate(b);
+            if (x != null) {
+                e.setCancelled();
+                if (plugin.CrateMain.PrimedPlayer.remove(n)) {
+                    if (plugin.CrateMain.SetKeyPrimedPlayer.remove(n)) {
+                        CrateData cd = x.CD;
                         Item hand = e.getPlayer().getInventory().getItemInHand();
-                        e.setCancelled();
-                        if (!CrateMain.isItemKey(hand)) {
-                            e.getPlayer().sendMessage("Error! Item is not a valid Crate Key!");
-                            return;
-                        }
-                        if (x.checkKey(hand)) {
-                            //Valid Key & Take it
-                            PlayerInventory pi = e.getPlayer().getInventory();
-                            Item i = pi.getItemInHand();
-                            i.count--;
-                            if (i.count == 0) i = Item.get(0);
-                            pi.setItemInHand(i);
-                            CyberCoreMain.getInstance().CrateMain.showCrate(b, e.getPlayer());
-                            CyberCoreMain.getInstance().CrateMain.rollCrate(b, e.getPlayer());
-                        }
-                        e.getPlayer().sendMessage("Error! Key was invalid!");
+                        String ki = plugin.CrateMain.getKeyIDFromKey(hand);
+                        if (ki != null) cd.KeyItems.add(ki);
+                        x.CD = cd;
+                        plugin.CrateMain.CrateChests.put(x.Location.asBlockVector3().asVector3(), x);
+                        CrateConfirmWindow s = new CrateConfirmWindow(FormType.MainForm.Crate_Confirm_Key_Assign, "Crate - Keep on Adding KEY ASSSING? ");
+                        s.addButton(new ElementButton("Keep adding Key Items"));
+                        s.addButton(new ElementButton("Stop Adding"));
+//                        s.on
+                        e.getPlayer().showFormWindow(s);
+                    } else if (plugin.CrateMain.RemoveCrate.remove(n)) {
+                        e.setCancelled(false);
+                        return;
+                    } else if (plugin.CrateMain.ViewCrateItems.remove(n)) {
+                        e.getPlayer().showFormWindow(new AdminCrateViewItemsWindow(x));
+                    } else if (plugin.CrateMain.SetCrateItemPrimedPlayer.remove(n)) {
+                        CrateData cd = x.CD;
+                        Item hand = e.getPlayer().getInventory().getItemInHand();
+                        cd.PossibleItems.add(new ItemChanceData(hand, 100, hand.getCount()));
+                        CrateConfirmWindow s = new CrateConfirmWindow(FormType.MainForm.Crate_Confirm_Add, "Crate - Keep on Adding? ");
+                        s.addButton(new ElementButton("Keep adding items"));
+                        s.addButton(new ElementButton("Stop Adding"));
+//                        s.on
+                        e.getPlayer().showFormWindow(s);
+                    } else {
+                        plugin.CrateMain.addCrate((CorePlayer) e.getPlayer(), b);
+                        CrateConfirmWindow s = new CrateConfirmWindow(FormType.MainForm.Crate_Confirm_ADD_Crate, "Crate - Keep on Adding Crates? ");
+                        s.addButton(new ElementButton("Keep adding Crates"));
+                        s.addButton(new ElementButton("Stop Adding"));
+//                        s.on
+                        e.getPlayer().showFormWindow(s);
                     }
                 } else {
-                    //Not Crate
+                    //Check Key
+                    Item hand = e.getPlayer().getInventory().getItemInHand();
+                    e.setCancelled();
+                    if (!CrateMain.isItemKey(hand)) {
+                        e.getPlayer().sendMessage("Error! Item is not a valid Crate Key!");
+                        return;
+                    }
+                    if (x.checkKey(hand)) {
+                        //Valid Key & Take it
+                        PlayerInventory pi = e.getPlayer().getInventory();
+                        Item i = pi.getItemInHand();
+                        i.count--;
+                        if (i.count == 0) i = Item.get(0);
+                        pi.setItemInHand(i);
+                        CyberCoreMain.getInstance().CrateMain.showCrate(b, e.getPlayer());
+                        CyberCoreMain.getInstance().CrateMain.rollCrate(b, e.getPlayer());
+                    } else
+                        e.getPlayer().sendMessage("Error! Key was invalid!");
+
                 }
             }
         }
 
     }
 
+    @EventHandler()
+    public void BlockBreakEvent(BlockBreakEvent e) {
+        if (e.getBlock().getId() == Block.CHEST) {
+            for (Vector3 v : plugin.CrateMain.CrateChests.keySet()) {
+                if (2 > e.getBlock().getLocation().asVector3f().asVector3().distance(v)) {
+                    e.setCancelled();
+                    e.getPlayer().sendMessage("error! CHEST BLOCKING!");
+                }
+            }
+        }
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PlayerDropItemEvent(PlayerDropItemEvent event) {
@@ -190,9 +211,11 @@ public class MasterListener implements Listener {
                 SlotChangeAction sca = (SlotChangeAction) t;
                 Inventory inv = sca.getInventory();
                 if (inv instanceof PlayerInventory) {
-                    if(sca.getSourceItem().hasCompoundTag() && sca.getSourceItem().getNamedTag().contains(ShopInv.StaticItems.KeyName))event.setCancelled();
+                    if (sca.getSourceItem().hasCompoundTag() && sca.getSourceItem().getNamedTag().contains(ShopInv.StaticItems.KeyName))
+                        event.setCancelled();
                 } else if (inv instanceof PlayerCursorInventory) {
-                    if(sca.getSourceItem().hasCompoundTag() && sca.getSourceItem().getNamedTag().contains(ShopInv.StaticItems.KeyName))event.setCancelled();
+                    if (sca.getSourceItem().hasCompoundTag() && sca.getSourceItem().getNamedTag().contains(ShopInv.StaticItems.KeyName))
+                        event.setCancelled();
                 }
             }
         }
@@ -557,7 +580,7 @@ public class MasterListener implements Listener {
         String Msg = (String) plugin.MainConfig.get("Leave-Message");
         event.setQuitMessage(Msg.replace("{player}", event.getPlayer().getName()));
         Player p = event.getPlayer();
-        if(p instanceof CorePlayer){
+        if (p instanceof CorePlayer) {
             plugin.ClassFactory.save((CorePlayer) p);
         }
     }

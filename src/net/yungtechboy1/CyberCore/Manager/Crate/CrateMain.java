@@ -14,16 +14,15 @@ import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Custom.Inventory.TestInv;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.Crate.Tasks.CrateTickThread;
 import net.yungtechboy1.CyberCore.Manager.Crate.Tasks.RollTick;
 import net.yungtechboy1.CyberCore.Manager.Factions.CustomFloatingTextParticle;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.Admin.Crate.AdminCrateChooseCrateWindow;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CrateMain {
     public static final String CK = "CrateKey";
@@ -36,6 +35,8 @@ public class CrateMain {
     //    private ConfigSection CrateLocations = new ConfigSection();
     public ConfigSection cratetxt = new ConfigSection();
     public CyberCoreMain CCM;
+    public ArrayList<String> ViewCrateItems = new ArrayList<>();
+    public ArrayList<String> RemoveCrate = new ArrayList<>();
     //    public HashMap<String, FloatingTextParticle> cratetxt = new HashMap<>();
     private HashMap<String, CrateData> CrateMap = new HashMap<>();
     private Config c;
@@ -53,13 +54,14 @@ public class CrateMain {
         });
         cc = new Config(new File(ccm.getDataFolder(), "crate-data.yml"), Config.YAML, new LinkedHashMap<String, Object>() {
         });
-        c.save();
-        ck.save();
-        cc.save();
+//        c.save();
+//        ck.save();
+//        cc.save();
 
         ConfigSection cl = c.getRootSection();
         ConfigSection cd = cc.getRootSection();
         System.out.println(cd);
+        System.out.println("Loading Crate Data");
         Map<String, Object> cdd = cd.getAllMap();
         if (cd.isEmpty()) {
             CrateData ccd = new CrateData("DEFAULT");
@@ -83,6 +85,7 @@ public class CrateMain {
             }
         }
 
+        System.out.println("Loading Crate Locations");
         if (cl.isEmpty()) {
 
         } else {
@@ -106,6 +109,7 @@ public class CrateMain {
             }
         }
 
+        System.out.println("Loading Crate Keys");
         ConfigSection CKC = ck.getRootSection();
         if (cl.isEmpty()) {
 
@@ -286,7 +290,8 @@ public class CrateMain {
                 put("pos", b.getLocation().asBlockVector3().asVector3());
             }};
             showCrate(b, player);
-            Server.getInstance().getScheduler().scheduleTask(new RollTick(this, data));
+            new CrateTickThread(player.getName(),items,co.CD.Name,b.getLocation().asBlockVector3().asVector3());
+//            Server.getInstance().getScheduler().scheduleTask(new RollTick(this, data));
         }
     }
 }

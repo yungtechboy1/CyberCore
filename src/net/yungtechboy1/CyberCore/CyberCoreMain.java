@@ -28,6 +28,7 @@ import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.AntidotePower;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.DoubleTimeAbility;
+import net.yungtechboy1.CyberCore.Classes.Power.DragonJumper;
 import net.yungtechboy1.CyberCore.Classes.Power.KnightSandShieldPower;
 import net.yungtechboy1.CyberCore.Classes.Power.Magic.Sorcerer.ThunderStrike;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PowerSourceTaskAsync;
@@ -432,6 +433,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new AuctionHouseCmd(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new SellHand(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new HowToPlay(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new BookCmd(this));
 
 
         CMC = new ClassMerchantConfig(this);
@@ -443,6 +445,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     }
 
     private void loadPowersToPM() {
+        PowerManager.addPowerToList(PowerEnum.DragonJumper, DragonJumper.class);
+        PowerManager.addPowerToList(PowerEnum.DoubleTime, DoubleTimeAbility.class);
+        PowerManager.addPowerToList(PowerEnum.AntidotePower, AntidotePower.class);
         PowerManager.addPowerToList(PowerEnum.KnightSandShield, KnightSandShieldPower.class);
         PowerManager.addPowerToList(PowerEnum.DoubleTime, DoubleTimeAbility.class);
         PowerManager.addPowerToList(PowerEnum.AntidotePower, AntidotePower.class);

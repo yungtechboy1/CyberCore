@@ -22,15 +22,19 @@ public class KnightSandShieldPower extends StagePowerAbstract {
         super(b);
     }
 
+    public KnightSandShieldPower(AdvancedPowerEnum ape) {
+        super(ape);
+    }
+
+    public KnightSandShieldPower(BaseClass b, AdvancedPowerEnum ape) {
+        super(b, ape);
+    }
+
     @Override
     public ArrayList<Class> getAllowedClasses() {
         ArrayList<Class> b = new ArrayList<>();
         b.add(Knight.class);
         return b;
-    }
-
-    public KnightSandShieldPower(BaseClass b, AdvancedPowerEnum ape) {
-        super(b, ape);
     }
 
     @Override
@@ -40,7 +44,7 @@ public class KnightSandShieldPower extends StagePowerAbstract {
 
     @Override
     public int getPowerSuccessChance() {
-        return  80;
+        return 80;
     }
 
     @Override
@@ -50,7 +54,7 @@ public class KnightSandShieldPower extends StagePowerAbstract {
 
     @Override
     public PowerSettings getPowerSettings() {
-        return new PowerSettings(false,true,true,false);
+        return new PowerSettings(false, true, true, false);
     }
 //    @Override
 //    public ClassLevelingManager getLM() {

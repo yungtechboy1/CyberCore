@@ -19,6 +19,10 @@ public class AntidotePower extends StagePowerAbstract {
         super(b, ape);
     }
 
+    public AntidotePower(AdvancedPowerEnum ape) {
+        super(ape);
+    }
+
     @Override
     public StageEnum getMaxStage() {
         return StageEnum.STAGE_5;

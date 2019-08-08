@@ -13,6 +13,7 @@ public class AdminMainWindow extends CyberFormSimple {
     public AdminMainWindow() {
         super(FormType.MainForm.Admin_Main, "Admin Page [1/1]");
         addButton(new ElementButton("Chest Manager"));
+        addButton(new ElementButton("Book Editor"));
         addButton(new ElementButton("Print Item NBT to Hex"));
     }
 
@@ -24,6 +25,9 @@ public class AdminMainWindow extends CyberFormSimple {
                 p.showFormWindow(new AdminCrateMainMenu());
                 break;
             case 1:
+                p.showFormWindow(new AdminBookMainMenu());
+                break;
+            case 2:
                 Item ih = p.getInventory().getItemInHand();
                 CyberCoreMain.getInstance().getLogger().info("Printing Item Data" + ih.getName() + " | " + ih.getCustomName() + " | " + Binary.bytesToHexString(ih.getCompoundTag()));
 //                cp.sendMessage("DEPRECATED");
