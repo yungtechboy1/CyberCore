@@ -1,42 +1,47 @@
 package net.yungtechboy1.CyberCore.Classes.Power;
 
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.LockedSlot;
 
+//@Deprecated
 public class PowerData {
     PowerAbstract PA = null;
-    PowerEnum PowerID = PowerEnum.Unknown;
+    AdvancedPowerEnum APE = null;
     Boolean Enabled = false;
     Boolean NeedsLockedSlot = false;
     LockedSlot LS = LockedSlot.NA;
 
-    public PowerData(PowerEnum powerID, Boolean enabled) {
-        PowerID = powerID;
-        Enabled = enabled;
+    public AdvancedPowerEnum getAPE() {
+        return APE;
     }
+//    public PowerData(AdvancedPowerEnum powerID, Boolean enabled) {
+//        PowerID = powerID;
+//        Enabled = enabled;
+//    }
 
     public PowerData(PowerAbstract PA) {
         this.PA = PA;
-        PowerID = PA.getType();
+        APE = PA.getAPE();
         if(PA.getPowerSettings() != null){
             NeedsLockedSlot = PA.getPowerSettings().isHotbar();
         }
     }
-
-    public PowerData(PowerEnum powerID, Boolean enabled, Boolean nls) {
-        PowerID = powerID;
-        Enabled = enabled;
-        NeedsLockedSlot = nls;
-    }
-
-    public PowerData(PowerEnum powerID, Boolean enabled, Boolean nls, LockedSlot LS, PowerAbstract pa) {
-        PowerID = powerID;
-        NeedsLockedSlot = nls;
-        Enabled = enabled;
-        PA = pa;
-        this.LS = LS;
-    }
+//
+//    public PowerData(PowerEnum powerID, Boolean enabled, Boolean nls) {
+//        PowerID = powerID;
+//        Enabled = enabled;
+//        NeedsLockedSlot = nls;
+//    }
+//
+//    public PowerData(PowerEnum powerID, Boolean enabled, Boolean nls, LockedSlot LS, PowerAbstract pa) {
+//        PowerID = powerID;
+//        NeedsLockedSlot = nls;
+//        Enabled = enabled;
+//        PA = pa;
+//        this.LS = LS;
+//    }
 
     public PowerAbstract getPA(){
         return PA;
@@ -51,12 +56,12 @@ public class PowerData {
     }
 
     public PowerEnum getPowerID() {
-        return PowerID;
+        return APE.getPowerEnum();
     }
 
-    public void setPowerID(PowerEnum powerID) {
-        PowerID = powerID;
-    }
+//    public void setPowerID(PowerEnum powerID) {
+//        PowerID = powerID;
+//    }
 
     public Boolean getEnabled() {
         return Enabled;

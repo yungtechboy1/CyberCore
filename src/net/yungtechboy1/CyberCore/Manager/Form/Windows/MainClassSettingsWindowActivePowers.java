@@ -36,8 +36,8 @@ public class MainClassSettingsWindowActivePowers extends CyberFormCustom {
             PowerAbstract p = pd.getPA();//_BC.getPossiblePower(pe, false);
             System.out.println("NOW PPPPPP >>> " + p + " || ");//+p.getDispalyName()+"||"+p.getName());
             String pn;
-            String ppn = TextFormat.GREEN + "[Currently Active]";
-            String ppnn = TextFormat.RED + "";
+            String ppn = TextFormat.GREEN + " [Currently Active]";
+            String ppnn = TextFormat.RED + " [Inactive]";
             if (p == null) pn = "UNKNOWN?!?" + e;
             else pn = p.getDispalyName();
             if (e)
@@ -68,7 +68,7 @@ public class MainClassSettingsWindowActivePowers extends CyberFormCustom {
             boolean on = getResponse().getToggleResponse(key);
             boolean b = _BC.getClassSettings().getEnabledPowers().contains(pd.getPowerID());
             if (on && !b) {
-                _BC.enablePower(pd);
+                _BC.enablePower(pd.getAPE());
 //                _BC.getPlayer().sendMessage(TextFormat.GREEN+"POWER > "+pd.getPowerID().name()+" has been activated!");
             } else if (!on && b) {
                 _BC.getClassSettings().getEnabledPowers().remove(pd.getPowerID());
