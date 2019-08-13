@@ -185,7 +185,7 @@ public abstract class BaseClass {
     }
 
     public void learnPlayerDefaultPowers() {
-        for (PowerEnum pe : getDefaultPowers()) {
+        for (AdvancedPowerEnum pe : getDefaultPowers()) {
             if (!getClassSettings().isPowerLearned(pe)) {
                 System.out.println("SEND LEARN TO " + pe);
                 getClassSettings().learnNewPower(pe, true);
@@ -238,7 +238,7 @@ public abstract class BaseClass {
         }
     }
 
-    public ArrayList<PowerEnum> getDefaultPowers() {
+    public ArrayList<AdvancedPowerEnum> getDefaultPowers() {
         return new ArrayList<>();
     }
 
@@ -915,7 +915,7 @@ public abstract class BaseClass {
     public ArrayList<PowerAbstract> getLearnedPowersAbstract() {
         ArrayList<PowerAbstract> pa = new ArrayList<>();
         for (AdvancedPowerEnum e : getClassSettings().getLearnedPowers()) {
-            pa.add(PowerManager.getPowerfromAPE(e));
+            pa.add(PowerManager.getPowerfromAPE(e,this));
         }
         return pa;
     }

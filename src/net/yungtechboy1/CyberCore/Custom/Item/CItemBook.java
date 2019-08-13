@@ -101,6 +101,7 @@ public class CItemBook extends Item {
             } else {
                 p.sendMessage("Error! You already have this power learned!");
             }
+            p.getInventory().setItemInHand(this);
             return true;
         } else if( isClass){
 

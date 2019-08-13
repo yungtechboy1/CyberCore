@@ -81,9 +81,12 @@ public class MainClassSettingsWindowChooseLockedSlot extends CyberFormCustom {
             for (PowerAbstract pa : _BC.getActivePowers()) {
                 kk++;
                 if (kk == k) {
-                    _BC.enablePower(pa.getType());
+                    _BC.enablePower(pa.getAPE());
+                    return true;
                 }
             }
+            p.sendMessage(" EROORRRRR!!!! E332242");
+            System.out.println("ERROR! Could not Enable Power");
 
 //            for (PowerData pd : _BC.getClassSettings().getPowerDataList()) {
 //

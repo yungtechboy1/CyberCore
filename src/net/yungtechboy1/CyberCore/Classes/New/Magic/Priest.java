@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Classes.New.Magic;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.ClassType;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -30,8 +31,8 @@ public class Priest extends BaseClass {
     }
 
     @Override
-    public ArrayList<PowerEnum> getDefaultPowers() {
-        ArrayList<PowerEnum> pe = new ArrayList<>();
+    public ArrayList<AdvancedPowerEnum> getDefaultPowers() {
+        ArrayList<AdvancedPowerEnum> pe = new ArrayList<>();
 //        pe.add(PowerEnum.KnightSandShield);
         return pe;
     }

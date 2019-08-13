@@ -262,6 +262,9 @@ public class ClassSettingsObj {
         if(k < LearnedPowers.size())LearnedPowers.remove(k);
     }
 
+    public boolean isPowerLearned(AdvancedPowerEnum pe) {
+        return isPowerLearned(pe.getPowerEnum());
+    }
     public boolean isPowerLearned(PowerEnum pe) {
         for(AdvancedPowerEnum ape: LearnedPowers){
             if(ape.getPowerEnum() == pe)return true;

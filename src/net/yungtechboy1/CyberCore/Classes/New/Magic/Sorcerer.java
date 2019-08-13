@@ -5,6 +5,7 @@ import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.ClassType;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -32,8 +33,8 @@ public class Sorcerer extends BaseClass {
     }
 
     @Override
-    public ArrayList<PowerEnum> getDefaultPowers() {
-        ArrayList<PowerEnum> pe = new ArrayList<>();
+    public ArrayList<AdvancedPowerEnum> getDefaultPowers() {
+        ArrayList<AdvancedPowerEnum> pe = new ArrayList<>();
 //        pe.add(PowerEnum.KnightSandShield);
 //        pe.add(PowerEnum.DoubleTime);
 //        pe.add(PowerEnum.AntidotePower);

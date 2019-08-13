@@ -5,6 +5,7 @@ import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
 import net.yungtechboy1.CyberCore.Classes.New.ClassType;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
@@ -40,11 +41,11 @@ public class Knight extends BaseClass {
     }
 
     @Override
-    public ArrayList<PowerEnum> getDefaultPowers() {
-        ArrayList<PowerEnum> pe = new ArrayList<>();
-        pe.add(PowerEnum.KnightSandShield);
-        pe.add(PowerEnum.DoubleTime);
-        pe.add(PowerEnum.AntidotePower);
+    public ArrayList<AdvancedPowerEnum> getDefaultPowers() {
+        ArrayList<AdvancedPowerEnum> pe = new ArrayList<>();
+//        pe.add(new AdvancedPowerEnum(PowerEnum.KnightSandShield, PowerAbstract.StageEnum.STAGE_1));
+        pe.add(new AdvancedPowerEnum(PowerEnum.DoubleTime, PowerAbstract.StageEnum.STAGE_1));
+//        pe.add(new AdvancedPowerEnum(PowerEnum.AntidotePower, PowerAbstract.StageEnum.STAGE_1));
         return pe;
     }
 
