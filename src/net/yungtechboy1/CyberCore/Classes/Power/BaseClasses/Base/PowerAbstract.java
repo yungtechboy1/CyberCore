@@ -300,18 +300,9 @@ public abstract class PowerAbstract {
                 System.out.println("====> CAN NOT ACTIVATE POWER NO HOT BAR SLOT IN SETTINGS!!!");
                 return;
             }
+            DeActivatedTick = Server.getInstance().getTick() + getRunTimeTick();
         }
         Active = active;
-        DeActivatedTick = Server.getInstance().getTick() + getRunTimeTick();
-        PowerEnum pe = getType();
-        //TODO Remove Below
-        if (PlayerClass.getClassSettings().getLearnedPowers().contains(pe) && active) {
-            PlayerClass.getClassSettings().addActivePower(pe);
-            onActivate();
-        } else {
-            getPlayer().sendMessage(TextFormat.RED + "ERROR > POWER > Could not activate " + getDispalyName() + TextFormat.RED + " Please make sure you have learned this power!");
-            throw new NullPointerException();
-        }
     }
 
     public boolean isEnabled() {
@@ -372,12 +363,11 @@ public abstract class PowerAbstract {
     }
 
     private void sendHotbarItemToLS(HotbarStatus hbs) {
-
         Item i = getHotbarItem(hbs);
         PlayerInventory pi = getPlayer().getInventory();
         Item ii = pi.getItem(getLS().getSlot()).clone();
-       pi.clear(getLS().getSlot());
-        if(ii.hasCompoundTag() && ii.getNamedTag().contains(PowerHotBarNBTTag))ii = null;
+        pi.clear(getLS().getSlot());
+        if(ii == null || ii.hasCompoundTag() && ii.getNamedTag().contains(PowerHotBarNBTTag))ii = null;
         pi.setItem(getLS().getSlot(), i);
         if(ii != null && !ii.isNull())pi.addItem(ii);
     }
@@ -635,9 +625,11 @@ public abstract class PowerAbstract {
     }
 
     public Object usePower(Object... args) {
-        if (MainPowerType == PowerType.Regular) {
-        } else if (MainPowerType == PowerType.Ability) {
+        setActive();
+        if (isAbility()){
             activate();
+        }else{
+            setActive(false);
         }
         return null;
     }
@@ -698,7 +690,7 @@ public abstract class PowerAbstract {
             if (isAbilityActive()) {
                 System.out.println("POWER TICKKKKKK3");
                 whileAbilityActive();
-                if (tick >= DeActivatedTick) {
+                if (getDeActivatedTick() != -1 && tick >= getDeActivatedTick()) {
                     System.out.println("POWER TICKKKKKK44444444444444444444444444444");
 //                    setEnabled(false);
                     DeactivateAbility();
@@ -715,9 +707,10 @@ public abstract class PowerAbstract {
 
     public void DeactivateAbility() {
         AbilityActive = false;
+        setActive(false);
     }
 
-    public void ActivateAbility() {
+    public final void ActivateAbility() {
         AbilityActive = true;
     }
 

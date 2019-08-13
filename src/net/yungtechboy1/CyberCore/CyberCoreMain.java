@@ -14,6 +14,7 @@ import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
+import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
@@ -25,11 +26,12 @@ import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.AntidotePower;
+import net.yungtechboy1.CyberCore.Classes.Power.Attack.Knight.AntidotePower;
+import net.yungtechboy1.CyberCore.Classes.Power.Attack.Knight.DoubleTimeAbility;
+import net.yungtechboy1.CyberCore.Classes.Power.Attack.Knight.KnightSandShieldPower;
+import net.yungtechboy1.CyberCore.Classes.Power.Attack.Knight.RagePower;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
-import net.yungtechboy1.CyberCore.Classes.Power.DoubleTimeAbility;
 import net.yungtechboy1.CyberCore.Classes.Power.DragonJumper;
-import net.yungtechboy1.CyberCore.Classes.Power.KnightSandShieldPower;
 import net.yungtechboy1.CyberCore.Classes.Power.Magic.Sorcerer.ThunderStrike;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PowerSourceTaskAsync;
 import net.yungtechboy1.CyberCore.Commands.*;
@@ -83,6 +85,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static cn.nukkit.item.Item.addCreativeItem;
+import static net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract.PowerHotBarNBTTag;
 
 /**
  * Created by carlt_000 on 3/21/2016.
@@ -158,6 +161,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public CustomCraftingManager CraftingManager;
     public CrateMain CrateMain;
     public ArrayList<CyberFloatingTextContainer> SavedFloatingText = new ArrayList<>();
+    public ClassMerchantConfig CMC;
     Vector3 p1;
     Vector3 p2;
     CustomRecipeCraftingManager CRM;
@@ -438,7 +442,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         CMC = new ClassMerchantConfig(this);
     }
-    public ClassMerchantConfig CMC;
+
     private void loadPowerManager() {
         PowerManagerr = new PowerManager(this);
         loadPowersToPM();
@@ -959,6 +963,11 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PMJ(PlayerJoinEvent me) {
         BossBarManager.AddBossBar(me.getPlayer(), new BossBarNotification(me.getPlayer(), "TEST TITLE", "TEST MESSAGE", 20 * 60, this));
+        PlayerInventory pi = me.getPlayer().getInventory();
+        for (Item i : new ArrayList<Item>(pi.getContents().values()))
+            if (i.hasCompoundTag() && i.getNamedTag().contains(PowerHotBarNBTTag))
+                pi.removeItem(i);
+
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

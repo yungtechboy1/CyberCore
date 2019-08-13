@@ -539,6 +539,16 @@ public class MasterListener implements Listener {
     public void spawnEvent(PlayerRespawnEvent event) {
 
     }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void TD(PlayerTakeDamageEvent event) {
+        Entity e = event.source.entity;
+        if (e instanceof CorePlayer) {
+            CorePlayer cp = (CorePlayer) e;
+            if (cp.getPlayerClass() != null) {
+                cp.getPlayerClass().HandelEvent(event);
+            }
+        }
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void EntityInventoryChangeEvent(EntityInventoryChangeEvent event) {

@@ -409,11 +409,26 @@ public abstract class BaseClass {
         getPlayer().sendMessage(TextFormat.RED + "POWER > " + p.getDispalyName() + " has been DEactivated!");
     }
 
-
-@Deprecated
-    public void enablePower(PowerData pe) {
-        System.out.println("Attempting to activate "+pe.getPowerID());
-        PowerAbstract p = pe.getPA();
+    //@Deprecated
+//    public void enablePower(PowerData pe) {
+//        System.out.println("Attempting to activate "+pe.getPowerID());
+//        PowerAbstract p = pe.getPA();
+//        if (p == null) {
+//            getPlayer().sendMessage("E:221S: Error attempting to Activating " + pe.getPowerID());
+//            return;
+//        }
+//        PossiblePowerList.put(pe.getPowerID(),p);
+//        p.enablePower();
+//        onPowerEnabled(p);//callback
+////        addActivePower(p);
+//        getPlayer().sendMessage(TextFormat.GREEN + "POWER > " + p.getDispalyName() + " has been activated!");
+//    }
+    public void enablePower(AdvancedPowerEnum pe) {
+        enablePower(pe,null);
+    }
+    public void enablePower(AdvancedPowerEnum pe, LockedSlot ls) {
+        System.out.println("Attempting to activate222 " + pe);
+        PowerAbstract p = PowerManager.getPowerfromAPE(pe, this);
         if (p == null) {
             getPlayer().sendMessage("E:221S: Error attempting to Activating " + pe.getPowerID());
             return;
@@ -431,6 +446,7 @@ public abstract class BaseClass {
             getPlayer().sendMessage("E:221S: Error attempting to Activating " + pe);
             return;
         }
+        if(ls != null && ls != LockedSlot.NA)p.setLS(ls);
         p.enablePower();
         onPowerEnabled(p);//callback
 //        addActivePower(p);
