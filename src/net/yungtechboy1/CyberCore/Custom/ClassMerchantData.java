@@ -37,7 +37,6 @@ public class ClassMerchantData extends CustomSimpleConfigClass {
 
     public ClassMerchantData(ConfigSection c) {
         super(c);
-        importcs(c);
         System.out.println(AllowedToPurchase.size()+"_______________________________");
         for(ClassType cv : AllowedToPurchase){
             System.out.println(cv+"<<<<<<<<<<<<<<|||||||");

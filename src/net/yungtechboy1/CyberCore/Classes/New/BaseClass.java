@@ -47,7 +47,7 @@ public abstract class BaseClass {
     public HashMap<PowerEnum, PowerAbstract> PossiblePowerList = new HashMap<>();
     public ArrayList<AdvancedPowerEnum> DefaultPowers1 = new ArrayList<>();
     protected int MainID = 0;
-    protected CyberCoreMain CCM;
+    public CyberCoreMain CCM;
     HashMap<Integer, Integer> Herbal = new HashMap<Integer, Integer>() {{
         put(Block.GRASS, 10);
         put(Block.VINE, 10);

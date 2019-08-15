@@ -3,9 +3,11 @@ package net.yungtechboy1.CyberCore.Manager.Crate;
 import cn.nukkit.item.Item;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.Binary;
+import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.Utils;
+import net.yungtechboy1.CyberCore.Data.CustomSimpleConfigClass;
 
-public class ItemChanceData {
+public class ItemChanceData extends CustomSimpleConfigClass {
     private int ItemID;
     private int ItemMeta;
     private String NBT = "";//NBT_HEX
@@ -50,6 +52,11 @@ public class ItemChanceData {
 
     public ItemChanceData(Item i, int chance, int max_Count) {
         this(i.getId(), i.getDamage(), chance, max_Count, i.hasCompoundTag() ? Binary.bytesToHexString(i.getCompoundTag()) : "");
+    }
+
+    public ItemChanceData(ConfigSection c){
+        super(c);
+        importcs(c);
     }
 
     public ItemChanceData(Item i, int chance) {

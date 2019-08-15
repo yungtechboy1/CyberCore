@@ -635,6 +635,10 @@ public abstract class PowerAbstract {
     }
 
     public boolean CanRun(boolean force, Object... args) {
+        if(!PlayerClass.CCM.isInSpawn(getPlayer())){
+            getPlayer().sendMessage(TextFormat.RED+"Error! can not use "+getDispalyName()+" while in spawn!");
+            return false;
+        }
         if (force) return true;
         if (PlayerClass.getPowerSourceCount() < PowerSourceCost) {
             getPlayer().sendMessage(TextFormat.RED + "Not enough " + PlayerClass.getPowerSourceType().name() + " Energy!");

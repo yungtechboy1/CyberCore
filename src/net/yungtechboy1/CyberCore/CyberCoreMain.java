@@ -17,7 +17,9 @@ import cn.nukkit.event.player.PlayerMoveEvent;
 import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
+import cn.nukkit.level.Location;
 import cn.nukkit.level.Position;
+import cn.nukkit.math.Vector2;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.plugin.PluginBase;
@@ -968,6 +970,17 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
             if (i.hasCompoundTag() && i.getNamedTag().contains(PowerHotBarNBTTag))
                 pi.removeItem(i);
 
+    }
+
+    public boolean isInSpawn(CorePlayer p){
+        return isInSpawn(p);
+    }
+    public boolean isInSpawn(Location v){
+        Vector2 pv = new Vector2(v.getFloorX(),v.getFloorZ());
+        Vector3 s = v.getLevel().getSpawnLocation().asVector3f().asVector3();
+        Vector2 sv = new Vector2(s.getFloorX(),s.getFloorZ());
+        int spawnprotection = 200;
+        return (sv.distance(pv) <= spawnprotection);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

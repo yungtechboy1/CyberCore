@@ -12,6 +12,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static net.yungtechboy1.CyberCore.Data.CustomSimpleConfig.*;
@@ -22,6 +23,7 @@ public abstract class CustomSimpleConfigClass {
 
     public CustomSimpleConfigClass(ConfigSection c) {
         if (c == null || c.isEmpty()) return;
+        importcs(c);
     }
 
     public Object phraseFromSave(String key, Object obj) {
@@ -41,12 +43,23 @@ public abstract class CustomSimpleConfigClass {
 
     public ConfigSection export() {
         ConfigSection cfg = new ConfigSection();
-        Field[] var3 = this.getClass().getDeclaredFields();
-        int var4 = var3.length;
+        Class<?> p = getClass().getSuperclass();
+        List<Field> f = getAllFields(this.getClass());
+        if(p == null){
+            System.out.println("ERROR COULD NOT FIND SUPER CLASS!@!!");
+            return null;
+        }else if(f.size() == 0){
+            System.out.println("ERROR COULD NOT FIND FIELDS TO LOAD!!");
+            return null;
+        }
+        System.out.println("EXXXXXX2 >>> "+f.size());
+        System.out.println("EXXXXXX2 >>> "+getClass().getDeclaredFields().length);
+        System.out.println("EXXXXXX2 >>> "+getClass().getSuperclass().getDeclaredFields().length);
+        int vsize = f.size();
 //        System.out.println("VAR3 LENGHTHHHHH "+var4);
 
-        for (int var5 = 0; var5 < var4; ++var5) {
-            Field field = var3[var5];
+        for (int counter = 0; counter < vsize; ++counter) {
+            Field field = f.get(counter);
 //            System.out.println("VAR3 NBOW ON FIELD  "+field+" ||| "+field.getName());
 
             if (!skipSave(field)) {
@@ -119,9 +132,26 @@ public abstract class CustomSimpleConfigClass {
         return null;
     }
 
+    public static List<Field> getAllFields(Class<?> type) {
+        List<Field> fields = new ArrayList<Field>();
+        for (Class<?> c = type; c != null; c = c.getSuperclass()) {
+            System.out.println("Adding to List from "+type.getName()+" AND ADDING "+c.getDeclaredFields().length);
+            fields.addAll(Arrays.asList(c.getDeclaredFields()));
+        }
+        System.out.println("TOTAL SIZE"+fields.size());
+        return fields;
+    }
+
     public ConfigSection importcs(ConfigSection cfg) {
 //        ConfigSection cfg = new ConfigSection();
-        for (Field field : this.getClass().getDeclaredFields()) {
+        Class<?> p = getClass().getSuperclass();
+        if(p == null){
+            System.out.println("ERROR COULD NOT FIND SUPER CLASS!@!!22222II");
+            return null;
+        }
+        List<Field> f = getAllFields(this.getClass());
+        System.out.println("!!!!!!!!!!!!!!! >> "+f.size());
+        for (Field field : f) {
 //            System.out.println("CHILD > Field > " + field.getName() + "||" + field.getType());
             if (field.getName().equals("configFile")) continue;
             if (CustomSimpleConfig.skipLoad(field)) continue;
