@@ -66,6 +66,7 @@ public class CustomEnchantment extends Enchantment {
         public static Tier GetTier(int t) {
             switch (t) {
                 case 0:
+                default:
                     return Unknown;
                 case 1:
                     return Basic;
@@ -83,8 +84,6 @@ public class CustomEnchantment extends Enchantment {
                     return Untold;
                 case 8:
                     return Unheard;
-                default:
-                    return Unknown;
             }
         }
 

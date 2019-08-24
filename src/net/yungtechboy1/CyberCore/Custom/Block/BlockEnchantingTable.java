@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public class BlockEnchantingTable extends BlockTransparentMeta {
 
-
+    EnchantmentTier EnchantingTeir = EnchantmentTier.Tier1;
     public BlockEnchantingTable() {
         super();
     }
@@ -45,6 +45,8 @@ public class BlockEnchantingTable extends BlockTransparentMeta {
         return getName();
     }
 
+
+
     @Override
     public String getName() {
         if (GetTier() == CustomEnchantment.Tier.Unknown) return "Enchanting Table";
@@ -53,7 +55,7 @@ public class BlockEnchantingTable extends BlockTransparentMeta {
 
     public CustomEnchantment.Tier GetTier() {
         BlockEntityEnchantTable a = getBlockEntity();
-        if (a == null || !a.namedTag.contains("level")) return CustomEnchantment.Tier.Basic;
+        if (a == null || a.namedTag == null || !a.namedTag.contains("level")) return CustomEnchantment.Tier.Basic;
         int t = a.namedTag.getInt("level");
         return CustomEnchantment.Tier.GetTier(t);
     }
