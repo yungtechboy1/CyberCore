@@ -40,32 +40,25 @@ public class PowerManager {
         }
         if (cpa.getSuperclass().isAssignableFrom(StagePowerAbstract.class)) {
             //Stage
-            try {
-                Constructor c;
-                if (b == null) {
-                    System.out.println("BASECLASS IS NULL!!!!!!!!!");
+            Constructor c;
+            if (b == null) {
+                System.out.println("BASECLASS IS NULL!!!!!!!!!" + cpa.getName());
+                try {
                     c = cpa.getConstructor(AdvancedPowerEnum.class);
-                    if (c == null) {
-                        System.out.println("ERRORROOORROR C  +++++=====  NUUULLLLLL");
-                        return null;
-                    }
-                    return (PowerAbstract) c.newInstance(b);
-                } else {
-                    c = cpa.getConstructor(BaseClass.class, AdvancedPowerEnum.class);
-                    if (c == null) {
-                        System.out.println("ERRORROOORROR C  +++++=====  NUUULLLLLL");
-                        return null;
-                    }
-                    return (PowerAbstract) c.newInstance(b, pe);
+                    return (PowerAbstract) c.newInstance(pe);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("ERRORROOORROR C2  +++++=====  NUUULLLLLL");
+                    return null;
                 }
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+            } else {
+                try {
+                    c = cpa.getConstructor(BaseClass.class, AdvancedPowerEnum.class);
+                    return (PowerAbstract) c.newInstance(b, pe);
+                } catch (Exception e) {
+                    System.out.println("ERRORROOORROR C  +++++=====  NUUULLLLLL");
+                    return null;
+                }
             }
 //        }else if(cpa.isAssignableFrom()){
         } else {

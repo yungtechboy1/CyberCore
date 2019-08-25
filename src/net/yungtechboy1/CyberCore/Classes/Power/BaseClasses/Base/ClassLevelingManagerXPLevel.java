@@ -64,7 +64,7 @@ public class ClassLevelingManagerXPLevel extends ClassLevelingManager {
         return l;
     }
 
-    protected int getXP() {
+    public final int getXP() {
         return XP;
     }
 

@@ -141,7 +141,7 @@ public class CrateTickThread extends Thread implements InterruptibleThread {
                 }
                 String f1 = CenterText.sendCenteredMessage("§r§c|---->§b" + i + "§c<----|\n\n" + ll, 246);
                 String f2 = CenterText.sendCenteredMessage(TextFormat.OBFUSCATED + "§b|||||||||§r" + TextFormat.RED + "ROLLING Item" + TextFormat.OBFUSCATED + "§b|||||||||§r", 246);
-                CustomFloatingTextParticle ft = new CustomFloatingTextParticle(new Vector3(pos.getFloorX() + .5, pos.getFloorY() + 1, pos.getFloorZ() + 1.5), f1, f2);
+                CustomFloatingTextParticle ft = new CustomFloatingTextParticle(new Vector3(pos.getFloorX() + .5, pos.getFloorY() + 3, pos.getFloorZ() + 1.5), f1, f2);
 
                 System.out.println("9|||||||||");
 //        FloatingTextFactory.AddFloatingText(new CyberFloatingTextContainer(FTM, getServer().getLevelByName("world").getSafeSpawn().add(0, 5, 0), TextFormat.GREEN + "This is Spawn!"));

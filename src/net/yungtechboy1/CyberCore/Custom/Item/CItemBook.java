@@ -106,6 +106,7 @@ public class CItemBook extends Item {
         } else if( isClass){
 
         };
+        p.getInventory().setItemInHand(this);
         return true;
     }
 

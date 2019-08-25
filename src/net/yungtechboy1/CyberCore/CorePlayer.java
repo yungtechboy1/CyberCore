@@ -672,7 +672,9 @@ return added;
     public boolean attack(CustomEntityDamageEvent source) {
         getServer().getPluginManager().callEvent(source);
         if (source.isCancelled()) return false;
-        setHealth(getHealth() - source.getFinalDamage());
+        PlayerTakeDamageEvent e = new PlayerTakeDamageEvent(source);
+        getServer().getPluginManager().callEvent(e);
+        setHealth(getHealth() - e.getFinalDamage());
         return true;
     }
 
@@ -1491,7 +1493,7 @@ return added;
                             break;
                         case PlayerActionPacket.ACTION_JUMP:
                             sendMessage("JUMMMPPPPP!!!" + getDirection() + "|" + getMotion());
-                            if (PlayerClass != null) PlayerClass.HandelEvent(new PlayerJumpEvent(this));
+//                            if (PlayerClass != null) PlayerClass.HandelEvent(new PlayerJumpEvent(this));
                             getServer().getPluginManager().callEvent(new PlayerJumpEvent(this));
 //                            addMovement(0,2.5,0,0,0,0);
 //                            switch (getDirection()) {

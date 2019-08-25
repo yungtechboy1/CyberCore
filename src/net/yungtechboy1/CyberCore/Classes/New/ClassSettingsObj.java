@@ -245,7 +245,7 @@ public class ClassSettingsObj {
         learnNewPower(advancedPowerEnum,false);
     }
     public void learnNewPower(AdvancedPowerEnum advancedPowerEnum, boolean silentfail) {
-        if(!canLearnNewPower(advancedPowerEnum) && !silentfail)BC.getPlayer().sendMessage(TextFormat.YELLOW+"ClassSettings > WARNING > Can not re-learn"+advancedPowerEnum.getPowerEnum()+" Power has now been learned!");
+        if(!canLearnNewPower(advancedPowerEnum) && !silentfail)BC.getPlayer().sendMessage(TextFormat.YELLOW+"ClassSettings > WARNING > Can not re-learn"+advancedPowerEnum.getPowerEnum()+" Power has already been learned!");
         LearnedPowers.add(advancedPowerEnum);
         BC.getPlayer().sendMessage(TextFormat.GREEN+"ClassSettings > "+advancedPowerEnum.getPowerEnum()+" Power has now been learned!");
     }

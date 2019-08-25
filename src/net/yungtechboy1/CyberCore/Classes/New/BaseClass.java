@@ -31,6 +31,7 @@ import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsWindow;
+import net.yungtechboy1.CyberCore.Manager.PowerManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -439,19 +440,19 @@ public abstract class BaseClass {
 //        addActivePower(p);
         getPlayer().sendMessage(TextFormat.GREEN + "POWER > " + p.getDispalyName() + " has been activated!");
     }
-    public void enablePower(PowerEnum pe) {
-        System.out.println("Attempting to activate222 "+pe);
-        PowerAbstract p = getPossiblePower(pe);
-        if (p == null) {
-            getPlayer().sendMessage("E:221S: Error attempting to Activating " + pe);
-            return;
-        }
-        if(ls != null && ls != LockedSlot.NA)p.setLS(ls);
-        p.enablePower();
-        onPowerEnabled(p);//callback
+//    public void enablePower(PowerEnum pe) {
+//        System.out.println("Attempting to activate222 "+pe);
+//        PowerAbstract p = PowerManager.getPowerfromAPE(pe,this);
+//        if (p == null) {
+//            getPlayer().sendMessage("E:221S: Error attempting to Activating " + pe);
+//            return;
+//        }
+////        if(ls != null && ls != LockedSlot.NA)p.setLS(ls);
+//        p.enablePower();
+//        onPowerEnabled(p);//callback
 //        addActivePower(p);
-        getPlayer().sendMessage(TextFormat.GREEN + "POWER2 > " + p.getDispalyName() + " has been activated!");
-    }
+//        getPlayer().sendMessage(TextFormat.GREEN + "POWER2 > " + p.getDispalyName() + " has been activated!");
+//    }
 
     private void onPowerEnabled(PowerAbstract p) {
     }
@@ -708,11 +709,13 @@ public abstract class BaseClass {
     public Event PowerHandelEvent(Event e) {
 //        Event ee = e;
         for (PowerAbstract p : getActivePowers()) {
-            p.handelEvent(e);
+            e = p.handelEvent(e);
         }
         return e;
     }
-
+    public Event PlayerTakeDamageEvent(PlayerTakeDamageEvent event) {
+        return event;
+    }
     //TODO
     public Event HandelEvent(Event event) {
         event = PowerHandelEvent(event);
@@ -835,7 +838,7 @@ public abstract class BaseClass {
     }
 
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
-        for (PowerAbstract p : getActivePowers()) p.CustomEntityDamageByEntityEvent(event);
+//        for (PowerAbstract p : getActivePowers()) p.CustomEntityDamageByEntityEvent(event);
         float bd = event.getOriginalDamage();
         Buff b = getBuff(BuffType.Damage);
         if (event.getEntity() instanceof Player && getBuff(BuffType.DamageToPlayer) != null) {

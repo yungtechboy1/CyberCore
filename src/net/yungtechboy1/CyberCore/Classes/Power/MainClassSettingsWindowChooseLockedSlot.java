@@ -34,14 +34,14 @@ public class MainClassSettingsWindowChooseLockedSlot extends CyberFormCustom {
         int k = 0;
         ArrayList<String> l = new ArrayList<>();
         l.add("N/A");
-        for (PowerAbstract pa : _BC.getActivePowers()) {
+        for (PowerAbstract pa : _BC.getLearnedPowersAbstract()) {
             k++;
             PowerEnum pe = pa.getType();
             if (!pa.isHotbar()) {
                 System.out.println(pe+" NO LOCKED SLOT!!!");
                 continue;//Can not Enable NOT LockedSlot Powers here
             }
-            boolean e = pa.isEnabled();
+//            boolean e = pa.isEnabled();
             if (pe == _BC.getClassSettings().getPreferedSlot(_LS)) d = k;
             String pn = pa.getDispalyName();
             l.add(pn);
@@ -78,8 +78,12 @@ public class MainClassSettingsWindowChooseLockedSlot extends CyberFormCustom {
         } else {
             int kk = 0;
 
-            for (PowerAbstract pa : _BC.getActivePowers()) {
+            for (PowerAbstract pa : _BC.getLearnedPowersAbstract()) {
                 kk++;
+                if (!pa.isHotbar()) {
+                    System.out.println(pa.getType()+" NO22222 LOCKED SLOT!!!");
+                    continue;//Can not Enable NOT LockedSlot Powers here
+                }
                 if (kk == k) {
                     _BC.enablePower(pa.getAPE(), _LS);
                     return true;

@@ -170,6 +170,10 @@ public class AdvancedPowerEnum {
         return s;
     }
 
+    public PowerEnum getPowerID() {
+        return getPowerEnum();
+    }
+
 //    public ConfigSection toConfig() {
 //        ConfigSection c = new ConfigSection();
 //        if (tt == PowerAbstract.LevelingType.None) return c;

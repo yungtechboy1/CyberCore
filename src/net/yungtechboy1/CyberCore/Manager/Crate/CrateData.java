@@ -34,7 +34,7 @@ public class CrateData {
                 PossibleItems = PossibleItemsFromJSON(c.getString("PossibleItems"));
             else
                 PossibleItems = PossibleItemsFromConfig(c.getSection("PossibleItems"));
-        }E
+        }
 //        if(c.containsKey("PossibleItems"))PossibleItems = (ArrayList<ItemChanceData>)c.get("PossibleItems");
 
 //        if (c.containsKey(PossibleItemsKey)) {

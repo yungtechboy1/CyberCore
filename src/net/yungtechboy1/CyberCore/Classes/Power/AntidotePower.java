@@ -43,10 +43,7 @@ public class AntidotePower extends StagePowerAbstract {
         return 25;
     }
 
-    @Override
-    public ArrayList<Class> getAllowedClasses() {
-        return null;
-    }
+
 
     @Override
     public PowerSettings getPowerSettings() {

@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Classes.Power;
 
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
@@ -27,13 +28,15 @@ public class DoubleTimeAbility extends StagePowerAbstract {
     }
 
     @Override
-    public ArrayList<Class> getAllowedClasses() {
-        return null;
+    public StageEnum getMaxStage() {
+        return StageEnum.STAGE_5;
     }
 
     @Override
-    public StageEnum getMaxStage() {
-        return StageEnum.STAGE_5;
+    public ArrayList<Class> getAllowedClasses() {
+        ArrayList<Class> a = getAllowedClasses();
+        a.add(Knight.class);
+        return a;
     }
 
     @Override
