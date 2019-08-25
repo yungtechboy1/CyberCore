@@ -47,8 +47,8 @@ public abstract class BaseClass {
     //    public ArrayList<PowerEnum> DefaultPowers = new ArrayList<>();
     public HashMap<PowerEnum, PowerAbstract> PossiblePowerList = new HashMap<>();
     public ArrayList<AdvancedPowerEnum> DefaultPowers1 = new ArrayList<>();
-    protected int MainID = 0;
     public CyberCoreMain CCM;
+    protected int MainID = 0;
     HashMap<Integer, Integer> Herbal = new HashMap<Integer, Integer>() {{
         put(Block.GRASS, 10);
         put(Block.VINE, 10);
@@ -425,8 +425,9 @@ public abstract class BaseClass {
 //        getPlayer().sendMessage(TextFormat.GREEN + "POWER > " + p.getDispalyName() + " has been activated!");
 //    }
     public void enablePower(AdvancedPowerEnum pe) {
-        enablePower(pe,null);
+        enablePower(pe, null);
     }
+
     public void enablePower(AdvancedPowerEnum pe, LockedSlot ls) {
         System.out.println("Attempting to activate222 " + pe);
         PowerAbstract p = PowerManager.getPowerfromAPE(pe, this);
@@ -434,7 +435,16 @@ public abstract class BaseClass {
             getPlayer().sendMessage("E:221S: Error attempting to Activating " + pe.getPowerID());
             return;
         }
-        PossiblePowerList.put(pe.getPowerID(),p);
+        if (p.isHotbar()) {
+            if (ls == null) {
+                System.out.println("Error! Did not set Locked Slot!");
+                getPlayer().sendMessage("E:2ww21S: Error attempting to Activating " + pe.getPowerID());
+                return;
+            } else {
+                p.setLS(ls);
+            }
+        }
+        PossiblePowerList.put(pe.getPowerID(), p);
         p.enablePower();
         onPowerEnabled(p);//callback
 //        addActivePower(p);
@@ -707,15 +717,21 @@ public abstract class BaseClass {
     }
 
     public Event PowerHandelEvent(Event e) {
+        if (e == null) {
+            System.out.println("WTF NUUU222222222222222222UUUUUUUUUUUUUUUULLLLLLLLLLLLLLLLLLLLL");
+            return null;
+        }
 //        Event ee = e;
         for (PowerAbstract p : getActivePowers()) {
-            e = p.handelEvent(e);
+            p.handelEvent(e);
         }
         return e;
     }
+
     public Event PlayerTakeDamageEvent(PlayerTakeDamageEvent event) {
         return event;
     }
+
     //TODO
     public Event HandelEvent(Event event) {
         event = PowerHandelEvent(event);
@@ -934,7 +950,7 @@ public abstract class BaseClass {
     public ArrayList<PowerAbstract> getLearnedPowersAbstract() {
         ArrayList<PowerAbstract> pa = new ArrayList<>();
         for (AdvancedPowerEnum e : getClassSettings().getLearnedPowers()) {
-            pa.add(PowerManager.getPowerfromAPE(e,this));
+            pa.add(PowerManager.getPowerfromAPE(e, this));
         }
         return pa;
     }

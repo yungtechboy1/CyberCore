@@ -27,6 +27,7 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse;
 import net.yungtechboy1.CyberCore.Factory.Shop.ShopInv;
+import net.yungtechboy1.CyberCore.Factory.Shop.ShopMysqlData;
 import net.yungtechboy1.CyberCore.Factory.Shop.Spawner.SpawnerShop;
 import net.yungtechboy1.CyberCore.Manager.Crate.CrateData;
 import net.yungtechboy1.CyberCore.Manager.Crate.CrateMain;
@@ -42,6 +43,7 @@ import java.util.UUID;
 
 import static net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBarInt.getPowerHotBarItemNamedTagKey;
 import static net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money;
+import static net.yungtechboy1.CyberCore.Factory.Shop.ShopInv.CurrentPageEnum.AdminItemEdit;
 
 /**
  * Created by carlt_000 on 1/22/2017.
@@ -260,112 +262,7 @@ public class MasterListener implements Listener {
                     System.out.println("+++++>" + transaction.getSource().getCursorInventory().slots);
                 }
                 if (inv instanceof ShopInv) {
-
-                    System.out.println("CHECK INNNNNVVV222222VVVV " + sca);
-                    ShopInv ah = (ShopInv) inv;
-//                    if(!ah.Init)return;
-                    System.out.println(sca.getSlot() + " || " + ah.getHolder().getName() + " || " + ah.getHolder().getClass().getName());
-                    CorePlayer ccpp = (CorePlayer) ah.getHolder();
-                    int slot = sca.getSlot();
-                    int sx = slot % 9;
-                    int sy = (int) Math.floor(slot / 9);
-//                    event.setCancelled();
-                    if (slot < 5 * 9) {
-                        System.out.println("TOP INV");
-                        //TODO CONFIRM AND SHOW ITEM
-                        if (!ah.ConfirmPurchase) {
-                            Item is = ah.getItem(slot);
-                            if (ah.CurrentPage == ShopInv.CurrentPageEnum.Catagories) {
-                                if (slot == 11) {
-                                    ah.CCM.SpawnShop.OpenShop((CorePlayer) ah.getHolder(), 1);
-                                } else {
-                                    ah.setPage(1);
-                                }
-                            } else {
-                                ah.ConfirmItemPurchase(slot);
-                            }
-//                        ccpp.AH.ConfirmItemPurchase(slot);
-                        } else {
-                            Item is = ah.getItem(slot);
-                            if (ah.CurrentPage == ShopInv.CurrentPageEnum.Catagories) {
-                                if (slot == 11) {
-                                    ah.CCM.SpawnShop.OpenShop((CorePlayer) ah.getHolder(), 1);
-                                } else {
-                                    ah.setPage(1);
-                                }
-                            } else if (ah.CurrentPage == ShopInv.CurrentPageEnum.PlayerSellingPage) {
-                                boolean isi = false;
-                                int isc = is.getCount();
-                                if (is != null && is.getId() != 0) {
-                                    if (is.getId() == Item.IRON_BLOCK) isi = true;
-                                    System.out.println("Selected Slot SX:" + sx + " | SY:" + sy);
-                                    if (sy != 0 && sy != 5 && sx != 4 && !isi) {
-                                        if (sx < 4) {
-                                            //Sell
-                                            ah.SetupPageToFinalConfirmItem(ah.MultiConfirmData, isc, true);
-
-                                        } else {
-                                            //Buy
-                                            ah.SetupPageToFinalConfirmItem(ah.MultiConfirmData, isc, false);
-                                        }
-                                    }
-                                }
-                                event.setCancelled();
-                                return;
-                            } else {
-                                Item si = ah.getContents().get(slot);
-                                if (si != null) {
-                                    if (ah.getCurrentPage() == ShopInv.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money) {
-                                        ah.setPage(1);
-                                        ah.ClearConfirmPurchase();
-                                        //Back Home
-                                        break;
-                                    } else {
-                                        System.out.println("CPPPPPPPP");
-
-                                        if (si.getId() == BlockID.EMERALD_BLOCK) {
-                                            System.out.println("CONFIRM PURCHASE!!!!!!!");
-                                            ah.SF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot, si.getCount());
-                                            break;
-                                        } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
-                                            System.out.println("DENCLINE PURCHASE!!!!!!!!");
-                                            ah.setPage(1);
-                                            ah.ClearConfirmPurchase();
-                                            break;
-                                        } else {
-                                            ah.setPage(1);
-                                            System.out.println("UNKNOWNMNNN!!!!!!!!");
-                                            ah.ClearConfirmPurchase();
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        switch (slot) {
-                            case ShopInv.MainPageItemRef.LastPage:
-                                ah.GoToPrevPage();
-                                break;
-                            case ShopInv.MainPageItemRef.NextPage:
-                                ah.GoToNextPage();
-                                break;
-                            case ShopInv.MainPageItemRef.Search:
-                                break;
-                            case ShopInv.MainPageItemRef.Reload:
-                                ah.ReloadCurrentPage();
-                                break;
-                            case ShopInv.MainPageItemRef.Catagories:
-                                ah.DisplayCatagories();
-                                break;
-                            case ShopInv.MainPageItemRef.ToggleAdmin:
-                                ah.AdminMode = !ah.AdminMode;
-                                event.setCancelled(false);
-                                ah.ReloadCurrentPage();
-                                break;
-
-                        }
-                    }
+                    ShopInvMainHandle(inv, sca, event);
                 }
                 if (inv instanceof AuctionHouse) {
 
@@ -535,10 +432,152 @@ public class MasterListener implements Listener {
         event.getTransaction().getSource().sendAllInventories();
     }
 
+    private void ShopInvMainHandle(Inventory inv, SlotChangeAction sca, InventoryTransactionEvent event) {
+
+        event.setCancelled();
+        System.out.println("CHECK INNNNNVVV222222VVVV " + sca);
+        ShopInv ah = (ShopInv) inv;
+//                    if(!ah.Init)return;
+        System.out.println(sca.getSlot() + " || " + ah.getHolder().getName() + " || " + ah.getHolder().getClass().getName());
+        CorePlayer ccpp = (CorePlayer) ah.getHolder();
+        int slot = sca.getSlot();
+        int sx = slot % 9;
+        int sy = (int) Math.floor(slot / 9);
+//                    event.setCancelled();
+        if (slot < 5 * 9) {
+            System.out.println("TOP INV");
+            //TODO CONFIRM AND SHOW ITEM
+            if (!ah.ConfirmPurchase) {
+                Item is = ah.getItem(slot);
+                if (ah.CurrentPage == ShopInv.CurrentPageEnum.Catagories) {
+
+                    ShopCatagoreyHandler(slot, ah);
+                } else {
+                    if (!ah.AdminMode)
+                        ah.ConfirmItemPurchase(slot, ah.AdminMode);
+                    else {
+                     if(ah.CurrentPage == AdminItemEdit){
+                         AdminItemEditHandle(ah,inv,sca,event,slot);
+                     }else
+                        ah.AdminModeItem(slot, ah.AdminMode);
+                    }
+                }
+//                        ccpp.AH.ConfirmItemPurchase(slot);
+            } else {
+                Item is = ah.getItem(slot);
+                if (ah.CurrentPage == ShopInv.CurrentPageEnum.Catagories) {
+                    if (slot == 11) {
+                        ah.CCM.SpawnShop.OpenShop((CorePlayer) ah.getHolder(), 1);
+                    } else {
+                        ah.setPage(1);
+                    }
+                } else if (ah.CurrentPage == ShopInv.CurrentPageEnum.PlayerSellingPage) {
+                    boolean isi = false;
+                    int isc = is.getCount();
+                    if (is != null && is.getId() != 0) {
+                        if (is.getId() == Item.IRON_BLOCK) isi = true;
+                        System.out.println("Selected Slot SX:" + sx + " | SY:" + sy);
+                        if (sy != 0 && sy != 5 && sx != 4 && !isi) {
+                            if (sx < 4) {
+                                //Sell
+                                ah.SetupPageToFinalConfirmItem(ah.MultiConfirmData, isc, true);
+
+                            } else {
+                                //Buy
+                                ah.SetupPageToFinalConfirmItem(ah.MultiConfirmData, isc, false);
+                            }
+                        }
+                    }
+                    return;
+                } else {
+                    Item si = ah.getContents().get(slot);
+                    if (si != null) {
+                        if (ah.getCurrentPage() == ShopInv.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money) {
+                            ah.setPage(1);
+                            ah.ClearConfirmPurchase();
+                            //Back Home
+                            return;
+                        } else {
+                            System.out.println("CPPPPPPPP");
+
+                            if (si.getId() == BlockID.EMERALD_BLOCK) {
+                                System.out.println("CONFIRM PURCHASE!!!!!!!");
+                                ah.SF.PurchaseItem((CorePlayer) ah.getHolder(), ah.getPage(), ah.ConfirmPurchaseSlot, si.getCount(), ah.AdminMode);
+                                return;
+                            } else if (si.getId() == BlockID.REDSTONE_BLOCK) {
+                                System.out.println("DENCLINE PURCHASE!!!!!!!!");
+                                ah.setPage(1);
+                                ah.ClearConfirmPurchase();
+                                return;
+                            } else {
+                                ah.setPage(1);
+                                System.out.println("UNKNOWNMNNN!!!!!!!!");
+                                ah.ClearConfirmPurchase();
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            switch (slot) {
+                case ShopInv.MainPageItemRef.LastPage:
+                    ah.GoToPrevPage();
+                    break;
+                case ShopInv.MainPageItemRef.NextPage:
+                    ah.GoToNextPage();
+                    break;
+                case ShopInv.MainPageItemRef.Search:
+                    break;
+                case ShopInv.MainPageItemRef.Reload:
+                    ah.ReloadCurrentPage();
+                    break;
+                case ShopInv.MainPageItemRef.Catagories:
+                    ah.DisplayCatagories();
+                    break;
+                case ShopInv.MainPageItemRef.ToggleAdmin:
+                    ah.AdminMode = !ah.AdminMode;
+                    event.setCancelled(false);
+                    ah.ReloadCurrentPage();
+                    break;
+
+            }
+        }
+        event.setCancelled();
+    }
+
+    private void AdminItemEditHandle(ShopInv ah, Inventory inv, SlotChangeAction sca, InventoryTransactionEvent event, int slot) {
+        int sx = slot % 9;
+        int sy = (int) Math.floor(slot / 9);
+        Item i = sca.getInventory().getItem(sca.getSlot());
+        if(sx == 3 &&sy ==3){
+            if(i.hasCompoundTag() && i.getNamedTag().contains("ShopID")){
+                int s = i.getNamedTag().getInt("ShopID");
+                ShopMysqlData sd = ah.CCM.Shop.getItemFrom(s);
+                if(sd == null){
+                    System.out.println("Error!!!!! WTF!!!1221aas222e2aaqqqwd  ass");
+                }else{
+                    //New Edit Window
+                }
+            }
+        }
+    }
+
+    private void ShopCatagoreyHandler(int slot, ShopInv ah) {
+        if (slot == 11) {
+            ah.CCM.SpawnShop.OpenShop((CorePlayer) ah.getHolder(), 1);
+        } else if (slot == 12) {//Food
+            ah.showFoodCategory();
+        } else {
+            ah.setPage(1);
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void spawnEvent(PlayerRespawnEvent event) {
 
     }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void TD(PlayerTakeDamageEvent event) {
         Entity e = event.source.entity;
@@ -551,7 +590,11 @@ public class MasterListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void EntityInventoryChangeEvent(EntityInventoryChangeEvent event) {
+    public void EICE(EntityInventoryChangeEvent event) {
+        if (event == null) {
+            System.out.println("WTF NUUUUUUUUUUUUUUUUUUULLLLLLLLLLLLLLLLLLLLL");
+            return;
+        }
         Entity e = event.getEntity();
         if (e instanceof CorePlayer) {
             CorePlayer cp = (CorePlayer) e;

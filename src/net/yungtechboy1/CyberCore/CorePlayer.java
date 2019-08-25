@@ -994,8 +994,9 @@ return added;
                                 if (transactionPacket2.actions.length > 0) {
                                     this.server.getLogger().debug("Expected 0 actions for mismatch, got " + transactionPacket2.actions.length + ", " + Arrays.toString(transactionPacket2.actions));
                                     this.server.getLogger().error("Expected 0 actions for mismatch, got " + transactionPacket2.actions.length + ", " + Arrays.toString(transactionPacket2.actions));
+                                    getCursorInventory().clearAll();
                                 } else {
-                                    this.server.getLogger().error("Expected 0 actions for mismatch, got " + transactionPacket2.actions.length + ", " + Arrays.toString(transactionPacket2.actions));
+                                    this.server.getLogger().error("Expected 0 actions for mismatch, got NUN");
                                 }
                                 this.sendAllInventories();
 

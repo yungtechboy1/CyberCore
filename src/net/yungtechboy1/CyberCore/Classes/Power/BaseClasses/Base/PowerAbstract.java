@@ -368,8 +368,21 @@ public abstract class PowerAbstract {
         Item ii = pi.getItem(getLS().getSlot()).clone();
         pi.clear(getLS().getSlot());
         if (ii == null || ii.hasCompoundTag() && ii.getNamedTag().contains(PowerHotBarNBTTag)) ii = null;
-        pi.setItem(getLS().getSlot(), i);
-        if (ii != null && !ii.isNull()) pi.addItem(ii);
+        System.out.println(">>>>>>>>>>>>>Data::: "+getLS()+"|||||"+i);
+        try {
+            if (i == null) {
+                System.out.println("Error! WTF ITEM IS NELL");
+                return;
+            }
+            if (getLS() == LockedSlot.NA) {
+                System.out.println("Error! LS IS NA aaaaaaaaaaaaaaaNELL");
+                return;
+            }
+            pi.setItem(getLS().getSlot(), i);
+            if (ii != null && !ii.isNull()) pi.addItem(ii);
+        }catch (Exception e){
+            System.out.println("Ahhhhhh Fuck!");
+        }
     }
 
     public Item getHotbarItem(HotbarStatus hbs) {

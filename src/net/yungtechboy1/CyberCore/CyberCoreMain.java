@@ -974,7 +974,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     }
 
     public boolean isInSpawn(CorePlayer p){
-        return isInSpawn(p);
+        return isInSpawn(p.getLocation());
     }
     public boolean isInSpawn(Location v){
         Vector2 pv = new Vector2(v.getFloorX(),v.getFloorZ());

@@ -34,7 +34,7 @@ public class DoubleTimeAbility extends StagePowerAbstract {
 
     @Override
     public ArrayList<Class> getAllowedClasses() {
-        ArrayList<Class> a = getAllowedClasses();
+        ArrayList<Class> a = super.getAllowedClasses();
         a.add(Knight.class);
         return a;
     }

@@ -8,6 +8,7 @@ import cn.nukkit.blockentity.BlockEntityEnchantTable;
 import cn.nukkit.form.element.Element;
 import cn.nukkit.form.element.ElementStepSlider;
 import cn.nukkit.form.window.FormWindowCustom;
+import cn.nukkit.inventory.EnchantInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemTool;
 import cn.nukkit.math.BlockFace;
@@ -159,9 +160,10 @@ public class BlockEnchantingTable extends CustomBlockTransparentMeta {
     public boolean onActivate(Item item, Player sender) {
         if (sender != null) {
             Player p = (Player) sender;
-            CorePlayer cp = (CorePlayer) p;
-            p.showFormWindow(new Enchanting0Window(getName()));
-            cp.setNewWindow(new Enchanting1Window(cp,GetTier(),item));
+            p.addWindow(new EnchantInventory(this.getLocation()), 3);
+//            CorePlayer cp = (CorePlayer) p;
+//            p.showFormWindow(new Enchanting0Window(getName()));
+//            cp.setNewWindow(new Enchanting1Window(cp,GetTier(),item));
         }
 
         return true;
