@@ -1,11 +1,11 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
-import cn.nukkit.command.CommandSender;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
+import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 

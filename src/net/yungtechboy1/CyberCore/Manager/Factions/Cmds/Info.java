@@ -1,21 +1,14 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
-import cn.nukkit.Player;
-import cn.nukkit.command.CommandSender;
 import cn.nukkit.form.element.ElementButton;
-import cn.nukkit.form.element.ElementLabel;
-import cn.nukkit.form.response.FormResponseCustom;
-import cn.nukkit.form.window.FormWindowCustom;
 import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.utils.TextFormat;
 
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
+import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
-
-import java.util.ArrayList;
 
 /**
  * Created by carlt_000 on 7/9/2016.

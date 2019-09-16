@@ -5,6 +5,7 @@ import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParameter;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.Faction.FactionCommandWindow;
 
 import java.util.ArrayList;
 
@@ -61,7 +62,11 @@ public class FactionBaseCMD extends Command {
 //            }
 
         String key = null;
-        if (strings.length == 0) key = null;
+        if (strings.length == 0) {
+//            key = null;
+            commandSender.showFormWindow(new FactionCommandWindow("F","CCCC",commandSender));
+            return true;
+        }
         else key = strings[0];
         String[] args = PushOne(strings);
         Owner.FM.FC.onCommand(Owner.FM, commandSender, key, args);

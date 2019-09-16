@@ -80,6 +80,7 @@ public class CorePlayer extends Player {
     private static boolean CooldownLock = false;
     private final String Cooldown_Faction = "Faction";
     private final String Cooldown_Class = "Class";
+    private final String Cooldown_DTP = "DelayTP";
     private final String Scoreboard_Class = "ScoreBoard";
     public String TPR = null;
     public FormType.MainForm LastSentFormType = FormType.MainForm.NULL;
@@ -142,6 +143,9 @@ public class CorePlayer extends Player {
     }};
     private int BaseSwingSpeed = 7;//Was 10 but felt too slow for good PVP
     private CoolDownTick SwingCooldown = new CoolDownTick();
+    private int WaitingForTP = -1;
+    private Position WaitingForTPPos = null;
+    private Position WaitingForTPStartPos;
 
     public CorePlayer(SourceInterface interfaz, Long clientID, String ip, int port) {
         super(interfaz, clientID, ip, port);
@@ -166,7 +170,7 @@ public class CorePlayer extends Player {
             int added = now - add;
             int level = this.getExperienceLevel();
 
-            for(int most = calculateRequireExperience(level-1); added < 0; ) {
+            for (int most = calculateRequireExperience(level - 1); added < 0; ) {
                 added += most;
                 --level;
             }
@@ -176,17 +180,18 @@ public class CorePlayer extends Player {
         }
         return false;
     }
+
     public int getTotalExperience() {
 //        int t = 0;
-            int now = this.getExperience();
-            int added = now;
-            int level = this.getExperienceLevel();
+        int now = this.getExperience();
+        int added = now;
+        int level = this.getExperienceLevel();
 
-            for(int most = calculateRequireExperience(level-1); level > 0; ) {
-                added += most;
-                --level;
-            }
-return added;
+        for (int most = calculateRequireExperience(level - 1); level > 0; ) {
+            added += most;
+            --level;
+        }
+        return added;
     }
 
     public HashMap<Buff.BuffType, Buff> getClassBuffList() {
@@ -300,8 +305,8 @@ return added;
                 data.put(b.getBt(), (b.getAmount()));
             }
         }
-        if(!data.containsKey(Buff.BuffType.Health))CustomExtraHP = 0;
-        if(!data.containsKey(Buff.BuffType.Movement))setMovementSpeed(DEFAULT_SPEED, true);
+        if (!data.containsKey(Buff.BuffType.Health)) CustomExtraHP = 0;
+        if (!data.containsKey(Buff.BuffType.Movement)) setMovementSpeed(DEFAULT_SPEED, true);
         if (!areequal(data, lastdata)) {
             data.forEach((key, value) -> {
                 switch (key) {
@@ -311,7 +316,7 @@ return added;
                     case NULL:
                         break;
                     case Health:
-                        CustomExtraHP = (int) (value+0);
+                        CustomExtraHP = (int) (value + 0);
                         setMaxHealth(20 + CustomExtraHP);
                         sendAttributes();
                         break;
@@ -401,15 +406,6 @@ return added;
         }
     }
 
-    public void SetPlayerClass(BaseClass bc) {
-        PlayerClass = bc;
-        if (PlayerClass != null) PlayerClass.initBuffs();
-    }
-
-    public BaseClass getPlayerClass() {
-        return PlayerClass;
-    }
-
     //for testing
 //    @Override
 //    public int dataPacket(DataPacket packet, boolean needACK) {
@@ -438,6 +434,15 @@ return added;
 //        }
 //        return 0;
 //    }
+
+    public void SetPlayerClass(BaseClass bc) {
+        PlayerClass = bc;
+        if (PlayerClass != null) PlayerClass.initBuffs();
+    }
+
+    public BaseClass getPlayerClass() {
+        return PlayerClass;
+    }
 
     @Override
     public void sendAttributes() {
@@ -488,6 +493,11 @@ return added;
         ItemBeingEnchantedLock = itemBeingEnchantedLock;
     }
 
+//    @Deprecated
+//    public PlayerEconData GetEconData() {
+//        return new PlayerEconData(GetData());
+//    }
+
     public void removeItemBeingEnchantedLock() {
         setItemBeingEnchantedLock(false);
     }
@@ -495,11 +505,6 @@ return added;
     public void setItemBeingEnchantedLock() {
         setItemBeingEnchantedLock(true);
     }
-
-//    @Deprecated
-//    public PlayerEconData GetEconData() {
-//        return new PlayerEconData(GetData());
-//    }
 
     public void ReturnItemBeingEnchanted() {
         if (IsItemBeingEnchanted() && !isItemBeingEnchantedLock()) {
@@ -559,6 +564,7 @@ return added;
 //        TakeMoney(price);
         return true;
     }
+
     public boolean MakeTransaction(double price) {
         if (price > getMoney()) return false;
         TakeMoney(price);
@@ -1549,7 +1555,7 @@ return added;
                 ArrayList<String> t = bc.FormatHudText();
                 if (t != null && t.size() != 0) {
                     sd.addLine("Class:", k++);
-                    for(String ss:t)sd.addLine("    " + ss, k++);
+                    for (String ss : t) sd.addLine("    " + ss, k++);
                 } else {
                     sd.addLine("Class: None", k++);
                 }
@@ -1624,6 +1630,7 @@ return added;
         if (this.spawned) {
             if (currentTick % 5 == 0) {//Only allows 4 Ticks per Sec
                 if (!CooldownLock && isAlive() && spawned) {
+                    CooldownLock = true;
                     if (Combat != null) {
                         if (Combat.getTick() < currentTick) {
                             //No Long in combat
@@ -1631,7 +1638,6 @@ return added;
                         }
                     }
 
-                    CooldownLock = true;
 //            CyberCoreMain.getInstance().getLogger().info("RUNNNING "+CDL.size());
                     CoolDownTick fc = GetCooldown(Cooldown_Faction, true);
                     if (fc == null) {
@@ -1653,6 +1659,16 @@ return added;
                                 fac.BroadcastMessage(TextFormat.YELLOW + getName() + " has declined your faction invite");
                                 ClearFactionInvite(true);
                             }
+                        }
+                    }
+                    //Delay Teleport
+                    CoolDownTick tc = GetCooldown(Cooldown_DTP, true);
+                    if (tc == null) {
+//                    CyberCoreMain.getInstance().getLogger().info("RUNNNING CLASS CHECK IN CP" + CDL.size()+"||"+ getPlayerClass());
+                        AddCoolDown(Cooldown_DTP, 1);
+                        if(isWaitingForTeleport()){
+                            teleport(WaitingForTPPos);
+                            clearWaitingForTP();
                         }
                     }
                     //Class Check
@@ -1679,7 +1695,8 @@ return added;
                             if (i.hasCompoundTag()) {
                                 if (i.getNamedTag().contains(ShopInv.StaticItems.KeyName)) getInventory().remove(i);
                                 if (i.getNamedTag().contains("AHITEM")) getInventory().remove(i);
-                                if (i.getNamedTag().contains(net.yungtechboy1.CyberCore.Factory.Shop.Spawner.SpawnerShop.StaticItems.KeyName))getInventory().remove(i);
+                                if (i.getNamedTag().contains(net.yungtechboy1.CyberCore.Factory.Shop.Spawner.SpawnerShop.StaticItems.KeyName))
+                                    getInventory().remove(i);
 //                                k++;
                             }
                         }
@@ -1996,88 +2013,6 @@ return added;
         ClearFactionInvite(false);
     }
 
-    public void ClearFactionInvite(boolean fromfac) {
-        if (fromfac) {
-            Faction f = CyberCoreMain.getInstance().FM.FFactory.getFaction(FactionInvite);
-            if (f != null) {
-                f.DelInvite(getName().toLowerCase());
-            } else {
-                getServer().getLogger().error("ERROR! Faction from CorePlayer invite not found! E3333");
-            }
-        }
-        FactionInvite = null;
-        FactionInviteTimeout = -1;
-    }
-
-    @Override
-    public void completeLoginSequence() {
-        PlayerLoginEvent ev;
-        this.server.getPluginManager().callEvent(ev = new PlayerLoginEvent(this, "Plugin reason"));
-        if (ev.isCancelled()) {
-            this.close(this.getLeaveMessage(), ev.getKickMessage());
-            return;
-        }
-
-        StartGamePacket startGamePacket = new StartGamePacket();
-        startGamePacket.entityUniqueId = this.id;
-        startGamePacket.entityRuntimeId = this.id;
-        startGamePacket.playerGamemode = (this.gamemode);
-        startGamePacket.x = (float) this.x;
-        startGamePacket.y = (float) this.y;
-        startGamePacket.z = (float) this.z;
-        startGamePacket.yaw = (float) this.yaw;
-        startGamePacket.pitch = (float) this.pitch;
-        startGamePacket.seed = -1;
-        startGamePacket.dimension = (byte) (this.level.getDimension() & 0xff);
-        startGamePacket.worldGamemode = (this.gamemode);
-        startGamePacket.difficulty = this.server.getDifficulty();
-        startGamePacket.spawnX = (int) this.x;
-        startGamePacket.spawnY = (int) this.y;
-        startGamePacket.spawnZ = (int) this.z;
-        startGamePacket.hasAchievementsDisabled = true;
-        startGamePacket.dayCycleStopTime = -1;
-        startGamePacket.eduMode = false;
-        startGamePacket.hasEduFeaturesEnabled = true;
-        startGamePacket.rainLevel = 0;
-        startGamePacket.lightningLevel = 0;
-        startGamePacket.commandsEnabled = this.isEnableClientCommand();
-        startGamePacket.gameRules = getLevel().getGameRules();
-        startGamePacket.levelId = "";
-        startGamePacket.worldName = this.getServer().getNetwork().getName();
-        startGamePacket.generator = 1; //0 old, 1 infinite, 2 flat
-        this.dataPacket(startGamePacket);
-
-        this.dataPacket(new AvailableEntityIdentifiersPacket());
-
-        this.loggedIn = true;
-
-        this.level.sendTime(this);
-
-        //todo cHANGE
-        this.setMovementSpeed(DEFAULT_SPEED);
-        this.sendAttributes();
-        this.setNameTagVisible(true);
-        this.setNameTagAlwaysVisible(true);
-        this.setCanClimb(true);
-
-        this.server.getLogger().info(this.getServer().getLanguage().translateString("nukkit.player.logIn",
-                TextFormat.AQUA + this.username + TextFormat.WHITE,
-                this.ip,
-                String.valueOf(this.port),
-                String.valueOf(this.id),
-                this.level.getName(),
-                String.valueOf(NukkitMath.round(this.x, 4)),
-                String.valueOf(NukkitMath.round(this.y, 4)),
-                String.valueOf(NukkitMath.round(this.z, 4))));
-
-        if (this.isOp() || this.hasPermission("nukkit.textcolor")) {
-            this.setRemoveFormat(false);
-        }
-
-        this.server.addOnlinePlayer(this);
-        this.server.onPlayerCompleteLoginSequence(this);
-    }
-
 
 //
 //        int tickDiff = currentTick - this.lastUpdate;
@@ -2179,6 +2114,87 @@ return added;
 //        return true;
 //    }
 
+    public void ClearFactionInvite(boolean fromfac) {
+        if (fromfac) {
+            Faction f = CyberCoreMain.getInstance().FM.FFactory.getFaction(FactionInvite);
+            if (f != null) {
+                f.DelInvite(getName().toLowerCase());
+            } else {
+                getServer().getLogger().error("ERROR! Faction from CorePlayer invite not found! E3333");
+            }
+        }
+        FactionInvite = null;
+        FactionInviteTimeout = -1;
+    }
+
+    @Override
+    public void completeLoginSequence() {
+        PlayerLoginEvent ev;
+        this.server.getPluginManager().callEvent(ev = new PlayerLoginEvent(this, "Plugin reason"));
+        if (ev.isCancelled()) {
+            this.close(this.getLeaveMessage(), ev.getKickMessage());
+            return;
+        }
+
+        StartGamePacket startGamePacket = new StartGamePacket();
+        startGamePacket.entityUniqueId = this.id;
+        startGamePacket.entityRuntimeId = this.id;
+        startGamePacket.playerGamemode = (this.gamemode);
+        startGamePacket.x = (float) this.x;
+        startGamePacket.y = (float) this.y;
+        startGamePacket.z = (float) this.z;
+        startGamePacket.yaw = (float) this.yaw;
+        startGamePacket.pitch = (float) this.pitch;
+        startGamePacket.seed = -1;
+        startGamePacket.dimension = (byte) (this.level.getDimension() & 0xff);
+        startGamePacket.worldGamemode = (this.gamemode);
+        startGamePacket.difficulty = this.server.getDifficulty();
+        startGamePacket.spawnX = (int) this.x;
+        startGamePacket.spawnY = (int) this.y;
+        startGamePacket.spawnZ = (int) this.z;
+        startGamePacket.hasAchievementsDisabled = true;
+        startGamePacket.dayCycleStopTime = -1;
+        startGamePacket.eduMode = false;
+        startGamePacket.hasEduFeaturesEnabled = true;
+        startGamePacket.rainLevel = 0;
+        startGamePacket.lightningLevel = 0;
+        startGamePacket.commandsEnabled = this.isEnableClientCommand();
+        startGamePacket.gameRules = getLevel().getGameRules();
+        startGamePacket.levelId = "";
+        startGamePacket.worldName = this.getServer().getNetwork().getName();
+        startGamePacket.generator = 1; //0 old, 1 infinite, 2 flat
+        this.dataPacket(startGamePacket);
+
+        this.dataPacket(new AvailableEntityIdentifiersPacket());
+
+        this.loggedIn = true;
+
+        this.level.sendTime(this);
+
+        //todo cHANGE
+        this.setMovementSpeed(DEFAULT_SPEED);
+        this.sendAttributes();
+        this.setNameTagVisible(true);
+        this.setNameTagAlwaysVisible(true);
+        this.setCanClimb(true);
+
+        this.server.getLogger().info(this.getServer().getLanguage().translateString("nukkit.player.logIn",
+                TextFormat.AQUA + this.username + TextFormat.WHITE,
+                this.ip,
+                String.valueOf(this.port),
+                String.valueOf(this.id),
+                this.level.getName(),
+                String.valueOf(NukkitMath.round(this.x, 4)),
+                String.valueOf(NukkitMath.round(this.y, 4)),
+                String.valueOf(NukkitMath.round(this.z, 4))));
+
+        if (this.isOp() || this.hasPermission("nukkit.textcolor")) {
+            this.setRemoveFormat(false);
+        }
+
+        this.server.addOnlinePlayer(this);
+        this.server.onPlayerCompleteLoginSequence(this);
+    }
 
     @Override
     public void heal(EntityRegainHealthEvent source) {
@@ -2222,10 +2238,61 @@ return added;
         //TODO
     }
 
+    public String getFactionName() {
+        Faction f = getFaction();
+        if (f == null) return "No Faction";
+        return f.GetDisplayName();
+    }
+
     public Faction getFaction() {
         if (Faction == null) return null;
         return CyberCoreMain.getInstance().FM.FFactory.getFaction(Faction);
     }
+
+    public boolean isWaitingForTeleport() {
+        if (!(WaitingForTP == -1) && WaitingForTPPos != null) {
+            if(WaitingForTPStartPos != null && WaitingForTPStartPos.distance(WaitingForTPPos.asVector3f().asVector3()) > WaitingForTPCD){
+                sendMessage("Error! You moved too much so your teleport was canceled");
+                clearWaitingForTP();
+                return false;
+            }
+            return true;
+        }
+        clearWaitingForTP();
+        return false;
+    }
+
+    public void clearWaitingForTP() {
+        WaitingForTP = -1;
+        WaitingForTPPos = null;
+    }
+
+    public boolean delayTeleport(int i, Position pos, boolean giveeffects) {
+        return delayTeleport(i,pos,giveeffects,2);
+    }
+    public boolean delayTeleport(int i, Position pos) {
+        return delayTeleport(i,pos,true,2);
+    }
+
+    public boolean delayTeleport(int i, Position pos, boolean giveeffects, int canceltpdistance) {
+        if (isWaitingForTeleport()) {
+            sendMessage(TextFormat.RED + "Error! You are already waiting for a teleport!");
+            return false;
+        }
+        WaitingForTP = i;
+        WaitingForTPStartPos = getPosition().clone();
+        WaitingForTPPos = pos.clone();
+        WaitingForTPEffects = giveeffects;
+        WaitingForTPCD = canceltpdistance;
+        if(WaitingForTPEffects){
+            addEffect(Effect.getEffect(Effect.NAUSEA).setDuration(20*5));
+            addEffect(Effect.getEffect(Effect.SLOWNESS).setDuration(20*5));
+        }
+        return true;
+    }
+
+    public int WaitingForTPCD = 2;
+    public boolean WaitingForTPEffects = false;
 //        if (!this.server.isWhitelisted((this.getName()).toLowerCase())) {
 //            this.kick(PlayerKickEvent.Reason.NOT_WHITELISTED, "Server is white-listed");
 //

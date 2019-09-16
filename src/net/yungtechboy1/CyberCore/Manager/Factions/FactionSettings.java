@@ -13,6 +13,16 @@ public class FactionSettings {
     private FactionRank DefaultJoinRank = FactionRank.Recruit;
     private FactionRank AllowedToClaim = FactionRank.General;
 
+    public FactionRank getAllowedToSetHome() {
+        return AllowedToSetHome;
+    }
+
+    public void setAllowedToSetHome(FactionRank allowedToSetHome) {
+        AllowedToSetHome = allowedToSetHome;
+    }
+
+    private FactionRank AllowedToSetHome = FactionRank.General;
+
     public FactionSettings() {
 
     }

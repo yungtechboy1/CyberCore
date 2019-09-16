@@ -37,9 +37,9 @@ A few items have been added to aid in raiding.
 Earning Money:
 ---
 
-    Since there is a class system implemented this season, a lot of custom items are not available to everyone equally.
+Since there is a Player Class System implemented this season, a lot of custom items are not available for purchase from the Server Shop. Check the auction house for a better
      
- So crafting items in your class speciality then selling them on the auction house should be a good way to make money
+ So crafting items in your class speciality then selling them on the auction house should be a good way to make money.
  
  The Server will also want special items! Whenever the server needs items it will issue a `Server Mission` where all players will have a chance to complete it for money / items / xp / all of the above.
  
