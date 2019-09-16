@@ -274,7 +274,7 @@ public class FloatingTextFactory extends Thread implements InterruptibleThread {
                     .replace("{kdr}", "N/A");
         }
         if(vertical)text = text.replaceAll("|n","\n");
-        System.out.println(text);
+//        System.out.println(text);
         return text;
     }
 

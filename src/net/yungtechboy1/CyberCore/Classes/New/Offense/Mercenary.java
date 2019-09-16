@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Classes.New.Offense;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
+import net.yungtechboy1.CyberCore.Classes.New.ClassType;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.MercenaryBlindingStrike;
 import net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary.MercenaryDisarm;
@@ -21,7 +22,7 @@ public class Mercenary  extends BaseClass {
 //    }
 
     public Mercenary(CyberCoreMain main, CorePlayer player, ConfigSection cs) {
-        super(main, player, ClassType.Class_Offense_Mercenary);
+        super(main, player);
     }
 
     @Override

@@ -1,15 +1,16 @@
 package net.yungtechboy1.CyberCore.Factory;
 
 import cn.nukkit.Player;
-import cn.nukkit.event.Event;
 import cn.nukkit.event.Listener;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.New.ClassType;
+import net.yungtechboy1.CyberCore.Classes.New.Magic.Priest;
+import net.yungtechboy1.CyberCore.Classes.New.Magic.Sorcerer;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.MineLifeClass;
 import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.*;
@@ -18,12 +19,10 @@ import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.io.File;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 /**
  * Created by carlt_000 on 1/24/2017.
@@ -123,12 +122,19 @@ public class ClassFactory implements Listener {
         ConfigSection o = (ConfigSection) MMOSave.get(p.getName().toLowerCase());
         if (o != null) {
             BaseClass data = null;//new BaseClass(CCM, p, (ConfigSection) o);
-            switch (BaseClass.ClassType.values()[o.getInt("TYPE", 0)]) {
+            switch (ClassType.values()[o.getInt("TYPE", 0)]) {
+                case Unknown:
+                    break;
                 case Class_Miner_TNT_Specialist:
                     data = new TNTSpecialist(CCM, p, o);
                     break;
                 case Class_Miner_MineLife:
                     data = new MineLifeClass(CCM, p, o);
+                    break;
+                case Class_Magic_Enchanter:
+                    break;
+                case Class_Rouge_Theif:
+                    data = new Theif(CCM, p, o);
                     break;
                 case Class_Offense_Knight:
                     data = new Knight(CCM, p, o);
@@ -142,10 +148,25 @@ public class ClassFactory implements Listener {
                 case Class_Offense_Dark_Knight:
                     data = new DarkKnight(CCM, p, o);
                     break;
-                case DragonSlayer:
+                case Class_Offense_DragonSlayer:
                     data = new DragonSlayer(CCM, p, o);
                     break;
+                case Class_Offense_Assassin:
+                    break;
+                case Class_Offense_Raider:
+                    break;
+                case Class_Magic_Sorcerer:
+                    data = new Sorcerer(CCM, p, o);
+                    break;
+                case Class_Priest:
+                    data = new Priest(CCM, p, o);
+                    break;
             }
+            if(data == null){
+                System.out.println("ERROROROROR NONEEE WEREEEEEE DDDDDDDDDDD"+o.getInt("TYPE", 0));
+                return null;
+            }
+            System.out.println(p.getName()+"'s CLASS WAS LOADEDEDDDD NONEEE WEREEEEEE DDDDDDDDDDD");
             data.onCreate();
             p.SetPlayerClass(data);
             return data;
@@ -161,6 +182,7 @@ public class ClassFactory implements Listener {
         } else {
             System.out.println(p.getName() + " HASS NUNN CLASS???");
         }
+        MMOSave.save();
     }
 
 //    @EventHandler
@@ -245,21 +267,29 @@ public class ClassFactory implements Listener {
         }
     }*/
 
-    public void HandelEvent(Event event, CorePlayer p) {
-        BaseClass bc = GetClass(p);
-        if (bc == null) return;
-        bc.HandelEvent(event);
-    }
+//    public void HandelEvent(Event event, CorePlayer p) {
+//        BaseClass bc = GetClass(p);
+//        if (bc == null) return;
+//        bc.HandelEvent(event);
+//    }
 
     public void Saveall() {
         CCM.getLogger().info("SAving All Classes!");
-        for (Player p : CCM.getServer().getOnlinePlayers().values()) {
+        for (Player p : new ArrayList<>(CCM.getServer().getOnlinePlayers().values())) {
             if (!(p instanceof CorePlayer)) continue;
             CorePlayer cp = (CorePlayer) p;
             if (cp.getPlayerClass() == null) continue;
-            MMOSave.set(cp.getName().toLowerCase(), cp.getPlayerClass().export());
+            save(cp,false);
         }
         CCM.getLogger().info("SAving File!");
         MMOSave.save();
+    }
+
+    public void save(CorePlayer cp){
+        save(cp,true);
+    }
+    public void save(CorePlayer cp, boolean savefile){
+        MMOSave.set(cp.getName().toLowerCase(), cp.getPlayerClass().export());
+        if(savefile)MMOSave.save();
     }
 }

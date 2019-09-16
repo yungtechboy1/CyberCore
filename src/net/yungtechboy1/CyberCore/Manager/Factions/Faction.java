@@ -50,6 +50,7 @@ public class Faction {
     private int Points = 0;
     private Integer XP = 0;
     private Integer Level = 0;
+    //todo Save faction Settings
     private FactionSettings Settings = new FactionSettings();
     private ArrayList<Integer> CompletedMissionIDs = new ArrayList<>();
     private Integer Money = 0;

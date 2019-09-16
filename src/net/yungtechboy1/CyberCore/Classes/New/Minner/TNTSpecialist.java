@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Classes.New.Minner;
 
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Classes.New.ClassType;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.TNTSpecialistPower;
 import net.yungtechboy1.CyberCore.CoolDown;
@@ -21,7 +22,7 @@ public class TNTSpecialist extends MinnerBaseClass {
     public static final int Power_TNT_Specialist = 0;
 
     public TNTSpecialist(CyberCoreMain main, CorePlayer player, ConfigSection data) {
-        super(main, player, ClassType.Class_Miner_TNT_Specialist, data);
+        super(main, player,data);
     }
 
 
@@ -49,7 +50,7 @@ public class TNTSpecialist extends MinnerBaseClass {
 
     @Override
     public void SetPowers() {
-        addPossiblePower(new TNTSpecialistPower(this,  3, GetMaxTNTPower()));
+//        addPossiblePower(new TNTSpecialistPower(this,  3, GetMaxTNTPower()));
     }
 
     @Override

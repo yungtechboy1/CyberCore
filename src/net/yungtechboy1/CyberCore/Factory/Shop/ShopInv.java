@@ -2,7 +2,10 @@ package net.yungtechboy1.CyberCore.Factory.Shop;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
-import cn.nukkit.block.*;
+import cn.nukkit.block.BlockAir;
+import cn.nukkit.block.BlockBedrock;
+import cn.nukkit.block.BlockEnderChest;
+import cn.nukkit.block.BlockGlassPaneStained;
 import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityHuman;
@@ -42,13 +45,14 @@ public class ShopInv extends BaseInventory implements Inventory {
      * @param aid
      */
     public ShopMysqlData MultiConfirmData = null;
+    public CyberCoreMain CCM;
+    public CurrentPageEnum CurrentPage;
+    public ShopCategory Catg = ShopCategory.NA;
     protected int maxStackSize = Inventory.MAX_STACK;
     EntityHuman holder;
     Vector3 BA;
-    public CyberCoreMain CCM;
     BlockEntity blockEntity2 = null;
     BlockEntity blockEntity = null;
-    public CurrentPageEnum CurrentPage;
     boolean SetupPageToFinalConfirmItemSell = false;
     private int Page = 1;
 
@@ -58,7 +62,7 @@ public class ShopInv extends BaseInventory implements Inventory {
 
     public ShopInv(EntityHuman Holder, CyberCoreMain ccm, Vector3 ba, int page) {
 //        super(Holder, InventoryType.DOUBLE_CHEST, CyberCoreMain.getInstance().SF.getPageHash(page), 9 * 6);//54??
-        super(Holder, InventoryType.DOUBLE_CHEST, ccm.Shop.getPageHash(page), 9 * 6);//54??
+        super(Holder, InventoryType.DOUBLE_CHEST, ccm.Shop.getPageHash(page, ShopCategory.NA, false), 9 * 6);//54??
         //TODO SHOULD SIZE BE 54!?!?
         holder = Holder;
 //        this.size = 9 * 6;
@@ -78,6 +82,14 @@ public class ShopInv extends BaseInventory implements Inventory {
 //        setContents(CyberCoreMain.getInstance().SF.getPageHash(page));
     }
 
+    public ShopCategory getCatg() {
+        return Catg;
+    }
+
+    public void setCatg(ShopCategory catg) {
+        Catg = catg;
+    }
+
     public CurrentPageEnum getCurrentPage() {
         return CurrentPage;
     }
@@ -89,13 +101,14 @@ public class ShopInv extends BaseInventory implements Inventory {
     public void GoToSellerPage() {
         clearAll();
         setPage(1);
-        setContents(SF.getPageHash(getPage()), true);
+        setContents(SF.getPageHash(getPage(), getCatg(), AdminMode), true);
         ReloadInv();
         sendContents(getHolder());
         SendAllSlots(getHolder());
     }
 
     public void ReloadCurrentPage() {
+        if(CurrentPage == null)CurrentPage = CurrentPageEnum.ItemPage;
         switch (CurrentPage) {
             case ItemPage:
                 clearAll();
@@ -118,21 +131,33 @@ public class ShopInv extends BaseInventory implements Inventory {
     public void DisplayCatagories() {
         clearAll();
         setCurrentPage(CurrentPageEnum.Catagories);
+        StaticItems si = new StaticItems(getPage());
         for (int i = 0; i < 5; i++) {
             for (int ii = 0; ii < 9; ii++) {
-                Item bi;
+                Item bi = null;
                 int slot = (i * 9) + ii;
-                if(i == 0 || i ==  4|| ii == 8|| ii == 7 || ii == 0 || ii == 1){
+                if (i == 0 || i == 4 || ii == 8 || ii == 7 || ii == 0 || ii == 1) {
 //                    bi = new ItemBlock(new BlockGlassPaneStained(0));
                     bi = new ItemBlock(new BlockBedrock());
                     bi.setCustomName(" ");
-                }else {
-                    if(i == 1 && ii == 2){
-                        bi =  new StaticItems(getPage()).Spawner.clone();
-                    }else{
+                } else {
+                    if (i == 1) {
+                        if (ii == 2) {
+                            bi = si.Spawner.clone();
+                        } else if (ii == 3) {
+                            bi = si.FoodCatagoty.clone();
+                        } else if (ii == 4) {
+                            bi = si.WeaponsCatagory.clone();
+                        } else if (ii == 5) {
+                            bi = si.BuildingCatagory.clone();
+                        } else if (ii == 6) {
+                            bi = si.RaidingCatagory.clone();
+                        }
+                    }
+                }
+                if (bi == null) {
                     bi = new ItemBlock(new BlockGlassPaneStained(7));
                     bi.setCustomName(TextFormat.GRAY + "FEATURE CURRENTLY DISABLED!");
-                }
                 }
                 setItem(slot, bi, true);
             }
@@ -157,7 +182,7 @@ public class ShopInv extends BaseInventory implements Inventory {
         Page = page;
         CurrentPage = CurrentPageEnum.PlayerSellingPage;
         clearAll();
-        setContents(SF.getPageHash(getPage()));
+        setContents(SF.getPageHash(getPage(), getCatg(), AdminMode));
         ReloadInv();
         SendAllSlots(getHolder());
     }
@@ -171,7 +196,7 @@ public class ShopInv extends BaseInventory implements Inventory {
         Page = page;
         CurrentPage = CurrentPageEnum.ItemPage;
         clearAll();
-        addItem(SF.getPage(getPage()));
+        addItem(SF.getPage(getPage(), getCatg(), AdminMode));
         ReloadInv();
         SendAllSlots(getHolder());
     }
@@ -234,7 +259,15 @@ public class ShopInv extends BaseInventory implements Inventory {
         setItem(MainPageItemRef.LastPage, si.Redglass);
 //        setItem( k--, si.Paper);
 //        setItem( k--, si.Grayglass);
-        setItem(MainPageItemRef.ToggleAdmin, si.Diamond);
+        if(AdminMode){
+            Item i = si.Deny.clone();
+            i.setCustomName(TextFormat.GOLD+""+TextFormat.BOLD+"Disable Admin Mode");
+            setItem(MainPageItemRef.ToggleAdmin, i);
+        }else{
+            Item i = si.Greenglass.clone();
+            i.setCustomName(TextFormat.GOLD+""+TextFormat.BOLD+"Enable Admin Mode");
+            setItem(MainPageItemRef.ToggleAdmin, i);
+        }
         setItem(MainPageItemRef.Reload, si.Netherstar);
         setItem(MainPageItemRef.Catagories, si.CatagoryChest);
 //        setItem( k--, si.Grayglass);
@@ -243,9 +276,9 @@ public class ShopInv extends BaseInventory implements Inventory {
 //        sendContents((Player) holder);
     }
 
-    public void ConfirmItemPurchase(int slot) {
+    public void ConfirmItemPurchase(int slot, boolean admin) {
         clearAll();
-        ShopMysqlData aid = SF.getItemFrom(Page, slot);
+        ShopMysqlData aid = SF.getItemFrom(Page, slot, admin);
 //        close(getHolder());
 //        SetupFormToConfirmItem(aid);
         SetupPageToConfirmMultiItem(aid);
@@ -260,8 +293,9 @@ public class ShopInv extends BaseInventory implements Inventory {
 
     public void SetupFormToConfirmItem(ShopMysqlData aid) {
         getHolder().removeWindow(this);
-        getHolder().showFormWindow(new ShopChooseBuySell(aid,(CorePlayer) getHolder()));
+        getHolder().showFormWindow(new ShopChooseBuySell(aid, (CorePlayer) getHolder()));
     }
+
     public void SetupPageToConfirmMultiItem(ShopMysqlData aid) {
         CurrentPage = CurrentPageEnum.PlayerSellingPage;
         StaticItems si = new StaticItems(Page);
@@ -401,7 +435,7 @@ public class ShopInv extends BaseInventory implements Inventory {
                     EntityInventoryChangeEvent ev = new EntityInventoryChangeEvent((Entity) holder, this.getItem(index), item, index);
                     Server.getInstance().getPluginManager().callEvent(ev);
                     if (ev.isCancelled()) {
-                        this.sendSlot(index, (Collection) this.getViewers());
+                        this.sendSlot(index, this.getViewers());
                         return false;
                     }
 
@@ -784,6 +818,83 @@ public class ShopInv extends BaseInventory implements Inventory {
         return InventoryType.DOUBLE_CHEST;
     }
 
+    public void showFoodCategory() {
+
+//        clearAll();
+//        setCurrentPage(CurrentPageEnum.Food_Catagory);
+        setCatg(ShopCategory.Food);
+        setPage(1);
+
+    }
+
+    public void AdminModeItem(int slot, boolean admin) {
+        clearAll();
+        ShopMysqlData aid = SF.getItemFrom(Page, slot, admin);
+//        close(getHolder());
+//        SetupFormToConfirmItem(aid);
+        SetupPageToAdminEdit(aid);
+        ReloadInv();
+        ConfirmPurchase = true;
+        ConfirmPurchaseSlot = slot;
+
+        sendContents((Player) holder);
+    }
+
+    private void SetupPageToAdminEdit(ShopMysqlData aid) {
+        CurrentPage = CurrentPageEnum.AdminItemEdit;
+        StaticItems si = new StaticItems(Page);
+        CorePlayer cp = (CorePlayer) getHolder();
+        Item item = aid.getItem();
+        MultiConfirmData = aid;
+        Collection<Item> ai = cp.getInventory().all(aid.getItem(true)).values();
+        int ic = 0;
+        for (Item iii : ai) {
+            ic += iii.getCount();
+        }
+        Item bi = new ItemBlock(new BlockBedrock());
+        bi.setCustomName(" ");
+        for (int i = 0; i < 5; i++) {
+            for (int ii = 0; ii < 9; ii++) {
+                int key = (i * 9) + ii;
+                Item add = null;
+                if (i == 0 || i == 4 || ii ==0|| ii ==8) {
+                    add = bi;
+                }else if(i == 1 && ii == 4){
+                    add = item.clone();
+                } else if(i == 3 ){
+                    if(ii == 3) {
+                        Item a = Item.get(Item.PAPER);
+                        a.setCustomName("Change Sell Item Price");
+                        add = a;
+                    }else if(ii ==4){
+                        Item a = Item.get(Item.PAPER);
+                        a.setCustomName("Change Buy Item Price");
+                        add = a;
+                    }else if(ii ==5){
+
+                        Item a = si.Redglass.clone();
+                        a.setCustomName("Enable Item");
+                        if(aid.isEnabled()){
+                            a = si.Greenglass.clone();
+                            a.setCustomName("Disable Item");
+                        }
+                        add = a;
+                    }else if(ii ==6){
+                        Item a = si.CatagoryChest.clone();
+                        a.setCustomName("Change Category");
+                        add = a;
+                    }else{
+                        add = bi;
+                    }
+                } else{
+                    add = bi;
+                }
+                setItem(key, add, true);
+
+            }
+        }
+    }
+
 //    @Override
 //    public void sendContents(Player player) {
 //        this.sendContents(new Player[]{player});
@@ -795,7 +906,7 @@ public class ShopInv extends BaseInventory implements Inventory {
         PlayerSellingPage,
         Expired,
         Confirm_Purchase,
-        Confirm_Purchase_Not_Enough_Money, Confirm_Purchase_Final, Catagories,
+        Confirm_Purchase_Not_Enough_Money, Confirm_Purchase_Final, Catagories, Food_Catagory, AdminItemEdit,
 
     }
 //    public void sendSlot(int index, Player[] players) {
@@ -815,6 +926,7 @@ public class ShopInv extends BaseInventory implements Inventory {
 //    }
 
     public class StaticItems {
+        public static final String KeyName = "SHOPITEM";
         public final Item Diamond;
         public final Item Potato;
         public final Item Grayglass;
@@ -847,7 +959,11 @@ public class ShopInv extends BaseInventory implements Inventory {
         public final Item RmvX64N;
         public final Item Deny;
         public final Item Gold;
-        public static final String KeyName = "SHOPITEM";
+        public final Item FoodCatagoty;
+        public final Item WeaponsCatagory;
+        public final Item BuildingCatagory;
+        public final Item RaidingCatagory;
+
 
         StaticItems() {
             this(-1);
@@ -856,6 +972,22 @@ public class ShopInv extends BaseInventory implements Inventory {
         StaticItems(int page) {
             CompoundTag T = new CompoundTag();
             T.putBoolean(KeyName, true);
+
+            RaidingCatagory = Item.get(Item.TNT);
+            RaidingCatagory.setCompoundTag(T);
+            RaidingCatagory.setCount(1);
+            RaidingCatagory.setCustomName(TextFormat.GREEN + " Raiding Category");
+
+            BuildingCatagory = Item.get(Item.BRICKS_BLOCK);
+            BuildingCatagory.setCompoundTag(T);
+            BuildingCatagory.setCount(1);
+            BuildingCatagory.setCustomName(TextFormat.GREEN + " Building Category");
+
+            WeaponsCatagory = Item.get(Item.IRON_SWORD);
+            WeaponsCatagory.setCompoundTag(T);
+            WeaponsCatagory.setCount(1);
+            WeaponsCatagory.setCustomName(TextFormat.GREEN + " Weapons Category");
+
             Gold = Item.get(ItemID.GOLD_INGOT, 0, 1);
             Gold.setCompoundTag(T);
             Gold.setCustomName(TextFormat.GOLD + " Your money: ");
@@ -870,6 +1002,12 @@ public class ShopInv extends BaseInventory implements Inventory {
             Spawner.setCompoundTag(T);
             Spawner.setCount(1);
             Spawner.setCustomName(TextFormat.GREEN + " Spawner Shop");
+
+            FoodCatagoty = Item.get(Item.STEAK);
+            FoodCatagoty.setCompoundTag(T);
+            FoodCatagoty.setCount(1);
+            FoodCatagoty.setCustomName(TextFormat.GREEN + " Food Category");
+
 
             CatagoryChest = Item.get(Item.CHEST);
             CatagoryChest.setCompoundTag(T);
@@ -1020,9 +1158,11 @@ public class ShopInv extends BaseInventory implements Inventory {
             );
 
             Map = Item.get(Item.MAP);
+            Map.setCompoundTag(T);
             Map.setCustomName(TextFormat.GOLD + "" + TextFormat.BOLD + "List Item In Hand");
 
             Paper = Item.get(Item.PAPER);
+            Paper.setCompoundTag(T);
             Paper.setCustomName(TextFormat.GOLD + "" + TextFormat.BOLD + "Search Auction House For Item");
         }
     }

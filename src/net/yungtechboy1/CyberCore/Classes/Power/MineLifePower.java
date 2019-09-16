@@ -10,12 +10,32 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
+import java.util.ArrayList;
+
 public class MineLifePower extends StagePowerAbstract {
     public MineLifePower(BaseClass b) {
-        super(b, new PowerSettings(false,true,true,false),(int) Math.floor(.65d * b.getLVL()) + 1);
-        int psc = ((int) Math.floor(.65d * b.getLVL()) + 1);
-
+        super(b);
 //        PotionEffect = new
+    }
+
+    @Override
+    public int getPowerSuccessChance() {
+        return ((int) Math.floor(.65d * PlayerClass.getLVL()) + 1);
+    }
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
+    }
+
+    @Override
+    public StageEnum getMaxStage() {
+        return StageEnum.STAGE_5;
+    }
+
+    @Override
+    public PowerSettings getPowerSettings() {
+        return  new PowerSettings(false,true,true,false);
     }
 
     @Override
@@ -96,7 +116,7 @@ public class MineLifePower extends StagePowerAbstract {
     }
 
     @Override
-    public int getCooldownTime() {
+    public int getCooldownTimeSecs() {
         if (PlayerClass.getLVL() <= 19) {
             return 60 * 15;
         } else if (PlayerClass.getLVL() <= 39) {
@@ -108,6 +128,6 @@ public class MineLifePower extends StagePowerAbstract {
         } else if (PlayerClass.getLVL() <= 100) {
             return 60 * 5;
         }
-        return super.getCooldownTime();
+        return super.getCooldownTimeSecs();
     }
 }

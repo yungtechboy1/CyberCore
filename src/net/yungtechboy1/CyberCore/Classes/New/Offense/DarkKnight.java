@@ -4,6 +4,7 @@ import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
+import net.yungtechboy1.CyberCore.Classes.New.ClassType;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.DarkKnightPoisonousStench;
@@ -13,7 +14,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class DarkKnight extends BaseClass {
     public DarkKnight(CyberCoreMain main, CorePlayer player, ConfigSection data) {
-        super(main, player, ClassType.Class_Offense_Dark_Knight, data);
+        super(main, player,data);
     }
 
     @Override

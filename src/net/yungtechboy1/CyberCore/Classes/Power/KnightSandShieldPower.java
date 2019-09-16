@@ -7,6 +7,7 @@ import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.New.Offense.Knight;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
@@ -14,11 +15,15 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
+import java.util.ArrayList;
+
 public class KnightSandShieldPower extends StagePowerAbstract {
     public KnightSandShieldPower(BaseClass b) {
         super(b);
-//        setPowerSettings();
-        setMaxStage(StageEnum.STAGE_5);
+    }
+
+    public KnightSandShieldPower(AdvancedPowerEnum ape) {
+        super(ape);
     }
 
     public KnightSandShieldPower(BaseClass b, AdvancedPowerEnum ape) {
@@ -26,8 +31,20 @@ public class KnightSandShieldPower extends StagePowerAbstract {
     }
 
     @Override
+    public ArrayList<Class> getAllowedClasses() {
+        ArrayList<Class> b = new ArrayList<>();
+        b.add(Knight.class);
+        return b;
+    }
+
+    @Override
+    public StageEnum getMaxStage() {
+        return StageEnum.STAGE_5;
+    }
+
+    @Override
     public int getPowerSuccessChance() {
-        return  80;
+        return 80;
     }
 
     @Override
@@ -37,7 +54,7 @@ public class KnightSandShieldPower extends StagePowerAbstract {
 
     @Override
     public PowerSettings getPowerSettings() {
-        return new PowerSettings(false,false,true,false);
+        return new PowerSettings(false, true, true, false);
     }
 //    @Override
 //    public ClassLevelingManager getLM() {

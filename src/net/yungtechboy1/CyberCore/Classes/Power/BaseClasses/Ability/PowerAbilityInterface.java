@@ -13,7 +13,7 @@ public interface PowerAbilityInterface {
 //    //    abstract void activate();
 //    default void activate() {
 //        if (isActive()) return;
-//        setActive(true);
+//        setEnabled(true);
 //        setDeActivatedTick(Server.getInstance().getTick() + getRunTimeTick());
 //    }
 

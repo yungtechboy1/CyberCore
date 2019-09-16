@@ -6,13 +6,15 @@ import net.yungtechboy1.CyberCore.PlayerSettingsData;
 import ru.nukkit.dblib.DbLib;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL.SBBB;
 
 public class UserSQL extends MySQL {
 
 
+    public static Connection SC = null;
     /**
      * Connects to the MYSQL database assigned in config.yml for GLOBAL data
      *
@@ -39,11 +41,23 @@ public class UserSQL extends MySQL {
         int port = plugin.MainConfig.getSection("db2").getInt("mysql-port");
         String user = plugin.MainConfig.getSection("db2").getString("mysql-user");
         String db = plugin.MainConfig.getSection("db2").getString("mysql-db-Server");
-        if (!enabled) return null;
-        Connection connection = DbLib.getMySqlConnection(host, port,
-                db, user, pass);
+        if (SC != null) {
+            try {
+                if(!SC.isClosed())return SC;
+            } catch (Exception e) {
 
-        if (connection == null) enabled = false;
+            }
+        }
+        if (!enabled) return null;
+
+        Connection connection = DbLib.getMySqlConnection(SBBB(host, port, db), user, pass);
+
+        if (connection == null) {
+            System.out.println("CONEEEEECTTTTTTTTTIONNNNNNNNNNNN FAILEDDDDDDDD!!!!!!!!!!!!");
+            enabled = false;
+        } else {
+            SC = connection;
+        }
         return connection;
     }
 
@@ -65,6 +79,7 @@ public class UserSQL extends MySQL {
 
             ArrayList<HashMap<String, Object>> a = executeSelect("SELECT * FROM `PlayerSettings` WHERE `Name` LIKE '" + corePlayer.getName() + "'");
             if (a == null || a.size() == 0) {
+                System.out.println("===> No PlayerSettingData Found in SQL!");
                 corePlayer.setSettingsData(psd);
                 return psd;
             }
@@ -81,21 +96,22 @@ public class UserSQL extends MySQL {
 
     public boolean savePlayerSettingData(CorePlayer corePlayer) {
         PlayerSettingsData psd = corePlayer.getSettingsData();
-        if(psd == null)return false;
+        if (psd == null) return false;
         if (!psd.UUIDS.contains(corePlayer.getUniqueId())) psd.UUIDS.add(corePlayer.getUniqueId());
         try {
             try {
                 executeUpdate("DELETE FROM `PlayerSettings` WHERE `Name` LIKE '" + corePlayer.getName() + "'");
             } catch (Exception e) {
                 e.printStackTrace();
+                System.out.println("Could not Delete!!!!! E55425");
             }
             String q = "INSERT INTO `PlayerSettings` VALUES (";
             q = addToQuery(q, corePlayer.getName()) + ",";
             q = addToQuery(q, psd.UUIDSToJSON()) + ",";
-            q = addToQuery(q, psd.Cash) + ",";
-            q = addToQuery(q, psd.CreditScore) + ",";
-            q = addToQuery(q, psd.CreditLimit) + ",";
-            q = addToQuery(q, psd.UsedCredit) + ",";
+            q = addToQuery(q, psd.getCash()) + ",";
+            q = addToQuery(q, psd.getCreditScore()) + ",";
+            q = addToQuery(q, psd.getCreditLimit()) + ",";
+            q = addToQuery(q, psd.getUsedCredit()) + ",";
             q = addToQuery(q, psd.PlayerWarningToJSON()) + ",";
             q = addToQuery(q, psd.PlayerTempBansToJSON()) + ",";
             q = addToQuery(q, psd.PlayerKicksToJSON()) + ",";

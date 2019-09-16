@@ -5,6 +5,7 @@ import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.level.Location;
 import cn.nukkit.level.particle.BubbleParticle;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -16,7 +17,16 @@ import java.util.ArrayList;
 
 public class HolyKnightHealPower extends PowerAbstract {
     public HolyKnightHealPower(BaseClass b) {
-        super(b, null,75);
+        super(b);
+    }
+
+    public HolyKnightHealPower(BaseClass b, AdvancedPowerEnum ape) {
+        super(b, ape);
+    }
+
+    @Override
+    public int getPowerSuccessChance() {
+        return 75;
     }
 
     @Override
@@ -117,12 +127,17 @@ public class HolyKnightHealPower extends PowerAbstract {
     }
 
     @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
+    }
+
+    @Override
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent e) {
         return e;
     }
 
     @Override
-    protected int getCooldownTime() {
+    protected int getCooldownTimeSecs() {
         return 30 + (10 * (6 - getStage().ordinal()));
     }
 }

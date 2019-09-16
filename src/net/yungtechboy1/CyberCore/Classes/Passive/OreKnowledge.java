@@ -6,20 +6,37 @@ import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Passive.PassivePower;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
 import net.yungtechboy1.CyberCore.Manager.FT.PopupFT;
 
 import java.util.ArrayList;
 
-public class OreKnowledge extends PassivePower {
-    int BlockRange = 10;
+//PowerAbstract
+public class OreKnowledge extends StagePowerAbstract {
+//    int BlockRange = 10;
 
     public OreKnowledge(BaseClass b) {
-        super(b,null,null,1);
+        super(b);
+        setMaxStage(StageEnum.STAGE_1);
+    }
+
+    @Override
+    public StageEnum getMaxStage() {
+        return StageEnum.STAGE_5;
+    }
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
+    }
+
+    @Override
+    public double getPowerSourceCost() {
+        return 1;
     }
 
     @Override
@@ -28,31 +45,36 @@ public class OreKnowledge extends PassivePower {
     }
 
     @Override
-    public void initStages() {
+    public int getPowerSuccessChance() {
+        switch (getStage()) {
+            default:
+            case STAGE_1:
+                return 2;
+            case STAGE_2:
+                return 5;
+            case STAGE_3:
+                return 8;
+            case STAGE_4:
+                return 10;
+            case STAGE_5:
+                return 15;
+        }
+    }
+
+    public int getBlockRange() {
         super.initStages();
         switch (getStage()) {
-            case STAGE_1:
-                setPowerSuccessChance(2);
-                break;
-            case STAGE_2:
-                setPowerSuccessChance(5);
-                BlockRange = 13;
-                break;
-            case STAGE_3:
-                setPowerSuccessChance(8);
-                BlockRange = 17;
-                break;
-            case STAGE_4:
-                setPowerSuccessChance(10);
-                BlockRange = 20;
-                break;
-            case STAGE_5:
-                setPowerSuccessChance(15);
-                BlockRange = 20;
-                break;
             default:
-                setPowerSuccessChance(2);
-                break;
+            case STAGE_1:
+                return 10;
+            case STAGE_2:
+                return 13;
+            case STAGE_3:
+
+                return 17;
+            case STAGE_4:
+            case STAGE_5:
+                return 20;
         }
     }
 
@@ -62,7 +84,7 @@ public class OreKnowledge extends PassivePower {
     }
 
     @Override
-    public Object usePower( Object... args) {
+    public Object usePower(Object... args) {
         return null;
     }
 
@@ -77,7 +99,7 @@ public class OreKnowledge extends PassivePower {
     }
 
     public void dispalyPreciousOres(CorePlayer p) {
-        int size = BlockRange;
+        int size = getBlockRange();
         ArrayList<Vector3> bl = new ArrayList<>();
         for (int x = -size; x < size; x++) {
             for (int y = -size; y < size; y++) {
@@ -100,10 +122,10 @@ public class OreKnowledge extends PassivePower {
             }
         }
         if (bl.size() == 0) return;
-        for(Vector3 v3: bl){
+        for (Vector3 v3 : bl) {
             Block b = p.getLevel().getBlock(v3);
-            String bn = TextFormat.YELLOW+b.getName();
-            CyberCoreMain.getInstance().FTM.AddToRemoveList(new PopupFT(new Position(v3.x,v3.y,v3.z,p.getLevel()),bn){{
+            String bn = TextFormat.YELLOW + b.getName();
+            FloatingTextFactory.AddToRemoveList(new PopupFT(new Position(v3.x, v3.y, v3.z, p.getLevel()), bn) {{
                 Frozen = true;
                 Lifespan = 10;
             }});

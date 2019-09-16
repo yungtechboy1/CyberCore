@@ -6,7 +6,10 @@ import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.event.inventory.InventoryClickEvent;
 import cn.nukkit.event.inventory.InventoryTransactionEvent;
+import cn.nukkit.inventory.PlayerInventory;
+import cn.nukkit.item.Item;
 import cn.nukkit.math.NukkitRandom;
+import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
@@ -17,14 +20,18 @@ import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsWindow;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
+import net.yungtechboy1.CyberCore.PlayerTakeDamageEvent;
+
+import java.util.ArrayList;
 
 /**
  * Created by carlt on 5/16/2019.
  */
 public abstract class PowerAbstract {
 
+    public static final String PowerHotBarNBTTag = "PowerHotBar";
     public BaseClass PlayerClass = null;
-    public int TickUpdate = -1;
+    //    public int TickUpdate = -1;
     public CoolDownTick Cooldown = null;
     public boolean TakePowerOnFail = false;
     public boolean PlayerToggleable = true;
@@ -36,7 +43,7 @@ public abstract class PowerAbstract {
     LockedSlot LS = LockedSlot.NA;
     //    private LevelingType LT;
     private boolean Active = false;
-    private int PowerSuccessChance = 0;
+    //    private int PowerSuccessChance = 0;
     private int _lasttick = -1;
     private double PowerSourceCost = 0;
     private int DurationTick = -1;
@@ -45,21 +52,34 @@ public abstract class PowerAbstract {
     private ClassLevelingManagerStage SLM;
     private ClassLevelingManagerXPLevel XLM;
 
-//    public PowerAbstract(BaseClass b, ClassLevelingManager lt, int psc) {
-//        this(b, lt, null, psc);
-//    }
-//
-//    public PowerAbstract(BaseClass b, ClassLevelingManager lt, int psc, double cost) {
-//        this(b, lt, null, psc, cost);
-//    }
-//
-//    public PowerAbstract(BaseClass b, ClassLevelingManager lt, PowerSettings ps, int psc) {
-//        this(b, lt, ps, psc, 5);
-//    }
-
-    public PowerAbstract(BaseClass b, AdvancedPowerEnum ape, PowerSettings ps) {
+    public PowerAbstract(AdvancedPowerEnum ape) {
+        if (ape == null) ape = new AdvancedPowerEnum(getType());
         if (!ape.isValid()) {
             System.out.println("Error! APE is not valid!");
+//            if(this instanceof StagePowerAbstract){
+            try {
+                if (this instanceof StagePowerAbstract) {
+                    System.out.println("IS STAGE ABSTRACT!!!!!");
+                    ape = new AdvancedPowerEnum(ape.getPowerEnum(), StageEnum.STAGE_1);
+                } else ape = new AdvancedPowerEnum(ape.getPowerEnum(), 0);
+            } catch (Exception e) {
+                System.out.println("Error!eeeeeeeeeeeeeeeeeeee");
+                e.printStackTrace();
+                return;
+            }
+//            }else return;
+        }
+        if (ape.isStage()) {
+            loadLevelManager(new ClassLevelingManagerStage(ape.getStageEnum()));
+        } else {
+            loadLevelManager(new ClassLevelingManagerXPLevel(ape.getXP()));
+        }
+    }
+
+    @Deprecated
+    public PowerAbstract(BaseClass b, AdvancedPowerEnum ape, PowerSettings ps) {
+        if (!ape.isValid()) {
+            System.out.println("Error! APE is not valid!22222");
             return;
         }
         PlayerClass = b;
@@ -79,9 +99,21 @@ public abstract class PowerAbstract {
     }
 
     public PowerAbstract(BaseClass b, AdvancedPowerEnum ape) {
+        if (ape == null) ape = new AdvancedPowerEnum(getType());
         if (!ape.isValid()) {
             System.out.println("Error! APE is not valid!");
-            return;
+//            if(this instanceof StagePowerAbstract){
+            try {
+                if (this instanceof StagePowerAbstract) {
+                    System.out.println("IS STAGE ABSTRACT!!!!!");
+                    ape = new AdvancedPowerEnum(ape.getPowerEnum(), StageEnum.STAGE_1);
+                } else ape = new AdvancedPowerEnum(ape.getPowerEnum(), 0);
+            } catch (Exception e) {
+                System.out.println("Error!eeeeeeeeeeeeeeeeeeee");
+                e.printStackTrace();
+                return;
+            }
+//            }else return;
         }
         PlayerClass = b;
         if (ape.isStage()) {
@@ -97,20 +129,41 @@ public abstract class PowerAbstract {
         initAfterCreation();
     }
 
-    public PowerAbstract(BaseClass b, Integer xp, PowerSettings ps, int psc, double cost) {
-        PowerSuccessChance = psc;
+//    public PowerAbstract(BaseClass b, ClassLevelingManager lt, int psc) {
+//        this(b, lt, null, psc);
+//    }
+//
+//    public PowerAbstract(BaseClass b, ClassLevelingManager lt, int psc, double cost) {
+//        this(b, lt, null, psc, cost);
+//    }
+//
+//    public PowerAbstract(BaseClass b, ClassLevelingManager lt, PowerSettings ps, int psc) {
+//        this(b, lt, ps, psc, 5);
+//    }
+
+    public PowerAbstract(BaseClass b) {
         PlayerClass = b;
-        loadLevelManager(new ClassLevelingManagerXPLevel(xp));
-        if (ps != null) {
-            setPowerSettings(ps);
-        } else
+        loadLevelManager(new ClassLevelingManagerXPLevel());
+        if (getPowerSettings() == null)
             b.getPlayer().getServer().getLogger().warning("POWER ABSTRACT ERROR! NO POWER SOURCE ASSIGNED FOR " + getName());
-//        Level = lvl;
-//        Level = b.getLVL();
         initStages();
         initAfterCreation();
-        PowerSourceCost = cost;
     }
+
+//    public PowerAbstract(BaseClass b, Integer xp, PowerSettings ps, int psc, double cost) {
+////        PowerSuccessChance = psc;
+//        PlayerClass = b;
+//        loadLevelManager(new ClassLevelingManagerXPLevel(xp));
+//        if (ps != null) {
+//            setPowerSettings(ps);
+//        } else
+//            b.getPlayer().getServer().getLogger().warning("POWER ABSTRACT ERROR! NO POWER SOURCE ASSIGNED FOR " + getName());
+////        Level = lvl;
+////        Level = b.getLVL();
+//        initStages();
+//        initAfterCreation();
+//        PowerSourceCost = cost;
+//    }
 
     public PowerAbstract(BaseClass b, StageEnum stageEnum) {
         PlayerClass = b;
@@ -121,17 +174,39 @@ public abstract class PowerAbstract {
         initAfterCreation();
     }
 
-    public PowerAbstract(BaseClass b, StageEnum stageEnum, PowerSettings ps) {
-        PlayerClass = b;
-        loadLevelManager(new ClassLevelingManagerStage(stageEnum));
-        if (ps != null) {
-            setPowerSettings(ps);
-        } else
-            b.getPlayer().getServer().getLogger().warning("POWER ABSTRACT ERROR! NO POWER SOURCE ASSIGNED FOR " + getName());
-//        Level = lvl;
-//        Level = b.getLVL();
-        initStages();
-        initAfterCreation();
+    public int getTickUpdate() {
+        if (isAbility()) return 20;
+        if (isHotbar()) return 20 * 5;
+        return -1;
+    }
+
+//    public PowerAbstract(BaseClass b, StageEnum stageEnum, PowerSettings ps) {
+//        PlayerClass = b;
+//        loadLevelManager(new ClassLevelingManagerStage(stageEnum));
+//        if (ps != null) {
+//            setPowerSettings(ps);
+//        } else
+//            b.getPlayer().getServer().getLogger().warning("POWER ABSTRACT ERROR! NO POWER SOURCE ASSIGNED FOR " + getName());
+////        Level = lvl;
+////        Level = b.getLVL();
+//        initStages();
+//        initAfterCreation();
+//    }
+
+//    public PowerAbstract(BaseClass b, AdvancedPowerEnum advancedPowerEnum, int i) {
+//        System.out.println("NOT IMPLEMENTEDDDDDD");
+//    }
+
+    public CoolDownTick getCooldown() {
+        if (Cooldown == null || !Cooldown.isValid()) {
+
+            return null;
+        }
+        return Cooldown;
+    }
+
+    public ArrayList<Class> getAllowedClasses() {
+        return new ArrayList<>();
     }
 
     public ClassLevelingManagerStage getStageLevelManager() {
@@ -150,9 +225,6 @@ public abstract class PowerAbstract {
         this.XLM = XLM;
     }
 
-    public StageEnum getMaxStage() throws Exception {
-        throw new Exception("error! can not get");
-    }
 
     public PowerSettings getPowerSettings() {
         if (PS == null)
@@ -180,11 +252,6 @@ public abstract class PowerAbstract {
     }
 
     private void onAbilityActivate() {
-    }
-
-    public void setPowerAsAbility() {
-        MainPowerType = PowerType.Ability;
-        TickUpdate = 10;
     }
 
     public int getDeActivatedTick() {
@@ -232,42 +299,130 @@ public abstract class PowerAbstract {
                 System.out.println("====> CAN NOT ACTIVATE POWER NO HOT BAR SLOT IN SETTINGS!!!");
                 return;
             }
+            DeActivatedTick = Server.getInstance().getTick() + getRunTimeTick();
         }
         Active = active;
-        DeActivatedTick = Server.getInstance().getTick() + getRunTimeTick();
-        PowerEnum pe = getType();
-        if (PlayerClass.getClassSettings().getLearnedPowers().contains(pe) && active) {
-            PlayerClass.getClassSettings().addActivePower(pe);
-            onActivate();
-        } else {
-            getPlayer().sendMessage(TextFormat.RED + "ERROR > POWER > Could not activate " + getDispalyName() + TextFormat.RED + " Please make sure you have learned this power!");
-            throw new NullPointerException();
-        }
     }
 
     public boolean isEnabled() {
         return Enabled;
     }
 
-    public void setEnabled(boolean enabled) {
-        Enabled = enabled;
+    private void setEnabled(boolean ee) {
+        Enabled = ee;
     }
 
     public void enablePower() {
+        enablePower(getLS());
+    }
+
+    public void enablePower(LockedSlot ls) {
+        if (getLS() != ls) setLS(ls);
         if (!hasPowerSettings()) {
-            System.out.println("====> CAN NOT ACTIVATE POWER NO POWER SETTINGS!!!");
+            System.out.println("====> CAN NOT ENAVBLE POWER NO POWER SETTINGS!!!");
             return;
         }
         if (getPowerSettings().isHotbar() && isLSNull()) {
-            System.out.println("====> CAN NOT ACTIVATE POWER NO HOT BAR SLOT IN SETTINGS!!!");
+            System.out.println("====> CAN NOT ENAVBLE POWER NO HOT BAR SLOT IN SETTINGS!!!" + getClass().getName());
             return;
         }
         setEnabled(true);
+        PlayerClass.getClassSettings().delLearnedPowerAndLearnIfNotEqual(getAPE());
+//        PlayerClass.getClassSettings().delLearnedPower(getType());
+//        PlayerClass.getClassSettings().learnNewPower(getAPE(),true);
+        if (!PlayerClass.getClassSettings().getEnabledPowers().contains(getType()))
+            PlayerClass.getClassSettings().getEnabledPowers().add(getType());
+        PlayerClass.getClassSettings().setPreferedSlot(getLS(), getType());
         onEnable();
     }
 
-    public void onEnable() {
+    public AdvancedPowerEnum getAPE() {
+        if (getStageLevelManager() != null) {
+            try {
+                return new AdvancedPowerEnum(getType(), getStage());
+            } catch (Exception e) {
+                System.out.println("ERRORR ###@@@ " + this + " || " + getClass().getName());
+                e.printStackTrace();
+                return null;
+            }
+        } else return new AdvancedPowerEnum(getType(), getXLM().getXP());
+    }
 
+    public void onEnable() {
+        if (hasPowerSettings()) {
+            PowerSettings ps = getPowerSettings();
+            if (ps.isHotbar()) {
+                if (getLS() == LockedSlot.NA) {
+                    System.out.println("Error! No Valid locked slot set!");
+                    getPlayer().sendMessage("Error! No Valid locked slot set!");
+                } else {
+                    sendHotbarItemToLS(HotbarStatus.Success);
+                }
+            }
+        }
+    }
+
+    private void sendHotbarItemToLS(HotbarStatus hbs) {
+        Item i = getHotbarItem(hbs);
+        PlayerInventory pi = getPlayer().getInventory();
+        Item ii = pi.getItem(getLS().getSlot()).clone();
+        pi.clear(getLS().getSlot());
+        if (ii == null || ii.hasCompoundTag() && ii.getNamedTag().contains(PowerHotBarNBTTag)) ii = null;
+        System.out.println(">>>>>>>>>>>>>Data::: "+getLS()+"|||||"+i);
+        try {
+            if (i == null) {
+                System.out.println("Error! WTF ITEM IS NELL");
+                return;
+            }
+            if (getLS() == LockedSlot.NA) {
+                System.out.println("Error! LS IS NA aaaaaaaaaaaaaaaNELL");
+                return;
+            }
+            pi.setItem(getLS().getSlot(), i);
+            if (ii != null && !ii.isNull()) pi.addItem(ii);
+        }catch (Exception e){
+            System.out.println("Ahhhhhh Fuck!");
+        }
+    }
+
+    public Item getHotbarItem(HotbarStatus hbs) {
+        Item i = null;
+        switch (hbs) {
+            case Fail:
+                i = getHotbarItem_Fail();
+                break;
+            case Success:
+                i = getHotbarItem_Success();
+                break;
+            case Cooldown:
+            default:
+                i = getHotbarItem_Cooldown();
+                break;
+        }
+        if (!i.hasCompoundTag()) i.setCompoundTag(new CompoundTag());
+        i.getNamedTag().putBoolean(PowerHotBarNBTTag, true);
+        return i;
+    }
+
+    public Item getHotbarItem_Success() {
+        Item i = Item.get(Item.EMERALD);
+        i.setCustomName(getDispalyName() + " Power");
+        i.setLore(TextFormat.GREEN + "Ready for Use!", TextFormat.GRAY + "Cooldown: " + getCooldownTimeSecs() + " Secs");
+        return i;
+    }
+
+    public Item getHotbarItem_Fail() {
+        Item i = Item.get(Item.REDSTONE_DUST);
+        i.setCustomName(getDispalyName() + " Power");
+        i.setLore(TextFormat.RED + "Power Failed Please Wait!", TextFormat.GRAY + "Cooldown: " + getCooldownTimeSecs() + " Secs");
+        return i;
+    }
+
+    public Item getHotbarItem_Cooldown() {
+        Item i = Item.get(Item.GLOWSTONE_DUST);
+        i.setCustomName(getDispalyName() + " Power");
+        i.setLore(TextFormat.YELLOW + "Power is in Cooldown!", TextFormat.RED + "Cooldown Time Left: " + ((getCooldown().getTick() - getPlayer().getServer().getTick()) / 20) + " Secs", TextFormat.GRAY + "Cooldown: " + getCooldownTimeSecs() + " Secs");
+        return i;
     }
 
     public boolean hasPowerSettings() {
@@ -292,9 +447,13 @@ public abstract class PowerAbstract {
         if (SLM != null) {
             return SLM.getStage();
         } else if (XLM != null) {
-            return XLM.getStage();
+            return formatLeveltoStage(XLM.getLevel());
         }
         return StageEnum.NA;
+    }
+
+    public StageEnum formatLeveltoStage(int lvl) {
+        return StageEnum.getStageFromInt(1 + (lvl / 20));
     }
 
     public void onActivate() {
@@ -306,6 +465,7 @@ public abstract class PowerAbstract {
     }
 
     public void setLS(LockedSlot LS) {
+        System.out.println("LOCKEDSLOT SET FOR " + this.getClass().getName());
         this.LS = LS;
     }
 
@@ -318,11 +478,7 @@ public abstract class PowerAbstract {
     }
 
     public int getPowerSuccessChance() {
-        return PowerSuccessChance;
-    }
-
-    public void setPowerSuccessChance(int powerSuccessChance) {
-        PowerSuccessChance = powerSuccessChance;
+        return 100;
     }
 
     public int getDefaultPowerSuccessChance() {
@@ -340,8 +496,14 @@ public abstract class PowerAbstract {
         return PlayerClass.getPlayer();
     }
 
+    public PlayerTakeDamageEvent PlayerTakeDamageEvent(PlayerTakeDamageEvent e) {
+        return e;
+    }
+
     //TODO IMPLEMENT
     public Event handelEvent(Event event) {
+        if (event instanceof PlayerTakeDamageEvent)
+            return PlayerTakeDamageEvent((PlayerTakeDamageEvent) event);
         if (event instanceof EntityDamageEvent)
             return EntityDamageEvent((EntityDamageEvent) event);
         if (event instanceof CustomEntityDamageByEntityEvent)
@@ -391,7 +553,7 @@ public abstract class PowerAbstract {
      *
      * @return int Time in secs
      */
-    protected int getCooldownTime() {
+    protected int getCooldownTimeSecs() {
         return 60 * 3;//3 Mins
     }
 
@@ -400,7 +562,11 @@ public abstract class PowerAbstract {
     }
 
     public final int getCooldownTimeTick() {
-        return getCooldownTime() * 20;
+        return getCooldownTimeSecs() * 20;
+    }
+
+    public void initStages() {
+
     }
 
 //    public void importConfig(ConfigSection cs) {
@@ -413,15 +579,11 @@ public abstract class PowerAbstract {
 //        return c;
 //    }
 
-    public void initStages() {
-
-    }
-
     public final void handleTick(int tick) {
 //        System.out.println("PowerAbstract Call TICK");
-        if (TickUpdate == -1) return;
 //        System.out.println("PowerAbstract Call TICK 1");
-        if (_lasttick + TickUpdate < tick) {
+        if (getTickUpdate() == -1) return;
+        if (_lasttick + getTickUpdate() < tick) {
 //            System.out.println("PowerAbstract Called THE ACTUAL TICK");
             onTick(tick);
             _lasttick = tick;
@@ -442,12 +604,12 @@ public abstract class PowerAbstract {
             return new AdvancedPowerEnum(getType());
         }
     }
+
+    public abstract PowerEnum getType();
 //    {
 //        CyberCoreMain.getInstance().getLogger().error("ERROR GETTING TYPE FROM POWER!!!!!");
 //        return PowerEnum.Unknown;
 //    }
-
-    public abstract PowerEnum getType();
 
     //USE TO RUN
     public final void initPowerRun(Object... args) {
@@ -486,47 +648,78 @@ public abstract class PowerAbstract {
     }
 
     public Object usePower(Object... args) {
-        if (MainPowerType == PowerType.Regular) {
-        } else if (MainPowerType == PowerType.Ability) {
+        setActive();
+        if (isAbility()) {
             activate();
+        } else {
+            setActive(false);
         }
         return null;
     }
 
     public boolean CanRun(boolean force, Object... args) {
+        if (!PlayerClass.CCM.isInSpawn(getPlayer())) {
+            getPlayer().sendMessage(TextFormat.RED + "Error! can not use " + getDispalyName() + " while in spawn!");
+            return false;
+        }
         if (force) return true;
         if (PlayerClass.getPowerSourceCount() < PowerSourceCost) {
             getPlayer().sendMessage(TextFormat.RED + "Not enough " + PlayerClass.getPowerSourceType().name() + " Energy!");
             return false;
         }
         NukkitRandom nr = new NukkitRandom();
-        if (nr.nextRange(0, 100) <= PowerSuccessChance) {
+        int r = nr.nextRange(0, 100);
+        if (r <= getPowerSuccessChance()) {
             //Success
-            if (Cooldown != null && Cooldown.isValid()) return false;
+            if (Cooldown != null && Cooldown.isValid()) {
+                System.out.println("CD FAIL!!!");
+                return false;
+            }
 
-        } else return false;//Fail
-        if (MainPowerType == PowerType.Regular) {
-            return true;
-        } else if (MainPowerType == PowerType.Ability) {
+        } else {
+            System.out.println("PSC FAIL!!!" + r + "||" + getPowerSuccessChance());
+            return false;//Fail
+        }
+        if (isAbility()) {
+            System.out.println("ABILITY " + !isActive());
             return !isActive();
         }
-        return false;
+        return true;
     }
 
     public boolean isAbility() {
         return getPowerSettings().isAbility();
     }
 
+    public boolean isHotbar() {
+        return getPowerSettings().isHotbar();
+    }
+
+    public HotbarStatus getCurrentHotbarStatus() {
+        if (getCooldown() != null) return HotbarStatus.Cooldown;
+        if (getPowerState() == PowerState.Fail) return HotbarStatus.Fail;
+        return HotbarStatus.Success;
+    }
+
+    public PowerState getPowerState() {
+        return PowerState.Idle;
+    }
+
     public void onTick(int tick) {
+        if (isHotbar()) {
+            if (!isLSNull()) {
+                sendHotbarItemToLS(getCurrentHotbarStatus());
+            }
+        }
         if (isAbility()) {
             //Only For Deactivation
 //            System.out.println("POWER TICKKKKKK2");
             if (isAbilityActive()) {
                 System.out.println("POWER TICKKKKKK3");
                 whileAbilityActive();
-                if (tick >= DeActivatedTick) {
+                if (getDeActivatedTick() != -1 && tick >= getDeActivatedTick()) {
                     System.out.println("POWER TICKKKKKK44444444444444444444444444444");
-//                    setActive(false);
+//                    setEnabled(false);
                     DeactivateAbility();
                     DeActivatedTick = -1;
                     onAbilityDeActivate();
@@ -541,9 +734,10 @@ public abstract class PowerAbstract {
 
     public void DeactivateAbility() {
         AbilityActive = false;
+        setActive(false);
     }
 
-    public void ActivateAbility() {
+    public final void ActivateAbility() {
         AbilityActive = true;
     }
 
@@ -556,7 +750,7 @@ public abstract class PowerAbstract {
     }
 
     public CoolDownTick addCooldown() {
-        return addCooldown(getCooldownTime());
+        return addCooldown(getCooldownTimeSecs());
     }
 
     public CoolDownTick addCooldown(int secs) {
@@ -583,6 +777,18 @@ public abstract class PowerAbstract {
         if (pe.isStage()) {
 
         }
+    }
+
+    public enum HotbarStatus {
+        Success,
+        Fail,
+        Cooldown
+    }
+
+    public enum PowerState {
+        Idle,
+        Fail,
+
     }
 
     public enum LevelingType {

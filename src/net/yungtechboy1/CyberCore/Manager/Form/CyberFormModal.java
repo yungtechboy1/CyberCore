@@ -19,11 +19,11 @@ public class CyberFormModal extends CyberForm {
         this.button1 = trueButtonText;
         this.button2 = falseButtonText;
     }
-    @Deprecated
-    private CyberFormModal(String title, String content, String trueButtonText, String falseButtonText) {
-        super(null);
+
+    public CyberFormModal(FormType.MainForm ttype,String title,  String trueButtonText, String falseButtonText) {
+        super(ttype);
         this.title = title;
-        this.content = content;
+        this.content = "";
         this.button1 = trueButtonText;
         this.button2 = falseButtonText;
     }

@@ -53,6 +53,8 @@ public class AdminCrateMainMenu extends CyberFormSimple {
                 }
                 break;
             case 1:
+                CyberCoreMain.getInstance().CrateMain.PrimedPlayer.add(p.getName());
+                CyberCoreMain.getInstance().CrateMain.ViewCrateItems.add(p.getName());
                 //TODO
                 break;
             case 6:

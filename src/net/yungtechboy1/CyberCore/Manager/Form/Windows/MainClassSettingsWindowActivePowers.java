@@ -31,13 +31,13 @@ public class MainClassSettingsWindowActivePowers extends CyberFormCustom {
             System.out.println("YEAHHHHH >>> " + pd + " || " + pd.getNeedsLockedSlot() + "||" + pd.getPowerID() + "||" + pd.getPowerID().name());
             if (check(pd)) continue;//Can not Enable LockedSlot Powers here
             System.out.println("\\/\\/\\/\\/ NExt!!");
-            boolean e = pd.getActive();
+            boolean e = pd.getEnabled();
             PowerEnum pe = pd.getPowerID();
-            PowerAbstract p = _BC.getPossiblePower(pe, false);
+            PowerAbstract p = pd.getPA();//_BC.getPossiblePower(pe, false);
             System.out.println("NOW PPPPPP >>> " + p + " || ");//+p.getDispalyName()+"||"+p.getName());
             String pn;
-            String ppn = TextFormat.GREEN + "[Currently Active]";
-            String ppnn = TextFormat.RED + "";
+            String ppn = TextFormat.GREEN + " [Currently Active]";
+            String ppnn = TextFormat.RED + " [Inactive]";
             if (p == null) pn = "UNKNOWN?!?" + e;
             else pn = p.getDispalyName();
             if (e)
@@ -66,12 +66,12 @@ public class MainClassSettingsWindowActivePowers extends CyberFormCustom {
         for (PowerData pd : _BC.getClassSettings().getPowerDataList()) {
             if (check(pd)) continue;//Skip like above
             boolean on = getResponse().getToggleResponse(key);
-            boolean b = _BC.getClassSettings().getActivatedPowers().contains(pd.getPowerID());
+            boolean b = _BC.getClassSettings().getEnabledPowers().contains(pd.getPowerID());
             if (on && !b) {
-                _BC.activatePower(pd.getPowerID());
+                _BC.enablePower(pd.getAPE());
 //                _BC.getPlayer().sendMessage(TextFormat.GREEN+"POWER > "+pd.getPowerID().name()+" has been activated!");
             } else if (!on && b) {
-                _BC.getClassSettings().getActivatedPowers().remove(pd.getPowerID());
+                _BC.disablePower(pd.getAPE());
             }
             key++;
         }

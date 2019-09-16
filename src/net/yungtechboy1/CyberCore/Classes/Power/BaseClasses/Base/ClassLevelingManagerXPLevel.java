@@ -14,6 +14,9 @@ public class ClassLevelingManagerXPLevel extends ClassLevelingManager {
     public ClassLevelingManagerXPLevel(int XP) {
         this.XP = XP;
     }
+    public ClassLevelingManagerXPLevel() {
+        this(0);
+    }
 
     public int getMaxLevel() {
         return MaxLevel;
@@ -61,7 +64,7 @@ public class ClassLevelingManagerXPLevel extends ClassLevelingManager {
         return l;
     }
 
-    protected int getXP() {
+    public final int getXP() {
         return XP;
     }
 

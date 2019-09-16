@@ -5,25 +5,47 @@ import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Passive.PassivePower;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
-import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Power;
 import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 
 import java.util.ArrayList;
 
-public class DragonJumper extends PassivePower {
+public class DragonJumper extends PowerAbstract {
     private boolean WaitingOnFall = false;
     private int JumpTick = -1;
 
+    public DragonJumper(BaseClass b, AdvancedPowerEnum ape) {
+        super(b, ape);
+    }
 
     public DragonJumper(BaseClass b) {
-        super(b, null,new PowerSettings(true,false,false,false),100);
+        super(b);
         //TODO make this so that this power Runs Automatically!
-        TickUpdate = 10;
         CanSendCanNotRunMessage = false;
+    }
+
+    @Override
+    public int getDefaultPowerSuccessChance() {
+        return 100;
+    }
+
+    @Override
+    public int getTickUpdate() {
+        return 10;
+    }
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
+    }
+
+    @Override
+    public PowerSettings getPowerSettings() {
+        return new PowerSettings(true,false,false,false);
     }
 
     @Override
@@ -56,7 +78,7 @@ public class DragonJumper extends PassivePower {
     }
 
     @Override
-    protected int getCooldownTime() {
+    protected int getCooldownTimeSecs() {
         switch (getStage()) {
             default:
             case NA:

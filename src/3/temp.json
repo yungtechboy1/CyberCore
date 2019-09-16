@@ -1,0 +1,23 @@
+[
+  {
+    "ItemID": 54,
+    "ItemMeta": 0,
+    "NBT": "",
+    "Chance": 100,
+    "Max_Count": 60
+  },
+  {
+    "ItemID": 264,
+    "ItemMeta": 0,
+    "NBT": "",
+    "Chance": 100,
+    "Max_Count": 64
+  },
+  {
+    "ItemID": 133,
+    "ItemMeta": 0,
+    "NBT": "",
+    "Chance": 100,
+    "Max_Count": 64
+  }
+]

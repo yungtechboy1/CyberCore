@@ -1,6 +1,7 @@
 package net.yungtechboy1.CyberCore.Classes.New.Minner;
 
 import cn.nukkit.utils.ConfigSection;
+import net.yungtechboy1.CyberCore.Classes.New.ClassType;
 import net.yungtechboy1.CyberCore.Classes.Passive.OreKnowledge;
 import net.yungtechboy1.CyberCore.Classes.Power.MineLifePower;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -8,7 +9,7 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class MineLifeClass extends MinnerBaseClass {
     public MineLifeClass(CyberCoreMain main, CorePlayer player, ConfigSection data) {
-        super(main, player, ClassType.Class_Miner_MineLife, data);
+        super(main, player,data);
     }
 //
 //    public MineLifeClass(CyberCoreMain main, CorePlayer player) {

@@ -94,7 +94,7 @@ public class CrateObject {
         ArrayList<Item> pi = new ArrayList<>();
         for (ItemChanceData icd : CD.PossibleItems) {
             Item i = icd.check();
-            if (i == null) continue;
+            if (i == null || i.isNull()) continue;
             pi.add(i);
         }
         return pi;

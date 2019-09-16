@@ -3,12 +3,11 @@ package net.yungtechboy1.CyberCore.Classes.New.Offense;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Buff;
+import net.yungtechboy1.CyberCore.Classes.New.ClassType;
 import net.yungtechboy1.CyberCore.Classes.New.DeBuff;
-import net.yungtechboy1.CyberCore.Classes.Power.AntidotePower;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
-import net.yungtechboy1.CyberCore.Classes.Power.DoubleTimeAbility;
-import net.yungtechboy1.CyberCore.Classes.Power.KnightSandShieldPower;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
@@ -17,38 +16,64 @@ import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.MainClassSettingsKnightWindow;
 
+import java.util.ArrayList;
+
 public class Knight extends BaseClass {
 //    public Knight(CyberCoreMain main, Player player, int rank, int xp, ConfigSection cooldowns) {
 //        super(main, player, rank,BaseClass.TYPE_Offensive_Knight, xp, cooldowns);
 //        SwingTime = 27;
 //    }
 
-    public Knight(CyberCoreMain main, CorePlayer player, ConfigSection data) {
-        super(main, player, ClassType.Class_Miner_TNT_Specialist, data);
+    public Knight(CyberCoreMain main) {
+        super(main);
     }
+
+    public Knight(CyberCoreMain main, CorePlayer player) {
+        super(main, player);
+    }
+
+    public Knight(CyberCoreMain main, CorePlayer player, ConfigSection data) {
+        super(main, player, data);
+
+//        addDefaultPower(PowerEnum.KnightSandShield);
+//        addPossiblePower(new DoubleTimeAbility(this));
+//        addPossiblePower(new AntidotePower(this));
+    }
+
+    @Override
+    public ArrayList<AdvancedPowerEnum> getDefaultPowers() {
+        ArrayList<AdvancedPowerEnum> pe = new ArrayList<>();
+//        pe.add(new AdvancedPowerEnum(PowerEnum.KnightSandShield, PowerAbstract.StageEnum.STAGE_1));
+        pe.add(new AdvancedPowerEnum(PowerEnum.DoubleTime, PowerAbstract.StageEnum.STAGE_1));
+//        pe.add(new AdvancedPowerEnum(PowerEnum.AntidotePower, PowerAbstract.StageEnum.STAGE_1));
+        return pe;
+    }
+
+
 
     @Override
     public CustomEntityDamageByEntityEvent CustomEntityDamageByEntityEvent(CustomEntityDamageByEntityEvent event) {
 //        Player p = (Player)event.entity;
-            float ad = event.getDamage(CustomEntityDamageEvent.CustomDamageModifier.BASE) * -.1f;
-            event.setDamage(ad, CustomEntityDamageEvent.CustomDamageModifier.MODIFIER_ARMOR_ABILLITY);
-            event.setCoolDownTicks(SwingTime);
+        float ad = event.getDamage(CustomEntityDamageEvent.CustomDamageModifier.BASE) * -.1f;
+        event.setDamage(ad, CustomEntityDamageEvent.CustomDamageModifier.MODIFIER_ARMOR_ABILLITY);
+        event.setCoolDownTicks(SwingTime);
         return event;
     }
 
     //TODO
     @Override
     public float getDamageBuff() {
-        return 1f+(.5f*(getTeir().ordinal()/10));
+        return 1f + (.5f * (getTeir().ordinal() / 10));
     }
+
     //TODO
     @Override
     public float getArmorBuff() {
-        return 1f+(.3f*(getTeir().ordinal()/10));
+        return 1f + (.3f * (getTeir().ordinal() / 10));
     }
 
     @Override
-    public int getExtraHealth(){
+    public int getExtraHealth() {
         return 4;
     }
 
@@ -80,10 +105,14 @@ public class Knight extends BaseClass {
 
     @Override
     public void SetPowers() {
-        addPossiblePower(new KnightSandShieldPower(this));
-        addPossiblePower(new DoubleTimeAbility(this));
-        addPossiblePower(new AntidotePower(this));
+
     }
+//    @Override
+//    public void SetPowers() {
+//        addPossiblePower(new KnightSandShieldPower(this));
+//        addPossiblePower(new DoubleTimeAbility(this));
+//        addPossiblePower(new AntidotePower(this));
+//    }
 
     @Override
     public ConfigSection export() {
@@ -93,17 +122,17 @@ public class Knight extends BaseClass {
 
     @Override
     public CyberForm getSettingsWindow() {
-        return new MainClassSettingsKnightWindow( this);
+        return new MainClassSettingsKnightWindow(this);
     }
 
     @Override
     public void initBuffs() {
-        addBuff(new Buff(Buff.BuffType.Damage,1.5f));
-        addBuff(new Buff(Buff.BuffType.Armor,1.3f));
-        addBuff(new Buff(Buff.BuffType.Health,4f));
-        addDeBuff(new DeBuff(Buff.BuffType.Movement,1.65f));
-        addDeBuff(new DeBuff(Buff.BuffType.SwingSpeed,1.5f));
-        addBuff(new Buff(Buff.BuffType.SuperFoodHeartRegin,1f));
+        addBuff(new Buff(Buff.BuffType.Damage, 1.5f));
+        addBuff(new Buff(Buff.BuffType.Armor, 1.3f));
+        addBuff(new Buff(Buff.BuffType.Health, 4f));
+        addDeBuff(new DeBuff(Buff.BuffType.Movement, 1.65f));
+        addDeBuff(new DeBuff(Buff.BuffType.SwingSpeed, 1.5f));
+        addBuff(new Buff(Buff.BuffType.SuperFoodHeartRegin, 1f));
     }
 
 }

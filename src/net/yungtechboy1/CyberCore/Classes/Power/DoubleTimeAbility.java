@@ -8,30 +8,47 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
+
+import java.util.ArrayList;
+
 //PowerAbilityHotBar
 public class DoubleTimeAbility extends StagePowerAbstract {
     private Buff oldbuff = null;
 
-    public DoubleTimeAbility(BaseClass knight, AdvancedPowerEnum ape)  {
+    public DoubleTimeAbility(BaseClass knight, AdvancedPowerEnum ape) {
         super(knight, ape);
-        setMaxStage(StageEnum.STAGE_5);
     }
 
-    public DoubleTimeAbility(BaseClass knight)  {
+    public DoubleTimeAbility(BaseClass knight) {
         super(knight);
-        setMaxStage(StageEnum.STAGE_5);
     }
 
+    public DoubleTimeAbility(AdvancedPowerEnum ape) {
+        super(ape);
+    }
+
+    @Override
+    public StageEnum getMaxStage() {
+        return StageEnum.STAGE_5;
+    }
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        ArrayList<Class> a = super.getAllowedClasses();
+        a.add(Knight.class);
+        return a;
+    }
 
     @Override
     public PowerSettings getPowerSettings() {
-        return new PowerSettings(true,false,true,false);
+        return new PowerSettings(true, true, true, false);
     }
 
     @Override
     public void onActivate() {
-        getPlayer().sendMessage("TUNNING");
+        getPlayer().sendMessage("SHOUDL RUN FASSSSSSTTTTTTTTTTTTEEEEEEEERRRRRRRRR");
         getPlayer().addTemporaryBuff(new Buff(Buff.BuffType.Movement, getMovementBuff()));
+        getPlayer().initAllClassBuffs();
 //        oldbuff = PlayerClass.getBuff(Buff.BuffType.Movement);
 //        PlayerClass.addBuff(new Buff(Buff.BuffType.Movement,1.1f));
 //        PlayerClass.initBuffs();
@@ -76,7 +93,7 @@ public class DoubleTimeAbility extends StagePowerAbstract {
     }
 
     @Override
-    protected int getCooldownTime() {
+    protected int getCooldownTimeSecs() {
         switch (getStage()) {
             default:
             case STAGE_5:

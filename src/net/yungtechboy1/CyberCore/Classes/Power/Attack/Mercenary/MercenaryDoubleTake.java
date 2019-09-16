@@ -3,16 +3,39 @@ package net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageEvent;
 
-public class MercenaryDoubleTake extends StagePowerAbstract {
+import java.util.ArrayList;
+
+public class MercenaryDoubleTake extends PowerAbstract {
     public MercenaryDoubleTake(BaseClass bc) {
-        super(bc, 10, 20);
-        setPowerSettings(false, false, false, true);
+        super(bc);
+    }
+
+    public MercenaryDoubleTake(BaseClass b, AdvancedPowerEnum ape) {
+        super(b, ape);
+    }
+
+    @Override
+    public PowerSettings getPowerSettings() {
+        return new PowerSettings(false,false,false,true);
+    }
+
+    @Override
+    public double getPowerSourceCost() {
+        return 20;
+    }
+
+    @Override
+    public int getPowerSuccessChance() {
+        return 10;
     }
 
     @Override
@@ -57,6 +80,11 @@ public class MercenaryDoubleTake extends StagePowerAbstract {
             return !(cp.getHealth() > 8);
         }
         return false;
+    }
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
     }
 
     @Override

@@ -9,18 +9,31 @@ import cn.nukkit.nbt.tag.DoubleTag;
 import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerStackable;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
+
+import java.util.ArrayList;
 
 /**
  * Created by carlt on 5/16/2019.
  */
 public class TNTSpecialistPower extends PowerStackable {
 
-    public TNTSpecialistPower(BaseClass b, int aq, int maq) {
-        super(b,null,100, aq, maq);
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
+    }
+
+    public TNTSpecialistPower(BaseClass b, AdvancedPowerEnum ape) {
+        super(b,ape);
+    }
+
+    @Override
+    public int getMaxAvailbleQuantity() {
+        return 100;
     }
 
     @Override

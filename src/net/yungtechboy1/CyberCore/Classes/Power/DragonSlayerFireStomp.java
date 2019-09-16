@@ -11,7 +11,10 @@ import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.LevelSoundEventPacket;
+import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.DragonSlayer;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
@@ -22,14 +25,42 @@ import net.yungtechboy1.CyberCore.PlayerJumpEvent;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class DragonSlayerFireStomp extends StagePowerAbstract {
+public class DragonSlayerFireStomp extends PowerAbstract {
     private boolean WaitingOnFall = false;
     private int WaitingOnFallTick = -1;
     private int StartNullFire = -1;
 
-    public DragonSlayerFireStomp(DragonSlayer b) {
-        super(b, new PowerSettings(true,false,true,false),100, 1);
-        TickUpdate = 10;
+    public DragonSlayerFireStomp(BaseClass b, AdvancedPowerEnum ape) {
+        super(b, ape);
+    }
+
+    public DragonSlayerFireStomp(BaseClass b) {
+        super(b);
+    }
+
+    @Override
+    public int getTickUpdate() {
+        return 10;
+    }
+
+    //    public DragonSlayerFireStomp(DragonSlayer b) {
+//        super(b);
+//        TickUpdate = 10;
+//    }
+
+    @Override
+    public int getPowerSuccessChance() {
+        return 100;
+    }
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
+    }
+
+    @Override
+    public double getPowerSourceCost() {
+        return 1;
     }
 
     @Override
@@ -91,7 +122,7 @@ public class DragonSlayerFireStomp extends StagePowerAbstract {
     }
 
     @Override
-    protected int getCooldownTime() {
+    protected int getCooldownTimeSecs() {
         return 15;
     }
 

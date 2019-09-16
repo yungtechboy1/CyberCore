@@ -23,6 +23,7 @@ public class FTS extends Command {
     public boolean execute(CommandSender s, String label, String[] args) {
         //TODO
         Owner.saveFloatingText();
+        Owner.CMC.save();
         s.sendMessage(TextFormat.GREEN+"Config Saved!");
         return true;
     }

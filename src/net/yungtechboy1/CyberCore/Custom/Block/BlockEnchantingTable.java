@@ -8,6 +8,7 @@ import cn.nukkit.blockentity.BlockEntityEnchantTable;
 import cn.nukkit.form.element.Element;
 import cn.nukkit.form.element.ElementStepSlider;
 import cn.nukkit.form.window.FormWindowCustom;
+import cn.nukkit.inventory.EnchantInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemTool;
 import cn.nukkit.math.BlockFace;
@@ -15,6 +16,7 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.nbt.tag.Tag;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.Custom.Block.MainClasses.CustomBlockTransparentMeta;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.Enchanting0Window;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.Enchanting1Window;
@@ -22,18 +24,26 @@ import net.yungtechboy1.CyberCore.Manager.Form.Windows.Enchanting1Window;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static cn.nukkit.block.BlockID.ENCHANTING_TABLE;
+
 /**
  * Created by carlt on 3/25/2019.
  */
-public class BlockEnchantingTable extends BlockTransparentMeta {
+public class BlockEnchantingTable extends CustomBlockTransparentMeta {
 
+    CustomEnchantment.Tier tier  = CustomEnchantment.Tier.Basic;
 
+//    EnchantmentTier EnchantingTeir = EnchantmentTier.Tier1;
     public BlockEnchantingTable() {
         super();
     }
 
     public BlockEnchantingTable(int meta) {
         super(meta);
+    }
+    public BlockEnchantingTable(CustomEnchantment.Tier t) {
+        super();
+        tier = t;
     }
 
     @Override
@@ -45,6 +55,8 @@ public class BlockEnchantingTable extends BlockTransparentMeta {
         return getName();
     }
 
+
+
     @Override
     public String getName() {
         if (GetTier() == CustomEnchantment.Tier.Unknown) return "Enchanting Table";
@@ -53,7 +65,7 @@ public class BlockEnchantingTable extends BlockTransparentMeta {
 
     public CustomEnchantment.Tier GetTier() {
         BlockEntityEnchantTable a = getBlockEntity();
-        if (a == null || !a.namedTag.contains("level")) return CustomEnchantment.Tier.Basic;
+        if (a == null || a.namedTag == null || !a.namedTag.contains("tier")) return CustomEnchantment.Tier.Basic;
         int t = a.namedTag.getInt("level");
         return CustomEnchantment.Tier.GetTier(t);
     }
@@ -105,7 +117,7 @@ public class BlockEnchantingTable extends BlockTransparentMeta {
                 .putInt("x", (int) this.x)
                 .putInt("y", (int) this.y)
                 .putInt("z", (int) this.z)
-                .putInt("level", 1);
+                .putInt("tier", tier.ordinal());
 
         if (item.hasCustomName()) {
             nbt.putString("CustomName", item.getCustomName());
@@ -137,7 +149,7 @@ public class BlockEnchantingTable extends BlockTransparentMeta {
                     .putInt("x", (int) this.x)
                     .putInt("y", (int) this.y)
                     .putInt("z", (int) this.z)
-                    .putInt("level", (int) 1);
+                    .putInt("tier", tier.ordinal());
             enchantTable = new BlockEntityEnchantTable(this.getLevel().getChunk((int) (this.x) >> 4, (int) (this.z) >> 4), nbt);
             getLevel().addBlockEntity(enchantTable);
         }
@@ -148,9 +160,10 @@ public class BlockEnchantingTable extends BlockTransparentMeta {
     public boolean onActivate(Item item, Player sender) {
         if (sender != null) {
             Player p = (Player) sender;
-            CorePlayer cp = (CorePlayer) p;
-            p.showFormWindow(new Enchanting0Window(getName()));
-            cp.setNewWindow(new Enchanting1Window(cp,GetTier(),item));
+            p.addWindow(new EnchantInventory(this.getLocation()), 3);
+//            CorePlayer cp = (CorePlayer) p;
+//            p.showFormWindow(new Enchanting0Window(getName()));
+//            cp.setNewWindow(new Enchanting1Window(cp,GetTier(),item));
         }
 
         return true;

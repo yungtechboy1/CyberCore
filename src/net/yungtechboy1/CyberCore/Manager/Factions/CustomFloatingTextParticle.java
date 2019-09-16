@@ -33,6 +33,15 @@ public class CustomFloatingTextParticle extends Particle {
         this.title = title;
     }
 
+    public CustomFloatingTextParticle(Vector3 pos, String text, String title, int e) {
+        super(pos.x, pos.y, pos.z);
+        this.entityId = e;
+        this.invisible = false;
+        this.metadata = new EntityMetadata();
+        this.text = text;
+        this.title = title;
+    }
+
     public void setText(String text) {
         this.text = text;
     }
@@ -71,23 +80,22 @@ public class CustomFloatingTextParticle extends Particle {
             pk.entityUniqueId = this.entityId;
             pk.entityRuntimeId = this.entityId;
             pk.x = (float) this.x;
-            pk.y = (float) (this.y - 1.62);
+            pk.y = (float) (this.y - .75);//.75? Now??
             pk.z = (float) this.z;
             pk.speedX = 0;
             pk.speedY = 0;
             pk.speedZ = 0;
             pk.yaw = 0;
             pk.pitch = 0;
-            long flags = 0;
-            flags |= 1 << Entity.DATA_FLAG_INVISIBLE;
-            flags |= 1 << Entity.DATA_FLAG_CAN_SHOW_NAMETAG;
-            flags |= 1 << Entity.DATA_FLAG_ALWAYS_SHOW_NAMETAG;
-            flags |= 1 << Entity.DATA_FLAG_IMMOBILE;
-            pk.metadata = new EntityMetadata()
-                    .putLong(Entity.DATA_FLAGS, flags)
-                    .putString(Entity.DATA_NAMETAG, this.title + (!"".equals(this.text) ? "\n" + this.text : ""))
-                    .putLong(Entity.DATA_LEAD_HOLDER_EID, -1);
-//                    .putByte(Entity.DATA_LEAD, 0);ERrored Out
+            long flags = (
+                    1L << Entity.DATA_FLAG_NO_AI
+            );
+            pk.metadata = new EntityMetadata().putLong(Entity.DATA_FLAGS, flags)
+                    .putString(Entity.DATA_NAMETAG, title+"\n\n\n\n"+text)
+                    .putLong(Entity.DATA_LEAD_HOLDER_EID, -1)
+                    .putFloat(Entity.DATA_SCALE, 0.01f) //zero causes problems on debug builds?
+                    .putFloat(Entity.DATA_BOUNDING_BOX_HEIGHT, 0.01f)
+                    .putFloat(Entity.DATA_BOUNDING_BOX_WIDTH, 0.01f);
             pk.item = Item.get(Item.AIR);
             packets.add(pk);
         }

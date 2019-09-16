@@ -31,6 +31,13 @@ public class CustomEntityDamageEvent extends EntityEvent implements Cancellable 
             }
         });
     }
+    public void addDamage(CustomDamageModifier powerRage_strength, float v) {
+        modifiers.put(powerRage_strength,v);
+    }
+
+    public float getBaseDamage() {
+        return modifiers.get(CustomDamageModifier.BASE);
+    }
 
     public CustomEntityDamageEvent(Entity entity, CustomDamageCause cause, Map<CustomDamageModifier, Float> modifiers) {
         this.entity = entity;
@@ -151,7 +158,9 @@ public class CustomEntityDamageEvent extends EntityEvent implements Cancellable 
 
         //ARMOR_ENCHANTMENTS
 
-        MODIFIER_ARMOR_ABILLITY
+        MODIFIER_ARMOR_ABILLITY,
+        PowerRage_Weakness,
+        PowerRage_Strength,
     }
 
     public enum CustomDamageCause {

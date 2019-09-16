@@ -2,16 +2,52 @@ package net.yungtechboy1.CyberCore.Classes.Power;
 
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
+import java.util.ArrayList;
+
 public class AntidotePower extends StagePowerAbstract {
     public AntidotePower(BaseClass baseClass) {
-        super(baseClass,100,25);
-        setPowerSettings(true,false,true,false);
-        setMaxStage(StageEnum.STAGE_5);
-        TickUpdate = getTickInterval();
+        super(baseClass);
+    }
+
+    public AntidotePower(BaseClass b, AdvancedPowerEnum ape) {
+        super(b, ape);
+    }
+
+    public AntidotePower(AdvancedPowerEnum ape) {
+        super(ape);
+    }
+
+    @Override
+    public StageEnum getMaxStage() {
+        return StageEnum.STAGE_5;
+    }
+
+    @Override
+    public int getTickUpdate() {
+        return getTickInterval();
+    }
+
+    @Override
+    public int getPowerSuccessChance() {
+        return 100;
+    }
+
+    @Override
+    public double getPowerSourceCost() {
+        return 25;
+    }
+
+
+
+    @Override
+    public PowerSettings getPowerSettings() {
+        return new PowerSettings(true,false,true,false);
     }
 
     @Override
@@ -25,7 +61,7 @@ public class AntidotePower extends StagePowerAbstract {
     }
 
     @Override
-    protected int getCooldownTime() {
+    protected int getCooldownTimeSecs() {
         return getRunTimeTick() * 2 / 20;
     }
 

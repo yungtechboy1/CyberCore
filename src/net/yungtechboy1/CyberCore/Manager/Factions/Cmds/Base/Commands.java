@@ -1,4 +1,4 @@
-package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
+package net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base;
 
 import cn.nukkit.Player;
 import cn.nukkit.utils.TextFormat;
@@ -33,7 +33,7 @@ public abstract class Commands {
     public boolean sendUsageOnFail = false;
     public boolean sendFailReason = false;
     public LinkedHashMap<String, String> optionalArgs;
-    Faction fac;
+    public Faction fac;
 
     public Commands(CorePlayer s, String[] a, String usage, FactionsMain main) {
         Args = a;

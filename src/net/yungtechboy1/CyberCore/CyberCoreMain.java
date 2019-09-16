@@ -14,9 +14,12 @@ import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
+import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
+import cn.nukkit.level.Location;
 import cn.nukkit.level.Position;
+import cn.nukkit.math.Vector2;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.plugin.PluginBase;
@@ -26,9 +29,12 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Bans.Ban;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.AntidotePower;
+import net.yungtechboy1.CyberCore.Classes.Power.Attack.Knight.RagePower;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.DoubleTimeAbility;
+import net.yungtechboy1.CyberCore.Classes.Power.DragonJumper;
 import net.yungtechboy1.CyberCore.Classes.Power.KnightSandShieldPower;
+import net.yungtechboy1.CyberCore.Classes.Power.Magic.Sorcerer.ThunderStrike;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PowerSourceTaskAsync;
 import net.yungtechboy1.CyberCore.Commands.*;
 import net.yungtechboy1.CyberCore.Commands.Gamemode.GMC;
@@ -41,6 +47,7 @@ import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockFire;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
+import net.yungtechboy1.CyberCore.Custom.ClassMerchantConfig;
 import net.yungtechboy1.CyberCore.Custom.Crafting.CustomRecipeCraftingManager;
 import net.yungtechboy1.CyberCore.Custom.CustomInventoryTransactionPacket;
 import net.yungtechboy1.CyberCore.Custom.Item.*;
@@ -80,6 +87,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static cn.nukkit.item.Item.addCreativeItem;
+import static net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract.PowerHotBarNBTTag;
 
 /**
  * Created by carlt_000 on 3/21/2016.
@@ -155,6 +163,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public CustomCraftingManager CraftingManager;
     public CrateMain CrateMain;
     public ArrayList<CyberFloatingTextContainer> SavedFloatingText = new ArrayList<>();
+    public ClassMerchantConfig CMC;
     Vector3 p1;
     Vector3 p2;
     CustomRecipeCraftingManager CRM;
@@ -294,12 +303,9 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //
 //        getServer().getCraftingManager().registerShapelessRecipe();
 
-        PowerManagerr = new PowerManager(this);
-
-        PowerManager.addPowerToList(PowerEnum.KnightSandShield,KnightSandShieldPower.class);
-        PowerManager.addPowerToList(PowerEnum.DoubleTime,DoubleTimeAbility.class);
-        addPossiblePower(new DoubleTimeAbility(this));
-        addPossiblePower(new AntidotePower(this));
+        loadPowerManager();
+//        addPossiblePower(new DoubleTimeAbility(this));
+//        addPossiblePower(new AntidotePower(this));
         ClassFactory = new ClassFactory(this);
         WarpManager = new WarpManager(this);
 
@@ -432,6 +438,27 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new AuctionHouseCmd(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new SellHand(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new HowToPlay(this));
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore/Commands", new BookCmd(this));
+
+
+        CMC = new ClassMerchantConfig(this);
+    }
+
+    private void loadPowerManager() {
+        PowerManagerr = new PowerManager(this);
+        loadPowersToPM();
+    }
+
+    private void loadPowersToPM() {
+        PowerManager.addPowerToList(PowerEnum.DragonJumper, DragonJumper.class);
+        PowerManager.addPowerToList(PowerEnum.DoubleTime, DoubleTimeAbility.class);
+        PowerManager.addPowerToList(PowerEnum.AntidotePower, AntidotePower.class);
+        PowerManager.addPowerToList(PowerEnum.KnightSandShield, KnightSandShieldPower.class);
+        PowerManager.addPowerToList(PowerEnum.DoubleTime, DoubleTimeAbility.class);
+        PowerManager.addPowerToList(PowerEnum.AntidotePower, AntidotePower.class);
+        PowerManager.addPowerToList(PowerEnum.ThunderStrike, ThunderStrike.class);
+        PowerManager.addPowerToList(PowerEnum.RagePower, RagePower.class);
     }
 
     public void onLoad() {
@@ -469,8 +496,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         for (Object e : ftc.getRootSection().getAllMap().values()) {
             if (e instanceof ConfigSection) {
-                System.out.println(e);
-                System.out.println(((ConfigSection) e).getLong("x")+" || "+((ConfigSection) e).getDouble("x")+" || "+((ConfigSection) e).get("x"));
+//                System.out.println(e);
+//                System.out.println(((ConfigSection) e).getLong("x")+" || "+((ConfigSection) e).getDouble("x")+" || "+((ConfigSection) e).get("x"));
                 double x = ((ConfigSection) e).getDouble("X");
                 double y = ((ConfigSection) e).getDouble("Y");
                 double z = ((ConfigSection) e).getDouble("Z");
@@ -481,10 +508,10 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
                 int lu = ((ConfigSection) e).getInt("LastUpdate");
                 Position pos = new Position(x, y, z, l);
                 CyberFloatingTextContainer cft = new CyberFloatingTextContainer(FTM, pos, syntax);
-                System.out.println("Loading FLOATING TEXTTTTTTTTT");
-                System.out.println(cft.toString());
+//                System.out.println("Loading FLOATING TEXTTTTTTTTT");
+//                System.out.println(cft.toString());
                 cft.PlayerUnique = pu;
-                cft.Vertical  = v;
+                cft.Vertical = v;
 //                cft.LastUpdate = lu;
                 FloatingTextFactory.AddFloatingText(cft, false);
                 SavedFloatingText.add(cft);
@@ -509,7 +536,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
         ConfigSection c = ftc.getRootSection();
         for (CyberFloatingTextContainer e : SavedFloatingText) {
-            if(!e.isValid())continue;
+            if (!e.isValid()) continue;
             c.put(e.getKeyPos(), e.getSave());
         }
         ftc.setAll(c);
@@ -601,6 +628,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        PasswordFactoy.onDisable();
 
         //Classes
+        CMC.save();
         FTM.CTstop();
         saveFloatingText();
         PowerSourceTask.CTstop();
@@ -938,6 +966,22 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     @EventHandler(priority = EventPriority.HIGHEST)
     public void PMJ(PlayerJoinEvent me) {
         BossBarManager.AddBossBar(me.getPlayer(), new BossBarNotification(me.getPlayer(), "TEST TITLE", "TEST MESSAGE", 20 * 60, this));
+        PlayerInventory pi = me.getPlayer().getInventory();
+        for (Item i : new ArrayList<Item>(pi.getContents().values()))
+            if (i.hasCompoundTag() && i.getNamedTag().contains(PowerHotBarNBTTag))
+                pi.removeItem(i);
+
+    }
+
+    public boolean isInSpawn(CorePlayer p){
+        return isInSpawn(p.getLocation());
+    }
+    public boolean isInSpawn(Location v){
+        Vector2 pv = new Vector2(v.getFloorX(),v.getFloorZ());
+        Vector3 s = v.getLevel().getSpawnLocation().asVector3f().asVector3();
+        Vector2 sv = new Vector2(s.getFloorX(),s.getFloorZ());
+        int spawnprotection = 200;
+        return (sv.distance(pv) <= spawnprotection);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

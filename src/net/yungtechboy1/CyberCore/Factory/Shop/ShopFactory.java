@@ -4,16 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.block.BlockChest;
-import cn.nukkit.block.BlockID;
-import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.inventory.InventoryTransactionEvent;
-import cn.nukkit.inventory.Inventory;
-import cn.nukkit.inventory.PlayerCursorInventory;
-import cn.nukkit.inventory.PlayerInventory;
-import cn.nukkit.inventory.transaction.InventoryTransaction;
-import cn.nukkit.inventory.transaction.action.InventoryAction;
-import cn.nukkit.inventory.transaction.action.SlotChangeAction;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
 import cn.nukkit.level.GlobalBlockPalette;
@@ -32,7 +23,7 @@ import java.nio.ByteOrder;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
+import java.util.List;
 
 public class ShopFactory implements Listener {
     private final ShopSQL SQL;
@@ -62,7 +53,11 @@ public class ShopFactory implements Listener {
     }
 
     //                new CoolDown().setTimeSecs(30,0);//30 Mins
+    @Deprecated
     public ArrayList<ShopMysqlData> GetAllItems() {
+        return GetAllItems(false);
+    }
+    public ArrayList<ShopMysqlData> GetAllItems(boolean admin) {
         if (ShopCache != null) {
             if (ShopCacheReset != null) {
                 if (ShopCacheReset.isValid()) {
@@ -76,7 +71,7 @@ public class ShopFactory implements Listener {
         }
         ArrayList<ShopMysqlData> is = new ArrayList<>();
         try {
-            ResultSet rs = SQL.ExecuteQuerySQLite("SELECT * FROM `Shop` WHERE `enabled` = 1 ORDER BY `Shop`.`Itemid` ASC");
+            ResultSet rs = SQL.ExecuteQuerySQLite("SELECT * FROM `Shop` WHERE "+ (!admin ? "`enabled` = 1 ":"")+"ORDER BY `Itemid` ASC");
             if (rs != null) {
                 try {
                     while (rs.next()) {
@@ -164,9 +159,9 @@ public class ShopFactory implements Listener {
 //        return null;
 //    }
 
-    public ArrayList<Item> getListOfItems() {
+    public ArrayList<Item> getListOfItems(boolean admin) {
         ArrayList<Item> il = new ArrayList<>();
-        for (ShopMysqlData ahd : GetAllItems()) {
+        for (ShopMysqlData ahd : GetAllItems(admin)) {
             il.add(ahd.getItem());
         }
         return il;
@@ -181,10 +176,10 @@ public class ShopFactory implements Listener {
 //    }
 
 
-    public HashMap<Integer, Item> getPageHash(int page) {
+    public HashMap<Integer, Item> getPageHash(int page, ShopCategory catg, boolean AdminMode) {
         HashMap<Integer, Item> list = new HashMap<Integer, Item>();
         int k = 0;
-        for (Item i : getPage(page)) {
+        for (Item i : getPage(page, catg, AdminMode)) {
             list.put(k, i);
             k++;
         }
@@ -194,9 +189,9 @@ public class ShopFactory implements Listener {
     }
 
 
-    public ArrayList<ShopMysqlData> GetAllItemsDataLimit(int start, int stop) {
+    public ArrayList<ShopMysqlData> GetAllItemsDataLimit(int start, int stop, boolean admin) {
         ArrayList<ShopMysqlData> il = new ArrayList<>();
-        ArrayList<ShopMysqlData> a = GetAllItems();
+        ArrayList<ShopMysqlData> a = GetAllItems(admin);
         for (int i = start; i < stop; i++) {
             if (i >= a.size()) break;
             ShopMysqlData smd = a.get(i);
@@ -205,9 +200,10 @@ public class ShopFactory implements Listener {
         return il;
     }
 
-    public ArrayList<Item> GetAllItemsLimit(int start, int stop) {
+    public ArrayList<Item> GetAllItemsLimit(int start, int stop, ShopCategory catg, boolean adminMode) {
         ArrayList<Item> il = new ArrayList<>();
-        ArrayList<ShopMysqlData> a = GetAllItems();
+        ArrayList<ShopMysqlData> a = GetAllItems(adminMode);
+        a = filterShopDataByCategory(a,catg);
         for (int i = start; i < stop; i++) {
             if (i >= a.size()) break;
             ShopMysqlData smd = a.get(i);
@@ -216,6 +212,16 @@ public class ShopFactory implements Listener {
             }
         }
         return il;
+    }
+
+    private ArrayList<ShopMysqlData> filterShopDataByCategory(ArrayList<ShopMysqlData> a, ShopCategory catg) {
+        ArrayList<ShopMysqlData> sd = new ArrayList<>();
+        for(ShopMysqlData d: a){
+            if(d.getCategory().size() == 0 && catg != ShopCategory.NA)continue;
+            if(catg != ShopCategory.NA &&!d.getCategory().contains(catg))continue;
+            sd.add(d);
+        }
+        return sd;
     }
 //
 //    public ArrayList<ShopMysqlData> GetAllItemsLimitData(int start, int stop) {
@@ -226,12 +232,12 @@ public class ShopFactory implements Listener {
 //        return il;
 //    }
 
-    public Item getItemFromPage(int page, int slot) {
+    public Item getItemFromPage(int page, int slot, ShopCategory catg, boolean AdminMode) {
         if (slot > 45) {
             CCM.getLogger().error("ERROR! Slot out of range! E443 Slot:" + slot);
             return null;
         }
-        Item[] list = getPage(page);
+        Item[] list = getPage(page, catg, AdminMode);
         if (slot > list.length) {
             CCM.getLogger().error("ERROR! Selected Slot out of List Range! E33342 SLOT:" + slot + " OF " + list.length);
             return null;
@@ -242,10 +248,10 @@ public class ShopFactory implements Listener {
     }
 
 
-    public Item[] getPage(int page) {
+    public Item[] getPage(int page, ShopCategory catg, boolean adminMode) {
         int stop = page * 45;
         int start = stop - 45;
-        ArrayList<Item> list2 = GetAllItemsLimit(start, stop);
+        ArrayList<Item> list2 = GetAllItemsLimit(start, stop,catg,adminMode);
         if (45 > list2.size()) {
             ArrayList<Item> a = new ArrayList<Item>();
             for (int i = 0; i < 45; i++) {
@@ -265,10 +271,10 @@ public class ShopFactory implements Listener {
         }
     }
 
-    public ArrayList<ShopMysqlData> getPageData(int page) {
+    public ArrayList<ShopMysqlData> getPageData(int page, boolean admin) {
         int stop = page * 45;
         int start = stop - 45;
-        ArrayList<ShopMysqlData> list2 = GetAllItemsDataLimit(start, stop);
+        ArrayList<ShopMysqlData> list2 = GetAllItemsDataLimit(start, stop,admin);
         if (45 > list2.size()) {
             ArrayList<ShopMysqlData> a = new ArrayList<ShopMysqlData>();
             for (int i = 0; i < 45; i++) {
@@ -697,8 +703,8 @@ public class ShopFactory implements Listener {
 //    }
 
     //SetupPageToFinalConfirmItemSell
-    public void PurchaseItem(CorePlayer holder, int page, int slot, int count) {
-        ShopMysqlData aid = getItemFrom(page, slot);
+    public void PurchaseItem(CorePlayer holder, int page, int slot, int count, boolean admin) {
+        ShopMysqlData aid = getItemFrom(page, slot, admin);
         if (aid == null) {
             System.out.println("ERROR IN SELECTION!!!!");
         } else if (aid.getPrice(count) > holder.getMoney() && !holder.Shop.SetupPageToFinalConfirmItemSell) {
@@ -750,8 +756,8 @@ public class ShopFactory implements Listener {
         }
     }
 
-    public ShopMysqlData getItemFrom(int page, int slot) {
-        ArrayList<ShopMysqlData> smd = getPageData(page);
+    public ShopMysqlData getItemFrom(int page, int slot, boolean admin) {
+        ArrayList<ShopMysqlData> smd = getPageData(page, admin);
         if (smd.size() < slot) return null;
         return smd.get(slot);
     }
@@ -761,5 +767,27 @@ public class ShopFactory implements Listener {
         SQL.AddItemForSale(aid);
     }
 
+    public ShopMysqlData getItemFrom(int s) {
+        ArrayList<ShopMysqlData> is = new ArrayList<>();
+        try {
+            ResultSet rs = SQL.ExecuteQuerySQLite("SELECT * FROM `Shop` WHERE `ShopID` = "+ s+"ORDER BY `Itemid` ASC");
+            if (rs != null) {
+                try {
+                    while (rs.next()) {
+                        ShopMysqlData aid = new ShopMysqlData(rs);
+//                        System.out.println(">>>!!!+" + aid);
+                        return aid;
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    CCM.getLogger().info("Error loading Shop Items3!");
+                    return null;
+                };
+            }
+        } catch (Exception e) {
+            CCM.getLogger().error("SSSSHHHHH ERRRORRROOROORORR", e);
+        }
+        return null;
+    }
 }
 

@@ -8,6 +8,7 @@ import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.LevelSoundEventPacket;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
@@ -18,11 +19,33 @@ import java.util.ArrayList;
 
 public class FireBox extends StagePowerAbstract {
 
+
     public FireBox(BaseClass b) {
-        super(b, new PowerSettings( false, false, true, false) ,100, 250);
-        //TODO make this so that this power Runs Automatically!
-//        TickUpdate = 10;
-//        CanSendCanNotRunMessage = false;
+        super(b);
+    }
+
+    public FireBox(BaseClass b, AdvancedPowerEnum ape) {
+        super(b, ape);
+    }
+
+    @Override
+    public StageEnum getMaxStage() {
+        return StageEnum.STAGE_5;
+    }
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
+    }
+
+    @Override
+    public PowerSettings getPowerSettings() {
+        return new PowerSettings( false, false, true, false);
+    }
+
+    @Override
+    public double getPowerSourceCost() {
+        return 10;//250? TODO
     }
 
     @Override
@@ -41,10 +64,9 @@ public class FireBox extends StagePowerAbstract {
     }
 
     @Override
-    protected int getCooldownTime() {
+    protected int getCooldownTimeSecs() {
         switch (getStage()) {
             default:
-            case NA:
             case STAGE_1:
                 return 45;
             case STAGE_2:

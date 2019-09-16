@@ -3,48 +3,73 @@ package net.yungtechboy1.CyberCore.Classes.Power.Attack.Mercenary;
 import cn.nukkit.event.entity.EntityRegainHealthEvent;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerSettings;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstract;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
+import java.util.ArrayList;
+
 public class MercenaryReneration extends StagePowerAbstract {
+    public int _incombat = 0;
+
     public MercenaryReneration(BaseClass bc) {
-        super(bc, 30, 30);
-        setPowerSettings(false, false, true, false);
-        TickUpdate = 20 * 5;//Every 5 Secs make sure player is in combat
+        super(bc);
+//        TickUpdate = 20 * 5;//Every 5 Secs make sure player is in combat
         PlayerToggleable = false;
+    }
+
+    @Override
+    public int getTickUpdate() {
+        return 20 * 5;
+    }
+
+    @Override
+    public StageEnum getMaxStage() {
+        return StageEnum.STAGE_5;
+    }
+
+    @Override
+    public ArrayList<Class> getAllowedClasses() {
+        return null;
+    }
+
+    @Override
+    public PowerSettings getPowerSettings() {
+        return new PowerSettings(false, false, true, false);
+    }
+
+    @Override
+    public double getPowerSourceCost() {
+        return 30;
+    }
+
+    @Override
+    public int getPowerSuccessChance() {
+        switch (getStage()) {
+            default:
+            case STAGE_1:
+                return (30);
+            case STAGE_2:
+                return (40);
+            case STAGE_3:
+                return (50);
+            case STAGE_4:
+                return (60);
+            case STAGE_5:
+                return (75);
+        }
     }
 
     @Override
     public void initStages() {
         super.initStages();
-        switch (getStage()) {
-            case STAGE_1:
-                setPowerSuccessChance(30);
-                break;
-            case STAGE_2:
-                setPowerSuccessChance(40);
-                break;
-            case STAGE_3:
-                setPowerSuccessChance(50);
-                break;
-            case STAGE_4:
-                setPowerSuccessChance(60);
-                break;
-            case STAGE_5:
-                setPowerSuccessChance(75);
-                break;
-            default:
-                setPowerSuccessChance(30);
-                break;
-        }
     }
 
     @Override
     public boolean CanRun(boolean force, Object... o) {
-        if(force)return true;
-        boolean s = super.CanRun(force,o);
-        return s;
+        if (force) return true;
+        return super.CanRun(force, o);
     }
 
     @Override
@@ -53,11 +78,9 @@ public class MercenaryReneration extends StagePowerAbstract {
     }
 
     @Override
-    protected int getCooldownTime() {
+    protected int getCooldownTimeSecs() {
         return 30;
     }
-
-    public int _incombat = 0;
 
     @Override
     public void onActivate() {
@@ -69,13 +92,13 @@ public class MercenaryReneration extends StagePowerAbstract {
     @Override
     public void onTick(int tick) {
         super.onTick(tick);
-        if(PlayerClass.getPlayer().checkCombat()){
+        if (PlayerClass.getPlayer().checkCombat()) {
             _incombat++;
-        }else{
+        } else {
             _incombat = 0;
         }
 
-        if(_incombat > 6){
+        if (_incombat > 6) {
             //Allow Heal, Run PowerAbstract
             initPowerRun();
             _incombat = 0;

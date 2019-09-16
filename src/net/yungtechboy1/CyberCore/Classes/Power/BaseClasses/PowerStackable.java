@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses;
 
 import cn.nukkit.math.NukkitRandom;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
+import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.ClassLevelingManager;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 
@@ -10,14 +11,12 @@ public abstract class PowerStackable extends PowerAbstract {
     int MaxAvailbleQuantity = 0;
 
     /**
-     * @param psc int PowerAbstract Success Chance
-     * @param aq
-     * @param maq
+     *
+     * @param c
+     * @param ape
      */
-    public PowerStackable(BaseClass c, ClassLevelingManager lm, int psc, int aq, int maq) {
-        super(c,lm, psc);
-        AvailbleQuantity = aq;
-        MaxAvailbleQuantity = maq;
+    public PowerStackable(BaseClass c, AdvancedPowerEnum ape) {
+        super(c,ape);
     }
 
     public int getMaxAvailbleQuantity() {

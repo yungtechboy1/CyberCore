@@ -14,9 +14,9 @@ public class PlayerEconData {
 
     public PlayerEconData(PlayerSettingsData psd){
         Name = psd.Name;
-        Cash = psd.Cash;
-        CreditScore = psd.CreditScore;
-        CreditLimit = psd.CreditLimit;
-        UsedCredit = psd.UsedCredit;
+        Cash = psd.getCash();
+        CreditScore = psd.getCreditScore();
+        CreditLimit = psd.getCreditLimit();
+        UsedCredit = psd.getUsedCredit();
     }
 }
