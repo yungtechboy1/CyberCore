@@ -1,12 +1,9 @@
 package net.yungtechboy1.CyberCore.Data;
 
-import cn.nukkit.Player;
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.CoreSettings;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Warp.WarpData;
-import net.yungtechboy1.CyberCore.Rank.Rank;
 import net.yungtechboy1.CyberCore.Rank.RankList;
 import ru.nukkit.dblib.DbLib;
 
@@ -107,7 +104,7 @@ public class ServerSqlite extends MySQL {
             LoadRank(p);
             LoadClass(p);
             Faction f = plugin.FM.FFactory.IsPlayerInFaction(p);
-            if(f != null)p.Faction = f.GetName();
+            if (f != null) p.Faction = f.getName();
         } catch (Exception e) {
             CyberCoreMain.getInstance().getLogger().error("EEEEE11122223333", e);
         }

@@ -44,7 +44,7 @@ public class Join extends Commands {
                 for(Faction f: af){
                     i++;
                     if(i > 20)continue;
-                    FWM.addButton(new ElementButton(f.GetDisplayName()));
+                    FWM.addButton(new ElementButton(f.getDisplayName()));
                 }
 //            FWM.addButton(new ElementButton("View All Plots Claimed"));
             }
@@ -67,7 +67,7 @@ public class Join extends Commands {
             CorePlayer cp = (CorePlayer) Sender;
             cp.Faction = fn;
 
-            Sender.sendMessage(FactionsMain.NAME + TextFormat.RED + "Congrads! You Just Joined " + fac.GetDisplayName() + " Faction!");
+            Sender.sendMessage(FactionsMain.NAME + TextFormat.RED + "Congrads! You Just Joined " + fac.getDisplayName() + " Faction!");
             f.BroadcastMessage(FactionsMain.NAME + TextFormat.GREEN + Sender.getName() + " Has joined your faction!");
 //        if(Main.CC != null)Main.CC.Setnametag((Player)Sender);
         }

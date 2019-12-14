@@ -1,8 +1,6 @@
 package net.yungtechboy1.CyberCore.Classes.New;
 
 import cn.nukkit.form.element.ElementButton;
-import cn.nukkit.form.response.FormResponseSimple;
-import net.yungtechboy1.CyberCore.Commands.ClassMerchant;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.ClassMerchantData;
 import net.yungtechboy1.CyberCore.CyberCoreMain;

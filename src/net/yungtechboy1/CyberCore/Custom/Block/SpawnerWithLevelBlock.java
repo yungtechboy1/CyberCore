@@ -1,30 +1,19 @@
 package net.yungtechboy1.CyberCore.Custom.Block;
 
-import cn.nukkit.Server;
-import cn.nukkit.block.BlockSolid;
-import cn.nukkit.block.BlockSolidMeta;
-import cn.nukkit.entity.Entity;
-import cn.nukkit.entity.EntityHuman;
-import cn.nukkit.entity.passive.EntityAnimal;
-import cn.nukkit.item.ItemBookEnchanted;
-import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
-import net.yungtechboy1.CyberCore.Custom.Item.CustomItemBlockSpawnerWithLevelBlock;
-import net.yungtechboy1.CyberCore.entities.animal.swimming.Squid;
-import net.yungtechboy1.CyberCore.entities.animal.walking.*;
-import net.yungtechboy1.CyberCore.entities.block.BlockEntitySpawner;
 import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.block.Block;
-import cn.nukkit.block.BlockMobSpawner;
+import cn.nukkit.block.BlockSolid;
 import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemTool;
 import cn.nukkit.math.BlockFace;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.entities.monster.flying.Blaze;
-import net.yungtechboy1.CyberCore.entities.monster.walking.*;
-
-import javax.swing.plaf.nimbus.State;
+import net.yungtechboy1.CyberCore.Custom.BlockEntity.SpawnerWithLevelBlockEntity;
+import net.yungtechboy1.CyberCore.entities.block.BlockEntitySpawner;
+import net.yungtechboy1.CyberCore.entities.monster.walking.Silverfish;
+import net.yungtechboy1.CyberCore.entities.monster.walking.ZombieVillager;
 
 /**
  * Created by carlt_000 on 1/14/2017.

@@ -5,7 +5,6 @@ import cn.nukkit.block.Block;
 import cn.nukkit.level.Level;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.scheduler.AsyncTask;
-
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
@@ -57,14 +56,14 @@ public class FactionRichAsyncSingle extends AsyncTask {
      public void onCompletion(Server server){
          FactionsMain main = (FactionsMain) server.getPluginManager().getPlugin("CyberFaction");
          if (main != null) {
-             Faction f = main.FFactory.getFaction(fac.GetName());
+             Faction f = main.FFactory.getFaction(fac.getName());
              if (f != null) {
                  f.SetRich(rich);
                  f.UpdateRichResults();
                  f.UpdateTopResults();
              }
          }
-         server.getLogger().info("COMPLETE"+fac.GetName());
+         server.getLogger().info("COMPLETE" + fac.getName());
      }
 
 }

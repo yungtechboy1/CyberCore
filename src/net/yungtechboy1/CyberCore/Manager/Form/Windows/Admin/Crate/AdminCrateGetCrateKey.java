@@ -2,7 +2,6 @@ package net.yungtechboy1.CyberCore.Manager.Form.Windows.Admin.Crate;
 
 import cn.nukkit.form.element.ElementButton;
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CrateKey;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Crate.KeyData;

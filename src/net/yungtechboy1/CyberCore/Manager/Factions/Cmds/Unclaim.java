@@ -2,7 +2,6 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.Player;
 import cn.nukkit.utils.TextFormat;
-
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
@@ -47,7 +46,7 @@ public class Unclaim extends Commands {
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Chunk Not Claimed!");
                 return;
             }
-            if(!Main.FFactory.PlotsList.get(x+"|"+z).equalsIgnoreCase(fac.GetName())){
+            if (!Main.FFactory.PlotsList.get(x + "|" + z).equalsIgnoreCase(fac.getName())) {
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Your Faction Dose not owne this Chunk!");
                 return;
             }
@@ -64,7 +63,7 @@ public class Unclaim extends Commands {
             return;
             //Sender.sendMessage(TextFormat.RED+"That Chunk at X:"+x+" Z:"+z+" is already Claimed by"+Main.FFactory.PlotsList.get(x+"|"+z)+"'s Faction!!");
         }
-        if(!Main.FFactory.PlotsList.get(x+"|"+z).equalsIgnoreCase(fac.GetName())){
+        if (!Main.FFactory.PlotsList.get(x + "|" + z).equalsIgnoreCase(fac.getName())) {
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Your Faction Dose not own this Chunk!");
             return;
         }

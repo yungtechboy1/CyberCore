@@ -2,12 +2,8 @@ package net.yungtechboy1.CyberCore.Custom.Block;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
-import cn.nukkit.block.BlockTransparentMeta;
 import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.blockentity.BlockEntityEnchantTable;
-import cn.nukkit.form.element.Element;
-import cn.nukkit.form.element.ElementStepSlider;
-import cn.nukkit.form.window.FormWindowCustom;
 import cn.nukkit.inventory.EnchantInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemTool;
@@ -15,16 +11,10 @@ import cn.nukkit.math.BlockFace;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.nbt.tag.Tag;
-import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Block.MainClasses.CustomBlockTransparentMeta;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
-import net.yungtechboy1.CyberCore.Manager.Form.Windows.Enchanting0Window;
-import net.yungtechboy1.CyberCore.Manager.Form.Windows.Enchanting1Window;
 
-import java.util.ArrayList;
 import java.util.Map;
-
-import static cn.nukkit.block.BlockID.ENCHANTING_TABLE;
 
 /**
  * Created by carlt on 3/25/2019.

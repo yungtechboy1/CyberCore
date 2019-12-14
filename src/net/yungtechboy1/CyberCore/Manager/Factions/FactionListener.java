@@ -1,15 +1,5 @@
 package net.yungtechboy1.CyberCore.Manager.Factions;
 
-import cn.nukkit.form.element.ElementButton;
-import cn.nukkit.form.response.FormResponseModal;
-import cn.nukkit.form.response.FormResponseSimple;
-import cn.nukkit.form.window.FormWindowSimple;
-import cn.nukkit.scheduler.NukkitRunnable;
-import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.FormType;
-import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
@@ -22,10 +12,8 @@ import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.event.player.*;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
-
-import java.util.ArrayList;
-
-import static net.yungtechboy1.CyberCore.FormType.MainForm.*;
+import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 /**
  * Created by carlt on 3/7/2019.
@@ -34,6 +22,7 @@ public class FactionListener implements Listener {
     private CyberCoreMain plugin;
 
     private FactionsMain factions;
+
     public FactionListener(CyberCoreMain main, FactionsMain factions) {
         plugin = main;
         this.factions = factions;
@@ -156,11 +145,11 @@ public class FactionListener implements Listener {
 //        }
 //    }
 
-        @EventHandler(priority = EventPriority.HIGHEST)
-        public void FationsJoinEvent(PlayerJoinEvent event) {
-            //_plugin.uuid[event.getPlayer().getName()][event.getPlayer().getClientId()] = date(DATE_COOKIE);
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void FationsJoinEvent(PlayerJoinEvent event) {
+        //_plugin.uuid[event.getPlayer().getName()][event.getPlayer().getClientId()] = date(DATE_COOKIE);
 //            String player = event.getPlayer().getName();
-            factions.LoadPlayer(event.getPlayer());
+        factions.LoadPlayer(event.getPlayer());
 
 
 /*
@@ -244,7 +233,7 @@ public class FactionListener implements Listener {
         }
         */
         // }
-   }
+    }
 
     @EventHandler
     public void BucketEmpty(PlayerBucketEmptyEvent ev) {

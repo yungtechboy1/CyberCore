@@ -21,7 +21,7 @@ public class FactionHomeWindow extends CyberFormSimple {
         for(String fan:f.getFAlly()){
             Faction fa = _plugin.FM.FFactory.getFaction(fan);
             if(fa == null)continue;
-            addButton(new ElementButton("Ally Faction Teleport > "+fa.GetDisplayName()));
+            addButton(new ElementButton("Ally Faction Teleport > " + fa.getDisplayName()));
             _fl.add(fa);
         }
     }

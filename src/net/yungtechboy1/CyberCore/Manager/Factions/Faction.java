@@ -10,9 +10,13 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.Mission.ActiveMission;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.FactionChatFactionWindow;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.*;
 
 /**
@@ -21,12 +25,14 @@ import java.util.*;
 ////@TODO Make this so I can Call a Faction Class....
 public class Faction {
     public String Leader;
-    public ArrayList<String> Recruits;
-    public ArrayList<String> Members;
-    public ArrayList<String> Officers;
-    public ArrayList<String> Generals;
+    public ArrayList<String> Recruits = new ArrayList<>();
+    public ArrayList<String> Members = new ArrayList<>();
+    public ArrayList<String> Officers = new ArrayList<>();
+    public ArrayList<String> Generals = new ArrayList<>();
     public ActiveMission AM = null;
     public ArrayList<AllyRequest> AR = new ArrayList<>();
+    protected boolean Clean = true;
+    protected int lastupload = 0;
     LinkedList<String> LastFactionChat = new LinkedList<>();
     LinkedList<String> LastAllyChat = new LinkedList<>();
     private FactionsMain Main;
@@ -40,7 +46,7 @@ public class Faction {
     private ArrayList<String> Allies = new ArrayList<>();
     private ArrayList<String> Enemies = new ArrayList<>();
     private String War = null;
-    private Map<String, Integer> Invites = new HashMap<>();
+    private Map<String, Invitation> Invites = new HashMap<>();
     private Integer MaxPlayers = 15;
     private Integer PowerBonus = 1;
     private Integer Privacy = 0;
@@ -53,8 +59,16 @@ public class Faction {
     //todo Save faction Settings
     private FactionSettings Settings = new FactionSettings();
     private ArrayList<Integer> CompletedMissionIDs = new ArrayList<>();
-    private Integer Money = 0;
+    //    private Integer Money = 0;
     private Vector3 Home = new Vector3(0, 0, 0);
+
+    public Faction(FactionsMain main, String name, String displayname, String leader) {
+        Main = main;
+        Name = name;
+        DisplayName = displayname;
+        Leader = leader;
+        onCreation();
+    }
 
     public Faction(FactionsMain main, String name, String displayname, String leader, ArrayList<String> members, ArrayList<String> generals, ArrayList<String> officers, ArrayList<String> recruits) {
         Main = main;
@@ -92,7 +106,13 @@ public class Faction {
         }
         Player p = Main.getServer().getPlayerExact(Leader);
         if (p != null) Main.FFactory.FacList.put(p.getName().toLowerCase(), Name);
+        onCreation();
     }
+
+    private void onCreation() {
+
+    }
+
 
     public FactionSettings getSettings() {
         return Settings;
@@ -249,7 +269,7 @@ public class Faction {
 
     //@todo LMAO THIS IS NOT EVEN CLOSE TO being correcty XD
     public String toString() {
-        return GetName();
+        return getName();
     }
 
     public void SetPlots(ArrayList<String> value) {
@@ -260,8 +280,24 @@ public class Faction {
         return Plots;
     }
 
-    public void AddPlots(String plot) {
+    public void AddPlots(int chunkx, int chunkz, CorePlayer player) {
+        String plot = chunkx + "|" + chunkz;
         Plots.add(plot);
+        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
+        try {
+            Statement s = c.createStatement();
+            //1 = Ally Request
+            //0 = Friend Requestw
+            //2 = ?????
+            //CyberCoreMain.getInstance().getIntTime
+            s.executeQuery(String.format("INSERT INTO `plots` VALUES ('%s','%s',2)", plot, getName()));
+            c.close();
+//        Main.FFactory.allyrequest.put(getName(), fac.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+            player.sendMessage("Error sending Ally Request! Please report Error 'E332R' to an admin");
+            return;
+        }
     }
 
     public void DelPlots(String plot) {
@@ -302,7 +338,7 @@ public class Faction {
         return Privacy;
     }
 
-    public String GetName() {
+    public String getName() {
         return Name;
     }
 
@@ -322,13 +358,12 @@ public class Faction {
         return MOTD;
     }
 
-    public void SetPerm(Integer value) {
-        if (value == null) value = 0;
-        Perms = value;
+    public void SetPerm(String value) {
+        Settings = new FactionSettings(value);
     }
 
-    public Integer GetPerm() {
-        return Perms;
+    public FactionSettings GetPerm() {
+        return getSettings();
     }
 
     public Integer GetPerm(Integer key) {
@@ -380,6 +415,7 @@ public class Faction {
     public int calculateRequireExperience() {
         return calculateRequireExperience(GetLevel());
     }
+
     public int calculateRequireExperience(int level) {
         if (level >= 30) {
             return 112 + (level - 30) * 9 * 100;
@@ -509,17 +545,17 @@ public class Faction {
     }
 
     public void RetrieveActiveMission(Integer id) {
-//        if(Main.AM.exists(GetName())){
+//        if(Main.AM.exists(getName())){
 //            for(Mission mission: Main.Missions){
 //                if(mission.id.equals(id)){
 //                    try {
 //                        /*YamlConfig yamlConfig = new YamlConfig();
 //                        yamlConfig.setClassTag("ActiveMission",ActiveMission.class);
 //                        yamlConfig.setClassTag("tag:yaml.org,2002:cn.nukkit.item.ItemBlock",ItemBlock.class);
-//                        YamlReader reader = new YamlReader(new FileReader(Main.getDataFolder().toString()+"/missions/"+GetName()+".yml"),yamlConfig);
+//                        YamlReader reader = new YamlReader(new FileReader(Main.getDataFolder().toString()+"/missions/"+getName()+".yml"),yamlConfig);
 //                        ActiveMission activeMission = reader.read(ActiveMission.class);
 //                        System.out.println(activeMission.name)*/;
-//                        ActiveMission activeMission = new ActiveMission(Main, this,(ConfigSection) Main.AM.get(GetName()));
+//                        ActiveMission activeMission = new ActiveMission(Main, this,(ConfigSection) Main.AM.get(getName()));
 //                        SetActiveMission(activeMission);
 //                        //SetActiveMission(new ActiveMission(Main,this,mission));
 //                        BroadcastMessage(FactionsMain.NAME+TextFormat.AQUA+mission.name+TextFormat.GREEN+" Faction mission accepted!");
@@ -563,12 +599,38 @@ public class Faction {
     }
 
     public void SetMoney(Integer value) {
-        Money = value;
-        UpdateTopResults();
+//        Money = value;
+        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
+        try {
+            Statement s = c.createStatement();
+            s.executeUpdate("UPDATE Settings SET Money = " + value + " WHERE Name LIKE '" + getName() + "' VALUES ");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        return;
+//        UpdateTopResults();
     }
 
+    /**
+     * @return null | Int
+     */
     public Integer GetMoney() {
-        return Money;
+        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
+        try {
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery("SELECT Money FROM Settings WHERE Name LIKE '" + getName() + "'");
+            ArrayList<AllyRequest> list = new ArrayList<>();
+            if (r.next()) {
+                Integer m = r.getInt("Money");
+                c.close();
+                return m;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return null;
     }
 
     public void AddMoney(Integer money) {
@@ -667,6 +729,25 @@ public class Faction {
 
     public void SetHome(Vector3 pos) {
         Home = pos;
+
+        saveHome();
+
+    }
+
+
+    public void saveHome() {
+        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
+        try {
+            Statement s = c.createStatement();
+            //CyberCoreMain.getInstance().getIntTime
+            s.executeUpdate(String.format("INSERT INTO `home` VALUES ('" + getName() + "','%s','%s','%s') ;", Home.getX(), Home.getY(), Home.getZ()));
+            c.close();
+//        Main.FFactory.allyrequest.put(getName(), fac.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+            BroadcastMessage("Error sending Ally Request! Please report Error 'E30DR' to an admin");
+            return;
+        }
     }
 
     public void StartWar(String key) {
@@ -702,14 +783,14 @@ public class Faction {
 //    public void AddCooldown(Integer secs){
 //        Map<String, Object> cd = Main.CD.getAll();
 //        int time = (int)(Calendar.getInstance().getTime().getTime()/1000);
-//        cd.put(GetName(),time+secs);
+//        cd.put(getName(),time+secs);
 //    }
 //    public boolean HasWarCooldown(){
 //        Map<String, Object> cd = Main.CD.getAll();
 //        int time = (int)(Calendar.getInstance().getTime().getTime()/1000);
-//        if (cd.containsKey(GetName())){
-//            if (time >= (int)cd.get(GetName())){
-//                cd.remove(GetName());
+//        if (cd.containsKey(getName())){
+//            if (time >= (int)cd.get(getName())){
+//                cd.remove(getName());
 //                return false;
 //            }
 //            return true;
@@ -717,8 +798,23 @@ public class Faction {
 //        return false;
 //    }
 
-    public void AddEnemy(String fac) {
-        Enemies.add(fac);
+    public void AddEnemy(Faction fac, CorePlayer player) {
+        Enemies.add(fac.getName());
+        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
+        try {
+            Statement s = c.createStatement();
+            //1 = Ally Request
+            //0 = Friend Request
+            //2 = ?????
+            //CyberCoreMain.getInstance().getIntTime
+            s.executeQuery(String.format("INSERT INTO `relationship` VALUES (null,'%s','%s','Enemy'," + CyberCoreMain.getInstance().getIntTime() + ")", getName(), fac.getName()));
+            c.close();
+//        Main.FFactory.allyrequest.put(getName(), fac.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+            player.sendMessage("Error sending Ally Request! Please report Error 'E332R' to an admin");
+            return;
+        }
     }
 
     public void RemoveEnemy(String fac) {
@@ -743,7 +839,7 @@ public class Faction {
 
     public void RemoveAlly(Faction fac) {
         if (fac == null) return;
-        RemoveAlly(fac.GetName());
+        RemoveAlly(fac.getName());
     }
 
     public void RemoveAlly(String fac) {
@@ -764,9 +860,11 @@ public class Faction {
     public Boolean isNeutral(String name) {
         return !isAllied(name) && !isEnemy(name);
     }
+
     public Boolean isNeutral(Faction fac) {
-        return isNeutral(fac.GetName());
+        return isNeutral(fac.getName());
     }
+
     public Boolean isAllied(CorePlayer player) {
         Faction f = player.getFaction();
         if (f != null) return isAllied(f);
@@ -774,46 +872,104 @@ public class Faction {
     }
 
     public Boolean isAllied(Faction fac) {
-        return isAllied(fac.GetName());
+        return isAllied(fac.getName());
     }
 
     public Boolean isAllied(String fac) {
         return Allies.contains(fac.toLowerCase());
     }
 
-    public void SetInvite(Map<String, Integer> Invs) {
-        Invites = Invs;
+//    public void SetInvite(Map<String, Integer> Invs) {
+//        Invites = Invs;
+//    }
+
+//    public Map<String, Integer> GetInvite() {
+//        return Invites;
+//    }
+
+    public void AddInvite(CorePlayer player, Integer value, CorePlayer sender, FactionRank fr) {
+
+        if (!addRequest(RequestType.Faction_Invite, null, player, value, sender)) {
+            player.sendMessage("Error sending Faction Invite Request! Please report Error 'E332FI' to an admin");
+            return;
+        }
+
+        Invites.put(player.getName().toLowerCase(), new Invitation(this, sender, value, fr));
     }
 
-    public Map<String, Integer> GetInvite() {
-        return Invites;
+    public void DelInvite(String name) {
+        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
+        try {
+            Statement stmt = c.createStatement();
+            stmt.executeUpdate("DELETE * from `Requests` where `faction` LIKE '" + getName() + "' AND `player` LIKE '" + name + "' AND `TYPE` =  " + RequestType.Faction_Invite.Key + ";");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        Invites.remove(name);
     }
 
-    public void AddInvite(String Key, Integer Value) {
-        Invites.put(Key, Value);
-    }
-
-    public void DelInvite(String Key) {
-        Invites.remove(Key);
-    }
-
-    public Boolean AcceptInvite(String name) {
-        if (Invites.get(name.toLowerCase()) > (int) (Calendar.getInstance().getTime().getTime() / 1000)) {
-            AddMember(name);
+    public Boolean AcceptInvite(CorePlayer p) {
+        String name = p.getName();
+        Invitation i = HasInvite(name);
+        if (i == null) {
+            //No Invite
+            p.sendMessage("Error! You are not invited to join '" + getDisplayName() + "'!");
+            return false;
+        }
+        if (!i.isValid()) {
+            //Invite Timed out
+            p.sendMessage("Error! You're invite has expired!");
             DelInvite(name);
-            BroadcastMessage(FactionsMain.NAME + TextFormat.GREEN + name + " Has joined your faction!");
-            return true;
+            return false;
         }
         DelInvite(name);
-        return false;
+        FactionRank r = i.getRank();
+        switch (r) {
+            case General:
+                AddGeneral(p);
+                break;
+            case Member:
+                AddMember(p);
+                break;
+            case Officer:
+                AddOfficer(p);
+                break;
+            default:
+            case Recruit:
+                AddRecruit(p);
+                break;
+        }
+        BroadcastMessage(FactionsMain.NAME + TextFormat.GREEN + name + " Has joined your faction!");
+        return true;
     }
 
     public void DenyInvite(String name) {
         DelInvite(name);
     }
 
-    public boolean HasInvite(String name) {
-        return Invites.containsKey(name.toLowerCase());
+    public Invitation HasInvite(CorePlayer name) {
+        return HasInvite(name.getName());
+    }
+
+    public Invitation HasInvite(String name) {
+
+        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
+        try {
+            Statement stmt = c.createStatement();
+            ResultSet r = stmt.executeQuery("select * from `Requests` where `faction` LIKE '" + getName() + "' AND `player` LIKE '" + name + "' AND `TYPE` =  " + RequestType.Faction_Invite.Key + ";");
+            if (r == null) return null;
+            if (r.next()) {
+                return new Invitation(getName(), name, r.getInt("expires"), FactionRank.getRankFromString(r.getString("data")));
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+//        return Invites.containsKey(name.toLowerCase());
     }
 
     public void SetMembers(ArrayList<String> members) {
@@ -866,7 +1022,7 @@ public class Faction {
 
     public void AddMember(String name) {
         Members.add(name);
-        Main.FFactory.FacList.put(name.toLowerCase(), GetName());
+        Main.FFactory.FacList.put(name.toLowerCase(), getName());
     }
 
     public void AddOfficer(Player p) {
@@ -879,7 +1035,7 @@ public class Faction {
 
     public void AddOfficer(String name) {
         Officers.add(name);
-        Main.FFactory.FacList.put(name.toLowerCase(), GetName());
+        Main.FFactory.FacList.put(name.toLowerCase(), getName());
     }
 
     public void AddGeneral(Player p) {
@@ -892,7 +1048,7 @@ public class Faction {
 
     public void AddGeneral(String name) {
         Generals.add(name);
-        Main.FFactory.FacList.put(name.toLowerCase(), GetName());
+        Main.FFactory.FacList.put(name.toLowerCase(), getName());
     }
 
     public void AddRecruit(Player p) {
@@ -905,7 +1061,7 @@ public class Faction {
 
     public void AddRecruit(String name) {
         Recruits.add(name);
-        Main.FFactory.FacList.put(name.toLowerCase(), GetName());
+        Main.FFactory.FacList.put(name.toLowerCase(), getName());
     }
 
     public void DelMember(String name) {
@@ -997,7 +1153,7 @@ public class Faction {
         DisplayName = val;
     }
 
-    public String GetDisplayName() {
+    public String getDisplayName() {
         return DisplayName;
     }
 
@@ -1178,7 +1334,7 @@ public class Faction {
                "§6"+GetDisplayName()+" §b: §aLEVEL §b: §3"+GetLevel()+"\n"+
                 "§eXP §b: §6"+GetXP()+" §a/ §b"+calculateRequireExperience(GetLevel());*/
         return TextFormat.GOLD + "" + TextFormat.BOLD + "====§eTERRA§6TIDE====" + TextFormat.RESET + "\n\n" +
-                "§e" + GetDisplayName() + " §b: §aLEVEL §b: §3" + GetLevel() + "\n" +
+                "§e" + getDisplayName() + " §b: §aLEVEL §b: §3" + GetLevel() + "\n" +
                 "§eXP §b: §a" + GetXP() + " §a/ §3" + calculateRequireExperience(GetLevel());
     }
 
@@ -1188,13 +1344,6 @@ public class Faction {
 //        }
     }
 
-    public ArrayList<String> getFAlly() {
-        return FAlly;
-    }
-
-    public void setFAlly(ArrayList<String> FAlly) {
-        this.FAlly = FAlly;
-    }
 
     public ArrayList<String> getFChat() {
         return FChat;
@@ -1205,43 +1354,142 @@ public class Faction {
     }
 
     public void UpdateTopResults() {
-        Main.FFactory.Top.put(GetName(), GetMoney());
+        Main.FFactory.Top.put(getName(), GetMoney());
     }
 
     public void UpdateRichResults() {
-        Main.FFactory.Rich.put(GetName(), GetRich());
+        Main.FFactory.Rich.put(getName(), GetRich());
     }
 
     public void AddAllyRequest(Faction fac) {
-        AddAllyRequest(fac, -1);
+        AddAllyRequest(fac, null, -1);
     }
 
-    public void AddAllyRequest(Faction fac, int timeout) {
+    public void AddAllyRequest(Faction fac, CorePlayer cp) {
+        AddAllyRequest(fac, cp, -1);
+    }
+
+    public ArrayList<AllyRequest> getAllyRequests() {
+        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
+        try {
+            Statement s = c.createStatement();
+
+            ResultSet r = s.executeQuery("SELECT * FROM Requestes WHERE type LIKE '" + RequestType.Ally.Key + "' AND target = '" + getName() + "'");
+
+            ArrayList<Integer> dellist = new ArrayList<>();
+            ArrayList<AllyRequest> list = new ArrayList<>();
+            while (r.next()) {
+                String fn = r.getString("faction");
+                Faction f = FactionsMain.getInstance().FFactory.getFaction(fn);
+                if (f == null) {
+                    dellist.add(r.getInt("id"));
+                }
+                AllyRequest ar = new AllyRequest(f, r.getInt("expires"));
+                list.add(ar);
+
+            }
+            c.close();
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public boolean addRequest(RequestType rt, Faction fac, CorePlayer player, int timeout, CorePlayer sender) {
+        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
+        String sn = null;
+        String pn = null;
+        if (sender != null) sn = sender.getName();
+        if (player != null) pn = player.getName();
+
+        try {
+            Statement s = c.createStatement();
+            //1 = Ally Request
+            //0 = Friend Request
+            //2 = ?????
+            //CyberCoreMain.getInstance().getIntTime
+            switch (rt) {
+                case Ally:
+                    //Null,0,getname(),fac.getname(),timeout,inviter
+                    s.executeQuery("INSERT INTO `Requests` VALUES (null," + rt.Key + ",'" + fac.getName() + "','" + getName() + "'," + timeout + ",'" + sn + "')");
+                case Faction_Invite:
+                    if (pn == null) return false;
+                    //Null,1,getname(),player.getname(),timeout,inviter
+                    s.executeQuery("INSERT INTO `Requests` VALUES (null," + rt.Key + ",'" + getName() + "','" + pn + "'," + timeout + ",'" + sn + "')");
+
+                default:
+            }
+            c.close();
+//        Main.FFactory.allyrequest.put(getName(), fac.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Adds ally request to this faction
+     *
+     * @param fac     Faction Requesting to be an Ally
+     * @param player  The Player who snet the Invite
+     * @param timeout DateTimem to String when request expires
+     */
+    public void AddAllyRequest(Faction fac, CorePlayer player, int timeout) {
+        if (!addRequest(RequestType.Ally, fac, null, timeout, player)) {
+            player.sendMessage("Error sending Ally Request! Please report Error 'E332RA' to an admin");
+            return;
+        }
+
+        //        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
+//        try {
+//            Statement s = c.createStatement();
+//            //1 = Ally Request
+//            //0 = Friend Request
+//            //2 = ?????
+//            //CyberCoreMain.getInstance().getIntTime
+//            s.executeQuery(String.format("INSERT INTO `Requests` VALUES (null,1,'%s',null,'%s'," + timeout + ")", fac.getName(), getName(), timeout));
+//            c.close();
+////        Main.FFactory.allyrequest.put(getName(), fac.getName());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            player.sendMessage("Error sending Ally Request! Please report Error 'E332R' to an admin");
+//            return;
+//        }
+
+
+        BroadcastMessage(TextFormat.AQUA + "[ArchFactions] " + fac.getDisplayName() + " wants to be Ally's with you!");
+//        BroadcastMessage(TextFormat.AQUA + "[ArchFactions] Respond to the request using `/f inbox`");
+        player.sendMessage(TextFormat.AQUA + "[ArchFactions] Ally request sent to " + getDisplayName());
+
         AR.add(new AllyRequest(fac, timeout));
         FactionRank r = Settings.getAllowedToAcceptAlly();
         switch (r) {
             case Recruit:
-                BroadcastMessage(fac.GetDisplayName() + "'s Faction would like to become your ally! View the offer in /f inbox", FactionRank.All);
+                BroadcastMessage(fac.getDisplayName() + "'s Faction would like to become your ally! View the offer in /f inbox", FactionRank.All);
                 break;
             case Member:
-                BroadcastMessage(fac.GetDisplayName() + "'s Faction would like to become your ally! View the offer in /f inbox", FactionRank.Member);
+                BroadcastMessage(fac.getDisplayName() + "'s Faction would like to become your ally! View the offer in /f inbox", FactionRank.Member);
                 break;
             case Officer:
-                BroadcastMessage(fac.GetDisplayName() + "'s Faction would like to become your ally! View the offer in /f inbox", FactionRank.Officer);
+                BroadcastMessage(fac.getDisplayName() + "'s Faction would like to become your ally! View the offer in /f inbox", FactionRank.Officer);
                 break;
             case General:
-                BroadcastMessage(fac.GetDisplayName() + "'s Faction would like to become your ally! View the offer in /f inbox", FactionRank.General);
+                BroadcastMessage(fac.getDisplayName() + "'s Faction would like to become your ally! View the offer in /f inbox", FactionRank.General);
                 break;
             case Leader:
-                BroadcastMessage(fac.GetDisplayName() + "'s Faction would like to become your ally! View the offer in /f inbox", FactionRank.Leader);
+                BroadcastMessage(fac.getDisplayName() + "'s Faction would like to become your ally! View the offer in /f inbox", FactionRank.Leader);
                 break;
         }
-//        Main.FFactory.allyrequest.put(GetName(), fac.GetName());
+
+
     }
 
     public void AddFactionChatMessage(String message, CorePlayer p) {
         FactionRank r = getPlayerRank(p);
-        message = TextFormat.GRAY + "[" + r.GetChatPrefix() + TextFormat.GRAY + "] - " + r.GetChatColor() + p.getDisplayName() + TextFormat.GRAY + " > " + TextFormat.WHITE + message;
+        message = TextFormat.GRAY + "[" + r.GetChatPrefix() + TextFormat.GRAY + "] - " + r.getChatColor() + p.getDisplayName() + TextFormat.GRAY + " > " + TextFormat.WHITE + message;
         BroadcastMessage("Faction> " + message);
         LastFactionChat.addFirst(message);
         if (LastFactionChat.size() > Settings.getMaxFactionChat()) {
@@ -1251,11 +1499,60 @@ public class Faction {
 
     public void AddAllyChatMessage(String message, CorePlayer p) {
         FactionRank r = getPlayerRank(p);
-        message = TextFormat.GRAY + "[" + r.GetChatPrefix() + TextFormat.GRAY + "] - " + r.GetChatColor() + p.getDisplayName() + TextFormat.GRAY + " > " + TextFormat.WHITE + message;
+        message = TextFormat.GRAY + "[" + r.GetChatPrefix() + TextFormat.GRAY + "] - " + r.getChatColor() + p.getDisplayName() + TextFormat.GRAY + " > " + TextFormat.WHITE + message;
         BroadcastMessage("Ally> " + message);
         LastAllyChat.addFirst(message);
         if (LastAllyChat.size() > Settings.getMaxAllyChat()) {
             LastAllyChat.removeLast();
+        }
+    }
+
+    @Deprecated
+    public void save() {
+        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
+        try {
+            getServer().getLogger().error("DELETEING Faction " + fn + "!");
+            Statement stmt = c.createStatement();
+            stmt.executeUpdate(String.format("DELETE FROM `allies` WHERE `factiona` LIKE '%s' OR `factionb` LIKE '%s';", fn, fn));
+            stmt.executeUpdate(String.format("DELETE FROM `plots` WHERE `faction` LIKE '%s';", fn));
+            stmt.executeUpdate(String.format("DELETE FROM `confirm` WHERE `faction` LIKE '%s';", fn));
+            stmt.executeUpdate(String.format("DELETE FROM `home` WHERE `faction` LIKE '%s';", fn));
+            stmt.executeUpdate(String.format("DELETE FROM `Master` WHERE `faction` LIKE '%s';", fn));
+            stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `faction` LIKE '%s';", fn));
+            stmt.close();
+        } catch (Exception ex) {
+            getServer().getLogger().info(ex.getClass().getName() + ":9 " + ex.getMessage() + " > " + ex.getStackTrace()[0].getLineNumber() + " ? " + ex.getCause());
+        }
+
+
+        //TODO
+//        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
+//        try {
+//            Statement s = c.createStatement();
+//            //1 = Ally Request
+//            //0 = Friend Request
+//            //2 = ?????
+//            //CyberCoreMain.getInstance().getIntTime
+//            s.executeQuery(String.format("INSERT INTO `Requests` VALUES (null,1,'%s',null,'%s'," + timeout + ")", fac.getName(), getName(), timeout));
+//            c.close();
+////        Main.FFactory.allyrequest.put(getName(), fac.getName());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            player.sendMessage("Error sending Ally Request! Please report Error 'E332R' to an admin");
+//            return;
+//        }
+
+
+    }
+
+    public enum RequestType {
+        Ally(0),
+        Faction_Invite(1);
+
+        private int Key = -1;
+
+        RequestType(int key) {
+            Key = key;
         }
     }
 

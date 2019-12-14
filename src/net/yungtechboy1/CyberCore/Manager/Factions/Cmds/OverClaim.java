@@ -2,7 +2,6 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.Player;
 import cn.nukkit.utils.TextFormat;
-
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
@@ -71,18 +70,18 @@ public class OverClaim extends Commands {
             return;
         }
         Faction fac2 = Main.FFactory.getFaction(Main.FFactory.PlotsList.get(x + "|" + z));
-        if (fac.GetName().equalsIgnoreCase("peace")){
+        if (fac.getName().equalsIgnoreCase("peace")) {
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Error! You can not overclaim peace!");
             return;
         }
         if (fac2.GetPower() < fac2.GetPlots().toArray().length) {
             Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Plot Overclaim Successful! $5000 and 3 PowerAbstract to over ClaimChunk at X:" + x + " Z:" + z + "!");
             fac.TakeMoney(money);
-            fac.AddPlots(x + "|" + z);
+            fac.AddPlots(x, z, Sender);
             fac2.DelPlots(x + "|" + z);
             fac.TakePower(power);
             Main.FFactory.PlotsList.remove(x + "|" + z);
-            Main.FFactory.PlotsList.put(x + "|" + z, fac.GetName());
+            Main.FFactory.PlotsList.put(x + "|" + z, fac.getName());
         }else{
 
         }

@@ -33,23 +33,23 @@ public class FactionCommandWindow extends CyberFormSimple {
 
         //Inbox
         FactionRank fr_m = fs.getAllowedToViewInbox();
-        if (fr_m.HasPerm(fr)) addButton(new ElementButton("Faction Inbox"));
+        if (fr_m.hasPerm(fr)) addButton(new ElementButton("Faction Inbox"));
 
         //Invite
         FactionRank fr_i = fs.getAllowedToInvite();
-        if (fr_i.HasPerm(fr)) addButton(new ElementButton("Invite Player"));
+        if (fr_i.hasPerm(fr)) addButton(new ElementButton("Invite Player"));
 
         //Claim Land
         FactionRank fr_cl = fs.getAllowedToClaim();
-        if (fr_cl.HasPerm(fr)) addButton(new ElementButton("Claim Land"));
+        if (fr_cl.hasPerm(fr)) addButton(new ElementButton("Claim Land"));
 
         //Demote
-        FactionRank fr_d = fs.getAllowedToDemote();
-        if (fr_d.HasPerm(fr)) addButton(new ElementButton("Demote Player"));
+        FactionRank fr_d = fs.getAllowedToPromote();
+        if (fr_d.hasPerm(fr)) addButton(new ElementButton("Demote Player"));
 
         //Promote
         FactionRank fr_p = fs.getAllowedToPromote();
-        if (fr_p.HasPerm(fr)) addButton(new ElementButton("Promote Player"));
+        if (fr_p.hasPerm(fr)) addButton(new ElementButton("Promote Player"));
 
 //        //Promote
 //        FactionRank fr_p = fs.get();

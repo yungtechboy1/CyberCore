@@ -2,7 +2,6 @@ package net.yungtechboy1.CyberCore.Manager.Crate;
 
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Position;
-import cn.nukkit.level.particle.FloatingTextParticle;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.FT.CyberFloatingTextContainer;

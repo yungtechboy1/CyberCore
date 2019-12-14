@@ -5,12 +5,14 @@ import cn.nukkit.inventory.AnvilInventory;
 import cn.nukkit.inventory.BeaconInventory;
 import cn.nukkit.inventory.EnchantInventory;
 import cn.nukkit.inventory.Inventory;
-import cn.nukkit.inventory.transaction.action.*;
+import cn.nukkit.inventory.transaction.action.CreativeInventoryAction;
+import cn.nukkit.inventory.transaction.action.DropItemAction;
+import cn.nukkit.inventory.transaction.action.InventoryAction;
+import cn.nukkit.inventory.transaction.action.SlotChangeAction;
 import cn.nukkit.item.Item;
 import cn.nukkit.network.protocol.InventoryTransactionPacket;
 import cn.nukkit.network.protocol.types.ContainerIds;
 import cn.nukkit.network.protocol.types.NetworkInventoryAction;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 public class CustomNetworkInventoryAction {
     public static final int SOURCE_CONTAINER = 0;

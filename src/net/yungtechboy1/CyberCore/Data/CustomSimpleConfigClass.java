@@ -1,11 +1,7 @@
 package net.yungtechboy1.CyberCore.Data;
 
 import cn.nukkit.Server;
-import cn.nukkit.scheduler.PluginTask;
-import cn.nukkit.scheduler.Task;
 import cn.nukkit.utils.ConfigSection;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Manager.Form.CyberForm;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -15,7 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static net.yungtechboy1.CyberCore.Data.CustomSimpleConfig.*;
+import static net.yungtechboy1.CyberCore.Data.CustomSimpleConfig.getPath;
+import static net.yungtechboy1.CyberCore.Data.CustomSimpleConfig.skipSave;
 
 public abstract class CustomSimpleConfigClass {
     public CustomSimpleConfigClass() {

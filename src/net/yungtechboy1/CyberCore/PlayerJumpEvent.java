@@ -5,8 +5,6 @@ import cn.nukkit.event.Cancellable;
 import cn.nukkit.event.HandlerList;
 import cn.nukkit.event.player.PlayerEvent;
 
-import java.awt.*;
-
 public class PlayerJumpEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 

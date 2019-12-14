@@ -6,17 +6,11 @@ import cn.nukkit.inventory.ShapedRecipe;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemIngotIron;
 import io.netty.util.collection.CharObjectHashMap;
-import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockPurpleGlazedTerraCotta;
-import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomWoolBlockTerra;
-import net.yungtechboy1.CyberCore.Custom.Item.CustomBlockWool;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemPurpleGlazedTerraCotta;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemString;
-import net.yungtechboy1.CyberCore.Custom.Item.CustomItemTNT;
 
 import java.util.ArrayList;
-
-import static net.yungtechboy1.CyberCore.Custom.Crafting.Recipies.GunpowderRecipe.GP1;
 
 public class PurpleGlazedTerraRecipe extends CustomRecipe {
     //Array Fill

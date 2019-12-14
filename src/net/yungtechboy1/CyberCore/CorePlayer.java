@@ -1165,7 +1165,7 @@ public class CorePlayer extends Player {
 
                                 switch (type) {
                                     case InventoryTransactionPacket.USE_ITEM_ON_ENTITY_ACTION_INTERACT:
-                                        PlayerInteractEntityEvent playerInteractEntityEvent = new PlayerInteractEntityEvent(this, target, item);
+                                        PlayerInteractEntityEvent playerInteractEntityEvent = new PlayerInteractEntityEvent(this, target, item, useItemOnEntityData.clickPos);
                                         if (this.isSpectator()) playerInteractEntityEvent.setCancelled();
                                         getServer().getPluginManager().callEvent(playerInteractEntityEvent);
 
@@ -1545,7 +1545,7 @@ public class CorePlayer extends Player {
             sd.addLine("    " + TextFormat.GOLD + "X: " + TextFormat.GREEN + getFloorX() + TextFormat.GOLD + " Y: " + TextFormat.GREEN + getFloorY() + TextFormat.GOLD + " Z: " + TextFormat.GREEN + getFloorZ(), k++);
         }
         if (!InternalPlayerSettings.isHudFactionOff() && getFaction() != null) {
-            sd.addLine(TextFormat.GRAY + "Faction : " + TextFormat.AQUA + getFaction().GetDisplayName(), k++);
+            sd.addLine(TextFormat.GRAY + "Faction : " + TextFormat.AQUA + getFaction().getDisplayName(), k++);
             sd.addLine("    " + TextFormat.AQUA + "XP" + TextFormat.GRAY + " | " + TextFormat.GREEN + getFaction().GetXP() + TextFormat.AQUA + " / " + TextFormat.GOLD + getFaction().calculateRequireExperience() + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + getFaction().GetLevel(), k++);
         }
         if (!InternalPlayerSettings.isHudClassOff()) {
@@ -1648,15 +1648,16 @@ public class CorePlayer extends Player {
                             if (f == null) {
                                 Faction = null;
                             } else {
-                                Faction = f.GetName();
+                                Faction = f.getName();
                             }
                         }
                         //Check to See if Faction Invite Expired
                         if (FactionInvite != null && FactionInviteTimeout > 0) {
-                            int t = CyberCoreMain.getInstance().GetIntTime();
+                            int t = CyberCoreMain.getInstance().getIntTime();
                             if (t < FactionInviteTimeout) {
                                 Faction fac = CyberCoreMain.getInstance().FM.FFactory.getFaction(FactionInvite);
                                 fac.BroadcastMessage(TextFormat.YELLOW + getName() + " has declined your faction invite");
+                                sendMessage(TextFormat.YELLOW + "You took too long to accept the faction invite, and has been auto declined!");
                                 ClearFactionInvite(true);
                             }
                         }
@@ -2241,7 +2242,7 @@ public class CorePlayer extends Player {
     public String getFactionName() {
         Faction f = getFaction();
         if (f == null) return "No Faction";
-        return f.GetDisplayName();
+        return f.getDisplayName();
     }
 
     public Faction getFaction() {

@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.utils.TextFormat;
-
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
@@ -40,7 +39,7 @@ public class Kick extends Commands {
     public void RunCommand() {
         FactionRank perm = fac.getSettings().getAllowedToKick();
         FactionRank fr = fac.getPlayerRank(Sender);
-        if(fr ==  null || !fr.HasPerm(perm)){
+        if (fr == null || !fr.hasPerm(perm)) {
             Sender.sendMessage("ERror you dont have perms to kick players!");
             return;
         }
@@ -58,8 +57,8 @@ public class Kick extends Commands {
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "Player Not In Faction!");
                 return;
             }
-            String fn = fac.GetName();
-            if (!ofaction.GetName().equalsIgnoreCase(fn)) {
+            String fn = fac.getName();
+            if (!ofaction.getName().equalsIgnoreCase(fn)) {
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "Player is not in this faction!");
                 return;
             }

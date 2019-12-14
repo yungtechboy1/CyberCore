@@ -4,7 +4,6 @@ import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.RemoveEntityPacket;
-import cn.nukkit.scheduler.PluginTask;
 import cn.nukkit.scheduler.Task;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Manager.Crate.CrateMain;

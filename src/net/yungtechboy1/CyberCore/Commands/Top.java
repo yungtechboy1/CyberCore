@@ -1,18 +1,18 @@
 package net.yungtechboy1.CyberCore.Commands;
 
-import cn.nukkit.command.data.CommandParamType;
-import net.yungtechboy1.CyberCore.Commands.Constructors.CheckPermCommand;
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Commands.Constructors.CheckPermCommand;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.CyberUtils;
 import net.yungtechboy1.CyberCore.Messages;
 import net.yungtechboy1.CyberCore.Rank.RankList;
-import net.yungtechboy1.CyberCore.Utils;
 
 import java.util.Calendar;
 
@@ -49,7 +49,7 @@ public class Top extends CheckPermCommand {
                     Integer ct = (int) (Calendar.getInstance().getTime().getTime() / 1000);
                     //Check time
                     if (ct < time) {
-                        String diff = Utils.getDifferenceBtwTime((long) time);
+                        String diff = CyberUtils.getDifferenceBtwTime((long) time);
                         commandSender.sendMessage(CyberCoreMain.NAME + TextFormat.RED + "Error! You must wait " + diff);
                         return true;
                     }

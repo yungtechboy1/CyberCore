@@ -1,25 +1,17 @@
 package net.yungtechboy1.CyberCore.Commands;
 
-import cn.nukkit.command.data.CommandParamType;
-import cn.nukkit.item.ItemSwordDiamond;
-import cn.nukkit.item.enchantment.Enchantment;
-import net.yungtechboy1.CyberCore.Commands.Constructors.CheckPermCommand;
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.item.Item;
-import cn.nukkit.item.ItemArmor;
-import cn.nukkit.item.ItemTool;
-import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.utils.TextFormat;
+import cn.nukkit.item.enchantment.Enchantment;
+import net.yungtechboy1.CyberCore.Commands.Constructors.CheckPermCommand;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Messages;
 import net.yungtechboy1.CyberCore.Rank.RankList;
-import net.yungtechboy1.CyberCore.Utils;
-
-import java.util.Calendar;
 
 /**
  * Created by carlt_000 on 3/21/2016.
@@ -143,7 +135,7 @@ public class Fix extends CheckPermCommand {
 //                    Integer ct = (int) (Calendar.getInstance().getTime().getTime() / 1000);
 //                    //Check time
 //                    if (ct < time) {
-//                        String diff = Utils.getDifferenceBtwTime((long) time);
+//                        String diff = CyberUtils.getDifferenceBtwTime((long) time);
 //                        commandSender.sendMessage(CyberCoreMain.NAME + TextFormat.RED + "Error! You must wait " + diff);
 //                        return true;
 //                    }

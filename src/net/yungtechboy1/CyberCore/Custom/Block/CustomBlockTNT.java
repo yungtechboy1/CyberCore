@@ -17,11 +17,9 @@ import cn.nukkit.nbt.tag.DoubleTag;
 import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.utils.BlockColor;
-import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
  * Created by carlt on 5/16/2019.

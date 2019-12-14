@@ -53,7 +53,7 @@ public class HolyKnightHealPower extends PowerAbstract {
                     if (fn != null) {
                         Faction f = CyberCoreMain.getInstance().FM.FFactory.getFaction(fn);
                         if (f != null) {
-                            if (f.GetName().equalsIgnoreCase(ff.GetName()) || f.isAllied(ff)) cpl.add(cp);
+                            if (f.getName().equalsIgnoreCase(ff.getName()) || f.isAllied(ff)) cpl.add(cp);
                         }
                     }
                 }

@@ -2,11 +2,9 @@ package net.yungtechboy1.CyberCore.Commands;
 
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
-import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Manager.Form.Windows.FactionAdminPage1;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.SettingsPage0;
 
 public class Settings  extends Command {

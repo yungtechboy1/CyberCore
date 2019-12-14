@@ -1,8 +1,5 @@
 package net.yungtechboy1.CyberCore.entities.monster.walking;
 
-import net.yungtechboy1.CyberCore.entities.Async.CreeperAsync;
-import net.yungtechboy1.CyberCore.entities.monster.WalkingMonster;
-import net.yungtechboy1.CyberCore.entities.utils.Utils;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityExplosive;
 import cn.nukkit.entity.data.ByteEntityData;
@@ -13,6 +10,9 @@ import cn.nukkit.level.Explosion;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
+import net.yungtechboy1.CyberCore.entities.Async.CreeperAsync;
+import net.yungtechboy1.CyberCore.entities.monster.WalkingMonster;
+import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;

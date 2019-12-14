@@ -1,10 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
-import cn.nukkit.form.element.*;
-import cn.nukkit.form.window.FormWindowCustom;
-
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.FactionCreate0;
@@ -39,14 +35,15 @@ public class Create extends Commands {
 
     @Override
     public void RunCommand() {
-        FormWindowCustom FWM = new FormWindowCustom("CyberFactions | Create Faction (1/2)");
-//        Element e = null;
-        FWM.addElement(new ElementInput("Desired Faction Name"));
-        FWM.addElement(new ElementInput("MOTD", "A CyberTech Faction"));
-        FWM.addElement(new ElementLabel("Enabeling Faction Privacy will require a player to have an invite to join your faction."));
-        FWM.addElement(new ElementToggle("Faction Privacy", false));
+//        FormWindowCustom FWM = new FormWindowCustom("CyberFactions | Create Faction (1/2)");
+////        Element e = null;
+//        FWM.addElement(new ElementInput("Desired Faction Name"));
+//        FWM.addElement(new ElementInput("MOTD", "A CyberTech Faction"));
+//        FWM.addElement(new ElementLabel("Enabeling Faction Privacy will require a player to have an invite to join your faction."));
+//        FWM.addElement(new ElementToggle("Faction Privacy", false));
 
-        CorePlayer cp = (CorePlayer) CyberCoreMain.getInstance().getServer().getPlayerExact(Sender.getName());
+//        CorePlayer cp = (CorePlayer) CyberCoreMain.getInstance().getServer().getPlayerExact(Sender.getName());
+        CorePlayer cp = Sender;
         cp.showFormWindow(new FactionCreate0());
 //        cp.setNewWindow();
 

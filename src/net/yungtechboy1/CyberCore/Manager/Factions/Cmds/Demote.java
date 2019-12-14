@@ -2,7 +2,6 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.Player;
 import cn.nukkit.utils.TextFormat;
-
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionRank;
@@ -50,8 +49,8 @@ public class Demote extends Commands {
         }
 
         FactionRank r = fac.getPlayerRank((Player)Sender);
-        FactionRank fr = fac.getSettings().getAllowedToDemote();
-        if(r.HasPerm(fr)){
+        FactionRank fr = fac.getSettings().getAllowedToPromote();
+        if (r.hasPerm(fr)) {
             fac.DemotePlayer(pp);
         }
 

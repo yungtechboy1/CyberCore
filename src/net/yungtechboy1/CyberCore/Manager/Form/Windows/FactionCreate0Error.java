@@ -6,24 +6,26 @@ import cn.nukkit.form.element.ElementToggle;
 import cn.nukkit.form.response.FormResponseCustom;
 import cn.nukkit.form.window.FormWindowModal;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.CyberTexts;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionString;
+import net.yungtechboy1.CyberCore.Manager.Factions.FactionErrorString;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormCustom;
 
 import static net.yungtechboy1.CyberCore.FormType.MainForm.Faction_Create_0_Error;
-import static net.yungtechboy1.CyberCore.Manager.Factions.FactionString.Error_SA221;
-import static net.yungtechboy1.CyberCore.Manager.Factions.FactionString.Error_SA223;
+import static net.yungtechboy1.CyberCore.Manager.Factions.FactionErrorString.Error_SA221;
+import static net.yungtechboy1.CyberCore.Manager.Factions.FactionErrorString.Error_SA223;
 
 public class FactionCreate0Error extends CyberFormCustom {
-    public FactionCreate0Error(FactionString fs) {
+    public FactionCreate0Error(FactionErrorString fs) {
         super(Faction_Create_0_Error, "CyberFactions | Create Faction (1/2)");
         if (fs == null) fs = Error_SA221;
         addElement(new ElementInput("Desired Faction Name"));
         addElement(new ElementLabel(fs.getMsg()));
-        addElement(new ElementInput("MOTD", "A CyberTech Faction"));
-        addElement(new ElementLabel("Enabeling Faction Privacy will require a player to have an invite to join your faction."));
-        addElement(new ElementToggle("Faction Privacy", false));
+        addElement(new ElementInput("Faction Description", CyberTexts.Default_Faction_Description));
+        addElement(new ElementInput("Message of the Day | (MOTD)", CyberTexts.Default_Faction_MOTD));
+        addElement(new ElementLabel(CyberTexts.Lable_FactionPrivacy));
+        addElement(new ElementToggle("Faction Privacy Protection", false));
     }
 
 
@@ -36,16 +38,17 @@ public class FactionCreate0Error extends CyberFormCustom {
 
         if (fn == null || fn.length() == 0) return false;
         System.out.println("PRINGING THE NAME " + fn);
-        int r = _plugin.FM.FFactory.CheckFactionName(fn);
-        if (r != 0) {
-            FactionString fs = FactionsMain.getInstance().TextList.getOrDefault(r, null);
+        FactionErrorString r = _plugin.FM.FFactory.CheckFactionName(fn);
+        if (r != null) {
+            FactionErrorString fs = FactionsMain.getInstance().FactionString.getOrDefault(r, null);
             cp.showFormWindow(new FactionCreate0Error(fs));
             return false;
         }
-        String motd = frc.getInputResponse(2);
-        boolean privacy = frc.getToggleResponse(4);
+        String desc = frc.getInputResponse(2);
+        String motd = frc.getInputResponse(3);
+        boolean privacy = frc.getToggleResponse(5);
 
-        Faction f = _plugin.FM.FFactory.CreateFaction(fn, cp, motd, privacy);
+        Faction f = _plugin.FM.FFactory.CreateFaction(fn, cp, desc, motd, privacy);
         if (f == null) {
             cp.sendMessage(Error_SA223.getMsg());
         }

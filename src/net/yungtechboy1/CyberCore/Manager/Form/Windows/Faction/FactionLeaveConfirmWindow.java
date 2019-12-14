@@ -10,7 +10,7 @@ import net.yungtechboy1.CyberCore.Manager.Form.CyberFormModal;
 
 public class FactionLeaveConfirmWindow extends CyberFormModal {
     public FactionLeaveConfirmWindow(Faction f) {
-        super(FormType.MainForm.Faction_Leave_Confirm, "Faction Leave Confirmation", TextFormat.RED+"Are you sure you want to leave "+f.GetDisplayName()+"?", "Leave", "Stay / Cancel");
+        super(FormType.MainForm.Faction_Leave_Confirm, "Faction Leave Confirmation", TextFormat.RED + "Are you sure you want to leave " + f.getDisplayName() + "?", "Leave", "Stay / Cancel");
     }
 
     @Override

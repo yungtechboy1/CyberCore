@@ -1,6 +1,5 @@
 package net.yungtechboy1.CyberCore;
 
-import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.element.ElementInput;
 import cn.nukkit.form.element.ElementLabel;
 import cn.nukkit.form.response.FormResponseCustom;
@@ -8,9 +7,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.utils.Binary;
 import net.yungtechboy1.CyberCore.Manager.Crate.CrateObject;
 import net.yungtechboy1.CyberCore.Manager.Crate.ItemChanceData;
-import net.yungtechboy1.CyberCore.Manager.Crate.KeyData;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormCustom;
-import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
 
 public class AdminCrateEditCrateItemDataWindow   extends CyberFormCustom {
     CrateObject _CO;

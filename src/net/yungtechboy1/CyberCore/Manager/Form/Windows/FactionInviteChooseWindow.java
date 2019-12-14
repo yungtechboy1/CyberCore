@@ -3,19 +3,16 @@ package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 import cn.nukkit.Player;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
-import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-import static net.yungtechboy1.CyberCore.Manager.Factions.FactionString.Error_PlayerInFaction;
-import static net.yungtechboy1.CyberCore.Manager.Factions.FactionString.Error_SA224;
+import static net.yungtechboy1.CyberCore.Manager.Factions.FactionErrorString.Error_CMD_Invite_PlayerInFaction;
+import static net.yungtechboy1.CyberCore.Manager.Factions.FactionErrorString.Error_SA224;
 
 public class FactionInviteChooseWindow extends CyberFormSimple {
     public FactionInviteChooseWindow(ArrayList<Player> af) {
@@ -23,9 +20,9 @@ public class FactionInviteChooseWindow extends CyberFormSimple {
     }
 
     public FactionInviteChooseWindow(List<ElementButton> buttons, ArrayList<Player> af) {
-        super(FormType.MainForm.Faction_Invite_Choose, "CyberFactions | Invite Player", "", buttons);
+        super(FormType.MainForm.Faction_Invite_Choose, "CyberFactions | Invite Player", "Select a name below to invite", buttons);
         int k = 0;
-        addButton(new ElementButton("Grinch!"));
+//        addButton(new ElementButton("Grinch!"));
         for (Player p : af) {
             k++;
             if (k > 20) break;
@@ -47,20 +44,25 @@ public class FactionInviteChooseWindow extends CyberFormSimple {
             if (null != CyberCoreMain.getInstance().FM.FFactory.getPlayerFaction(cpp)) {
                 //TODO Allow Setting to ignore Faction messages
                 //Sounds like a lot of work lol >:(
-                cp.sendMessage(Error_PlayerInFaction.getMsg());
+                cp.sendMessage(Error_CMD_Invite_PlayerInFaction.getMsg());
                 return false;
             }
-            Integer time = (int) (Calendar.getInstance().getTime().getTime() / 1000) + 60 * 5;
+//            Integer time = (int) (Calendar.getInstance().getTime().getTime() / 1000) + 60 * 5;
             if (_Fac == null) {
                 cp.sendMessage(Error_SA224.getMsg());
                 return false;
             }
-            _Fac.AddInvite(cpp.getName().toLowerCase(), time);
-            CyberCoreMain.getInstance().FM.FFactory.InvList.put(cpp.getName().toLowerCase(), _Fac.GetName());
 
-            cp.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Successfully invited " + cpp.getName() + "!");
-            cpp.sendMessage(FactionsMain.NAME + TextFormat.YELLOW + "You have been invited to faction.\n" + TextFormat.GREEN + "Type '/f accept' or '/f deny' into chat to accept or deny!");
+            cp.showFormWindow(new FactionInviteChooseRank(cp, cpp));
+
+//            FactionsMain.getInstance().PlayerInvitedToFaction(cpp, cp,_Fac);
+
+//            _Fac.AddInvite(cpp.getName().toLowerCase(), time);
+//            CyberCoreMain.getInstance().FM.FFactory.InvList.put(cpp.getName().toLowerCase(), _Fac.getName());
+
+//            cp.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Successfully invited " + cpp.getName() + "!");
+//            cpp.sendMessage(FactionsMain.NAME + TextFormat.YELLOW + "You have been invited to faction.\n" + TextFormat.GREEN + "Type '/f accept' or '/f deny' into chat to accept or deny!");
+            return true;
         }
-        return false;
     }
 }

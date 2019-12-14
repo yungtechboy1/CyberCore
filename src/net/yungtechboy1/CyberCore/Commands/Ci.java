@@ -1,11 +1,11 @@
 package net.yungtechboy1.CyberCore.Commands;
 
-import cn.nukkit.command.data.CommandParamType;
-import net.yungtechboy1.CyberCore.Commands.Constructors.TargetCommand;
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Commands.Constructors.TargetCommand;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Messages;
 import net.yungtechboy1.CyberCore.Rank.RankList;

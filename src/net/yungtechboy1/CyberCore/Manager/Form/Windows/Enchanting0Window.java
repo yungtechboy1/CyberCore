@@ -7,7 +7,8 @@ import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormModal;
 
-import static net.yungtechboy1.CyberCore.FormType.MainForm.*;
+import static net.yungtechboy1.CyberCore.FormType.MainForm.Enchanting_1;
+import static net.yungtechboy1.CyberCore.FormType.MainForm.NULL;
 
 public class Enchanting0Window extends CyberFormModal {
     public Enchanting0Window(String name) {

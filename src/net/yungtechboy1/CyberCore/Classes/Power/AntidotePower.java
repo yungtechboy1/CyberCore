@@ -8,8 +8,6 @@ import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.StagePowerAbstr
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Events.CustomEntityDamageByEntityEvent;
 
-import java.util.ArrayList;
-
 public class AntidotePower extends StagePowerAbstract {
     public AntidotePower(BaseClass baseClass) {
         super(baseClass);

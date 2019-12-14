@@ -14,15 +14,16 @@ import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.Custom.Inventory.TestInv;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Crate.Tasks.CrateTickThread;
-import net.yungtechboy1.CyberCore.Manager.Crate.Tasks.RollTick;
 import net.yungtechboy1.CyberCore.Manager.Factions.CustomFloatingTextParticle;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.Admin.Crate.AdminCrateChooseCrateWindow;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class CrateMain {
     public static final String CK = "CrateKey";

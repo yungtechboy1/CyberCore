@@ -13,7 +13,6 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.utils.TextFormat;
 
-import javax.rmi.CORBA.Tie;
 import java.util.ArrayList;
 import java.util.Date;
 

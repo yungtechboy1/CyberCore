@@ -1,12 +1,11 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.utils.TextFormat;
-
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * Created by carlt_000 on 7/9/2016.
@@ -90,7 +89,7 @@ public class Perk extends Commands {
 //            Integer money = (Integer)reward.get("money");
 //            if(cmds.size() != 0){
 //                for(String cmd: cmds){
-//                    cmd = cmd.replace("{faction}",fac.GetName());
+//                    cmd = cmd.replace("{faction}",fac.getName());
 //                    if(cmd.contains("{player}")){
 //                        for(Player player: fac.GetOnlinePlayers()){
 //                            Main.getServer().dispatchCommand(new ConsoleCommandSender(), cmd.replace("{player}",player.getName()));

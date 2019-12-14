@@ -3,7 +3,6 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 import cn.nukkit.Player;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.TextFormat;
-
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
@@ -49,7 +48,7 @@ public class Home extends Commands {
                 return;
             }
             ((CorePlayer) Sender).StartTeleport(home,(Player)Sender,10);
-            Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"Teleporting to "+ofaction.GetName()+"'s home in 10 secs!");
+            Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Teleporting to " + ofaction.getName() + "'s home in 10 secs!");
         }else{
             if(fac == null){
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Your Not In a Faction!");

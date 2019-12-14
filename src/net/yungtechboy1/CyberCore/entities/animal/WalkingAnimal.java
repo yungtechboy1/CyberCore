@@ -9,7 +9,6 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.potion.Effect;
 import co.aikar.timings.Timings;
 import net.yungtechboy1.CyberCore.entities.Async.WalkingAnimalAsync;
-import net.yungtechboy1.CyberCore.entities.EntityStackable;
 import net.yungtechboy1.CyberCore.entities.WalkingEntity;
 
 public abstract class WalkingAnimal extends WalkingEntity  implements Animal {

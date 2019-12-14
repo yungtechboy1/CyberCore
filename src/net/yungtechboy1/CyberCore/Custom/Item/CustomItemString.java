@@ -3,7 +3,6 @@ package net.yungtechboy1.CyberCore.Custom.Item;
 import cn.nukkit.block.BlockTripWire;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.TextFormat;
-import javafx.scene.effect.SepiaTone;
 
 public class CustomItemString extends Item {
 

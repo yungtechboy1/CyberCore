@@ -3,7 +3,6 @@ package net.yungtechboy1.CyberCore.Custom.Block;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
-import cn.nukkit.item.ItemBlock;
 import cn.nukkit.math.BlockFace;
 
 public class CustomElementBlock extends Block {

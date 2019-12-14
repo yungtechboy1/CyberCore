@@ -8,7 +8,6 @@ import cn.nukkit.level.particle.HugeExplodeSeedParticle;
 import cn.nukkit.level.particle.Particle;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.ExplodePacket;
-import cn.nukkit.scheduler.PluginTask;
 import cn.nukkit.scheduler.Task;
 import net.yungtechboy1.CyberCore.Manager.Crate.CrateMain;
 

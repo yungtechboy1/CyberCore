@@ -3,7 +3,6 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.utils.TextFormat;
-
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
@@ -13,7 +12,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
 import java.util.ArrayList;
 
-import static net.yungtechboy1.CyberCore.Manager.Factions.FactionString.Error_UnableToFindFaction;
+import static net.yungtechboy1.CyberCore.Manager.Factions.FactionErrorString.Error_UnableToFindFaction;
 
 /**
  * Created by carlt_000 on 12/10/2016.
@@ -57,7 +56,7 @@ public class Enemy extends Commands {
                 for (Faction p : l) {
                     k++;
                     if (k > 20) break;
-                    FWM.addButton(new ElementButton(p.GetName()));
+                    FWM.addButton(new ElementButton(p.getName()));
                 }
 
                 CorePlayer cp = (CorePlayer) CyberCoreMain.getInstance().getServer().getPlayerExact(Sender.getName());
@@ -71,8 +70,8 @@ public class Enemy extends Commands {
             return;
         }
 
-        fac.AddEnemy(target.GetName());
-        target.BroadcastMessage(TextFormat.AQUA+"[ArchFactions] "+fac.GetDisplayName()+" Has added you as an enemy!");
-        Sender.sendMessage(TextFormat .AQUA+"[ArchFactions] "+target.GetDisplayName()+" is now an enemy");
+        fac.AddEnemy(target, Sender);
+        target.BroadcastMessage(TextFormat.AQUA + "[ArchFactions] " + fac.getDisplayName() + " Has added you as an enemy!");
+        Sender.sendMessage(TextFormat.AQUA + "[ArchFactions] " + target.getDisplayName() + " is now an enemy");
     }
 }

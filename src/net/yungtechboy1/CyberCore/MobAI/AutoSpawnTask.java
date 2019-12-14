@@ -1,14 +1,5 @@
 package net.yungtechboy1.CyberCore.MobAI;
 
-import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.entities.animal.flying.Bat;
-import net.yungtechboy1.CyberCore.entities.monster.flying.Blaze;
-import net.yungtechboy1.CyberCore.entities.monster.flying.Ghast;
-import net.yungtechboy1.CyberCore.entities.spawners.*;
-import net.yungtechboy1.CyberCore.entities.monster.walking.*;
-import net.yungtechboy1.CyberCore.entities.spawners.*;
-import net.yungtechboy1.CyberCore.entities.utils.Utils;
-import net.yungtechboy1.CyberCore.entities.monster.walking.*;
 import cn.nukkit.IPlayer;
 import cn.nukkit.OfflinePlayer;
 import cn.nukkit.Player;
@@ -17,11 +8,20 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.entities.animal.flying.Bat;
 import net.yungtechboy1.CyberCore.entities.animal.walking.*;
 import net.yungtechboy1.CyberCore.entities.autospawn.IEntitySpawner;
-import net.yungtechboy1.CyberCore.entities.animal.walking.*;
+import net.yungtechboy1.CyberCore.entities.monster.flying.Blaze;
+import net.yungtechboy1.CyberCore.entities.monster.flying.Ghast;
+import net.yungtechboy1.CyberCore.entities.monster.walking.*;
+import net.yungtechboy1.CyberCore.entities.spawners.*;
+import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class AutoSpawnTask implements Runnable {

@@ -2,7 +2,6 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.Player;
 import cn.nukkit.utils.TextFormat;
-
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
@@ -43,7 +42,7 @@ public class Sethome extends Commands {
         String co = Main.GetChunkOwner((int) x >> 4, (int) z >> 4);
 
 
-        if (co != null && co.equalsIgnoreCase(fac.GetName())) {
+        if (co != null && co.equalsIgnoreCase(fac.getName())) {
             fac.SetHome((Player) Sender);
             fac.TakePower(1);
             Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN + "Home updated!");

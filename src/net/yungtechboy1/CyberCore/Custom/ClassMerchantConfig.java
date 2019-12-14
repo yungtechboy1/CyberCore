@@ -4,7 +4,6 @@ import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.plugin.Plugin;
 import net.yungtechboy1.CyberCore.Classes.New.ClassType;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
-import net.yungtechboy1.CyberCore.Commands.ClassMerchant;
 import net.yungtechboy1.CyberCore.Data.CustomSimpleConfig;
 
 import java.util.ArrayList;

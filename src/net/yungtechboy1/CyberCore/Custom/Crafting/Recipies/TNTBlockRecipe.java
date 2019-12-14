@@ -3,16 +3,12 @@ package net.yungtechboy1.CyberCore.Custom.Crafting.Recipies;
 import cn.nukkit.block.BlockID;
 import cn.nukkit.inventory.Recipe;
 import cn.nukkit.inventory.ShapedRecipe;
-import cn.nukkit.inventory.ShapelessRecipe;
 import cn.nukkit.item.Item;
 import io.netty.util.collection.CharObjectHashMap;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockTNT;
-import net.yungtechboy1.CyberCore.Custom.Item.CustomItemGunpowder;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemTNT;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import static net.yungtechboy1.CyberCore.Custom.Crafting.Recipies.GunpowderRecipe.*;
 

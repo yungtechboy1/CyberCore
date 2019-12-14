@@ -1,23 +1,15 @@
 package net.yungtechboy1.CyberCore.Custom.Item;
 
-import cn.nukkit.Server;
 import cn.nukkit.block.Block;
-import cn.nukkit.item.*;
 import cn.nukkit.item.ItemChickenCooked;
 import cn.nukkit.item.ItemEnderPearl;
 import cn.nukkit.item.ItemMagmaCream;
 import cn.nukkit.item.ItemMuttonCooked;
 import cn.nukkit.item.ItemMuttonRaw;
 import cn.nukkit.item.ItemPorkchopCooked;
-import cn.nukkit.utils.Config;
-import cn.nukkit.utils.MainLogger;
+import cn.nukkit.item.*;
 import cn.nukkit.utils.Utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 

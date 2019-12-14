@@ -2,7 +2,6 @@ package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
-import net.yungtechboy1.CyberCore.Classes.New.Minner.TNTSpecialist;
 import net.yungtechboy1.CyberCore.Classes.New.Offense.*;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;

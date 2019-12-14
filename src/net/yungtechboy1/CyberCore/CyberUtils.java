@@ -9,9 +9,23 @@ import java.util.Date;
 /**
  * Created by carlt_000 on 1/21/2017.
  */
-public class Utils {
+public class CyberUtils {
 
     public static final String NAME = TextFormat.DARK_AQUA+"Cyber"+TextFormat.GOLD+"Tech"+TextFormat.GREEN+"++";
+
+    public static String toStringCode(Object... a) {
+        String f = "";
+        for (Object o : a) {
+            f += o.toString() + "|";
+        }
+        f.substring(0, f.length() - 1);
+        return f;
+    }
+
+    public static String[] fromStringCode(String s) {
+        String[] ss = s.split("\\|");
+        return ss;
+    }
 
     public static void SendCommandUsage(Command c, CommandSender s) {
         s.sendMessage(TextFormat.YELLOW+"Usage: "+c.getUsage());

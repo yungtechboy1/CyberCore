@@ -1,23 +1,17 @@
 package net.yungtechboy1.CyberCore.entities.block;
 
-import cn.nukkit.Server;
 import cn.nukkit.blockentity.BlockEntitySpawnable;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.item.Item;
-import cn.nukkit.level.Position;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
-import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.nbt.tag.ShortTag;
 import net.yungtechboy1.CyberCore.Factory.CustomFactory;
-import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
 import net.yungtechboy1.CyberCore.Tasks.SpawnerCalculationsAsync;
-import net.yungtechboy1.CyberCore.entities.BaseEntity;
 import net.yungtechboy1.CyberCore.entities.EntityStackable;
 import net.yungtechboy1.CyberCore.entities.animal.walking.Pig;
 import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
-import javax.swing.text.html.StyleSheet;
 import java.util.ArrayList;
 
 public class BlockEntitySpawner extends BlockEntitySpawnable {

@@ -1,6 +1,5 @@
 package net.yungtechboy1.CyberCore.entities.monster.walking;
 
-import net.yungtechboy1.CyberCore.entities.monster.TameableMonster;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.entity.data.IntEntityData;
@@ -10,6 +9,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.DyeColor;
+import net.yungtechboy1.CyberCore.entities.monster.TameableMonster;
 
 public class Wolf extends TameableMonster {
 

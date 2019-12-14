@@ -1,8 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.Form.Windows.Shop;
 
 import cn.nukkit.form.element.ElementButton;
-import cn.nukkit.form.element.ElementLabel;
-import cn.nukkit.form.element.ElementSlider;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;

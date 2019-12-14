@@ -1,14 +1,11 @@
 package net.yungtechboy1.CyberCore.Manager.Form.Windows.HowToPlay;
 
 import cn.nukkit.form.element.ElementButton;
-import cn.nukkit.form.response.FormResponseModal;
 import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
-import net.yungtechboy1.CyberCore.Manager.Form.CyberFormModal;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
-import net.yungtechboy1.CyberCore.Manager.Form.Windows.Class1Window;
 
 public class HTP_6_Window extends CyberFormSimple {
     public HTP_6_Window(){

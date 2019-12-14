@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.BossBar;
 
 import cn.nukkit.Player;
-
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 
 public class BossBarNotification extends BossBarGeneric{

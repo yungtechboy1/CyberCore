@@ -2,7 +2,6 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.Player;
 import cn.nukkit.utils.TextFormat;
-
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionRank;
@@ -28,9 +27,9 @@ public class Claim extends Commands {
     @Override
     public void RunCommand(){
         Integer Radius = GetIntegerAtArgs(1,1);
-        FactionRank r = fac.getPlayerRank((CorePlayer) Sender);
+        FactionRank r = fac.getPlayerRank(Sender);
         if(r != null){
-            if(!r.HasPerm(fac.getSettings().getAllowedToClaim())){
+            if (!r.hasPerm(fac.getSettings().getAllowedToClaim())) {
                 Sender.sendMessage("Error! You don't have permission to Claim Plots!");
                 return;
             }
@@ -76,9 +75,9 @@ public class Claim extends Commands {
             }
             Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"Purchase Successful! $5000 and 1 PowerAbstract Withdrawn To Purchase This Chunk!");
             fac.TakeMoney(money);
-            fac.AddPlots(x+"|"+z);
+            fac.AddPlots(x, z, Sender);
             fac.TakePower(power);
-            Main.FFactory.PlotsList.put(x+"|"+z,fac.GetName());
+            Main.FFactory.PlotsList.put(x + "|" + z, fac.getName());
         }
 
     }
@@ -100,8 +99,8 @@ public class Claim extends Commands {
         }
         Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"Purchase Successful! $5000 and 1 PowerAbstract Withdrawn To Purchase Chunk at X:"+x+" Z:"+z+"!");
         fac.TakeMoney(money);
-        fac.AddPlots(x+"|"+z);
+        fac.AddPlots(x, z, Sender);
         fac.TakePower(power);
-        Main.FFactory.PlotsList.put(x+"|"+z,fac.GetName());
+        Main.FFactory.PlotsList.put(x + "|" + z, fac.getName());
     }
 }

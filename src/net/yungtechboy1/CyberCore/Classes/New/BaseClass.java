@@ -656,7 +656,7 @@ public abstract class BaseClass {
     }
 
     public void AddCooldown(String perk, int value) {
-        COOLDOWNS.add(new CoolDown(perk, CCM.GetIntTime() + value));
+        COOLDOWNS.add(new CoolDown(perk, CCM.getIntTime() + value));
     }
 
     public void RemoveCooldown(String perk) {

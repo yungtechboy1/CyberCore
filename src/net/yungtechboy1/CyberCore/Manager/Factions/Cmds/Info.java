@@ -3,7 +3,6 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.utils.TextFormat;
-
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
@@ -49,7 +48,7 @@ public class Info extends Commands {
             }
 
             StringBuilder sb = new StringBuilder();
-            sb.append(formatString("Faction name",ffaction.GetDisplayName())).append("\n");
+            sb.append(formatString("Faction name", ffaction.getDisplayName())).append("\n");
             sb.append(formatString("Leader",ffaction.GetLeader())).append("\n");
             sb.append(formatString("# of Players",ffaction.GetPlayerCount()+"")).append("\n");
             sb.append(formatString("Max # of Players",ffaction.GetMaxPlayers())).append("\n");
@@ -61,7 +60,7 @@ public class Info extends Commands {
             sb.append(formatString("XP",ffaction.GetXP())).append("\n");
             sb.append(formatString("Level",ffaction.GetLevel())).append("\n");
 
-            FormWindowSimple FWM = new FormWindowSimple("CyberFactions | "+ffaction.GetDisplayName()+TextFormat.RESET+" Faction info",sb.toString());
+            FormWindowSimple FWM = new FormWindowSimple("CyberFactions | " + ffaction.getDisplayName() + TextFormat.RESET + " Faction info", sb.toString());
 
 
             FWM.addButton(new ElementButton("View All Players"));
@@ -82,7 +81,7 @@ public class Info extends Commands {
                 return;
             }
             StringBuilder sb = new StringBuilder();
-            sb.append(formatString("Faction name",fac.GetDisplayName())).append("\n");
+            sb.append(formatString("Faction name", fac.getDisplayName())).append("\n");
             sb.append(formatString("Leader",fac.GetLeader())).append("\n");
             sb.append(formatString("# of Players",fac.GetPlayerCount()+"")).append("\n");
             sb.append(formatString("Max # of Players",fac.GetMaxPlayers())).append("\n");
@@ -94,7 +93,7 @@ public class Info extends Commands {
             sb.append(formatString("XP",fac.GetXP())).append("\n");
             sb.append(formatString("Level",fac.GetLevel())).append("\n");
 
-            FormWindowSimple FWM = new FormWindowSimple("CyberFactions | "+fac.GetDisplayName()+TextFormat.RESET+" Faction info",sb.toString());
+            FormWindowSimple FWM = new FormWindowSimple("CyberFactions | " + fac.getDisplayName() + TextFormat.RESET + " Faction info", sb.toString());
 
             FWM.addButton(new ElementButton("View All Players"));
 //            FWM.addButton(new ElementButton("View All Plots Claimed"));

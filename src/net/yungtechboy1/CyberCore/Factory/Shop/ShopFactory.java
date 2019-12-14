@@ -23,7 +23,6 @@ import java.nio.ByteOrder;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class ShopFactory implements Listener {
     private final ShopSQL SQL;

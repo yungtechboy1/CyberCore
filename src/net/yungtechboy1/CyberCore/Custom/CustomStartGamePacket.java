@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Custom;
 
 import cn.nukkit.level.GameRules;
-import cn.nukkit.level.GlobalBlockPalette;
 import cn.nukkit.network.protocol.DataPacket;
 import cn.nukkit.network.protocol.ProtocolInfo;
 

@@ -2,12 +2,9 @@ package net.yungtechboy1.CyberCore.Factory.Shop.Spawner;
 
 import cn.nukkit.block.Block;
 import cn.nukkit.item.Item;
-import cn.nukkit.item.ItemBlock;
-import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemBlockSpawnerWithLevelBlock;
-import sun.plugin.dom.core.Text;
 
 public class SpawnerShopData {
     public SpawnerWithLevelBlock.SpawnerType SpawnerType;
