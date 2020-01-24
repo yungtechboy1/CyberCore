@@ -1,9 +1,65 @@
 Ranks:
-  default:
-    rank: 0
-    display_name: "&7[D]&r"
-    chat_prefix: "&7"
-  vip:
-    rank: 1
-    display_name: "&4[V]&r"
+#  default:
+#    rank: 0
+#    display_name: "&7[D]&r"
+#    chat_prefix: "&7"
+#  vip:
+#    rank: 1
+#    display_name: "&4[V]&r"
+#    chat_prefix: "&2"
+  Admin:
+      rank: 3
+      display_name: "&7[ADMIN]&r"
+      chat_prefix: "&2"
+  Member:
+      rank: 5
+      display_name: "&7[Member]&r"
+      chat_prefix: "&2"
+  Jr Server Admin:
+      rank: 6
+      display_name: "&7[Jr Server Admin]&r"
+      chat_prefix: "&2"
+  Server Admin:
+      rank: 7
+      display_name: "&7[Server Admin]&r"
+      chat_prefix: "&2"
+  Jr Server Mod:
+      rank: 8
+      display_name: "&7[Jr Server Mod]&r"
+      chat_prefix: "&2"
+  Server Moderator:
+      rank: 9
+      display_name: "&7[Server Moderator]&r"
+      chat_prefix: "&2"
+  Helper:
+    rank: 10
+    display_name: "&7[Helper]&r"
+    chat_prefix: "&2"
+  Builder:
+    rank: 11
+    display_name: "&7[Builder]&r"
+    chat_prefix: "&2"
+  Citizen:
+    rank: 12
+    display_name: "&7[Citizen]&r"
+    chat_prefix: "&2"
+  Citizen+:
+    rank: 13
+    display_name: "&7[Citizen+]&r"
+    chat_prefix: "&2"
+  Representative:
+    rank: 14
+    display_name: "&7[Representative]&r"
+    chat_prefix: "&2"
+  Senator:
+    rank: 15
+    display_name: "&7[Senator]&r"
+    chat_prefix: "&2"
+  General:
+    rank: 16
+    display_name: "&7[General]&r"
+    chat_prefix: "&2"
+  President:
+    rank: 17
+    display_name: "&7[President]&r"
     chat_prefix: "&2"

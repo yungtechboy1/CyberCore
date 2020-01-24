@@ -8,8 +8,8 @@ import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Chat;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Leave;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
+import net.yungtechboy1.CyberCore.Manager.Factions.FactionPermSettings;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionRank;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionSettings;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
 
 public class FactionCommandWindow extends CyberFormSimple {
@@ -22,7 +22,7 @@ public class FactionCommandWindow extends CyberFormSimple {
         Faction f = cp.getFaction();
         addButton(new ElementButton("Leave Faction"));
         FactionRank fr = cp.getFaction().getPlayerRank(cp);
-        FactionSettings fs = f.getSettings();
+        FactionPermSettings fs = f.getPermSettings();
         addButton(new ElementButton("Faction/Ally Chat Menu"));
         addButton(new ElementButton("Faction Home"));
         addButton(new ElementButton("Faction Info"));

@@ -13,7 +13,7 @@ import java.util.HashMap;
 public abstract class MySQL {
 
     public Connection connection;
-    public CyberCoreMain plugin;
+    public CyberCoreMain Plugin;
     public boolean enabled = true;
 
 
@@ -25,7 +25,7 @@ public abstract class MySQL {
 
     public MySQL(CyberCoreMain plugin) {
 
-        this.plugin = plugin;
+        Plugin = plugin;
     }
 
     /**
@@ -34,11 +34,11 @@ public abstract class MySQL {
      * @return Connection
      */
     public abstract Connection connectToDb();// {
-//        String host = plugin.MainConfig.getString("mysql-host");
-//        String pass = plugin.MainConfig.getString("mysql-pass");
-//        int port = plugin.MainConfig.getInt("mysql-port");
-//        String user = plugin.MainConfig.getString("mysql-user");
-//        String db = plugin.MainConfig.getString("mysql-db");
+//        String host = Plugin.MainConfig.getString("mysql-host");
+//        String pass = Plugin.MainConfig.getString("mysql-pass");
+//        int port = Plugin.MainConfig.getInt("mysql-port");
+//        String user = Plugin.MainConfig.getString("mysql-user");
+//        String db = Plugin.MainConfig.getString("mysql-db");
 //        if (!enabled) return null;
 //        Connection connection = DbLib.getMySqlConnection(SBBB(host, port,
 //                db, user, pass);

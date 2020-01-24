@@ -11,8 +11,10 @@ import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
 import java.util.ArrayList;
 
 public class FactionInviteChooseRank extends CyberFormSimple {
+    CorePlayer _t;
     public FactionInviteChooseRank(CorePlayer inviter, CorePlayer target) {
         super(FormType.MainForm.Faction_Invite_Choose_Rank, "CyberFactions | Invite Player | Choose Rank", "", new ArrayList<>());
+        _t = target;
         setContent("Now please choose what rank you would like to invite " + target.getName() + " to your faction as:");
         addButton(new ElementButton("Recruit"));
         if (inviter.getFaction().getPlayerRank(inviter).hasPerm(FactionRank.Member))
@@ -49,7 +51,7 @@ public class FactionInviteChooseRank extends CyberFormSimple {
         }
 
 
-        FactionsMain.getInstance().PlayerInvitedToFaction(cp, cp, _Fac, fr);
+        FactionsMain.getInstance().PlayerInvitedToFaction(_t, cp, _Fac, fr);
 
 //            _Fac.AddInvite(cpp.getName().toLowerCase(), time);
 //            CyberCoreMain.getInstance().FM.FFactory.InvList.put(cpp.getName().toLowerCase(), _Fac.getName());

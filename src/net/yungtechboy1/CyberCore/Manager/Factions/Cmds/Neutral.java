@@ -38,7 +38,7 @@ public class Neutral extends Commands {
         }
 
         if (fac.isEnemy(target.getName())) {
-            fac.RemoveEnemy(target.getName());
+            fac.RemoveEnemy(target,Sender);
             target.BroadcastMessage(TextFormat.AQUA + "[ArchFactions] " + fac.getDisplayName() + " Has removed you as an enemy!");
             Sender.sendMessage(TextFormat.AQUA + "[ArchFactions] " + target.getDisplayName() + " is not an enemy");
         } else if (fac.isAllied(target.getName())) {

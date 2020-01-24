@@ -50,15 +50,15 @@ public class Info extends Commands {
             StringBuilder sb = new StringBuilder();
             sb.append(formatString("Faction name", ffaction.getDisplayName())).append("\n");
             sb.append(formatString("Leader",ffaction.GetLeader())).append("\n");
-            sb.append(formatString("# of Players",ffaction.GetPlayerCount()+"")).append("\n");
+            sb.append(formatString("# of Players",ffaction.getPlayerCount()+"")).append("\n");
             sb.append(formatString("Max # of Players",ffaction.GetMaxPlayers())).append("\n");
-            sb.append(formatString("MOTD",ffaction.GetMOTD())).append("\n");
-            sb.append(formatString("Desc",ffaction.GetDesc())).append("\n");
+            sb.append(formatString("MOTD",ffaction.getSettings().getMOTD())).append("\n");
+            sb.append(formatString("Desc",ffaction.getSettings().getDescription())).append("\n");
             sb.append(formatString("PowerAbstract",ffaction.GetPower())).append("\n");
             sb.append(formatString("Land Owned",ffaction.GetPlots().size())).append("\n");
             sb.append(formatString("Money",ffaction.GetMoney())).append("\n");
-            sb.append(formatString("XP",ffaction.GetXP())).append("\n");
-            sb.append(formatString("Level",ffaction.GetLevel())).append("\n");
+            sb.append(formatString("XP",ffaction.getSettings().getXP())).append("\n");
+            sb.append(formatString("Level",ffaction.getSettings().getLevel())).append("\n");
 
             FormWindowSimple FWM = new FormWindowSimple("CyberFactions | " + ffaction.getDisplayName() + TextFormat.RESET + " Faction info", sb.toString());
 
@@ -83,15 +83,15 @@ public class Info extends Commands {
             StringBuilder sb = new StringBuilder();
             sb.append(formatString("Faction name", fac.getDisplayName())).append("\n");
             sb.append(formatString("Leader",fac.GetLeader())).append("\n");
-            sb.append(formatString("# of Players",fac.GetPlayerCount()+"")).append("\n");
+            sb.append(formatString("# of Players",fac.getPlayerCount()+"")).append("\n");
             sb.append(formatString("Max # of Players",fac.GetMaxPlayers())).append("\n");
-            sb.append(formatString("MOTD",fac.GetMOTD())).append("\n");
-            sb.append(formatString("Desc",fac.GetDesc())).append("\n");
+            sb.append(formatString("MOTD",fac.getSettings().getMOTD())).append("\n");
+            sb.append(formatString("Desc",fac.getSettings().getDescription())).append("\n");
             sb.append(formatString("PowerAbstract",fac.GetPower())).append("\n");
             sb.append(formatString("Land Owned",fac.GetPlots().size())).append("\n");
             sb.append(formatString("Money",fac.GetMoney())).append("\n");
-            sb.append(formatString("XP",fac.GetXP())).append("\n");
-            sb.append(formatString("Level",fac.GetLevel())).append("\n");
+            sb.append(formatString("XP",fac.getSettings().getXP())).append("\n");
+            sb.append(formatString("Level",fac.getSettings().getLevel())).append("\n");
 
             FormWindowSimple FWM = new FormWindowSimple("CyberFactions | " + fac.getDisplayName() + TextFormat.RESET + " Faction info", sb.toString());
 

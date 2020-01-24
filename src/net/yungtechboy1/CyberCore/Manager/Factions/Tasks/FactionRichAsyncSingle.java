@@ -58,7 +58,8 @@ public class FactionRichAsyncSingle extends AsyncTask {
          if (main != null) {
              Faction f = main.FFactory.getFaction(fac.getName());
              if (f != null) {
-                 f.SetRich(rich);
+                 //TODO
+//                 f.SetRich(rich);
                  f.UpdateRichResults();
                  f.UpdateTopResults();
              }

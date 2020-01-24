@@ -57,7 +57,7 @@ public class PlayerSettingsData {
     public ArrayList<PlayerTempBanEvent> PlayerTempBans = new ArrayList<>();
     public ArrayList<PlayerKickEvent> PlayerKicks = new ArrayList<>();
     public ArrayList<PlayerBanEvent> PlayerBans = new ArrayList<>();
-    public int Rank = 0;
+//    public int Rank = 0;
     Type uuidType = new TypeToken<ArrayList<UUID>>() {
     }.getType();
     Type pweType = new TypeToken<ArrayList<PlayerWarningEvent>>() {
@@ -91,11 +91,11 @@ public class PlayerSettingsData {
 //        PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), uuidType);
         if (!((String) a.get("PlayerBans")).equalsIgnoreCase("[]"))PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), pbbType);
 //        PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), uuidType);
-        try {
-            Rank = Integer.parseInt((String) a.get("Rank"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Rank = Integer.parseInt((String) a.get("Rank"));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public String UUIDSToJSON() {

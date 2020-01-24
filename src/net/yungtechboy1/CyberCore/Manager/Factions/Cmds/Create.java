@@ -68,7 +68,7 @@ public class Create extends Commands {
 //            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Faction name is too long. Please try again!");
 //            return;
 //        }
-//        if(Main.isInFaction(Sender.getName())) {
+//        if(Main.isPlayerInFaction(Sender.getName())) {
 //            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"You must leave your faction first");
 //            return;
 //        } else {

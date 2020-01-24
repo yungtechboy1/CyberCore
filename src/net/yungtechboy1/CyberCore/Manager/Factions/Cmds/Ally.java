@@ -34,7 +34,7 @@ public class Ally extends Commands {
         }
 
         FactionRank r = fac.getPlayerRank(Sender);
-        if (!fac.getSettings().getAllowedToAcceptAlly().hasPerm(r)) {
+        if (!fac.getPermSettings().getAllowedToAcceptAlly().hasPerm(r)) {
             Sender.sendMessage("Error, you do not have permission to send ally requests or accept them!");
             return;
         }

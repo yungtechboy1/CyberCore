@@ -1,10 +1,12 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
+import cn.nukkit.Player;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.FactionSettings;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
+import net.yungtechboy1.CyberCore.PlayerFactionSettings;
 
 /**
  * Created by carlt_000 on 7/9/2016.
@@ -33,11 +35,11 @@ public class AllyChat extends Commands {
         if (Args.length == 2) {
             String name = Sender.getName().toLowerCase();
             if (Args[1].equalsIgnoreCase("on")) {
-                p.fsettings.setChatSelection(FactionSettings.ChatSetting.Ally);
+                p.fsettings.setChatSelection(PlayerFactionSettings.ChatSetting.Ally);
                 Sender.sendMessage(TextFormat.GREEN + "Ally Chat Activated!");
                 return;
             } else if (Args[1].equalsIgnoreCase("off")) {
-                p.fsettings.setChatSelection(FactionSettings.ChatSetting.All);
+                p.fsettings.setChatSelection(PlayerFactionSettings.ChatSetting.Global);
                 Sender.sendMessage(TextFormat.RED + "Ally Chat Removed!");
                 return;
             }
@@ -48,7 +50,7 @@ public class AllyChat extends Commands {
             chat += c + " ";
         }
         String n = Sender.getName();
-        if (fac.Leader.equalsIgnoreCase(Sender.getName())) {
+        if (fac.GetLeader().equalsIgnoreCase(Sender.getName())) {
             fac.MessageAllys(TextFormat.YELLOW + "~***[" + n + "]***~: " + chat);
         } else if (fac.IsGeneral(Sender.getName())) {
             fac.MessageAllys(TextFormat.YELLOW + "~**[" + n + "]**~: " + chat);

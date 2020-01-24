@@ -62,7 +62,7 @@ public class Join extends Commands {
                 Sender.sendMessage(FactionsMain.NAME + TextFormat.RED + "Error! You can not join a private Faction!");
                 return;
             }
-            f.AddRecruit(Sender.getName().toLowerCase());
+            f.addPlayer(Sender, f.getPermSettings().getDefaultJoinRank(), "Self-Joined");
             Main.FFactory.FacList.put(Sender.getName().toLowerCase(), fn);
             CorePlayer cp = (CorePlayer) Sender;
             cp.Faction = fn;

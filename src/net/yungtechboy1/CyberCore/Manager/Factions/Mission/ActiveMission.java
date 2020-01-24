@@ -323,9 +323,9 @@ public class ActiveMission extends Mission {
                 }
             }
         }
-        if (MoneyReward != 0) faction.AddMoney(MoneyReward);
-        if (XPReward != 0) faction.AddXP(XPReward);
-        if (PointReward != 0) faction.AddXP(PointReward);
+        if (MoneyReward != 0) faction.getSettings().addMoney(MoneyReward);
+        if (XPReward != 0) faction.getSettings().addXP(XPReward);
+        if (PointReward != 0) faction.getSettings().addPoints(PointReward);
     }
 
     public ConfigSection ToHashMap() {

@@ -35,7 +35,7 @@ public class Map extends Commands {
             text = text +TextFormat.BLUE+ "|";
             for (int o = -15; o <= 15; o++) {//X
                 //Main.getLogger().info("DOING X:"+(x+o)+" AND Z:"+(z+i));
-                String stat = Main.FFactory.GetPlotStatus(x+o,z+i);
+                String stat = Main.FFactory.getPlotOwner(x+o,z+i);
                 if(i == 0 && o == 0){
                     if (stat != null && fac != null && stat.toLowerCase().equalsIgnoreCase(fac.getName().toLowerCase())) {
                         text = text + TextFormat.GREEN + "&";

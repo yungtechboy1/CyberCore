@@ -8,35 +8,45 @@ public class Invitation {
 
     private String fac = null;
     private String PlayerName;
+    private String InvitedBy;
     private FactionRank Rank = FactionRank.Recruit;
     private int Timeout;
 
-    public Invitation(Faction f, String playerName, int timeout, FactionRank r) {
-        fac = f.getName();
-        PlayerName = playerName;
-        Timeout = timeout;
-        Rank = r;
-    }
+//    public Invitation(Faction f, String playerName, int timeout, FactionRank r) {
+//        fac = f.getName();
+//        PlayerName = playerName;
+//        Timeout = timeout;
+//        Rank = r;
+//    }
+//
+//    public Invitation(Faction f, CorePlayer sender, Integer value, FactionRank r) {
+//        fac = f.getName();
+//        PlayerName = sender.getName();
+//        Timeout = value;
+//        Rank = r;
+//    }
+//
+//    public Invitation(String f, CorePlayer sender, Integer value, FactionRank r) {
+//        fac = f;
+//        PlayerName = sender.getName();
+//        Timeout = value;
+//        Rank = r;
+//    }
 
-    public Invitation(Faction f, CorePlayer sender, Integer value, FactionRank r) {
-        fac = f.getName();
-        PlayerName = sender.getName();
+    public Invitation(String faction, String player,String invitedby, Integer value, FactionRank r) {
+        fac = faction;
+        InvitedBy = invitedby;
+        PlayerName = player;
         Timeout = value;
         Rank = r;
     }
 
-    public Invitation(String f, CorePlayer sender, Integer value, FactionRank r) {
-        fac = f;
-        PlayerName = sender.getName();
-        Timeout = value;
-        Rank = r;
+    public String getInvitedBy() {
+        return InvitedBy;
     }
 
-    public Invitation(String f, String sender, Integer value, FactionRank r) {
-        fac = f;
-        PlayerName = sender;
-        Timeout = value;
-        Rank = r;
+    public void setInvitedBy(String invitedBy) {
+        InvitedBy = invitedBy;
     }
 
     public FactionRank getRank() {

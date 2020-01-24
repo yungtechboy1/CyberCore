@@ -26,7 +26,7 @@ public class Delete extends Commands {
 
     @Override
     public void RunCommand() {
-        if (fac.Leader.equalsIgnoreCase(Sender.getName())) {
+        if (fac.GetLeader().equalsIgnoreCase(Sender.getName())) {
             Sender.showFormWindow(new FactionConfirmDelete());
         } else {
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "You are not the leader!");

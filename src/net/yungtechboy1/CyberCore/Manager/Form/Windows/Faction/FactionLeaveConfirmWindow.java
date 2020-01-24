@@ -18,10 +18,7 @@ public class FactionLeaveConfirmWindow extends CyberFormModal {
         FormResponseModal fr = getResponse();
         int k = fr.getClickedButtonId();
         Faction fac = p.getFaction();
-        if(fac.IsMember( p.getName()))fac.DelMember(p.getName());
-        if(fac.IsOfficer( p.getName()))fac.DelOfficer(p.getName());
-        if(fac.IsGeneral( p.getName()))fac.DelGeneral(p.getName());
-        if(fac.IsRecruit( p.getName()))fac.DelRecruit(p.getName());
+        fac.removePlayer(p);
 
         p.sendMessage(FactionsMain.NAME+ TextFormat.GREEN + "You successfully left faction");
         fac.TakePower(1);

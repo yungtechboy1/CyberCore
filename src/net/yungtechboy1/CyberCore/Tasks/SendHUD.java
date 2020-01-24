@@ -70,10 +70,10 @@ public class SendHUD extends Thread implements InterruptibleThread {
         Integer fxp = 0;
         Integer fxpm = 0;
         if (fac != null) {
-            fn = fac.getDisplayName();
-            flvl = fac.GetLevel();
-            fxp = fac.GetXP();
-            fxpm = fac.calculateRequireExperience(flvl);
+            fn = fac.getSettings().getDisplayName();
+            flvl = fac.getSettings().getLevel();
+            fxp = fac.getSettings().getXP();
+            fxpm = fac.getSettings().calculateRequireExperience(flvl);
         }
 
         String f = "";

@@ -46,8 +46,8 @@ public class Invite extends Commands {
 
         FactionRank r = fac.getPlayerRank(Sender);
         if (r != null) {
-            if (!r.hasPerm(fac.getSettings().getAllowedToInvite())) {
-                Sender.sendMessage("Error! You dont have permission to Invite players at your current faction rank! Your faction only allows " + fac.getSettings().getAllowedToInvite().getName() + "s to invite players!");
+            if (!r.hasPerm(fac.getPermSettings().getAllowedToInvite())) {
+                Sender.sendMessage("Error! You dont have permission to Invite players at your current faction rank! Your faction only allows " + fac.getPermSettings().getAllowedToInvite().getName() + "s to invite players!");
                 return;
             }
         }

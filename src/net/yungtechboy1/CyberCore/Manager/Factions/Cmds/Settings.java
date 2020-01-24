@@ -26,7 +26,7 @@ public class Settings extends Commands {
 
     @Override
     public void RunCommand(){
-        FactionRank nr = fac.getSettings().getAllowedToEditSettings();
+        FactionRank nr = fac.getPermSettings().getAllowedToEditSettings();
         FactionRank pr = fac.getPlayerRank(Sender);
         if (pr.hasPerm(nr)) {
             Sender.showFormWindow(new FactionSettingsWindow(Sender.getFaction()));

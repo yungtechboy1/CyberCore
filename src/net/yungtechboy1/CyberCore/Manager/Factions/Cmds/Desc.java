@@ -8,6 +8,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 /**
  * Created by carlt_000 on 7/9/2016.
  */
+@Deprecated
 public class Desc extends Commands {
 
     public Desc(CorePlayer s, String[] a, FactionsMain m){
@@ -35,7 +36,7 @@ public class Desc extends Commands {
             if (a == 1) continue;
             desc += c + " ";
         }
-        fac.SetDesc(desc);
+        fac.getSettings().setDescription(desc);
         Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+" Faction description changed!");
     }
 }

@@ -32,11 +32,13 @@ public class FactionSQL extends MySQL {
 
     @Override
     public Connection connectToDb() {
-        String host = plugin.MainConfig.getSection("db2").getString("mysql-host");
-        String pass = plugin.MainConfig.getSection("db2").getString("mysql-pass");
-        int port = plugin.MainConfig.getSection("db2").getInt("mysql-port");
-        String user = plugin.MainConfig.getSection("db2").getString("mysql-user");
-        String db = plugin.MainConfig.getSection("db2").getString("mysql-db-Faction");
+        if(Plugin == null)System.out.println("PLUGIN ERRRRRRRRRRRRRR");
+        if(Plugin.MainConfig == null)System.out.println("MAINNN ERRRRRRRRRRRRRR");
+        String host = Plugin.MainConfig.getSection("db2").getString("mysql-host");
+        String pass = Plugin.MainConfig.getSection("db2").getString("mysql-pass");
+        int port = Plugin.MainConfig.getSection("db2").getInt("mysql-port");
+        String user = Plugin.MainConfig.getSection("db2").getString("mysql-user");
+        String db = Plugin.MainConfig.getSection("db2").getString("mysql-db-Faction");
         if (SC != null) {
             try {
                 if (!SC.isClosed()) return SC;
@@ -49,7 +51,7 @@ public class FactionSQL extends MySQL {
         Connection connection = DbLib.getMySqlConnection(SBBB(host, port, db), user, pass);
 
         if (connection == null) {
-            System.out.println("CONEEEEECTTTTTTTTTIONNNNNNNNNNNN FAILEDDDDDDDD!!!!!!!!!!!!");
+            System.out.println("CONEEEEECTTTTTTTTTIONNNNNNNNNNNN FAILEDDDDDDDD!!!21!!!!!!!!!"+SBBB(host, port, db));
             enabled = false;
         } else {
             SC = connection;

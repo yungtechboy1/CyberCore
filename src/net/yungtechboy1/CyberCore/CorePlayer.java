@@ -89,7 +89,7 @@ public class CorePlayer extends Player {
     public String LastMessageSentTo = null;
     public String Faction = null;
     public String FactionInvite = null;
-    public FactionSettings fsettings = new FactionSettings();
+//    public FactionSettings fsettings = new FactionSettings();
     public CoreSettings InternalPlayerSettings = new CoreSettings();
     /**
      * @@deprecated
@@ -115,13 +115,14 @@ public class CorePlayer extends Player {
     public boolean DebuffsChanced = false;
     public boolean BuffsChanced = false;
     public Scoreboard PlayerScoreBoard = ScoreboardAPI.createScoreboard();
+    public PlayerFactionSettings fsettings;
     protected HashMap<Buff.BuffType, Float> lastdata = null;
     long uct = 0;
     boolean uw = false;
     private FormWindow nw;
     private Item ItemBeingEnchanted = null;
     private boolean ItemBeingEnchantedLock = false;
-    private PlayerSettingsData SettingsData = null;
+    private PlayerSettingsData PlayerSettingsData = null;
     private Rank rank = RankList.PERM_GUEST.getRank();
     private BlockVector3 lastBreakPosition1 = new BlockVector3();
     private Position CTLastPos = null;
@@ -516,8 +517,8 @@ public class CorePlayer extends Player {
     }
 
     public PlayerSettingsData GetData() {
-        if (getSettingsData() == null) CreateDefaultSettingsData(this);
-        return getSettingsData();
+        if (getPlayerSettingsData() == null) CreateDefaultSettingsData(this);
+        return getPlayerSettingsData();
     }
 
     @Override
@@ -530,7 +531,7 @@ public class CorePlayer extends Player {
 
     public void CreateDefaultSettingsData(CorePlayer p) {
         PlayerSettingsData a = new PlayerSettingsData(p);
-        setSettingsData(a);
+        setPlayerSettingsData(a);
     }
 
     @Override
@@ -750,6 +751,7 @@ public class CorePlayer extends Player {
 
         this.sendPlayStatus(3);
         PlayerJoinEvent playerJoinEvent = new PlayerJoinEvent(this, new TranslationContainer(TextFormat.YELLOW + "%multiplayer.player.joined", new String[]{this.getDisplayName()}));
+//        Player;
         this.server.getPluginManager().callEvent(playerJoinEvent);
         if (playerJoinEvent.getJoinMessage().toString().trim().length() > 0) {
             this.server.broadcastMessage(playerJoinEvent.getJoinMessage());
@@ -1265,14 +1267,14 @@ public class CorePlayer extends Player {
                                     break packetswitch;
                                 }
                                 ReleaseItemData releaseItemData = (ReleaseItemData) transactionPacket2.transactionData;
-
                                 try {
                                     type = releaseItemData.actionType;
                                     switch (type) {
                                         case InventoryTransactionPacket.RELEASE_ITEM_ACTION_RELEASE:
                                             if (this.isUsingItem()) {
                                                 item = this.inventory.getItemInHand();
-                                                if (item.onReleaseUsing(this)) {
+                                                int tickcused = this.server.getTick() - this.startAction;
+                                                if (item.onRelease(this, tickcused)) {
                                                     this.inventory.setItemInHand(item);
                                                 }
                                             } else {
@@ -1545,8 +1547,8 @@ public class CorePlayer extends Player {
             sd.addLine("    " + TextFormat.GOLD + "X: " + TextFormat.GREEN + getFloorX() + TextFormat.GOLD + " Y: " + TextFormat.GREEN + getFloorY() + TextFormat.GOLD + " Z: " + TextFormat.GREEN + getFloorZ(), k++);
         }
         if (!InternalPlayerSettings.isHudFactionOff() && getFaction() != null) {
-            sd.addLine(TextFormat.GRAY + "Faction : " + TextFormat.AQUA + getFaction().getDisplayName(), k++);
-            sd.addLine("    " + TextFormat.AQUA + "XP" + TextFormat.GRAY + " | " + TextFormat.GREEN + getFaction().GetXP() + TextFormat.AQUA + " / " + TextFormat.GOLD + getFaction().calculateRequireExperience() + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + getFaction().GetLevel(), k++);
+            sd.addLine(TextFormat.GRAY + "Faction : " + TextFormat.AQUA + getFaction().getSettings().getDisplayName(), k++);
+            sd.addLine("    " + TextFormat.AQUA + "XP" + TextFormat.GRAY + " | " + TextFormat.GREEN + getFaction().getSettings().GetXP() + TextFormat.AQUA + " / " + TextFormat.GOLD + getFaction().getSettings().calculateRequireExperience() + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + getFaction().getSettings().getLevel(), k++);
         }
         if (!InternalPlayerSettings.isHudClassOff()) {
 //            TODO
@@ -1956,12 +1958,12 @@ public class CorePlayer extends Player {
         HD.add(homeData);
     }
 
-    public PlayerSettingsData getSettingsData() {
-        return SettingsData;
+    public PlayerSettingsData getPlayerSettingsData() {
+        return PlayerSettingsData;
     }
 
-    public void setSettingsData(PlayerSettingsData settingsData) {
-        SettingsData = settingsData;
+    public void setPlayerSettingsData(PlayerSettingsData playerSettingsData) {
+        PlayerSettingsData = playerSettingsData;
     }
 
     public void StartTeleport(CorePlayer pl, int delay) {
@@ -2128,74 +2130,74 @@ public class CorePlayer extends Player {
         FactionInviteTimeout = -1;
     }
 
-    @Override
-    public void completeLoginSequence() {
-        PlayerLoginEvent ev;
-        this.server.getPluginManager().callEvent(ev = new PlayerLoginEvent(this, "Plugin reason"));
-        if (ev.isCancelled()) {
-            this.close(this.getLeaveMessage(), ev.getKickMessage());
-            return;
-        }
-
-        StartGamePacket startGamePacket = new StartGamePacket();
-        startGamePacket.entityUniqueId = this.id;
-        startGamePacket.entityRuntimeId = this.id;
-        startGamePacket.playerGamemode = (this.gamemode);
-        startGamePacket.x = (float) this.x;
-        startGamePacket.y = (float) this.y;
-        startGamePacket.z = (float) this.z;
-        startGamePacket.yaw = (float) this.yaw;
-        startGamePacket.pitch = (float) this.pitch;
-        startGamePacket.seed = -1;
-        startGamePacket.dimension = (byte) (this.level.getDimension() & 0xff);
-        startGamePacket.worldGamemode = (this.gamemode);
-        startGamePacket.difficulty = this.server.getDifficulty();
-        startGamePacket.spawnX = (int) this.x;
-        startGamePacket.spawnY = (int) this.y;
-        startGamePacket.spawnZ = (int) this.z;
-        startGamePacket.hasAchievementsDisabled = true;
-        startGamePacket.dayCycleStopTime = -1;
-        startGamePacket.eduMode = false;
-        startGamePacket.hasEduFeaturesEnabled = true;
-        startGamePacket.rainLevel = 0;
-        startGamePacket.lightningLevel = 0;
-        startGamePacket.commandsEnabled = this.isEnableClientCommand();
-        startGamePacket.gameRules = getLevel().getGameRules();
-        startGamePacket.levelId = "";
-        startGamePacket.worldName = this.getServer().getNetwork().getName();
-        startGamePacket.generator = 1; //0 old, 1 infinite, 2 flat
-        this.dataPacket(startGamePacket);
-
-        this.dataPacket(new AvailableEntityIdentifiersPacket());
-
-        this.loggedIn = true;
-
-        this.level.sendTime(this);
-
-        //todo cHANGE
-        this.setMovementSpeed(DEFAULT_SPEED);
-        this.sendAttributes();
-        this.setNameTagVisible(true);
-        this.setNameTagAlwaysVisible(true);
-        this.setCanClimb(true);
-
-        this.server.getLogger().info(this.getServer().getLanguage().translateString("nukkit.player.logIn",
-                TextFormat.AQUA + this.username + TextFormat.WHITE,
-                this.ip,
-                String.valueOf(this.port),
-                String.valueOf(this.id),
-                this.level.getName(),
-                String.valueOf(NukkitMath.round(this.x, 4)),
-                String.valueOf(NukkitMath.round(this.y, 4)),
-                String.valueOf(NukkitMath.round(this.z, 4))));
-
-        if (this.isOp() || this.hasPermission("nukkit.textcolor")) {
-            this.setRemoveFormat(false);
-        }
-
-        this.server.addOnlinePlayer(this);
-        this.server.onPlayerCompleteLoginSequence(this);
-    }
+//    @Override
+//    public void completeLoginSequence() {
+//        PlayerLoginEvent ev;
+//        this.server.getPluginManager().callEvent(ev = new PlayerLoginEvent(this, "Plugin reason"));
+//        if (ev.isCancelled()) {
+//            this.close(this.getLeaveMessage(), ev.getKickMessage());
+//            return;
+//        }
+//
+//        StartGamePacket startGamePacket = new StartGamePacket();
+//        startGamePacket.entityUniqueId = this.id;
+//        startGamePacket.entityRuntimeId = this.id;
+//        startGamePacket.playerGamemode = (this.gamemode);
+//        startGamePacket.x = (float) this.x;
+//        startGamePacket.y = (float) this.y;
+//        startGamePacket.z = (float) this.z;
+//        startGamePacket.yaw = (float) this.yaw;
+//        startGamePacket.pitch = (float) this.pitch;
+//        startGamePacket.seed = -1;
+//        startGamePacket.dimension = (byte) (this.level.getDimension() & 0xff);
+//        startGamePacket.worldGamemode = (this.gamemode);
+//        startGamePacket.difficulty = this.server.getDifficulty();
+//        startGamePacket.spawnX = (int) this.x;
+//        startGamePacket.spawnY = (int) this.y;
+//        startGamePacket.spawnZ = (int) this.z;
+//        startGamePacket.hasAchievementsDisabled = true;
+//        startGamePacket.dayCycleStopTime = -1;
+////        startGamePacket.eduMode = false;
+//        startGamePacket.hasEduFeaturesEnabled = true;
+//        startGamePacket.rainLevel = 0;
+//        startGamePacket.lightningLevel = 0;
+//        startGamePacket.commandsEnabled = this.isEnableClientCommand();
+//        startGamePacket.gameRules = getLevel().getGameRules();
+//        startGamePacket.levelId = "";
+//        startGamePacket.worldName = this.getServer().getNetwork().getName();
+//        startGamePacket.generator = 1; //0 old, 1 infinite, 2 flat
+//        this.dataPacket(startGamePacket);
+//
+//        this.dataPacket(new AvailableEntityIdentifiersPacket());
+//
+//        this.loggedIn = true;
+//
+//        this.level.sendTime(this);
+//
+//        //todo cHANGE
+//        this.setMovementSpeed(DEFAULT_SPEED);
+//        this.sendAttributes();
+//        this.setNameTagVisible(true);
+//        this.setNameTagAlwaysVisible(true);
+//        this.setCanClimb(true);
+//
+//        this.server.getLogger().info(this.getServer().getLanguage().translateString("nukkit.player.logIn",
+//                TextFormat.AQUA + this.username + TextFormat.WHITE,
+//                this.ip,
+//                String.valueOf(this.port),
+//                String.valueOf(this.id),
+//                this.level.getName(),
+//                String.valueOf(NukkitMath.round(this.x, 4)),
+//                String.valueOf(NukkitMath.round(this.y, 4)),
+//                String.valueOf(NukkitMath.round(this.z, 4))));
+//
+//        if (this.isOp() || this.hasPermission("nukkit.textcolor")) {
+//            this.setRemoveFormat(false);
+//        }
+//
+//        this.server.addOnlinePlayer(this);
+//        this.server.onPlayerCompleteLoginSequence(this);
+//    }
 
     @Override
     public void heal(EntityRegainHealthEvent source) {
@@ -2242,7 +2244,7 @@ public class CorePlayer extends Player {
     public String getFactionName() {
         Faction f = getFaction();
         if (f == null) return "No Faction";
-        return f.getDisplayName();
+        return f.getSettings().getDisplayName();
     }
 
     public Faction getFaction() {
@@ -2294,6 +2296,8 @@ public class CorePlayer extends Player {
 
     public int WaitingForTPCD = 2;
     public boolean WaitingForTPEffects = false;
+
+
 //        if (!this.server.isWhitelisted((this.getName()).toLowerCase())) {
 //            this.kick(PlayerKickEvent.Reason.NOT_WHITELISTED, "Server is white-listed");
 //

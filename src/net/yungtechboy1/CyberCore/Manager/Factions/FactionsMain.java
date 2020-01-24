@@ -36,16 +36,16 @@ public class FactionsMain {
     public Map<Long, CustomFloatingTextParticle> popups = new HashMap<>();
     public FactionFactory FFactory = null;
     public CyberCoreMain plugin;
-    public FactionSQL factionData;
+    public FactionSQL FactionData = new FactionSQL(CyberCoreMain.getInstance());
     public HashMap<Integer, FactionErrorString> FactionString = new HashMap<>();
     //private Statement Statement = null;
     private PreparedStatement PreparedStatement = null;
     //public Map<String,Integer> death;
     private ResultSet ResultSet = null;
 
-    public FactionsMain(CyberCoreMain main, FactionSQL factionData) {
+    public FactionsMain(CyberCoreMain main, FactionSQL fd) {
         plugin = main;
-        this.factionData = factionData;
+        if(fd != null)FactionData = fd;
         onLoad();
 
         getServer().getPluginManager().registerEvents(new FactionListener(main, this), main);
@@ -74,14 +74,14 @@ public class FactionsMain {
                     stmt.executeUpdate(String.format("DELETE FROM `confirm` WHERE `faction` LIKE '%s';",fn));
                     stmt.executeUpdate(String.format("DELETE FROM `home` WHERE `faction` LIKE '%s';",fn));
                     stmt.executeUpdate(String.format("DELETE FROM `Master` WHERE `faction` LIKE '%s';",fn));
-                    stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `faction` LIKE '%s';",fn));
+                    stmt.executeUpdate(String.format("DELETE FROM `Master` WHERE `faction` LIKE '%s';",fn));
                     stmt.close();
                 } catch (Exception  ex) {
                     getServer().getLogger().info( ex.getClass().getName() + ":9 " + ex.getMessage()+" > "+ex.getStackTrace()[0].getLineNumber()+" ? "+ex.getCause());
                 }*/
             } else {
-                FFactory.Top.put(f.getName(), f.GetMoney());
-                FFactory.Rich.put(f.getName(), f.GetRich());
+                FFactory.Top.put(f.getName(), f.getSettings().getMoney());
+                FFactory.Rich.put(f.getName(), f.getSettings().getRich());
             }
             if (fn.equalsIgnoreCase("peace")) {
                 peace = true;
@@ -92,17 +92,21 @@ public class FactionsMain {
         }
         if (!peace) {
             getServer().getLogger().info("Peace Faction Being Created!");
-            Faction fac = new Faction(this, "peace", TextFormat.GREEN + "peaceful", "p", new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            Faction fac = new Faction(this, "peace", TextFormat.GREEN + "peaceful", false);
             FFactory.LocalFactionCache.put("peace", fac);
         }
 //
         if (!wilderness) {
             getServer().getLogger().info("Wilderness Faction Being Created!");
-            Faction fac = new Faction(this, "wilderness", TextFormat.RED + "wilderness", "w", new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            Faction fac = new Faction(this, "wilderness", TextFormat.RED + "wilderness", false);
             FFactory.LocalFactionCache.put("wilderness", fac);
         }
 //
 //        getServer().getLogger().info("SUCCESSFUL Loading of "+Count+" Factions from the database!");
+    }
+
+    public FactionsMain(CyberCoreMain cyberCoreMain) {
+        this(cyberCoreMain,null);
     }
 
     public static FactionsMain getInstance() {
@@ -113,7 +117,7 @@ public class FactionsMain {
         return plugin.getServer();
     }
 
-    public void onLoad() {
+    public void  onLoad() {
         FactionsMain.instance = this;
         FFactory = new FactionFactory(this);
     }
@@ -127,13 +131,7 @@ public class FactionsMain {
         return false;
     }
 
-    public void AddFactionPower(String faction, Integer power) {
-        Faction fac = FFactory.getFaction(faction);
-        if (fac != null) {
-            Integer power1 = fac.GetPowerBonus() * power;
-            fac.AddPower(power1);
-        }
-    }
+
 
     public boolean isInFaction(Player player) {
         return player != null && isInFaction((CorePlayer) player);
@@ -164,32 +162,6 @@ public class FactionsMain {
         return null;
     }
 
-    public int getNumberOfPlayers(String faction) {
-        return getNumberOfPlayers(FFactory.getFaction(faction));
-    }
-
-    public int getNumberOfPlayers(Faction faction) {
-        if (faction != null) {
-            Integer a = 1;
-            a += faction.GetMembers().toArray().length;
-            a += faction.GetOfficers().toArray().length;
-            a += faction.GetGenerals().toArray().length;
-            return a;
-        }
-        return 0;
-    }
-
-    public int GetMaxPlayers(String faction) {
-        Faction fac = FFactory.getFaction(faction);
-        if (fac != null) return fac.GetMaxPlayers();
-        return 25;
-    }
-
-    public int GetMaxPlayers(Faction faction) {
-        if (faction != null) return faction.GetMaxPlayers();
-        return 25;
-    }
-
     public Boolean isLeader(CorePlayer player) {
         return isLeader(player.getName());
     }
@@ -208,34 +180,7 @@ public class FactionsMain {
     }
 
     public String GetChunkOwner(int x, int z) {
-        if (FFactory.PlotsList.containsKey(x + "|" + z)) {
-            return FFactory.PlotsList.get(x + "|" + z);
-        }
-        return null;
-    }
-
-    public boolean isOfficer(String player) {
-        if (FFactory.FacList.containsKey(player.toLowerCase())) {
-            Faction fac = FFactory.getFaction(FFactory.FacList.get(player.toLowerCase()));
-            if (fac != null) {
-                for (String name : fac.GetOfficers()) {
-                    if (name.equalsIgnoreCase(player)) return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean isGeneral(String player) {
-        if (FFactory.FacList.containsKey(player.toLowerCase())) {
-            Faction fac = FFactory.getFaction(FFactory.FacList.get(player.toLowerCase()));
-            if (fac != null) {
-                for (String name : fac.GetGenerals()) {
-                    if (name.equalsIgnoreCase(player)) return true;
-                }
-            }
-        }
-        return false;
+        return FactionsMain.getInstance().FFactory.PM.getFactionFromPlot(x,z);
     }
 
     public void LoadPlayer(Player player) {
@@ -243,18 +188,18 @@ public class FactionsMain {
     }
 
     public void PlayerInvitedToFaction(CorePlayer invited, CorePlayer Sender, Faction fac) {
-        PlayerInvitedToFaction(invited, Sender, fac, fac.getSettings().getDefaultJoinRank());
+        PlayerInvitedToFaction(invited, Sender, fac, fac.getPermSettings().getDefaultJoinRank());
     }
 
     public void PlayerInvitedToFaction(CorePlayer invited, CorePlayer Sender, Faction fac, FactionRank fr) {
         if (invited == null) {
-            CyberCoreMain.getInstance().getLogger().warning("WARNING!!! TRING TO INVITE NULL PLAYER to FAC: " + fac.getDisplayName());
+            CyberCoreMain.getInstance().getLogger().warning("WARNING!!! TRING TO INVITE NULL PLAYER to FAC: " + fac.getSettings().getDisplayName());
             return;
         }
 
         fac.BroadcastMessage(Sender.getName() + " has invited " + invited.getName() + " to the faction as a " + fr.getChatColor() + fr.getName());
         Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "You successfully invited " + invited.getName() + " to your faction as a " + fr.getChatColor() + fr.getName() + " !");
-        invited.sendMessage(FactionsMain.NAME + TextFormat.YELLOW + "You have been invited to join " + fac.getDisplayName() + " by " + Sender.getName() + "\n" + TextFormat.GREEN + "Type '/f accept' or '/f deny' into chat to accept or deny!");
+        invited.sendMessage(FactionsMain.NAME + TextFormat.YELLOW + "You have been invited to join " + fac.getSettings().getDisplayName() + " by " + Sender.getName() + "\n" + TextFormat.GREEN + "Type '/f accept' or '/f deny' into chat to accept or deny!");
 
         Integer time = GetIntTime() + 60 * 5;//5 Mins
         fac.AddInvite(invited, time, Sender, fr);
@@ -269,7 +214,7 @@ public class FactionsMain {
 
 //        invited.
         if (!invited.InternalPlayerSettings.isAllowFactionRequestPopUps()) return;
-        invited.showFormWindow(new FactionInvited(invited.getDisplayName(), fac.getDisplayName()));
+        invited.showFormWindow(new FactionInvited(invited.getDisplayName(), fac.getSettings().getDisplayName()));
 
 
 

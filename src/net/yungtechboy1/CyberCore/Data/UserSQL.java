@@ -36,11 +36,11 @@ public class UserSQL extends MySQL {
 
     @Override
     public Connection connectToDb() {
-        String host = plugin.MainConfig.getSection("db2").getString("mysql-host");
-        String pass = plugin.MainConfig.getSection("db2").getString("mysql-pass");
-        int port = plugin.MainConfig.getSection("db2").getInt("mysql-port");
-        String user = plugin.MainConfig.getSection("db2").getString("mysql-user");
-        String db = plugin.MainConfig.getSection("db2").getString("mysql-db-Server");
+        String host = Plugin.MainConfig.getSection("db2").getString("mysql-host");
+        String pass = Plugin.MainConfig.getSection("db2").getString("mysql-pass");
+        int port = Plugin.MainConfig.getSection("db2").getInt("mysql-port");
+        String user = Plugin.MainConfig.getSection("db2").getString("mysql-user");
+        String db = Plugin.MainConfig.getSection("db2").getString("mysql-db-Server");
         if (SC != null) {
             try {
                 if(!SC.isClosed())return SC;
@@ -80,22 +80,22 @@ public class UserSQL extends MySQL {
             ArrayList<HashMap<String, Object>> a = executeSelect("SELECT * FROM `PlayerSettings` WHERE `Name` LIKE '" + corePlayer.getName() + "'");
             if (a == null || a.size() == 0) {
                 System.out.println("===> No PlayerSettingData Found in SQL!");
-                corePlayer.setSettingsData(psd);
+                corePlayer.setPlayerSettingsData(psd);
                 return psd;
             }
             psd = new PlayerSettingsData(a.get(0));
             if (!psd.UUIDS.contains(corePlayer.getUniqueId())) psd.UUIDS.add(corePlayer.getUniqueId());
-            corePlayer.setSettingsData(psd);
+            corePlayer.setPlayerSettingsData(psd);
             return psd;
         } catch (Exception e) {
-            plugin.getLogger().error("Error getting UserSQL PlayerSettingData1");
+            Plugin.getLogger().error("Error getting UserSQL PlayerSettingData1");
             e.printStackTrace();
             return null;
         }
     }
 
     public boolean savePlayerSettingData(CorePlayer corePlayer) {
-        PlayerSettingsData psd = corePlayer.getSettingsData();
+        PlayerSettingsData psd = corePlayer.getPlayerSettingsData();
         if (psd == null) return false;
         if (!psd.UUIDS.contains(corePlayer.getUniqueId())) psd.UUIDS.add(corePlayer.getUniqueId());
         try {
@@ -115,15 +115,14 @@ public class UserSQL extends MySQL {
             q = addToQuery(q, psd.PlayerWarningToJSON()) + ",";
             q = addToQuery(q, psd.PlayerTempBansToJSON()) + ",";
             q = addToQuery(q, psd.PlayerKicksToJSON()) + ",";
-            q = addToQuery(q, psd.PlayerBansToJSON()) + ",";
-            q = addToQuery(q, psd.Rank);
+            q = addToQuery(q, psd.PlayerBansToJSON()) ;
             q += ")";
-            plugin.getLogger().info("Saved Player With SQL:" + q);
+            Plugin.getLogger().info("Saved Player With SQL:" + q);
             executeUpdate(q);
             return true;
 
         } catch (Exception e) {
-            plugin.getLogger().error("Error Saving UserSQL PlayerSettingData");
+            Plugin.getLogger().error("Error Saving UserSQL PlayerSettingData");
             e.printStackTrace();
             return false;
         }

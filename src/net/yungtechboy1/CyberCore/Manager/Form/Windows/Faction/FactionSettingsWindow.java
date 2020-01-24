@@ -7,8 +7,8 @@ import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
+import net.yungtechboy1.CyberCore.Manager.Factions.FactionPermSettings;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionRank;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionSettings;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormCustom;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class FactionSettingsWindow extends CyberFormCustom {
     public FactionSettingsWindow(Faction f) {
         super(FormType.MainForm.Faction_Settings_Window, "Faction Settings Window");
         _Fac = f;
-        FactionSettings fs = f.getSettings();
+        FactionPermSettings fs = f.getPermSettings();
         ArrayList<String> LGOMR = new ArrayList<String>() {{
             add("Leader");
             add("General");
@@ -82,7 +82,7 @@ public class FactionSettingsWindow extends CyberFormCustom {
             return true;
         }
 
-        FactionSettings fs = _Fac.getSettings();
+        FactionPermSettings fs = _Fac.getPermSettings();
         fs.setAllowedToViewInbox(FactionRank.getRankFromForm(avi));
         fs.setAllowedToAcceptAlly(FactionRank.getRankFromForm(aaa));
         fs.setAllowedToEditSettings(FactionRank.getRankFromForm(aes));

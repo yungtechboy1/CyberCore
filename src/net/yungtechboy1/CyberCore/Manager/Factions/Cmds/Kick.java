@@ -37,7 +37,7 @@ public class Kick extends Commands {
 
     @Override
     public void RunCommand() {
-        FactionRank perm = fac.getSettings().getAllowedToKick();
+        FactionRank perm = fac.getPermSettings().getAllowedToKick();
         FactionRank fr = fac.getPlayerRank(Sender);
         if (fr == null || !fr.hasPerm(perm)) {
             Sender.sendMessage("ERror you dont have perms to kick players!");
@@ -65,10 +65,7 @@ public class Kick extends Commands {
 
             fac.KickPlayer(pp);
         }else {
-            ArrayList<String> af = fac.GetRecruits();
-            af.addAll(fac.GetMembers());
-            af.addAll(fac.GetOfficers());
-            af.addAll(fac.GetGenerals());
+            ArrayList<String> af = new ArrayList<>(fac.PlayerRanks.keySet());
             Sender.showFormWindow(new FactionKickListWindow(af));
 //            Sender.LastSentFormType = FormType.MainForm.Faction_Kick_List;
 

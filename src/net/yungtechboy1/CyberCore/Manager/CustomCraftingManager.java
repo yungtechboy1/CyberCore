@@ -285,7 +285,7 @@ public class CustomCraftingManager {
 
     public void registerBrewingRecipe(BrewingRecipe recipe) {
         Item input = recipe.getInput();
-        Item potion = recipe.getPotion();
+        Item potion = recipe.getResult();
         this.brewingRecipes.put(getItemHash(input.getId(), potion.getDamage()), recipe);
     }
 

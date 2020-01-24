@@ -51,7 +51,7 @@ public class List extends Commands {
             x++;
             //Privacy
             a += TextFormat.DARK_GREEN+""+x+" > ";
-            if (f.GetPrivacy() == 1) {
+            if (f.getSettings().getPrivacy() == 1) {
                 a += TextFormat.RED + "[P]";
             } else {
                 a += TextFormat.GREEN + "[O]";
@@ -59,7 +59,7 @@ public class List extends Commands {
             a += TextFormat.WHITE + "---[ ";
             a += TextFormat.DARK_AQUA+"" + f.GetPlots().size();
             a += TextFormat.WHITE + " / ";
-            a += TextFormat.DARK_AQUA +""+ f.GetPower();
+            a += TextFormat.DARK_AQUA +""+ f.getSettings().getPower();
             a += TextFormat.WHITE + " / ";
             a += TextFormat.DARK_AQUA+"" + f.CalculateMaxPower();
             a += TextFormat.WHITE + " ]--- " + TextFormat.YELLOW + f.getDisplayName();

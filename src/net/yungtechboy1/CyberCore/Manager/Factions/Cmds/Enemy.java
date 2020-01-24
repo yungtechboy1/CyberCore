@@ -46,6 +46,7 @@ public class Enemy extends Commands {
             ArrayList<Faction> l = CyberCoreMain.getInstance().getAllFactionNamesCloseTo(Args[1]);
             if (l.size() == 0) {
                 Sender.sendMessage(Error_UnableToFindFaction.getMsg());
+                Sender.sendMessage(TextFormat.RED+"Error the faction containing '" + Args[1] + "' could not be found!");
                 return;
             } else if (l.size() == 1) {
                 target = l.get(0);
@@ -66,8 +67,7 @@ public class Enemy extends Commands {
             }
 
 
-            Sender.sendMessage(TextFormat.RED+"Error the faction containing '" + Args[1] + "' could not be found!");
-            return;
+
         }
 
         fac.AddEnemy(target, Sender);

@@ -4,6 +4,7 @@ import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Date;
  */
 public class CyberUtils {
 
-    public static final String NAME = TextFormat.DARK_AQUA+"Cyber"+TextFormat.GOLD+"Tech"+TextFormat.GREEN+"++";
+    public static final String NAME = TextFormat.DARK_AQUA + "Cyber" + TextFormat.GOLD + "Tech" + TextFormat.GREEN + "++";
 
     public static String toStringCode(Object... a) {
         String f = "";
@@ -28,8 +29,9 @@ public class CyberUtils {
     }
 
     public static void SendCommandUsage(Command c, CommandSender s) {
-        s.sendMessage(TextFormat.YELLOW+"Usage: "+c.getUsage());
+        s.sendMessage(TextFormat.YELLOW + "Usage: " + c.getUsage());
     }
+
     public static String getDifferenceBtwTime(Long dateTime) {
 
         long timeDifferenceMilliseconds = dateTime - new Date().getTime();
@@ -75,8 +77,8 @@ public class CyberUtils {
 
     public static String convertBinaryToHexadecimal(String number) {
         String hexa = "";
-        char[] hex = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
-                'b', 'c', 'd', 'e', 'f' };
+        char[] hex = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a',
+                'b', 'c', 'd', 'e', 'f'};
         if (number != null && !number.isEmpty()) {
             int decimal = convertBinaryToDecimal(number);
             while (decimal > 0) {
@@ -86,6 +88,15 @@ public class CyberUtils {
             System.out.println("The hexa decimal number is: " + hexa);
         }
         return hexa;
+    }
+
+    /**
+     *
+     * Returns Time as an Integer in secs
+     * @return
+     */
+    public static int getIntTime() {
+        return (int) (Calendar.getInstance().getTime().getTime() / 1000);
     }
 
     public static int convertBinaryToDecimal(String number) {

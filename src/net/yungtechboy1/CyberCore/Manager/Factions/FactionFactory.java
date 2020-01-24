@@ -32,7 +32,9 @@ public class FactionFactory {
      */
     public Map<String, Faction> LocalFactionCache = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public Map<String, String> FacList = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    public Map<String, String> PlotsList = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+//    public Map<String, String> PlotsList = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    public PlotManager PM;
+    public RelationshipManager RM = new RelationshipManager(this);
     public Map<String, String> allyrequest = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public Map<String, String> War = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);//Attacking V Defending
     public Map<String, Integer> Top = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -47,6 +49,7 @@ public class FactionFactory {
 
     public FactionFactory(FactionsMain main) {
         Main = main;
+        PM = new PlotManager(this);
     }
 
     public void addFactionInvite(FactionInviteData fid) {
@@ -116,18 +119,27 @@ public class FactionFactory {
     }
 
     private Server getServer() {
-        return Main.getServer();
+        return Server.getInstance();
     }
 
-    public String GetPlotStatus(Integer x, Integer z) {
-        if (PlotsList.containsKey(x + "|" + z)) {
-            return PlotsList.get(x + "|" + z);
-        }
-        return null;
+    /**
+     * Use PM.getFactionFromPlot(x,z);
+     * @param x
+     * @param z
+     * @return String of Faction that ownes the plot
+     */
+    @Deprecated
+    public String getPlotOwner(Integer x, Integer z) {
+        return PM.getFactionFromPlot(x,z);
     }
 
     public Connection getMySqlConnection() {
-        return Main.factionData.connectToDb();
+
+//        System.out.println("WOR ==============================HOWEEEE");
+        if(Main == null)System.out.println("WOR HOWEEEE");
+        if(Main.FactionData == null)System.out.println("WOR 2222222222222HOWEEEE");
+        if(Main.FactionData == null)System.out.println("WOR 2222222222222HOWEEEE");
+        return Main.FactionData.connectToDb();
     }
 
     public void RemoveFaction(Faction fac) {
@@ -135,40 +147,8 @@ public class FactionFactory {
         try {
             String name = fac.getName();
             Statement stmt = c.createStatement();
-            for (String m : fac.GetRecruits()) {
+            for (String m : fac.PlayerRanks.keySet()) {
                 FacList.remove(m);
-                if (Main.getServer().getPlayerExact(m) != null) {
-//                    Main.Setnametag(m);
-//                    Main.sendBossBar(m);
-                }
-            }
-            for (String m : fac.GetMembers()) {
-                FacList.remove(m);
-                if (Main.getServer().getPlayerExact(m) != null) {
-//                    Main.CC.Setnametag(m);
-//                    Main.sendBossBar(m);
-                }
-            }
-            for (String m : fac.GetOfficers()) {
-                if (Main.getServer().getPlayerExact(m) != null) {
-//                    Main.CC.Setnametag(m);
-//                    Main.sendBossBar(m);
-                }
-                FacList.remove(m);
-            }
-            for (String m : fac.GetGenerals()) {
-                if (Main.getServer().getPlayerExact(m) != null) {
-//                    Main.CC.Setnametag(m);
-//                    Main.sendBossBar(m);
-                }
-                FacList.remove(m);
-            }
-            if (FacList.containsKey(fac.GetLeader().toLowerCase())) {
-                if (Main.getServer().getPlayerExact(fac.GetLeader()) != null) {
-//                    Main.CC.Setnametag(fac.GetLeader());
-//                    Main.sendBossBar(fac.GetLeader());
-                }
-                FacList.remove(fac.GetLeader().toLowerCase());
             }
             LocalFactionCache.remove(fac.getName());
             stmt.executeUpdate(String.format("DELETE FROM `allies` WHERE `factiona` LIKE '%s' OR `factionb` LIKE '%s';", name, name));
@@ -176,7 +156,7 @@ public class FactionFactory {
             stmt.executeUpdate(String.format("DELETE FROM `confirm` WHERE `faction` LIKE '%s';", name));
             stmt.executeUpdate(String.format("DELETE FROM `home` WHERE `faction` LIKE '%s';", name));
             stmt.executeUpdate(String.format("DELETE FROM `Master` WHERE `faction` LIKE '%s';", name));
-            stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `faction` LIKE '%s';", name));
+            stmt.executeUpdate(String.format("DELETE FROM `Master` WHERE `faction` LIKE '%s';", name));
             stmt.close();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -245,26 +225,26 @@ public class FactionFactory {
                 try {
                     Faction fac = e.getValue();
                     String name = e.getKey();
-                    ArrayList<String> allies = fac.GetAllies();
-                    ArrayList<String> enemies = fac.GetEnemies();
-                    ArrayList<String> plots = fac.GetPlots();
-//                    Map<String, Integer> invites = fac.GetInvite();
-                    Vector3 home = fac.GetHome();
-                    String motd = fac.GetMOTD();
-                    String displayName = fac.getDisplayName();
-                    String desc = fac.GetDesc();
-                    FactionSettings perms = fac.GetPerm();
-                    Integer powerbonus = fac.GetPowerBonus();
-                    Integer privacy = fac.GetPrivacy();
-                    Integer maxplayers = fac.GetMaxPlayers();
-                    Integer power = fac.GetPower();
-                    Integer money = fac.GetMoney();
-
-                    //@TODO
-                    Integer point = fac.GetPoints();
-                    Integer xp = fac.GetXP();
-                    Integer lvl = fac.GetLevel();
-                    Integer rich = fac.GetRich();
+//                    ArrayList<String> allies = fac.GetAllies();
+//                    ArrayList<String> enemies = fac.GetEnemies();
+//                    ArrayList<String> plots = fac.GetPlots();
+////                    Map<String, Integer> invites = fac.GetInvite();
+//                    Vector3 home = fac.GetHome();
+//                    String motd = fac.GetMOTD();
+//                    String displayName = fac.getDisplayName();
+//                    String desc = fac.GetDesc();
+//                    FactionPermSettings perms = fac.GetPerm();
+//                    Integer powerbonus = fac.GetPowerBonus();
+//                    Integer privacy = fac.GetPrivacy();
+//                    Integer maxplayers = fac.GetMaxPlayers();
+//                    Integer power = fac.GetPower();
+//                    Integer money = fac.GetMoney();
+//
+//                    //@TODO
+//                    Integer point = fac.GetPoints();
+//                    Integer xp = fac.GetXP();
+//                    Integer lvl = fac.GetLevel();
+//                    Integer rich = fac.GetRich();
                     String am = "";
 //                    if (fac.GetActiveMission() != null) {
 //                        am = fac.GetActiveMission().id + "";
@@ -286,6 +266,8 @@ public class FactionFactory {
 //                        Server.getInstance().getLogger().logException(var8);
 //                    }*/
 //                    }
+                    fac.save();
+
                     ArrayList<Integer> CMID1 = fac.GetCompletedMissions();
                     String CMID = "";
                     if (CMID1.size() > 1) {
@@ -341,31 +323,31 @@ public class FactionFactory {
 //                    //stmt2.executeUpdate(String.format("DELETE FROM `Master` WHERE `faction` LIKE '%s';",name));
 //                    //stmt2.executeUpdate(String.format("INSERT INTO `Master` VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s'); ",name,maxplayers,powerbonus,motd,displayName,desc,perms,privacy,power,money));
 //                    //Saving Members, Leader, And Officers
-//                    stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `faction` = '%s';", name));
+//                    stmt.executeUpdate(String.format("DELETE FROM `Master` WHERE `faction` = '%s';", name));
 //                    for (String member : fac.GetRecruits()) {
-//                        stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `player` = '%s';", member));
-//                        stmt.executeUpdate(String.format("INSERT IGNORE INTO `master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');", member, name, "Recruits"));
+//                        stmt.executeUpdate(String.format("DELETE FROM `Master` WHERE `player` = '%s';", member));
+//                        stmt.executeUpdate(String.format("INSERT IGNORE INTO `Master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');", member, name, "Recruits"));
 //                    }
-//                    //for(String member: fac.GetRecruits())stmt2.executeUpdate(String.format("INSERT OR IGNORE INTO `master`(`player`,`faction`,`rank`) VALUES (%s,%s,%s);",member,name,"Recruits"));
+//                    //for(String member: fac.GetRecruits())stmt2.executeUpdate(String.format("INSERT OR IGNORE INTO `Master`(`player`,`faction`,`rank`) VALUES (%s,%s,%s);",member,name,"Recruits"));
 //                    for (String member : fac.GetMembers()) {
-//                        stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `player` = '%s';", member));
-//                        stmt.executeUpdate(String.format("INSERT IGNORE INTO `master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');", member, name, "Member"));
-//                        //for(String member: fac.GetMembers())stmt2.executeUpdate(String.format("INSERT OR IGNORE INTO `master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');",member,name,"Member"));
+//                        stmt.executeUpdate(String.format("DELETE FROM `Master` WHERE `player` = '%s';", member));
+//                        stmt.executeUpdate(String.format("INSERT IGNORE INTO `Master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');", member, name, "Member"));
+//                        //for(String member: fac.GetMembers())stmt2.executeUpdate(String.format("INSERT OR IGNORE INTO `Master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');",member,name,"Member"));
 //                    }
 //                    for (String member : fac.GetOfficers()) {
-//                        stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `player` = '%s';", member));
-//                        stmt.executeUpdate(String.format("INSERT IGNORE INTO `master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');", member, name, "Officer"));
-//                        //for(String member: fac.GetOfficers())stmt2.executeUpdate(String.format("INSERT OR IGNORE INTO `master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');",member,name,"Officer"));
+//                        stmt.executeUpdate(String.format("DELETE FROM `Master` WHERE `player` = '%s';", member));
+//                        stmt.executeUpdate(String.format("INSERT IGNORE INTO `Master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');", member, name, "Officer"));
+//                        //for(String member: fac.GetOfficers())stmt2.executeUpdate(String.format("INSERT OR IGNORE INTO `Master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');",member,name,"Officer"));
 //                    }
 //                    for (String member : fac.GetGenerals()) {
-//                        stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `player` = '%s';", member));
-//                        stmt.executeUpdate(String.format("INSERT INTO `master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');", member, name, "General"));
+//                        stmt.executeUpdate(String.format("DELETE FROM `Master` WHERE `player` = '%s';", member));
+//                        stmt.executeUpdate(String.format("INSERT INTO `Master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');", member, name, "General"));
 //                    }
-//                    //for(String member: fac.GetGenerals())stmt2.executeUpdate(String.format("INSERT OR IGNORE INTO `master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');",member,name,"General"));
+//                    //for(String member: fac.GetGenerals())stmt2.executeUpdate(String.format("INSERT OR IGNORE INTO `Master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');",member,name,"General"));
 //                    System.out.println(fac.getName() + " > " + fac.GetLeader());
-//                    stmt.executeUpdate(String.format("DELETE FROM `master` WHERE `player` = '%s';", fac.GetLeader()));
-//                    stmt.executeUpdate(String.format("INSERT INTO `master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');", fac.GetLeader(), name, "Leader"));
-//                    //stmt2.executeUpdate(String.format("INSERT INTO `master`(`player`,`faction`,`rank`) VALUES (''%s'',''%s'',''%s'');",fac.GetLeader(),name,"Leader"));
+//                    stmt.executeUpdate(String.format("DELETE FROM `Master` WHERE `player` = '%s';", fac.GetLeader()));
+//                    stmt.executeUpdate(String.format("INSERT INTO `Master`(`player`,`faction`,`rank`) VALUES ('%s','%s','%s');", fac.GetLeader(), name, "Leader"));
+//                    //stmt2.executeUpdate(String.format("INSERT INTO `Master`(`player`,`faction`,`rank`) VALUES (''%s'',''%s'',''%s'');",fac.GetLeader(),name,"Leader"));
                     Main.plugin.getLogger().info(TextFormat.GREEN + "[Factions] Saving Faction " + name);
                 } catch (Exception ex) {
                     Main.plugin.getLogger().error(TextFormat.RED + "[Factions] Error! Faction " + e.getKey(), ex);
@@ -399,21 +381,26 @@ public class FactionFactory {
     public ResultSet ExecuteQuerySQL(String s) {
         try {
 
-            Statement stmt = this.getMySqlConnection().createStatement();
+            Connection c = this.getMySqlConnection();
+            if(c == null){
+                System.out.println("WOW ERROR WITH CONNECTION E3324332!!! ");
+                return null;
+            }
+            Statement stmt = c.createStatement();
             ResultSet r = stmt.executeQuery(s);
             //this.getServer().getLogger().info( s );
 //            stmt.close();
             return r;
         } catch (Exception ex) {
 
-            getServer().getLogger().info(ex.getClass().getName() + ":8 " + ex.getMessage(), ex);
+            getServer().getLogger().info(ex.getClass().getName() + ":8.1 " + ex.getMessage(), ex);
             return null;
         }
     }
 
     public Boolean factionExistsInDB(String name) {
         try {
-            ResultSet r = this.ExecuteQuerySQL(String.format("select count(*) from `Master` where `faction ,` LIKE '%s'", name));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select count(*) from `Settings` where `Name` LIKE '%s'", name));
             if (r == null) return false;
             if (r.next()) if (r.getInt(1) > 0) return true;
             r.close();
@@ -425,7 +412,7 @@ public class FactionFactory {
 
     public Object GetFromSettings(String key, String faction) {
         try {
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `Master` where faction = '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `Settings` where `Name` = '%s'", faction));
             if (r == null) return null;
             if (r.next()) return r.getObject(key);
             return null;
@@ -453,7 +440,7 @@ public class FactionFactory {
 
     public String GetLeader(String faction) {
         try {
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `master` where `faction` = '%s' and rank LIKE 'leader'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `Master` where `faction` = '%s' and `rank` LIKE 'leader'", faction));
             if (r == null) return null;
             if (r.next()) {
                 return r.getString("player");
@@ -467,7 +454,7 @@ public class FactionFactory {
     public ArrayList<String> GetRecruits(String faction) {
         try {
             ArrayList<String> result = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `master` where `faction` LIKE '%s' AND `rank` LIKE '%s'", faction, "recruit"));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `Master` where `faction` LIKE '%s' AND `rank` LIKE '%s'", faction, "recruit"));
             if (r == null) return null;
             while (r.next()) {
                 result.add(r.getString("player").toLowerCase());
@@ -482,7 +469,7 @@ public class FactionFactory {
     public ArrayList<String> GetMemebrs(String faction) {
         try {
             ArrayList<String> result = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `master` where `faction` LIKE '%s' AND `rank` LIKE '%s'", faction, "Member"));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `Master` where `faction` LIKE '%s' AND `rank` LIKE '%s'", faction, "Member"));
             if (r == null) return null;
             while (r.next()) {
                 result.add(r.getString("player").toLowerCase());
@@ -497,7 +484,7 @@ public class FactionFactory {
     public ArrayList<String> GetOfficers(String faction) {
         try {
             ArrayList<String> result = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `master` where `faction` LIKE '%s' AND `rank` LIKE '%s'", faction, "Officer"));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `Master` where `faction` LIKE '%s' AND `rank` LIKE '%s'", faction, "Officer"));
             if (r == null) return null;
             while (r.next()) {
                 result.add(r.getString("player").toLowerCase());
@@ -512,7 +499,7 @@ public class FactionFactory {
     public ArrayList<String> GetGenerals(String faction) {
         try {
             ArrayList<String> result = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `master` where `faction` LIKE '%s' AND `rank` LIKE '%s'", faction, "General"));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `Master` where `faction` LIKE '%s' AND `rank` LIKE '%s'", faction, "General"));
             if (r == null) return null;
             while (r.next()) {
                 result.add(r.getString("player").toLowerCase());
@@ -524,20 +511,20 @@ public class FactionFactory {
         }
     }
 
-    public ArrayList<String> GetPlots(String faction) {
-        try {
-            ArrayList<String> results = new ArrayList<>();
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `plots` where `faction` LIKE '%s'", faction));
-            if (r == null) return null;
-            while (r.next()) {
-                results.add(r.getInt("x") + "|" + r.getInt("z"));
-                PlotsList.put(r.getInt("x") + "|" + r.getInt("z"), faction.toLowerCase());
-            }
-            return results;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public ArrayList<String> GetPlots(String faction) {
+//        try {
+//            ArrayList<String> results = new ArrayList<>();
+//            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `plots` where `faction` LIKE '%s'", faction));
+//            if (r == null) return null;
+//            while (r.next()) {
+//                results.add(r.getInt("x") + "|" + r.getInt("z"));
+//                PlotsList.put(r.getInt("x") + "|" + r.getInt("z"), faction.toLowerCase());
+//            }
+//            return results;
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     /**
      * @param faction
@@ -568,10 +555,13 @@ public class FactionFactory {
         Main.plugin.getLogger().info("GETTINGALL FACS");
         ArrayList<String> results = new ArrayList<>();
         try {
-            ResultSet r = this.ExecuteQuerySQL("select * from `Master`");
-            if (r == null) return null;
+            ResultSet r = this.ExecuteQuerySQL("select * from `Settings`");
+            if (r == null) {
+                System.out.println("WTF THIS IS NULL TOOOOOOO E33746!");
+                return null;
+            }
             while (r.next()) {
-                String ff = r.getString("faction");
+                String ff = r.getString("Name");
                 Main.plugin.getLogger().info("FOUNDDDDDDD FACCCCCCCCCCCCCCC" + ff);
                 if (!results.contains(ff)) results.add(ff);
             }
@@ -689,22 +679,25 @@ public class FactionFactory {
         if (p.Faction != null) {
             p.sendMessage(Error_InFaction.getMsg());
             return null;
+        } if(factionExistsInDB(name)){
+            p.sendMessage(Error_FactionExists.getMsg());
+            return null;
         }
 
 
-        Faction fac = new Faction(Main, name, name, p.getName().toLowerCase());
+        Faction fac = new Faction(Main, name);
         System.out.println(fac + " <<<<<< FFFFFFFFFFFFFFFF");
         LocalFactionCache.put(name.toLowerCase(), fac);
-        FacList.put(p.getName().toLowerCase(), name);
-        fac.SetPower(2);
-        fac.SetMOTD(motd);
-        fac.SetDesc(desc);
-        if (privacy) fac.SetPrivacy(1);
-        else fac.SetPrivacy(0);
+        fac.addPlayerToGlobalList(p,name);
+        fac.getSettings().setPower(2,true);
+        fac.getSettings().setMOTD(motd,true);
+        fac.getSettings().setDescription(desc,true);
+        fac.getSettings().setPrivacy(privacy ? 1 : 0,true);
         p.sendMessage(Success_FactionCreated.getMsg());
         p.Faction = fac.getName();
         RegitsterToRich(fac);
-        fac.save();
+//@Todo
+        //        fac.save();
         return fac;
     }
 
@@ -713,15 +706,15 @@ public class FactionFactory {
     }
 
     public void RegitsterToRich(Faction f) {
-        RegitsterToRich(f.getName(), f.GetMoney());
+        RegitsterToRich(f.getName(), f.getSettings().getMoney());
     }
 
     public String factionPartialName(String name) {
         try {
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `master` where `faction`= '%s'", name + "%"));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `Setting` where `Name`= '%s'", name + "%"));
             if (r == null) return null;
             if (r.next()) {
-                return r.getString("faction");
+                return r.getString("Name");
             } else {
                 return null;
             }
@@ -762,8 +755,8 @@ public class FactionFactory {
 
     public String GetFactionFromMember(String faction) {
         try {
-            System.out.println(String.format("select * from `master` where `player` LIKE '%s'", faction));
-            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `master` where `player` LIKE '%s'", faction));
+            System.out.println(String.format("select * from `Master` where `player` LIKE '%s'", faction));
+            ResultSet r = this.ExecuteQuerySQL(String.format("select * from `Master` where `player` LIKE '%s'", faction));
             if (r == null) return null;
             while (r.next()) {
                 return r.getString("faction").toLowerCase();
@@ -794,27 +787,28 @@ public class FactionFactory {
             //No leader == No Faction!
             if (GetLeader(name) == null && !name.equalsIgnoreCase("peace") && !name.equalsIgnoreCase("wilderness"))
                 return null;
-            Faction fac = new Faction(Main, name, (String) GetFromSettings("displayname", name), GetLeader(name), GetMemebrs(name), GetOfficers(name), GetGenerals(name), GetRecruits(name));
-            fac.SetPlots(GetPlots(name));
-            fac.SetMaxPlayers((Integer) GetFromSettings("MaxPlayers", name));
-//            fac.SetPowerBonus((Integer) GetFromSettings("powerbonus", name));
-            fac.SetMOTD((String) GetFromSettings("MOTD", name));
-            fac.SetDesc((String) GetFromSettings("Description", name));
-            fac.SetPrivacy((Integer) GetFromSettings("Privacy", name));
-            fac.SetPerm((String) GetFromSettings("Perm", name));
-            fac.SetHome(GetHome(name));
-            fac.SetAllies(GetAllies(name));
-            fac.SetEnemies(GetEnemies(name));
-//            fac.SetInvite(GetInvites(name));
-            fac.SetDisplayName(GetDisplayName(name));
-            fac.SetPower((Integer) GetFromSettings("Power", name));
-            fac.SetMoney((Integer) GetFromSettings("Money", name));
-            fac.SetPoints((Integer) GetFromSettings("Points", name));
-            fac.SetXP((Integer) GetFromSettings("XP", name));
-            fac.SetLevel((Integer) GetFromSettings("Level", name));
-            fac.RetrieveActiveMission((String) GetFromSettings("ActivevMission", name));
-            fac.SetRich((Integer) GetFromSettings("Rich", name));
-            fac.SetCompletedMissisons(GetCompletedMissions(name));
+//            Faction fac = new Faction(Main, name, (String) GetFromSettings("displayname", name), GetLeader(name), GetMemebrs(name), GetOfficers(name), GetGenerals(name), GetRecruits(name));
+            Faction fac = new Faction(Main, name, false);
+//            fac.SetPlots(GetPlots(name));
+//            fac.SetMaxPlayers((Integer) GetFromSettings("MaxPlayers", name));
+////            fac.SetPowerBonus((Integer) GetFromSettings("powerbonus", name));
+//            fac.SetMOTD((String) GetFromSettings("MOTD", name));
+//            fac.SetDesc((String) GetFromSettings("Description", name));
+//            fac.SetPrivacy((Integer) GetFromSettings("Privacy", name));
+//            fac.SetPerm((String) GetFromSettings("Perm", name));
+//            fac.SetHome(GetHome(name));
+////            fac.SetAllies(GetAllies(name));
+////            fac.SetEnemies(GetEnemies(name));
+////            fac.SetInvite(GetInvites(name));
+//            fac.SetDisplayName(GetDisplayName(name));
+//            fac.SetPower((Integer) GetFromSettings("Power", name));
+//            fac.SetMoney((Integer) GetFromSettings("Money", name));
+//            fac.SetPoints((Integer) GetFromSettings("Points", name));
+//            fac.SetXP((Integer) GetFromSettings("XP", name));
+//            fac.SetLevel((Integer) GetFromSettings("Level", name));
+//            fac.RetrieveActiveMission((String) GetFromSettings("ActivevMission", name));
+//            fac.SetRich((Integer) GetFromSettings("Rich", name));
+//            fac.SetCompletedMissisons(GetCompletedMissions(name));
             LocalFactionCache.put(fac.getName().toLowerCase(), fac);
             return fac;
         }
@@ -826,7 +820,7 @@ public class FactionFactory {
     public ArrayList<Faction> GetAllOpenFactions() {
         ArrayList<Faction> found = new ArrayList<>();
         try {
-            ResultSet r = this.ExecuteQuerySQL("select * from `Master` where `privacy`= '1'");
+            ResultSet r = this.ExecuteQuerySQL("select * from `Settings` where `privacy`= '1'");
             if (r == null) return null;
             while (r.next()) {
 //                return r.getString("faction");
@@ -842,7 +836,7 @@ public class FactionFactory {
     public ArrayList<Faction> GetAllOpenFactions(String name) {
         ArrayList<Faction> found = new ArrayList<>();
         try {
-            ResultSet r = this.ExecuteQuerySQL("select * from `Master` where `privacy`= '1' and `faction` LIKE '" + name + "'");
+            ResultSet r = this.ExecuteQuerySQL("select * from `Settings` where `privacy`= '1' and `faction` LIKE '" + name + "'");
             if (r == null) return null;
             while (r.next()) {
 //                return r.getString("faction");
@@ -853,5 +847,50 @@ public class FactionFactory {
             Main.plugin.getLogger().error("ERROR GETTING ALL OPEN FACTIONS", e);
         }
         return found;
+    }
+
+    /**
+     * Returns if Faction if chunk is claimed and Null if not claimed
+     * @param x
+     * @param z
+     * @return Null | Faction
+     */
+    public Faction checkPlot(int x, int z) {
+        try {
+            String pid = x+"|"+z;
+            ResultSet r = this.ExecuteQuerySQL("select * from plots where `plotid`= '"+pid+"'");
+            if (r == null) return null;
+            if(r.next()) {
+//                return r.getString("faction");
+                Faction f = Main.FFactory.getFaction(r.getString("faction"));
+                if (f == null)return null;
+                return f;
+            }
+        } catch (Exception e) {
+            Main.plugin.getLogger().error("ERROR WHILE CHECKING PLOT", e);
+        }
+        return null;
+
+    }
+
+    public boolean isPlayerInFaction(CorePlayer p) {
+        return isPlayerInFaction(p.getName());
+    }
+    public boolean isPlayerInFaction(Player p) {
+        return isPlayerInFaction(p.getName());
+    }
+    public boolean isPlayerInFaction(String p) {
+        try {
+            ResultSet r = this.ExecuteQuerySQL("select * from Master where `player`= '"+p+"'");
+            if (r == null) return false;
+            if(r.next()) {
+                r.close();
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            Main.plugin.getLogger().error("ERROR WHILE CHECKING PLOT", e);
+        }
+        return true;
     }
 }

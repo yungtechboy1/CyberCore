@@ -38,7 +38,7 @@ public class Deposit extends Commands {
             Sender.sendMessage(FactionsMain.NAME + TextFormat.RED + "You don't have " + money + " Money!");
             return;
         }
-        fac.AddMoney(money);
+        fac.getSettings().addMoney(money);
         Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "$" + money + " Money Added to your Faction!");
         fac.BroadcastMessage(FactionsMain.NAME + TextFormat.GREEN + Sender.getName() + " has deposited $" + money + " Money to the faction account!");
     }

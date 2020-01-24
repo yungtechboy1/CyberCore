@@ -9,6 +9,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 /**
  * Created by carlt_000 on 7/9/2016.
  */
+@Deprecated
 public class Deny extends Commands {
 
     public Deny(CorePlayer s, String[] a, FactionsMain m) {
@@ -29,7 +30,7 @@ public class Deny extends Commands {
 
         if (cp.FactionInvite != null) {
             Faction fac = Main.FFactory.getFaction(cp.FactionInvite);
-            fac.BroadcastMessage(TextFormat.YELLOW + Sender.getName() + " has declined the invitation to your faction", fac.getSettings().getAllowedToInvite());
+            fac.BroadcastMessage(TextFormat.YELLOW + Sender.getName() + " has declined the invitation to your faction", fac.getPermSettings().getAllowedToInvite());
             cp.FactionInvite = null;
             cp.FactionInviteTimeout = -1;
             Sender.sendMessage(TextFormat.GREEN+"Faction invite declined!");

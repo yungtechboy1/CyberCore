@@ -12,11 +12,11 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
  */
 public class Demote extends Commands {
 
-    public static final int RECRUIT = 1;
-    public static final int MEMBER = 2;
-    public static final int OFFICER = 3;
-    public static final int GENERAL = 4;
-    public static final int LEADER = 5;
+//    public static final int RECRUIT = 1;
+//    public static final int MEMBER = 2;
+//    public static final int OFFICER = 3;
+//    public static final int GENERAL = 4;
+//    public static final int LEADER = 5;
 
     public Demote(CorePlayer s, String[] a, FactionsMain m) {
         super(s, a, "/f Demote <player>", m);
@@ -49,7 +49,7 @@ public class Demote extends Commands {
         }
 
         FactionRank r = fac.getPlayerRank((Player)Sender);
-        FactionRank fr = fac.getSettings().getAllowedToPromote();
+        FactionRank fr = fac.getPermSettings().getAllowedToPromote();
         if (r.hasPerm(fr)) {
             fac.DemotePlayer(pp);
         }

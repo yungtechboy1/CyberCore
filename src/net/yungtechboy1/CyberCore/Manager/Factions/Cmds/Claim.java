@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
+import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionRank;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 
@@ -29,7 +30,7 @@ public class Claim extends Commands {
         Integer Radius = GetIntegerAtArgs(1,1);
         FactionRank r = fac.getPlayerRank(Sender);
         if(r != null){
-            if (!r.hasPerm(fac.getSettings().getAllowedToClaim())) {
+            if (!r.hasPerm(fac.getPermSettings().getAllowedToClaim())) {
                 Sender.sendMessage("Error! You don't have permission to Claim Plots!");
                 return;
             }
@@ -39,11 +40,11 @@ public class Claim extends Commands {
             Integer rr = Radius * Radius;
             Integer money = (5000*rr);
             Integer power = (rr);
-            if(fac.GetMoney() > money){
+            if(fac.getSettings().getMoney() > money){
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Your Faction does not have $"+money+" in your faction account!");
                 return;
             }
-            if(fac.GetPower() < power){
+            if(fac.getSettings().getPower() < power){
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Your Faction does not have enough power!");
                 return;
             }
@@ -69,15 +70,17 @@ public class Claim extends Commands {
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Your Faction does not have "+power+" PowerAbstract!");
                 return;
             }
-            if(Main.FFactory.PlotsList.containsKey(x+"|"+z)){
-                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"That land is already Claimed by"+Main.FFactory.PlotsList.get(x+"|"+z)+"'s Faction!!");
+            Faction f = Main.FFactory.checkPlot(x,z);
+            if(f != null){
+                Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"That land is already Claimed by"+f.getName()+"'s Faction!!");
                 return;
             }
             Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"Purchase Successful! $5000 and 1 PowerAbstract Withdrawn To Purchase This Chunk!");
             fac.TakeMoney(money);
             fac.AddPlots(x, z, Sender);
             fac.TakePower(power);
-            Main.FFactory.PlotsList.put(x + "|" + z, fac.getName());
+            fac.AddPlots(x,z,Sender);
+//            Main.FFactory.PlotsList.put(x + "|" + z, fac.getName());
         }
 
     }
@@ -93,14 +96,15 @@ public class Claim extends Commands {
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Your Faction does not have "+power+" PowerAbstract to claim Chunk at X:"+x+" Z:"+z+"!");
             return;
         }
-        if(Main.FFactory.PlotsList.containsKey(x+"|"+z)){
-            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"That Chunk at X:"+x+" Z:"+z+" is already Claimed by"+Main.FFactory.PlotsList.get(x+"|"+z)+"'s Faction!!");
+        if(Main.FFactory.PM.isPlotClaimed(x,z)){
+            Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"That Chunk at X:"+x+" Z:"+z+" is already Claimed by"+Main.FFactory.PM.getFactionFromPlot(x,z)+"'s Faction!!");
             return;
         }
         Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"Purchase Successful! $5000 and 1 PowerAbstract Withdrawn To Purchase Chunk at X:"+x+" Z:"+z+"!");
         fac.TakeMoney(money);
         fac.AddPlots(x, z, Sender);
         fac.TakePower(power);
-        Main.FFactory.PlotsList.put(x + "|" + z, fac.getName());
+        fac.AddPlots(x,z,Sender);
+//        Main.FFactory.PlotsList.put(x + "|" + z, fac.getName());
     }
 }

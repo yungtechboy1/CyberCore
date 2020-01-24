@@ -10,6 +10,7 @@ import cn.nukkit.item.ItemTool;
 import cn.nukkit.math.BlockFace;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ListTag;
+import cn.nukkit.nbt.tag.StringTag;
 import cn.nukkit.nbt.tag.Tag;
 import net.yungtechboy1.CyberCore.Custom.Block.MainClasses.CustomBlockTransparentMeta;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
@@ -149,14 +150,33 @@ public class BlockEnchantingTable extends CustomBlockTransparentMeta {
     @Override
     public boolean onActivate(Item item, Player sender) {
         if (sender != null) {
-            Player p = (Player) sender;
-            p.addWindow(new EnchantInventory(this.getLocation()), 3);
-//            CorePlayer cp = (CorePlayer) p;
-//            p.showFormWindow(new Enchanting0Window(getName()));
-//            cp.setNewWindow(new Enchanting1Window(cp,GetTier(),item));
+            BlockEntity t = this.getLevel().getBlockEntity(this);
+            BlockEntityEnchantTable enchantTable;
+            if (t instanceof BlockEntityEnchantTable) {
+                enchantTable = (BlockEntityEnchantTable)t;
+            } else {
+                CompoundTag nbt = (new CompoundTag()).putList(new ListTag("Items")).putString("id", "EnchantTable").putInt("x", (int)this.x).putInt("y", (int)this.y).putInt("z", (int)this.z);
+                enchantTable = new BlockEntityEnchantTable(this.getLevel().getChunk((int)this.x >> 4, (int)this.z >> 4), nbt);
+            }
+
+            if (enchantTable.namedTag.contains("Lock") && enchantTable.namedTag.get("Lock") instanceof StringTag && !enchantTable.namedTag.getString("Lock").equals(item.getCustomName())) {
+                return true;
+            }
+
+            sender.addWindow(new EnchantInventory(sender.getUIInventory(), this.getLocation()), 3);
         }
 
         return true;
+
+//        if (sender != null) {
+//            Player p = (Player) sender;
+//            p.addWindow(new EnchantInventory(this.getLocation()), 3);
+////            CorePlayer cp = (CorePlayer) p;
+////            p.showFormWindow(new Enchanting0Window(getName()));
+////            cp.setNewWindow(new Enchanting1Window(cp,GetTier(),item));
+//        }
+//
+//        return true;
     }
 
     @Override

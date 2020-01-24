@@ -51,18 +51,15 @@ public class Promote extends Commands {
         Integer fromperm = fac.GetPlayerPerm(ppn);
 
         if(perm >= MEMBER && fromperm < RECRUIT){
-            fac.DelRecruit(Sender.getName());
-            fac.AddMember(Sender.getName());
+            fac.PromotePlayer(Sender);
             Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+ppn+" Has been Promoted to Member");
             pp.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"You have been promoted to Member");
         }else if(perm >= OFFICER && fromperm < MEMBER){
-            fac.DelMember(Sender.getName());
-            fac.AddOfficer(Sender.getName());
+            fac.PromotePlayer(Sender);
             Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+ppn+" Has been Promoted to Officer");
             pp.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"You have been promoted to Officer");
         }else if(perm >= GENERAL && fromperm < OFFICER){
-            fac.DelOfficer(Sender.getName());
-            fac.AddGeneral(Sender.getName());
+            fac.PromotePlayer(Sender);
             Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+ppn+" Has been Promoted to General");
             pp.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"You have been promoted to General");
         }else if(perm >= LEADER && fromperm < GENERAL){

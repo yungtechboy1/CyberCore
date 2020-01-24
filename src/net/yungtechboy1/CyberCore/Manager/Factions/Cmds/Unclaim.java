@@ -42,33 +42,33 @@ public class Unclaim extends Commands {
             //amount = (100) * Main.prefs["PlotPrice"];
 
 
-            if(!Main.FFactory.PlotsList.containsKey(x+"|"+z)){
+            if(!Main.FFactory.PM.isPlotClaimed(x,z)){
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Chunk Not Claimed!");
                 return;
             }
-            if (!Main.FFactory.PlotsList.get(x + "|" + z).equalsIgnoreCase(fac.getName())) {
+            if (!Main.FFactory.PM.getFactionFromPlot(x,z).equalsIgnoreCase(fac.getName())) {
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Your Faction Dose not owne this Chunk!");
                 return;
             }
             Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"Plot Removed!");
-            fac.DelPlots(x+"|"+z);
-            Main.FFactory.PlotsList.remove(x+"|"+z);
+            fac.DelPlots(x,z,Sender);
+//            Main.FFactory.PlotsList.remove(x+"|"+z);
         }
 
     }
 
     private void UnClaimLand(Integer x,Integer z){
-        if(!Main.FFactory.PlotsList.containsKey(x+"|"+z)){
+        if(!Main.FFactory.PM.isPlotClaimed(x,z)){
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Chunk Not Claimed!");
             return;
             //Sender.sendMessage(TextFormat.RED+"That Chunk at X:"+x+" Z:"+z+" is already Claimed by"+Main.FFactory.PlotsList.get(x+"|"+z)+"'s Faction!!");
         }
-        if (!Main.FFactory.PlotsList.get(x + "|" + z).equalsIgnoreCase(fac.getName())) {
+        if (!Main.FFactory.PM.getFactionFromPlot(x , z).equalsIgnoreCase(fac.getName())) {
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED+"Your Faction Dose not own this Chunk!");
             return;
         }
         Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN+"Plot Removed!");
-        fac.DelPlots(x+"|"+z);
-        Main.FFactory.PlotsList.remove(x+"|"+z);
+        fac.DelPlots(x,z, Sender);
+//        Main.FFactory.PlotsList.remove(x+"|"+z);
     }
 }

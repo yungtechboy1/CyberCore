@@ -1,5 +1,8 @@
 package net.yungtechboy1.CyberCore.Manager.Form.Windows;
 
+import cn.nukkit.Player;
+import cn.nukkit.Server;
+import cn.nukkit.block.BlockEnchantingTable;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
 import net.yungtechboy1.CyberCore.CorePlayer;
@@ -40,7 +43,14 @@ public class FactionKickListWindow extends CyberFormSimple {
             return false;
         }else{
             System.out.println("STARTTING KICKKING >>> "+tp);
-            _Fac.KickPlayer(tp);
+            Player tpp = Server.getInstance().getPlayerExact(tp);
+            if(tpp == null){
+                cp.sendMessage("Error E44321. No Player Found!!!");
+                return false;
+            }else {
+                _Fac.KickPlayer(tpp);
+                new BlockEnchantingTable();
+            }
         }
         return false;
     }
