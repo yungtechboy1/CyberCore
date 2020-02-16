@@ -7,6 +7,7 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.item.EntityItem;
 import cn.nukkit.level.Level;
 import cn.nukkit.scheduler.AsyncTask;
+import net.yungtechboy1.CyberCore.entities.EntityStackable;
 import net.yungtechboy1.CyberCore.entities.block.BlockEntitySpawner;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class SpawnerCalculationsAsync extends AsyncTask {
     int requiredPlayerRange = 32;
     int maxNearbyEntities = 6;
     ArrayList<Entity> list = new ArrayList<>();
+    int FA = 0;
 
     public SpawnerCalculationsAsync(Entity[] entities, BlockEntitySpawner me, int requiredPlayerRange, int maxNearbyEntities) {
         Entities = entities;
@@ -29,13 +31,18 @@ public class SpawnerCalculationsAsync extends AsyncTask {
 
     @Override
     public void onRun() {
+        FA = 0;
         boolean isValid = false;
         for (Entity entity : Entities) {
             if (entity.distance(Me) <= this.requiredPlayerRange) {
                 if (entity instanceof Player) {
                     isValid = true;
+                } else if(entity instanceof EntityItem)continue;//Dropped Items Should not count!
+                else if(entity instanceof EntityStackable){
+                    EntityStackable es = (EntityStackable)entity;
+                    FA += es.GetStackCount()-1;
                 }
-                if(entity instanceof EntityItem)continue;//Dropped Items Should not count!
+                FA++;
                 list.add(entity);
             }
         }
@@ -52,7 +59,7 @@ public class SpawnerCalculationsAsync extends AsyncTask {
         }
         BlockEntity be = lvl.getBlockEntity(Me);
         if (be != null && be instanceof BlockEntitySpawner) {
-            ((BlockEntitySpawner) be).afterUpdate(list);
+            ((BlockEntitySpawner) be).afterUpdate(list, FA);
             ((BlockEntitySpawner) be).wait = false;
         }
     }

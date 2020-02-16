@@ -115,7 +115,9 @@ public class UserSQL extends MySQL {
             q = addToQuery(q, psd.PlayerWarningToJSON()) + ",";
             q = addToQuery(q, psd.PlayerTempBansToJSON()) + ",";
             q = addToQuery(q, psd.PlayerKicksToJSON()) + ",";
-            q = addToQuery(q, psd.PlayerBansToJSON()) ;
+            q = addToQuery(q, psd.PlayerBansToJSON())+ "," ;
+            q = addToQuery(q, psd.getKills()) + ",";
+            q = addToQuery(q, psd.getDeaths()) ;
             q += ")";
             Plugin.getLogger().info("Saved Player With SQL:" + q);
             executeUpdate(q);

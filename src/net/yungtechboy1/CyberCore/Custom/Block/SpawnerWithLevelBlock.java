@@ -94,7 +94,10 @@ public class SpawnerWithLevelBlock extends BlockSolid {
 //        CustomItemBlockSpawnerWithLevelBlock iitem = (CustomItemBlockSpawnerWithLevelBlock)item;
         if (blockEntity != null && blockEntity instanceof BlockEntitySpawner) {
             Server.getInstance().broadcastMessage("ENTITY ALREADY CREATED!!!!");
-            ((BlockEntitySpawner) blockEntity).setSpawnEntityType(item.getDamage());
+            BlockEntitySpawner b = ((BlockEntitySpawner) blockEntity);
+            b.setSpawnEntityType(item.getDamage());
+            b.lvl++;
+            player.sendMessage("Spawn Level Increased to LVL: "+b.lvl+"!!");
         } else {
             Server.getInstance().broadcastMessage("ENTITY NOT ALREADY CREATED!!!!");
             if (blockEntity != null) blockEntity.close();
@@ -115,6 +118,7 @@ public class SpawnerWithLevelBlock extends BlockSolid {
                     .putInt("z", (int) this.z)
                     .putInt("Level", sl);
             player.sendMessage("PLACE! Spawner is valid! T:" + t + " SL:" + sl);
+
             SpawnerWithLevelBlockEntity s = new SpawnerWithLevelBlockEntity(this.getLevel().getChunk((int) this.x >> 4, (int) this.z >> 4), nbt, sl);
 //            EntityHuman
             Server.getInstance().broadcastMessage(s.namedTag.getShort("MinSpawnDelay") + " <<<<<<");

@@ -289,6 +289,7 @@ public class ClassFactory implements Listener {
         save(cp,true);
     }
     public void save(CorePlayer cp, boolean savefile){
+        if(cp.getPlayerClass() == null)return;
         MMOSave.set(cp.getName().toLowerCase(), cp.getPlayerClass().export());
         if(savefile)MMOSave.save();
     }

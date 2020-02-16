@@ -30,10 +30,8 @@ public class UMCSQL extends MySQL {
 
     @Override
     public Connection connectToDb() {
-        if (Plugin == null) System.out.println("PLUGIN ERRRRRRRRRR222222222221RRRR");
-        if (Plugin.MainConfig == null) System.out.println("MAINNN ERRRRRRRR221222111211RRRRRR");
         String host = "cybertechpp.com";
-        int port = Plugin.MainConfig.getSection("db2").getInt("mysql-port");
+        int port = 3306;
         String user = "admin_UMC";
         String db = "admin_UMC";
         String pass = "admin_UMC";
@@ -49,7 +47,7 @@ public class UMCSQL extends MySQL {
         Connection connection = DbLib.getMySqlConnection(SBBB(host, port, db), user, pass);
 
         if (connection == null) {
-            System.out.println("CONEEEEECTTTTTTTTTIONNNNNNNNNNNN FAILEDDDDDDDD!!!21!333333!!!!!!!!" + SBBB(host, port, db));
+            System.out.println("CONEEEEECTTTTTTTTTIONNNNNNNNNNNN FAILEDDDDDDDD!!!21331!333333!!!!!!!!" + SBBB(host, port, db));
             enabled = false;
         } else {
             SC = connection;

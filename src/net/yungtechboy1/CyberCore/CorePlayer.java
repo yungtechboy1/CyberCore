@@ -94,9 +94,9 @@ public class CorePlayer extends Player {
     /**
      * @@deprecated
      */
-    public Integer money = 0;
+//    public Integer money = 0;
     public Integer kills = 0;
-    public Integer deaths = 0;
+//    public Integer deaths = 0;
     public Integer fixcoins = 0;
     public Integer banned = 0;
     //    public String faction_id = null;
@@ -126,11 +126,11 @@ public class CorePlayer extends Player {
     private Rank rank = RankList.PERM_GUEST.getRank();
     private BlockVector3 lastBreakPosition1 = new BlockVector3();
     private Position CTLastPos = null;
-    private int TeleportTick = 0;
-    private boolean isTeleporting = false;
-    private boolean isInTeleportingProcess = false;
-    private CorePlayer TargetTeleporting = null;
-    private Position TargetTeleportingLoc;
+//    private int TeleportTick = 0;
+//    private boolean isTeleporting = false;
+//    private boolean isInTeleportingProcess = false;
+//    private CorePlayer TargetTeleporting = null;
+//    private Position TargetTeleportingLoc;
     private BaseClass PlayerClass = null;
     private int ClassCheck = -1;
     private int FactionCheck = -1;
@@ -460,12 +460,12 @@ public class CorePlayer extends Player {
     }
 
     public boolean isInTeleportingProcess() {
-        return isInTeleportingProcess;
+        return WaitingForTP != -1;
     }
-
-    public void setInTeleportingProcess(boolean inTeleportingProcess) {
-        isInTeleportingProcess = inTeleportingProcess;
-    }
+//
+//    public void setInTeleportingProcess(boolean inTeleportingProcess) {
+//        isInTeleportingProcess = inTeleportingProcess;
+//    }
 
     public boolean IsItemBeingEnchanted() {
         return getItemBeingEnchanted() != null;
@@ -516,9 +516,9 @@ public class CorePlayer extends Player {
         }
     }
 
-    public PlayerSettingsData GetData() {
-        if (getPlayerSettingsData() == null) CreateDefaultSettingsData(this);
-        return getPlayerSettingsData();
+    public PlayerSettingsData getPlayerSettingsData() {
+        if (PlayerSettingsData == null) CreateDefaultSettingsData(this);
+        return PlayerSettingsData;
     }
 
     @Override
@@ -555,7 +555,8 @@ public class CorePlayer extends Player {
             return cnt;
         } else {
             this.removeWindow(inventory);
-            sendMessage("ERROR!!!!!!! I FUCKKKKED UUUUPPP");
+//            sendMessage("ERROR!!!!!!! I " +
+//                    "FUCKKKKED UUUUPPP");
             return -1;
         }
     }
@@ -579,50 +580,39 @@ public class CorePlayer extends Player {
 
     public void TakeMoney(double price) {
         if (price <= 0) return;
-        PlayerSettingsData ped = GetData();
+        PlayerSettingsData ped = getPlayerSettingsData();
         ped.takeCash(price);
     }
 
     public void AddMoney(double price) {
         if (price <= 0) return;
-        PlayerSettingsData ped = GetData();
+        PlayerSettingsData ped = getPlayerSettingsData();
         ped.addCash(price);
     }
 
     public double getMoney() {
-        return GetData().getCash();
-    }
-
-    public void SetRank(RankList r) {
-        SetRank(r.getRank());
-    }
-
-    public void SetRank(Rank r) {
-        rank = r;
+        return getPlayerSettingsData().getCash();
     }
 
     public Rank GetRank() {
+        if(rank == null)rank = CyberCoreMain.getInstance().RF.getPlayerRank(this);
         return rank;
     }
 
-    public Integer addDeath() {
-        return deaths += 1;
+    public void addDeath() {
+        getPlayerSettingsData().addDeath();
+        kills = 0;
     }
 
-    public Integer addDeaths(Integer amount) {
-        return deaths += amount;
-    }
+    public void addKill() {
 
-    public Integer addKill() {
-        return kills += 1;
-    }
-
-    public Integer addKills(Integer amount) {
-        return kills += amount;
+        kills += 1;
+        getPlayerSettingsData().addKill();
     }
 
     public double calculateKD() {
-        return kills / deaths;
+        PlayerSettingsData psd = getPlayerSettingsData();
+        return  psd.getKills()/ psd.getDeaths();
     }
 
     public boolean hasNewWindow() {
@@ -1670,8 +1660,14 @@ public class CorePlayer extends Player {
 //                    CyberCoreMain.getInstance().getLogger().info("RUNNNING CLASS CHECK IN CP" + CDL.size()+"||"+ getPlayerClass());
                         AddCoolDown(Cooldown_DTP, 1);
                         if(isWaitingForTeleport()){
-                            teleport(WaitingForTPPos);
-                            clearWaitingForTP();
+                            if(WaitingForTP == 0) {
+                                teleport(WaitingForTPPos);
+                                clearWaitingForTP();
+                            }else if(WaitingForTP == -1){
+                                //NO TP PENDING
+                            }else{
+                                WaitingForTP--;
+                            }
                         }
                     }
                     //Class Check
@@ -1711,68 +1707,68 @@ public class CorePlayer extends Player {
 
             //Check to see if Player as medic or Restoration
             PlayerFood pf = getFoodData();
-            if (TPR != null && TPRTimeout != 0 && TPRTimeout < currentTick && !isInTeleportingProcess) {
+            if (TPR != null && TPRTimeout != 0 && TPRTimeout < currentTick) {
                 TPRTimeout = 0;
                 CorePlayer cp = CyberCoreMain.getInstance().getCorePlayer(TPR);
                 if (cp != null) cp.sendPopup(TextFormat.YELLOW + "Teleport request expired");
                 sendPopup(TextFormat.YELLOW + "Teleport request expired");
                 TPR = null;
             }
-
-            if (isInTeleportingProcess) {
-                sendPopup(TeleportTick + "|" + isTeleporting);
-                if (TeleportTick != 0 && isTeleporting) {
-                    if (CTLastPos == null) CTLastPos = getPosition();
-                    else {
-                        sendMessage(CTLastPos.distance(getPosition()) + "");
-                        if (CTLastPos.distance(getPosition()) > 3) {
-                            isTeleporting = false;
-                        }
-//            CTLastPos = getPosition();
-                    }
-                    if (TeleportTick <= currentTick && isTeleporting) {
-                        System.out.println("AAAAAA");
-                        if (isTeleporting) {
-                            removeAllEffects();//TODO use `removeEffect` to only remove that Effect
-                            if ((TargetTeleporting != null && !TargetTeleporting.isAlive())) {
-                                sendMessage("Error! Player Not found!!");
-                                isInTeleportingProcess = false;
-                                TeleportTick = 0;
-                                CTLastPos = null;
-                                return super.onUpdate(currentTick);
-                            } else if (TargetTeleporting == null && TargetTeleportingLoc == null) {
-                                sendMessage("Error! No Teleport data found!!!");
-                                isInTeleportingProcess = false;
-                                TeleportTick = 0;
-                                CTLastPos = null;
-                                return super.onUpdate(currentTick);
-                            } else if (TargetTeleportingLoc != null) {
-                                getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
-                                teleport(TargetTeleportingLoc);
-                                TargetTeleportingLoc = null;
-                                TargetTeleporting = null;
-                            } else {
-                                getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
-                                teleport(TargetTeleporting);
-                                TargetTeleportingLoc = null;
-                                TargetTeleporting = null;
-                            }
-                            isInTeleportingProcess = false;
-                            TeleportTick = 0;
-                            CTLastPos = null;
-                        }
-                    } else if (isInTeleportingProcess && !isTeleporting) {
-                        removeAllEffects();
-                        sendMessage("Error! you moved too much!");
-                        isInTeleportingProcess = false;
-                        TeleportTick = 0;
-                        CTLastPos = null;
-                        TargetTeleportingLoc = null;
-                        TargetTeleporting = null;
-                    }
-
-                }
-            }
+//            @Deprecated
+//            if (isInTeleportingProcess) {
+//                sendPopup(TeleportTick + "|" + isTeleporting);
+//                if (TeleportTick != 0 && isTeleporting) {
+//                    if (CTLastPos == null) CTLastPos = getPosition();
+//                    else {
+//                        sendMessage(CTLastPos.distance(getPosition()) + "");
+//                        if (CTLastPos.distance(getPosition()) > 3) {
+//                            isTeleporting = false;
+//                        }
+////            CTLastPos = getPosition();
+//                    }
+//                    if (TeleportTick <= currentTick && isTeleporting) {
+//                        System.out.println("AAAAAA");
+//                        if (isTeleporting) {
+//                            removeAllEffects();//TODO use `removeEffect` to only remove that Effect
+//                            if ((TargetTeleporting != null && !TargetTeleporting.isAlive())) {
+//                                sendMessage("Error! Player Not found!!");
+//                                isInTeleportingProcess = false;
+//                                TeleportTick = 0;
+//                                CTLastPos = null;
+//                                return super.onUpdate(currentTick);
+//                            } else if (TargetTeleporting == null && TargetTeleportingLoc == null) {
+//                                sendMessage("Error! No Teleport data found!!!");
+//                                isInTeleportingProcess = false;
+//                                TeleportTick = 0;
+//                                CTLastPos = null;
+//                                return super.onUpdate(currentTick);
+//                            } else if (TargetTeleportingLoc != null) {
+//                                getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
+//                                teleport(TargetTeleportingLoc);
+//                                TargetTeleportingLoc = null;
+//                                TargetTeleporting = null;
+//                            } else {
+//                                getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
+//                                teleport(TargetTeleporting);
+//                                TargetTeleportingLoc = null;
+//                                TargetTeleporting = null;
+//                            }
+//                            isInTeleportingProcess = false;
+//                            TeleportTick = 0;
+//                            CTLastPos = null;
+//                        }
+//                    } else if (isInTeleportingProcess && !isTeleporting) {
+//                        removeAllEffects();
+//                        sendMessage("Error! you moved too much!");
+//                        isInTeleportingProcess = false;
+//                        TeleportTick = 0;
+//                        CTLastPos = null;
+//                        TargetTeleportingLoc = null;
+//                        TargetTeleporting = null;
+//                    }
+//
+//                }
+//            }
         }
 
         if (!this.loggedIn) {
@@ -1926,7 +1922,8 @@ public class CorePlayer extends Player {
                 Vector3 v3 = h.toVector3();
                 if (instant) teleport(v3);
                 else
-                    StartTeleport(h.toPosition(getLevel()), 7);
+//                    StartTeleport(h.toPosition(getLevel()), delay);
+                delayTeleport(delay,h.toPosition(getLevel()),true,2);
             }
         }
 
@@ -1958,43 +1955,51 @@ public class CorePlayer extends Player {
         HD.add(homeData);
     }
 
-    public PlayerSettingsData getPlayerSettingsData() {
-        return PlayerSettingsData;
-    }
+//    public PlayerSettingsData getPlayerSettingsData() {
+//        return PlayerSettingsData;
+//    }
 
     public void setPlayerSettingsData(PlayerSettingsData playerSettingsData) {
         PlayerSettingsData = playerSettingsData;
     }
+    @Deprecated
 
     public void StartTeleport(CorePlayer pl, int delay) {
 
         pl.BeginTeleportEffects(this, delay);
     }
 
+    @Deprecated
     public void StartTeleport(CorePlayer pl) {
         StartTeleport(pl, 3);
     }
 
+    @Deprecated
     public void StartTeleport(Position pl, int delay) {
 
         BeginTeleportEffects(pl, delay);
     }
+    @Deprecated
 
     public void StartTeleport(Vector3 v3, Player pl, int delay) {
         BeginTeleportEffects(new Location(v3.x, v3.y, v3.z, pl.getLevel()), delay);
     }
+    @Deprecated
 
     public void StartTeleport(Position pl) {
         StartTeleport(pl, 3);
     }
+    @Deprecated
 
     private void BeginTeleportEffects(CorePlayer corePlayer) {
         BeginTeleportEffects(corePlayer, 3);
     }
+    @Deprecated
 
     private void BeginTeleportEffects(CorePlayer corePlayer, int delay) {
         BeginTeleportEffects(corePlayer.getLocation(), delay);
     }
+    @Deprecated
 
     private void BeginTeleportEffects(Position pos, int delay) {
         Effect e1 = Effect.getEffect(9);
@@ -2005,11 +2010,11 @@ public class CorePlayer extends Player {
         e2.setDuration(20 * 600);
         addEffect(e1);
         addEffect(e2);
-        isTeleporting = true;
-        isInTeleportingProcess = true;
-        TeleportTick = getServer().getTick() + 20 * delay;
-        TargetTeleporting = null;
-        TargetTeleportingLoc = pos;
+//        isTeleporting = true;
+//        isInTeleportingProcess = true;
+//        TeleportTick = getServer().getTick() + 20 * delay;
+//        TargetTeleporting = null;
+//        TargetTeleportingLoc = pos;
     }
 
     public void ClearFactionInvite() {
@@ -2253,9 +2258,10 @@ public class CorePlayer extends Player {
     }
 
     public boolean isWaitingForTeleport() {
-        if (!(WaitingForTP == -1) && WaitingForTPPos != null) {
-            if(WaitingForTPStartPos != null && WaitingForTPStartPos.distance(WaitingForTPPos.asVector3f().asVector3()) > WaitingForTPCD){
-                sendMessage("Error! You moved too much so your teleport was canceled");
+        if (!(WaitingForTP == -1) && WaitingForTPPos != null && WaitingForTPStartPos != null ) {
+            double d = WaitingForTPStartPos.distance(getPosition().asVector3f().asVector3());
+            if(d > WaitingForTPCD){
+                sendMessage("Error! You moved too much so your teleport was canceled! Distance Moved :" +d);
                 clearWaitingForTP();
                 return false;
             }

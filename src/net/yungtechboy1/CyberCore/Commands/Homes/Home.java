@@ -64,7 +64,7 @@ public class Home extends Command {
             sender.sendMessage(Prefix + "Error! You are in the process of TPing already!");
             return true;
         }
-        p.setInTeleportingProcess(true);
+//        p.setInTeleportingProcess(true);
         p.TeleportToHome(args[0],10);
         return true;
     }

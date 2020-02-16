@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Rank;
 import cn.nukkit.Player;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
+import net.yungtechboy1.CyberCore.CacheChecker;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Rank.Ranks.Guest_Rank;
@@ -12,6 +13,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by carlt_000 on 1/22/2017.
@@ -27,12 +29,20 @@ public class RankFactory {
     public ConfigSection GARC = new ConfigSection();
     public ConfigSection MRC = new ConfigSection();
     public ConfigSection SRC = new ConfigSection();
+    CacheChecker cc = new CacheChecker("Rank",60*8);
 
     public Map<Integer, Rank> ranks = new HashMap<>();
 
     public RankFactory(CyberCoreMain main) {
         Main = main;
         loadRanks();
+    }
+
+    public void onUpdate(){
+        if(cc.needsUpdate()){
+            cc.updateLastUpdated();
+            RankCache.clear();
+        }
     }
 
     public void loadDefault() {
@@ -71,8 +81,11 @@ public class RankFactory {
             int rid = getRankIDFromUserID(uid);
             CyberCoreMain.getInstance().getLogger().warning("Loading rank for "+pn+" wtih Rank ID "+rid+" & User ID: "+uid);
             if(rid != -1){
-                return ranks.getOrDefault(rid,new Guest_Rank());
+                Rank r = ranks.getOrDefault(rid,new Guest_Rank());
+                RankCache.put(pn,rid);
+                return r;
             }
+            RankCache.put(pn,0);
             return new Guest_Rank();
         }
         return ranks.getOrDefault(RankCache.get(pn), new Guest_Rank());

@@ -20,6 +20,25 @@ public class PlotManager {
         ReloadPlots();
     }
 
+    public ArrayList<String> getFactionPlots(String faction) {
+        ArrayList<String> p = new ArrayList<>();
+        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
+        try {
+            Statement s = c.createStatement();
+            ResultSet r = s.executeQuery("SELECT * FROM plots WHERE faction LIKE '" + faction + "'");
+            while (r.next()) {
+                p.add(r.getString("plotid"));
+            }
+            c.close();
+            return p;
+//        Main.FFactory.allyrequest.put(getName(), fac.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error sending plots to DB!!! Please report Error 'E209DB t'o an admin");
+            return null;
+        }
+    }
+
     public void ReloadPlots() {
         try {
             ArrayList<String> results = new ArrayList<>();

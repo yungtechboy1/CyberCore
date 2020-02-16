@@ -119,44 +119,44 @@ public class ServerSqlite extends MySQL {
         Plugin.ClassFactory.GetClass(p,true);
     }
 
-    private void LoadRank(CorePlayer p) {
-        try {
-            List<HashMap<String, Object>> data = executeSelect("SELECT * FROM `Ranks` WHERE `uuid` LIKE '" + p.getUniqueId() + "'");
-            if (data == null || data.size() == 0) {
-                CyberCoreMain.getInstance().getLogger().error("No Ranks found for "+p.getName());
-                p.SetRank(RankList.PERM_GUEST);
-                return;
-            } else {
-                Plugin.getLogger().info("Loading " + data.size() + " Ranks!");
-            }
-
-            for (HashMap<String, Object> v : data) {
-                String rn = (String)v.get("rank");
-                if(rn.equalsIgnoreCase(RankList.PERM_GUEST.getName())){
-                    if(p.GetRank().getId() < RankList.PERM_GUEST.getID()){
-                        p.SetRank(RankList.PERM_GUEST);
-                    }
-                }else if(rn.equalsIgnoreCase(RankList.PERM_MEMBER.getName())){
-                    if(p.GetRank().getId() < RankList.PERM_MEMBER.getID()){
-                        p.SetRank(RankList.PERM_MEMBER);
-                    }
-                }else if(rn.equalsIgnoreCase(RankList.PERM_OP.getName())){
-                    if(p.GetRank().getId() < RankList.PERM_OP.getID()){
-                        p.SetRank(RankList.PERM_OP);
-                    }
-                }else if(rn.equalsIgnoreCase(RankList.PERM_VIP.getName())){
-                    if(p.GetRank().getId() < RankList.PERM_VIP.getID()){
-                        p.SetRank(RankList.PERM_VIP);
-                    }
-                }
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        p.SetRank(RankList.PERM_GUEST);
-        return;
-    }
+//    private void LoadRank(CorePlayer p) {
+//        try {
+//            List<HashMap<String, Object>> data = executeSelect("SELECT * FROM `Ranks` WHERE `uuid` LIKE '" + p.getUniqueId() + "'");
+//            if (data == null || data.size() == 0) {
+//                CyberCoreMain.getInstance().getLogger().error("No Ranks found for "+p.getName());
+//                p.SetRank(RankList.PERM_GUEST);
+//                return;
+//            } else {
+//                Plugin.getLogger().info("Loading " + data.size() + " Ranks!");
+//            }
+//
+//            for (HashMap<String, Object> v : data) {
+//                String rn = (String)v.get("rank");
+//                if(rn.equalsIgnoreCase(RankList.PERM_GUEST.getName())){
+//                    if(p.GetRank().getId() < RankList.PERM_GUEST.getID()){
+//                        p.SetRank(RankList.PERM_GUEST);
+//                    }
+//                }else if(rn.equalsIgnoreCase(RankList.PERM_MEMBER.getName())){
+//                    if(p.GetRank().getId() < RankList.PERM_MEMBER.getID()){
+//                        p.SetRank(RankList.PERM_MEMBER);
+//                    }
+//                }else if(rn.equalsIgnoreCase(RankList.PERM_OP.getName())){
+//                    if(p.GetRank().getId() < RankList.PERM_OP.getID()){
+//                        p.SetRank(RankList.PERM_OP);
+//                    }
+//                }else if(rn.equalsIgnoreCase(RankList.PERM_VIP.getName())){
+//                    if(p.GetRank().getId() < RankList.PERM_VIP.getID()){
+//                        p.SetRank(RankList.PERM_VIP);
+//                    }
+//                }
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        p.SetRank(RankList.PERM_GUEST);
+//        return;
+//    }
 
 //    public void UnLoadPlayer(Player p) {
 //        SaveHomes((CorePlayer) p);

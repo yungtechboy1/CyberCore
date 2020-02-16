@@ -29,6 +29,7 @@ import net.yungtechboy1.CyberCore.Custom.Inventory.TestInv;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.entities.EntityStackable;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -65,7 +66,7 @@ public class CustomFactory implements Listener {
      * @param args
      * @return
      */
-    public static Entity SpawnEntityStack(int type, Position source, Object... args) {
+    public static Entity SpawnEntityStack(int type, Position source, ArrayList<Entity> list,Object... args) {
         FullChunk chunk = source.getLevel().getChunk((int) source.x >> 4, (int) source.z >> 4, true);
         if (!chunk.isGenerated()) {
             chunk.setGenerated();
@@ -74,7 +75,8 @@ public class CustomFactory implements Listener {
             chunk.setPopulated();
         }
 
-        Entity[] el = source.getLevel().getNearbyEntities(source.getLevelBlock().getBoundingBox().grow(16, 16, 16));
+//        Entity[] el = source.getLevel().getNearbyEntities(source.getLevelBlock().getBoundingBox().grow(16, 16, 16));
+        ArrayList<Entity> el = list;
 //        Server.getInstance().getLogger().info("FOUND "+el.length);
         Entity stackEntity = null;
         for (Entity e : el) {

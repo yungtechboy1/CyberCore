@@ -29,6 +29,8 @@ public class CrateTickThread extends Thread implements InterruptibleThread {
     //    public static CyberCoreMain CCM;
     private String player;
     private ArrayList<Item> items;
+    long eid2 = -1l;
+    long eid = -1l;
     private String name;
     //    private HashMap<String, Long> eids = new HashMap<>();
     private Vector3 asVector3;
@@ -49,8 +51,6 @@ public class CrateTickThread extends Thread implements InterruptibleThread {
     public void run() {
         int life = 0;
         boolean ff = false;
-        long eid2 = -1l;
-        long eid = -1l;
         int slot = -1;
         int lasttick = -1;
 //        int lt = -1;
@@ -230,6 +230,9 @@ public class CrateTickThread extends Thread implements InterruptibleThread {
                     RemoveEntityPacket pkk = new RemoveEntityPacket();
                     pkk.eid = eid2;
                     p.batchDataPacket(pkk);
+                    RemoveEntityPacket pkk1 = new RemoveEntityPacket();
+                    pkk1.eid = eid;
+                    p.batchDataPacket(pkk1);
 
                     System.out.println("18B|||||||||||||");
                     CTstop();

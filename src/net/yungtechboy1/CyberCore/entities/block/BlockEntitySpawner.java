@@ -4,8 +4,10 @@ import cn.nukkit.blockentity.BlockEntitySpawnable;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.format.FullChunk;
+import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ShortTag;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Factory.CustomFactory;
 import net.yungtechboy1.CyberCore.Tasks.SpawnerCalculationsAsync;
 import net.yungtechboy1.CyberCore.entities.EntityStackable;
@@ -22,8 +24,9 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
     public boolean wait = false;
     public int minSpawnDelay;
     public int maxSpawnDelay;
+    public int lvl;
+    public int LastTick = 0;
     private int entityId = -1;
-    private int lvl;
     private int delay = 0;
 
     public BlockEntitySpawner(FullChunk chunk, CompoundTag nbt, int eid, int llevel, int spawnRange, int minSpawnDelay, int maxSpawnDelay, int requiredPlayerRange) {
@@ -122,25 +125,44 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
             return false;
         }
 
-        int r = Utils.rand(this.minSpawnDelay, this.maxSpawnDelay);
 //        System.out.println("UPDATE "+this.x+" | "+this.y+" | "+this.z+" | WAIT: "+delay+"<"+r);
-        if (this.delay++ >= r && !wait) {
+        if (!wait) {
+            if (delay <= 0) {
 //            System.out.println("UPDATE "+this.x+" | "+this.y+" | "+this.z+" | DEWLAY TTTTTTTTTTTTTTTTTTTTT"+delay);
-            this.delay = 0;
+                this.delay = Utils.rand(this.minSpawnDelay, this.maxSpawnDelay);
 
-            SpawnerCalculationsAsync SCA = new SpawnerCalculationsAsync(level.getEntities(), this, requiredPlayerRange, maxNearbyEntities);
-            server.getScheduler().scheduleAsyncTask(SCA);
-            wait = true;
+//            this.delay = 0;
+                SimpleAxisAlignedBB s = new SimpleAxisAlignedBB(this, this);
+                //16 Block Radius / 1/2 chunk
+//                CyberCoreMain.getInstance().getLogger().warning("AAA | "+getLevel());
+//                CyberCoreMain.getInstance().getLogger().warning("AAA > "+s);
+//                CyberCoreMain.getInstance().getLogger().warning("AAA >> "+getLevelBlock());
+//                CyberCoreMain.getInstance().getLogger().warning("AAA >>> "+getLevelBlock().asVector3f().toString());
+//                CyberCoreMain.getInstance().getLogger().warning("AAA >>>> "+getLevelBlock().getBoundingBox());
+//                CyberCoreMain.getInstance().getLogger().warning("AAA >>>>> "+s.grow(16,16,16));
+                Entity[] e = getLevel().getNearbyEntities(s.grow(16, 16, 16));
+                SpawnerCalculationsAsync SCA = new SpawnerCalculationsAsync(e, this, requiredPlayerRange, maxNearbyEntities);
+                server.getScheduler().scheduleAsyncTask(CyberCoreMain.getInstance(), SCA);
+                wait = true;
+            } else {
+                if (LastTick == 0) {
+                    delay--;
+                }  else {
+                    int a = getLevel().getServer().getTick() - LastTick;
+                    delay -= a;
+                }
+                LastTick = getLevel().getServer().getTick();
+            }
         }
         return true;
     }
 
-    public void afterUpdate(ArrayList<Entity> list) {
+    public void afterUpdate(ArrayList<Entity> list, int fa) {
 //        Server.getInstance().broadcastMessage("After Update"+list.size()+" | "+maxNearbyEntities);
-        if (list.size() > 0) {
-            if (list.size() <= this.maxNearbyEntities) {
+        if (fa > 0) {
+            if (fa <= this.maxNearbyEntities) {
 //                System.out.println("CREATE ENTITYT");
-                Entity entity = CustomFactory.SpawnEntityStack(this.entityId, this);
+                Entity entity = CustomFactory.SpawnEntityStack(this.entityId, this, list);
                 if (entity != null) {
                     entity.spawnToAll();
                     if (((EntityStackable) entity).IsStackable()) {
@@ -214,7 +236,7 @@ public class BlockEntitySpawner extends BlockEntitySpawnable {
 
                 .putInt("EntityId", this.entityId)
                 .putInt("Type", this.entityId)
-        .putString("id", this.getSaveId())
+                .putString("id", this.getSaveId())
 //                .putString("SpawnData", this.entityId + "")//"minecraft:zombie"
 //                .putList(new ListTag<CompoundTag>("SpawnPotentials") {
 //                    {

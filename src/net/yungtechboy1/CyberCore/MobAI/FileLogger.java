@@ -17,7 +17,8 @@ import java.sql.Timestamp;
  * 
  * @author <a href="mailto:kniffman@googlemail.com">Michael Gertz (kniffo80)</a>
  */
-public class FileLogger {
+public class
+FileLogger {
     
     private static PrintWriter printWriter = null;
     

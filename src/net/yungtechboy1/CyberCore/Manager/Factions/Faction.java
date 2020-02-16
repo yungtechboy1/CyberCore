@@ -176,7 +176,7 @@ public class Faction {
         Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
         try {
             Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT * FROM Master WHERE faction LIKE '" + getName() + "'");
+            ResultSet r = s.executeQuery("SELECT * FROM Master WHERE `faction` LIKE '" + getName() + "'");
             PlayerRanks.clear();
             while (r.next()) {
                 String pn = r.getString("player");
@@ -184,6 +184,7 @@ public class Faction {
                 PlayerRanks.put(pn, fr);
             }
             PlayerRanksCC.updateLastUpdated();
+            r.close();
             c.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -435,22 +436,7 @@ public class Faction {
     }
 
     public ArrayList<String> GetPlots() {
-        ArrayList<String> p = new ArrayList<>();
-        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
-        try {
-            Statement s = c.createStatement();
-            ResultSet r = s.executeQuery("SELECT * FROM plots WHERE faction LIKE '" + getName() + "'");
-            while (r.next()) {
-                p.add(r.getString("plotid"));
-            }
-            c.close();
-            return p;
-//        Main.FFactory.allyrequest.put(getName(), fac.getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error sending plots to DB!!! Please report Error 'E209DB t'o an admin");
-            return null;
-        }
+        return FactionsMain.getInstance().FFactory.PM.getFactionPlots(getName());
     }
 
     public boolean AddPlots(int chunkx, int chunkz, CorePlayer player) {
@@ -1266,7 +1252,7 @@ public class Faction {
 
     public boolean IsInFaction(String n) {
         for (String m : PlayerRanks.keySet()) if (n.equalsIgnoreCase(m)) return true;
-        return n.equalsIgnoreCase(GetLeader());
+        return false;
     }
 
     public void MessageAllys(String message) {
@@ -1545,9 +1531,27 @@ public class Faction {
         }
     }
 
-    @Deprecated
+//    @Deprecated
     public void save() {
+        //Save Settings
         getSettings().upload();
+        //Save Player Ranks
+        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
+        try {
+            Statement stmt = c.createStatement();
+            for (Map.Entry<String, FactionRank> m : PlayerRanks.entrySet()) {
+                try {
+                    stmt.executeUpdate(String.format("UPDATE `Master` SET `rank` = '%s' WHERE `Master`.`player` = '&s'", m.getValue().getName(), m.getKey()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            stmt.close();
+        } catch (Exception e) {
+    e.printStackTrace();
+        }
+        //Save Plots - All Saved immedatelly to the cloud
+        //
 
 //
 //        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
