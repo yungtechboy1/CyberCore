@@ -45,7 +45,7 @@ public class Admin extends Commands {
 //        } else if (Args.length == 2) {
 //            if (Args[1].equalsIgnoreCase("reload")) {
 //                Main.FFactory = new FactionFactory(Main);
-//                for (String fn : Main.FFactory.GetAllFactions()) {
+//                for (String fn : Main.FFactory.GetAllFactionsNames()) {
 //                    Faction f = Main.FFactory.getFaction(fn);
 //                    if (f != null) {
 //                        Main.FFactory.List.put(fn.toLowerCase(), f);

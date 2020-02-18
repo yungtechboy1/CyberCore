@@ -9,6 +9,7 @@ import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.CyberTexts;
+import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -137,9 +138,13 @@ public class FactionFactory {
 
 //        System.out.println("WOR ==============================HOWEEEE");
         if(Main == null)System.out.println("WOR HOWEEEE");
-        if(Main.FactionData == null)System.out.println("WOR 2222222222222HOWEEEE");
-        if(Main.FactionData == null)System.out.println("WOR 2222222222222HOWEEEE");
-        return Main.FactionData.connectToDb();
+        if(Main.FactionData == null){
+            System.out.println("WOR 2222222222222HOWEEEE");
+            Main.FactionData = new FactionSQL(CyberCoreMain.getInstance());
+        }
+        Connection c=  Main.FactionData.connectToDb();
+        if(c == null)System.out.println("NOOO WHYYYY U NULL BBYY##217");
+        return c;
     }
 
     public void RemoveFaction(Faction fac) {
@@ -551,7 +556,7 @@ public class FactionFactory {
         }
     }
 
-    public ArrayList<String> GetAllFactions() {
+    public ArrayList<String> GetAllFactionsNames() {
         Main.plugin.getLogger().info("GETTINGALL FACS");
         ArrayList<String> results = new ArrayList<>();
         try {
@@ -785,8 +790,10 @@ public class FactionFactory {
             //getServer().getLogger().debug("In DB");
             //if (List.containsKey(name.toLowerCase())) return List.get(name.toLowerCase());
             //No leader == No Faction!
-            if (GetLeader(name) == null && !name.equalsIgnoreCase("peace") && !name.equalsIgnoreCase("wilderness"))
+            if (GetLeader(name) == null && !name.equalsIgnoreCase("peace") && !name.equalsIgnoreCase("wilderness")) {
+             CyberCoreMain.getInstance().getLogger().error("Error Loading Faction: "+name+"!!!");
                 return null;
+            }
 //            Faction fac = new Faction(Main, name, (String) GetFromSettings("displayname", name), GetLeader(name), GetMemebrs(name), GetOfficers(name), GetGenerals(name), GetRecruits(name));
             Faction fac = new Faction(Main, name, false);
 //            fac.SetPlots(GetPlots(name));

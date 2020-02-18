@@ -14,7 +14,6 @@ import net.yungtechboy1.CyberCore.Manager.Form.Windows.FactionInvited;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,9 +33,10 @@ public class FactionsMain {
 //    public Map<String,Integer> death = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 //    public Map<String,Integer> pvplog = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public Map<Long, CustomFloatingTextParticle> popups = new HashMap<>();
-    public FactionFactory FFactory = null;
+    public FactionFactory FFactory = new FactionFactory(this);
+    ;
     public CyberCoreMain plugin;
-    public FactionSQL FactionData = new FactionSQL(CyberCoreMain.getInstance());
+    public FactionSQL FactionData = null;
     public HashMap<Integer, FactionErrorString> FactionString = new HashMap<>();
     //private Statement Statement = null;
     private PreparedStatement PreparedStatement = null;
@@ -45,7 +45,8 @@ public class FactionsMain {
 
     public FactionsMain(CyberCoreMain main, FactionSQL fd) {
         plugin = main;
-        if(fd != null)FactionData = fd;
+        if (fd == null) FactionData = new FactionSQL(CyberCoreMain.getInstance());
+        else FactionData = fd;
         onLoad();
 
         getServer().getPluginManager().registerEvents(new FactionListener(main, this), main);
@@ -60,8 +61,8 @@ public class FactionsMain {
         boolean peace = false;
         boolean wilderness = false;
         System.out.println(FFactory == null);
-        for (String fn : FFactory.GetAllFactions()) {
-            System.out.println("Loading Faction "+fn);
+        for (String fn : FFactory.GetAllFactionsNames()) {
+            System.out.println("Loading Faction " + fn);
             Faction f = FFactory.getFaction(fn);
             if (f == null) {
                 continue;
@@ -106,7 +107,7 @@ public class FactionsMain {
     }
 
     public FactionsMain(CyberCoreMain cyberCoreMain) {
-        this(cyberCoreMain,null);
+        this(cyberCoreMain, null);
     }
 
     public static FactionsMain getInstance() {
@@ -117,9 +118,9 @@ public class FactionsMain {
         return plugin.getServer();
     }
 
-    public void  onLoad() {
+    public void onLoad() {
         FactionsMain.instance = this;
-        FFactory = new FactionFactory(this);
+//        FFactory = new FactionFactory(this);
     }
 
     public void initiatePlayer(CorePlayer player) {
@@ -130,7 +131,6 @@ public class FactionsMain {
         if (fac1 != null && fac1.isAllied(faction2)) return true;
         return false;
     }
-
 
 
     public boolean isInFaction(Player player) {
@@ -180,7 +180,7 @@ public class FactionsMain {
     }
 
     public String GetChunkOwner(int x, int z) {
-        return FactionsMain.getInstance().FFactory.PM.getFactionFromPlot(x,z);
+        return FactionsMain.getInstance().FFactory.PM.getFactionFromPlot(x, z);
     }
 
     public void LoadPlayer(Player player) {
@@ -215,7 +215,6 @@ public class FactionsMain {
 //        invited.
         if (!invited.InternalPlayerSettings.isAllowFactionRequestPopUps()) return;
         invited.showFormWindow(new FactionInvited(invited.getDisplayName(), fac.getSettings().getDisplayName()));
-
 
 
     }

@@ -64,7 +64,15 @@ public abstract class MySQL {
         PreparedStatement pstmt = connection.prepareStatement(query);
         try {
 //            ct.setName("");
-            byte[] ba = NBTIO.write(ct, ByteOrder.LITTLE_ENDIAN);
+            System.out.println("E112222223222222222222222222 > "+ct);
+//            System.out.println("E1122222232 > "+ct.toString());
+            byte[] ba = new byte[0];
+            if(ct != null) {
+                ba = NBTIO.write(ct, ByteOrder.LITTLE_ENDIAN);
+                System.out.println("CT AWS WAS NOT NULLLLLL");
+            }
+            System.out.println("E1132 > |21| "+new String(ba)+"||3333|| "+ba);
+
 
             pstmt.setBytes(1, ba);
             pstmt.execute();

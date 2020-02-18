@@ -110,8 +110,13 @@ public class Faction {
     }
 
     public Faction(FactionsMain main, String name, boolean newfac) {
-        this(main, name, name.toLowerCase(), newfac);
-
+        Main = main;
+        Name = name;
+        Settings = new FactionSettings(this, true);
+        if (newfac)
+            onCreation();
+        else
+            loadFromDB();
     }
 
     public Faction(FactionsMain main, String name, String displayname) {
@@ -122,7 +127,7 @@ public class Faction {
         Main = main;
         Name = name;
         Settings = new FactionSettings(this, false);
-        getSettings().setDisplayName(displayname);
+        getSettings().setDisplayName(displayname, true);
         if (newfac)
             onCreation();
         else
@@ -173,7 +178,9 @@ public class Faction {
 
     public void reloadPlayerRanks(boolean force) {
         if (!PlayerRanksCC.needsUpdate() && !force) return;
-        Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
+        if(Main == null)System.out.println("Error 1111111111111111111111111111111111111111");
+        if(Main.FFactory == null)System.out.println("Error 1111111111111111111111111111111111111111222222222222222222222222222");
+        Connection c = Main.FFactory.getMySqlConnection();
         try {
             Statement s = c.createStatement();
             ResultSet r = s.executeQuery("SELECT * FROM Master WHERE `faction` LIKE '" + getName() + "'");
@@ -269,7 +276,7 @@ public class Faction {
         try {
             //Update PermSettings
             FactionsMain.getInstance().FFactory.getMySqlConnection().createStatement().executeUpdate(String.format("INSERT INTO `Settings` VALUES('%s','%s'," + getSettings().getMaxPlayers() + "," + getSettings().getPowerBonus() + ",'%s','%s'," + getSettings().getPrivacy() + ",'%s'," + getSettings().getPower() + "," + getSettings().getMoney() + "," + getSettings().getRich() + "," + getSettings().getXP() + "," + getSettings().getLevel() + "," + getSettings().getPoints() + ")", getName(), getSettings().getDisplayName(), getSettings().getMOTD(), getSettings().getDescription(), getPermSettings().export()));
-            CyberCoreMain.getInstance().getLogger().error("Error with Faction PermSettings Cache E39942!BBgfgggggBBBB");
+            CyberCoreMain.getInstance().getLogger().error("Error with Faction PermSettings Cache E39942!BBgfggggwww122222222222222222222222222222222222222222222222222gBBBB");
             return;
         } catch (Exception e) {
             CyberCoreMain.getInstance().getLogger().error("Error with Faction PermSettings Cache E399dddddddaaaaaaaaaa42!AAA", e);
@@ -279,6 +286,7 @@ public class Faction {
 
     private void loadFromDB() {
         getSettings().download();
+        reloadPlayerRanks(true);
     }
 
     public FactionSettings getSettings() {
@@ -1531,7 +1539,7 @@ public class Faction {
         }
     }
 
-//    @Deprecated
+    //    @Deprecated
     public void save() {
         //Save Settings
         getSettings().upload();
@@ -1548,7 +1556,7 @@ public class Faction {
             }
             stmt.close();
         } catch (Exception e) {
-    e.printStackTrace();
+            e.printStackTrace();
         }
         //Save Plots - All Saved immedatelly to the cloud
         //
