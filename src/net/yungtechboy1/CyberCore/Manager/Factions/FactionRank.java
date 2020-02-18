@@ -91,8 +91,9 @@ public enum FactionRank {
         }
     }
 
-
+//FactionCommandWindow.java:40
     public boolean hasPerm(FactionRank target) {
+        if(target == null)return false;
         return Power >= target.Power;
     }
 
