@@ -35,25 +35,27 @@ public class FactionCommandWindow extends CyberFormSimple {
             addButton(new ElementButton("Faction Missions"));
             addButton(new ElementButton("-------------"));
 
-            //Inbox
-            FactionRank fr_m = fs.getAllowedToViewInbox();
-            if (fr_m.hasPerm(fr)) addButton(new ElementButton("Faction Inbox"));
+            if(fr != null) {
+                //Inbox
+                FactionRank fr_m = fs.getAllowedToViewInbox();
+                if (fr_m.hasPerm(fr)) addButton(new ElementButton("Faction Inbox"));
 
-            //Invite
-            FactionRank fr_i = fs.getAllowedToInvite();
-            if (fr_i.hasPerm(fr)) addButton(new ElementButton("Invite Player"));
+                //Invite
+                FactionRank fr_i = fs.getAllowedToInvite();
+                if (fr_i.hasPerm(fr)) addButton(new ElementButton("Invite Player"));
 
-            //Claim Land
-            FactionRank fr_cl = fs.getAllowedToClaim();
-            if (fr_cl.hasPerm(fr)) addButton(new ElementButton("Claim Land"));
+                //Claim Land
+                FactionRank fr_cl = fs.getAllowedToClaim();
+                if (fr_cl.hasPerm(fr)) addButton(new ElementButton("Claim Land"));
 
-            //Demote
-            FactionRank fr_d = fs.getAllowedToPromote();
-            if (fr_d.hasPerm(fr)) addButton(new ElementButton("Demote Player"));
+                //Demote
+                FactionRank fr_d = fs.getAllowedToPromote();
+                if (fr_d.hasPerm(fr)) addButton(new ElementButton("Demote Player"));
 
-            //Promote
-            FactionRank fr_p = fs.getAllowedToPromote();
-            if (fr_p.hasPerm(fr)) addButton(new ElementButton("Promote Player"));
+                //Promote
+                FactionRank fr_p = fs.getAllowedToPromote();
+                if (fr_p.hasPerm(fr)) addButton(new ElementButton("Promote Player"));
+            }
         }else{
             setContent(getContent()+"\n"+TextFormat.GREEN+"Current Faction: =| None |= "+"\n\n"+ TextFormat.YELLOW+TextFormat.BOLD+" Please join a faction to gain access to more commands!");
             addButton(new ElementButton("Find a Faction To Join"));

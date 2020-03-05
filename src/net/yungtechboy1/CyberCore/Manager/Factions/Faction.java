@@ -105,8 +105,9 @@ public class Faction {
 //    private int Settings_Cache_Lastupload = 0;
     private int UpdateEverySecs = 60 * 15;
 
-    public Faction(FactionsMain main, String name) {
+    public Faction(FactionsMain main, String name, CorePlayer cp) {
         this(main, name, true);
+        addPlayer(cp,FactionRank.Leader,null);
     }
 
     public Faction(FactionsMain main, String name, boolean newfac) {
@@ -176,6 +177,8 @@ public class Faction {
         reloadPlayerRanks(false);
     }
 
+    //CJ LOOK HERE
+    //TODO ALSO FIX PROMOTE AND DEMOTE TO SEND DIRECTLY TO SERVER
     public void reloadPlayerRanks(boolean force) {
         if (!PlayerRanksCC.needsUpdate() && !force) return;
         if(Main == null)System.out.println("Error 1111111111111111111111111111111111111111");
@@ -1198,16 +1201,19 @@ public class Faction {
     }
 
     public boolean addPlayer(String p, FactionRank r, String invitedby) {
+        if(invitedby != null){
+            invitedby = "'"+invitedby+"'";
+        }else invitedby = "null";
         if (CyberCoreMain.getInstance().FM.FFactory.isPlayerInFaction(p)) {
             //Playing in faction
             Player pp = Server.getInstance().getPlayer(p);
-            if (p != null) pp.sendMessage("Error you are currently in a faction and can not join a new one!!!");
+            if (pp != null) pp.sendMessage("Error you are currently in a faction and can not join a new one!!!");
             return false;
         }
         Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
         try {
             Statement s = c.createStatement();
-            s.executeUpdate("INSERT INTO Master VALUES ('" + p + "','" + getName() + "','" + CyberCoreMain.getInstance().getIntTime() + "','" + invitedby + "','" + r.getName() + "')");
+            s.executeUpdate("INSERT INTO Master VALUES ('" + p + "','" + getName() + "','" + CyberCoreMain.getInstance().getIntTime() + "'," + invitedby + ",'" + r.getName() + "')");
             s.close();
             c.close();
         } catch (Exception e) {
@@ -1285,7 +1291,11 @@ public class Faction {
         BroadcastMessage(message, FactionRank.All);
     }
 
+   CacheChecker PRC = new CacheChecker("PR",120);
+
     public FactionRank getPlayerRank(String p) {
+//        PlayerRanks
+        if(PlayerRanks.containsKey(p))return PlayerRanks.get(p);
         Connection c = CyberCoreMain.getInstance().FM.FFactory.getMySqlConnection();
         try {
             Statement s = c.createStatement();

@@ -1638,6 +1638,7 @@ public class CorePlayer extends Player {
                         if (Faction == null) {
                             Faction f = CyberCoreMain.getInstance().FM.FFactory.IsPlayerInFaction(this);
                             if (f == null) {
+                                System.out.println("Faction IS Null?!??!?!");
                                 Faction = null;
                             } else {
                                 Faction = f.getName();

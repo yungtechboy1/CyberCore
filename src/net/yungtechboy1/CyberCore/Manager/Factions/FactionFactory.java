@@ -690,7 +690,7 @@ public class FactionFactory {
         }
 
 
-        Faction fac = new Faction(Main, name);
+        Faction fac = new Faction(Main, name,p);
         System.out.println(fac + " <<<<<< FFFFFFFFFFFFFFFF");
         LocalFactionCache.put(name.toLowerCase(), fac);
         fac.addPlayerToGlobalList(p,name);
@@ -787,7 +787,8 @@ public class FactionFactory {
             //getServer().getLogger().debug("In Cache");
             return LocalFactionCache.get(name.toLowerCase());
         } else if (factionExistsInDB(name)) {
-            //getServer().getLogger().debug("In DB");
+            System.out.println("In DB11111111111111111111111111111");
+            getServer().getLogger().info("In DB11111111111111111111111111111");
             //if (List.containsKey(name.toLowerCase())) return List.get(name.toLowerCase());
             //No leader == No Faction!
             if (GetLeader(name) == null && !name.equalsIgnoreCase("peace") && !name.equalsIgnoreCase("wilderness")) {
