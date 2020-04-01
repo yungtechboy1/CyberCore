@@ -1,10 +1,6 @@
 package net.yungtechboy1.CyberCore.Custom.Item;
 
-import cn.nukkit.block.Block;
-import cn.nukkit.block.BlockID;
-import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
-import net.yungtechboy1.CyberCore.Custom.Block.CustomBlockPurpleGlazedTerraCotta;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomWoolBlockTerra;
 
 public class CustomItemPurpleGlazedTerraCotta extends ItemBlock{

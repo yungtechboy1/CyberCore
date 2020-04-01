@@ -7,7 +7,6 @@ import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import sun.applet.Main;
 
 import java.util.LinkedHashMap;
 

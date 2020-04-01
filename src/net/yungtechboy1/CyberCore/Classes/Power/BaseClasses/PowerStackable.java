@@ -3,7 +3,6 @@ package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses;
 import cn.nukkit.math.NukkitRandom;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.AdvancedPowerEnum;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.ClassLevelingManager;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 
 public abstract class PowerStackable extends PowerAbstract {

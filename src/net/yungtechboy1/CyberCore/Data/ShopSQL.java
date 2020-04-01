@@ -29,11 +29,11 @@ public class ShopSQL extends MySQL {
 
     @Override
     public Connection connectToDb() {
-        String host = plugin.MainConfig.getSection("db2").getString("mysql-host");
-        String pass = plugin.MainConfig.getSection("db2").getString("mysql-pass");
-        int port = plugin.MainConfig.getSection("db2").getInt("mysql-port");
-        String user = plugin.MainConfig.getSection("db2").getString("mysql-user");
-        String db = plugin.MainConfig.getSection("db2").getString("mysql-db-Server");
+        String host = Plugin.MainConfig.getSection("db2").getString("mysql-host");
+        String pass = Plugin.MainConfig.getSection("db2").getString("mysql-pass");
+        int port = Plugin.MainConfig.getSection("db2").getInt("mysql-port");
+        String user = Plugin.MainConfig.getSection("db2").getString("mysql-user");
+        String db = Plugin.MainConfig.getSection("db2").getString("mysql-db-Server");
         if (SC != null) {
             try {
                 if (!SC.isClosed()) return SC;
@@ -61,7 +61,7 @@ public class ShopSQL extends MySQL {
                 CyberCoreMain.getInstance().getLogger().error("Error Loading Auctions from Sqlite!");
                 return;
             } else {
-                plugin.getLogger().info("Loading " + data.size() + " Auction Items!");
+                Plugin.getLogger().info("Loading " + data.size() + " Auction Items!");
             }
 
             for (HashMap<String, Object> v : data) {
@@ -105,7 +105,7 @@ public class ShopSQL extends MySQL {
                     "INSERT INTO `AuctionHouse` VALUES (null," +
                             data.item.getId() + "," + data.item.getDamage() + "," + data.item.getCount() + ",?," + data.Cost + ",'" + data.Soldby + "','" + data.Soldbyn + "',false)", data.item.getNamedTag());
 
-            plugin.getLogger().info("AH saved for " + data.toString());
+            Plugin.getLogger().info("AH saved for " + data.toString());
             ExecuteQuerySQLite("SELECT * FROM `AuctionHouse` ");
 
         } catch (Exception e) {
@@ -192,7 +192,7 @@ public class ShopSQL extends MySQL {
             for (HomeData h : p.HD) {
                 executeUpdate("INSERT INTO `Homes` VALUES (0,'" + h.getName() + "'," + h.getX() + "," + h.getY() + "," + h.getZ() + ",'" + h.getLevel() + "','" + h.getOwner() + "','" + h.getOwneruuid() + "')");
             }
-            plugin.getLogger().info("Homes saved for " + p.getName());
+            Plugin.getLogger().info("Homes saved for " + p.getName());
             p.sendTip("Homes Saved!");
         } catch (SQLException e) {
             e.printStackTrace();

@@ -1,12 +1,7 @@
 package net.yungtechboy1.CyberCore.Manager.Crate;
 
-import cn.nukkit.block.Block;
-import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.player.PlayerInteractEvent;
-import cn.nukkit.item.Item;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Manager.Crate.Tasks.CloseCrate;
 
 
 public class CrateListener implements Listener {

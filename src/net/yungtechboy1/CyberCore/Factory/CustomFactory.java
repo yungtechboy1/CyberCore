@@ -10,12 +10,10 @@ import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.server.DataPacketReceiveEvent;
 import cn.nukkit.inventory.Inventory;
-import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.level.Location;
 import cn.nukkit.level.Position;
 import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.math.AxisAlignedBB;
 import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
@@ -26,16 +24,12 @@ import cn.nukkit.network.protocol.MovePlayerPacket;
 import cn.nukkit.network.protocol.ProtocolInfo;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
-import net.yungtechboy1.CyberCore.Custom.Block.SpawnerWithLevelBlock;
-import net.yungtechboy1.CyberCore.Custom.CustomEnchant.*;
 import net.yungtechboy1.CyberCore.Custom.CustomEnchant.*;
 import net.yungtechboy1.CyberCore.Custom.Inventory.TestInv;
-import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
-import net.yungtechboy1.CyberCore.Custom.Item.CItemBookEnchanted;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Utils;
 import net.yungtechboy1.CyberCore.entities.EntityStackable;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -72,7 +66,7 @@ public class CustomFactory implements Listener {
      * @param args
      * @return
      */
-    public static Entity SpawnEntityStack(int type, Position source, Object... args) {
+    public static Entity SpawnEntityStack(int type, Position source, ArrayList<Entity> list,Object... args) {
         FullChunk chunk = source.getLevel().getChunk((int) source.x >> 4, (int) source.z >> 4, true);
         if (!chunk.isGenerated()) {
             chunk.setGenerated();
@@ -81,7 +75,8 @@ public class CustomFactory implements Listener {
             chunk.setPopulated();
         }
 
-        Entity[] el = source.getLevel().getNearbyEntities(source.getLevelBlock().getBoundingBox().grow(16, 16, 16));
+//        Entity[] el = source.getLevel().getNearbyEntities(source.getLevelBlock().getBoundingBox().grow(16, 16, 16));
+        ArrayList<Entity> el = list;
 //        Server.getInstance().getLogger().info("FOUND "+el.length);
         Entity stackEntity = null;
         for (Entity e : el) {

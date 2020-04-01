@@ -2,55 +2,64 @@ package net.yungtechboy1.CyberCore.Manager.Form.Windows.Faction;
 
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
+import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.FormType;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Chat;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Leave;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
+import net.yungtechboy1.CyberCore.Manager.Factions.FactionPermSettings;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionRank;
-import net.yungtechboy1.CyberCore.Manager.Factions.FactionSettings;
 import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
 
 public class FactionCommandWindow extends CyberFormSimple {
     public FactionCommandWindow(String title, String content, CorePlayer cp) {
         super(FormType.MainForm.Faction_CMD_Window, "Faction Command Window", "Below you will find the list of all commands you have access to. You can coose to tap on the command to learn more about it or just exit when done :)");
-        setContent(getContent() + "\n" +
-                "Current Faction: " + cp.getFactionName() + "\n" +
-                "");
+
 
         Faction f = cp.getFaction();
-        addButton(new ElementButton("Leave Faction"));
-        FactionRank fr = cp.getFaction().getPlayerRank(cp);
-        FactionSettings fs = f.getSettings();
-        addButton(new ElementButton("Faction/Ally Chat Menu"));
-        addButton(new ElementButton("Faction Home"));
-        addButton(new ElementButton("Faction Info"));
-        addButton(new ElementButton("Faction Map"));
-        addButton(new ElementButton("Faction Perks"));
-        addButton(new ElementButton("Faction Missions"));
-        addButton(new ElementButton("-------------"));
+        if(f != null) {
+            setContent(getContent() + "\n" +
+                    "Current Faction: " + cp.getFactionName() + "\n" +
+                    "");
 
-        //Inbox
-        FactionRank fr_m = fs.getAllowedToViewInbox();
-        if (fr_m.HasPerm(fr)) addButton(new ElementButton("Faction Inbox"));
+            addButton(new ElementButton("Leave Faction"));
+            FactionRank fr = cp.getFaction().getPlayerRank(cp);
+            FactionPermSettings fs = f.getPermSettings();
+            addButton(new ElementButton("Faction/Ally Chat Menu"));
+            addButton(new ElementButton("Faction Home"));
+            addButton(new ElementButton("Faction Info"));
+            addButton(new ElementButton("Faction Map"));
+            addButton(new ElementButton("Faction Perks"));
+            addButton(new ElementButton("Faction Missions"));
+            addButton(new ElementButton("-------------"));
 
-        //Invite
-        FactionRank fr_i = fs.getAllowedToInvite();
-        if (fr_i.HasPerm(fr)) addButton(new ElementButton("Invite Player"));
+            if(fr != null) {
+                //Inbox
+                FactionRank fr_m = fs.getAllowedToViewInbox();
+                if (fr_m.hasPerm(fr)) addButton(new ElementButton("Faction Inbox"));
 
-        //Claim Land
-        FactionRank fr_cl = fs.getAllowedToClaim();
-        if (fr_cl.HasPerm(fr)) addButton(new ElementButton("Claim Land"));
+                //Invite
+                FactionRank fr_i = fs.getAllowedToInvite();
+                if (fr_i.hasPerm(fr)) addButton(new ElementButton("Invite Player"));
 
-        //Demote
-        FactionRank fr_d = fs.getAllowedToDemote();
-        if (fr_d.HasPerm(fr)) addButton(new ElementButton("Demote Player"));
+                //Claim Land
+                FactionRank fr_cl = fs.getAllowedToClaim();
+                if (fr_cl.hasPerm(fr)) addButton(new ElementButton("Claim Land"));
 
-        //Promote
-        FactionRank fr_p = fs.getAllowedToPromote();
-        if (fr_p.HasPerm(fr)) addButton(new ElementButton("Promote Player"));
+                //Demote
+                FactionRank fr_d = fs.getAllowedToPromote();
+                if (fr_d.hasPerm(fr)) addButton(new ElementButton("Demote Player"));
 
+                //Promote
+                FactionRank fr_p = fs.getAllowedToPromote();
+                if (fr_p.hasPerm(fr)) addButton(new ElementButton("Promote Player"));
+            }
+        }else{
+            setContent(getContent()+"\n"+TextFormat.GREEN+"Current Faction: =| None |= "+"\n\n"+ TextFormat.YELLOW+TextFormat.BOLD+" Please join a faction to gain access to more commands!");
+            addButton(new ElementButton("Find a Faction To Join"));
+        }
 //        //Promote
 //        FactionRank fr_p = fs.get();
 //        if (fr_p.HasPerm(fr)) addButton(new ElementButton("Promote Player"));

@@ -24,6 +24,7 @@ public class Mission {
     public Integer XPReward = 0;
     public Integer MoneyReward = 0;
     public ArrayList<Item> ItemReward = new ArrayList<>();
+    public ArrayList<MissionTask> Tasks = new ArrayList<>();
     public Integer PointReward = 0;
 
 

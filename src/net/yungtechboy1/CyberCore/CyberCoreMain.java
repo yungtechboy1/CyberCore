@@ -83,6 +83,7 @@ import net.yungtechboy1.CyberCore.entities.animal.walking.Pig;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.sql.Connection;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -115,6 +116,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public Config RankChatColor;
     public Config RankConfig;
     public Config MainConfig;
+    public Config PlayerIdentification;
     public Config RankListConfig;
     public FactionsMain FM;
     public Boolean nf = true;
@@ -265,7 +267,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
         BlockEntity.registerBlockEntity(BlockEntity.MOB_SPAWNER, SpawnerWithLevelBlockEntity.class);
         //Must be registered after custom block
-        Item.registerCustomItemBlock(Item.MONSTER_SPAWNER, CustomItemBlockSpawnerWithLevelBlock.class, this);
+//        Item.registerCustomItemBlock(Item.MONSTER_SPAWNER, CustomItemBlockSpawnerWithLevelBlock.class, this);
 
         ReloadBlockList(Block.MONSTER_SPAWNER, SpawnerWithLevelBlock.class);
         ReloadBlockList(Block.FIRE, CustomBlockFire.class);
@@ -309,14 +311,14 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         ClassFactory = new ClassFactory(this);
         WarpManager = new WarpManager(this);
 
-
+        PlayerIdentification = new Config(new File(getDataFolder(), "pid.yml"));
         MainConfig = new Config(new File(getDataFolder(), "config.yml"));
         //Save = new SaveMain(this);
         SQLSaveManager = new SQLManager(this);
 
 //        CoreSQL = new CoreSQL(this,"Core");
         ServerSQL = new ServerSqlite(this);
-        ServerSQL.LoadAllWarps();
+//        ServerSQL.LoadAllWarps();
         UserSQL = new UserSQL(this);
 
 
@@ -339,7 +341,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        GOOD
 //        ECON = new EconManager(this);
-        FM = new FactionsMain(this, new FactionSQL(this));
+        FM = new FactionsMain(this);
 //        getServer().getScheduler().scheduleRepeatingTask(new UnMuteTask(this), 20 * 15);
 //        getServer().getScheduler().scheduleRepeatingTask(new ClearSpamTick(this), 20 * 5);
 //        getServer().getScheduler().scheduleRepeatingTask(new CheckOP(this), 20 * 60);//1 Min
@@ -628,6 +630,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        PasswordFactoy.onDisable();
 
         //Classes
+        PlayerIdentification.save();
         CMC.save();
         FTM.CTstop();
         saveFloatingText();
@@ -676,7 +679,12 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         return (CorePlayer) getPlayer(p.getName());
     }
 
-    public Integer GetIntTime() {
+    /**
+     * Use CyberUtils.getIntTime
+     * @return
+     */
+    @Deprecated
+    public Integer getIntTime() {
         return (int) (Calendar.getInstance().getTime().getTime() / 1000);
     }
 
@@ -998,12 +1006,12 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         ArrayList<Faction> found = new ArrayList<>();
         arg = arg.toLowerCase();
         int delta = 2147483647;
-        Iterator var4 = FM.FFactory.List.values().iterator();
+        Iterator var4 = FM.FFactory.LocalFactionCache.values().iterator();
 
         while (var4.hasNext()) {
             Faction player = (Faction) var4.next();
-            if (player.GetName().toLowerCase().startsWith(arg) || player.GetName().toLowerCase().contains(arg)) {
-                int curDelta = player.GetName().length() - arg.length();
+            if (player.getName().toLowerCase().startsWith(arg) || player.getName().toLowerCase().contains(arg)) {
+                int curDelta = player.getName().length() - arg.length();
                 if (curDelta < delta) {
                     found.add(player);
                     delta = curDelta;

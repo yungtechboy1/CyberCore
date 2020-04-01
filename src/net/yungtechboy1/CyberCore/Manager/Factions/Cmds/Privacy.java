@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.utils.TextFormat;
-
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
@@ -29,11 +28,11 @@ public class Privacy extends Commands {
     public void RunCommand(){
         if(Args.length == 2) {
             if (Args[1].equalsIgnoreCase("on")) {
-                fac.SetPrivacy(1);
+                fac.getSettings().setPrivacy(1);
                 Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Faction Privacy is Now On!");
             } else if (Args[1].equalsIgnoreCase("off")) {
                 Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Faction Privacy is Now Off!");
-                fac.SetPrivacy(0);
+                fac.getSettings().setPrivacy(0);
             } else {
                 SendUseage();
                 return;

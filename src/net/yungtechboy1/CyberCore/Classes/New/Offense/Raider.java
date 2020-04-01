@@ -3,7 +3,6 @@ package net.yungtechboy1.CyberCore.Classes.New.Offense;
 import cn.nukkit.Player;
 import cn.nukkit.utils.ConfigSection;
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-
 import net.yungtechboy1.CyberCore.Classes.New.ClassType;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Classes.PowerSource.PrimalPowerType;
@@ -21,7 +20,7 @@ public class Raider extends BaseClass {
         Player p = (Player)event.entity;
         int x = p.getFloorX() >> 4;
         int z = p.getFloorZ() >> 4;
-        if(CyberCoreMain.getInstance().FM.FFactory.PlotsList.containsKey(x+"|"+z)){
+        if(CyberCoreMain.getInstance().FM.FFactory.PM.isPlotClaimed(x,z)){
             float ad = event.getDamage(CustomEntityDamageEvent.CustomDamageModifier.BASE) * -.1f;
             event.setDamage(ad, CustomEntityDamageEvent.CustomDamageModifier.ARMOR);
         }

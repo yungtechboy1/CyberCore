@@ -1,9 +1,6 @@
 package net.yungtechboy1.CyberCore.Classes.GUI;
 
-import cn.nukkit.Player;
-import cn.nukkit.event.player.PlayerFormRespondedEvent;
 import cn.nukkit.form.element.ElementButton;
-import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.form.window.FormWindowSimple;
 
 /**

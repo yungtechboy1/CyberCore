@@ -1,6 +1,5 @@
 package net.yungtechboy1.CyberCore.entities.projectile;
 
-import net.yungtechboy1.CyberCore.entities.utils.Utils;
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.projectile.EntityProjectile;
@@ -10,6 +9,7 @@ import cn.nukkit.level.format.FullChunk;
 import cn.nukkit.level.particle.CriticalParticle;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.network.protocol.AddEntityPacket;
+import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
 public class EntityFireBall extends EntityProjectile {
 

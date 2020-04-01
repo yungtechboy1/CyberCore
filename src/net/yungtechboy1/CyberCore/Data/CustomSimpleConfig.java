@@ -4,9 +4,6 @@ import cn.nukkit.Server;
 import cn.nukkit.plugin.Plugin;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.ConfigSection;
-import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.New.ClassType;
-import net.yungtechboy1.CyberCore.Custom.ClassMerchantData;
 
 import java.io.File;
 import java.lang.annotation.ElementType;

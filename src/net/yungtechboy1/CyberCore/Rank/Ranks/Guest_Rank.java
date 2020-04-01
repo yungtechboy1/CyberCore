@@ -1,8 +1,6 @@
 package net.yungtechboy1.CyberCore.Rank.Ranks;
 
-import cn.nukkit.Player;
 import net.yungtechboy1.CyberCore.Rank.Rank;
-import net.yungtechboy1.CyberCore.Rank.RankFactory;
 import net.yungtechboy1.CyberCore.Rank.RankList;
 
 /**

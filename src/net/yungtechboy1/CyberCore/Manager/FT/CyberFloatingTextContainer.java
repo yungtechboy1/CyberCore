@@ -5,18 +5,13 @@ import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.data.EntityMetadata;
 import cn.nukkit.item.Item;
-import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.network.protocol.AddPlayerPacket;
 import cn.nukkit.network.protocol.DataPacket;
 import cn.nukkit.network.protocol.RemoveEntityPacket;
 import cn.nukkit.network.protocol.SetEntityDataPacket;
-import cn.nukkit.plugin.Plugin;
 import cn.nukkit.utils.ConfigSection;
-import cn.nukkit.utils.SimpleConfig;
 import com.google.common.base.Strings;
-import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Data.CustomConfigSection;
 
 import java.util.ArrayList;
 import java.util.HashMap;

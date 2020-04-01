@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.utils.TextFormat;
-
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
@@ -38,14 +37,14 @@ public class Neutral extends Commands {
             return;
         }
 
-        if(fac.isEnemy(target.GetName())){
-            fac.RemoveEnemy(target.GetName());
-            target.BroadcastMessage(TextFormat.AQUA+"[ArchFactions] "+fac.GetDisplayName()+" Has removed you as an enemy!");
-            Sender.sendMessage(TextFormat.AQUA+"[ArchFactions] "+target.GetDisplayName()+" is not an enemy");
-        }else if(fac.isAllied(target.GetName())){
-            fac.RemoveAlly(target.GetName());
-            target.BroadcastMessage(TextFormat.AQUA+"[ArchFactions] "+fac.GetDisplayName()+" Has added you as an ally!");
-            Sender.sendMessage(TextFormat.AQUA+"[ArchFactions] "+target.GetDisplayName()+" is not an ally");
+        if (fac.isEnemy(target.getName())) {
+            fac.RemoveEnemy(target,Sender);
+            target.BroadcastMessage(TextFormat.AQUA + "[ArchFactions] " + fac.getDisplayName() + " Has removed you as an enemy!");
+            Sender.sendMessage(TextFormat.AQUA + "[ArchFactions] " + target.getDisplayName() + " is not an enemy");
+        } else if (fac.isAllied(target.getName())) {
+            fac.RemoveAlly(target.getName());
+            target.BroadcastMessage(TextFormat.AQUA + "[ArchFactions] " + fac.getDisplayName() + " Has added you as an ally!");
+            Sender.sendMessage(TextFormat.AQUA + "[ArchFactions] " + target.getDisplayName() + " is not an ally");
         }else{
             Sender.sendMessage(TextFormat.RED+"Error! That faction is not an enemy or ally!");
         }

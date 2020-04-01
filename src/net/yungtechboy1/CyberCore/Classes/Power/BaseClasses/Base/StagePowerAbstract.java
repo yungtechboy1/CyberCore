@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base;
 
 import net.yungtechboy1.CyberCore.Classes.New.BaseClass;
-import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 
 public abstract class StagePowerAbstract extends PowerAbstract{
 //    @Deprecated

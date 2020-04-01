@@ -28,23 +28,23 @@ public class Balance extends Commands {
         if (Args.length >= 1) {
             String f = Args[1];
             FactionFactory cff = Main.FFactory;
-            Faction ff = cff.getFaction(cff.factionPartialName(f));
+            Faction ff = cff.getFaction(f);
             if (ff == null) {
-                ff = Main.FFactory.getFaction(Main.FFactory.factionPartialName(Args[1]));
+                ff = cff.getFaction(cff.factionPartialName(f));
                 if (ff == null) {
-                    Sender.sendMessage(TextFormat.RED + "Error the faction containing '" + Args[1] + "' could not be found!");
+                    Sender.sendMessage(TextFormat.RED + "Error the faction containing '" + f + "' could not be found!");
                     return;
                 }
-                Sender.sendMessage(FactionsMain.NAME + TextFormat.RED + "Faction not found!");
-                return;
+//                Sender.sendMessage(FactionsMain.NAME + TextFormat.RED + "Faction not found!");
+//                return;
             }
             Integer money = ff.GetMoney();
-            Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + ff.GetDisplayName() + " Faction has " + TextFormat.AQUA + money);
-            fac.UpdateTopResults();
+            Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + ff.getDisplayName() + " Faction has " + TextFormat.AQUA + money);
+//            fac.UpdateTopResults();
         } else {
             Integer money = fac.GetMoney();
             Sender.sendMessage(FactionsMain.NAME + TextFormat.GREEN + "Your Faction has " + TextFormat.AQUA + money);
-            fac.UpdateTopResults();
+//            fac.UpdateTopResults();
         }
     }
 }

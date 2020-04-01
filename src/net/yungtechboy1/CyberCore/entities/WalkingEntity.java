@@ -1,7 +1,5 @@
 package net.yungtechboy1.CyberCore.entities;
 
-import net.yungtechboy1.CyberCore.entities.animal.Animal;
-import net.yungtechboy1.CyberCore.entities.utils.Utils;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockFence;
 import cn.nukkit.block.BlockFenceGate;
@@ -13,6 +11,8 @@ import cn.nukkit.math.BlockFace;
 import cn.nukkit.math.NukkitMath;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
+import net.yungtechboy1.CyberCore.entities.animal.Animal;
+import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
 public abstract class WalkingEntity extends BaseEntity {
 

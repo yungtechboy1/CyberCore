@@ -1,16 +1,16 @@
 package net.yungtechboy1.CyberCore.Commands;
 
-import cn.nukkit.command.data.CommandParamType;
-import net.yungtechboy1.CyberCore.Commands.Constructors.TargetCommand;
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Bans.Ban;
+import net.yungtechboy1.CyberCore.Commands.Constructors.TargetCommand;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.CyberUtils;
 import net.yungtechboy1.CyberCore.Rank.RankList;
-import net.yungtechboy1.CyberCore.Utils;
 
 /**
  * Created by carlt_000 on 3/21/2016.
@@ -38,7 +38,7 @@ public class IPBan extends TargetCommand {
         }
 
         Long time = -1L;
-        new Ban(Owner,target,TextFormat.RED+s.getName()+" Has banned you! Reason:"+ Utils.implode(" ",args),time,true,true,true);
+        new Ban(Owner, target, TextFormat.RED + s.getName() + " Has banned you! Reason:" + CyberUtils.implode(" ", args), time, true, true, true);
         for (Item I : target.getInventory().getContents().values()) target.getLevel().dropItem(target, I);
         target.getInventory().clearAll();
         target.kick("You Have Been Banned!");

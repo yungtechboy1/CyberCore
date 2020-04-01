@@ -1,12 +1,10 @@
 package net.yungtechboy1.CyberCore.Data;
 
-import cn.nukkit.Player;
 import net.yungtechboy1.CyberCore.CorePlayer;
-import net.yungtechboy1.CyberCore.CoreSettings;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Warp.WarpData;
-import net.yungtechboy1.CyberCore.Rank.Rank;
+import net.yungtechboy1.CyberCore.PlayerSettingsData;
 import net.yungtechboy1.CyberCore.Rank.RankList;
 import ru.nukkit.dblib.DbLib;
 
@@ -33,11 +31,11 @@ public class ServerSqlite extends MySQL {
     public static Connection SC = null;
 @Override
     public Connection connectToDb() {
-        String host = plugin.MainConfig.getSection("db2").getString("mysql-host");
-        String pass = plugin.MainConfig.getSection("db2").getString("mysql-pass");
-        int port = plugin.MainConfig.getSection("db2").getInt("mysql-port");
-        String user = plugin.MainConfig.getSection("db2").getString("mysql-user");
-        String db = plugin.MainConfig.getSection("db2").getString("mysql-db-Server");
+        String host = Plugin.MainConfig.getSection("db2").getString("mysql-host");
+        String pass = Plugin.MainConfig.getSection("db2").getString("mysql-pass");
+        int port = Plugin.MainConfig.getSection("db2").getInt("mysql-port");
+        String user = Plugin.MainConfig.getSection("db2").getString("mysql-user");
+        String db = Plugin.MainConfig.getSection("db2").getString("mysql-db-Server");
     if (SC != null) {
         try {
             if(!SC.isClosed())return SC;
@@ -77,6 +75,10 @@ public class ServerSqlite extends MySQL {
     }
 
 
+    @Deprecated
+    /**
+     * No Need to load warps from SQL... These are global Warps too
+     */
     public void LoadAllWarps() {
         try {
             List<HashMap<String, Object>> data = executeSelect("SELECT * FROM `Warps`");
@@ -84,11 +86,11 @@ public class ServerSqlite extends MySQL {
                 CyberCoreMain.getInstance().getLogger().error("Error Loading Warps from Sqlite!");
                 return;
             } else {
-                plugin.getLogger().info("Loading " + data.size() + " Warps!");
+                Plugin.getLogger().info("Loading " + data.size() + " Warps!");
             }
 
             for (HashMap<String, Object> v : data) {
-                plugin.WarpManager.AddWarp(new WarpData((String) v.get("name"), (double) v.get("x"), (double) v.get("y"), (double) v.get("z"), (String) v.get("level")));
+                Plugin.WarpManager.AddWarp(new WarpData((String) v.get("name"), (double) v.get("x"), (double) v.get("y"), (double) v.get("z"), (String) v.get("level")));
             }
 
         } catch (SQLException e) {
@@ -104,57 +106,57 @@ public class ServerSqlite extends MySQL {
         try {
             LoadHomes(p);
             LoadSettings(p);
-            LoadRank(p);
+//            LoadRank(p);
             LoadClass(p);
-            Faction f = plugin.FM.FFactory.IsPlayerInFaction(p);
-            if(f != null)p.Faction = f.GetName();
+            Faction f = Plugin.FM.FFactory.IsPlayerInFaction(p);
+            if (f != null) p.Faction = f.getName();
         } catch (Exception e) {
             CyberCoreMain.getInstance().getLogger().error("EEEEE11122223333", e);
         }
     }
 
     private void LoadClass(CorePlayer p) {
-        plugin.ClassFactory.GetClass(p,true);
+        Plugin.ClassFactory.GetClass(p,true);
     }
 
-    private void LoadRank(CorePlayer p) {
-        try {
-            List<HashMap<String, Object>> data = executeSelect("SELECT * FROM `Ranks` WHERE `uuid` LIKE '" + p.getUniqueId() + "'");
-            if (data == null || data.size() == 0) {
-                CyberCoreMain.getInstance().getLogger().error("No Ranks found for "+p.getName());
-                p.SetRank(RankList.PERM_GUEST);
-                return;
-            } else {
-                plugin.getLogger().info("Loading " + data.size() + " Ranks!");
-            }
-
-            for (HashMap<String, Object> v : data) {
-                String rn = (String)v.get("rank");
-                if(rn.equalsIgnoreCase(RankList.PERM_GUEST.getName())){
-                    if(p.GetRank().getId() < RankList.PERM_GUEST.getID()){
-                        p.SetRank(RankList.PERM_GUEST);
-                    }
-                }else if(rn.equalsIgnoreCase(RankList.PERM_MEMBER.getName())){
-                    if(p.GetRank().getId() < RankList.PERM_MEMBER.getID()){
-                        p.SetRank(RankList.PERM_MEMBER);
-                    }
-                }else if(rn.equalsIgnoreCase(RankList.PERM_OP.getName())){
-                    if(p.GetRank().getId() < RankList.PERM_OP.getID()){
-                        p.SetRank(RankList.PERM_OP);
-                    }
-                }else if(rn.equalsIgnoreCase(RankList.PERM_VIP.getName())){
-                    if(p.GetRank().getId() < RankList.PERM_VIP.getID()){
-                        p.SetRank(RankList.PERM_VIP);
-                    }
-                }
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        p.SetRank(RankList.PERM_GUEST);
-        return;
-    }
+//    private void LoadRank(CorePlayer p) {
+//        try {
+//            List<HashMap<String, Object>> data = executeSelect("SELECT * FROM `Ranks` WHERE `uuid` LIKE '" + p.getUniqueId() + "'");
+//            if (data == null || data.size() == 0) {
+//                CyberCoreMain.getInstance().getLogger().error("No Ranks found for "+p.getName());
+//                p.SetRank(RankList.PERM_GUEST);
+//                return;
+//            } else {
+//                Plugin.getLogger().info("Loading " + data.size() + " Ranks!");
+//            }
+//
+//            for (HashMap<String, Object> v : data) {
+//                String rn = (String)v.get("rank");
+//                if(rn.equalsIgnoreCase(RankList.PERM_GUEST.getName())){
+//                    if(p.GetRank().getId() < RankList.PERM_GUEST.getID()){
+//                        p.SetRank(RankList.PERM_GUEST);
+//                    }
+//                }else if(rn.equalsIgnoreCase(RankList.PERM_MEMBER.getName())){
+//                    if(p.GetRank().getId() < RankList.PERM_MEMBER.getID()){
+//                        p.SetRank(RankList.PERM_MEMBER);
+//                    }
+//                }else if(rn.equalsIgnoreCase(RankList.PERM_OP.getName())){
+//                    if(p.GetRank().getId() < RankList.PERM_OP.getID()){
+//                        p.SetRank(RankList.PERM_OP);
+//                    }
+//                }else if(rn.equalsIgnoreCase(RankList.PERM_VIP.getName())){
+//                    if(p.GetRank().getId() < RankList.PERM_VIP.getID()){
+//                        p.SetRank(RankList.PERM_VIP);
+//                    }
+//                }
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        p.SetRank(RankList.PERM_GUEST);
+//        return;
+//    }
 
 //    public void UnLoadPlayer(Player p) {
 //        SaveHomes((CorePlayer) p);
@@ -164,17 +166,17 @@ public class ServerSqlite extends MySQL {
     public void UnLoadPlayer(CorePlayer p) {
         SaveHomes(p);
         SaveSettings(p);
-        plugin.ClassFactory.SaveClassToFile(p);
+        Plugin.ClassFactory.SaveClassToFile(p);
     }
 
     private void LoadHomes(CorePlayer p) {
         try {
-            List<HashMap<String, Object>> data = executeSelect("SELECT * FROM `Homes` WHERE `owneruuid` LIKE '" + p.getUniqueId() + "'");
+            List<HashMap<String, Object>> data = executeSelect("SELECT * FROM `PlayerHomes` WHERE `owneruuid` LIKE '" + p.getUniqueId() + "'");
             if (data == null) {
                 CyberCoreMain.getInstance().getLogger().error("Error Loading Warps from Sqlite!");
                 return;
             } else {
-                plugin.getLogger().info("Loading " + data.size() + " Warps!");
+                Plugin.getLogger().info("Loading " + data.size() + " Warps!");
             }
 
             for (HashMap<String, Object> v : data) {
@@ -188,18 +190,19 @@ public class ServerSqlite extends MySQL {
 
     private void LoadSettings(CorePlayer p) {
 
-        UserSQL u = plugin.UserSQL;
-        plugin.getLogger().info("Starting loading "+p.getName()+"'s Server Data...Maybe");
-        u.getPlayerSettingsData(p);
+        UserSQL u = Plugin.UserSQL;
+        Plugin.getLogger().info("Starting loading "+p.getName()+"'s Server Data...Maybe");
+        PlayerSettingsData pd = u.getPlayerSettingsData(p);
+        p.setPlayerSettingsData(pd);
     }
 
     private void SaveHomes(CorePlayer p) {
         try {
-            executeUpdate("DELETE FROM `Homes` WHERE `owneruuid` LIKE '" + p.getUniqueId() + "'");
+            executeUpdate("DELETE FROM `PlayerHomes` WHERE `owneruuid` LIKE '" + p.getUniqueId() + "'");
             for (HomeData h : p.HD) {
-                executeUpdate("INSERT INTO `Homes` VALUES (0,'" + h.getName() + "'," + h.getX() + "," + h.getY() + "," + h.getZ() + ",'" + h.getLevel() + "','" + h.getOwner() + "','" + h.getOwneruuid() + "')");
+                executeUpdate("INSERT INTO `PlayerHomes` VALUES (0,'" + h.getName() + "'," + h.getX() + "," + h.getY() + "," + h.getZ() + ",'" + h.getLevel() + "','" + h.getOwner() + "','" + h.getOwneruuid() + "')");
             }
-            plugin.getLogger().info("Homes saved for " + p.getName());
+            Plugin.getLogger().info("Homes saved for " + p.getName());
 //            p.sendTip("Homes Saved!");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -208,8 +211,8 @@ public class ServerSqlite extends MySQL {
 
     private void SaveSettings(CorePlayer p) {
 
-        UserSQL u = plugin.UserSQL;
-        plugin.getLogger().info("Starting SAVING FOR  "+p.getName()+"'s Server Data...Maybe");
+        UserSQL u = Plugin.UserSQL;
+        Plugin.getLogger().info("Starting SAVING FOR  "+p.getName()+"'s Server Data...Maybe");
         u.savePlayerSettingData(p);
     }
 

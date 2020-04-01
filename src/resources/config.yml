@@ -13,9 +13,9 @@ mysql-port: 3306
 db2:
   mysql-host: "198.199.70.100"
   mysql-pass: "cybertechpp123"
-  mysql-db-Faction: "Faction"
-  mysql-db-Server: "Server"
-  mysql-user: "cybertech"
+  mysql-db-Faction: "Cyber"
+  mysql-db-Server: "Cyber"
+  mysql-user: "cyber"
   mysql-port: 3306
 
 server-data:

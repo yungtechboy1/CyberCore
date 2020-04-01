@@ -45,7 +45,7 @@ public class Admin extends Commands {
 //        } else if (Args.length == 2) {
 //            if (Args[1].equalsIgnoreCase("reload")) {
 //                Main.FFactory = new FactionFactory(Main);
-//                for (String fn : Main.FFactory.GetAllFactions()) {
+//                for (String fn : Main.FFactory.GetAllFactionsNames()) {
 //                    Faction f = Main.FFactory.getFaction(fn);
 //                    if (f != null) {
 //                        Main.FFactory.List.put(fn.toLowerCase(), f);
@@ -125,7 +125,7 @@ public class Admin extends Commands {
 //                    }
 //                }
 //                tf.AddPlots(x + "|" + z);
-//                Main.FFactory.PlotsList.put(x + "|" + z, tf.GetName());
+//                Main.FFactory.PlotsList.put(x + "|" + z, tf.getName());
 //                Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN + "Plot Claimed!");
 //            }else if (Args[1].equalsIgnoreCase("unclaim")) {
 //                if (!(Sender instanceof Player)) {
@@ -187,7 +187,7 @@ public class Admin extends Commands {
 //                Player pp = Main.getServer().getPlayer(Args[3]);
 //                if (pp != null) {
 //                    String ppn = pp.getName();
-//                    if (tf.GetName().equalsIgnoreCase(Main.getPlayerFaction(ppn))) {
+//                    if (tf.getName().equalsIgnoreCase(Main.getPlayerFaction(ppn))) {
 //                        Integer r = tf.GetPlayerPerm(ppn);
 //                        if (r == 0) tf.DelRecruit(ppn);
 //                        if (r == 1) tf.DelMember(ppn);
@@ -242,7 +242,7 @@ public class Admin extends Commands {
 //                            }
 //                        }
 //                        tf.AddPlots((x + xx) + "|" + (z + zz));
-//                        Main.FFactory.PlotsList.put((x + xx) + "|" + (z + zz), tf.GetName());
+//                        Main.FFactory.PlotsList.put((x + xx) + "|" + (z + zz), tf.getName());
 //                    }
 //                }
 //            }

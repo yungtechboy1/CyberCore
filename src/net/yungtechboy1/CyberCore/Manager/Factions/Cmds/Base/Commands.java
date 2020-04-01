@@ -3,6 +3,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base;
 import cn.nukkit.Player;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
+import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionRank;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
@@ -19,6 +20,7 @@ public abstract class Commands {
     public CorePlayer Sender;
     public FactionsMain Main;
     public boolean senderMustBeInFaction = false;
+    public boolean senderMustNOTBeInFaction = false;
     public FactionRank senderMustBe = FactionRank.Member;
     public boolean senderMustBePlayer = false;
     @Deprecated
@@ -44,17 +46,16 @@ public abstract class Commands {
 
     public boolean run() {
         fac = Main.FFactory.getPlayerFaction((Player) Sender);
-        if (!CheckPerms() && sendFailReason) {
-            PermFail failcode = CheckPermsCodes();
-            String message = "Unknown Error!";
-            if (failcode == PermFail.Not_Player) message = "You must be a Player to use this Command!";
-            if (failcode == PermFail.Not_In_Faction) message = "You must be in a faction to use this Command!";
-            if (failcode == PermFail.IncorrectPerms){
+        if (!CheckPerms()) {
+            if (sendFailReason) {
+                PermFail failcode = CheckPermsCodes();
+                String message = "Unknown Error!";
+                Sender.sendMessage(FactionsMain.NAME + failcode.getTxt());
+                if (sendUsageOnFail) Sender.sendMessage(FactionsMain.NAME + TextFormat.YELLOW + "Usage : " + Usage);
+                return false;
+            } else {
                 return false;
             }
-            Sender.sendMessage(FactionsMain.NAME + message);
-            if (sendUsageOnFail) Sender.sendMessage(FactionsMain.NAME + TextFormat.YELLOW + "Usage : " + Usage);
-            return false;
         }
         return true;
         /*
@@ -91,39 +92,14 @@ public abstract class Commands {
         return true;
     }
 
-    public enum PermFail {
-        No_Error(0),
-        Not_Player(1),
-        Not_In_Faction(2),
-        IncorrectPerms(3);
-
-        int id = -1;
-
-        private PermFail(int i) {
-            id = i;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public static PermFail getPermFail(int pid) {
-            if (pid == No_Error.getId()) return No_Error;
-            if (pid == Not_Player.getId()) return Not_Player;
-            if (pid == Not_In_Faction.getId()) return Not_In_Faction;
-            if (pid == IncorrectPerms.getId()) return IncorrectPerms;
-            return No_Error;
-        }
-
-    }
-
     public PermFail CheckPermsCodes() {
         if (senderMustBePlayer && Sender == null) return PermFail.Not_Player;
         CorePlayer sp = Sender;
         if (fac == null && senderMustBeInFaction) return PermFail.Not_In_Faction;
         if (fac != null) {
+            if (senderMustNOTBeInFaction) return PermFail.Is_In_Faction;
             FactionRank fr = fac.getPlayerRank(sp);
-            if (fr.HasPerm(senderMustBe)) {
+            if (fr.hasPerm(senderMustBe)) {
                 return PermFail.No_Error;
                 //Success
             } else {
@@ -194,5 +170,44 @@ public abstract class Commands {
     }
 
     public void RunCommand() {
+    }
+
+    public enum PermFail {
+        No_Error(0),
+        Not_Player(1, "You must be a Player to use this Command!"),
+        Not_In_Faction(2, "You must be in a faction to use this Command!"),
+        IncorrectPerms(3, "You do not have the correct permissions to use this command!"),
+        Is_In_Faction(4, "You must NOT be in a faction to use this Command!");
+
+        int id = -1;
+        String txt;
+
+        private PermFail(int i) {
+            id = i;
+            txt = "No Fail Message! E:" + i;
+        }
+
+        private PermFail(int i, String t) {
+            id = i;
+            txt = t;
+        }
+
+        public static PermFail getPermFail(int pid) {
+            if (pid > values().length) {
+                CyberCoreMain.getInstance().getLogger().error("Error Locating PermFail: " + pid);
+                return No_Error;
+            }
+            return values()[pid];
+//            return No_Error;
+        }
+
+        public String getTxt() {
+            return txt;
+        }
+
+        public int getId() {
+            return id;
+        }
+
     }
 }

@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Custom.Events;
 
 import cn.nukkit.entity.Entity;
-import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.potion.Effect;
 import net.yungtechboy1.CyberCore.CorePlayer;
 

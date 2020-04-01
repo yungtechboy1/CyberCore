@@ -1,6 +1,5 @@
 package net.yungtechboy1.CyberCore.Commands;
 
-import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParamType;
@@ -8,7 +7,7 @@ import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Utils;
+import net.yungtechboy1.CyberCore.CyberUtils;
 
 /**
  * Created by carlt_000 on 3/21/2016.
@@ -36,7 +35,7 @@ public class Msg extends Command {
                 if (t == null) {
                     if (args[0].equalsIgnoreCase("SERVER")) {
 
-                        String msg = Utils.implode(" ", args);
+                        String msg = CyberUtils.implode(" ", args);
                         s.sendMessage(TextFormat.YELLOW + "[You > SERVER] : " + TextFormat.AQUA + msg);
                         server.getLogger().info(TextFormat.YELLOW + "[" + p.getName() + " > You/Server ] : " + TextFormat.AQUA + msg);
 
@@ -51,7 +50,7 @@ public class Msg extends Command {
                     s.sendMessage(TextFormat.RED + "Error! "+t.getName()+" is not accepting Messages right now!");
                     return true;
                 }
-                String msg = Utils.implode(" ", args);
+                String msg = CyberUtils.implode(" ", args);
                 t.sendMessage(TextFormat.YELLOW + "[" + p.getName() + " > You] : " + TextFormat.AQUA + msg);
                 s.sendMessage(TextFormat.YELLOW + "[You > " + t.getName() + "] : " + TextFormat.AQUA + msg);
                 server.getLogger().info(TextFormat.YELLOW + "[" + p.getName() + " > " + t.getName() + "] : " + TextFormat.AQUA + msg);
@@ -70,7 +69,7 @@ public class Msg extends Command {
                     s.sendMessage(TextFormat.RED + "Error! Target Player Not Found!");
                     return true;
                 }
-                String msg = Utils.implode(" ", args);
+                String msg = CyberUtils.implode(" ", args);
                 t.sendMessage(TextFormat.YELLOW + "[SERVER > You] : " + TextFormat.AQUA + msg);
 //                s.sendMessage(TextFormat.YELLOW + "[You > " + t.getName() + "] : " + TextFormat.AQUA + msg);
                 server.getLogger().info(TextFormat.YELLOW + "[SERVER > " + t.getName() + "] : " + TextFormat.AQUA + msg);

@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.utils.TextFormat;
-
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
@@ -10,6 +9,7 @@ import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
 /**
  * Created by carlt_000 on 7/9/2016.
  */
+@Deprecated
 public class Accept extends Commands {
 
     public Accept(CorePlayer s, String[] a, FactionsMain m) {
@@ -35,7 +35,7 @@ public class Accept extends Commands {
                 cp.ClearFactionInvite();
                 return;
             }
-            if (FF.HasInvite(Sender.getName().toLowerCase()) && FF.AcceptInvite(Sender.getName().toLowerCase())) {
+            if (FF.AcceptInvite(Sender)) {
                 Sender.sendMessage(FactionsMain.NAME+TextFormat.GREEN + "Faction Invite Accepted!");
 //                Main.CC.Setnametag(Sender.getName());
             } else {

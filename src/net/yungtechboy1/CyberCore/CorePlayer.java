@@ -89,14 +89,14 @@ public class CorePlayer extends Player {
     public String LastMessageSentTo = null;
     public String Faction = null;
     public String FactionInvite = null;
-    public FactionSettings fsettings = new FactionSettings();
+//    public FactionSettings fsettings = new FactionSettings();
     public CoreSettings InternalPlayerSettings = new CoreSettings();
     /**
      * @@deprecated
      */
-    public Integer money = 0;
+//    public Integer money = 0;
     public Integer kills = 0;
-    public Integer deaths = 0;
+//    public Integer deaths = 0;
     public Integer fixcoins = 0;
     public Integer banned = 0;
     //    public String faction_id = null;
@@ -115,21 +115,22 @@ public class CorePlayer extends Player {
     public boolean DebuffsChanced = false;
     public boolean BuffsChanced = false;
     public Scoreboard PlayerScoreBoard = ScoreboardAPI.createScoreboard();
+    public PlayerFactionSettings fsettings;
     protected HashMap<Buff.BuffType, Float> lastdata = null;
     long uct = 0;
     boolean uw = false;
     private FormWindow nw;
     private Item ItemBeingEnchanted = null;
     private boolean ItemBeingEnchantedLock = false;
-    private PlayerSettingsData SettingsData = null;
+    private PlayerSettingsData PlayerSettingsData = null;
     private Rank rank = RankList.PERM_GUEST.getRank();
     private BlockVector3 lastBreakPosition1 = new BlockVector3();
     private Position CTLastPos = null;
-    private int TeleportTick = 0;
-    private boolean isTeleporting = false;
-    private boolean isInTeleportingProcess = false;
-    private CorePlayer TargetTeleporting = null;
-    private Position TargetTeleportingLoc;
+//    private int TeleportTick = 0;
+//    private boolean isTeleporting = false;
+//    private boolean isInTeleportingProcess = false;
+//    private CorePlayer TargetTeleporting = null;
+//    private Position TargetTeleportingLoc;
     private BaseClass PlayerClass = null;
     private int ClassCheck = -1;
     private int FactionCheck = -1;
@@ -459,12 +460,12 @@ public class CorePlayer extends Player {
     }
 
     public boolean isInTeleportingProcess() {
-        return isInTeleportingProcess;
+        return WaitingForTP != -1;
     }
-
-    public void setInTeleportingProcess(boolean inTeleportingProcess) {
-        isInTeleportingProcess = inTeleportingProcess;
-    }
+//
+//    public void setInTeleportingProcess(boolean inTeleportingProcess) {
+//        isInTeleportingProcess = inTeleportingProcess;
+//    }
 
     public boolean IsItemBeingEnchanted() {
         return getItemBeingEnchanted() != null;
@@ -515,9 +516,9 @@ public class CorePlayer extends Player {
         }
     }
 
-    public PlayerSettingsData GetData() {
-        if (getSettingsData() == null) CreateDefaultSettingsData(this);
-        return getSettingsData();
+    public PlayerSettingsData getPlayerSettingsData() {
+        if (PlayerSettingsData == null) CreateDefaultSettingsData(this);
+        return PlayerSettingsData;
     }
 
     @Override
@@ -530,7 +531,7 @@ public class CorePlayer extends Player {
 
     public void CreateDefaultSettingsData(CorePlayer p) {
         PlayerSettingsData a = new PlayerSettingsData(p);
-        setSettingsData(a);
+        setPlayerSettingsData(a);
     }
 
     @Override
@@ -554,7 +555,8 @@ public class CorePlayer extends Player {
             return cnt;
         } else {
             this.removeWindow(inventory);
-            sendMessage("ERROR!!!!!!! I FUCKKKKED UUUUPPP");
+//            sendMessage("ERROR!!!!!!! I " +
+//                    "FUCKKKKED UUUUPPP");
             return -1;
         }
     }
@@ -578,50 +580,39 @@ public class CorePlayer extends Player {
 
     public void TakeMoney(double price) {
         if (price <= 0) return;
-        PlayerSettingsData ped = GetData();
+        PlayerSettingsData ped = getPlayerSettingsData();
         ped.takeCash(price);
     }
 
     public void AddMoney(double price) {
         if (price <= 0) return;
-        PlayerSettingsData ped = GetData();
+        PlayerSettingsData ped = getPlayerSettingsData();
         ped.addCash(price);
     }
 
     public double getMoney() {
-        return GetData().getCash();
-    }
-
-    public void SetRank(RankList r) {
-        SetRank(r.getRank());
-    }
-
-    public void SetRank(Rank r) {
-        rank = r;
+        return getPlayerSettingsData().getCash();
     }
 
     public Rank GetRank() {
+        if(rank == null)rank = CyberCoreMain.getInstance().RF.getPlayerRank(this);
         return rank;
     }
 
-    public Integer addDeath() {
-        return deaths += 1;
+    public void addDeath() {
+        getPlayerSettingsData().addDeath();
+        kills = 0;
     }
 
-    public Integer addDeaths(Integer amount) {
-        return deaths += amount;
-    }
+    public void addKill() {
 
-    public Integer addKill() {
-        return kills += 1;
-    }
-
-    public Integer addKills(Integer amount) {
-        return kills += amount;
+        kills += 1;
+        getPlayerSettingsData().addKill();
     }
 
     public double calculateKD() {
-        return kills / deaths;
+        PlayerSettingsData psd = getPlayerSettingsData();
+        return  psd.getKills()/ psd.getDeaths();
     }
 
     public boolean hasNewWindow() {
@@ -750,6 +741,7 @@ public class CorePlayer extends Player {
 
         this.sendPlayStatus(3);
         PlayerJoinEvent playerJoinEvent = new PlayerJoinEvent(this, new TranslationContainer(TextFormat.YELLOW + "%multiplayer.player.joined", new String[]{this.getDisplayName()}));
+//        Player;
         this.server.getPluginManager().callEvent(playerJoinEvent);
         if (playerJoinEvent.getJoinMessage().toString().trim().length() > 0) {
             this.server.broadcastMessage(playerJoinEvent.getJoinMessage());
@@ -1165,7 +1157,7 @@ public class CorePlayer extends Player {
 
                                 switch (type) {
                                     case InventoryTransactionPacket.USE_ITEM_ON_ENTITY_ACTION_INTERACT:
-                                        PlayerInteractEntityEvent playerInteractEntityEvent = new PlayerInteractEntityEvent(this, target, item);
+                                        PlayerInteractEntityEvent playerInteractEntityEvent = new PlayerInteractEntityEvent(this, target, item, useItemOnEntityData.clickPos);
                                         if (this.isSpectator()) playerInteractEntityEvent.setCancelled();
                                         getServer().getPluginManager().callEvent(playerInteractEntityEvent);
 
@@ -1265,14 +1257,14 @@ public class CorePlayer extends Player {
                                     break packetswitch;
                                 }
                                 ReleaseItemData releaseItemData = (ReleaseItemData) transactionPacket2.transactionData;
-
                                 try {
                                     type = releaseItemData.actionType;
                                     switch (type) {
                                         case InventoryTransactionPacket.RELEASE_ITEM_ACTION_RELEASE:
                                             if (this.isUsingItem()) {
                                                 item = this.inventory.getItemInHand();
-                                                if (item.onReleaseUsing(this)) {
+                                                int tickcused = this.server.getTick() - this.startAction;
+                                                if (item.onRelease(this, tickcused)) {
                                                     this.inventory.setItemInHand(item);
                                                 }
                                             } else {
@@ -1545,8 +1537,8 @@ public class CorePlayer extends Player {
             sd.addLine("    " + TextFormat.GOLD + "X: " + TextFormat.GREEN + getFloorX() + TextFormat.GOLD + " Y: " + TextFormat.GREEN + getFloorY() + TextFormat.GOLD + " Z: " + TextFormat.GREEN + getFloorZ(), k++);
         }
         if (!InternalPlayerSettings.isHudFactionOff() && getFaction() != null) {
-            sd.addLine(TextFormat.GRAY + "Faction : " + TextFormat.AQUA + getFaction().GetDisplayName(), k++);
-            sd.addLine("    " + TextFormat.AQUA + "XP" + TextFormat.GRAY + " | " + TextFormat.GREEN + getFaction().GetXP() + TextFormat.AQUA + " / " + TextFormat.GOLD + getFaction().calculateRequireExperience() + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + getFaction().GetLevel(), k++);
+            sd.addLine(TextFormat.GRAY + "Faction : " + TextFormat.AQUA + getFaction().getSettings().getDisplayName(), k++);
+            sd.addLine("    " + TextFormat.AQUA + "XP" + TextFormat.GRAY + " | " + TextFormat.GREEN + getFaction().getSettings().GetXP() + TextFormat.AQUA + " / " + TextFormat.GOLD + getFaction().getSettings().calculateRequireExperience() + TextFormat.GRAY + " | " + TextFormat.GREEN + "Level: " + TextFormat.YELLOW + getFaction().getSettings().getLevel(), k++);
         }
         if (!InternalPlayerSettings.isHudClassOff()) {
 //            TODO
@@ -1646,17 +1638,19 @@ public class CorePlayer extends Player {
                         if (Faction == null) {
                             Faction f = CyberCoreMain.getInstance().FM.FFactory.IsPlayerInFaction(this);
                             if (f == null) {
+                                System.out.println("Faction IS Null?!??!?!");
                                 Faction = null;
                             } else {
-                                Faction = f.GetName();
+                                Faction = f.getName();
                             }
                         }
                         //Check to See if Faction Invite Expired
                         if (FactionInvite != null && FactionInviteTimeout > 0) {
-                            int t = CyberCoreMain.getInstance().GetIntTime();
+                            int t = CyberCoreMain.getInstance().getIntTime();
                             if (t < FactionInviteTimeout) {
                                 Faction fac = CyberCoreMain.getInstance().FM.FFactory.getFaction(FactionInvite);
                                 fac.BroadcastMessage(TextFormat.YELLOW + getName() + " has declined your faction invite");
+                                sendMessage(TextFormat.YELLOW + "You took too long to accept the faction invite, and has been auto declined!");
                                 ClearFactionInvite(true);
                             }
                         }
@@ -1667,8 +1661,14 @@ public class CorePlayer extends Player {
 //                    CyberCoreMain.getInstance().getLogger().info("RUNNNING CLASS CHECK IN CP" + CDL.size()+"||"+ getPlayerClass());
                         AddCoolDown(Cooldown_DTP, 1);
                         if(isWaitingForTeleport()){
-                            teleport(WaitingForTPPos);
-                            clearWaitingForTP();
+                            if(WaitingForTP == 0) {
+                                teleport(WaitingForTPPos);
+                                clearWaitingForTP();
+                            }else if(WaitingForTP == -1){
+                                //NO TP PENDING
+                            }else{
+                                WaitingForTP--;
+                            }
                         }
                     }
                     //Class Check
@@ -1708,68 +1708,68 @@ public class CorePlayer extends Player {
 
             //Check to see if Player as medic or Restoration
             PlayerFood pf = getFoodData();
-            if (TPR != null && TPRTimeout != 0 && TPRTimeout < currentTick && !isInTeleportingProcess) {
+            if (TPR != null && TPRTimeout != 0 && TPRTimeout < currentTick) {
                 TPRTimeout = 0;
                 CorePlayer cp = CyberCoreMain.getInstance().getCorePlayer(TPR);
                 if (cp != null) cp.sendPopup(TextFormat.YELLOW + "Teleport request expired");
                 sendPopup(TextFormat.YELLOW + "Teleport request expired");
                 TPR = null;
             }
-
-            if (isInTeleportingProcess) {
-                sendPopup(TeleportTick + "|" + isTeleporting);
-                if (TeleportTick != 0 && isTeleporting) {
-                    if (CTLastPos == null) CTLastPos = getPosition();
-                    else {
-                        sendMessage(CTLastPos.distance(getPosition()) + "");
-                        if (CTLastPos.distance(getPosition()) > 3) {
-                            isTeleporting = false;
-                        }
-//            CTLastPos = getPosition();
-                    }
-                    if (TeleportTick <= currentTick && isTeleporting) {
-                        System.out.println("AAAAAA");
-                        if (isTeleporting) {
-                            removeAllEffects();//TODO use `removeEffect` to only remove that Effect
-                            if ((TargetTeleporting != null && !TargetTeleporting.isAlive())) {
-                                sendMessage("Error! Player Not found!!");
-                                isInTeleportingProcess = false;
-                                TeleportTick = 0;
-                                CTLastPos = null;
-                                return super.onUpdate(currentTick);
-                            } else if (TargetTeleporting == null && TargetTeleportingLoc == null) {
-                                sendMessage("Error! No Teleport data found!!!");
-                                isInTeleportingProcess = false;
-                                TeleportTick = 0;
-                                CTLastPos = null;
-                                return super.onUpdate(currentTick);
-                            } else if (TargetTeleportingLoc != null) {
-                                getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
-                                teleport(TargetTeleportingLoc);
-                                TargetTeleportingLoc = null;
-                                TargetTeleporting = null;
-                            } else {
-                                getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
-                                teleport(TargetTeleporting);
-                                TargetTeleportingLoc = null;
-                                TargetTeleporting = null;
-                            }
-                            isInTeleportingProcess = false;
-                            TeleportTick = 0;
-                            CTLastPos = null;
-                        }
-                    } else if (isInTeleportingProcess && !isTeleporting) {
-                        removeAllEffects();
-                        sendMessage("Error! you moved too much!");
-                        isInTeleportingProcess = false;
-                        TeleportTick = 0;
-                        CTLastPos = null;
-                        TargetTeleportingLoc = null;
-                        TargetTeleporting = null;
-                    }
-
-                }
-            }
+//            @Deprecated
+//            if (isInTeleportingProcess) {
+//                sendPopup(TeleportTick + "|" + isTeleporting);
+//                if (TeleportTick != 0 && isTeleporting) {
+//                    if (CTLastPos == null) CTLastPos = getPosition();
+//                    else {
+//                        sendMessage(CTLastPos.distance(getPosition()) + "");
+//                        if (CTLastPos.distance(getPosition()) > 3) {
+//                            isTeleporting = false;
+//                        }
+////            CTLastPos = getPosition();
+//                    }
+//                    if (TeleportTick <= currentTick && isTeleporting) {
+//                        System.out.println("AAAAAA");
+//                        if (isTeleporting) {
+//                            removeAllEffects();//TODO use `removeEffect` to only remove that Effect
+//                            if ((TargetTeleporting != null && !TargetTeleporting.isAlive())) {
+//                                sendMessage("Error! Player Not found!!");
+//                                isInTeleportingProcess = false;
+//                                TeleportTick = 0;
+//                                CTLastPos = null;
+//                                return super.onUpdate(currentTick);
+//                            } else if (TargetTeleporting == null && TargetTeleportingLoc == null) {
+//                                sendMessage("Error! No Teleport data found!!!");
+//                                isInTeleportingProcess = false;
+//                                TeleportTick = 0;
+//                                CTLastPos = null;
+//                                return super.onUpdate(currentTick);
+//                            } else if (TargetTeleportingLoc != null) {
+//                                getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
+//                                teleport(TargetTeleportingLoc);
+//                                TargetTeleportingLoc = null;
+//                                TargetTeleporting = null;
+//                            } else {
+//                                getLevel().addSound(getPosition(), Sound.MOB_ENDERMEN_PORTAL);
+//                                teleport(TargetTeleporting);
+//                                TargetTeleportingLoc = null;
+//                                TargetTeleporting = null;
+//                            }
+//                            isInTeleportingProcess = false;
+//                            TeleportTick = 0;
+//                            CTLastPos = null;
+//                        }
+//                    } else if (isInTeleportingProcess && !isTeleporting) {
+//                        removeAllEffects();
+//                        sendMessage("Error! you moved too much!");
+//                        isInTeleportingProcess = false;
+//                        TeleportTick = 0;
+//                        CTLastPos = null;
+//                        TargetTeleportingLoc = null;
+//                        TargetTeleporting = null;
+//                    }
+//
+//                }
+//            }
         }
 
         if (!this.loggedIn) {
@@ -1923,7 +1923,8 @@ public class CorePlayer extends Player {
                 Vector3 v3 = h.toVector3();
                 if (instant) teleport(v3);
                 else
-                    StartTeleport(h.toPosition(getLevel()), 7);
+//                    StartTeleport(h.toPosition(getLevel()), delay);
+                delayTeleport(delay,h.toPosition(getLevel()),true,2);
             }
         }
 
@@ -1955,43 +1956,51 @@ public class CorePlayer extends Player {
         HD.add(homeData);
     }
 
-    public PlayerSettingsData getSettingsData() {
-        return SettingsData;
-    }
+//    public PlayerSettingsData getPlayerSettingsData() {
+//        return PlayerSettingsData;
+//    }
 
-    public void setSettingsData(PlayerSettingsData settingsData) {
-        SettingsData = settingsData;
+    public void setPlayerSettingsData(PlayerSettingsData playerSettingsData) {
+        PlayerSettingsData = playerSettingsData;
     }
+    @Deprecated
 
     public void StartTeleport(CorePlayer pl, int delay) {
 
         pl.BeginTeleportEffects(this, delay);
     }
 
+    @Deprecated
     public void StartTeleport(CorePlayer pl) {
         StartTeleport(pl, 3);
     }
 
+    @Deprecated
     public void StartTeleport(Position pl, int delay) {
 
         BeginTeleportEffects(pl, delay);
     }
+    @Deprecated
 
     public void StartTeleport(Vector3 v3, Player pl, int delay) {
         BeginTeleportEffects(new Location(v3.x, v3.y, v3.z, pl.getLevel()), delay);
     }
+    @Deprecated
 
     public void StartTeleport(Position pl) {
         StartTeleport(pl, 3);
     }
+    @Deprecated
 
     private void BeginTeleportEffects(CorePlayer corePlayer) {
         BeginTeleportEffects(corePlayer, 3);
     }
+    @Deprecated
 
     private void BeginTeleportEffects(CorePlayer corePlayer, int delay) {
         BeginTeleportEffects(corePlayer.getLocation(), delay);
     }
+    @Deprecated
 
     private void BeginTeleportEffects(Position pos, int delay) {
         Effect e1 = Effect.getEffect(9);
@@ -2002,11 +2011,11 @@ public class CorePlayer extends Player {
         e2.setDuration(20 * 600);
         addEffect(e1);
         addEffect(e2);
-        isTeleporting = true;
-        isInTeleportingProcess = true;
-        TeleportTick = getServer().getTick() + 20 * delay;
-        TargetTeleporting = null;
-        TargetTeleportingLoc = pos;
+//        isTeleporting = true;
+//        isInTeleportingProcess = true;
+//        TeleportTick = getServer().getTick() + 20 * delay;
+//        TargetTeleporting = null;
+//        TargetTeleportingLoc = pos;
     }
 
     public void ClearFactionInvite() {
@@ -2127,74 +2136,74 @@ public class CorePlayer extends Player {
         FactionInviteTimeout = -1;
     }
 
-    @Override
-    public void completeLoginSequence() {
-        PlayerLoginEvent ev;
-        this.server.getPluginManager().callEvent(ev = new PlayerLoginEvent(this, "Plugin reason"));
-        if (ev.isCancelled()) {
-            this.close(this.getLeaveMessage(), ev.getKickMessage());
-            return;
-        }
-
-        StartGamePacket startGamePacket = new StartGamePacket();
-        startGamePacket.entityUniqueId = this.id;
-        startGamePacket.entityRuntimeId = this.id;
-        startGamePacket.playerGamemode = (this.gamemode);
-        startGamePacket.x = (float) this.x;
-        startGamePacket.y = (float) this.y;
-        startGamePacket.z = (float) this.z;
-        startGamePacket.yaw = (float) this.yaw;
-        startGamePacket.pitch = (float) this.pitch;
-        startGamePacket.seed = -1;
-        startGamePacket.dimension = (byte) (this.level.getDimension() & 0xff);
-        startGamePacket.worldGamemode = (this.gamemode);
-        startGamePacket.difficulty = this.server.getDifficulty();
-        startGamePacket.spawnX = (int) this.x;
-        startGamePacket.spawnY = (int) this.y;
-        startGamePacket.spawnZ = (int) this.z;
-        startGamePacket.hasAchievementsDisabled = true;
-        startGamePacket.dayCycleStopTime = -1;
-        startGamePacket.eduMode = false;
-        startGamePacket.hasEduFeaturesEnabled = true;
-        startGamePacket.rainLevel = 0;
-        startGamePacket.lightningLevel = 0;
-        startGamePacket.commandsEnabled = this.isEnableClientCommand();
-        startGamePacket.gameRules = getLevel().getGameRules();
-        startGamePacket.levelId = "";
-        startGamePacket.worldName = this.getServer().getNetwork().getName();
-        startGamePacket.generator = 1; //0 old, 1 infinite, 2 flat
-        this.dataPacket(startGamePacket);
-
-        this.dataPacket(new AvailableEntityIdentifiersPacket());
-
-        this.loggedIn = true;
-
-        this.level.sendTime(this);
-
-        //todo cHANGE
-        this.setMovementSpeed(DEFAULT_SPEED);
-        this.sendAttributes();
-        this.setNameTagVisible(true);
-        this.setNameTagAlwaysVisible(true);
-        this.setCanClimb(true);
-
-        this.server.getLogger().info(this.getServer().getLanguage().translateString("nukkit.player.logIn",
-                TextFormat.AQUA + this.username + TextFormat.WHITE,
-                this.ip,
-                String.valueOf(this.port),
-                String.valueOf(this.id),
-                this.level.getName(),
-                String.valueOf(NukkitMath.round(this.x, 4)),
-                String.valueOf(NukkitMath.round(this.y, 4)),
-                String.valueOf(NukkitMath.round(this.z, 4))));
-
-        if (this.isOp() || this.hasPermission("nukkit.textcolor")) {
-            this.setRemoveFormat(false);
-        }
-
-        this.server.addOnlinePlayer(this);
-        this.server.onPlayerCompleteLoginSequence(this);
-    }
+//    @Override
+//    public void completeLoginSequence() {
+//        PlayerLoginEvent ev;
+//        this.server.getPluginManager().callEvent(ev = new PlayerLoginEvent(this, "Plugin reason"));
+//        if (ev.isCancelled()) {
+//            this.close(this.getLeaveMessage(), ev.getKickMessage());
+//            return;
+//        }
+//
+//        StartGamePacket startGamePacket = new StartGamePacket();
+//        startGamePacket.entityUniqueId = this.id;
+//        startGamePacket.entityRuntimeId = this.id;
+//        startGamePacket.playerGamemode = (this.gamemode);
+//        startGamePacket.x = (float) this.x;
+//        startGamePacket.y = (float) this.y;
+//        startGamePacket.z = (float) this.z;
+//        startGamePacket.yaw = (float) this.yaw;
+//        startGamePacket.pitch = (float) this.pitch;
+//        startGamePacket.seed = -1;
+//        startGamePacket.dimension = (byte) (this.level.getDimension() & 0xff);
+//        startGamePacket.worldGamemode = (this.gamemode);
+//        startGamePacket.difficulty = this.server.getDifficulty();
+//        startGamePacket.spawnX = (int) this.x;
+//        startGamePacket.spawnY = (int) this.y;
+//        startGamePacket.spawnZ = (int) this.z;
+//        startGamePacket.hasAchievementsDisabled = true;
+//        startGamePacket.dayCycleStopTime = -1;
+////        startGamePacket.eduMode = false;
+//        startGamePacket.hasEduFeaturesEnabled = true;
+//        startGamePacket.rainLevel = 0;
+//        startGamePacket.lightningLevel = 0;
+//        startGamePacket.commandsEnabled = this.isEnableClientCommand();
+//        startGamePacket.gameRules = getLevel().getGameRules();
+//        startGamePacket.levelId = "";
+//        startGamePacket.worldName = this.getServer().getNetwork().getName();
+//        startGamePacket.generator = 1; //0 old, 1 infinite, 2 flat
+//        this.dataPacket(startGamePacket);
+//
+//        this.dataPacket(new AvailableEntityIdentifiersPacket());
+//
+//        this.loggedIn = true;
+//
+//        this.level.sendTime(this);
+//
+//        //todo cHANGE
+//        this.setMovementSpeed(DEFAULT_SPEED);
+//        this.sendAttributes();
+//        this.setNameTagVisible(true);
+//        this.setNameTagAlwaysVisible(true);
+//        this.setCanClimb(true);
+//
+//        this.server.getLogger().info(this.getServer().getLanguage().translateString("nukkit.player.logIn",
+//                TextFormat.AQUA + this.username + TextFormat.WHITE,
+//                this.ip,
+//                String.valueOf(this.port),
+//                String.valueOf(this.id),
+//                this.level.getName(),
+//                String.valueOf(NukkitMath.round(this.x, 4)),
+//                String.valueOf(NukkitMath.round(this.y, 4)),
+//                String.valueOf(NukkitMath.round(this.z, 4))));
+//
+//        if (this.isOp() || this.hasPermission("nukkit.textcolor")) {
+//            this.setRemoveFormat(false);
+//        }
+//
+//        this.server.addOnlinePlayer(this);
+//        this.server.onPlayerCompleteLoginSequence(this);
+//    }
 
     @Override
     public void heal(EntityRegainHealthEvent source) {
@@ -2241,7 +2250,7 @@ public class CorePlayer extends Player {
     public String getFactionName() {
         Faction f = getFaction();
         if (f == null) return "No Faction";
-        return f.GetDisplayName();
+        return f.getSettings().getDisplayName();
     }
 
     public Faction getFaction() {
@@ -2250,9 +2259,10 @@ public class CorePlayer extends Player {
     }
 
     public boolean isWaitingForTeleport() {
-        if (!(WaitingForTP == -1) && WaitingForTPPos != null) {
-            if(WaitingForTPStartPos != null && WaitingForTPStartPos.distance(WaitingForTPPos.asVector3f().asVector3()) > WaitingForTPCD){
-                sendMessage("Error! You moved too much so your teleport was canceled");
+        if (!(WaitingForTP == -1) && WaitingForTPPos != null && WaitingForTPStartPos != null ) {
+            double d = WaitingForTPStartPos.distance(getPosition().asVector3f().asVector3());
+            if(d > WaitingForTPCD){
+                sendMessage("Error! You moved too much so your teleport was canceled! Distance Moved :" +d);
                 clearWaitingForTP();
                 return false;
             }
@@ -2293,6 +2303,8 @@ public class CorePlayer extends Player {
 
     public int WaitingForTPCD = 2;
     public boolean WaitingForTPEffects = false;
+
+
 //        if (!this.server.isWhitelisted((this.getName()).toLowerCase())) {
 //            this.kick(PlayerKickEvent.Reason.NOT_WHITELISTED, "Server is white-listed");
 //

@@ -11,7 +11,7 @@ import net.yungtechboy1.CyberCore.Manager.Form.CyberFormSimple;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.yungtechboy1.CyberCore.Manager.Factions.FactionString.Success_ADMIN_Faction_Saved;
+import static net.yungtechboy1.CyberCore.Manager.Factions.FactionErrorString.Success_ADMIN_Faction_Saved;
 
 public class FactionAdminPageSLRWindow extends CyberFormSimple {
     public FactionAdminPageSLRWindow() {

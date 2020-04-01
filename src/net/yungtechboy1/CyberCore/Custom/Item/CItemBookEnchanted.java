@@ -1,11 +1,11 @@
 package net.yungtechboy1.CyberCore.Custom.Item;
 
-import cn.nukkit.math.NukkitRandom;
-import cn.nukkit.nbt.tag.CompoundTag;
-import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
+import cn.nukkit.math.NukkitRandom;
+import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
+import net.yungtechboy1.CyberCore.Custom.CustomEnchant.CustomEnchantment;
 
 import java.util.ArrayList;
 

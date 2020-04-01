@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.utils.TextFormat;
-
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
@@ -35,7 +34,7 @@ public class List extends Commands {
 
         t += TextFormat.GRAY+"-------------"+TextFormat.GOLD+".<[List]>."+TextFormat.GRAY+"-------------\n";
         t += TextFormat.GRAY+"------------Land-Pwr-Max---------\n";
-        for(java.util.Map.Entry<String, Faction> e : Main.FFactory.List.entrySet()){
+        for (java.util.Map.Entry<String, Faction> e : Main.FFactory.LocalFactionCache.entrySet()) {
             Faction f = e.getValue();
             a = "";
             // 0 < 5 && 0 >= 0
@@ -52,7 +51,7 @@ public class List extends Commands {
             x++;
             //Privacy
             a += TextFormat.DARK_GREEN+""+x+" > ";
-            if (f.GetPrivacy() == 1) {
+            if (f.getSettings().getPrivacy() == 1) {
                 a += TextFormat.RED + "[P]";
             } else {
                 a += TextFormat.GREEN + "[O]";
@@ -60,10 +59,10 @@ public class List extends Commands {
             a += TextFormat.WHITE + "---[ ";
             a += TextFormat.DARK_AQUA+"" + f.GetPlots().size();
             a += TextFormat.WHITE + " / ";
-            a += TextFormat.DARK_AQUA +""+ f.GetPower();
+            a += TextFormat.DARK_AQUA +""+ f.getSettings().getPower();
             a += TextFormat.WHITE + " / ";
             a += TextFormat.DARK_AQUA+"" + f.CalculateMaxPower();
-            a += TextFormat.WHITE + " ]--- " + TextFormat.YELLOW + f.GetDisplayName();
+            a += TextFormat.WHITE + " ]--- " + TextFormat.YELLOW + f.getDisplayName();
             a += TextFormat.GRAY + "[" + f.GetNumberOfPlayers() + "]";
             t += a + "\n";
 

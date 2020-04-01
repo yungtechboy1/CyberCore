@@ -1,6 +1,5 @@
 package net.yungtechboy1.CyberCore.Tasks;
 
-import cn.nukkit.Player;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.potion.Effect;
 import cn.nukkit.scheduler.PluginTask;

@@ -1,6 +1,5 @@
 package net.yungtechboy1.CyberCore;
 
-import cn.nukkit.Player;
 import cn.nukkit.PlayerFood;
 import cn.nukkit.Server;
 import cn.nukkit.event.entity.EntityDamageEvent;

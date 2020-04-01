@@ -2,10 +2,8 @@ package net.yungtechboy1.CyberCore.Custom.Crafting.Recipies;
 
 import cn.nukkit.inventory.Recipe;
 import cn.nukkit.inventory.ShapelessRecipe;
-import cn.nukkit.item.Item;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemGunpowder;
 
-import java.util.ArrayList;
 import java.util.Collections;
 
 public class GunpowderRecipe extends CustomRecipe {

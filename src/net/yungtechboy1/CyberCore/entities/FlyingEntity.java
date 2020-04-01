@@ -1,7 +1,5 @@
 package net.yungtechboy1.CyberCore.entities;
 
-import net.yungtechboy1.CyberCore.entities.animal.Animal;
-import net.yungtechboy1.CyberCore.entities.utils.Utils;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityCreature;
 import cn.nukkit.level.format.FullChunk;
@@ -9,6 +7,8 @@ import cn.nukkit.math.Vector2;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.tag.CompoundTag;
 import net.yungtechboy1.CyberCore.MobAI.MobPlugin;
+import net.yungtechboy1.CyberCore.entities.animal.Animal;
+import net.yungtechboy1.CyberCore.entities.utils.Utils;
 
 public abstract class FlyingEntity extends BaseEntity {
 

@@ -4,7 +4,6 @@ import cn.nukkit.item.ItemDiamond;
 import cn.nukkit.scheduler.Task;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Factory.Shop.ShopInv;
 
 public class OpenSpawnerShop extends Task implements Runnable {
     CorePlayer P;

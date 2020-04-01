@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Custom.Inventory;
 
 import cn.nukkit.Player;
-import cn.nukkit.blockentity.BlockEntity;
 import cn.nukkit.blockentity.BlockEntityChest;
 import cn.nukkit.inventory.ContainerInventory;
 import cn.nukkit.inventory.DoubleChestInventory;
@@ -10,7 +9,6 @@ import cn.nukkit.inventory.InventoryType;
 import cn.nukkit.level.Level;
 import cn.nukkit.network.protocol.BlockEventPacket;
 import cn.nukkit.network.protocol.LevelSoundEventPacket;
-import net.yungtechboy1.CyberCore.Custom.Block.BlockEnchantingTable;
 
 /**
  * Created by carlt on 3/28/2019.

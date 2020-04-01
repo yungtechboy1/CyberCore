@@ -23,6 +23,7 @@ import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.inventory.transaction.action.SlotChangeAction;
 import cn.nukkit.item.Item;
 import cn.nukkit.math.Vector3;
+import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Base.PowerAbstract;
 import net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse;
@@ -35,11 +36,9 @@ import net.yungtechboy1.CyberCore.Manager.Crate.CrateObject;
 import net.yungtechboy1.CyberCore.Manager.Crate.ItemChanceData;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.CrateConfirmWindow;
+import net.yungtechboy1.CyberCore.Manager.Form.Windows.HowToPlay.HTP_0_Window;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Slot.PowerHotBarInt.getPowerHotBarItemNamedTagKey;
 import static net.yungtechboy1.CyberCore.Factory.AuctionHouse.AuctionHouse.CurrentPageEnum.Confirm_Purchase_Not_Enough_Money;
@@ -58,6 +57,36 @@ public class MasterListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void joinEvent(PlayerJoinEvent event) {
         Player p = event.getPlayer();
+
+        if (plugin.PlayerIdentification.exists(p.getName().toLowerCase())) {
+            ConfigSection cs = plugin.PlayerIdentification.getSection(p.getName().toLowerCase());
+            if (cs.exists("IP")) {
+                List<String> ipl = cs.getStringList("IP");
+                if (!ipl.contains(p.getAddress())) ipl.add(p.getAddress());
+                List<Long> cid = cs.getLongList("CID");
+                if (!cid.contains(p.getClientId())) cid.add(p.getClientId());
+                List<String> uid = cs.getStringList("UID");
+                if (!uid.contains(p.getUniqueId().toString())) uid.add(p.getUniqueId().toString());
+
+            }
+        } else {
+            ConfigSection c = new ConfigSection() {{
+                put("IP", new ArrayList<String>() {{
+                    add(p.getAddress());
+                }});
+                put("CID", new ArrayList<Long>() {{
+                    add(p.getClientId());
+                }});
+                put("UID", new ArrayList<String>() {{
+                    add(p.getUniqueId().toString());
+                }});
+            }};
+            plugin.PlayerIdentification.set(p.getName().toLowerCase(), c);
+            //NEW PLAYER
+            p.showFormWindow(new HTP_0_Window());
+            p.getServer().broadcastMessage(TextFormat.AQUA + "Welcome " + p.getName() + " to the community!!! They have logged in for the 1st time!");
+        }
+
 
         String Msg = plugin.colorize((String) plugin.MainConfig.get("Join-Message"));
         event.setJoinMessage(Msg.replace("{player}", p.getName()));
@@ -681,7 +710,7 @@ public class MasterListener implements Listener {
         String faction;
         Faction pf = plugin.getPlayerFaction(player);
         if (pf != null) {
-            faction = pf.GetDisplayName();
+            faction = pf.getDisplayName();
             //FactionFormat = TextFormat.GRAY+FactionFormat.replace("{value}",fp.getFaction().getTag())+TextFormat.WHITE;
         } else {
             faction = TextFormat.GRAY + "[NF]" + TextFormat.WHITE;

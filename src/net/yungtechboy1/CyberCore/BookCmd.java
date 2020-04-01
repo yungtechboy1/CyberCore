@@ -8,7 +8,6 @@ import cn.nukkit.item.Item;
 import net.yungtechboy1.CyberCore.Classes.New.ClassType;
 import net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.PowerEnum;
 import net.yungtechboy1.CyberCore.Custom.Item.CItemBook;
-import net.yungtechboy1.CyberCore.Manager.Form.Windows.HowToPlay.HTP_0_Window;
 
 public class BookCmd extends Command {
     CyberCoreMain Owner;

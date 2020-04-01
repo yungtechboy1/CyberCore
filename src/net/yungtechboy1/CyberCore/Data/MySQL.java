@@ -3,7 +3,6 @@ package net.yungtechboy1.CyberCore.Data;
 import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import ru.nukkit.dblib.DbLib;
 
 import java.io.IOException;
 import java.nio.ByteOrder;
@@ -14,7 +13,7 @@ import java.util.HashMap;
 public abstract class MySQL {
 
     public Connection connection;
-    public CyberCoreMain plugin;
+    public CyberCoreMain Plugin;
     public boolean enabled = true;
 
 
@@ -26,7 +25,7 @@ public abstract class MySQL {
 
     public MySQL(CyberCoreMain plugin) {
 
-        this.plugin = plugin;
+        Plugin = plugin;
     }
 
     /**
@@ -35,11 +34,11 @@ public abstract class MySQL {
      * @return Connection
      */
     public abstract Connection connectToDb();// {
-//        String host = plugin.MainConfig.getString("mysql-host");
-//        String pass = plugin.MainConfig.getString("mysql-pass");
-//        int port = plugin.MainConfig.getInt("mysql-port");
-//        String user = plugin.MainConfig.getString("mysql-user");
-//        String db = plugin.MainConfig.getString("mysql-db");
+//        String host = Plugin.MainConfig.getString("mysql-host");
+//        String pass = Plugin.MainConfig.getString("mysql-pass");
+//        int port = Plugin.MainConfig.getInt("mysql-port");
+//        String user = Plugin.MainConfig.getString("mysql-user");
+//        String db = Plugin.MainConfig.getString("mysql-db");
 //        if (!enabled) return null;
 //        Connection connection = DbLib.getMySqlConnection(SBBB(host, port,
 //                db, user, pass);
@@ -65,7 +64,15 @@ public abstract class MySQL {
         PreparedStatement pstmt = connection.prepareStatement(query);
         try {
 //            ct.setName("");
-            byte[] ba = NBTIO.write(ct, ByteOrder.LITTLE_ENDIAN);
+            System.out.println("E112222223222222222222222222 > "+ct);
+//            System.out.println("E1122222232 > "+ct.toString());
+            byte[] ba = new byte[0];
+            if(ct != null) {
+                ba = NBTIO.write(ct, ByteOrder.LITTLE_ENDIAN);
+                System.out.println("CT AWS WAS NOT NULLLLLL");
+            }
+            System.out.println("E1132 > |21| "+new String(ba)+"||3333|| "+ba);
+
 
             pstmt.setBytes(1, ba);
             pstmt.execute();

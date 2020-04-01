@@ -5,16 +5,16 @@
  */
 package net.yungtechboy1.CyberCore.entities.spawners;
 
-import net.yungtechboy1.CyberCore.MobAI.AutoSpawnTask;
-import net.yungtechboy1.CyberCore.MobAI.FileLogger;
-import net.yungtechboy1.CyberCore.entities.animal.walking.Sheep;
-import net.yungtechboy1.CyberCore.entities.autospawn.AbstractEntitySpawner;
-import net.yungtechboy1.CyberCore.entities.autospawn.SpawnResult;
 import cn.nukkit.IPlayer;
 import cn.nukkit.block.Block;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import cn.nukkit.utils.Config;
+import net.yungtechboy1.CyberCore.MobAI.AutoSpawnTask;
+import net.yungtechboy1.CyberCore.MobAI.FileLogger;
+import net.yungtechboy1.CyberCore.entities.animal.walking.Sheep;
+import net.yungtechboy1.CyberCore.entities.autospawn.AbstractEntitySpawner;
+import net.yungtechboy1.CyberCore.entities.autospawn.SpawnResult;
 
 /**
  * Each entity get it's own spawner class.

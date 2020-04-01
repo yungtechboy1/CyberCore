@@ -10,7 +10,7 @@ import net.yungtechboy1.CyberCore.Manager.Form.CyberFormModal;
 
 public class FactionLeaveConfirmWindow extends CyberFormModal {
     public FactionLeaveConfirmWindow(Faction f) {
-        super(FormType.MainForm.Faction_Leave_Confirm, "Faction Leave Confirmation", TextFormat.RED+"Are you sure you want to leave "+f.GetDisplayName()+"?", "Leave", "Stay / Cancel");
+        super(FormType.MainForm.Faction_Leave_Confirm, "Faction Leave Confirmation", TextFormat.RED + "Are you sure you want to leave " + f.getDisplayName() + "?", "Leave", "Stay / Cancel");
     }
 
     @Override
@@ -18,10 +18,7 @@ public class FactionLeaveConfirmWindow extends CyberFormModal {
         FormResponseModal fr = getResponse();
         int k = fr.getClickedButtonId();
         Faction fac = p.getFaction();
-        if(fac.IsMember( p.getName()))fac.DelMember(p.getName());
-        if(fac.IsOfficer( p.getName()))fac.DelOfficer(p.getName());
-        if(fac.IsGeneral( p.getName()))fac.DelGeneral(p.getName());
-        if(fac.IsRecruit( p.getName()))fac.DelRecruit(p.getName());
+        fac.removePlayer(p);
 
         p.sendMessage(FactionsMain.NAME+ TextFormat.GREEN + "You successfully left faction");
         fac.TakePower(1);

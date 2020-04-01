@@ -7,7 +7,7 @@ import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.item.Item;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
-import net.yungtechboy1.CyberCore.Utils;
+import net.yungtechboy1.CyberCore.CyberUtils;
 
 /**
  * Created by carlt_000 on 2/23/2017.
@@ -28,7 +28,7 @@ public class SellHand extends Command {
     @Override
     public boolean execute(CommandSender s, String label, String[] args) {
         if (args.length == 0 || args.length != 1) {
-            Utils.SendCommandUsage(this, s);
+            CyberUtils.SendCommandUsage(this, s);
             return true;
         } else {
             s.sendMessage("IMA TAKE YOUR HAND!");

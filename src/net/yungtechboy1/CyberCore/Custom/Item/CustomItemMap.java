@@ -1,9 +1,7 @@
 package net.yungtechboy1.CyberCore.Custom.Item;
 
 import cn.nukkit.Player;
-import cn.nukkit.event.player.PlayerMapInfoRequestEvent;
 import cn.nukkit.item.ItemMap;
-import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.ClientboundMapItemDataPacket;
 import cn.nukkit.utils.MainLogger;
 import net.yungtechboy1.CyberCore.Manager.PositionImage;
@@ -11,12 +9,9 @@ import net.yungtechboy1.CyberCore.Manager.PositionImage;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Vector;
 
 /**
  * Created by carlt on 5/16/2019.

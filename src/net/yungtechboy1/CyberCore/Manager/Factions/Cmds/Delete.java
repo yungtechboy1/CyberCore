@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 import cn.nukkit.utils.TextFormat;
-
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
@@ -27,7 +26,7 @@ public class Delete extends Commands {
 
     @Override
     public void RunCommand() {
-        if (fac.Leader.equalsIgnoreCase(Sender.getName())) {
+        if (fac.GetLeader().equalsIgnoreCase(Sender.getName())) {
             Sender.showFormWindow(new FactionConfirmDelete());
         } else {
             Sender.sendMessage(FactionsMain.NAME+TextFormat.RED + "You are not the leader!");

@@ -1,7 +1,5 @@
 package net.yungtechboy1.CyberCore.Classes.Power.BaseClasses.Ability;
 
-import cn.nukkit.Server;
-
 public interface PowerAbilityInterface {
 
     int getRunTimeTick();

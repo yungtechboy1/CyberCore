@@ -4,30 +4,17 @@ import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.blockentity.*;
-import cn.nukkit.inventory.*;
+import cn.nukkit.inventory.BaseInventory;
+import cn.nukkit.inventory.InventoryHolder;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
-import cn.nukkit.item.enchantment.Enchantment;
-import cn.nukkit.item.enchantment.EnchantmentEntry;
-import cn.nukkit.item.enchantment.EnchantmentList;
-import cn.nukkit.level.Position;
 import cn.nukkit.level.format.FullChunk;
-import cn.nukkit.math.NukkitRandom;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.nbt.NBTIO;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ListTag;
-import cn.nukkit.network.protocol.CraftingDataPacket;
-import io.netty.util.internal.ThreadLocalRandom;
-import net.yungtechboy1.CyberCore.Custom.CustomEnchant.LifeSteal;
-import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Restoration;
-import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Spring;
-import net.yungtechboy1.CyberCore.Custom.CustomEnchant.Viper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Random;
 
 /**
  * Created by carlt on 3/25/2019.

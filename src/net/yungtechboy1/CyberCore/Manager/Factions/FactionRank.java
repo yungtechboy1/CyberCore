@@ -11,6 +11,55 @@ public enum FactionRank {
     Leader(4),
     All(-1);
 
+    public static FactionRank getRankFromString(String a) {
+        try {
+            int i = Integer.parseInt(a);
+//            values()
+            for (FactionRank f : values()) {
+                if (f.Power == i) return f;
+            }
+            return null;
+        } catch (Exception e) {
+            System.out.println("Error attempting to parse Rank String to Int to Rank");
+            return null;
+        }
+    }
+
+    public static FactionRank getRankFromForm(int a) {
+        switch (a) {
+            case 0:
+                return Leader;
+            case 1:
+                return General;
+            case 2:
+                return Officer;
+            case 3:
+                return Member;
+            case 4:
+                return Recruit;
+            default:
+                return Recruit;
+        }
+    }
+
+    public int getFormPower() {
+        if (Power == -1) return Power;
+        switch (this) {
+            case Leader:
+                return 0;
+            case General:
+                return 1;
+            case Officer:
+                return 2;
+            case Member:
+                return 3;
+            case Recruit:
+                return 4;
+            default:
+                return 0;
+        }
+    }
+
     public int getPower() {
         return Power;
     }
@@ -25,7 +74,7 @@ public enum FactionRank {
         Power = -1;
     }
 
-    public TextFormat GetChatColor() {
+    public TextFormat getChatColor() {
         switch (Power) {
             case 0:
                 return TextFormat.GRAY;
@@ -42,8 +91,9 @@ public enum FactionRank {
         }
     }
 
-
-    public boolean HasPerm(FactionRank target){
+//FactionCommandWindow.java:40
+    public boolean hasPerm(FactionRank target) {
+        if(target == null)return false;
         return Power >= target.Power;
     }
 
@@ -52,7 +102,7 @@ public enum FactionRank {
         p.sendMessage(TextFormat.RED+"Error! You must be a " +target.getName()+" to use this command!");
     }
 
-    private String getName() {
+    public String getName() {
         switch (Power) {
             case 0:
                 return "Recruit";

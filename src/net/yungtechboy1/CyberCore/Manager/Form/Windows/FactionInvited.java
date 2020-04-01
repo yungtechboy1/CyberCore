@@ -23,8 +23,8 @@ public class FactionInvited extends CyberFormModal {
             Faction f = _Fac;
             if (frsi.getClickedButtonId() == 0) {
                 //Accept
-                if (f.AcceptInvite(cp.getName()))
-                    cp.sendMessage("Welcome to " + f.GetDisplayName());
+                if (f.AcceptInvite(cp))
+                    cp.sendMessage("Welcome to " + f.getDisplayName());
                 else
                     cp.sendMessage("Error! Invite timed out!");
             } else if (frsi.getClickedButtonId() == 1) {

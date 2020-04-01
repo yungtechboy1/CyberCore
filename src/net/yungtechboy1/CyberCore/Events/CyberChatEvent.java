@@ -5,7 +5,10 @@ import cn.nukkit.Server;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.player.*;
+import cn.nukkit.event.player.PlayerChatEvent;
+import cn.nukkit.event.player.PlayerJoinEvent;
+import cn.nukkit.event.player.PlayerQuitEvent;
+import cn.nukkit.event.player.PlayerRespawnEvent;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
@@ -97,7 +100,7 @@ public class CyberChatEvent implements Listener {
         String faction;
         Faction pf = plugin.getPlayerFaction(player);
         if ( pf != null) {
-            faction = pf.GetDisplayName();
+            faction = pf.getDisplayName();
             //FactionFormat = TextFormat.GRAY+FactionFormat.replace("{value}",fp.getFaction().getTag())+TextFormat.WHITE;
         } else {
             faction = TextFormat.GRAY + "[NF]" + TextFormat.WHITE;

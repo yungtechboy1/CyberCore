@@ -7,8 +7,7 @@ import cn.nukkit.level.particle.GenericParticle;
 import cn.nukkit.level.particle.HugeExplodeSeedParticle;
 import cn.nukkit.level.particle.Particle;
 import cn.nukkit.math.Vector3;
-import cn.nukkit.network.protocol.ExplodePacket;
-import cn.nukkit.scheduler.PluginTask;
+//import cn.nukkit.network.protocol.ExplodePacket;
 import cn.nukkit.scheduler.Task;
 import net.yungtechboy1.CyberCore.Manager.Crate.CrateMain;
 
@@ -43,14 +42,16 @@ public class Explosion extends Task {
         ArrayList<Vector3> send = new ArrayList<>();
         send.add(v3);
 
-        ExplodePacket pk = new ExplodePacket();
-        pk.x = (float) v3.x;
-        pk.y = (float) v3.y;
-        pk.z = (float) v3.z;
-        pk.radius =  10f;
-        pk.records = send.toArray(new Vector3[0]);
+//        ExplodePacket pk = new ExplodePacket();
+//        pk.x = (float) v3.x;
+//        pk.y = (float) v3.y;
+//        pk.z = (float) v3.z;
+//        pk.radius =  10f;
+//        pk.records = send.toArray(new Vector3[0]);
 
-        l.addChunkPacket((int) v3.x >> 4, (int) v3.z >> 4, pk);
+        System.out.println("EXPLODE!!!!!!!!!!!! "+v3);
+
+//        l.addChunkPacket((int) v3.x >> 4, (int) v3.z >> 4, pk);
         l.addParticle(new HugeExplodeSeedParticle(v3));
     }
 }

@@ -1,16 +1,16 @@
 package net.yungtechboy1.CyberCore.Commands;
 
-import cn.nukkit.command.data.CommandParamType;
-import net.yungtechboy1.CyberCore.Commands.Constructors.TargetCommand;
 import cn.nukkit.Player;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.Bans.Ban;
+import net.yungtechboy1.CyberCore.Commands.Constructors.TargetCommand;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
+import net.yungtechboy1.CyberCore.CyberUtils;
 import net.yungtechboy1.CyberCore.Rank.RankList;
-import net.yungtechboy1.CyberCore.Utils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,7 +55,7 @@ public class Tban extends TargetCommand {
             Owner.getServer().broadcastMessage(Target.getName()+" has been temp banned for 24 Hours!");
         } else if (args.length >= 2) {
             Long time = (new Date().getTime()) + (1000 * 60 * 60 * Integer.parseInt(args[1]));
-            new Ban(Owner,target,TextFormat.RED+s.getName()+" Has banned you! Reason:"+ Utils.implode(" ",(String[]) args2.toArray()),time,true,false,true);
+            new Ban(Owner, target, TextFormat.RED + s.getName() + " Has banned you! Reason:" + CyberUtils.implode(" ", (String[]) args2.toArray()), time, true, false, true);
             for (Item I : target.getInventory().getContents().values()) target.getLevel().dropItem(target, I);
             target.kick("You Have Been Temp Banned For " + Integer.parseInt(args[1]) + " Hours!");
             Owner.getServer().broadcastMessage(Target.getName()+" has Been Temp Banned For " + Integer.parseInt(args[1]) + " Hours!");

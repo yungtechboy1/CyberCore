@@ -1,9 +1,6 @@
 package net.yungtechboy1.CyberCore.Manager.AnitCheat;
 
-import cn.nukkit.AdventureSettings;
 import cn.nukkit.Player;
-import cn.nukkit.Server;
-import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
@@ -13,7 +10,6 @@ import cn.nukkit.inventory.transaction.data.UseItemOnEntityData;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
 import cn.nukkit.item.enchantment.Enchantment;
-import cn.nukkit.level.GameRule;
 import cn.nukkit.math.Vector2;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.DataPacket;

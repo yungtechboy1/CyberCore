@@ -14,7 +14,7 @@ import net.yungtechboy1.CyberCore.Messages;
 
 import java.util.Calendar;
 
-import static net.yungtechboy1.CyberCore.Utils.getDifferenceBtwTime;
+import static net.yungtechboy1.CyberCore.CyberUtils.getDifferenceBtwTime;
 
 /**
  * Created by carlt_000 on 3/21/2016.

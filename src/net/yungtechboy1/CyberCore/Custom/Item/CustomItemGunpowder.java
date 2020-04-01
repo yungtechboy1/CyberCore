@@ -1,7 +1,6 @@
 package net.yungtechboy1.CyberCore.Custom.Item;
 
 import cn.nukkit.item.Item;
-import cn.nukkit.utils.TextFormat;
 
 public class CustomItemGunpowder extends Item {
 

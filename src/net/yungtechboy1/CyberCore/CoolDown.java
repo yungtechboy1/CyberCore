@@ -1,7 +1,5 @@
 package net.yungtechboy1.CyberCore;
 
-import cn.nukkit.utils.ConfigSection;
-
 /**
  * Created by carlt on 5/16/2019.
  */
@@ -66,7 +64,7 @@ public class CoolDown {//TODO Maybe extend ConfigSelection
     }
 
     public CoolDown setTimeSecs(int secs) {
-        setTime(CyberCoreMain.getInstance().GetIntTime() + secs);
+        setTime(CyberCoreMain.getInstance().getIntTime() + secs);
         return this;
     }
 
@@ -91,7 +89,7 @@ public class CoolDown {//TODO Maybe extend ConfigSelection
     }
 
     private boolean isValidTime() {
-        int ct = CyberCoreMain.getInstance().GetIntTime();
+        int ct = CyberCoreMain.getInstance().getIntTime();
 //        System.out.println(ct+" > "+Time);
         return ct < Time;
     }

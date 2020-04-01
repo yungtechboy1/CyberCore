@@ -65,7 +65,12 @@ public class AuctionItemData {
     public Item MakePretty() {
         Item titem = item.clone();
         CompoundTag tag;
-        if (titem.hasCompoundTag()) tag = titem.getNamedTag();
+        if (titem.hasCompoundTag()) {
+            System.out.println("==========");
+            System.out.println("Ayy SO "+titem.getCompoundTag().toString());
+            System.out.println("==========");
+            tag = titem.getNamedTag();
+        }
         else tag = new CompoundTag();
         if (tag.contains("ah-data")) tag.putCompound("ah-data", new CompoundTag());
 

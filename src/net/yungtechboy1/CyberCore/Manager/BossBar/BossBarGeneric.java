@@ -4,7 +4,6 @@ import cn.nukkit.Player;
 import cn.nukkit.entity.Attribute;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.data.EntityMetadata;
-import cn.nukkit.entity.mob.EntityCreeper;
 import cn.nukkit.entity.mob.EntityWither;
 import cn.nukkit.network.protocol.*;
 import cn.nukkit.utils.TextFormat;

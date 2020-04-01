@@ -6,7 +6,6 @@ import cn.nukkit.inventory.CraftingRecipe;
 import cn.nukkit.inventory.transaction.InventoryTransaction;
 import cn.nukkit.inventory.transaction.action.InventoryAction;
 import cn.nukkit.item.Item;
-import cn.nukkit.item.ItemBlock;
 import cn.nukkit.network.protocol.ContainerClosePacket;
 import cn.nukkit.scheduler.Task;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
