@@ -14,10 +14,65 @@ import java.util.UUID;
 public class PlayerSettingsData {
 
     public String Name;
-    public ArrayList<UUID> UUIDS = new ArrayList<>();
+    public ArrayList<String> UUIDS = new ArrayList<>();
+    //TODO Intergrate
+    public ArrayList<PlayerWarningEvent> PlayerWarnings = new ArrayList<>();
+    public ArrayList<PlayerTempBanEvent> PlayerTempBans = new ArrayList<>();
+    public ArrayList<PlayerKickEvent> PlayerKicks = new ArrayList<>();
+    public ArrayList<PlayerBanEvent> PlayerBans = new ArrayList<>();
+    //    public int Rank = 0;
+    Type uuidType = new TypeToken<ArrayList<String>>() {
+    }.getType();
+    Type pweType = new TypeToken<ArrayList<PlayerWarningEvent>>() {
+    }.getType();
+    Type ptbType = new TypeToken<ArrayList<PlayerTempBanEvent>>() {
+    }.getType();
+    Type pkbType = new TypeToken<ArrayList<PlayerKickEvent>>() {
+    }.getType();
+    Type pbbType = new TypeToken<ArrayList<PlayerBanEvent>>() {
+    }.getType();
     private double Cash = 0;
-    private int CreditScore = 0;
     private int Kills = 0;
+    private int Deaths = 0;
+    private int CreditScore = 0;
+    private int CreditLimit = 500;
+    private int UsedCredit = 0;
+
+    public PlayerSettingsData(CorePlayer p) {
+        Cash = 1000;
+        CreditLimit = 1000;
+        CreditScore = 350;//Out of 1000
+        UUIDS.add(p.getUniqueId().toString());
+    }
+
+    public PlayerSettingsData(HashMap<String, Object> a) {
+        Name = (String) a.get("Name");
+        //https://stackoverflow.com/questions/27893342/how-to-convert-list-to-a-json-object-using-gson
+//        if (((String) a.get("PlayerWarnings")).equalsIgnoreCase("[]"))
+        UUIDS = new Gson().fromJson((String) a.get("UUIDs"), uuidType);
+        Cash = (int) a.get("Cash");
+        CreditScore = (int) a.get("CreditScore");
+        CreditLimit = (int) a.get("CreditLimit");
+        UsedCredit = (int) a.get("UsedCredit");
+        Deaths = (int) a.get("Kills");
+        Kills = (int) a.get("Deaths");
+        //TODO
+        if (!((String) a.get("PlayerWarnings")).equalsIgnoreCase("[]"))
+            PlayerWarnings = new Gson().fromJson((String) a.get("PlayerWarnings"), pweType);
+        if (!((String) a.get("PlayerTempBans")).equalsIgnoreCase("[]"))
+            PlayerTempBans = new Gson().fromJson((String) a.get("PlayerTempBans"), ptbType);
+        if (!((String) a.get("PlayerKicks")).equalsIgnoreCase("[]"))
+            PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), pkbType);
+//        PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), uuidType);
+        if (!((String) a.get("PlayerBans")).equalsIgnoreCase("[]"))
+            PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), pbbType);
+//        PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), uuidType);
+//        try {
+//            Rank = Integer.parseInt((String) a.get("Rank"));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+    }
 
     public int getKills() {
         return Kills;
@@ -27,8 +82,8 @@ public class PlayerSettingsData {
         Kills = kills;
     }
 
-    public void addKill(){
-        setKills(getKills()+1);
+    public void addKill() {
+        setKills(getKills() + 1);
     }
 
     public int getDeaths() {
@@ -39,12 +94,9 @@ public class PlayerSettingsData {
         Deaths = deaths;
     }
 
-
-    public void addDeath(){
-        setDeaths(getDeaths() +1);
+    public void addDeath() {
+        setDeaths(getDeaths() + 1);
     }
-
-    private int Deaths = 0;
 
     public double getCash() {
         return Cash;
@@ -78,57 +130,6 @@ public class PlayerSettingsData {
         UsedCredit = usedCredit;
     }
 
-    private int CreditLimit = 500;
-    private int UsedCredit = 0;
-    //TODO Intergrate
-    public ArrayList<PlayerWarningEvent> PlayerWarnings = new ArrayList<>();
-    public ArrayList<PlayerTempBanEvent> PlayerTempBans = new ArrayList<>();
-    public ArrayList<PlayerKickEvent> PlayerKicks = new ArrayList<>();
-    public ArrayList<PlayerBanEvent> PlayerBans = new ArrayList<>();
-//    public int Rank = 0;
-    Type uuidType = new TypeToken<ArrayList<UUID>>() {
-    }.getType();
-    Type pweType = new TypeToken<ArrayList<PlayerWarningEvent>>() {
-    }.getType();
-    Type ptbType = new TypeToken<ArrayList<PlayerTempBanEvent>>() {
-    }.getType();
-    Type pkbType = new TypeToken<ArrayList<PlayerKickEvent>>() {
-    }.getType();
-    Type pbbType = new TypeToken<ArrayList<PlayerBanEvent>>() {
-    }.getType();
-
-    public PlayerSettingsData(CorePlayer p) {
-        Cash = 1000;
-        CreditLimit = 1000;
-        CreditScore = 350;//Out of 1000
-        UUIDS.add(p.getUniqueId());
-    }
-
-    public PlayerSettingsData(HashMap<String, Object> a) {
-        Name = (String) a.get("Name");
-        //https://stackoverflow.com/questions/27893342/how-to-convert-list-to-a-json-object-using-gson
-//        if (((String) a.get("PlayerWarnings")).equalsIgnoreCase("[]"))
-        UUIDS = new Gson().fromJson((String) a.get("UUIDs"), uuidType);
-        Cash = (int) a.get("Cash");
-        CreditScore = (int) a.get("CreditScore");
-        CreditLimit = (int) a.get("CreditLimit");
-        UsedCredit = (int) a.get("UsedCredit");
-        Deaths = (int) a.get("Kills");
-        Kills = (int) a.get("Deaths");
-        //TODO
-        if (!((String) a.get("PlayerWarnings")).equalsIgnoreCase("[]")) PlayerWarnings = new Gson().fromJson((String) a.get("PlayerWarnings"), pweType);
-        if (!((String) a.get("PlayerTempBans")).equalsIgnoreCase("[]"))PlayerTempBans = new Gson().fromJson((String) a.get("PlayerTempBans"), ptbType);
-        if (!((String) a.get("PlayerKicks")).equalsIgnoreCase("[]"))PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), pkbType);
-//        PlayerKicks = new Gson().fromJson((String) a.get("PlayerKicks"), uuidType);
-        if (!((String) a.get("PlayerBans")).equalsIgnoreCase("[]"))PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), pbbType);
-//        PlayerBans = new Gson().fromJson((String) a.get("PlayerBans"), uuidType);
-//        try {
-//            Rank = Integer.parseInt((String) a.get("Rank"));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-    }
-
     public String UUIDSToJSON() {
         return new Gson().toJson(UUIDS, uuidType);
     }
@@ -159,7 +160,7 @@ public class PlayerSettingsData {
 
     public boolean takeCash(double price) {
 
-        if(getCash() < price)return false;
+        if (getCash() < price) return false;
         Cash -= price;
         return true;
     }

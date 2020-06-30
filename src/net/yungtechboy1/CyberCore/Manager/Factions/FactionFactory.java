@@ -796,7 +796,7 @@ public class FactionFactory {
                 return null;
             }
 //            Faction fac = new Faction(Main, name, (String) GetFromSettings("displayname", name), GetLeader(name), GetMemebrs(name), GetOfficers(name), GetGenerals(name), GetRecruits(name));
-            Faction fac = new Faction(Main, name, false);
+            Faction fac = new Faction(Main, name,name, false);
 //            fac.SetPlots(GetPlots(name));
 //            fac.SetMaxPlayers((Integer) GetFromSettings("MaxPlayers", name));
 ////            fac.SetPowerBonus((Integer) GetFromSettings("powerbonus", name));

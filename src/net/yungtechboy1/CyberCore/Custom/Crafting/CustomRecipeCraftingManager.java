@@ -26,7 +26,7 @@ public class CustomRecipeCraftingManager {
     public void RegisterCustomCraftingRecipies() {
         for (Recipe r : Recipies) {
             if (!addedtoCreative.contains(r)) {
-                CCM.CraftingManager.registerRecipe(r);
+//                CCM.CraftingManager.registerRecipe(r);
                 CCM.getLogger().info("Registering Recipe : " + r);
                 CCM.getLogger().info("Registering Result Item : " + r.getResult());
                 CCM.getLogger().info("Registering Result Item : " + r.getResult().getId());

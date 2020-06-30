@@ -34,7 +34,7 @@ public class UMCSQL extends MySQL {
         int port = 3306;
         String user = "admin_UMC";
         String db = "admin_UMC";
-        String pass = "admin_UMC";
+        String pass = "admin_UMC123a";
         if (SC != null) {
             try {
                 if (!SC.isClosed()) return SC;

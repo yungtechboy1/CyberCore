@@ -11,12 +11,24 @@ import cn.nukkit.utils.MainLogger;
 import cn.nukkit.utils.Utils;
 import io.netty.util.collection.CharObjectHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 public class CustomCraftingManager {
+    private static final Logger log = LogManager.getLogger(CraftingManager.class);
+    public final Collection<Recipe> recipes = new ArrayDeque();
+    public static BatchPacket packet = null;
+    protected final Map<Integer, Map<UUID, ShapedRecipe>> shapedRecipes = new Int2ObjectOpenHashMap();
+    public final Map<Integer, FurnaceRecipe> furnaceRecipes = new Int2ObjectOpenHashMap();
+    public final Map<Integer, BrewingRecipe> brewingRecipes = new Int2ObjectOpenHashMap();
+    public final Map<Integer, ContainerRecipe> containerRecipes = new Int2ObjectOpenHashMap();
+    private static int RECIPE_COUNT = 0;
+    protected final Map<Integer, Map<UUID, ShapelessRecipe>> shapelessRecipes = new Int2ObjectOpenHashMap();
     public static final Comparator<Item> recipeComparator = (i1, i2) -> {
         if (i1.getId() > i2.getId()) {
             return 1;
@@ -28,153 +40,147 @@ public class CustomCraftingManager {
             return i1.getDamage() < i2.getDamage() ? -1 : Integer.compare(i1.getCount(), i2.getCount());
         }
     };
-    public static BatchPacket packet = null;
-    private static int RECIPE_COUNT = 0;
-    public final Collection<Recipe> recipes = new ArrayDeque();
-    public final Map<Integer, Map<UUID, ShapedRecipe>> shapedRecipes = new Int2ObjectOpenHashMap();
-    public final Map<Integer, FurnaceRecipe> furnaceRecipes = new Int2ObjectOpenHashMap();
-    public final Map<Integer, BrewingRecipe> brewingRecipes = new Int2ObjectOpenHashMap();
-    public final Map<Integer, Map<UUID, ShapelessRecipe>> shapelessRecipes = new Int2ObjectOpenHashMap();
 
     public CustomCraftingManager() {
-        String path = Server.getInstance().getDataPath() + "recipes.json";
-        if (!(new File(path)).exists()) {
-            try {
-                Utils.writeFile(path, Server.class.getClassLoader().getResourceAsStream("recipes.json"));
-            } catch (IOException var17) {
-                MainLogger.getLogger().logException(var17);
+        InputStream recipesStream = Server.class.getClassLoader().getResourceAsStream("recipes.json");
+        if (recipesStream == null) {
+            throw new AssertionError("Unable to find recipes.json");
+        } else {
+            Config recipesConfig = new Config(1);
+            recipesConfig.load(recipesStream);
+            this.loadRecipes(recipesConfig);
+            String path = Server.getInstance().getDataPath() + "custom_recipes.json";
+            File filePath = new File(path);
+            if (filePath.exists()) {
+                Config customRecipes = new Config(filePath, 1);
+                this.loadRecipes(customRecipes);
             }
-        }
 
-        List<Map> recipes = (new Config(path, 1)).getMapList("recipes");
+            this.rebuildPacket();
+            MainLogger.getLogger().info("Loaded " + this.recipes.size() + " recipes.");
+        }
+    }
+
+    private void loadRecipes(Config config) {
+        List<Map> recipes = config.getMapList("recipes");
         MainLogger.getLogger().info("Loading recipes...");
         Iterator var3 = recipes.iterator();
 
-        while (var3.hasNext()) {
-            Map recipe = (Map) var3.next();
+        while(var3.hasNext()) {
+            Map recipe = (Map)var3.next();
 
             try {
+                String craftingBlock;
+                List outputs;
                 Map first;
-                switch (Utils.toInt(recipe.get("type"))) {
+                String recipeId;
+                int priority;
+                switch(Utils.toInt(recipe.get("type"))) {
                     case 0:
-                        first = (Map) ((List) recipe.get("output")).get(0);
-                        List<Item> sorted = new ArrayList();
-                        Iterator var7 = ((List) recipe.get("input")).iterator();
+                        craftingBlock = (String)recipe.get("block");
+                        if (!"crafting_table".equals(craftingBlock)) {
+                            break;
+                        }
 
-                        while (var7.hasNext()) {
-                            Map<String, Object> ingredient = (Map) var7.next();
+                        outputs = (List)recipe.get("output");
+                        if (outputs.size() > 1) {
+                            break;
+                        }
+
+                        first = (Map)outputs.get(0);
+                        List<Item> sorted = new ArrayList();
+                        Iterator var31 = ((List)recipe.get("input")).iterator();
+
+                        while(var31.hasNext()) {
+                            Map<String, Object> ingredient = (Map)var31.next();
                             sorted.add(Item.fromJson(ingredient));
                         }
 
                         sorted.sort(recipeComparator);
-                        ShapelessRecipe result = new ShapelessRecipe(Item.fromJson(first), sorted);
+                        recipeId = (String)recipe.get("id");
+                        priority = Utils.toInt(recipe.get("priority"));
+                        ShapelessRecipe result = new ShapelessRecipe(recipeId, priority, Item.fromJson(first), sorted);
                         this.registerRecipe(result);
                         break;
                     case 1:
-                        List<Map> output = (List) recipe.get("output");
-                        first = (Map) output.remove(0);
-                        String[] shape = (String[]) ((List) recipe.get("shape")).toArray(new String[0]);
+                        craftingBlock = (String)recipe.get("block");
+                        if (!"crafting_table".equals(craftingBlock)) {
+                            break;
+                        }
+
+                        outputs = (List)recipe.get("output");
+                        first = (Map)outputs.remove(0);
+                        String[] shape = (String[])((List)recipe.get("shape")).toArray(new String[0]);
                         Map<Character, Item> ingredients = new CharObjectHashMap();
                         List<Item> extraResults = new ArrayList();
-                        Map<String, Map<String, Object>> input = (Map) recipe.get("input");
-                        Iterator var21 = input.entrySet().iterator();
+                        Map<String, Map<String, Object>> input = (Map)recipe.get("input");
+                        Iterator var34 = input.entrySet().iterator();
 
-                        while (var21.hasNext()) {
-                            java.util.Map.Entry<String, Map<String, Object>> ingredientEntry = (java.util.Map.Entry) var21.next();
-                            char ingredientChar = ((String) ingredientEntry.getKey()).charAt(0);
-                            Item ingredient = Item.fromJson((Map) ingredientEntry.getValue());
+                        while(var34.hasNext()) {
+                            java.util.Map.Entry<String, Map<String, Object>> ingredientEntry = (java.util.Map.Entry)var34.next();
+                            char ingredientChar = ((String)ingredientEntry.getKey()).charAt(0);
+                            Item ingredient = Item.fromJson((Map)ingredientEntry.getValue());
                             ingredients.put(ingredientChar, ingredient);
                         }
 
-                        var21 = output.iterator();
+                        var34 = outputs.iterator();
 
-                        while (var21.hasNext()) {
-                            Map<String, Object> data = (Map) var21.next();
+                        while(var34.hasNext()) {
+                            Map<String, Object> data = (Map)var34.next();
                             extraResults.add(Item.fromJson(data));
                         }
 
-                        this.registerRecipe(new ShapedRecipe(Item.fromJson(first), shape, ingredients, extraResults));
+                        recipeId = (String)recipe.get("id");
+                        priority = Utils.toInt(recipe.get("priority"));
+                        this.registerRecipe(new ShapedRecipe(recipeId, priority, Item.fromJson(first), shape, ingredients, extraResults));
                         break;
                     case 2:
                     case 3:
-                        Map<String, Object> resultMap = (Map) recipe.get("output");
-                        Item resultItem = Item.fromJson(resultMap);
-                        this.registerRecipe(new FurnaceRecipe(resultItem, Item.get(Utils.toInt(recipe.get("inputId")), recipe.containsKey("inputDamage") ? Utils.toInt(recipe.get("inputDamage")) : -1, 1)));
+                        craftingBlock = (String)recipe.get("block");
+                        if ("furnace".equals(craftingBlock)) {
+                            Map<String, Object> resultMap = (Map)recipe.get("output");
+                            Item resultItem = Item.fromJson(resultMap);
+
+                            Item inputItem;
+                            try {
+                                Map<String, Object> inputMap = (Map)recipe.get("input");
+                                inputItem = Item.fromJson(inputMap);
+                            } catch (Exception var20) {
+                                inputItem = Item.get(Utils.toInt(recipe.get("inputId")), recipe.containsKey("inputDamage") ? Utils.toInt(recipe.get("inputDamage")) : -1, 1);
+                            }
+
+                            this.registerRecipe(new FurnaceRecipe(resultItem, inputItem));
+                        }
                 }
-            } catch (Exception var18) {
-                MainLogger.getLogger().error("Exception during registering recipe", var18);
+            } catch (Exception var21) {
+                MainLogger.getLogger().error("Exception during registering recipe", var21);
             }
         }
 
-        this.registerBrewing();
-        this.rebuildPacket();
-        MainLogger.getLogger().info("Loaded " + this.recipes.size() + " recipes.");
-    }
+        List<Map> potionMixes = config.getMapList("potionMixes");
+        Iterator var23 = potionMixes.iterator();
 
-    public static UUID getMultiItemHash(Collection<Item> items) {
-        BinaryStream stream = new BinaryStream();
-        Iterator var2 = items.iterator();
-
-        while (var2.hasNext()) {
-            Item item = (Item) var2.next();
-            stream.putVarInt(getFullItemHash(item));
+        int fromItemId;
+        int ingredient;
+        while(var23.hasNext()) {
+            Map potionMix = (Map)var23.next();
+            int fromPotionId = ((Number)potionMix.get("fromPotionId")).intValue();
+            fromItemId = ((Number)potionMix.get("ingredient")).intValue();
+            ingredient = ((Number)potionMix.get("toPotionId")).intValue();
+            this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, fromPotionId), Item.get(fromItemId), Item.get(373, ingredient)));
         }
 
-        return UUID.nameUUIDFromBytes(stream.getBuffer());
-    }
+        List<Map> containerMixes = config.getMapList("containerMixes");
+        Iterator var26 = containerMixes.iterator();
 
-    private static int getFullItemHash(Item item) {
-        return 31 * getItemHash(item) + item.getCount();
-    }
+        while(var26.hasNext()) {
+            Map containerMix = (Map)var26.next();
+            fromItemId = ((Number)containerMix.get("fromItemId")).intValue();
+            ingredient = ((Number)containerMix.get("ingredient")).intValue();
+            int toItemId = ((Number)containerMix.get("toItemId")).intValue();
+            this.registerContainerRecipe(new ContainerRecipe(Item.get(fromItemId), Item.get(ingredient), Item.get(toItemId)));
+        }
 
-    public static int getItemHash(Item item) {
-        return getItemHash(item.getId(), item.getDamage());
-    }
-
-    private static int getItemHash(int id, int meta) {
-        return id << 4 | meta & 15;
-    }
-
-    protected void registerBrewing() {
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 4, 1), Item.get(372, 0, 1), Item.get(373, 0, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 3, 1), Item.get(348, 0, 1), Item.get(373, 0, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 2, 1), Item.get(331, 0, 1), Item.get(373, 0, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 31, 1), Item.get(377, 0, 1), Item.get(373, 4, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 32, 1), Item.get(331, 0, 1), Item.get(373, 31, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 32, 1), Item.get(331, 0, 1), Item.get(373, 33, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 33, 1), Item.get(348, 0, 1), Item.get(373, 31, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 33, 1), Item.get(348, 0, 1), Item.get(373, 32, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 34, 1), Item.get(376, 0, 1), Item.get(373, 0, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 35, 1), Item.get(331, 0, 1), Item.get(373, 34, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 5, 1), Item.get(396, 0, 1), Item.get(373, 4, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 6, 1), Item.get(331, 0, 1), Item.get(373, 5, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 7, 1), Item.get(376, 0, 1), Item.get(373, 5, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 8, 1), Item.get(331, 0, 1), Item.get(373, 7, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 8, 1), Item.get(376, 0, 1), Item.get(373, 6, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 12, 1), Item.get(378, 0, 1), Item.get(373, 4, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 13, 1), Item.get(331, 0, 1), Item.get(373, 12, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 17, 1), Item.get(376, 0, 1), Item.get(373, 12, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 17, 1), Item.get(376, 0, 1), Item.get(373, 14, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 17, 1), Item.get(376, 0, 1), Item.get(373, 9, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 18, 1), Item.get(376, 0, 1), Item.get(373, 13, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 18, 1), Item.get(376, 0, 1), Item.get(373, 15, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 14, 1), Item.get(353, 0, 1), Item.get(373, 4, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 15, 1), Item.get(331, 0, 1), Item.get(373, 14, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 16, 1), Item.get(348, 0, 1), Item.get(373, 14, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 21, 1), Item.get(382, 0, 1), Item.get(373, 4, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 22, 1), Item.get(348, 0, 1), Item.get(373, 21, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 25, 1), Item.get(375, 0, 1), Item.get(373, 4, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 26, 1), Item.get(331, 0, 1), Item.get(373, 25, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 27, 1), Item.get(348, 0, 1), Item.get(373, 25, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 28, 1), Item.get(370, 0, 1), Item.get(373, 4, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 29, 1), Item.get(331, 0, 1), Item.get(373, 28, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 30, 1), Item.get(348, 0, 1), Item.get(373, 28, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 23, 1), Item.get(376, 0, 1), Item.get(373, 19, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 23, 1), Item.get(376, 0, 1), Item.get(373, 21, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 23, 1), Item.get(376, 0, 1), Item.get(373, 25, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 24, 1), Item.get(348, 0, 1), Item.get(373, 23, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 24, 1), Item.get(376, 0, 1), Item.get(373, 22, 1)));
-        this.registerBrewingRecipe(new BrewingRecipe(Item.get(373, 24, 1), Item.get(376, 0, 1), Item.get(373, 26, 1)));
     }
 
     public void rebuildPacket() {
@@ -182,20 +188,34 @@ public class CustomCraftingManager {
         pk.cleanRecipes = true;
         Iterator var2 = this.getRecipes().iterator();
 
-        while (var2.hasNext()) {
-            Recipe recipe = (Recipe) var2.next();
+        while(var2.hasNext()) {
+            Recipe recipe = (Recipe)var2.next();
             if (recipe instanceof ShapedRecipe) {
-                pk.addShapedRecipe(new ShapedRecipe[]{(ShapedRecipe) recipe});
+                pk.addShapedRecipe(new ShapedRecipe[]{(ShapedRecipe)recipe});
             } else if (recipe instanceof ShapelessRecipe) {
-                pk.addShapelessRecipe(new ShapelessRecipe[]{(ShapelessRecipe) recipe});
+                pk.addShapelessRecipe(new ShapelessRecipe[]{(ShapelessRecipe)recipe});
             }
         }
 
         var2 = this.getFurnaceRecipes().values().iterator();
 
-        while (var2.hasNext()) {
-            FurnaceRecipe recipe = (FurnaceRecipe) var2.next();
+        while(var2.hasNext()) {
+            FurnaceRecipe recipe = (FurnaceRecipe)var2.next();
             pk.addFurnaceRecipe(new FurnaceRecipe[]{recipe});
+        }
+
+        var2 = this.brewingRecipes.values().iterator();
+
+        while(var2.hasNext()) {
+            BrewingRecipe recipe = (BrewingRecipe)var2.next();
+            pk.addBrewingRecipe(new BrewingRecipe[]{recipe});
+        }
+
+        var2 = this.containerRecipes.values().iterator();
+
+        while(var2.hasNext()) {
+            ContainerRecipe recipe = (ContainerRecipe)var2.next();
+            pk.addContainerRecipe(new ContainerRecipe[]{recipe});
         }
 
         pk.encode();
@@ -211,12 +231,28 @@ public class CustomCraftingManager {
     }
 
     public FurnaceRecipe matchFurnaceRecipe(Item input) {
-        FurnaceRecipe recipe = (FurnaceRecipe) this.furnaceRecipes.get(getItemHash(input));
+        FurnaceRecipe recipe = (FurnaceRecipe)this.furnaceRecipes.get(getItemHash(input));
         if (recipe == null) {
-            recipe = (FurnaceRecipe) this.furnaceRecipes.get(getItemHash(input.getId(), 0));
+            recipe = (FurnaceRecipe)this.furnaceRecipes.get(getItemHash(input.getId(), 0));
         }
 
         return recipe;
+    }
+
+    private static UUID getMultiItemHash(Collection<Item> items) {
+        BinaryStream stream = new BinaryStream();
+        Iterator var2 = items.iterator();
+
+        while(var2.hasNext()) {
+            Item item = (Item)var2.next();
+            stream.putVarInt(getFullItemHash(item));
+        }
+
+        return UUID.nameUUIDFromBytes(stream.getBuffer());
+    }
+
+    private static int getFullItemHash(Item item) {
+        return 31 * getItemHash(item) + item.getCount();
     }
 
     public void registerFurnaceRecipe(FurnaceRecipe recipe) {
@@ -224,389 +260,143 @@ public class CustomCraftingManager {
         this.furnaceRecipes.put(getItemHash(input), recipe);
     }
 
+    private static int getItemHash(Item item) {
+        return getItemHash(item.getId(), item.getDamage());
+    }
+
+    private static int getItemHash(int id, int meta) {
+        return id << 4 | meta & 15;
+    }
+
     public void registerShapedRecipe(ShapedRecipe recipe) {
-        int resultHash = getItemHash(recipe.getResult());
-        Map<UUID, ShapedRecipe> map = this.shapedRecipes.computeIfAbsent(resultHash, (k) -> {
-            return new HashMap();
-        });
-        map.put(getMultiItemHash(recipe.getIngredientList()), recipe);
+//        int resultHash = getItemHash(recipe.getResult());
+//        Map<UUID, ShapedRecipe> map = (Map)this.shapedRecipes.computeIfAbsent(resultHash, (k) -> {
+//            return new HashMap();
+//        });
+//        List<Item> inputList = new LinkedList(recipe.getIngredientsAggregate());
+//        map.put(getMultiItemHash(inputList), recipe);
     }
-
-    private Item[][] cloneItemMap(Item[][] map) {
-        Item[][] newMap = new Item[map.length][];
-
-        int y;
-        Item[] row;
-        for (y = 0; y < newMap.length; ++y) {
-            row = map[y];
-            Item[] n = new Item[row.length];
-            System.arraycopy(row, 0, n, 0, n.length);
-            newMap[y] = n;
-        }
-
-        for (y = 0; y < newMap.length; ++y) {
-            row = newMap[y];
-
-            for (int x = 0; x < row.length; ++x) {
-                Item item = newMap[y][x];
-                newMap[y][x] = item.clone();
-            }
-        }
-
-        return newMap;
-    }
-
-    public void registerRecipe(Recipe recipe) {
-        if (recipe instanceof CraftingRecipe) {
-            UUID id = Utils.dataToUUID(new String[]{String.valueOf(++RECIPE_COUNT), String.valueOf(recipe.getResult().getId()), String.valueOf(recipe.getResult().getDamage()), String.valueOf(recipe.getResult().getCount()), Arrays.toString(recipe.getResult().getCompoundTag())});
-            ((CraftingRecipe) recipe).setId(id);
-            this.recipes.add(recipe);
-        }
-
-        if (recipe instanceof ShapelessRecipe) registerShapelessRecipe((ShapelessRecipe) recipe);
-        else if (recipe instanceof ShapedRecipe) registerShapedRecipe((ShapedRecipe) recipe);
-        else if (recipe instanceof FurnaceRecipe) registerFurnaceRecipe((FurnaceRecipe) recipe);
-        else if (recipe instanceof BrewingRecipe) registerBrewingRecipe((BrewingRecipe) recipe);
 //
-//        //TODO CHECK
+    public void registerRecipe(Recipe recipe) {
+//        if (recipe instanceof CraftingRecipe) {
+//            UUID id = Utils.dataToUUID(new String[]{String.valueOf(++RECIPE_COUNT), String.valueOf(recipe.getResult().getId()), String.valueOf(recipe.getResult().getDamage()), String.valueOf(recipe.getResult().getCount()), Arrays.toString(recipe.getResult().getCompoundTag())});
+//            ((CraftingRecipe)recipe).setId(id);
+//            this.recipes.add(recipe);
+//        }
+//
 //        recipe.registerToCraftingManager(this);
     }
 
     public void registerShapelessRecipe(ShapelessRecipe recipe) {
-        List<Item> list = recipe.getIngredientList();
-        list.sort(recipeComparator);
+        List<Item> list = recipe.getIngredientsAggregate();
         UUID hash = getMultiItemHash(list);
         int resultHash = getItemHash(recipe.getResult());
-        Map<UUID, ShapelessRecipe> map = (Map) this.shapelessRecipes.computeIfAbsent(resultHash, (k) -> {
+        Map<UUID, ShapelessRecipe> map = (Map)this.shapelessRecipes.computeIfAbsent(resultHash, (k) -> {
             return new HashMap();
         });
         map.put(hash, recipe);
     }
 
+    private static int getPotionHash(int ingredientId, int potionType) {
+        return ingredientId << 6 | potionType;
+    }
+
+    private static int getContainerHash(int ingredientId, int containerId) {
+        return ingredientId << 9 | containerId;
+    }
+
     public void registerBrewingRecipe(BrewingRecipe recipe) {
-        Item input = recipe.getInput();
-        Item potion = recipe.getResult();
-        this.brewingRecipes.put(getItemHash(input.getId(), potion.getDamage()), recipe);
+        Item input = recipe.getIngredient();
+        Item potion = recipe.getInput();
+        this.brewingRecipes.put(getPotionHash(input.getId(), potion.getDamage()), recipe);
+    }
+
+    public void registerContainerRecipe(ContainerRecipe recipe) {
+        Item input = recipe.getIngredient();
+        Item potion = recipe.getInput();
+        this.containerRecipes.put(getContainerHash(input.getId(), potion.getId()), recipe);
     }
 
     public BrewingRecipe matchBrewingRecipe(Item input, Item potion) {
-        return (BrewingRecipe) this.brewingRecipes.get(getItemHash(input.getId(), potion.getDamage()));
+        int id = potion.getId();
+        return id != 373 && id != 438 && id != 441 ? null : (BrewingRecipe)this.brewingRecipes.get(getPotionHash(input.getId(), potion.getDamage()));
     }
 
-    public boolean matchItems(ShapedRecipe sr, Item[][] input, Item[][] output) {
-        System.out.println("CHECK MATCH 5.0" + sr == null);
-        if (!this.matchInputMap(sr, (Item[][]) Utils.clone2dArray(input))) {
-            System.out.println("5.0.5E");
-            Item[][] reverse = (Item[][]) Utils.clone2dArray(input);
-
-            for (int y = 0; y < reverse.length; ++y) {
-                reverse[y] = (Item[]) Utils.reverseArray(reverse[y], false);
-            }
-
-            if (!this.matchInputMap(sr, reverse)) {
-                System.out.println("5.1 DEEAD");
-                return false;
-            }
-        }
-
-        System.out.println("5.2");
-        List<Item> haveItems = new ArrayList();
-        Item[][] var10 = output;
-        int var5 = output.length;
-
-        for (int var6 = 0; var6 < var5; ++var6) {
-            Item[] items = var10[var6];
-            haveItems.addAll(Arrays.asList(items));
-        }
-
-        List<Item> needItems = sr.getExtraResults();
-        Iterator var12 = (new ArrayList(haveItems)).iterator();
-        Iterator var13 = (new ArrayList(needItems)).iterator();
-        Iterator var14 = (new ArrayList(needItems)).iterator();
-
-        int k = 0;
-
-        while (true) {
-            while (var12.hasNext()) {
-                System.out.println("5.3");
-                Item haveItem = (Item) var12.next();
-                if (haveItem.isNull()) {
-                    System.out.println("5.4.1");
-                    haveItems.remove(haveItem);
-                    k++;
-                } else {
-
-//                    System.out.println("5.4.2");
-                    while (var14.hasNext()) {
-
-                        System.out.println("5.4.2.1");
-                        Item needItem = (Item) var14.next();
-                        if (needItem.equals(haveItem, needItem.hasMeta(), needItem.hasCompoundTag()) && needItem.getCount() == haveItem.getCount()) {
-
-                            System.out.println("5.4.2.2");
-                            haveItems.remove(haveItem);
-                            needItems.remove(needItem);
-                            break;
-                        }
-                    }
-                }
-
-                if (k == 9) needItems.clear();
-
-
-            }
-
-            System.out.println("5.5" + haveItems.isEmpty() + "|" + needItems.isEmpty());
-            return haveItems.isEmpty() && needItems.isEmpty();
-        }
+    public ContainerRecipe matchContainerRecipe(Item input, Item potion) {
+        return (ContainerRecipe)this.containerRecipes.get(getContainerHash(input.getId(), potion.getId()));
     }
 
-    private boolean matchInputMap(ShapedRecipe sr, Item[][] input) {
-//        System.out.println("Z1"+sr);
-//        System.out.println("Z1"+sr.getIngredientMap());
-        Map<Integer, Map<Integer, Item>> map = sr.getIngredientMap();
-//        System.out.println("Z2");
-        int y = 0;
-
-        int y2;
-        int x;
-        for (y2 = sr.getHeight(); y < y2; ++y) {
-            x = 0;
-//            System.out.println("Z3");
-
-            for (int x2 = sr.getWidth(); x < x2; ++x) {
-//                System.out.println("Z4");
-                Item given = input[y][x];
-                Item required = (Item) ((Map) map.get(y)).get(x);
-                if (given == null || !required.equals(given, required.hasMeta(), required.hasCompoundTag()) || required.getCount() != given.getCount()) {
-//                    System.out.println("5.7"+required+"||||||||||"+given);
-                    return false;
-                }
-
-                System.out.println("Zz");
-                input[y][x] = null;
-            }
-        }
-
-//        System.out.println("Zzz");
-        Item[][] var11 = input;
-        y2 = input.length;
-
-        for (x = 0; x < y2; ++x) {
-            Item[] items = var11[x];
-            Item[] var13 = items;
-            int var14 = items.length;
-
-            for (int var9 = 0; var9 < var14; ++var9) {
-                Item item = var13[var9];
-                if (item != null && !item.isNull()) {
-
-//                    System.out.println("5.8");
-                    return false;
-                }
-            }
-        }
-
-//        System.out.println("5.9 ITEMS GIVEN ARE CORRECT INGREDIENTS");
-        return true;
-    }
-
-    public CraftingRecipe matchRecipe(Item[][] inputMap, Item primaryOutput, Item[][] extraOutputMap) {
+    public CraftingRecipe matchRecipe(List<Item> inputList, Item primaryOutput, List<Item> extraOutputList) {
         int outputHash = getItemHash(primaryOutput);
-        ArrayList list;
-        Item[][] var6;
-        int var7;
-        int var8;
-        Item[] a;
         UUID inputHash;
         Map recipes;
-        Iterator var14;
-        System.out.println("CALL 3" + primaryOutput + " | " + primaryOutput.getCustomName() + "|" + primaryOutput.getName() + "|" + primaryOutput.getId());
-        System.out.println("CALL 3.0.1 >> " + inputMap + " | " + extraOutputMap.toString());
+        Iterator var8;
         if (this.shapedRecipes.containsKey(outputHash)) {
-            System.out.println("CALL 3.1");
-            list = new ArrayList();
-            var6 = inputMap;
-            var7 = inputMap.length;
-
-            for (var8 = 0; var8 < var7; ++var8) {
-                a = var6[var8];
-                list.addAll(Arrays.asList(a));
-            }
-
-            inputHash = getMultiItemHash(list);
-            recipes = (Map) this.shapedRecipes.get(outputHash);
+            inputList.sort(recipeComparator);
+            inputHash = getMultiItemHash(inputList);
+            recipes = (Map)this.shapedRecipes.get(outputHash);
             if (recipes != null) {
-                ShapedRecipe recipe = (ShapedRecipe) recipes.get(inputHash);
-                System.out.println("CALL 3.2" + recipe);
-                int k = -1;
-                Item[][] ii = this.cloneItemMap(inputMap);
-                Item[][] iii = this.cloneItemMap(extraOutputMap);
-                for (Item[] aa : ii) {
-                    k++;
-                    for (int aaa = 0; aaa < aa.length; aaa++) {
-//                        System.out.println(ii[k][aaa] +"||+"+iii[k][aaa] );
+                label85: {
+                    ShapedRecipe recipe = (ShapedRecipe)recipes.get(inputHash);
+                    if (recipe != null && (recipe.matchItems(inputList, extraOutputList) || this.matchItemsAccumulation(recipe, inputList, primaryOutput, extraOutputList))) {
+                        return recipe;
                     }
-                }
-                if (recipe != null && (recipe.matchItems(this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap)) || recipe.matchItems(this.cloneItemMap(inputMap), new Item[0][]) || matchItems(recipe, this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap)))) {
-                    System.out.println("CALL 3.3-------");
-                    return recipe;
-                }
 
-                var14 = recipes.values().iterator();
+                    var8 = recipes.values().iterator();
 
-                while (var14.hasNext()) {
-                    ShapedRecipe shapedRecipe = (ShapedRecipe) var14.next();
-                    System.out.println("CALL 3.4" + shapedRecipe.getResult().getName() + "||" + shapedRecipe.getIngredientList().toString());
-                    if (shapedRecipe.matchItems(this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap)) || shapedRecipe.matchItems(this.cloneItemMap(inputMap), new Item[0][]) || matchItems(shapedRecipe, this.cloneItemMap(inputMap), this.cloneItemMap(extraOutputMap))) {
-                        System.out.println("CALL 3.5");
-                        return shapedRecipe;
-                    }
+                    ShapedRecipe shapedRecipe;
+                    do {
+                        if (!var8.hasNext()) {
+                            break label85;
+                        }
+
+                        shapedRecipe = (ShapedRecipe)var8.next();
+                    } while(!shapedRecipe.matchItems(inputList, extraOutputList) && !this.matchItemsAccumulation(shapedRecipe, inputList, primaryOutput, extraOutputList));
+
+                    return shapedRecipe;
                 }
             }
         }
 
-        //TODO Check if All Inputs are Right and OutPut name Tag is Same as another Recipe but the Meta is off
-        CraftingRecipe r = CheckForRecipe(inputMap, primaryOutput, true);
-        if (r != null) return r;
-
-        System.out.println("CALL 3.6---");
-
         if (this.shapelessRecipes.containsKey(outputHash)) {
-            System.out.println("CALL 4.1");
-            list = new ArrayList();
-            var6 = inputMap;
-            var7 = inputMap.length;
-
-            for (var8 = 0; var8 < var7; ++var8) {
-                a = var6[var8];
-                list.addAll(Arrays.asList(a));
-            }
-
-            list.sort(recipeComparator);
-            inputHash = getMultiItemHash(list);
-            recipes = (Map) this.shapelessRecipes.get(outputHash);
+            inputList.sort(recipeComparator);
+            inputHash = getMultiItemHash(inputList);
+            recipes = (Map)this.shapelessRecipes.get(outputHash);
             if (recipes == null) {
                 return null;
-            }
+            } else {
+                ShapelessRecipe recipe = (ShapelessRecipe)recipes.get(inputHash);
+                if (recipe != null && (recipe.matchItems(inputList, extraOutputList) || this.matchItemsAccumulation(recipe, inputList, primaryOutput, extraOutputList))) {
+                    return recipe;
+                } else {
+                    var8 = recipes.values().iterator();
 
+                    ShapelessRecipe shapelessRecipe;
+                    do {
+                        if (!var8.hasNext()) {
+                            return null;
+                        }
 
-            int k = -1;
-            Item[][] ii = this.cloneItemMap(inputMap);
-            Item[][] iii = this.cloneItemMap(extraOutputMap);
-            for (Item[] aa : ii) {
-                k++;
-                for (int aaa = 0; aaa < aa.length; aaa++) {
-                    System.out.println("!!!!" + ii[k][aaa] + "||+" + iii[k][aaa]);
-                }
-            }
+                        shapelessRecipe = (ShapelessRecipe)var8.next();
+                    } while(!shapelessRecipe.matchItems(inputList, extraOutputList) && !this.matchItemsAccumulation(shapelessRecipe, inputList, primaryOutput, extraOutputList));
 
-            ShapelessRecipe recipe = (ShapelessRecipe) recipes.get(inputHash);
-            System.out.println("CALL 4.2" + recipe);
-            if (recipe != null) System.out.println("CALL 4.2.1 ER > " + recipe.getExtraResults());
-            if (recipe != null && recipe.matchItems(this.cloneItemMap(inputMap), new Item[0][])) {
-                return recipe;
-            }
-
-            System.out.println("CALL 4.3");
-            var14 = recipes.values().iterator();
-
-            while (var14.hasNext()) {
-                ShapelessRecipe shapelessRecipe = (ShapelessRecipe) var14.next();
-                System.out.println("CALL 4.4" + shapelessRecipe.getResult().getName() + "||" + shapelessRecipe.getResult() + "||" + shapelessRecipe.getIngredientList());
-                if (shapelessRecipe.matchItems(this.cloneItemMap(inputMap), new Item[0][])) {
                     return shapelessRecipe;
                 }
             }
+        } else {
+            return null;
         }
-
-
-//        for(Recipe r: this.recipes){
-//            if(r instanceof ShapelessRecipe){
-//                ShapelessRecipe slr = (ShapelessRecipe)r;
-//                slr.matchItems()
-//            }
-//        }
-
-        return null;
     }
 
-    private Recipe CheckForRecipe(Item[][] inputMap, Item primaryOutput) {
-        return CheckForRecipe(inputMap, primaryOutput, false);
-    }
-
-    //    private boolean matchInputMap(ShapedRecipe sr, Item[][] input) {
-//        Map<Integer, Map<Integer, Item>> map = sr.getIngredientMap();
-//        int y = 0;
-//
-//        int y2;
-//        int x;
-//        for(y2 = sr.getHeight(); y < y2; ++y) {
-//            x = 0;
-//
-//            for(int x2 = sr.getWidth(); x < x2; ++x) {
-//                Item given = input[y][x];
-//                Item required = (Item)((Map)map.get(y)).get(x);
-//                if (given == null || !required.equals(given, required.hasMeta(), required.hasCompoundTag()) || required.getCount() != given.getCount()) {
-//                    return false;
-//                }
-//
-//                input[y][x] = null;
-//            }
-//        }
-//
-//        Item[][] var11 = input;
-//        y2 = input.length;
-//
-//        for(x = 0; x < y2; ++x) {
-//            Item[] items = var11[x];
-//            Item[] var13 = items;
-//            int var14 = items.length;
-//
-//            for(int var9 = 0; var9 < var14; ++var9) {
-//                Item item = var13[var9];
-//                if (item != null && !item.isNull()) {
-//                    return false;
-//                }
-//            }
-//        }
-//
-//        return true;
-//    }
-//
-    private CraftingRecipe CheckForRecipe(Item[][] inputMap, Item primaryOutput, boolean CheckNameTag) {
-        int outputHash = getItemHash(primaryOutput);
-        ArrayList list;
-        Item[][] var6;
-        int var7;
-        Item[] a;
-        ArrayList<Item> il = new ArrayList();
-
-        for (int var8 = 0; var8 < inputMap.length; ++var8) {
-            a = inputMap[var8];
-            il.addAll(Arrays.asList(a));
+    private boolean matchItemsAccumulation(CraftingRecipe recipe, List<Item> inputList, Item primaryOutput, List<Item> extraOutputList) {
+        Item recipeResult = recipe.getResult();
+        if (primaryOutput.equals(recipeResult, recipeResult.hasMeta(), recipeResult.hasCompoundTag()) && primaryOutput.getCount() % recipeResult.getCount() == 0) {
+            int multiplier = primaryOutput.getCount() / recipeResult.getCount();
+            return recipe.matchItems(inputList, extraOutputList, multiplier);
+        } else {
+            return false;
         }
-        UUID inputHash;
-        Map recipes;
-        Iterator var14;
-        for (Recipe r : getRecipes()) {
-            System.out.println("-------------------CHECKING RECIPE WITH RESULT >>> " + r.getResult());
-            if (r instanceof ShapedRecipe) {
-                ShapedRecipe sr = (ShapedRecipe) r;
-                Item ri = sr.getResult();
-                if (ri.equals(primaryOutput, false, true)) {
-                    System.out.println("-------------------MATCH");
-                    if (matchInputMap(sr, inputMap)) {
-                        System.out.println("-------------------MATCH2");
-                        //Same Ingreds
-                        return sr;
-                    }
-                }
-            }
-        }
-        return null;
     }
-
 
     public static class Entry {
         final int resultItemId;

@@ -24,6 +24,7 @@ public class CrateConfirmWindow extends CyberFormSimple {
                 CyberCoreMain.getInstance().CrateMain.SetKeyPrimedPlayer.add(p.getName());
             } else {
                 CyberCoreMain.getInstance().CrateMain.PrimedPlayer.add(p.getName());
+                CyberCoreMain.getInstance().CrateMain.SetKeyPrimedPlayer.add(p.getName());
             }
             return super.onRun(p);
         }else{

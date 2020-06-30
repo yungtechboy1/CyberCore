@@ -28,12 +28,30 @@ public class FactionSettings {
     private int Level = 0;
     private int Points = 0;
     private int Privacy = 0;
+    private int MaxHomes = 1;
+
+    public int getMaxHomes() {
+        return MaxHomes;
+    }
+
+    public void setMaxHomes(int maxHomes) {
+        MaxHomes = maxHomes;
+    }
 
     public FactionSettings(Faction f, boolean update) {
         setF(f);
         setFaction(f.getName());
         setDisplayName(f.getName());
         if (update) download();
+    }
+
+    public void SendDefaultValues(){
+       String q = String.format("INSERT INTO `Settings` VALUES('%s','%s'," + getMaxPlayers() + "," + getPowerBonus() + ",'%s','%s'," + getPrivacy() + ",'%s'," + getPower() + "," + getMoney() + "," + getRich() + "," + getXP() + "," + getLevel() + "," + getPoints() + ","+getMaxHomes()+")", Faction, getDisplayName(), getMOTD(), getDescription(), getPermSettings().export());
+       try{
+        FactionsMain.getInstance().FFactory.getMySqlConnection().createStatement().executeUpdate(q);
+    }catch (Exception e){
+           CyberCoreMain.getInstance().getLogger().error("Error Setting Default Values!");
+       }
     }
 
     public FactionSettings(Faction f, String fps) {
@@ -173,10 +191,11 @@ public class FactionSettings {
         setXP((Integer) a.get("XP"));
         setLevel((Integer) a.get("Level"));
         setPoints((Integer) a.get("Points"));
+        setMaxHomes((Integer) a.get("MaxHomes"));
     }
 
     public void upload() {
-        String q = String.format("INSERT INTO `Settings` VALUES('%s','%s'," + getMaxPlayers() + "," + getPowerBonus() + ",'%s','%s'," + getPrivacy() + ",'%s'," + getPower() + "," + getMoney() + "," + getRich() + "," + getXP() + "," + getLevel() + "," + getPoints() + ")", getFaction(), getDisplayName(), getMOTD(), getDescription(), getPermSettings().export());
+        String q = String.format("INSERT INTO `Settings` VALUES("+getFaction() + ","+getMaxPlayers() + ","+ getMaxPlayers() + "," + getPowerBonus() + ",'%s','%s'," + getPrivacy() + ",'%s'," + getPower() + "," + getMoney() + "," + getRich() + "," + getXP() + "," + getLevel() + "," + getPoints() + ")", getFaction(), getDisplayName(), getMOTD(), getDescription(), getPermSettings().export());
         try {
             //Update PermSettings
             FactionsMain.getInstance().FFactory.getMySqlConnection().createStatement().executeUpdate("DELETE FROM `Settings` WHERE `Name` LIKE '"+getFaction()+"'");
@@ -232,7 +251,6 @@ public class FactionSettings {
     public void UpdateSettingsValue(String key, String val) {
         try {
             FactionsMain.getInstance().FFactory.getMySqlConnection().createStatement().executeUpdate("UPDATE `Settings` SET " + key + " = '" + val + "' WHERE `Name` LIKE '" + getFaction() + "'");
-            CyberCoreMain.getInstance().getLogger().error("Error with Faction PermSettings Cache E39942!BBBqzxcccBBB");
             return;
         } catch (Exception e) {
             CyberCoreMain.getInstance().getLogger().error("Error with FacSett USVS KEY:" + key + " | Val: " + val, e);

@@ -45,7 +45,7 @@ public class Home extends Commands {
 //            }
 //            Vector3 home = ofaction.GetHome();
 //            if(home.y == 0 && home.x == 0 && home.z == 0){
-//                Sender.sendMessage(FactionsMain.NAME+TextFormat.GOLD+""+ofaction+"'s does not have a Home is not set!");
+//                Sender.sendMessage(FactionsMain.NAME+TextFormat.GOLD+""+ofaction+"'s does not have a Home is not set!");C
 //                return;
 //            }
 //            ((CorePlayer) Sender).StartTeleport(home,(Player)Sender,10);

@@ -34,7 +34,6 @@ public class FactionsMain {
 //    public Map<String,Integer> pvplog = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public Map<Long, CustomFloatingTextParticle> popups = new HashMap<>();
     public FactionFactory FFactory = new FactionFactory(this);
-    ;
     public CyberCoreMain plugin;
     public FactionSQL FactionData = null;
     public HashMap<Integer, FactionErrorString> FactionString = new HashMap<>();
@@ -60,7 +59,6 @@ public class FactionsMain {
         Integer Count = 0;
         boolean peace = false;
         boolean wilderness = false;
-        System.out.println(FFactory == null);
         for (String fn : FFactory.GetAllFactionsNames()) {
             System.out.println("Loading Faction " + fn);
             Faction f = FFactory.getFaction(fn);
@@ -93,13 +91,13 @@ public class FactionsMain {
         }
         if (!peace) {
             getServer().getLogger().info("Peace Faction Being Created!");
-            Faction fac = new Faction(this, "peace", TextFormat.GREEN + "peaceful", false);
+            Faction fac = new Faction(this, "peace", TextFormat.GREEN + "peaceful", true);
             FFactory.LocalFactionCache.put("peace", fac);
         }
 //
         if (!wilderness) {
             getServer().getLogger().info("Wilderness Faction Being Created!");
-            Faction fac = new Faction(this, "wilderness", TextFormat.RED + "wilderness", false);
+            Faction fac = new Faction(this, "wilderness", TextFormat.RED + "wilderness", true);
             FFactory.LocalFactionCache.put("wilderness", fac);
         }
 //
@@ -128,8 +126,7 @@ public class FactionsMain {
 
     public boolean isFactionsAllyed(String faction1, String faction2) {
         Faction fac1 = FFactory.getFaction(faction1);
-        if (fac1 != null && fac1.isAllied(faction2)) return true;
-        return false;
+        return fac1 != null && fac1.isAllied(faction2);
     }
 
 
@@ -175,8 +172,7 @@ public class FactionsMain {
     }
 
     public Boolean factionExists(String fac) {
-        if (FFactory.LocalFactionCache.containsKey(fac.toLowerCase())) return true;
-        return false;
+        return FFactory.LocalFactionCache.containsKey(fac.toLowerCase());
     }
 
     public String GetChunkOwner(int x, int z) {

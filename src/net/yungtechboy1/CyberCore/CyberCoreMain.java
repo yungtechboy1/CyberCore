@@ -14,6 +14,7 @@ import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
+import cn.nukkit.inventory.CraftingManager;
 import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
@@ -65,6 +66,7 @@ import net.yungtechboy1.CyberCore.Manager.Crate.CrateMain;
 import net.yungtechboy1.CyberCore.Manager.CustomCraftingManager;
 import net.yungtechboy1.CyberCore.Manager.FT.CyberFloatingTextContainer;
 import net.yungtechboy1.CyberCore.Manager.FT.FloatingTextFactory;
+import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.FactionTestCommand;
 import net.yungtechboy1.CyberCore.Manager.Factions.Data.FactionSQL;
 import net.yungtechboy1.CyberCore.Manager.Factions.Faction;
 import net.yungtechboy1.CyberCore.Manager.Factions.FactionsMain;
@@ -116,7 +118,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public Config RankChatColor;
     public Config RankConfig;
     public Config MainConfig;
-    public Config PlayerIdentification;
+//    public Config PlayerIdentification;
     public Config RankListConfig;
     public FactionsMain FM;
     public Boolean nf = true;
@@ -162,7 +164,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
     public net.yungtechboy1.CyberCore.Data.UserSQL UserSQL;
     public net.yungtechboy1.CyberCore.Manager.Warp.WarpManager WarpManager;
     public ServerSqlite ServerSQL;
-    public CustomCraftingManager CraftingManager;
+//    public CustomCraftingManager CraftingManager;
     public CrateMain CrateMain;
     public ArrayList<CyberFloatingTextContainer> SavedFloatingText = new ArrayList<>();
     public ClassMerchantConfig CMC;
@@ -265,7 +267,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        Item.customblocklist[Item.MONSTER_SPAWNER] = CustomItemBlockSpawnerWithLevelBlock.class;
         Block.list[Block.FIRE] = CustomBlockFire.class;
         Block.list[Block.MONSTER_SPAWNER] = SpawnerWithLevelBlock.class;
-        BlockEntity.registerBlockEntity(BlockEntity.MOB_SPAWNER, SpawnerWithLevelBlockEntity.class);
+//        BlockEntity.registerBlockEntity(BlockEntity.MOB_SPAWNER, SpawnerWithLevelBlockEntity.class);
         //Must be registered after custom block
 //        Item.registerCustomItemBlock(Item.MONSTER_SPAWNER, CustomItemBlockSpawnerWithLevelBlock.class, this);
 
@@ -283,7 +285,8 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        System.out.println(">>>>>>>>>>0x" + Binary.bytesToHexString(new CustomItemGunpowder(CustomItemGunpowder.GunpowderType.Lvl_1).getCompoundTag()));
 
         PowerSourceTask = new PowerSourceTaskAsync(this);
-        CraftingManager = new CustomCraftingManager();
+//        CraftingManager = new CustomCraftingManager();
+//        new CraftingManager();
         CRM = new CustomRecipeCraftingManager(this);
 //        CustomItemTNT
 //        ShapedRecipe nsr = new ShapedRecipe(Item.get(46), new String[]{"AAA", "BBB", "AAA"}, new CharObjectHashMap<Item>() {{
@@ -296,7 +299,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 
 //        CraftingManager.registerShapedRecipe(nsr);
 
-        System.out.println("EEEE >>>>> " + CraftingManager.shapedRecipes.size());
+//        System.out.println("EEEE >>>>> " + CraftingManager.shapedRecipes.size());
 
 
 //        getServer().getCraftingManager().registerShapelessRecipe();=null;
@@ -311,7 +314,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
         ClassFactory = new ClassFactory(this);
         WarpManager = new WarpManager(this);
 
-        PlayerIdentification = new Config(new File(getDataFolder(), "pid.yml"));
+//        PlayerIdentification = new Config(new File(getDataFolder(), "pid.yml"));
         MainConfig = new Config(new File(getDataFolder(), "config.yml"));
         //Save = new SaveMain(this);
         SQLSaveManager = new SQLManager(this);
@@ -388,6 +391,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        SH = new SendHUD();
 
         //COMMANDS
+        getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new FactionTestCommand(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new AdminCMD(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new ChooseClass(this));
         getServer().getCommandMap().register("net/yungtechboy1/CyberCore", new BanCmd(this));
@@ -630,7 +634,7 @@ public class CyberCoreMain extends PluginBase implements CommandExecutor, Listen
 //        PasswordFactoy.onDisable();
 
         //Classes
-        PlayerIdentification.save();
+//        PlayerIdentification.save();
         CMC.save();
         FTM.CTstop();
         saveFloatingText();

@@ -464,7 +464,7 @@ public class CorePlayer extends Player {
     }
 //
 //    public void setInTeleportingProcess(boolean inTeleportingProcess) {
-//        isInTeleportingProcess = inTeleportingProcess;
+//        MOB_ENDERMEN_PORTAL = inTeleportingProcess;
 //    }
 
     public boolean IsItemBeingEnchanted() {
@@ -749,8 +749,8 @@ public class CorePlayer extends Player {
 
         this.noDamageTicks = 60;
 
-        CyberCoreMain.getInstance().CraftingManager.rebuildPacket();
-        dataPacket(CustomCraftingManager.packet);
+//        CyberCoreMain.getInstance().CraftingManager.rebuildPacket();
+//        dataPacket(CustomCraftingManager.packet);
 //        this.getServer().sendRecipeList(this);
         if (this.gamemode == 3) {
             InventoryContentPacket inventoryContentPacket = new InventoryContentPacket();

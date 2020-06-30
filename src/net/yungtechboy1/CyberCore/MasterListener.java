@@ -58,34 +58,34 @@ public class MasterListener implements Listener {
     public void joinEvent(PlayerJoinEvent event) {
         Player p = event.getPlayer();
 
-        if (plugin.PlayerIdentification.exists(p.getName().toLowerCase())) {
-            ConfigSection cs = plugin.PlayerIdentification.getSection(p.getName().toLowerCase());
-            if (cs.exists("IP")) {
-                List<String> ipl = cs.getStringList("IP");
-                if (!ipl.contains(p.getAddress())) ipl.add(p.getAddress());
-                List<Long> cid = cs.getLongList("CID");
-                if (!cid.contains(p.getClientId())) cid.add(p.getClientId());
-                List<String> uid = cs.getStringList("UID");
-                if (!uid.contains(p.getUniqueId().toString())) uid.add(p.getUniqueId().toString());
-
-            }
-        } else {
-            ConfigSection c = new ConfigSection() {{
-                put("IP", new ArrayList<String>() {{
-                    add(p.getAddress());
-                }});
-                put("CID", new ArrayList<Long>() {{
-                    add(p.getClientId());
-                }});
-                put("UID", new ArrayList<String>() {{
-                    add(p.getUniqueId().toString());
-                }});
-            }};
-            plugin.PlayerIdentification.set(p.getName().toLowerCase(), c);
-            //NEW PLAYER
-            p.showFormWindow(new HTP_0_Window());
-            p.getServer().broadcastMessage(TextFormat.AQUA + "Welcome " + p.getName() + " to the community!!! They have logged in for the 1st time!");
-        }
+//        if (plugin.PlayerIdentification.exists(p.getName().toLowerCase())) {
+//            ConfigSection cs = plugin.PlayerIdentification.getSection(p.getName().toLowerCase());
+//            if (cs.exists("IP")) {
+//                List<String> ipl = cs.getStringList("IP");
+//                if (!ipl.contains(p.getAddress())) ipl.add(p.getAddress());
+//                List<Long> cid = cs.getLongList("CID");
+//                if (!cid.contains(p.getClientId())) cid.add(p.getClientId());
+//                List<String> uid = cs.getStringList("UID");
+//                if (!uid.contains(p.getUniqueId().toString())) uid.add(p.getUniqueId().toString());
+//
+//            }
+//        } else {
+//            ConfigSection c = new ConfigSection() {{
+//                put("IP", new ArrayList<String>() {{
+//                    add(p.getAddress());
+//                }});
+//                put("CID", new ArrayList<Long>() {{
+//                    add(p.getClientId());
+//                }});
+//                put("UID", new ArrayList<String>() {{
+//                    add(p.getUniqueId().toString());
+//                }});
+//            }};
+//            plugin.PlayerIdentification.set(p.getName().toLowerCase(), c);
+//            //NEW PLAYER
+//            p.showFormWindow(new HTP_0_Window());
+//            p.getServer().broadcastMessage(TextFormat.AQUA + "Welcome " + p.getName() + " to the community!!! They have logged in for the 1st time!");
+//        }
 
 
         String Msg = plugin.colorize((String) plugin.MainConfig.get("Join-Message"));

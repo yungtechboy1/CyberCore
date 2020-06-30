@@ -12,6 +12,8 @@ import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.ConfigSection;
 import cn.nukkit.utils.TextFormat;
+import com.google.common.util.concurrent.SettableFuture;
+import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion;
 import net.yungtechboy1.CyberCore.*;
 import net.yungtechboy1.CyberCore.Manager.Factions.Mission.ActiveMission;
 import net.yungtechboy1.CyberCore.Manager.Form.Windows.FactionChatFactionWindow;
@@ -59,6 +61,7 @@ public class Faction {
         add("Level");
 //        add("ActiveMission");
         add("Rich");
+        add("MaxHomes");
 //        add("CompletedMissions");
     }};
     //Keeping Everyting Synced
@@ -106,19 +109,19 @@ public class Faction {
     private int UpdateEverySecs = 60 * 15;
 
     public Faction(FactionsMain main, String name, CorePlayer cp) {
-        this(main, name, true);
+        this(main, name,name, true);
         addPlayer(cp,FactionRank.Leader,null);
     }
 
-    public Faction(FactionsMain main, String name, boolean newfac) {
-        Main = main;
-        Name = name;
-        Settings = new FactionSettings(this, true);
-        if (newfac)
-            onCreation();
-        else
-            loadFromDB();
-    }
+//    public Faction(FactionsMain main, String name, boolean newfac) {
+//        Main = main;
+//        Name = name;
+//        Settings = new FactionSettings(this, true);
+//        if (newfac)
+//            onCreation();
+//        else
+//            loadFromDB();
+//    }
 
     public Faction(FactionsMain main, String name, String displayname) {
         this(main, name, displayname, true);
@@ -128,9 +131,10 @@ public class Faction {
         Main = main;
         Name = name;
         Settings = new FactionSettings(this, false);
-        getSettings().setDisplayName(displayname, true);
-        if (newfac)
-            onCreation();
+        getSettings().setDisplayName(displayname, false);
+        if (newfac){
+            Settings.SendDefaultValues();
+        }
         else
             loadFromDB();
     }
@@ -270,21 +274,6 @@ public class Faction {
         }
 
 
-    }
-
-    //TODO
-    @TODO
-    private void onCreation() {
-        getSettings().setDisplayName(getName());
-        try {
-            //Update PermSettings
-            FactionsMain.getInstance().FFactory.getMySqlConnection().createStatement().executeUpdate(String.format("INSERT INTO `Settings` VALUES('%s','%s'," + getSettings().getMaxPlayers() + "," + getSettings().getPowerBonus() + ",'%s','%s'," + getSettings().getPrivacy() + ",'%s'," + getSettings().getPower() + "," + getSettings().getMoney() + "," + getSettings().getRich() + "," + getSettings().getXP() + "," + getSettings().getLevel() + "," + getSettings().getPoints() + ")", getName(), getSettings().getDisplayName(), getSettings().getMOTD(), getSettings().getDescription(), getPermSettings().export()));
-            CyberCoreMain.getInstance().getLogger().error("Error with Faction PermSettings Cache E39942!BBgfggggwww122222222222222222222222222222222222222222222222222gBBBB");
-            return;
-        } catch (Exception e) {
-            CyberCoreMain.getInstance().getLogger().error("Error with Faction PermSettings Cache E399dddddddaaaaaaaaaa42!AAA", e);
-            return;
-        }
     }
 
     private void loadFromDB() {

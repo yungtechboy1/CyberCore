@@ -7,6 +7,7 @@ import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
 import cn.nukkit.utils.Binary;
+import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.Custom.Block.CustomElementBlock;
 import net.yungtechboy1.CyberCore.Custom.Item.CustomItemMap;
@@ -61,8 +62,9 @@ public class FactionAdminPage1 extends CyberFormSimple {
 //                cp.sendMessage("DEPRECATED");
                 break;
             case 3:
-                CyberCoreMain.getInstance().CraftingManager.rebuildPacket();
-                cp.dataPacket(CustomCraftingManager.packet);
+                cp.sendMessage(TextFormat.RED+"Coming Soon!");
+//                CyberCoreMain.getInstance().CraftingManager.rebuildPacket();
+//                cp.dataPacket(CustomCraftingManager.packet);
                 break;
             case 4:
                 cp.getInventory().sendCreativeContents();

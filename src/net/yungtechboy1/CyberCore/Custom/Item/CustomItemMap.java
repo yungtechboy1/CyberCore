@@ -49,18 +49,18 @@ ArrayList<ClientboundMapItemDataPacket.MapDecorator> md = new ArrayList<>();
 
     private int kk = 0;
 
-    public void AddDecoration(int decorationid,int x, int z,double rot){
-        kk++;
-        ClientboundMapItemDataPacket.MapDecorator m;
-        m = new ClientboundMapItemDataPacket().new MapDecorator();
-        m.color = new Color(250,0,0);
-        m.icon = (byte)decorationid;
-        m.offsetX = (byte)x;
-        m.offsetZ = (byte)z;
-        m.rotation = (byte)rot;
-        m.label = "TESTTT"+kk;
-        md.add(m);
-    }
+//    public void AddDecoration(int decorationid,int x, int z,double rot){
+//        kk++;
+//        ClientboundMapItemDataPacket.MapDecorator m;
+//        m = new ClientboundMapItemDataPacket().new MapDecorator();
+//        m.color = new Color(250,0,0);
+//        m.icon = (byte)decorationid;
+//        m.offsetX = (byte)x;
+//        m.offsetZ = (byte)z;
+//        m.rotation = (byte)rot;
+//        m.label = "TESTTT"+kk;
+//        md.add(m);
+//    }
 
     @Override
     public void setImage(BufferedImage img) {

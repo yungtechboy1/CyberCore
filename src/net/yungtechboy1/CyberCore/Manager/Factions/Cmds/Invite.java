@@ -2,6 +2,7 @@ package net.yungtechboy1.CyberCore.Manager.Factions.Cmds;
 
 
 import cn.nukkit.Player;
+import cn.nukkit.utils.TextFormat;
 import net.yungtechboy1.CyberCore.CorePlayer;
 import net.yungtechboy1.CyberCore.CyberCoreMain;
 import net.yungtechboy1.CyberCore.Manager.Factions.Cmds.Base.Commands;
@@ -47,7 +48,7 @@ public class Invite extends Commands {
         FactionRank r = fac.getPlayerRank(Sender);
         if (r != null) {
             if (!r.hasPerm(fac.getPermSettings().getAllowedToInvite())) {
-                Sender.sendMessage("Error! You dont have permission to Invite players at your current faction rank! Your faction only allows " + fac.getPermSettings().getAllowedToInvite().getName() + "s to invite players!");
+                Sender.sendMessage(TextFormat.RED+"Error! You dont have permission to Invite players at your current faction rank! Your faction only allows " + fac.getPermSettings().getAllowedToInvite().getName() + "s to invite players!");
                 return;
             }
         }

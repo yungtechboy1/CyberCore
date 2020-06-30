@@ -84,7 +84,7 @@ public class UserSQL extends MySQL {
                 return psd;
             }
             psd = new PlayerSettingsData(a.get(0));
-            if (!psd.UUIDS.contains(corePlayer.getUniqueId())) psd.UUIDS.add(corePlayer.getUniqueId());
+            if (!psd.UUIDS.contains(corePlayer.getUniqueId())) psd.UUIDS.add(corePlayer.getUniqueId().toString());
             corePlayer.setPlayerSettingsData(psd);
             return psd;
         } catch (Exception e) {
@@ -97,7 +97,7 @@ public class UserSQL extends MySQL {
     public boolean savePlayerSettingData(CorePlayer corePlayer) {
         PlayerSettingsData psd = corePlayer.getPlayerSettingsData();
         if (psd == null) return false;
-        if (!psd.UUIDS.contains(corePlayer.getUniqueId())) psd.UUIDS.add(corePlayer.getUniqueId());
+        if (!psd.UUIDS.contains(corePlayer.getUniqueId())) psd.UUIDS.add(corePlayer.getUniqueId().toString());
         try {
             try {
                 executeUpdate("DELETE FROM `PlayerSettings` WHERE `Name` LIKE '" + corePlayer.getName() + "'");

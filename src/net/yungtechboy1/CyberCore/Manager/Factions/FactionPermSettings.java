@@ -5,6 +5,7 @@ public class FactionPermSettings {
     private FactionRank AllowedToAcceptAlly = FactionRank.General;
     private FactionRank AllowedToEditSettings = FactionRank.Leader;
     private FactionRank AllowedToPromote = FactionRank.Member;
+    public boolean AllowAlliesToTPToHomes = true;
     private FactionRank AllowedToKick = FactionRank.General;
     //    private FactionRank AllowedToDemote = FactionRank.Member;
     private int MaxFactionChat = 30;

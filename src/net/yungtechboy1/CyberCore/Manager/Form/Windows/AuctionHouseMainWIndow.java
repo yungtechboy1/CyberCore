@@ -54,8 +54,8 @@ public class AuctionHouseMainWIndow  extends CyberFormSimple {
 //                cp.sendMessage("DEPRECATED");
                 break;
             case 3:
-                CyberCoreMain.getInstance().CraftingManager.rebuildPacket();
-                cp.dataPacket(CustomCraftingManager.packet);
+//                CyberCoreMain.getInstance().CraftingManager.rebuildPacket();
+//                cp.dataPacket(CustomCraftingManager.packet);
                 break;
             case 4:
                 cp.getInventory().sendCreativeContents();
